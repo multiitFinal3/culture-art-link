@@ -1,4 +1,4 @@
-package com.multi.culture_link;
+package com.multi.culture_link.config;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
