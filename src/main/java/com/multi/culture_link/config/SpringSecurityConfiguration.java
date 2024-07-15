@@ -50,9 +50,9 @@ public class SpringSecurityConfiguration {
 		
 		httpSecurity.csrf(AbstractHttpConfigurer::disable)
 				.authorizeHttpRequests((authorizeHttpRequests) -> authorizeHttpRequests
-						.requestMatchers("/","/home","/loginPost","/users/login","/users/login2").permitAll()
+						/*.requestMatchers("/","/home","/loginPost","/users/login","/users/login2").permitAll()
 						.requestMatchers(usersPermitUrlList.toArray(new String[usersPermitUrlList.size()])).hasAnyRole("USERS", "ADMIN")
-						.requestMatchers(adminPermitUrlList.toArray(new String[adminPermitUrlList.size()])).hasRole("ADMIN")
+						.requestMatchers(adminPermitUrlList.toArray(new String[adminPermitUrlList.size()])).hasRole("ADMIN")*/
 						.anyRequest().permitAll()
 				
 				)
