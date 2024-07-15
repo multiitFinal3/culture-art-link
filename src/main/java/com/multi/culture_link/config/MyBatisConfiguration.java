@@ -1,5 +1,7 @@
 package com.multi.culture_link.config;
 
+import com.multi.culture_link.users.model.dto.RoleDTO;
+import com.multi.culture_link.users.model.dto.VWUserRoleDTO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.type.JdbcType;
@@ -16,7 +18,7 @@ import javax.sql.DataSource;
 
 @Configuration
 @EnableTransactionManagement
-@MapperScan(basePackages = "com.multi.mini", annotationClass = Mapper.class)
+@MapperScan(basePackages = "com.multi.culture_link", annotationClass = Mapper.class)
 public class MyBatisConfiguration {
 	
 	@Bean
@@ -43,7 +45,8 @@ public class MyBatisConfiguration {
 		
 		
 		// DTO 별명 설정
-		/*configuration.getTypeAliasRegistry().registerAlias("festivalDTO", FestivalDTO.class);*/
+		configuration.getTypeAliasRegistry().registerAlias("vwUserRoleDTO", VWUserRoleDTO.class);
+		configuration.getTypeAliasRegistry().registerAlias("roleDTO", RoleDTO.class);
 		
 		
 		

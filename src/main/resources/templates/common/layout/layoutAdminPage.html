@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
-    <title>Collapsible sidebar using Bootstrap 4</title>
+    <title>관리자 페이지</title>
 
     <!-- Bootstrap CSS CDN -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
@@ -26,6 +26,7 @@
     <!-- Bootstrap JS -->
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
 
+    <!--모든 기능 완성 시 css파일로 분리할 예정-->
     <style>
 
         .wrapper {
@@ -171,6 +172,9 @@
                 <li class="nav-item">
                     <a class="nav-link" href="/festival/festival-list">축제</a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/cultural-properties">문화재</a>
+                </li>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         커뮤니티
@@ -183,6 +187,95 @@
 
             </ul>
         </div>
+
+        <!--관리자-->
+        <div id="adminBtn">
+            <button type="button" class="btn btn-light" th:onclick="|location.href='@{/admin/festival-regulate}'|">관리자</button>
+        </div>
+
+
+        <!--로그인 모달-->
+        <!--<div id="loginInfo">
+
+            &lt;!&ndash; Button trigger modal &ndash;&gt;
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+                로그인/회원가입
+            </button>
+
+            &lt;!&ndash; Modal &ndash;&gt;
+            <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">로그인</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form th:action="@{/login}" method="post" id="">
+                                &lt;!&ndash; Email input &ndash;&gt;
+                                <div data-mdb-input-init class="form-outline mb-4">
+                                    <input type="email" id="form2Example1" class="form-control" />
+                                    <label class="form-label" for="form2Example1">Email address</label>
+                                </div>
+
+                                &lt;!&ndash; Password input &ndash;&gt;
+                                <div data-mdb-input-init class="form-outline mb-4">
+                                    <input type="password" id="form2Example2" class="form-control" />
+                                    <label class="form-label" for="form2Example2">Password</label>
+                                </div>
+
+                                &lt;!&ndash; 2 column grid layout for inline styling &ndash;&gt;
+                                <div class="row mb-4">
+                                    <div class="col d-flex justify-content-center">
+                                        &lt;!&ndash; Checkbox &ndash;&gt;
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" value="" id="form2Example31" checked />
+                                            <label class="form-check-label" for="form2Example31">로그인 정보 저장하기</label>
+                                        </div>
+                                    </div>
+
+                                    <div class="col">
+                                        &lt;!&ndash; Simple link &ndash;&gt;
+                                        <a href="#!">비밀번호를 잊으셨습니까?</a>
+                                    </div>
+                                </div>
+
+                                &lt;!&ndash; Submit button &ndash;&gt;
+                                <button  type="button" data-mdb-button-init data-mdb-ripple-init class="btn btn-primary btn-block mb-4">로그인 하기</button>
+
+                                &lt;!&ndash; Register buttons &ndash;&gt;
+                                <div class="text-center">
+                                    <p>회원이 아니세요? <a href="#!">회원가입 하기</a></p>
+                                    <p>또는 네이버 로그인:</p>
+                                    <button  type="button" data-mdb-button-init data-mdb-ripple-init class="btn btn-link btn-floating mx-1">
+                                        <i class="fab fa-facebook-f"></i>
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
+                            <button type="button" class="btn btn-primary">변경된 내용 저장하기</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>-->
+
+
+        <!--마이페이지-->
+        <div id="mypageBtn">
+            <button type="button" class="btn btn-light" th:onclick="|location.href='@{/myPage}'|">마이페이지</button>
+        </div>
+
+        <!--로그아웃-->
+        <div id="logoutBtn">
+            <button type="button" class="btn btn-light" th:onclick="|location.href='@{/logout}'|">로그아웃</button>
+        </div>
+
     </nav>
 
 </div>
@@ -205,15 +298,15 @@
                 <a href="#museumRegulate" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">박물관</a>
                 <ul class="collapse list-unstyled" id="museumRegulate">
                     <li>
-                        <a href="/admin/exhibition-regulate">전시</a>
+                        <a href="/admin/exhibition-regulate">전시 관리</a>
                     </li>
                     <li>
-                        <a href="/admin/museumEvent-regulate">행사</a>
+                        <a href="/admin/museumEvent-regulate">행사 관리</a>
                     </li>
                 </ul>
             </li>
             <li>
-                <a href="/admin/festival-regulate">축제</a>
+                <a href="/admin/festival-regulate">축제 관리</a>
             </li>
             <li>
                 <a href="/admin/cultural-properties-regulate">문화재 관리</a>
