@@ -31,6 +31,8 @@
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
 
         </button>
+
+        <!--메뉴바 링크-->
         <div class="collapse navbar-collapse" id="navbarNavDropdown">
             <ul class="navbar-nav">
                 <li class="nav-item">
@@ -51,6 +53,9 @@
                 <li class="nav-item">
                     <a class="nav-link" href="/festival/festival-list">축제</a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/cultural-properties">문화재</a>
+                </li>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         커뮤니티
@@ -63,14 +68,35 @@
 
             </ul>
         </div>
+
+        <!--관리자-->
+        <div id="adminBtn">
+            <button type="button" class="btn btn-light" th:onclick="|location.href='@{/admin/festival-regulate}'|">관리자</button>
+        </div>
+
+
+        <!--로그인 모달-->
+        <div id="login">
+            <button type="button" class="btn btn-light" th:onclick="|location.href='@{/users/login}'|">로그인</button>
+        </div>
+
+        <!--마이페이지-->
+        <div id="mypageBtn">
+            <button type="button" class="btn btn-light" th:onclick="|location.href='@{/myPage}'|">마이페이지</button>
+        </div>
+
+        <!--로그아웃-->
+        <div id="logoutBtn">
+            <button type="button" class="btn btn-light" th:onclick="|location.href='@{/userLogout}'|">로그아웃</button>
+        </div>
+
+
     </nav>
 
 </div>
 
 
-<!--로그인 마이페이지 로그아웃 모달-->
 
-<div id="login"></div>
 
 
 <!--각 페이지 내용으로 layout:fragment="content"를 div 안에 넣을 것. main.html 또는 festivalmanage.html 참고 -->
