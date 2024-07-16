@@ -29,6 +29,9 @@ public class UserController {
 	@PostMapping("/signUp")
 	public void signUpPost(@RequestParam("userId") int userId, @RequestParam("email") String email, @RequestParam("password") String password, @RequestParam("userName") String userName, @RequestParam("tel") String tel, @RequestParam("gender") String gender, @RequestParam("regionId") int regionId){
 		
+		// 회원 users/ admin 넣는 것도 추가할 것 = > 매핑 테이블에도 조인으로 추가하기
+		
+		
 		int result= 0;
 		UserDTO userDTO = new UserDTO();
 		userDTO.setUserId(userId);
@@ -38,6 +41,10 @@ public class UserController {
 		userDTO.setTel(tel);
 		userDTO.setGender(gender);
 		userDTO.setRegionId(regionId);
+		
+		/*userDTO.setRoleId(2);*/
+		
+		
 		try {
 			
 			String encoded_pw = bCryptPasswordEncoder.encode(userDTO.getPassword());

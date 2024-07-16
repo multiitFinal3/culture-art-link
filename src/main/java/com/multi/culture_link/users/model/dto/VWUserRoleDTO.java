@@ -113,4 +113,18 @@ public class VWUserRoleDTO implements UserDetails {
 	public boolean isEnabled() {
 		return true;
 	}
+	
+	public UserDTO getUser(){
+		System.out.println("getUserDTO");
+		return userDTO;
+		
+	}
+	
+	@Override
+	public String toString() {
+		return "VWUserRoleDTO{" +
+				"userDTO=" + userDTO +
+				", vwUserRoleDTO=" + vwUserRoleDTO +
+				'}';
+	}
 }
