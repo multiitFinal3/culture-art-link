@@ -37,9 +37,9 @@
 
 
 
-<!--<div id="loginInfo">
+<div id="loginInfo">
 
-    &lt;!&ndash; Modal &ndash;&gt;
+    <!-- Modal -->
     <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -51,20 +51,20 @@
                 </div>
                 <div class="modal-body">
                     <form th:action="@{/user/login2}" method="post">
-                        &lt;!&ndash; Email input &ndash;&gt;
+                        <!-- Email input -->
                         <div data-mdb-input-init class="form-outline mb-4">
                             <input type="text" name="username" id="form2Example1" class="form-control" />
                             <label class="form-label" for="form2Example1">Email address</label>
                         </div>
 
-                        &lt;!&ndash; Password input &ndash;&gt;
+                        <!-- Password input -->
                         <div data-mdb-input-init class="form-outline mb-4">
                             <input type="password" name="password" id="form2Example2" class="form-control" />
                             <label class="form-label" for="form2Example2">Password</label>
                         </div>
 
-                        &lt;!&ndash; 2 column grid layout for inline styling &ndash;&gt;
-                        &lt;!&ndash;<div class="row mb-4">
+                        <!-- 2 column grid layout for inline styling -->
+                        <!--<div class="row mb-4">
                             <div class="col d-flex justify-content-center">
                                 &lt;!&ndash; Checkbox &ndash;&gt;
                                 <div class="form-check">
@@ -77,48 +77,48 @@
                                 &lt;!&ndash; Simple link &ndash;&gt;
                                 <a href="#!">비밀번호를 잊으셨습니까?</a>
                             </div>
-                        </div>&ndash;&gt;
+                        </div>-->
 
-                        &lt;!&ndash; Submit button &ndash;&gt;
+                        <!-- Submit button -->
                         <button  type="submit" data-mdb-button-init data-mdb-ripple-init class="btn btn-primary btn-block mb-4" id="submitBtn">로그인 하기</button>
 
 
                     </form>
-                    &lt;!&ndash; Register buttons &ndash;&gt;
+                    <!-- Register buttons -->
                     <div class="text-center">
                         <p>회원이 아니세요? <a th:href="@{/user/signUp}" id="sign">회원가입 하기</a></p>
-                        &lt;!&ndash;<p>또는 네이버 로그인:</p>
+                        <!--<p>또는 네이버 로그인:</p>
                         <button  type="button" data-mdb-button-init data-mdb-ripple-init class="btn btn-link btn-floating mx-1">
                             <i class="fab fa-facebook-f"></i>
-                        </button>&ndash;&gt;
+                        </button>-->
                     </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal" id="closeBtn">닫기</button>
-                    &lt;!&ndash;<button type="button" class="btn btn-primary">변경된 내용 저장하기</button>&ndash;&gt;
+                    <!--<button type="button" class="btn btn-primary">변경된 내용 저장하기</button>-->
                 </div>
             </div>
         </div>
     </div>
 
-</div>-->
+</div>
 
-<div class="modal-body">
+<!--<div class="modal-body">
     <form th:action="@{/user/login2}" method="post">
-        <!-- Email input -->
+        &lt;!&ndash; Email input &ndash;&gt;
         <div data-mdb-input-init class="form-outline mb-4">
             <input type="text" name="username" id="form2Example1" class="form-control" />
             <label class="form-label" for="form2Example1">Email address</label>
         </div>
 
-        <!-- Password input -->
+        &lt;!&ndash; Password input &ndash;&gt;
         <div data-mdb-input-init class="form-outline mb-4">
             <input type="password" name="password" id="form2Example2" class="form-control" />
             <label class="form-label" for="form2Example2">Password</label>
         </div>
 
-        <!-- 2 column grid layout for inline styling -->
-        <!--<div class="row mb-4">
+        &lt;!&ndash; 2 column grid layout for inline styling &ndash;&gt;
+        &lt;!&ndash;<div class="row mb-4">
             <div class="col d-flex justify-content-center">
                 &lt;!&ndash; Checkbox &ndash;&gt;
                 <div class="form-check">
@@ -131,22 +131,22 @@
                 &lt;!&ndash; Simple link &ndash;&gt;
                 <a href="#!">비밀번호를 잊으셨습니까?</a>
             </div>
-        </div>-->
+        </div>&ndash;&gt;
 
-        <!-- Submit button -->
+        &lt;!&ndash; Submit button &ndash;&gt;
         <button  type="submit" data-mdb-button-init data-mdb-ripple-init class="btn btn-primary btn-block mb-4" id="submitBtn">로그인 하기</button>
 
 
     </form>
-    <!-- Register buttons -->
+    &lt;!&ndash; Register buttons &ndash;&gt;
     <div class="text-center">
         <p>회원이 아니세요? <a th:href="@{/user/signUp}" id="sign">회원가입 하기</a></p>
-        <!--<p>또는 네이버 로그인:</p>
+        &lt;!&ndash;<p>또는 네이버 로그인:</p>
         <button  type="button" data-mdb-button-init data-mdb-ripple-init class="btn btn-link btn-floating mx-1">
             <i class="fab fa-facebook-f"></i>
-        </button>-->
+        </button>&ndash;&gt;
     </div>
-</div>
+</div>-->
 
 </body>
 </html>
