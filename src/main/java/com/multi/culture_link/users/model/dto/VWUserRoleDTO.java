@@ -1,46 +1,65 @@
 package com.multi.culture_link.users.model.dto;
 
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 
-public class VWUserRoleDTO extends User{
+public class VWUserRoleDTO implements UserDetails {
 	
 	
-	private String email;
-	private String password;
-	private String roleName;
-
+	private UserDTO userDTO;
 	
-	public VWUserRoleDTO(String email, String password,  Collection<? extends GrantedAuthority> authorities) {
-		super(email, password, authorities);
+	public VWUserRoleDTO vwUserRoleDTO;
+	
+	public VWUserRoleDTO(UserDTO userDTO) {
+		this.userDTO = userDTO;
 	}
 	
-	
-	public String getEmail() {
-		return email;
-	}
-	
-	public void setEmail(String email) {
-		this.email = email;
+	@Override
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+		
+		Collection<GrantedAuthority> collection = new ArrayList<>();
+		collection.add(new GrantedAuthority() {
+			@Override
+			public String getAuthority() {
+				return userDTO.getRoleName();
+			}
+		});
+		
+		
+		return collection;
 	}
 	
 	@Override
 	public String getPassword() {
-		return password;
+		return userDTO.getPassword();
 	}
 	
-	public void setPassword(String password) {
-		this.password = password;
+	@Override
+	public String getUsername() {
+		return userDTO.getUserName();
 	}
 	
-	public String getRoleName() {
-		return roleName;
+	@Override
+	public boolean isAccountNonExpired() {
+		return true;
 	}
 	
-	public void setRoleName(String roleName) {
-		this.roleName = roleName;
+	@Override
+	public boolean isAccountNonLocked() {
+		return true;
+	}
+	
+	@Override
+	public boolean isCredentialsNonExpired() {
+		return true;
+	}
+	
+	@Override
+	public boolean isEnabled() {
+		return true;
 	}
 }

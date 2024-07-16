@@ -267,18 +267,17 @@
 
         <!--로그인 모달-->
         <div id="login">
-            <button type="button" class="btn btn-light" th:onclick="|location.href='@{/users/login}'|">로그인</button>
+            <button type="button" class="btn btn-light" th:onclick="|location.href='@{/user/login}'|">로그인</button>
         </div>
-
 
         <!--마이페이지-->
         <div id="mypageBtn">
-            <button type="button" class="btn btn-light" th:onclick="|location.href='@{/myPage}'|">마이페이지</button>
+            <button type="button" class="btn btn-light" th:onclick="|location.href='@{/user/myPage}'|">마이페이지</button>
         </div>
 
         <!--로그아웃-->
         <div id="logoutBtn">
-            <button type="button" class="btn btn-light" th:onclick="|location.href='@{/logout}'|">로그아웃</button>
+            <button type="button" class="btn btn-light" th:onclick="|location.href='@{/user/logout}'|">로그아웃</button>
         </div>
 
     </nav>
