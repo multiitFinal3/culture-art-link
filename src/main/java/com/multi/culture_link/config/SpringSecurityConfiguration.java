@@ -24,10 +24,9 @@ public class SpringSecurityConfiguration {
 		
 		httpSecurity.authorizeHttpRequests((auth) -> auth
 				
-				/*.requestMatchers("/","/home","/user/login","/user/logout","/user/signUp","/user/login2").permitAll()
-				.requestMatchers("/admin").hasRole("ADMIN")
-				.requestMatchers("/user/myPage").hasAnyRole("ADMIN", "USERS")
-				.anyRequest().authenticated().*/
+				.requestMatchers("/","/home","/user/login/**","/user/logout/**","/user/signUp/**","/user/login2/**").permitAll()
+				.requestMatchers("/admin/**").hasRole("ADMIN")
+				.requestMatchers("/user/myPage/**").hasAnyRole("ADMIN", "USERS")
 				
 				.anyRequest().permitAll()
 		
