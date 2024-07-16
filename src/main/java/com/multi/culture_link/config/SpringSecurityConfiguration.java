@@ -10,9 +10,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Configuration
 @EnableWebSecurity
 public class SpringSecurityConfiguration {
@@ -41,18 +38,18 @@ public class SpringSecurityConfiguration {
 		List<String> adminPermitUrlList = permitUrlListMap.get("adminPermitUrlList");
 		List<String> usersPermitUrlList = permitUrlListMap.get("usersPermitUrlList");*/
 		
-		ArrayList<String> adminPermitUrlList = new ArrayList<>(List.of("/admin/**"));
+		/*ArrayList<String> adminPermitUrlList = new ArrayList<>(List.of("/admin/**"));
 		ArrayList<String> usersPermitUrlList = new ArrayList<>(List.of("/performance/**", "/exhibition/**","/museumEvent/**","/festival/**","/cultural-properties/**","/chat/**","/board/**","/myPage/**"));
 		
 		adminPermitUrlList.forEach(url -> System.out.println("admin permint list : " + url));
-		usersPermitUrlList.forEach(url -> System.out.println("general users permint list : " + url));
+		usersPermitUrlList.forEach(url -> System.out.println("general users permint list : " + url));*/
 		
 		
 		httpSecurity.csrf(AbstractHttpConfigurer::disable)
 				.authorizeHttpRequests((authorizeHttpRequests) -> authorizeHttpRequests
 						/*.requestMatchers("/","/home","/loginPost","/users/login","/users/login2").permitAll()
-						.requestMatchers(usersPermitUrlList.toArray(new String[usersPermitUrlList.size()])).hasAnyRole("USERS", "ADMIN")
-						.requestMatchers(adminPermitUrlList.toArray(new String[adminPermitUrlList.size()])).hasRole("ADMIN")*/
+						.requestMatchers("/performance/**", "/exhibition/**","/museumEvent/**","/festival/**","/cultural-properties/**","/chat/**","/board/**","/myPage/**").hasAnyRole("USERS", "ADMIN")
+						.requestMatchers("/admin/**").hasRole("ADMIN")*/
 						.anyRequest().permitAll()
 				
 				)
