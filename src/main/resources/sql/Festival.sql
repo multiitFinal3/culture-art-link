@@ -25,15 +25,15 @@
 --dkswl                - OS user name
 
 
-CREATE TABLE region(
+/*CREATE TABLE region(
     region_id INT AUTO_INCREMENT PRIMARY KEY,
     region_name VARCHAR(100),
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-);
+);*/
 
 
-CREATE TABLE users(
+CREATE TABLE user(
     user_id INT AUTO_INCREMENT PRIMARY KEY,
     email VARCHAR(100),
     password VARCHAR(100) UNIQUE,
@@ -45,12 +45,16 @@ CREATE TABLE users(
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
-ALTER TABLE `users` ADD CONSTRAINT `FK_REGION_TO_USERS_1` FOREIGN KEY(
+ALTER TABLE `user` ADD CONSTRAINT `FK_REGION_TO_USERS_1` FOREIGN KEY(
 	`region_id`
 )
 REFERENCES `region`(
 	`region_id`
 );
+
+
+ALTER TABLE `user`
+DROP CONSTRAINT `FK_REGION_TO_USERS_1`;
 
 
 DROP TABLE users cascade;
@@ -79,7 +83,7 @@ CREATE TABLE user_role_mapping(
 ALTER TABLE `user_role_mapping` ADD CONSTRAINT `FK_USERS_TO_USERS_ROLE_MAPPING_1` FOREIGN KEY(
 	`user_id`
 )
-REFERENCES `users`(
+REFERENCES `user`(
 	`user_id`
 );
 
@@ -274,7 +278,7 @@ CREATE TABLE festival_review(
 ALTER TABLE `festival_review` ADD CONSTRAINT `FK_USERS_TO_FESTIVAL_REVIEW_1` FOREIGN KEY(
 	`user_id`
 )
-REFERENCES `users`(
+REFERENCES `user`(
 	`user_id`
 );
 
@@ -328,7 +332,7 @@ CREATE TABLE user_festival_love_hate_keyword_mapping(
 ALTER TABLE `user_festival_love_hate_keyword_mapping` ADD CONSTRAINT `FK_USERS_TO_USER_FESTIVAL_LOVE_HATE_KEYWORD_MAPPING_1` FOREIGN KEY(
 	`user_id`
 )
-REFERENCES `users`(
+REFERENCES `user`(
 	`user_id`
 );
 
@@ -366,7 +370,7 @@ CREATE TABLE user_festival_love_hate_culture_mapping(
 ALTER TABLE `user_festival_love_hate_culture_mapping` ADD CONSTRAINT `FK_USERS_TO_USER_FESTIVAL_LOVE_HATE_CULTURE_MAPPING_1` FOREIGN KEY(
 	`user_id`
 )
-REFERENCES `users`(
+REFERENCES `user`(
 	`user_id`
 );
 
@@ -404,7 +408,7 @@ CREATE TABLE user_time_mapping(
 ALTER TABLE `user_time_mapping` ADD CONSTRAINT `FK_USER_TO_USER_TIME_MAPPING_1` FOREIGN KEY(
 	`user_id`
 )
-REFERENCES `users`(
+REFERENCES `user`(
 	`user_id`
 );
 
@@ -454,7 +458,7 @@ CREATE TABLE user_genre_mapping(
 ALTER TABLE `user_genre_mapping` ADD CONSTRAINT `FK_USER_TO_USER_GENRE_MAPPING_1` FOREIGN KEY(
 	`user_id`
 )
-REFERENCES `users`(
+REFERENCES `user`(
 	`user_id`
 );
 
@@ -466,6 +470,7 @@ REFERENCES `performance_genre`(
 );
 
 DROP TABLE user_genre_mapping cascade;
+
 
 
 
@@ -487,7 +492,7 @@ CREATE VIEW vw_user_role_data AS
 		r.role_name,
 		r.role_content
 
-	FROM users u
+	FROM user u
 		JOIN user_role_mapping urm ON u.user_id=urm.user_id
 		JOIN role r ON urm.role_id=r.role_id;
 
@@ -504,6 +509,13 @@ CREATE VIEW vw_user_role_data AS
 
 
 
+
+ALTER TABLE `region_map` ADD CONSTRAINT `FK_REGION_TO_REGION_MAP_1` FOREIGN KEY(
+	`region_id`
+)
+REFERENCES `region`(
+	`region_id`
+);
 
 
 
