@@ -62,7 +62,7 @@ public class SpringSecurityConfiguration {
 						.loginProcessingUrl("/users/login2")
 						.defaultSuccessUrl("/", true)
 						/*.failureForwardUrl("/common/loginError")*/
-						.failureForwardUrl("/")
+						
 				)
 				.logout(logout -> logout
 						.logoutRequestMatcher(new AntPathRequestMatcher("/userLogout"))
