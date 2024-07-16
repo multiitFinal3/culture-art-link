@@ -1,21 +1,56 @@
 package com.multi.culture_link.users.controller;
 
 
+import com.multi.culture_link.users.model.dto.UserDTO;
+import com.multi.culture_link.users.service.UserService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping("/user")
 public class UserController {
 
-
-
-	@GetMapping
-	public void signUp(){
 	
+	private final UserService userService;
+	private final BCryptPasswordEncoder bCryptPasswordEncoder;
 	
+	public UserController(UserService userService, BCryptPasswordEncoder bCryptPasswordEncoder) {
+		this.userService = userService;
+		this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+	}
+	
+	@GetMapping("/signUp")
+	public String signUp(){
+	
+		return "/user/signUp";
+	}
+	
+	@PostMapping("/signUp")
+	public void signUpPost(@RequestParam("userId") int userId, @RequestParam("email") String email, @RequestParam("password") String password, @RequestParam("userName") String userName, @RequestParam("tel") String tel, @RequestParam("gender") String gender, @RequestParam("regionId") int regionId){
+		
+		int result= 0;
+		UserDTO userDTO = new UserDTO();
+		userDTO.setUserId(userId);
+		userDTO.setEmail(email);
+		userDTO.setPassword(password);
+		userDTO.setUserName(userName);
+		userDTO.setTel(tel);
+		userDTO.setGender(gender);
+		userDTO.setRegionId(regionId);
+		try {
+			
+			String encoded_pw = bCryptPasswordEncoder.encode(userDTO.getPassword());
+			userDTO.setPassword(encoded_pw);
+			
+			
+			userService.signUp(userDTO);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+		
+		System.out.println("회원가입 성공");
+		
 	}
 	
 	@PostMapping("/login2")
@@ -25,6 +60,13 @@ public class UserController {
 		
 	}
 
+	
+	@GetMapping("/myPage")
+	public String myPage(){
+		
+		return "/user/myPage";
+		
+	}
 
 
 }

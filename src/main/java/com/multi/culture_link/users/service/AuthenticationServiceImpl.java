@@ -2,7 +2,7 @@ package com.multi.culture_link.users.service;
 
 import com.multi.culture_link.users.model.dto.UserDTO;
 import com.multi.culture_link.users.model.dto.VWUserRoleDTO;
-import com.multi.culture_link.users.model.mapper.UsersMapper;
+import com.multi.culture_link.users.model.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -17,12 +17,12 @@ import java.util.List;
 @Service
 public class AuthenticationServiceImpl implements AuthenticationService {
 	
-	private final UsersMapper usersMapper;
+	private final UserMapper userMapper;
 	private final BCryptPasswordEncoder bCryptPasswordEncoder;
 	
 	@Autowired
-	public AuthenticationServiceImpl(UsersMapper usersMapper, BCryptPasswordEncoder bCryptPasswordEncoder) {
-		this.usersMapper = usersMapper;
+	public AuthenticationServiceImpl(UserMapper userMapper, BCryptPasswordEncoder bCryptPasswordEncoder) {
+		this.userMapper = userMapper;
 		this.bCryptPasswordEncoder=bCryptPasswordEncoder;
 	}
 	
@@ -33,7 +33,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 		
 		try {
 			System.out.println(1);
-			UserDTO userDTO = usersMapper.findUserByEmail(username);
+			UserDTO userDTO = userMapper.findUserByEmail(username);
 			System.out.println(2);
 			System.out.println("userDTO : " + userDTO);
 			
@@ -63,7 +63,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 			System.out.println(userDTO.toString());
 			
 			
-			/*System.out.println("encodedPassword : " + encodedPassword);*/
+			System.out.println("encodedPassword : " + bCryptPasswordEncoder.encode(userDTO.getPassword()));
 			
 			VWUserRoleDTO result =  new VWUserRoleDTO(userDTO);
 			
