@@ -49,7 +49,7 @@ ALTER TABLE `users` ADD CONSTRAINT `FK_REGION_TO_USERS_1` FOREIGN KEY(
 	`region_id`
 )
 REFERENCES `region`(
-	`id`
+	`region_id`
 );
 
 
@@ -80,14 +80,14 @@ ALTER TABLE `user_role_mapping` ADD CONSTRAINT `FK_USERS_TO_USERS_ROLE_MAPPING_1
 	`user_id`
 )
 REFERENCES `users`(
-	`id`
+	`user_id`
 );
 
 ALTER TABLE `user_role_mapping` ADD CONSTRAINT `FK_ROLE_TO_USERS_ROLE_MAPPING_1` FOREIGN KEY(
 	`role_id`
 )
 REFERENCES `role`(
-	`id`
+	`role_id`
 );
 
 DROP TABLE user_role_mapping cascade;
@@ -96,7 +96,7 @@ DROP TABLE user_role_mapping cascade;
 
 
 
-CREATE TABLE category(
+/*CREATE TABLE category(
     category_id INT AUTO_INCREMENT PRIMARY KEY,
     category_name VARCHAR(100),
     category_content VARCHAR(300),
@@ -120,7 +120,7 @@ REFERENCES `category`(
 	`id`
 );
 
-DROP TABLE culture cascade;
+DROP TABLE culture cascade;*/
 
 
 
@@ -135,8 +135,8 @@ DROP TABLE time cascade;
 
 CREATE TABLE festival(
     festival_id INT AUTO_INCREMENT PRIMARY KEY,
-    category_id INT,
-    culture_id INT,
+/*    category_id INT,
+    culture_id INT,*/
     region_id INT,
     time_id INT,
     avg_rate DOUBLE,
@@ -153,7 +153,7 @@ CREATE TABLE festival(
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
-ALTER TABLE `festival` ADD CONSTRAINT `FK_CATEGORY_TO_FESTIVAL_1` FOREIGN KEY(
+/*ALTER TABLE `festival` ADD CONSTRAINT `FK_CATEGORY_TO_FESTIVAL_1` FOREIGN KEY(
 	`category_id`
 )
 REFERENCES `category`(
@@ -165,7 +165,7 @@ ALTER TABLE `festival` ADD CONSTRAINT `FK_CULTURE_TO_FESTIVAL_1` FOREIGN KEY(
 )
 REFERENCES `culture`(
 	`culture_id`
-);
+);*/
 
 ALTER TABLE `festival` ADD CONSTRAINT `FK_REGION_TO_FESTIVAL_1` FOREIGN KEY(
 	`region_id`
@@ -202,19 +202,18 @@ DROP TABLE sort cascade;
 
 CREATE TABLE festival_keyword(
     festival_keyword_id INT AUTO_INCREMENT PRIMARY KEY,
-    category_id INT,
     festival_keyword_name VARCHAR(100),
     emotion_stat INT,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
-ALTER TABLE `festival_keyword` ADD CONSTRAINT `FK_CATEGORY_TO_FESTIVAL_KEYWORD_1` FOREIGN KEY(
+/*ALTER TABLE `festival_keyword` ADD CONSTRAINT `FK_CATEGORY_TO_FESTIVAL_KEYWORD_1` FOREIGN KEY(
 	`category_id`
 )
 REFERENCES `category`(
 	`category_id`
-);
+);*/
 
 
 DROP TABLE festival_keyword cascade;
@@ -244,7 +243,7 @@ REFERENCES `festival`(
 ALTER TABLE `festival_review_naver_keyword_mapping` ADD CONSTRAINT `FK_KEYWORD_SORT_TO_FESTIVAL_REVIEW_NAVER_KEYWORD_MAPPING_1` FOREIGN KEY(
 	`sort_id`
 )
-REFERENCES `keyword_sort`(
+REFERENCES `sort`(
 	`sort_id`
 );
 
@@ -358,10 +357,10 @@ DROP TABLE user_festival_love_hate_keyword_mapping cascade;
 CREATE TABLE user_festival_love_hate_culture_mapping(
     user_id INT,
     sort_id INT,
-    culture_id INT,
+/*    culture_id INT,*/
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    PRIMARY KEY(`user_id`,`sort_id`,`culture_id`)
+    PRIMARY KEY(`user_id`,`sort_id`)
 );
 
 ALTER TABLE `user_festival_love_hate_culture_mapping` ADD CONSTRAINT `FK_USERS_TO_USER_FESTIVAL_LOVE_HATE_CULTURE_MAPPING_1` FOREIGN KEY(
@@ -374,16 +373,16 @@ REFERENCES `users`(
 ALTER TABLE `user_festival_love_hate_culture_mapping` ADD CONSTRAINT `FK_SORT_TO_USER_FESTIVAL_LOVE_HATE_CULTURE_MAPPING_1` FOREIGN KEY(
 	`sort_id`
 )
-REFERENCES `keyword_sort`(
+REFERENCES `sort`(
 	`sort_id`
 );
 
-ALTER TABLE `user_festival_love_hate_culture_mapping` ADD CONSTRAINT `FK_KEYWORD_TO_USER_FESTIVAL_LOVE_HATE_CULTURE_MAPPING_1` FOREIGN KEY(
+/*ALTER TABLE `user_festival_love_hate_culture_mapping` ADD CONSTRAINT `FK_KEYWORD_TO_USER_FESTIVAL_LOVE_HATE_CULTURE_MAPPING_1` FOREIGN KEY(
 	`culture_id`
 )
 REFERENCES `culture`(
 	`culture_id`
-);
+);*/
 
 
 DROP TABLE user_festival_love_hate_culture_mapping cascade;

@@ -21,7 +21,7 @@
             $('#exampleModal').modal('show');
 
 
-            $('#closeBtn').on("click", function(){
+            $('#closeBtn , #closeBtn2, #submitBtn').on("click", function(){
 
                 window.location.href="/";
 
@@ -46,7 +46,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel">로그인</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="closeBtn2">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
@@ -81,7 +81,7 @@
                         </div>
 
                         <!-- Submit button -->
-                        <button  type="submit" data-mdb-button-init data-mdb-ripple-init class="btn btn-primary btn-block mb-4">로그인 하기</button>
+                        <button  type="submit" data-mdb-button-init data-mdb-ripple-init class="btn btn-primary btn-block mb-4" id="submitBtn">로그인 하기</button>
 
                         <!-- Register buttons -->
                         <div class="text-center">
