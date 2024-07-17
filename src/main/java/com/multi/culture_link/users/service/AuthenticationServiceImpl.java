@@ -49,7 +49,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 			List<GrantedAuthority> authorities = new ArrayList<>();
 			
 			
-			authorities.add(new SimpleGrantedAuthority(userDTO.getRoleName()));
+			authorities.add(new SimpleGrantedAuthority(userDTO.getRoleId()));
 		
 			
 			
