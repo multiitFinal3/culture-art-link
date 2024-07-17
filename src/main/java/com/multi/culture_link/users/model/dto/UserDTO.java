@@ -13,7 +13,6 @@ public class UserDTO {
 	private String tel;
 	private String gender;
 	private int regionId;
-	private int roleId;
-	private String roleName;
+	private String roleId;
 	private String roleContent;
 }

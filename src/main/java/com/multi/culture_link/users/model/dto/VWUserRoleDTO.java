@@ -25,7 +25,7 @@ public class VWUserRoleDTO implements UserDetails {
 		collection.add(new GrantedAuthority() {
 			@Override
 			public String getAuthority() {
-				return userDTO.getRoleName();
+				return userDTO.getRoleId();
 			}
 		});
 		
@@ -73,17 +73,10 @@ public class VWUserRoleDTO implements UserDetails {
 		
 	}
 	
-	public int getRoleId(){
+	public String getRoleId(){
 		
 		System.out.println("getRoleId : "+ userDTO.getRoleId());
 		return userDTO.getRoleId();
-		
-	}
-	
-	public String getRoleName(){
-		
-		System.out.println("getRoleName : "+ userDTO.getRoleName());
-		return userDTO.getRoleName();
 		
 	}
 	
