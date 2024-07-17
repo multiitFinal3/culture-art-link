@@ -43,6 +43,9 @@ dependencies {
 	implementation group: 'org.bgee.log4jdbc-log4j2', name: 'log4jdbc-log4j2-jdbc4.1', version: '1.16'
 	implementation group: 'org.json', name: 'json', version: '20160810'
 	implementation group: 'javax.xml', name: 'jaxp-api', version: '1.4.2'
+	implementation 'com.fasterxml.jackson.core:jackson-databind'
+	implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-xml'
+	implementation group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-cbor', version: '2.15.3'
 }
 
 tasks.named('test') {
