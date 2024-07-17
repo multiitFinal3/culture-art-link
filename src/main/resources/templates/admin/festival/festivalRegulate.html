@@ -10,8 +10,51 @@
 <body>
 <div layout:fragment="content2">
 
+    <div id="festivalRegulate">
 
-    축제 관리자 페이지 입니다.
+        축제 관리자 페이지 입니다.
+
+        <h2>축제 DB 현황</h2>
+        <table class="table table-striped" id="festivalDB">
+
+            <thead class="table-light">
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">축제이름</th>
+                <th scope="col">상세설명</th>
+                <th scope="col">주체기관</th>
+                <th scope="col">시작일</th>
+                <th scope="col">종료일</th>
+                <th scope="col">DB관리</th>
+            </tr>
+            </thead>
+            <tbody id="list1"></tbody>
+
+
+        </table>
+
+
+        <h2>전국 축제 실시간</h2>
+        <table class="table table-striped" id="festivalAPI">
+
+            <thead class="table-light">
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">축제이름</th>
+                <th scope="col">상세설명</th>
+                <th scope="col">주체기관</th>
+                <th scope="col">시작일</th>
+                <th scope="col">종료일</th>
+                <th scope="col">DB관리</th>
+            </tr>
+            </thead>
+            <tbody id="list2"></tbody>
+
+
+        </table>
+
+
+    </div>
 
 
 

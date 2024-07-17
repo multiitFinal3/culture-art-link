@@ -12,11 +12,14 @@ public class AdminFestivalController {
 	
 	@GetMapping
 	public String festivalManage(){
+
 		
 		
 		return "/admin/festival/festivalRegulate";
 		
 	}
+	
+	
 	
 	
 	
