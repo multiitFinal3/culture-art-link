@@ -8,6 +8,7 @@
         justify-content: center;
         margin-top: 14%;
         margin-left: 10%;
+        overflow-x: scroll;
     }
 
     table{
@@ -23,10 +24,12 @@
     table, th, td{
 
         border: 1px solid black;
-
+        width: 100px;
 
 
     }
+
+
 
 
     th, td{
