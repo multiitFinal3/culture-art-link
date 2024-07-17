@@ -16,7 +16,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
 
     <!--css 파일-->
-    <link rel="stylesheet" th:href="@{/css/common/menubar}">
+
 
 </head>
 <body>
@@ -69,26 +69,32 @@
             </ul>
         </div>
 
-        <!--관리자-->
-        <div id="adminBtn">
-            <button type="button" class="btn btn-light" th:onclick="|location.href='@{/admin/festival-regulate}'|">관리자</button>
-        </div>
+        <th:block sec:authorize="hasAnyAuthority('ROLE_ADMIN')">
+            <!--관리자-->
+            <div id="adminBtn">
+                <button type="button" class="btn btn-light" th:onclick="|location.href='@{/admin/festival-regulate}'|">관리자</button>
+            </div>
+        </th:block>
+
+        <th:block sec:authorize="isAnonymous">
+            <!--로그인 모달-->
+            <div id="login">
+                <button type="button" class="btn btn-light" th:onclick="|location.href='@{/user/login}'|">로그인</button>
+            </div>
+        </th:block>
+
+        <th:block sec:authorize="hasAnyAuthority('ROLE_USERS','ROLE_ADMIN')">
+            <!--마이페이지-->
+            <div id="mypageBtn">
+                <button type="button" class="btn btn-light" th:onclick="|location.href='@{/user/myPage}'|">마이페이지</button>
+            </div>
 
 
-        <!--로그인 모달-->
-        <div id="login">
-            <button type="button" class="btn btn-light" th:onclick="|location.href='@{/users/login}'|">로그인</button>
-        </div>
-
-        <!--마이페이지-->
-        <div id="mypageBtn">
-            <button type="button" class="btn btn-light" th:onclick="|location.href='@{/myPage}'|">마이페이지</button>
-        </div>
-
-        <!--로그아웃-->
-        <div id="logoutBtn">
-            <button type="button" class="btn btn-light" th:onclick="|location.href='@{/userLogout}'|">로그아웃</button>
-        </div>
+            <!--로그아웃-->
+            <div id="logoutBtn">
+                <button type="button" class="btn btn-light" th:onclick="|location.href='@{/user/logout}'|">로그아웃</button>
+            </div>
+        </th:block>
 
 
     </nav>
