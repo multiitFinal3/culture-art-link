@@ -1,6 +1,5 @@
 package com.multi.culture_link.admin.exhibition.controller;
 
-
 import com.multi.culture_link.admin.exhibition.service.ExhibitionApiService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -14,11 +13,9 @@ public class AdminExhibitionController {
     private final ExhibitionApiService exhibitionApiService;
 
     @GetMapping
-    public String exhibitionManage(){
-        exhibitionApiService.getApiResponse();
-
+    public String exhibitionManage() {
+        exhibitionApiService.fetchJsonData();
         return "/admin/exhibition/exhibitionRegulate";
 
     }
-
 }
