@@ -1,4 +1,4 @@
-package com.multi.culture_link.admin.exhibition.model.dto;
+package com.multi.culture_link.admin.exhibition.model.dto.api;
 
 import lombok.Data;
 
