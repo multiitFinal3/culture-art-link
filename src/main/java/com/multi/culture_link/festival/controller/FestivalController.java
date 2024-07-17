@@ -1,4 +1,4 @@
-package com.multi.culture_link.festival;
+package com.multi.culture_link.festival.controller;
 
 
 import com.multi.culture_link.users.model.dto.VWUserRoleDTO;

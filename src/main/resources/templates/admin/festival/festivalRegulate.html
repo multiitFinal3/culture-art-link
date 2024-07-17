@@ -5,10 +5,107 @@
       layout:decorate="~{/common/layout/layoutAdminPage}">
 <head>
     <link rel="stylesheet" th:href="@{/css/festival/festivalRegulate.css}">
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+
+    <script th:inline="javascript">
+
+        $(document).ready(
+
+            function(){
+
+
+                // api table
+                function findAPIFestivalList(page){
+
+                    $('#list2').html("");
+
+                    $.ajax({
+
+                        url: '/admin/festival-regulate/findAPIFestivalList?page=' + page,
+                        method: 'POST',
+                        contentType: 'application/json',
+                        success: function(list){
+
+                            $.each(list, function(index, festival){
+
+                                var index1 = (index + 1) + (page-1)*5;
+
+
+                                var content = festival.festivalContent.length > 30?
+                                festival.festivalContent.substring(0,30) + "..."
+                                : festival.festivalContent;
+
+
+
+                                var htmlContent =`
+
+                                    <tr>
+
+                                        <th scope="row">${index1}</th>
+                                        <td id="regionId">${festival.regionId}</td>
+                                        <td id="timeId">${festival.timeId}</td>
+                                        <td id="festivalName">${festival.festivalName}</td>
+                                        <td id="festivalContent">${content}</td>
+                                        <td id="manageInstitution">${festival.manageInstitution}</td>
+                                        <td id="hostInstitution">${festival.hostInstitution}</td>
+                                        <td id="sponserInstitution">${festival.sponserInstitution}</td>
+                                        <td id="tel">${festival.tel}</td>
+                                        <td id="homepageUrl">${festival.homepageUrl}</td>
+                                        <td id="detailAddress">${festival.detailAddress}</td>
+                                        <td id="latitude">${festival.latitude}</td>
+                                        <td id="longtitude">${festival.longtitude}</td>
+                                        <td id="place">${festival.place}</td>
+                                        <td id="startDate">${festival.startDate}</td>
+                                        <td id="endDate">${festival.endDate}</td>
+                                        <td id="avgRate">${festival.avgRate}</td>
+                                        <td id="season">${festival.season}</td>
+                                        <td id="imgUrl"><img src="${festival.imgUrl}" width="40px"></td>
+
+                                    </tr>
+
+                                `;
+
+                                $('#list2').append(htmlContent);
+
+                            })
+
+
+                        }
+
+                    })
+                }
+
+
+                findAPIFestivalList(1);
+
+                for(var p=1; p<=10; p++){
+
+                    $('#pageNum2').append(`<button class="pageBtn2">${p}</button>`)
+
+
+                }
+
+                $(document).on('click','.pageBtn2', function(){
+
+                    const page = $(this).text();
+                    findAPIFestivalList(page);
+
+                })
+            }
+        )
+
+
+
+
+
+    </script>
+
 
 </head>
 <body>
 <div layout:fragment="content2">
+
+
 
     <div id="festivalRegulate">
 
@@ -32,24 +129,39 @@
         </table>
 
 
+        <br><br><br><br><br><br>
+
         <h2>전국 축제 실시간</h2>
         <table class="table table-striped" id="festivalAPI">
 
             <thead class="table-light">
             <tr>
                 <th scope="col">#</th>
+                <th scope="col">지역아이디</th>
+                <th scope="col">시간대아이디</th>
                 <th scope="col">축제이름</th>
                 <th scope="col">상세설명</th>
+                <th scope="col">주관기관</th>
                 <th scope="col">주체기관</th>
+                <th scope="col">후원기관</th>
+                <th scope="col">전화번호</th>
+                <th scope="col">홈페이지</th>
+                <th scope="col">상세주소</th>
+                <th scope="col">위도</th>
+                <th scope="col">경도</th>
+                <th scope="col">장소</th>
                 <th scope="col">시작일</th>
                 <th scope="col">종료일</th>
-                <th scope="col">DB관리</th>
+                <th scope="col">별점평균</th>
+                <th scope="col">계절</th>
+                <th scope="col">관련이미지</th>
             </tr>
             </thead>
             <tbody id="list2"></tbody>
 
 
         </table>
+        <div id="pageNum2"></div>
 
 
     </div>
@@ -59,5 +171,10 @@
 
 
 </div>
+
+
+
+
+
 </body>
 </html>
