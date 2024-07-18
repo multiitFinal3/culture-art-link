@@ -1,5 +1,7 @@
 package com.multi.culture_link.config;
 
+import com.multi.culture_link.festival.model.dto.FestivalDTO;
+import com.multi.culture_link.festival.model.dto.PageDTO;
 import com.multi.culture_link.users.model.dto.RoleDTO;
 import com.multi.culture_link.users.model.dto.UserDTO;
 import com.multi.culture_link.users.model.dto.VWUserRoleDTO;
@@ -49,6 +51,9 @@ public class MyBatisConfiguration {
 		configuration.getTypeAliasRegistry().registerAlias("vwUserRoleDTO", VWUserRoleDTO.class);
 		configuration.getTypeAliasRegistry().registerAlias("roleDTO", RoleDTO.class);
 		configuration.getTypeAliasRegistry().registerAlias("userDTO", UserDTO.class);
+		configuration.getTypeAliasRegistry().registerAlias("festivalDTO", FestivalDTO.class);
+		configuration.getTypeAliasRegistry().registerAlias("pageDTO", PageDTO.class);
+		
 		
 		
 		
