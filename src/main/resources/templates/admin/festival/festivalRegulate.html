@@ -286,6 +286,47 @@
                 })
 
 
+            // 일괄 삭제 기능
+
+
+
+                $(document).on('click','#dbDeleteBtn', function(){
+
+                    var checks = [];
+
+                    var selectedChecks = document.querySelectorAll("input[type='checkbox']:checked");
+
+                    $.each(selectedChecks, function(index, item){
+
+
+                        checks.push($(item).val());
+                        console.log($(item).val());
+
+                    })
+
+                    console.log(checks)
+
+                    $.ajax({
+
+                        url: '/admin/festival-regulate/insertAPIFestivalList',
+                        method: 'POST',
+                        contentType: 'application/json',
+                        data: JSON.stringify(checks),
+                        success: function(response){
+
+                            alert(response);
+                            window.location.href='/admin/festival-regulate';
+
+                        }
+
+
+                    })
+
+
+                })
+
+
+
 
             }
         )
