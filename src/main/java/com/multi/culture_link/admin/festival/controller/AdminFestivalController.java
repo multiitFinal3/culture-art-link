@@ -51,6 +51,31 @@ public class AdminFestivalController {
 	}
 	
 	
+	
+	@PostMapping("/insertAPIFestivalList")
+	@ResponseBody
+	public String insertAPIFestivalList(@RequestBody ArrayList<Integer> checks){
+		
+		System.out.println("checks : " + checks);
+		
+		ArrayList<Integer> list = new ArrayList();
+		
+		for(int i : checks){
+			
+			list.add(i);
+		}
+		
+		
+		try {
+			adminFestivalService.insertAPIFestivalList(list);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+		
+		return "삽입 성공";
+	}
+	
+	
 	// json 파싱 예시
 	/*public static void main(String[] args) throws IOException {
 		
