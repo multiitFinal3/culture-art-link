@@ -50,3 +50,10 @@
         background-color: #E7EEF9;
 
     }
+
+
+    td#festivalContent, td#festivalName{
+
+        width: 400px;
+
+    }

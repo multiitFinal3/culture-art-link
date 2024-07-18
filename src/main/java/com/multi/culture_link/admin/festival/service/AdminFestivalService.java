@@ -6,4 +6,6 @@ import java.util.ArrayList;
 
 public interface AdminFestivalService {
 	ArrayList<FestivalDTO> findAPIFestivalList(int page) throws Exception;
+	
+	void insertAPIFestivalList(ArrayList<Integer> list) throws Exception;
 }

@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.multi.culture_link.festival.model.dto.FestivalDTO;
+import com.multi.culture_link.admin.festival.model.mapper.AdminFestivalMapper;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -20,20 +21,25 @@ import java.util.Date;
 @Service
 public class AdminFestivalServiceImpl implements AdminFestivalService {
 	
+	private final AdminFestivalMapper adminFestivalMapper;
 	private final OkHttpClient client;
 	private final Gson gson;
 	
-	public AdminFestivalServiceImpl(OkHttpClient client, Gson gson, OkHttpClient client1) {
+	ArrayList<FestivalDTO> list = new ArrayList<>();
+	
+	public AdminFestivalServiceImpl(OkHttpClient client, Gson gson, OkHttpClient client1, AdminFestivalMapper adminFestivalMapper) {
 		this.client = client;
 		this.gson = gson;
+		this.adminFestivalMapper = adminFestivalMapper;
 	}
 	
 	@Override
 	public ArrayList<FestivalDTO> findAPIFestivalList(int page) throws Exception {
 		
-		
+		//크롬인 것 처럼 속이려했으나 빠르게 클릭하면 여전히 네이버 서버에서 막는다
 		Request request = new Request.Builder()
 				.url("http://api.data.go.kr/openapi/tn_pubr_public_cltur_fstvl_api?serviceKey=chNg8jx96krRfOCTvGcO2PvBKnrCrH0Qm6/JmV1TOw/Yu1T0x3jy0fHM8SOcZFnJIxdc7oqyM03PVmMA9UFOsA==&pageNo=" + page + "&numOfRows=5&type=json")
+				.addHeader("User-Agent", "Mozilla/5.0")
 				.get()
 				.build();
 		
@@ -259,7 +265,15 @@ public class AdminFestivalServiceImpl implements AdminFestivalService {
 			
 			
 			String imgUrl = document.select("div.detail_info > a > img").attr("src");
-			festivalDTO.setImgUrl(imgUrl);
+			
+			if (!imgUrl.equals("")) {
+				
+				festivalDTO.setImgUrl(imgUrl);
+				
+			} else {
+			
+			
+			}
 			
 			
 			String content2 = document.select("div.intro_box > p.text").text();
@@ -278,8 +292,20 @@ public class AdminFestivalServiceImpl implements AdminFestivalService {
 			
 			festivalDTO.setTel(item.get("phoneNumber").getAsString());
 			festivalDTO.setHomepageUrl(item.get("homepageUrl").getAsString());
-			festivalDTO.setLatitude(item.get("latitude").getAsDouble());
-			festivalDTO.setLongtitude(item.get("longitude").getAsDouble());
+			
+			
+			double lat = item.get("latitude") == null ? 0.0
+					: item.get("latitude").getAsString().equals("") ? 0.0
+					: item.get("latitude").getAsDouble();
+			
+			
+			double longi = item.get("longtitude") == null ? 0.0
+					: item.get("longtitude").getAsString().equals("") ? 0.0
+					: item.get("longtitude").getAsDouble();
+			
+			
+			festivalDTO.setLatitude(lat);
+			festivalDTO.setLongtitude(longi);
 			
 			festivalDTO.setAvgRate(0);
 			
@@ -290,10 +316,56 @@ public class AdminFestivalServiceImpl implements AdminFestivalService {
 		}
 		
 		
-		System.out.println("impl list: " + list );
+		System.out.println("impl list: " + list);
+		
+		this.list = list;
 		
 		return list;
 		
 		
 	}
+	
+	@Override
+	public void insertAPIFestivalList(ArrayList<Integer> numList) throws Exception {
+		
+		
+		for (int i : numList) {
+			
+			FestivalDTO festivalDTO = list.get(i);
+			
+			System.out.println(festivalDTO.toString());
+			
+			adminFestivalMapper.insertAPIFestival(festivalDTO);
+			
+		}
+		
+		
+	}
+	
+
+	
+	
+	
+	
+	
+	/*public static void main(String[] args) throws IOException {
+		
+		
+		Document document = Jsoup.connect("https://search.naver.com/search.naver?sm=tab_hty.top&where=nexearch&ssc=tab.nx.all&query=" + "눈축제" + "+기본정보").get();
+		
+		String title = document.title();
+		System.out.println("title : " + title);
+		
+		
+		String imgUrl = document.select("div.detail_info > a > img").attr("src");
+		
+		System.out.println("?? : " + imgUrl);
+		
+		System.out.println(imgUrl==null);
+		System.out.println(imgUrl.equals("")); //true
+		
+		
+	}*/
+	
+	
 }

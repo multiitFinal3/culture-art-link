@@ -35,31 +35,53 @@
                                 festival.festivalContent.substring(0,30) + "..."
                                 : festival.festivalContent;
 
+                                var inst1 = festival.manageInstitution.length > 15?
+                                festival.manageInstitution.substring(0,15) + "..."
+                                : festival.manageInstitution;
+
+                                var inst2 = festival.hostInstitution.length > 15?
+                                festival.hostInstitution.substring(0,15) + "..."
+                                : festival.hostInstitution;
+
+                                var inst3 = festival.sponserInstitution.length > 15?
+                                festival.sponserInstitution.substring(0,15) + "..."
+                                : festival.sponserInstitution;
+
+
+
+
+                                var start = festival.startDate.length >0?
+                                festival.startDate.substring(0,10):
+                                "링크없음";
+
+                                var end = festival.endDate.length >0?
+                                festival.endDate.substring(0,10):
+                                "링크없음";
 
 
                                 var htmlContent =`
 
                                     <tr>
 
-                                        <th scope="row">${index1}</th>
-                                        <td id="regionId">${festival.regionId}</td>
-                                        <td id="timeId">${festival.timeId}</td>
-                                        <td id="festivalName">${festival.festivalName}</td>
-                                        <td id="festivalContent">${content}</td>
-                                        <td id="manageInstitution">${festival.manageInstitution}</td>
-                                        <td id="hostInstitution">${festival.hostInstitution}</td>
-                                        <td id="sponserInstitution">${festival.sponserInstitution}</td>
-                                        <td id="tel">${festival.tel}</td>
-                                        <td id="homepageUrl">${festival.homepageUrl}</td>
-                                        <td id="detailAddress">${festival.detailAddress}</td>
-                                        <td id="latitude">${festival.latitude}</td>
-                                        <td id="longtitude">${festival.longtitude}</td>
-                                        <td id="place">${festival.place}</td>
-                                        <td id="startDate">${festival.startDate}</td>
-                                        <td id="endDate">${festival.endDate}</td>
-                                        <td id="avgRate">${festival.avgRate}</td>
-                                        <td id="season">${festival.season}</td>
-                                        <td id="imgUrl"><img src="${festival.imgUrl}" width="40px"></td>
+                                        <td><input class="check2" type="checkbox" name="index" value="${index1}"/></td>
+                                        <td class="index1">${index1}</td>
+                                        <td class="regionId">${festival.regionId}</td>
+                                        <td class="timeId">${festival.timeId}</td>
+                                        <td class="festivalName">${festival.festivalName}</td>
+                                        <td class="festivalContent">${content}</td>
+                                        <td class="manageInstitution">${inst1}</td>
+                                        <td class="hostInstitution">${inst2}</td>
+                                        <td class="sponserInstitution">${inst3}</td>
+                                        <td class="tel">${festival.tel}</td>
+                                        <td class="homepageUrl"><a href="${festival.homepageUrl}">클릭!</a></td>
+                                        <td class="detailAddress">${festival.detailAddress}</td>
+
+                                        <td class="place">${festival.place}</td>
+                                        <td class="startDate">${start}</td>
+                                        <td class="endDate">${end}</td>
+                                        <td class="avgRate">${festival.avgRate}</td>
+                                        <td class="season">${festival.season}</td>
+                                        <td class="imgUrl"><img src="${festival.imgUrl}" width="40px"></td>
 
                                     </tr>
 
@@ -91,6 +113,43 @@
                     findAPIFestivalList(page);
 
                 })
+
+
+                $(document).on('click','#apiInsertBtn', function(){
+
+                    var checks = [];
+
+                    var selectedChecks = document.querySelectorAll("input[type='checkbox']:checked");
+
+                    $.each(selectedChecks, function(index, item){
+
+
+                        checks.push($(item).val());
+                        console.log($(item).val());
+
+                    })
+
+                    console.log(checks)
+
+                    $.ajax({
+
+                        url: '/admin/festival-regulate/insertAPIFestivalList',
+                        method: 'POST',
+                        contentType: 'application/json',
+                        data: JSON.stringify(checks),
+                        success: function(response){
+
+                            alert(response);
+                            window.location.href='/admin/festival-regulate';
+
+                        }
+
+
+                    })
+
+
+                })
+
             }
         )
 
@@ -114,6 +173,7 @@
 
             <thead class="table-light">
             <tr>
+                <th scope="col">체크</th>
                 <th scope="col">#</th>
                 <th scope="col">축제이름</th>
                 <th scope="col">상세설명</th>
@@ -131,27 +191,28 @@
 
         <br><br><br><br><br><br>
 
-        <h2>전국 축제 실시간</h2>
+        <h2>전국 축제 실시간</h2><button id="apiInsertBtn">DB에 추가</button>
         <table class="table table-striped" id="festivalAPI">
 
             <thead class="table-light">
             <tr>
+                <th scope="col">체크</th>
                 <th scope="col">#</th>
-                <th scope="col">지역아이디</th>
-                <th scope="col">시간대아이디</th>
-                <th scope="col">축제이름</th>
-                <th scope="col">상세설명</th>
-                <th scope="col">주관기관</th>
-                <th scope="col">주체기관</th>
-                <th scope="col">후원기관</th>
-                <th scope="col">전화번호</th>
+                <th scope="col">지역</th>
+                <th scope="col">시간</th>
+                <th scope="col">이름</th>
+                <th scope="col">설명</th>
+                <th scope="col">주관</th>
+                <th scope="col">주체</th>
+                <th scope="col">후원</th>
+                <th scope="col">번호</th>
                 <th scope="col">홈페이지</th>
-                <th scope="col">상세주소</th>
-                <th scope="col">위도</th>
-                <th scope="col">경도</th>
+                <th scope="col">주소</th>
+                <!--<th scope="col">위도</th>
+                <th scope="col">경도</th>-->
                 <th scope="col">장소</th>
-                <th scope="col">시작일</th>
-                <th scope="col">종료일</th>
+                <th scope="col">시작</th>
+                <th scope="col">종료</th>
                 <th scope="col">별점평균</th>
                 <th scope="col">계절</th>
                 <th scope="col">관련이미지</th>
