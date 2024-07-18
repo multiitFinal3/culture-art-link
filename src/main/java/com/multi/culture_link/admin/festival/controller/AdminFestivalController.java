@@ -3,6 +3,7 @@ package com.multi.culture_link.admin.festival.controller;
 
 import com.multi.culture_link.admin.festival.service.AdminFestivalService;
 import com.multi.culture_link.festival.model.dto.FestivalDTO;
+import com.multi.culture_link.festival.model.dto.PageDTO;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,10 +31,9 @@ public class AdminFestivalController {
 	}
 	
 	
-	
 	@PostMapping("/findAPIFestivalList")
 	@ResponseBody
-	public ArrayList<FestivalDTO> findAPIFestivalList(@RequestParam("page") int page){
+	public ArrayList<FestivalDTO> findAPIFestivalList(@RequestParam("page") int page) {
 		
 		ArrayList<FestivalDTO> list = null;
 		try {
@@ -51,16 +51,15 @@ public class AdminFestivalController {
 	}
 	
 	
-	
 	@PostMapping("/insertAPIFestivalList")
 	@ResponseBody
-	public String insertAPIFestivalList(@RequestBody ArrayList<Integer> checks){
+	public String insertAPIFestivalList(@RequestBody ArrayList<Integer> checks) {
 		
 		System.out.println("checks : " + checks);
 		
 		ArrayList<Integer> list = new ArrayList();
 		
-		for(int i : checks){
+		for (int i : checks) {
 			
 			list.add(i);
 		}
@@ -73,6 +72,50 @@ public class AdminFestivalController {
 		}
 		
 		return "삽입 성공";
+	}
+	
+	
+	@PostMapping("/findDBFestivalList")
+	@ResponseBody
+	public ArrayList<FestivalDTO> findDBFestivalList(@RequestParam("page") int page) {
+		
+		System.out.println("page : " + page);
+		
+		PageDTO pageDTO = new PageDTO();
+		pageDTO.setStartEnd(page);
+		
+		ArrayList<FestivalDTO> list = null;
+		try {
+			list = adminFestivalService.findDBFestivalList(pageDTO);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+		
+		System.out.println("list : " + list);
+		
+		return list;
+		
+		
+	}
+	
+	
+	@PostMapping("/findDBFestivalCount")
+	@ResponseBody
+	public int findDBFestivalCount(){
+		
+		int count = 0;
+		try {
+			count = adminFestivalService.findDBFestivalCount();
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+		
+		
+		System.out.println("count : " + count);
+		
+		return count;
+		
+		
 	}
 	
 	

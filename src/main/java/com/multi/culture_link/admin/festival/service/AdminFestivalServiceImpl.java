@@ -5,6 +5,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.multi.culture_link.festival.model.dto.FestivalDTO;
 import com.multi.culture_link.admin.festival.model.mapper.AdminFestivalMapper;
+import com.multi.culture_link.festival.model.dto.PageDTO;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -77,7 +78,7 @@ public class AdminFestivalServiceImpl implements AdminFestivalService {
 			
 			String firstAddress = detailAddress.split(" ")[0];
 			
-			int regionId = 0;
+			int regionId = 66;
 			
 			switch (firstAddress) {
 				
@@ -179,20 +180,20 @@ public class AdminFestivalServiceImpl implements AdminFestivalService {
 			
 			int diffDays = (int) ((endDate.getTime() - startDate.getTime()) / (1000 * 24 * 60 * 60));
 			
-			System.out.println(startDate);
+			/*System.out.println(startDate);
 			System.out.println(endDate);
-			System.out.println("일 수 차이 : " + diffDays);
+			System.out.println("일 수 차이 : " + diffDays);*/
 			
 			
 			Calendar calendar1 = Calendar.getInstance();
 			calendar1.setTime(startDate);
 			int startMonth = calendar1.get(Calendar.MONTH) + 1;
-			System.out.println("시작월 : " + startMonth);
+			/*System.out.println("시작월 : " + startMonth);*/
 			
 			Calendar calendar2 = Calendar.getInstance();
 			calendar2.setTime(endDate);
 			int endMonth = calendar2.get(Calendar.MONTH) + 1;
-			System.out.println(endMonth);
+			/*System.out.println(endMonth);*/
 			
 			
 			String season = "";
@@ -222,12 +223,12 @@ public class AdminFestivalServiceImpl implements AdminFestivalService {
 			
 			for (int j = 0; j < diffDays + 1; j++) {
 				
-				System.out.println("축제 기간 : " + (diffDays + 1));
+				/*System.out.println("축제 기간 : " + (diffDays + 1));*/
 				Calendar calendar = Calendar.getInstance();
 				calendar.setTime(startDate);
 				calendar.add(Calendar.DATE, j);
 				
-				System.out.println("calendar.get(Calendar.DAY_OF_WEEK) : " + calendar.get(Calendar.DAY_OF_WEEK));
+				/*System.out.println("calendar.get(Calendar.DAY_OF_WEEK) : " + calendar.get(Calendar.DAY_OF_WEEK));*/
 				days.add(calendar.get(Calendar.DAY_OF_WEEK));
 				
 			}
@@ -299,9 +300,9 @@ public class AdminFestivalServiceImpl implements AdminFestivalService {
 					: item.get("latitude").getAsDouble();
 			
 			
-			double longi = item.get("longtitude") == null ? 0.0
-					: item.get("longtitude").getAsString().equals("") ? 0.0
-					: item.get("longtitude").getAsDouble();
+			double longi = item.get("longitude") == null ? 0.0
+					: item.get("longitude").getAsString().equals("") ? 0.0
+					: item.get("longitude").getAsDouble();
 			
 			
 			festivalDTO.setLatitude(lat);
@@ -340,6 +341,25 @@ public class AdminFestivalServiceImpl implements AdminFestivalService {
 		}
 		
 		
+	}
+	
+	@Override
+	public ArrayList<FestivalDTO> findDBFestivalList(PageDTO pageDTO) throws Exception {
+		
+		ArrayList<FestivalDTO> list = adminFestivalMapper.findDBFestivalList(pageDTO);
+		
+		System.out.println("impl list : " + list);
+		
+		return list;
+		
+	}
+	
+	@Override
+	public int findDBFestivalCount() throws Exception {
+		int count = adminFestivalMapper.findDBFestivalCount();
+		
+		System.out.println("impl count : " + count);
+		return count;
 	}
 	
 
