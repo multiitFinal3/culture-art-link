@@ -2,9 +2,7 @@ package com.multi.culture_link.admin.exhibition.model.dto.api;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
+
 import lombok.Data;
 
 import java.util.List;
@@ -18,7 +16,6 @@ public class ExhibitionApiResponseDto {
     @JsonProperty("body")
     private Body body;
 
-    // getters and setters for header and body
 
     @Data
     public static class Header {
@@ -27,17 +24,7 @@ public class ExhibitionApiResponseDto {
 
         @JsonProperty("resultMsg")
         private String resultMsg;
-
-        // getters and setters for resultCode and resultMsg
     }
-
-//    public static class Body {
-//        @JacksonXmlProperty(localName = "items")
-//        @JacksonXmlElementWrapper(useWrapping = false)
-//        private List<Item> items;
-//
-//        // getter and setter for items
-//    }
 
     @Data
     public static class Body {
@@ -52,16 +39,12 @@ public class ExhibitionApiResponseDto {
 
         @JsonProperty("totalCount")
         private String totalCount;
-
-        // getters and setters
     }
 
     @Data
     public static class Items {
         @JsonProperty("item")
         private List<Item> item;
-
-        // getter and setter
     }
 
 
@@ -136,6 +119,12 @@ public class ExhibitionApiResponseDto {
 
         @JsonProperty("PERIOD")
         private String period;
+
+
+        private String start_date;
+        private String end_date;
+
+
 
         @JsonProperty("EVENT_PERIOD")
         private String eventPeriod;

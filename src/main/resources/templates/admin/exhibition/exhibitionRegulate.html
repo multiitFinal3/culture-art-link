@@ -1,20 +1,209 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
-      layout:decorate="~{/common/layout/layoutAdminPage}">
-<head>
-<!--    <link rel="stylesheet" th:href="@{/css/festival/festivalRegulate.css}">-->
+<html
+  xmlns:th="http://www.thymeleaf.org"
+  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
+  layout:decorate="~{/common/layout/layoutAdminPage}"
+>
+  <head>
+    <link
+      rel="stylesheet"
+      th:href="@{/css/exhibition/exhibitionRegulate.css}"
+    />
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script th:inline="javascript">
+      function parseDateRange(dateString) {
+        const [start, end] = dateString?.split("~");
 
-</head>
-<body>
-<div layout:fragment="content2">
+        function formatDate(date) {
+          if (date.includes("-") && date.length === 10) {
+            return date;
+          }
 
+          return date.replace(/(\d{4})(\d{2})(\d{2})/, "$1-$2-$3");
+        }
 
-    전시 관리자 페이지 입니다.
+        return {
+          startDate: formatDate(start),
+          endDate: formatDate(end),
+        };
+      }
+      $(document).ready(function () {
+        let allData = [];
+        const itemsPerPage = 10;
+        let currentPage = 1;
+        const maxPageButtons = 10;
 
+        async function fetchData() {
+          try {
+            const response = await axios.get(
+              "/admin/exhibition-regulate/exhibitions"
+            );
+            allData = response.data;
+            console.log("allData : ", allData);
+            renderTable();
+            renderPagination();
+          } catch (error) {
+            console.error("데이터를 가져오는 중 오류 발생:", error);
+          }
+        }
 
+        function renderTable() {
+          const startIndex = (currentPage - 1) * itemsPerPage;
+          const endIndex = startIndex + itemsPerPage;
+          const pageData = allData.slice(startIndex, endIndex);
 
-</div>
-</body>
+          const tableBody = document.getElementById("list2");
+          tableBody.innerHTML = "";
+
+          pageData.forEach((item, index) => {
+            const { startDate, endDate } = parseDateRange(item.PERIOD);
+            console.log(`startDate= ${startDate}, endDate= ${endDate}`);
+            item.start_date = startDate;
+            item.end_date = endDate;
+            const row = `
+                    <tr>
+                      <td scope="col"><input type="checkbox" data-index="${
+                        startIndex + index
+                      }"></td>
+                      <td scope="col">${startIndex + index + 1}</td>
+                      <td scope="col">${item.TITLE}</td>
+                      <td scope="col">${item.CNTC_INSTT_NM}</td>
+                      <td scope="col">${item.start_date}</td>
+                      <td scope="col">${item.end_date}</td>
+                    </tr>
+                  `;
+            tableBody.innerHTML += row;
+          });
+        }
+
+        function renderPagination() {
+          const totalPages = Math.ceil(allData.length / itemsPerPage);
+          const paginationElement = document.getElementById("pageNum2");
+          paginationElement.innerHTML = "";
+
+          // 시작 페이지와 끝 페이지 계산
+          let startPage = Math.max(
+            currentPage - Math.floor(maxPageButtons / 2),
+            1
+          );
+          let endPage = startPage + maxPageButtons - 1;
+
+          if (endPage > totalPages) {
+            endPage = totalPages;
+            startPage = Math.max(endPage - maxPageButtons + 1, 1);
+          }
+
+          // 이전 버튼
+          if (startPage > 1) {
+            const prevButton = createPageButton("이전", () => {
+              currentPage = startPage - 1;
+              renderTable();
+              renderPagination();
+            });
+            paginationElement.appendChild(prevButton);
+          }
+
+          // 페이지 번호 버튼
+          for (let i = startPage; i <= endPage; i++) {
+            const button = createPageButton(i, () => {
+              currentPage = i;
+              renderTable();
+              renderPagination();
+            });
+            if (i === currentPage) {
+              button.classList.add("active");
+            }
+            paginationElement.appendChild(button);
+          }
+
+          // 다음 버튼
+          if (endPage < totalPages) {
+            const nextButton = createPageButton("다음", () => {
+              currentPage = endPage + 1;
+              renderTable();
+              renderPagination();
+            });
+            paginationElement.appendChild(nextButton);
+          }
+        }
+
+        function extractCheckedData() {
+          const checkedBoxes = document.querySelectorAll(
+            "#list2 .row-checkbox:checked"
+          );
+          const checkedData = Array.from(checkedBoxes).map((checkbox) => {
+            const index = parseInt(checkbox.getAttribute("data-index"));
+            return allData[index];
+          });
+
+          console.log("체크된 데이터:", checkedData);
+          // 여기서 체크된 데이터를 원하는 대로 처리할 수 있습니다.
+          // 예: 모달로 표시, 새 창에서 열기, 서버로 전송 등
+
+          // 예시: 알림으로 체크된 데이터 수 표시
+          alert(`${checkedData.length}개의 데이터가 선택되었습니다.`);
+        }
+
+        // 페이지 버튼 생성 함수
+        function createPageButton(text, onClick) {
+          const button = document.createElement("button");
+          button.innerText = text;
+          button.addEventListener("click", onClick);
+          return button;
+        }
+
+        // 체크된 데이터 추출 버튼에 이벤트 리스너 추가
+        document
+          .getElementById("apiInsertBtn")
+          .addEventListener("click", extractCheckedData);
+
+        // 초기 데이터 로드
+        fetchData();
+      });
+    </script>
+  </head>
+  <body>
+    <div layout:fragment="content2">
+      <div id="festivalRegulate">
+        <h2>
+          축제 DB 현황 <button id="dbUpdateBtn">DB 수정</button
+          ><button id="dbDeleteBtn">DB 삭제</button>
+        </h2>
+        <table class="table table-striped" id="festivalDB">
+          <thead class="table-light">
+            <tr>
+              <th scope="col">체크</th>
+              <th scope="col">#</th>
+              <th scope="col">전시이름</th>
+              <th scope="col">미술관</th>
+              <th scope="col">시작일</th>
+              <th scope="col">종료일</th>
+            </tr>
+          </thead>
+          <tbody id="list1"></tbody>
+        </table>
+        <div id="pageNum1"></div>
+
+        <br /><br /><br /><br /><br /><br />
+
+        <h2>전국 축제 실시간<button id="apiInsertBtn">DB에 추가</button></h2>
+        <table class="table table-striped" id="festivalAPI">
+          <thead class="table-light">
+            <tr>
+              <th scope="col">체크</th>
+              <th scope="col">#</th>
+              <th scope="col">전시이름</th>
+              <th scope="col">미술관</th>
+              <th scope="col">시작일</th>
+              <th scope="col">종료일</th>
+            </tr>
+          </thead>
+          <tbody id="list2"></tbody>
+        </table>
+        <div id="pageNum2"></div>
+      </div>
+    </div>
+  </body>
 </html>

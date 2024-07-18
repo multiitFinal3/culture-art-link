@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.multi.culture_link.admin.exhibition.model.dao.AdminExhibitionDao"><!-- 메퍼위치하고  동일하게 네임스페이스 작성-->
+
+
+    <insert id="saveData" parameterType="com.multi.culture_link.admin.exhibition.model.dto.api.ExhibitionApiDto">
+        INSERT INTO exhibition (title, artist, museum, start_date, end_date, price, image, description, sub_description, url) VALUES
+        <foreach collection="processedData" item="data" separator=",">
+            (#{data.title}, #{data.artist}, #{data.museum}, #{data.start_date}, #{data.end_date},
+            #{data.price}, #{data.image}, #{data.description}, #{data.sub_description}, #{data.url}
+            )
+        </foreach>
+    </insert>
+</mapper>

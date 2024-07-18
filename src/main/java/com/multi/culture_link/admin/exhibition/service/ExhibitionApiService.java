@@ -3,6 +3,8 @@ package com.multi.culture_link.admin.exhibition.service;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
+import com.multi.culture_link.admin.exhibition.model.dao.AdminExhibitionDao;
+import com.multi.culture_link.admin.exhibition.model.dto.api.ExhibitionApiDto;
 import com.multi.culture_link.admin.exhibition.model.dto.api.ExhibitionApiResponseDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -11,10 +13,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Slf4j
@@ -25,6 +28,7 @@ public class ExhibitionApiService {
     String clientKey;
 
     private final RestTemplate restTemplate;
+    private final AdminExhibitionDao adminExhibitionDao;
 
 
     // xml 불러오기
@@ -52,7 +56,7 @@ public class ExhibitionApiService {
     }
 
     // json 변환
-    public String fetchJsonData() {
+    public ExhibitionApiResponseDto fetchJsonData() {
         String apiUrl = "http://api.kcisa.kr/openapi/API_CCA_145/request?serviceKey=" + clientKey;
 
         try {
@@ -68,24 +72,35 @@ public class ExhibitionApiService {
             String jsonResult = jsonMapper.writerWithDefaultPrettyPrinter().writeValueAsString(node);
 //            System.out.println(jsonResult);
             ExhibitionApiResponseDto response = jsonMapper.readValue(jsonResult, ExhibitionApiResponseDto.class);
-            System.out.println(response);
-            return jsonResult;
+            //System.out.println(response);
+            return response;
 
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
-    //    public ExhibitionApiResponseDto getApiResponse() {
-//        // String apiUrl = "http://api.kcisa.kr/openapi/API_CCA_145/request?serviceKey=" + clientKey;
-//        String apiUrl = "http://api.kcisa.kr/openapi/API_CCA_145/request?serviceKey=c9130d29-65ea-495e-9701-9025010a1b92";
-//        System.out.println(restTemplate.getForObject(apiUrl, ExhibitionApiResponseDto.class));
-//        return restTemplate.getForObject(apiUrl, ExhibitionApiResponseDto.class);
-//
+//    public List<ExhibitionApiDto> getSavedExhibitions() {
+//        return exhibitionRepository.findAll();
 //    }
 
-
-
-
-
+    public void saveExhibition(List<ExhibitionApiResponseDto.Item> responseData) {
+        List<ExhibitionApiDto> processedData = new ArrayList<ExhibitionApiDto>();
+        for (ExhibitionApiResponseDto.Item responseDatum : responseData) {
+            ExhibitionApiDto eachData = new ExhibitionApiDto();
+            eachData.setTitle("대");
+            eachData.setArtist("responseDatum.getAuthor()");
+            eachData.setMuseum(responseDatum.getCntcInsttNm());
+            eachData.setStart_date("2023-01-11");
+            eachData.setEnd_date("2023-01-11");
+            eachData.setPrice("responseDatum.getCharge()");
+            eachData.setImage("responseDatum.getImageObject()");
+            eachData.setDescription("대답");
+            eachData.setSub_description("대답대");
+            eachData.setUrl(responseDatum.getUrl());
+            processedData.add(eachData);
+        }
+        System.out.println("야" + processedData);
+        adminExhibitionDao.saveData(processedData);
+    }
 }
