@@ -4,16 +4,16 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.multi.culture_link.admin.exhibition.model.dao.AdminExhibitionDao"><!-- 메퍼위치하고  동일하게 네임스페이스 작성-->
-    <resultMap id="exhibitionResultMap" type="com.multi.culture_link.admin.exhibition.model.dto.api.ExhibitionApiDto">
-        <result column="start_date" property="start_date" jdbcType="TIMESTAMP" javaType="java.time.LocalDateTime"/>
-        <result column="end_date" property="end_date" jdbcType="TIMESTAMP" javaType="java.time.LocalDateTime"/>
-    </resultMap>
+<!--    <resultMap id="exhibitionResultMap" type="com.multi.culture_link.admin.exhibition.model.dto.api.ExhibitionApiDto">-->
+<!--        <result column="start_date" property="start_date" jdbcType="TIMESTAMP" javaType="java.time.LocalDateTime"/>-->
+<!--        <result column="end_date" property="end_date" jdbcType="TIMESTAMP" javaType="java.time.LocalDateTime"/>-->
+<!--    </resultMap>-->
 
     <insert id="saveData" parameterType="com.multi.culture_link.admin.exhibition.model.dto.api.ExhibitionApiDto">
         INSERT INTO exhibition (title, artist, museum, start_date, end_date, price, image, description, sub_description, url) VALUES
         <foreach collection="processedData" item="data" separator=",">
-            (#{data.title}, #{data.artist}, #{data.museum}, #{data.start_date}, #{data.end_date},
-            #{data.price}, #{data.image}, #{data.description}, #{data.sub_description}, #{data.url}
+            (#{data.title}, #{data.artist}, #{data.museum}, #{data.startDate}, #{data.endDate},
+            #{data.price}, #{data.image}, #{data.description}, #{data.subDescription}, #{data.url}
             )
         </foreach>
     </insert>
@@ -26,20 +26,22 @@
     </delete>
 
     <update id="updateData" parameterType="com.multi.culture_link.admin.exhibition.model.dto.api.ExhibitionApiDto">
-        UPDATE exhibition
-        <set>
-            <if test="title != null and title != ''">title = #{title},</if>
-            <if test="artist != null and artist != ''">artist = #{artist},</if>
-            <if test="museum != null and museum != ''">museum = #{museum},</if>
-            <if test="start_date != null">start_date = #{start_date},</if>
-            <if test="end_date != null">end_date = #{end_date},</if>
-            <if test="price != null and price != ''">price = #{price},</if>
-            <if test="image != null and image != ''">image = #{image},</if>
-            <if test="description != null and description != ''">description = #{description},</if>
-            <if test="sub_description != null and sub_description != ''">sub_description = #{sub_description},</if>
-            <if test="url != null and url != ''">url = #{url},</if>
-        </set>
-        WHERE id = #{id}
+        <foreach collection="list" item="data" index="index" separator=";">
+            UPDATE exhibition
+            <set>
+                <if test="data.title != null and data.title != ''">title = #{data.title},</if>
+                <if test="data.artist != null and data.artist != ''">artist = #{data.artist},</if>
+                <if test="data.museum != null and data.museum != ''">museum = #{data.museum},</if>
+                <if test="data.startDate != null">start_date = #{data.startDate},</if>
+                <if test="data.endDate != null">end_date = #{data.endDate},</if>
+                <if test="data.price != null and data.price != ''">price = #{data.price},</if>
+                <if test="data.image != null and data.image != ''">image = #{data.image},</if>
+                <if test="data.description != null and data.description != ''">description = #{data.description},</if>
+                <if test="data.subDescription != null and data.subDescription != ''">sub_description = #{data.sub_description},</if>
+                <if test="data.url != null and data.url != ''">url = #{data.url},</if>
+            </set>
+            WHERE id = #{data.id}
+        </foreach>
     </update>
 
     <select id="getData" resultType="com.multi.culture_link.admin.exhibition.model.dto.api.ExhibitionApiDto">

@@ -96,7 +96,7 @@ public class ExhibitionApiService {
             eachData.setPrice(responseDatum.getCharge());
             eachData.setImage(responseDatum.getImageObject());
             eachData.setDescription(responseDatum.getDescription());
-            eachData.setSub_description(responseDatum.getSubDescription());
+            eachData.setSubDescription(responseDatum.getSubDescription());
             eachData.setUrl(responseDatum.getUrl());
             processedData.add(eachData);
         }
@@ -108,8 +108,9 @@ public class ExhibitionApiService {
         adminExhibitionDao.deleteData(id);
     }
 
-    public void updateExhibition(int id, String data) {
-        adminExhibitionDao.updateData(id, data);
+    public void updateExhibition(List<ExhibitionApiDto> data) {
+        System.out.println("야" + data);
+        adminExhibitionDao.updateData(data);
     }
 
     public List<ExhibitionApiDto> getExhibition() {

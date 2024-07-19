@@ -15,6 +15,6 @@ public class ExhibitionApiDto {
     public String price;
     public String image;
     public String description;
-    public String sub_description;
+    public String subDescription;
     public String url;
 }

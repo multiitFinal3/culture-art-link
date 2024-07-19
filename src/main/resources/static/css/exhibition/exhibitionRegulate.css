@@ -1,59 +1,43 @@
+#festivalRegulate {
+  display: flex;
+  flex-flow: column;
+  align-items: center;
+  justify-content: center;
+  margin-top: 14%;
+  margin-left: 10%;
+  overflow-x: scroll;
+}
 
-    #festivalRegulate{
+table {
+  margin-bottom: 50px;
+}
 
+table,
+th,
+td {
+  border: 1px solid black;
+  width: 100px;
+}
 
-        display: flex;
-        flex-flow: column;
-        align-items: center;
-        justify-content: center;
-        margin-top: 14%;
-        margin-left: 10%;
-        overflow-x: scroll;
-    }
+th,
+td {
+  text-align: center;
+  width: 150px;
+}
 
-    table{
+th {
+  background-color: #c6d6ef;
+}
 
-        margin-bottom: 50px;
-    }
+td {
+  background-color: #e7eef9;
+}
 
+td#festivalContent,
+td#festivalName {
+  width: 400px;
+}
 
-
-
-
-
-    table, th, td{
-
-        border: 1px solid black;
-        width: 100px;
-
-
-    }
-
-
-
-
-    th, td{
-        text-align : center;
-        width: 150px;
-    }
-
-
-    th{
-
-        background-color: #C6D6EF;
-
-    }
-
-
-
-    td{
-        background-color: #E7EEF9;
-
-    }
-
-
-    td#festivalContent, td#festivalName{
-
-        width: 400px;
-
-    }
+.resize-img {
+  width: 150px;
+}
