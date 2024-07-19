@@ -21,6 +21,7 @@ spring-boot:
 logging:
   level:
     org:
+      mybatis: DEBUG
       springframework:
         jdbc: DEBUG
         transaction: DEBUG

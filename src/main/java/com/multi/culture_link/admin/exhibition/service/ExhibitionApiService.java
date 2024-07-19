@@ -88,19 +88,33 @@ public class ExhibitionApiService {
         List<ExhibitionApiDto> processedData = new ArrayList<ExhibitionApiDto>();
         for (ExhibitionApiResponseDto.Item responseDatum : responseData) {
             ExhibitionApiDto eachData = new ExhibitionApiDto();
-            eachData.setTitle("대");
-            eachData.setArtist("responseDatum.getAuthor()");
+            eachData.setTitle(responseDatum.getTitle());
+            eachData.setArtist(responseDatum.getAuthor());
             eachData.setMuseum(responseDatum.getCntcInsttNm());
-            eachData.setStart_date("2023-01-11");
-            eachData.setEnd_date("2023-01-11");
-            eachData.setPrice("responseDatum.getCharge()");
-            eachData.setImage("responseDatum.getImageObject()");
-            eachData.setDescription("대답");
-            eachData.setSub_description("대답대");
+            eachData.setStartDate(responseDatum.getStart_date());
+            eachData.setEndDate(responseDatum.getEnd_date());
+            eachData.setPrice(responseDatum.getCharge());
+            eachData.setImage(responseDatum.getImageObject());
+            eachData.setDescription(responseDatum.getDescription());
+            eachData.setSub_description(responseDatum.getSubDescription());
             eachData.setUrl(responseDatum.getUrl());
             processedData.add(eachData);
         }
-        System.out.println("야" + processedData);
+        System.out.println("processedData: " + processedData);
         adminExhibitionDao.saveData(processedData);
     }
+
+    public void deleteExhibition(List<Integer> id) {
+        adminExhibitionDao.deleteData(id);
+    }
+
+    public void updateExhibition(int id, String data) {
+        adminExhibitionDao.updateData(id, data);
+    }
+
+    public List<ExhibitionApiDto> getExhibition() {
+        return adminExhibitionDao.getData();
+    }
+
+
 }
