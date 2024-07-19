@@ -46,9 +46,9 @@ public class AdminExhibitionController {
     // db 정보 수정
     @PatchMapping("/db-exhibitions")
     public void updateExhibition(
-            @RequestBody int id, String data
+            @RequestBody List<ExhibitionApiDto> data
     ) {
-        exhibitionApiService.updateExhibition(id, data);
+        exhibitionApiService.updateExhibition(data);
 
     }
     

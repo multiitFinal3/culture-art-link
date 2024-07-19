@@ -10,7 +10,7 @@ import java.util.List;
 public interface AdminExhibitionDao {
     void saveData(@Param("processedData") List<ExhibitionApiDto> processedData);
     void deleteData(List<Integer> id);
-    void updateData(int id, String data);
+    void updateData(List<ExhibitionApiDto> list);
     List<ExhibitionApiDto> getData();
 
 
