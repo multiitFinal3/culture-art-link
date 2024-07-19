@@ -2,6 +2,10 @@ package com.multi.culture_link.admin.festival.controller;
 
 
 import com.multi.culture_link.admin.festival.service.AdminFestivalService;
+import com.multi.culture_link.common.region.model.dto.RegionDTO;
+import com.multi.culture_link.common.region.service.RegionService;
+import com.multi.culture_link.common.time.model.dto.TimeDTO;
+import com.multi.culture_link.common.time.service.TimeService;
 import com.multi.culture_link.festival.model.dto.FestivalDTO;
 import com.multi.culture_link.festival.model.dto.PageDTO;
 import org.springframework.stereotype.Controller;
@@ -11,6 +15,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 
 
@@ -19,10 +24,14 @@ import java.util.Map;
 public class AdminFestivalController {
 	
 	private final AdminFestivalService adminFestivalService;
+	private final RegionService regionService;
+	private final TimeService timeService;
 	private ArrayList<FestivalDTO> list2;
 	
-	public AdminFestivalController(AdminFestivalService adminFestivalService, ArrayList<FestivalDTO> list2) {
+	public AdminFestivalController(AdminFestivalService adminFestivalService, RegionService regionService, TimeService timeService, ArrayList<FestivalDTO> list2) {
 		this.adminFestivalService = adminFestivalService;
+		this.regionService = regionService;
+		this.timeService = timeService;
 		this.list2 = list2;
 	}
 	
@@ -45,7 +54,7 @@ public class AdminFestivalController {
 			
 			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 			
-			for(FestivalDTO festivalDTO : list){
+			for (FestivalDTO festivalDTO : list) {
 				
 				
 				festivalDTO.setFormattedEnd(dateFormat.format(festivalDTO.getEndDate()));
@@ -106,8 +115,7 @@ public class AdminFestivalController {
 			
 			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 			
-			for(FestivalDTO festivalDTO : list){
-				
+			for (FestivalDTO festivalDTO : list) {
 				
 				festivalDTO.setFormattedEnd(dateFormat.format(festivalDTO.getEndDate()));
 				festivalDTO.setFormattedStart(dateFormat.format(festivalDTO.getStartDate()));
@@ -130,7 +138,7 @@ public class AdminFestivalController {
 	
 	@PostMapping("/findDBFestivalCount")
 	@ResponseBody
-	public int findDBFestivalCount(){
+	public int findDBFestivalCount() {
 		
 		int count = 0;
 		try {
@@ -147,7 +155,7 @@ public class AdminFestivalController {
 		
 	}
 	
-
+	
 	@PostMapping("/deleteDBFestivalList")
 	@ResponseBody
 	public String deleteDBFestivalList(@RequestBody ArrayList<Integer> checks) {
@@ -184,18 +192,16 @@ public class AdminFestivalController {
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		festivalDTO.setFormattedEnd(dateFormat.format(festivalDTO.getEndDate()));
 		festivalDTO.setFormattedStart(dateFormat.format(festivalDTO.getStartDate()));
-
 		
 		
 		return festivalDTO;
-	
-	
+		
+		
 	}
 	
 	
-	
 	@PostMapping("/updateDBFestivalByFestival")
-	public String updateDBFestivalByFestival(FestivalDTO festivalDTO, RedirectAttributes redirectAttributes){
+	public String updateDBFestivalByFestival(FestivalDTO festivalDTO, RedirectAttributes redirectAttributes) {
 		
 		System.out.println("form : " + festivalDTO);
 		
@@ -214,16 +220,276 @@ public class AdminFestivalController {
 			festivalDTO.setEndDate(end);
 			
 			adminFestivalService.updateDBFestivalByFestival(festivalDTO);
-
+			
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
-
+		
 		
 		return "redirect:/admin/festival-regulate";
-	
-	
+		
+		
 	}
+	
+	
+	@PostMapping("/findAllRegionAndTime")
+	@ResponseBody
+	public Map<String, ArrayList> findAllRegionAndTime() {
+		
+		ArrayList<RegionDTO> list1 = null;
+		ArrayList<TimeDTO> list2 = null;
+		
+		try {
+			list1 = regionService.findAllRegion();
+			list2 = timeService.findAllTime();
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+		
+		Map<String, ArrayList> map = new HashMap<String, ArrayList>();
+		
+		map.put("regionList", list1);
+		map.put("timeList", list2);
+		
+		
+		return map;
+		
+		
+	}
+	
+	
+	@PostMapping("/findDBFestivalByMultiple")
+	@ResponseBody
+	public ArrayList<FestivalDTO> findDBFestivalByMultiple(
+			@RequestBody ArrayList<HashMap<String, String>> mapList,
+			@RequestParam("page") int page) {
+		
+		
+		System.out.println("findDBFestivalByMultiple : " + mapList.toString());
+		
+		
+		FestivalDTO festivalDTO = new FestivalDTO();
+		PageDTO pageDTO = new PageDTO();
+		pageDTO.setPage(page);
+		pageDTO.setStartEnd(pageDTO.getPage());
+		festivalDTO.setPageDTO(pageDTO);
+		
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		
+		
+		for (int i = 0; i < mapList.size(); i++) {
+			
+			if (!mapList.get(i).get("value").isEmpty()) {
+				
+				switch (i) {
+					
+					case 0:
+						festivalDTO.setRegionId(Integer.parseInt(mapList.get(i).get("value")));
+						break;
+					
+					case 1:
+						festivalDTO.setTimeId(mapList.get(i).get("value"));
+						break;
+					
+					case 2:
+						festivalDTO.setFestivalName(mapList.get(i).get("value"));
+						break;
+					
+					case 3:
+						festivalDTO.setFestivalContent(mapList.get(i).get("value"));
+						break;
+					
+					case 4:
+						festivalDTO.setManageInstitution(mapList.get(i).get("value"));
+						break;
+					
+					case 5:
+						festivalDTO.setHostInstitution(mapList.get(i).get("value"));
+						break;
+					
+					
+					case 6:
+						festivalDTO.setSponserInstitution(mapList.get(i).get("value"));
+						break;
+					
+					
+					case 7:
+						festivalDTO.setTel(mapList.get(i).get("value"));
+						break;
+					
+					
+					case 8:
+						festivalDTO.setPlace(mapList.get(i).get("value"));
+						break;
+					
+					
+					case 9:
+						Date date = new Date(mapList.get(i).get("value"));
+						festivalDTO.setStartDate(date);
+						break;
+					
+					
+					case 10:
+						Date date2 = new Date(mapList.get(i).get("value"));
+						festivalDTO.setEndDate(date2);
+						break;
+					
+					case 11:
+						festivalDTO.setAvgRate(Double.valueOf(mapList.get(i).get("value")));
+						break;
+					
+					
+					case 12:
+						festivalDTO.setSeason(mapList.get(i).get("value"));
+						break;
+					
+				}
+				
+				
+			}
+			
+		}
+		
+		
+		System.out.println("정보가 담긴 축제 : " + festivalDTO.toString());
+
+//		정보가 담긴 축제 : FestivalDTO(festivalId=0, regionId=11, regionName=null, timeId=평일, festivalName=null, festivalContent=null, manageInstitution=null, hostInstitution=null, sponserInstitution=null, tel=null, homepageUrl=null, detailAddress=null, latitude=0.0, longtitude=0.0, place=null, startDate=null, endDate=null, formattedStart=null, formattedEnd=null, avgRate=0.0, season=봄, imgUrl=null, exist=null)
+		
+		
+		ArrayList<FestivalDTO> list = null;
+		try {
+			list = adminFestivalService.findDBFestivalByMultiple(festivalDTO);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+		
+		System.out.println("받아온 리스트 : " + list);
+		for (FestivalDTO festivalDTO1 : list) {
+			
+			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+			
+			festivalDTO1.setFormattedStart(dateFormat.format(festivalDTO1.getStartDate()));
+			festivalDTO1.setFormattedEnd(dateFormat.format(festivalDTO1.getEndDate()));
+			
+			
+			System.out.println(festivalDTO1.toString());
+			
+		}
+		
+		return list;
+	}
+	
+	
+	
+	
+	@PostMapping("/findDBFestivalMultipleCount")
+	@ResponseBody
+	public int findDBFestivalMultipleCount(@RequestBody ArrayList<HashMap<String, String>> mapList) {
+		
+		
+		System.out.println("findDBFestivalMultipleCount : " + mapList.toString());
+		
+		FestivalDTO festivalDTO = new FestivalDTO();
+		
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		
+		
+		for (int i = 0; i < mapList.size(); i++) {
+			
+			if (!mapList.get(i).get("value").isEmpty()) {
+				
+				switch (i) {
+					
+					case 0:
+						festivalDTO.setRegionId(Integer.parseInt(mapList.get(i).get("value")));
+						break;
+					
+					case 1:
+						festivalDTO.setTimeId(mapList.get(i).get("value"));
+						break;
+					
+					case 2:
+						festivalDTO.setFestivalName(mapList.get(i).get("value"));
+						break;
+					
+					case 3:
+						festivalDTO.setFestivalContent(mapList.get(i).get("value"));
+						break;
+					
+					case 4:
+						festivalDTO.setManageInstitution(mapList.get(i).get("value"));
+						break;
+					
+					case 5:
+						festivalDTO.setHostInstitution(mapList.get(i).get("value"));
+						break;
+					
+					
+					case 6:
+						festivalDTO.setSponserInstitution(mapList.get(i).get("value"));
+						break;
+					
+					
+					case 7:
+						festivalDTO.setTel(mapList.get(i).get("value"));
+						break;
+					
+					
+					case 8:
+						festivalDTO.setPlace(mapList.get(i).get("value"));
+						break;
+					
+					
+					case 9:
+						Date date = new Date(mapList.get(i).get("value"));
+						festivalDTO.setStartDate(date);
+						break;
+					
+					
+					case 10:
+						Date date2 = new Date(mapList.get(i).get("value"));
+						festivalDTO.setEndDate(date2);
+						break;
+					
+					case 11:
+						festivalDTO.setAvgRate(Double.valueOf(mapList.get(i).get("value")));
+						break;
+					
+					
+					case 12:
+						festivalDTO.setSeason(mapList.get(i).get("value"));
+						break;
+					
+				}
+				
+				
+			}
+			
+		}
+		
+		
+		System.out.println("정보가 담긴 축제 : " + festivalDTO.toString());
+		
+		
+		
+		
+		int count = 0;
+		try {
+			count = adminFestivalService.findDBFestivalMultipleCount(festivalDTO);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+		
+		
+		System.out.println("MULTIPLE count : " + count);
+		
+		return count;
+		
+		
+	}
+	
+	
+	
 	
 	// json 파싱 예시
 	/*public static void main(String[] args) throws IOException {
