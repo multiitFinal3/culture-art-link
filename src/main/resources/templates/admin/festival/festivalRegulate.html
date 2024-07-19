@@ -118,7 +118,7 @@
 
                 findAPIFestivalList(1);
 
-                for(var p=1; p<=10; p++){
+                for(var p=1; p<=20; p++){
 
                     $('#pageNum2').append(`<button class="pageBtn2">${p}</button>`)
 
@@ -276,6 +276,8 @@
                         method: 'POST',
                         contentType: 'application/json',
                         success: function(count){
+
+                            $('#pageNum1').html("");
                             console.log("카운트는...")
                             console.log(count)
 
@@ -406,7 +408,7 @@
 
                                         계절: <input class="neverClickable" name="season" type="text" value="${festival.season}"><br><br>
 
-                                        <img src="${festival.imgUrl}" width="100px">
+                                        <img src="${festival.imgUrl}" width="400px"><br>
                                         이미지 소스:  <input class="autoWidth" name="imgUrl" type="text" value="${festival.imgUrl}"><br><br>
 
                                         <button type="submit" id="updateSubmitBtn">수정내용 제출</button>
@@ -424,6 +426,223 @@
 
 
                 })
+
+
+
+                // db 상세 모달 클릭
+
+                 $(document).on('click','#search1', function(){
+
+                    $.ajax({
+
+                        url: '/admin/festival-regulate/findAllRegionAndTime',
+                        method: 'POST',
+                        contentType: 'application/json',
+                        success: function(map){
+
+                            var list1 = map.regionList;
+                            var list2 = map.timeList;
+
+                            $('#searchRegion1').html("");
+
+                            $.each(list1, function(index, region){
+
+                                var htmlContent = `<option value="${region.regionId}">${region.regionName}</option>`;
+                                $('#searchRegion1').append(htmlContent);
+
+                            })
+
+                            $('#searchTime1').html("");
+
+                            $.each(list2, function(index, time){
+
+                                var htmlContent = `<option value="${time.timeId}">${time.timeName}</option>`;
+                                $('#searchTime1').append(htmlContent);
+
+                            })
+
+                        }
+
+                    })
+
+                })
+
+
+                // db 상세 모달 클릭
+
+                 $(document).on('click','#searchBtn1', function(){
+
+                    var data = $("#searchForm1").serializeArray();
+
+                    console.log("폼 : ");
+
+                    console.log(data);
+
+
+                    findDBFestivalByMultiple(data,1);
+                    findDBFestivalMultipleCount(data);
+
+                    // 다중 조건 검색 모달 닫기
+                    $('#close1').click();
+
+                 })
+
+
+                // 수정 조건 폼 보내기
+                 function findDBFestivalByMultiple(data1, page){
+
+
+                    console.log(data1);
+
+                    $.ajax({
+
+                        url: '/admin/festival-regulate/findDBFestivalByMultiple?page=' + page,
+                        method: 'POST',
+                        contentType: 'application/json',
+                        data: JSON.stringify(data1),
+                        success: function(list){
+
+                            $('#list1').html("");
+
+
+                            $.each(list, function(index, festival){
+
+                                console.log(festival);
+                                var index1 = (index + 1) + (page-1)*5;
+
+                                var content = festival.festivalContent.length > 30?
+                                festival.festivalContent.substring(0,30) + "..."
+                                : festival.festivalContent;
+
+                                var inst1 = festival.manageInstitution.length > 15?
+                                festival.manageInstitution.substring(0,15) + "..."
+                                : festival.manageInstitution;
+
+                                var inst2 = festival.hostInstitution.length > 15?
+                                festival.hostInstitution.substring(0,15) + "..."
+                                : festival.hostInstitution;
+
+                                var inst3 = festival.sponserInstitution.length > 15?
+                                festival.sponserInstitution.substring(0,15) + "..."
+                                : festival.sponserInstitution;
+
+
+                                console.log("축제 날짜")
+                                console.log(festival.startDate);
+                                console.log(festival.endDate);
+
+                                var start = festival.startDate.length >0?
+                                festival.startDate.substring(0,10):
+                                "없음";
+
+                                var end = festival.endDate.length >0?
+                                festival.endDate.substring(0,10):
+                                "없음";
+
+
+                                var htmlContent =`
+
+                                    <tr>
+
+                                        <td><input class="check1" type="checkbox" name="index" value="${festival.festivalId}"/><br><hr><br><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalLong" id="dbUpdateBtn" value="${festival.festivalId}">상세 수정</button></td>
+                                        <td class="index1" style="width : 20px; height: 20px;">${index1}</td>
+                                        <td class="festivalId">${festival.festivalId}</td>
+                                        <td class="regionId">${festival.regionId}</td>
+                                        <td class="timeId">${festival.timeId}</td>
+                                        <td class="festivalName">${festival.festivalName}</td>
+                                        <td class="festivalContent">${content}</td>
+                                        <td class="manageInstitution">${inst1}</td>
+                                        <td class="hostInstitution">${inst2}</td>
+                                        <td class="sponserInstitution">${inst3}</td>
+                                        <td class="tel">${festival.tel}</td>
+                                        <td class="homepageUrl"><a href="${festival.homepageUrl}">클릭!</a></td>
+                                        <td class="detailAddress">${festival.detailAddress}</td>
+
+                                        <td class="place">${festival.place}</td>
+                                        <td class="formattedStart">${festival.formattedStart}</td>
+                                        <td class="formattedEnd">${festival.formattedEnd}</td>
+                                        <td class="avgRate">${festival.avgRate}</td>
+                                        <td class="season">${festival.season}</td>
+                                        <td class="imgUrl"><img src="${festival.imgUrl}" width="40px"></td>
+
+                                    </tr>
+
+                                `;
+
+                                $('#list1').append(htmlContent);
+
+                            })
+
+
+                        }
+
+                    })
+
+                 }
+
+                 // 상세검색 버튼 붙히기
+                 function findDBFestivalMultipleCount(data1){
+
+                    $.ajax({
+
+                        url: '/admin/festival-regulate/findDBFestivalMultipleCount',
+                        method: 'POST',
+                        data: JSON.stringify(data1),
+                        contentType: 'application/json',
+                        success: function(count){
+
+                            $('#pageNum1').html("");
+                            // 상세검색 전으로 돌아가기 버튼
+                            $('#pageNum1').append(`<button class="pageBtn4" onclick=>전체검색</button>`);
+
+                            $(document).on('click','.pageBtn4', function(){
+
+                                findDBFestivalList(1);
+                                findDBFestivalCount();
+
+                            })
+
+
+
+                            console.log("카운트는...")
+                            console.log(count)
+
+                            var page = 0;
+
+                            if(count % 5 ==0){
+                                page = count/5;
+                            }else{
+                                page = count/5 +1;
+                            }
+
+                            for(var p=1; p<=page; p++){
+
+                                $('#pageNum1').append(`<button class="pageBtn3">${p}</button>`)
+
+                            }
+
+
+
+                            $(document).on('click','.pageBtn3', function(){
+
+                                const page = $(this).text();
+                                findDBFestivalByMultiple(data1, page);
+
+                            })
+
+
+                        }
+
+                    })
+
+
+                }
+
+
+
+
+
+
 
             }
         )
@@ -443,7 +662,67 @@
 
     <div id="festivalRegulate">
 
-        <h2>축제 DB 현황 <button id="dbDeleteBtn">DB 삭제</button></h2>
+        <!-- Modal : db 상세 검색 -->
+        <div class="modal fade" id="searchModal1" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLongTitle1">검색 조건</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+
+                        <form id="searchForm1" name="searchForm1">
+
+                            지역 번호 : <select name="regionId" id="searchRegion1">
+                                            <option value="봄">봄</option>
+                                            <option value="여름">여름</option>
+                                            <option value="가을">가을</option>
+                                            <option value="겨울">겨울</option>
+                                        </select><br><br>
+                            시간대 : <select name="timeId" id="searchTime1">
+                                        <option value="봄">봄</option>
+                                        <option value="여름">여름</option>
+                                        <option value="가을">가을</option>
+                                        <option value="겨울">겨울</option>
+                                    </select><br><br>
+                            축제 이름 : <input name="festivalName" type="text"><br><br>
+                            내용 키워드<br><textarea name="festivalContent" cols="55" rows="10"></textarea><br><br>
+                            주체기관 : <input class="autoWidth" name="manageInstitution" type="text"><br><br>
+                            주관기관 : <input class="autoWidth" name="hostInstitution" type="text"><br><br>
+                            후원기관 : <input class="autoWidth" name="sponserInstitution" type="text"><br><br>
+                            전화번호 : <input name="tel" type="text"><br><br>
+                            장소 : <input name="place" type="text"><br><br>
+                            시작일 : <input name="formattedStart" type="date"><br><br>
+                            종료일 : <input name="formattedEnd" type="date"><br><br>
+                            최소 별점 : <input name="avgRate" type="number" step="0.1"><br><br>
+                            계절: <select name="season" id="searchSeason1">
+                                    <option value="봄">봄</option>
+                                    <option value="여름">여름</option>
+                                    <option value="가을">가을</option>
+                                    <option value="겨울">겨울</option>
+                                 </select><br><br>
+
+                            <button type="button" id="searchBtn1">검색</button>
+
+                        </form>
+
+
+
+                    </div>
+                    <div class="modal-footer">
+                        <button id="close1" type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <h2>축제 DB 현황
+            <button id="search1" type="button" class="btn btn-primary" data-toggle="modal" data-target="#searchModal1">
+                <img src="https://play-lh.googleusercontent.com/jLQTklRid_7HfQ1a6hzrM8WO439CyZ6dWCVnI0eiaeW8k7W3Mn69j4oy7lYedZ2QqKM" style="width : 20px; height: 20px;">
+            </button>
+            <button id="dbDeleteBtn">DB 삭제</button></h2>
         <table class="table table-striped" id="festivalDB">
 
             <thead class="table-light">
@@ -499,7 +778,32 @@
 
         <br><br><br><br><br><br>
 
-        <h2>전국 축제 실시간<button id="apiInsertBtn">DB에 추가</button></h2>
+        <!-- Modal -->
+        <div class="modal fade" id="searchModal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLongTitle2">Modal title</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        ...
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary">Save changes</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <h2>전국 축제 실시간
+
+            <button id="search2" type="button" class="btn btn-primary" data-toggle="modal" data-target="#searchModal2">
+                <img src="https://play-lh.googleusercontent.com/jLQTklRid_7HfQ1a6hzrM8WO439CyZ6dWCVnI0eiaeW8k7W3Mn69j4oy7lYedZ2QqKM" style="width : 20px; height: 20px;">
+            </button>
+            <button id="apiInsertBtn">DB에 추가</button></h2>
         <table class="table table-striped" id="festivalAPI">
 
             <thead class="table-light">

@@ -19,4 +19,9 @@ public interface AdminFestivalService {
 	FestivalDTO findDBFestivalByFestivalId(int festivalId) throws Exception;
 	
 	void updateDBFestivalByFestival(FestivalDTO festivalDTO) throws Exception;
+	
+	
+	ArrayList<FestivalDTO> findDBFestivalByMultiple(FestivalDTO festivalDTO) throws Exception;
+	
+	int findDBFestivalMultipleCount(FestivalDTO festivalDTO) throws Exception;
 }

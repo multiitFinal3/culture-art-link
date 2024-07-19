@@ -1,5 +1,6 @@
 package com.multi.culture_link.admin.festival.model.mapper;
 
+import com.multi.culture_link.common.region.model.dto.RegionDTO;
 import com.multi.culture_link.festival.model.dto.FestivalDTO;
 import com.multi.culture_link.festival.model.dto.PageDTO;
 import org.apache.ibatis.annotations.Mapper;
@@ -25,4 +26,10 @@ public interface AdminFestivalMapper {
 	void updateDBFestivalByFestival(FestivalDTO festivalDTO) throws Exception;
 	
 	FestivalDTO findDBFestivalByFestival(FestivalDTO festivalDTO) throws Exception;
+	
+	ArrayList<RegionDTO> findAllRegion() throws Exception;
+	
+	ArrayList<FestivalDTO> findDBFestivalByMultiple(FestivalDTO festivalDTO) throws Exception;
+	
+	int findDBFestivalMultipleCount(FestivalDTO festivalDTO) throws Exception;
 }

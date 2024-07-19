@@ -3,8 +3,8 @@ package com.multi.culture_link.admin.festival.service;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import com.multi.culture_link.festival.model.dto.FestivalDTO;
 import com.multi.culture_link.admin.festival.model.mapper.AdminFestivalMapper;
+import com.multi.culture_link.festival.model.dto.FestivalDTO;
 import com.multi.culture_link.festival.model.dto.PageDTO;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -39,9 +39,9 @@ public class AdminFestivalServiceImpl implements AdminFestivalService {
 		
 		//크롬인 것 처럼 속이려했으나 빠르게 클릭하면 여전히 네이버 서버에서 막는다
 		Request request = new Request.Builder()
-				.url("http://api.data.go.kr/openapi/tn_pubr_public_cltur_fstvl_api?serviceKey=chNg8jx96krRfOCTvGcO2PvBKnrCrH0Qm6/JmV1TOw/Yu1T0x3jy0fHM8SOcZFnJIxdc7oqyM03PVmMA9UFOsA==&pageNo="+page+"&numOfRows=5&type=json")
+				.url("http://api.data.go.kr/openapi/tn_pubr_public_cltur_fstvl_api?serviceKey=chNg8jx96krRfOCTvGcO2PvBKnrCrH0Qm6/JmV1TOw/Yu1T0x3jy0fHM8SOcZFnJIxdc7oqyM03PVmMA9UFOsA==&pageNo=" + page + "&numOfRows=5&type=json")
 				.addHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36")
-				.addHeader("Connection","keep-alive")
+				.addHeader("Connection", "keep-alive")
 				.get()
 				.build();
 		
@@ -316,7 +316,7 @@ public class AdminFestivalServiceImpl implements AdminFestivalService {
 			
 			FestivalDTO festivalExist = adminFestivalMapper.findDBFestivalByFestival(festivalDTO);
 			
-			if (festivalExist != null){
+			if (festivalExist != null) {
 				System.out.println("리스트에서 제외 : " + festivalExist.toString());
 				festivalDTO.setExist("Y");
 				
@@ -377,7 +377,7 @@ public class AdminFestivalServiceImpl implements AdminFestivalService {
 	public void deleteDBFestivalList(ArrayList<Integer> checks) throws Exception {
 		
 		
-		for (int i=0; i<checks.size(); i++) {
+		for (int i = 0; i < checks.size(); i++) {
 			
 			int festivalId = checks.get(i);
 			
@@ -404,6 +404,22 @@ public class AdminFestivalServiceImpl implements AdminFestivalService {
 		adminFestivalMapper.updateDBFestivalByFestival(festivalDTO);
 		
 	}
+	
+	@Override
+	public ArrayList<FestivalDTO> findDBFestivalByMultiple(FestivalDTO festivalDTO) throws Exception {
+		ArrayList<FestivalDTO> list = adminFestivalMapper.findDBFestivalByMultiple(festivalDTO);
+		
+		return list;
+	}
+	
+	@Override
+	public int findDBFestivalMultipleCount(FestivalDTO festivalDTO) throws Exception {
+		int count = adminFestivalMapper.findDBFestivalMultipleCount(festivalDTO);
+		
+		return count;
+	}
+	
+	
 	
 
 	
