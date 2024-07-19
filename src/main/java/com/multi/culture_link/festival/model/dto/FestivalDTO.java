@@ -5,6 +5,7 @@ import lombok.Data;
 
 import java.util.Date;
 
+
 @Data
 public class FestivalDTO {
 	
@@ -30,6 +31,7 @@ public class FestivalDTO {
 	private double avgRate;
 	private String season;
 	private String imgUrl;
+	private String exist;
 	
 	
 	

@@ -23,4 +23,6 @@ public interface AdminFestivalMapper {
 	FestivalDTO findDBFestivalByFestivalId(int festivalId) throws Exception;
 	
 	void updateDBFestivalByFestival(FestivalDTO festivalDTO) throws Exception;
+	
+	FestivalDTO findDBFestivalByFestival(FestivalDTO festivalDTO) throws Exception;
 }

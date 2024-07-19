@@ -77,5 +77,15 @@
 
     </update>
 
+    <select id="findDBFestivalByFestival" parameterType="festivalDTO">
+
+        SELECT * FROM festival
+        WHERE festival_name = #{festivalName}
+        AND start_date = #{startDate}
+        AND end_date = #{endDate};
+
+    </select>
+
+
 
 </mapper>

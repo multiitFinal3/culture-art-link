@@ -42,6 +42,18 @@ public class AdminFestivalController {
 		ArrayList<FestivalDTO> list = null;
 		try {
 			list = adminFestivalService.findAPIFestivalList(page);
+			
+			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+			
+			for(FestivalDTO festivalDTO : list){
+				
+				
+				festivalDTO.setFormattedEnd(dateFormat.format(festivalDTO.getEndDate()));
+				festivalDTO.setFormattedStart(dateFormat.format(festivalDTO.getStartDate()));
+				
+			}
+			
+			
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
@@ -91,6 +103,19 @@ public class AdminFestivalController {
 		ArrayList<FestivalDTO> list = null;
 		try {
 			list = adminFestivalService.findDBFestivalList(pageDTO);
+			
+			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+			
+			for(FestivalDTO festivalDTO : list){
+				
+				
+				festivalDTO.setFormattedEnd(dateFormat.format(festivalDTO.getEndDate()));
+				festivalDTO.setFormattedStart(dateFormat.format(festivalDTO.getStartDate()));
+				
+			}
+			
+			
+			System.out.println("첫번째 : " + list.get(0));
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
@@ -193,9 +218,6 @@ public class AdminFestivalController {
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
-		
-		
-		redirectAttributes.addAttribute("msg","DB 수정 성공");
 
 		
 		return "redirect:/admin/festival-regulate";
