@@ -11,7 +11,7 @@ mybatis:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 
 server:
-  port: 8080
+  port: 8088
 
 spring-boot:
   run:
