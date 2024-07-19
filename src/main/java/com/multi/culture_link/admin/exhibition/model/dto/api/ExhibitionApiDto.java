@@ -10,8 +10,8 @@ public class ExhibitionApiDto {
     public String title;
     public String artist;
     public String museum;
-    public String start_date;
-    public String end_date;
+    public String startDate;
+    public String endDate;
     public String price;
     public String image;
     public String description;

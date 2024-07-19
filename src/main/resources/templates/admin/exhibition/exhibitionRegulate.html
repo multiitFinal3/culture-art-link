@@ -14,6 +14,12 @@
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script th:inline="javascript">
       function parseDateRange(dateString) {
+        if (!dateString) {
+          return {
+            startDate: null,
+            endDate: null,
+          };
+        }
         const [start, end] = dateString?.split("~");
 
         function formatDate(date) {
@@ -29,42 +35,55 @@
           endDate: formatDate(end),
         };
       }
+
       $(document).ready(function () {
-        let allData = [];
         const itemsPerPage = 10;
         let currentPage = 1;
         const maxPageButtons = 10;
+        let exhibition = [];
+        let exhibitionDB = [];
 
         async function fetchData() {
           try {
-            const response = await axios.get(
+            const response1 = await axios.get(
               "/admin/exhibition-regulate/exhibitions"
             );
-            allData = response.data;
-            console.log("allData : ", allData);
-            renderTable();
-            renderPagination();
+
+            const response2 = await axios.get(
+              "/admin/exhibition-regulate/db-exhibitions"
+            );
+            exhibition = response1.data;
+            renderTable(response1.data, "list2");
+            renderPagination(response1.data, "pageNum2");
+
+            console.log("response2 : ", response2);
+            exhibitionDB = response2.data;
+            renderTable(response2.data, "list1");
+            renderPagination(response2.data, "pageNum1");
           } catch (error) {
             console.error("데이터를 가져오는 중 오류 발생:", error);
           }
         }
 
-        function renderTable() {
+        function renderTable(allData, tableId) {
           const startIndex = (currentPage - 1) * itemsPerPage;
           const endIndex = startIndex + itemsPerPage;
           const pageData = allData.slice(startIndex, endIndex);
 
-          const tableBody = document.getElementById("list2");
+          const tableBody = document.getElementById(tableId);
           tableBody.innerHTML = "";
 
           pageData.forEach((item, index) => {
-            const { startDate, endDate } = parseDateRange(item.PERIOD);
-            console.log(`startDate= ${startDate}, endDate= ${endDate}`);
-            item.start_date = startDate;
-            item.end_date = endDate;
-            const row = `
+            const { startDate, endDate } = parseDateRange(item?.PERIOD);
+            item.start_date = item.start_date ? item.start_date : startDate;
+            item.end_date = item.end_date ? item.end_date : endDate;
+
+            let row = "";
+
+            if (tableId === "list2") {
+              row = `
                     <tr>
-                      <td scope="col"><input type="checkbox" data-index="${
+                      <td scope="col"><input type="checkbox" class="row-checkbox" data-index="${
                         startIndex + index
                       }"></td>
                       <td scope="col">${startIndex + index + 1}</td>
@@ -74,16 +93,32 @@
                       <td scope="col">${item.end_date}</td>
                     </tr>
                   `;
+            } else {
+              row = `
+                    <tr>
+                      <td scope="col"><input type="checkbox" class="row-checkbox" data-index="${
+                        item.id
+                      }"></td>
+                      <td scope="col">${startIndex + index + 1}</td>
+                      <td scope="col">${item.title}</td>
+                      <td scope="col">${item.artist}</td>
+                      <td scope="col">${item.museum}</td>
+                      <td scope="col">${item.start_date}</td>
+                      <td scope="col">${item.end_date}</td>
+                      <td scope="col">${item.price}</td>
+                      <td scope="col"><img src="${item.image}"></img></td>
+                    </tr>
+                  `;
+            }
             tableBody.innerHTML += row;
           });
         }
 
-        function renderPagination() {
+        function renderPagination(allData, pageNumId) {
           const totalPages = Math.ceil(allData.length / itemsPerPage);
-          const paginationElement = document.getElementById("pageNum2");
+          const paginationElement = document.getElementById(pageNumId);
           paginationElement.innerHTML = "";
 
-          // 시작 페이지와 끝 페이지 계산
           let startPage = Math.max(
             currentPage - Math.floor(maxPageButtons / 2),
             1
@@ -135,15 +170,28 @@
           );
           const checkedData = Array.from(checkedBoxes).map((checkbox) => {
             const index = parseInt(checkbox.getAttribute("data-index"));
-            return allData[index];
+            return exhibition[index];
           });
 
-          console.log("체크된 데이터:", checkedData);
-          // 여기서 체크된 데이터를 원하는 대로 처리할 수 있습니다.
-          // 예: 모달로 표시, 새 창에서 열기, 서버로 전송 등
-
+          saveExhibsions(checkedData);
           // 예시: 알림으로 체크된 데이터 수 표시
-          alert(`${checkedData.length}개의 데이터가 선택되었습니다.`);
+        }
+
+        async function saveExhibsions(list) {
+          if (list.length === 0) {
+            alert("Please select");
+          }
+          const response = await axios.post(
+            "/admin/exhibition-regulate/exhibitions",
+            list,
+            {
+              headers: {
+                "Content-Type": "application/json",
+              },
+            }
+          );
+
+          alert(`${list.length} 데이터가 저장되었습니다.`);
         }
 
         // 페이지 버튼 생성 함수
@@ -171,15 +219,18 @@
           축제 DB 현황 <button id="dbUpdateBtn">DB 수정</button
           ><button id="dbDeleteBtn">DB 삭제</button>
         </h2>
-        <table class="table table-striped" id="festivalDB">
+        <table class="table table-striped" id="exhibitionDB">
           <thead class="table-light">
             <tr>
               <th scope="col">체크</th>
               <th scope="col">#</th>
               <th scope="col">전시이름</th>
+              <th scope="col">작가</th>
               <th scope="col">미술관</th>
               <th scope="col">시작일</th>
               <th scope="col">종료일</th>
+              <th scope="col">요금</th>
+              <th scope="col">이미지</th>
             </tr>
           </thead>
           <tbody id="list1"></tbody>
@@ -189,7 +240,7 @@
         <br /><br /><br /><br /><br /><br />
 
         <h2>전국 축제 실시간<button id="apiInsertBtn">DB에 추가</button></h2>
-        <table class="table table-striped" id="festivalAPI">
+        <table class="table table-striped" id="exhibitionAPI">
           <thead class="table-light">
             <tr>
               <th scope="col">체크</th>
