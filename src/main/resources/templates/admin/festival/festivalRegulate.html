@@ -60,12 +60,24 @@
                                 festival.endDate.substring(0,10):
                                 "링크없음";
 
+                                var htmlCheck = ``;
+
+                                if(festival.exist=="Y"){
+
+                                    htmlCheck= `<tr>
+                                        <td>DB<br>존재</td>`
+
+
+                                }else{
+
+                                     htmlCheck = `<tr>
+                                        <td><input class="check2" type="checkbox" name="index" value="${index}"/></td>`
+                                }
+
 
                                 var htmlContent =`
 
-                                    <tr>
 
-                                        <td><input class="check2" type="checkbox" name="index" value="${index}"/></td>
                                         <td class="index1">${index1}</td>
                                         <td class="regionId">${festival.regionId}</td>
                                         <td class="timeId">${festival.timeId}</td>
@@ -79,8 +91,8 @@
                                         <td class="detailAddress">${festival.detailAddress}</td>
 
                                         <td class="place">${festival.place}</td>
-                                        <td class="startDate">${start}</td>
-                                        <td class="endDate">${end}</td>
+                                        <td class="startDate">${festival.formattedStart}</td>
+                                        <td class="endDate">${festival.formattedEnd}</td>
                                         <td class="avgRate">${festival.avgRate}</td>
                                         <td class="season">${festival.season}</td>
                                         <td class="imgUrl"><img src="${festival.imgUrl}" width="40px"></td>
@@ -89,7 +101,11 @@
 
                                 `;
 
-                                $('#list2').append(htmlContent);
+                                var finalHtml = htmlCheck + htmlContent;
+
+                                $('#list2').append(finalHtml);
+
+
 
                             })
 
@@ -193,13 +209,17 @@
                                 : festival.sponserInstitution;
 
 
+                                console.log("축제 날짜")
+                                console.log(festival.startDate);
+                                console.log(festival.endDate);
+
                                 var start = festival.startDate.length >0?
                                 festival.startDate.substring(0,10):
-                                "링크없음";
+                                "없음";
 
                                 var end = festival.endDate.length >0?
                                 festival.endDate.substring(0,10):
-                                "링크없음";
+                                "없음";
 
 
                                 var htmlContent =`
@@ -221,8 +241,8 @@
                                         <td class="detailAddress">${festival.detailAddress}</td>
 
                                         <td class="place">${festival.place}</td>
-                                        <td class="formattedStart">${start}</td>
-                                        <td class="formattedEnd">${end}</td>
+                                        <td class="formattedStart">${festival.formattedStart}</td>
+                                        <td class="formattedEnd">${festival.formattedEnd}</td>
                                         <td class="avgRate">${festival.avgRate}</td>
                                         <td class="season">${festival.season}</td>
                                         <td class="imgUrl"><img src="${festival.imgUrl}" width="40px"></td>
@@ -360,7 +380,7 @@
 
                                         시간대 : <input class="neverClickable" name="timeId"  type="text" value="${festival.timeId}"><br><br>
 
-                                        축제 이름 : <input class="autoWidth" name="festivalName" type="text" value="${festival.festivalName}"><br><br>
+                                        축제 이름 : <input class="neverClickable" name="festivalName" type="text" value="${festival.festivalName}"><br><br>
 
                                         상세 내용 <br><textarea name="festivalContent" cols="55" rows="10">${festival.festivalContent}</textarea><br><br>
 
@@ -375,10 +395,6 @@
                                         홈페이지 : <input name="homepageUrl" type="text" value="${festival.homepageUrl}"><br><br>
 
                                         상세주소 : <input name="detailAddress" type="text" value="${festival.detailAddress}"><br><br>
-
-                                        위도 : <input name="latitude" type="number" value="${festival.latitude}"><br><br>
-
-                                        경도 : <input name="longtitude" type="number" value="${festival.longtitude}"><br><br>
 
                                         장소 : <input name="place" type="text" value="${festival.place}"><br><br>
 
