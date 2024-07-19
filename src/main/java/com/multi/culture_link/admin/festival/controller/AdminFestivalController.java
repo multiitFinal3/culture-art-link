@@ -6,8 +6,12 @@ import com.multi.culture_link.festival.model.dto.FestivalDTO;
 import com.multi.culture_link.festival.model.dto.PageDTO;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Map;
 
 
 @Controller
@@ -118,6 +122,86 @@ public class AdminFestivalController {
 		
 	}
 	
+
+	@PostMapping("/deleteDBFestivalList")
+	@ResponseBody
+	public String deleteDBFestivalList(@RequestBody ArrayList<Integer> checks) {
+		
+		System.out.println("checks : " + checks);
+		
+		
+		try {
+			adminFestivalService.deleteDBFestivalList(checks);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+		
+		return "삭제 성공";
+	}
+	
+	@PostMapping("/findDBFestivalByFestivalId")
+	@ResponseBody
+	public FestivalDTO findDBFestivalByFestivalId(@RequestBody Map<String, Integer> request) {
+		
+		int festivalId = request.get("festivalId");
+		
+		System.out.println("받은 페스티벌 아이디 : " + festivalId);
+		
+		FestivalDTO festivalDTO = null;
+		try {
+			festivalDTO = adminFestivalService.findDBFestivalByFestivalId(festivalId);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+		
+		System.out.println("start : " + festivalDTO.getStartDate());
+		
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		festivalDTO.setFormattedEnd(dateFormat.format(festivalDTO.getEndDate()));
+		festivalDTO.setFormattedStart(dateFormat.format(festivalDTO.getStartDate()));
+
+		
+		
+		return festivalDTO;
+	
+	
+	}
+	
+	
+	
+	@PostMapping("/updateDBFestivalByFestival")
+	public String updateDBFestivalByFestival(FestivalDTO festivalDTO, RedirectAttributes redirectAttributes){
+		
+		System.out.println("form : " + festivalDTO);
+		
+		
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		
+		
+		Date start = null;
+		Date end = null;
+		try {
+			start = dateFormat.parse(festivalDTO.getFormattedStart());
+			festivalDTO.setStartDate(start);
+			
+			
+			end = dateFormat.parse(festivalDTO.getFormattedEnd());
+			festivalDTO.setEndDate(end);
+			
+			adminFestivalService.updateDBFestivalByFestival(festivalDTO);
+
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+		
+		
+		redirectAttributes.addAttribute("msg","DB 수정 성공");
+
+		
+		return "redirect:/admin/festival-regulate";
+	
+	
+	}
 	
 	// json 파싱 예시
 	/*public static void main(String[] args) throws IOException {

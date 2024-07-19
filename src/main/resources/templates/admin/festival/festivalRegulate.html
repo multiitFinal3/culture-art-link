@@ -9,7 +9,9 @@
 
     <script th:inline="javascript">
 
+
         $(document).ready(
+
 
             function(){
 
@@ -119,7 +121,7 @@
 
                     var checks = [];
 
-                    var selectedChecks = document.querySelectorAll("input[type='checkbox']:checked");
+                    var selectedChecks = document.querySelectorAll("input[type='checkbox'].check2:checked");
 
                     $.each(selectedChecks, function(index, item){
 
@@ -156,6 +158,7 @@
                 function findDBFestivalList(page){
 
                     $('#list1').html("");
+
 
                     $.ajax({
 
@@ -203,8 +206,8 @@
 
                                     <tr>
 
-                                        <td><input class="check1" type="checkbox" name="index" value="${festival.festivalId}"/></td>
-                                        <td class="index1">${index1}</td>
+                                        <td><input class="check1" type="checkbox" name="index" value="${festival.festivalId}"/><br><hr><br><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalLong" id="dbUpdateBtn" value="${festival.festivalId}">상세 수정</button></td>
+                                        <td class="index1" style="width : 20px; height: 20px;">${index1}</td>
                                         <td class="festivalId">${festival.festivalId}</td>
                                         <td class="regionId">${festival.regionId}</td>
                                         <td class="timeId">${festival.timeId}</td>
@@ -218,8 +221,8 @@
                                         <td class="detailAddress">${festival.detailAddress}</td>
 
                                         <td class="place">${festival.place}</td>
-                                        <td class="startDate">${start}</td>
-                                        <td class="endDate">${end}</td>
+                                        <td class="formattedStart">${start}</td>
+                                        <td class="formattedEnd">${end}</td>
                                         <td class="avgRate">${festival.avgRate}</td>
                                         <td class="season">${festival.season}</td>
                                         <td class="imgUrl"><img src="${festival.imgUrl}" width="40px"></td>
@@ -229,6 +232,8 @@
                                 `;
 
                                 $('#list1').append(htmlContent);
+
+
 
                             })
 
@@ -286,15 +291,14 @@
                 })
 
 
-            // 일괄 삭제 기능
-
+                // 일괄 삭제 기능
 
 
                 $(document).on('click','#dbDeleteBtn', function(){
 
                     var checks = [];
 
-                    var selectedChecks = document.querySelectorAll("input[type='checkbox']:checked");
+                    var selectedChecks = document.querySelectorAll("input[type='checkbox'].check1:checked");
 
                     $.each(selectedChecks, function(index, item){
 
@@ -308,7 +312,7 @@
 
                     $.ajax({
 
-                        url: '/admin/festival-regulate/insertAPIFestivalList',
+                        url: '/admin/festival-regulate/deleteDBFestivalList',
                         method: 'POST',
                         contentType: 'application/json',
                         data: JSON.stringify(checks),
@@ -325,8 +329,85 @@
 
                 })
 
+                // 상세 수정 - 모달 클릭 시 보여주기
 
 
+                $(document).on('click','#dbUpdateBtn', function(){
+
+                    var festivalId = $(this).val();
+                    console.log("festivalId : ")
+                    console.log(festivalId)
+                    console.log("#dbUpdateBtn")
+
+
+
+                    $.ajax({
+
+                        url: '/admin/festival-regulate/findDBFestivalByFestivalId',
+                        method: 'POST',
+                        contentType: 'application/json',
+                        data: JSON.stringify({ festivalId : festivalId}),
+                        success: function(festival){
+
+                            $('#modalBody').html("");
+                                var htmlContent2 = `
+
+                                    <form action="/admin/festival-regulate/updateDBFestivalByFestival" method="post">
+
+                                        DB아이디 : <input name="festivalId" type="text" class="neverClickable" value="${festival.festivalId}"><br><br>
+
+                                        지역 번호 : <input name="regionId" type="text" class="neverClickable" value="${festival.regionId}"><br><br>
+
+                                        시간대 : <input class="neverClickable" name="timeId"  type="text" value="${festival.timeId}"><br><br>
+
+                                        축제 이름 : <input class="autoWidth" name="festivalName" type="text" value="${festival.festivalName}"><br><br>
+
+                                        상세 내용 <br><textarea name="festivalContent" cols="55" rows="10">${festival.festivalContent}</textarea><br><br>
+
+                                        주체기관 : <input class="autoWidth" name="manageInstitution" type="text" value="${festival.manageInstitution}"><br><br>
+
+                                        주관기관 : <input class="autoWidth" name="hostInstitution" type="text" value="${festival.hostInstitution}"><br><br>
+
+                                        후원기관 : <input class="autoWidth" name="sponserInstitution" type="text" value="${festival.sponserInstitution}"><br><br>
+
+                                        전화번호 : <input name="tel" type="text" value="${festival.tel}"><br><br>
+
+                                        홈페이지 : <input name="homepageUrl" type="text" value="${festival.homepageUrl}"><br><br>
+
+                                        상세주소 : <input name="detailAddress" type="text" value="${festival.detailAddress}"><br><br>
+
+                                        위도 : <input name="latitude" type="number" value="${festival.latitude}"><br><br>
+
+                                        경도 : <input name="longtitude" type="number" value="${festival.longtitude}"><br><br>
+
+                                        장소 : <input name="place" type="text" value="${festival.place}"><br><br>
+
+                                        시작일 : <input name="formattedStart" type="date" value="${festival.formattedStart}"><br><br>
+
+                                        종료일 : <input name="formattedEnd" type="date"  value="${festival.formattedEnd}"><br><br>
+
+                                        리뷰 평균 별점 : <input name="avgRate" type="text" class="neverClickable"  value="${festival.avgRate}"><br><br>
+
+                                        계절: <input class="neverClickable" name="season" type="text" value="${festival.season}"><br><br>
+
+                                        <img src="${festival.imgUrl}" width="100px">
+                                        이미지 소스:  <input class="autoWidth" name="imgUrl" type="text" value="${festival.imgUrl}"><br><br>
+
+                                        <button type="submit" id="updateSubmitBtn">수정내용 제출</button>
+
+                                    </form>
+
+                                `;
+
+                                $('#modalBody').html(htmlContent2);
+
+                        }
+
+
+                    })
+
+
+                })
 
             }
         )
@@ -346,7 +427,7 @@
 
     <div id="festivalRegulate">
 
-        <h2>축제 DB 현황 <button id="dbUpdateBtn">DB 수정</button><button id="dbDeleteBtn">DB 삭제</button></h2>
+        <h2>축제 DB 현황 <button id="dbDeleteBtn">DB 삭제</button></h2>
         <table class="table table-striped" id="festivalDB">
 
             <thead class="table-light">
@@ -377,6 +458,27 @@
 
         </table>
         <div id="pageNum1"></div>
+
+
+        <!-- Modal -->
+        <div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLongTitle">DB수정 상세 모달</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body" id="modalBody">
+                        ...
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
 
 
         <br><br><br><br><br><br>
