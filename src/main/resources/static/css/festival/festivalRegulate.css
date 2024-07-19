@@ -57,3 +57,22 @@
         width: 400px;
 
     }
+
+    .neverClickable{
+
+        pointer-events: none !important;
+        background-color: #f0f0f1 !important;
+        text-align: center;
+
+    }
+
+
+    .autoWidth{
+
+        display: inline-block;
+        width: auto;
+        padding: 1px;
+        text-align: left;
+
+
+    }

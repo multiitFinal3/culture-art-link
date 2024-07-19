@@ -362,6 +362,38 @@ public class AdminFestivalServiceImpl implements AdminFestivalService {
 		return count;
 	}
 	
+	@Override
+	public void deleteDBFestivalList(ArrayList<Integer> checks) throws Exception {
+		
+		
+		for (int i=0; i<checks.size(); i++) {
+			
+			int festivalId = checks.get(i);
+			
+			System.out.println(festivalId);
+			
+			adminFestivalMapper.deleteDBFestivalList(festivalId);
+			
+		}
+		
+		
+	}
+	
+	@Override
+	public FestivalDTO findDBFestivalByFestivalId(int festivalId) throws Exception {
+		
+		FestivalDTO festivalDTO = adminFestivalMapper.findDBFestivalByFestivalId(festivalId);
+		
+		return festivalDTO;
+	}
+	
+	@Override
+	public void updateDBFestivalByFestival(FestivalDTO festivalDTO) throws Exception {
+		
+		adminFestivalMapper.updateDBFestivalByFestival(festivalDTO);
+		
+	}
+	
 
 	
 	

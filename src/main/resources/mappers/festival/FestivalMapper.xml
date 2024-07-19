@@ -35,5 +35,47 @@
 
     </select>
 
+    <delete id="deleteDBFestivalList">
+
+        DELETE FROM festival
+        WHERE festival_id = ${festivalId};
+
+    </delete>
+
+
+    <select id="findDBFestivalByFestivalId">
+
+        SELECT * FROM festival
+        WHERE festival_id = ${festivalId};
+
+    </select>
+
+    <update id="updateDBFestivalByFestival" parameterType="festivalDTO">
+
+        UPDATE festival
+        SET
+            region_id = #{regionId},
+            time_id = #{timeId},
+            festival_name = #{festivalName},
+            festival_content = #{festivalContent},
+            manage_institution = #{manageInstitution},
+            host_institution = #{hostInstitution},
+            sponser_institution = #{sponserInstitution},
+            tel = #{tel},
+            homepage_url = #{homepageUrl},
+            detail_address = #{detailAddress},
+            latitude = #{latitude},
+            longtitude = #{longtitude},
+            place = #{place},
+            start_date = #{startDate},
+            end_date = #{endDate},
+            avg_Rate = #{avgRate},
+            season = #{season},
+            img_url = #{imgUrl}
+
+        WHERE festival_id = #{festivalId};
+
+    </update>
+
 
 </mapper>

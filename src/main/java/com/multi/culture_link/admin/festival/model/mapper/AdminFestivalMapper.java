@@ -17,4 +17,10 @@ public interface AdminFestivalMapper {
 	ArrayList<FestivalDTO> findDBFestivalList(PageDTO pageDTO) throws Exception;
 	
 	int findDBFestivalCount() throws Exception;
+	
+	void deleteDBFestivalList(int festivalId) throws Exception;
+	
+	FestivalDTO findDBFestivalByFestivalId(int festivalId) throws Exception;
+	
+	void updateDBFestivalByFestival(FestivalDTO festivalDTO) throws Exception;
 }
