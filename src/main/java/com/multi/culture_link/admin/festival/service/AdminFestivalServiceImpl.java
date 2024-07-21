@@ -435,28 +435,20 @@ public class AdminFestivalServiceImpl implements AdminFestivalService {
 	}
 	
 	@Override
-	public ArrayList<FestivalDTO> findAPIFestivalByMultiple(FestivalDTO festivalDTO) throws Exception {
+	public ArrayList<FestivalDTO> findAPIFestivalByMultiple(FestivalDTO festivalDTO, String urls) throws Exception {
 		
 		int page = festivalDTO.getPageDTO().getPage();
 		
 		String url1 = "http://api.data.go.kr/openapi/tn_pubr_public_cltur_fstvl_api?serviceKey=chNg8jx96krRfOCTvGcO2PvBKnrCrH0Qm6/JmV1TOw/Yu1T0x3jy0fHM8SOcZFnJIxdc7oqyM03PVmMA9UFOsA==&pageNo=";
 		
 		// 조건에 의한 파라미터들
-		String url2 = "";
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
+		String url2 = urls;
+
 		String url3 = "&numOfRows=5&type=json";
 		
 		
 		String urlFinal = url1 + page + url2 + url3;
+		System.out.println("urlFinal : " + urlFinal);
 		
 		Request request = new Request.Builder()
 				.url(urlFinal)
@@ -743,6 +735,41 @@ public class AdminFestivalServiceImpl implements AdminFestivalService {
 		this.list = list;
 		
 		return list;
+	}
+	
+	@Override
+	public int findAPIFestivalByMultipleCount(FestivalDTO festivalDTO, String urls) throws Exception {
+		
+		String url1 = "http://api.data.go.kr/openapi/tn_pubr_public_cltur_fstvl_api?serviceKey=chNg8jx96krRfOCTvGcO2PvBKnrCrH0Qm6/JmV1TOw/Yu1T0x3jy0fHM8SOcZFnJIxdc7oqyM03PVmMA9UFOsA==&pageNo=1";
+		
+		// 조건에 의한 파라미터들
+		String url2 = urls;
+		
+		String url3 = "&numOfRows=10&type=json";
+		
+		
+		String urlFinal = url1 + url2 + url3;
+		System.out.println("urlFinal : " + urlFinal);
+		
+		Request request = new Request.Builder()
+				.url(urlFinal)
+				.addHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36")
+				.addHeader("Connection", "keep-alive")
+				.get()
+				.build();
+		
+		
+		Response response = client.newCall(request).execute();
+		String responseBody = response.body().string();
+		JsonObject json = gson.fromJson(responseBody, JsonObject.class);
+		JsonObject response1 = json.getAsJsonObject("response");
+		JsonObject body1 = response1.getAsJsonObject("body");
+		int count  = body1.getAsJsonPrimitive("totalCount").getAsInt();
+		
+		System.out.println("count : " + count);
+		
+		
+		return count;
 	}
 	
 	

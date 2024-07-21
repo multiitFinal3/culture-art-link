@@ -117,20 +117,30 @@
 
 
                 findAPIFestivalList(1);
+                findAPIFestivalCount(20);
 
-                for(var p=1; p<=20; p++){
+
+
+                // api table page number
+                function findAPIFestivalCount(page){
+
+                    $('#pageNum2').html("");
+
+                   for(var p=1; p<=page; p++){
 
                     $('#pageNum2').append(`<button class="pageBtn2">${p}</button>`)
 
+                    }
 
+                    $(document).on('click','.pageBtn2', function(){
+
+                        const page = $(this).text();
+                        findAPIFestivalList(page);
+
+                    })
                 }
 
-                $(document).on('click','.pageBtn2', function(){
 
-                    const page = $(this).text();
-                    findAPIFestivalList(page);
-
-                })
 
 
                 $(document).on('click','#apiInsertBtn', function(){
@@ -654,25 +664,13 @@
                         success: function(map){
 
                             var list1 = map.regionList;
-                            var list2 = map.timeList;
 
                             $('#searchRegion2').html("");
-                            $('#searchRegion2').append(`<option value="">선택안함</option>`);
 
                             $.each(list1, function(index, region){
 
                                 var htmlContent = `<option value="${region.regionId}">${region.regionName}</option>`;
                                 $('#searchRegion2').append(htmlContent);
-
-                            })
-
-                            $('#searchTime2').html("");
-                            $('#searchTime2').append(`<option value="">선택 안함</option>`);
-
-                            $.each(list2, function(index, time){
-
-                                var htmlContent = `<option value="${time.timeId}">${time.timeName}</option>`;
-                                $('#searchTime2').append(htmlContent);
 
                             })
 
@@ -720,11 +718,10 @@
 
                             $('#list2').html("");
 
-
                             $.each(list, function(index, festival){
 
-                                console.log(festival);
                                 var index1 = (index + 1) + (page-1)*5;
+
 
                                 var content = festival.festivalContent.length > 30?
                                 festival.festivalContent.substring(0,30) + "..."
@@ -743,26 +740,34 @@
                                 : festival.sponserInstitution;
 
 
-                                console.log("축제 날짜")
-                                console.log(festival.startDate);
-                                console.log(festival.endDate);
+
 
                                 var start = festival.startDate.length >0?
                                 festival.startDate.substring(0,10):
-                                "없음";
+                                "링크없음";
 
                                 var end = festival.endDate.length >0?
                                 festival.endDate.substring(0,10):
-                                "없음";
+                                "링크없음";
+
+                                var htmlCheck = ``;
+
+                                if(festival.exist=="Y"){
+
+                                    htmlCheck= `<tr>
+                                        <td>DB<br>존재</td>`
+
+
+                                }else{
+
+                                     htmlCheck = `<tr>
+                                        <td><input class="check2" type="checkbox" name="index" value="${index}"/></td>`
+                                }
 
 
                                 var htmlContent =`
 
-                                    <tr>
-
-                                        <td><input class="check1" type="checkbox" name="index" value="${festival.festivalId}"/><br><hr><br><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalLong" id="dbUpdateBtn" value="${festival.festivalId}">상세 수정</button></td>
-                                        <td class="index1" style="width : 20px; height: 20px;">${index1}</td>
-                                        <td class="festivalId">${festival.festivalId}</td>
+                                        <td class="index1">${index1}</td>
                                         <td class="regionId">${festival.regionId}</td>
                                         <td class="timeId">${festival.timeId}</td>
                                         <td class="festivalName">${festival.festivalName}</td>
@@ -775,8 +780,8 @@
                                         <td class="detailAddress">${festival.detailAddress}</td>
 
                                         <td class="place">${festival.place}</td>
-                                        <td class="formattedStart">${festival.formattedStart}</td>
-                                        <td class="formattedEnd">${festival.formattedEnd}</td>
+                                        <td class="startDate">${festival.formattedStart}</td>
+                                        <td class="endDate">${festival.formattedEnd}</td>
                                         <td class="avgRate">${festival.avgRate}</td>
                                         <td class="season">${festival.season}</td>
                                         <td class="imgUrl"><img src="${festival.imgUrl}" width="40px"></td>
@@ -785,7 +790,11 @@
 
                                 `;
 
-                                $('#list2').append(htmlContent);
+                                var finalHtml = htmlCheck + htmlContent;
+
+                                $('#list2').append(finalHtml);
+
+
 
                             })
 
@@ -809,12 +818,12 @@
 
                             $('#pageNum2').html("");
                             // 상세검색 전으로 돌아가기 버튼
-                            $('#pageNum2').append(`<button class="pageBtn5" onclick=>전체검색</button>`);
+                            $('#pageNum2').append(`<button class="pageBtn6" onclick=>전체검색</button>`);
 
-                            $(document).on('click','.pageBtn5', function(){
+                            $(document).on('click','.pageBtn6', function(){
 
                                 findAPIFestivalList(1);
-                                findAPIFestivalCount();
+                                findAPIFestivalCount(20);
 
                             })
 
@@ -1001,13 +1010,8 @@
                     </div>
                     <div class="modal-body">
                         <form id="searchForm2" name="searchForm2">
-
-                            지역 번호 : <select name="regionId" id="searchRegion2">
-                                        </select><br><br>
-                            시간대 : <select name="timeId" id="searchTime2">
-                                    </select><br><br>
+                            <h3>입력값 정확 일치</h3>
                             축제 이름 : <input name="festivalName" type="text"><br><br>
-                            내용 키워드<br><textarea name="festivalContent" cols="55" rows="10"></textarea><br><br>
                             주체기관 : <input class="autoWidth" name="manageInstitution" type="text"><br><br>
                             주관기관 : <input class="autoWidth" name="hostInstitution" type="text"><br><br>
                             후원기관 : <input class="autoWidth" name="sponserInstitution" type="text"><br><br>
@@ -1015,13 +1019,6 @@
                             장소 : <input name="place" type="text"><br><br>
                             시작일 : <input name="formattedStart" type="date"><br><br>
                             종료일 : <input name="formattedEnd" type="date"><br><br>
-                            계절: <select name="season" id="searchSeason2">
-                            <option value="">선택안함</option>
-                            <option value="봄">봄</option>
-                            <option value="여름">여름</option>
-                            <option value="가을">가을</option>
-                            <option value="겨울">겨울</option>
-                        </select><br><br>
 
                             <button type="button" id="searchBtn2">검색</button>
 
