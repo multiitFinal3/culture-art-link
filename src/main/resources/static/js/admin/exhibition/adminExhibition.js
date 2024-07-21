@@ -53,6 +53,7 @@ $(document).ready(function () {
     console.log("search data : ", response1.data);
     renderTable(response1.data, "list1");
     renderPagination(response1.data, "pageNum1");
+    fetchData();
   }
 
   // 데이터 가져와서 table에 세팅
