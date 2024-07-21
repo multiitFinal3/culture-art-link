@@ -25,5 +25,7 @@ public interface AdminFestivalService {
 	
 	int findDBFestivalMultipleCount(FestivalDTO festivalDTO) throws Exception;
 	
-	ArrayList<FestivalDTO> findAPIFestivalByMultiple(FestivalDTO festivalDTO) throws Exception;
+	ArrayList<FestivalDTO> findAPIFestivalByMultiple(FestivalDTO festivalDTO, String urls) throws Exception;
+	
+	int findAPIFestivalByMultipleCount(FestivalDTO festivalDTO, String urls) throws Exception;
 }
