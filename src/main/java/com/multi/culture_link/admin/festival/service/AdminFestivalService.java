@@ -24,4 +24,6 @@ public interface AdminFestivalService {
 	ArrayList<FestivalDTO> findDBFestivalByMultiple(FestivalDTO festivalDTO) throws Exception;
 	
 	int findDBFestivalMultipleCount(FestivalDTO festivalDTO) throws Exception;
+	
+	ArrayList<FestivalDTO> findAPIFestivalByMultiple(FestivalDTO festivalDTO) throws Exception;
 }

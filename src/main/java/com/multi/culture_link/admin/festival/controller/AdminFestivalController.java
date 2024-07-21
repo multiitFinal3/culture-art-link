@@ -12,12 +12,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-
 
 
 // json 파싱 예시
@@ -382,8 +382,6 @@ import java.util.Map;
 	}*/
 
 
-
-
 @Controller
 @RequestMapping("/admin/festival-regulate")
 public class AdminFestivalController {
@@ -689,13 +687,24 @@ public class AdminFestivalController {
 					
 					
 					case 9:
-						Date date = new Date(mapList.get(i).get("value").trim());
+						System.out.println("start-c: " + mapList.get(i).get("value").trim());
+						Date date = null;
+						try {
+							date = simpleDateFormat.parse(mapList.get(i).get("value").trim());
+						} catch (ParseException e) {
+							throw new RuntimeException(e);
+						}
 						festivalDTO.setStartDate(date);
 						break;
 					
 					
 					case 10:
-						Date date2 = new Date(mapList.get(i).get("value").trim());
+						Date date2 = null;
+						try {
+							date2 = simpleDateFormat.parse(mapList.get(i).get("value").trim());
+						} catch (ParseException e) {
+							throw new RuntimeException(e);
+						}
 						festivalDTO.setEndDate(date2);
 						break;
 					
@@ -716,9 +725,9 @@ public class AdminFestivalController {
 		}
 		
 		
-		System.out.println("정보가 담긴 축제 : " + festivalDTO.toString());
-
-//		정보가 담긴 축제 : FestivalDTO(festivalId=0, regionId=11, regionName=null, timeId=평일, festivalName=null, festivalContent=null, manageInstitution=null, hostInstitution=null, sponserInstitution=null, tel=null, homepageUrl=null, detailAddress=null, latitude=0.0, longtitude=0.0, place=null, startDate=null, endDate=null, formattedStart=null, formattedEnd=null, avgRate=0.0, season=봄, imgUrl=null, exist=null)
+		System.out.println("findDBFestivalByMultiple 정보가 담긴 축제 : " + festivalDTO.toString());
+		
+		//		정보가 담긴 축제 : FestivalDTO(festivalId=0, regionId=11, regionName=null, timeId=평일, festivalName=null, festivalContent=null, manageInstitution=null, hostInstitution=null, sponserInstitution=null, tel=null, homepageUrl=null, detailAddress=null, latitude=0.0, longtitude=0.0, place=null, startDate=null, endDate=null, formattedStart=null, formattedEnd=null, avgRate=0.0, season=봄, imgUrl=null, exist=null)
 		
 		
 		ArrayList<FestivalDTO> list = null;
@@ -804,13 +813,31 @@ public class AdminFestivalController {
 					
 					
 					case 9:
-						Date date = new Date(mapList.get(i).get("value"));
+						System.out.println("start : " + mapList.get(i).get("value").trim());
+						System.out.println();
+						Date date = null;
+						try {
+							date = simpleDateFormat.parse(mapList.get(i).get("value").trim());
+							System.out.println("c: start pared date : " + date);
+						} catch (ParseException e) {
+							throw new RuntimeException(e);
+						}
+						
+						System.out.println(date);
 						festivalDTO.setStartDate(date);
 						break;
 					
 					
 					case 10:
-						Date date2 = new Date(mapList.get(i).get("value"));
+						System.out.println();
+						Date date2 = null;
+						try {
+							System.out.println("c : date2");
+							date2 = simpleDateFormat.parse(mapList.get(i).get("value").trim());
+							System.out.println("parsed : " + date2);
+						} catch (ParseException e) {
+							throw new RuntimeException(e);
+						}
 						festivalDTO.setEndDate(date2);
 						break;
 					
@@ -831,7 +858,7 @@ public class AdminFestivalController {
 		}
 		
 		
-		System.out.println("정보가 담긴 축제 : " + festivalDTO.toString());
+		System.out.println("findDBFestivalMultipleCount 정보가 담긴 축제 : " + festivalDTO.toString());
 		
 		
 		int count = 0;
@@ -847,6 +874,127 @@ public class AdminFestivalController {
 		return count;
 		
 		
+	}
+	
+	
+	// api 상세조건 검색 내용 받기
+	@PostMapping("/findAPIFestivalByMultiple")
+	@ResponseBody
+	public ArrayList<FestivalDTO> findAPIFestivalByMultiple(
+			@RequestBody ArrayList<HashMap<String, String>> mapList,
+			@RequestParam("page") int page) {
+		
+		
+		System.out.println("findDBFestivalByMultiple : " + mapList.toString());
+		
+		
+		FestivalDTO festivalDTO = new FestivalDTO();
+		PageDTO pageDTO = new PageDTO();
+		pageDTO.setPage(page);
+		pageDTO.setStartEnd(pageDTO.getPage());
+		festivalDTO.setPageDTO(pageDTO);
+		
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		
+		// 받아온 정보를 깔끔하게 바꾸기
+		for (int i = 0; i < mapList.size(); i++) {
+			
+			if (!mapList.get(i).get("value").isEmpty()) {
+				
+				switch (i) {
+					
+					case 0:
+						festivalDTO.setRegionId(Integer.parseInt(mapList.get(i).get("value")));
+						break;
+					
+					case 1:
+						festivalDTO.setTimeId(mapList.get(i).get("value"));
+						break;
+					
+					case 2:
+						festivalDTO.setFestivalName(mapList.get(i).get("value").trim());
+						break;
+					
+					case 3:
+						festivalDTO.setFestivalContent(mapList.get(i).get("value").trim());
+						break;
+					
+					case 4:
+						festivalDTO.setManageInstitution(mapList.get(i).get("value").trim());
+						break;
+					
+					case 5:
+						festivalDTO.setHostInstitution(mapList.get(i).get("value").trim());
+						break;
+					
+					
+					case 6:
+						festivalDTO.setSponserInstitution(mapList.get(i).get("value").trim());
+						break;
+					
+					
+					case 7:
+						festivalDTO.setTel(mapList.get(i).get("value").replace("-", "").trim());
+						break;
+					
+					
+					case 8:
+						festivalDTO.setPlace(mapList.get(i).get("value").replace("-", "").trim());
+						break;
+					
+					
+					case 9:
+						Date date = new Date(mapList.get(i).get("value").trim());
+						festivalDTO.setStartDate(date);
+						break;
+					
+					
+					case 10:
+						Date date2 = new Date(mapList.get(i).get("value").trim());
+						festivalDTO.setEndDate(date2);
+						break;
+					
+					case 11:
+						festivalDTO.setAvgRate(Double.valueOf(mapList.get(i).get("value").trim()));
+						break;
+					
+					
+					case 12:
+						festivalDTO.setSeason(mapList.get(i).get("value").trim());
+						break;
+					
+				}
+				
+				
+			}
+			
+		}
+		
+		
+		System.out.println("findAPIFestivalByMultiple 정보가 담긴 축제 : " + festivalDTO.toString());
+		
+		
+		ArrayList<FestivalDTO> list = null;
+		try {
+			list = adminFestivalService.findAPIFestivalByMultiple(festivalDTO);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+		
+		System.out.println("받아온 리스트 : " + list);
+		for (FestivalDTO festivalDTO1 : list) {
+			
+			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+			
+			festivalDTO1.setFormattedStart(dateFormat.format(festivalDTO1.getStartDate()));
+			festivalDTO1.setFormattedEnd(dateFormat.format(festivalDTO1.getEndDate()));
+			
+			
+			System.out.println(festivalDTO1.toString());
+			
+		}
+		
+		return list;
 	}
 	
 	
