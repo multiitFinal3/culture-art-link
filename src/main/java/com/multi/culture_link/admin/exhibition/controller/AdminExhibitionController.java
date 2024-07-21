@@ -18,7 +18,7 @@ public class AdminExhibitionController {
 
 
     // api 정보 가져오기
-    @GetMapping("/exhibitions")
+    @GetMapping("/exhibition")
     public List<ExhibitionApiResponseDto.Item> listExhibitions(Model model) {
         ExhibitionApiResponseDto responseData= exhibitionApiService.fetchJsonData();
         // 나중에 client 에서 필요한 값만, 리스트로 보여주기
@@ -27,7 +27,7 @@ public class AdminExhibitionController {
     }
 
     // 선택 api 정보 저장하기
-    @PostMapping("/exhibitions")
+    @PostMapping("/exhibition")
     @ResponseBody
     public ResponseEntity<String> saveExhibition(
             @RequestBody List<ExhibitionApiResponseDto.Item> data
@@ -38,13 +38,13 @@ public class AdminExhibitionController {
     }
 
     // db 에서 정보 불러오기
-    @GetMapping("/db-exhibitions")
+    @GetMapping("/db-exhibition")
     public List<ExhibitionApiDto> getDbExhibitions(){
         return exhibitionApiService.getExhibition();
     }
 
     // db 정보 수정
-    @PatchMapping("/db-exhibitions")
+    @PatchMapping("/db-exhibition")
     public void updateExhibition(
             @RequestBody List<ExhibitionApiDto> data
     ) {
@@ -53,7 +53,7 @@ public class AdminExhibitionController {
     }
     
     // db 정보 삭제
-    @DeleteMapping("/db-exhibitions")
+    @DeleteMapping("/db-exhibition")
     public void deleteExhibition(
             @RequestBody List<Integer> id
     ) {

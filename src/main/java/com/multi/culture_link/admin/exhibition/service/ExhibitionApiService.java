@@ -80,10 +80,7 @@ public class ExhibitionApiService {
         }
     }
 
-//    public List<ExhibitionApiDto> getSavedExhibitions() {
-//        return exhibitionRepository.findAll();
-//    }
-
+    // db 형태로 데이터 변환 후 저장
     public void saveExhibition(List<ExhibitionApiResponseDto.Item> responseData) {
         List<ExhibitionApiDto> processedData = new ArrayList<ExhibitionApiDto>();
         for (ExhibitionApiResponseDto.Item responseDatum : responseData) {
@@ -109,7 +106,7 @@ public class ExhibitionApiService {
     }
 
     public void updateExhibition(List<ExhibitionApiDto> data) {
-        System.out.println("야" + data);
+//        System.out.println("야" + data);
         adminExhibitionDao.updateData(data);
     }
 
