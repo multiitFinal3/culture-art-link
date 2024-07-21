@@ -3,49 +3,20 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.multi.culture_link.admin.exhibition.model.dao.AdminExhibitionDao"><!-- 메퍼위치하고  동일하게 네임스페이스 작성-->
-<!--    <resultMap id="exhibitionResultMap" type="com.multi.culture_link.admin.exhibition.model.dto.api.ExhibitionApiDto">-->
-<!--        <result column="start_date" property="start_date" jdbcType="TIMESTAMP" javaType="java.time.LocalDateTime"/>-->
-<!--        <result column="end_date" property="end_date" jdbcType="TIMESTAMP" javaType="java.time.LocalDateTime"/>-->
-<!--    </resultMap>-->
-
-    <insert id="saveData" parameterType="com.multi.culture_link.admin.exhibition.model.dto.api.ExhibitionApiDto">
-        INSERT INTO exhibition (title, artist, museum, start_date, end_date, price, image, description, sub_description, url) VALUES
-        <foreach collection="processedData" item="data" separator=",">
-            (#{data.title}, #{data.artist}, #{data.museum}, #{data.startDate}, #{data.endDate},
-            #{data.price}, #{data.image}, #{data.description}, #{data.subDescription}, #{data.url}
-            )
-        </foreach>
-    </insert>
-
-    <delete id="deleteData" parameterType="java.util.List">
-        DELETE FROM exhibition WHERE id IN
-        <foreach item="id" collection="list" open="(" separator="," close=")">
-            #{id}
-        </foreach>
-    </delete>
-
-    <update id="updateData" parameterType="com.multi.culture_link.admin.exhibition.model.dto.api.ExhibitionApiDto">
-        <foreach collection="list" item="data" index="index" separator=";">
-            UPDATE exhibition
-            <set>
-                <if test="data.title != null and data.title != ''">title = #{data.title},</if>
-                <if test="data.artist != null and data.artist != ''">artist = #{data.artist},</if>
-                <if test="data.museum != null and data.museum != ''">museum = #{data.museum},</if>
-                <if test="data.startDate != null">start_date = #{data.startDate},</if>
-                <if test="data.endDate != null">end_date = #{data.endDate},</if>
-                <if test="data.price != null and data.price != ''">price = #{data.price},</if>
-                <if test="data.image != null and data.image != ''">image = #{data.image},</if>
-                <if test="data.description != null and data.description != ''">description = #{data.description},</if>
-                <if test="data.subDescription != null and data.subDescription != ''">sub_description = #{data.sub_description},</if>
-                <if test="data.url != null and data.url != ''">url = #{data.url},</if>
-            </set>
-            WHERE id = #{data.id}
-        </foreach>
-    </update>
-
-    <select id="getData" resultType="com.multi.culture_link.admin.exhibition.model.dto.api.ExhibitionApiDto">
+<mapper namespace="com.multi.culture_link.exhibition.model.dao.ExhibitionDao"><!-- 메퍼위치하고  동일하게 네임스페이스 작성-->
+<!--    다중 검색-->
+    <select id="searchExhibition" parameterType="map" resultType="com.multi.culture_link.admin.exhibition.model.dto.api.ExhibitionApiDto">
         SELECT * FROM exhibition
+        WHERE 1=1
+        <if test="title != null and title != ''">
+            AND title LIKE CONCAT('%', #{title}, '%')
+        </if>
+        <if test="artist != null and artist != ''">
+            AND artist LIKE CONCAT('%', #{artist}, '%')
+        </if>
+        <if test="museum != null and museum != ''">
+            AND museum LIKE CONCAT('%', #{museum}, '%')
+        </if>
     </select>
 
 </mapper>
