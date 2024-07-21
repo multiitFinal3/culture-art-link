@@ -292,55 +292,55 @@ public class AdminFestivalController {
 						break;
 					
 					case 2:
-						festivalDTO.setFestivalName(mapList.get(i).get("value"));
+						festivalDTO.setFestivalName(mapList.get(i).get("value").trim());
 						break;
 					
 					case 3:
-						festivalDTO.setFestivalContent(mapList.get(i).get("value"));
+						festivalDTO.setFestivalContent(mapList.get(i).get("value").trim());
 						break;
 					
 					case 4:
-						festivalDTO.setManageInstitution(mapList.get(i).get("value"));
+						festivalDTO.setManageInstitution(mapList.get(i).get("value").trim());
 						break;
 					
 					case 5:
-						festivalDTO.setHostInstitution(mapList.get(i).get("value"));
+						festivalDTO.setHostInstitution(mapList.get(i).get("value").trim());
 						break;
 					
 					
 					case 6:
-						festivalDTO.setSponserInstitution(mapList.get(i).get("value"));
+						festivalDTO.setSponserInstitution(mapList.get(i).get("value").trim());
 						break;
 					
 					
 					case 7:
-						festivalDTO.setTel(mapList.get(i).get("value"));
+						festivalDTO.setTel(mapList.get(i).get("value").replace("-","").trim());
 						break;
 					
 					
 					case 8:
-						festivalDTO.setPlace(mapList.get(i).get("value"));
+						festivalDTO.setPlace(mapList.get(i).get("value").replace("-","").trim());
 						break;
 					
 					
 					case 9:
-						Date date = new Date(mapList.get(i).get("value"));
+						Date date = new Date(mapList.get(i).get("value").trim());
 						festivalDTO.setStartDate(date);
 						break;
 					
 					
 					case 10:
-						Date date2 = new Date(mapList.get(i).get("value"));
+						Date date2 = new Date(mapList.get(i).get("value").trim());
 						festivalDTO.setEndDate(date2);
 						break;
 					
 					case 11:
-						festivalDTO.setAvgRate(Double.valueOf(mapList.get(i).get("value")));
+						festivalDTO.setAvgRate(Double.valueOf(mapList.get(i).get("value").trim()));
 						break;
 					
 					
 					case 12:
-						festivalDTO.setSeason(mapList.get(i).get("value"));
+						festivalDTO.setSeason(mapList.get(i).get("value").trim());
 						break;
 					
 				}
