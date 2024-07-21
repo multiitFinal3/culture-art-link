@@ -28,6 +28,9 @@
                         contentType: 'application/json',
                         success: function(list){
 
+                            $('#list2').html("");
+
+
                             $.each(list, function(index, festival){
 
                                 var index1 = (index + 1) + (page-1)*5;
