@@ -111,7 +111,7 @@
 
 
                     <if test="festivalName !=null and festivalName !=''">
-                        AND festival_name = #{festivalName}
+                        AND festival_name LIKE CONCAT ('%', #{festivalName}, '%')
                     </if>
 
 
@@ -136,12 +136,12 @@
 
 
                     <if test="tel !=null and tel !=''">
-                        AND tel = #{tel}
+                        AND tel LIKE CONCAT ('%', #{tel}, '%')
                     </if>
 
 
                     <if test="place !=null and place !=''">
-                        AND place = #{place}
+                        AND place LIKE CONCAT ('%', #{place}, '%')
                     </if>
 
 
@@ -203,7 +203,7 @@
 
 
                 <if test="festivalName !=null and festivalName !=''">
-                    AND festival_name = #{festivalName}
+                    AND festival_name LIKE CONCAT ('%', #{festivalName}, '%')
                 </if>
 
 
@@ -228,12 +228,12 @@
 
 
                 <if test="tel !=null and tel !=''">
-                    AND tel = #{tel}
+                    AND tel LIKE CONCAT ('%', #{tel}, '%')
                 </if>
 
 
                 <if test="place !=null and place !=''">
-                    AND place = #{place}
+                    AND place LIKE CONCAT ('%', #{place}, '%')
                 </if>
 
 
