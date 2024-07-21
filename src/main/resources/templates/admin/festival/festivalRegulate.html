@@ -444,6 +444,7 @@
                             var list2 = map.timeList;
 
                             $('#searchRegion1').html("");
+                            $('#searchRegion1').append(`<option value="">선택안함</option>`);
 
                             $.each(list1, function(index, region){
 
@@ -453,6 +454,7 @@
                             })
 
                             $('#searchTime1').html("");
+                            $('#searchTime1').append(`<option value="">선택 안함</option>`);
 
                             $.each(list2, function(index, time){
 
@@ -699,6 +701,7 @@
                             종료일 : <input name="formattedEnd" type="date"><br><br>
                             최소 별점 : <input name="avgRate" type="number" step="0.1"><br><br>
                             계절: <select name="season" id="searchSeason1">
+                                    <option value="">선택안함</option>
                                     <option value="봄">봄</option>
                                     <option value="여름">여름</option>
                                     <option value="가을">가을</option>
