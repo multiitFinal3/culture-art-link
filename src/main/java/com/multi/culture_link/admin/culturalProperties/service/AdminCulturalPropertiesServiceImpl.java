@@ -28,14 +28,14 @@ public class AdminCulturalPropertiesServiceImpl implements AdminCulturalProperti
     private RestTemplate restTemplate = new RestTemplate();
 
     @Override
-    public List<CulturalPropertiesDTO> fetchApiData() {
+    public List<CulturalPropertiesDTO> fetchApiData(int page) {
         List<CulturalPropertiesDTO> culturalPropertiesList = new ArrayList<>();
 
 
         try {
             // 1716 페이지까지 반복
             for (int pageIndex = 1; pageIndex <= 1716; pageIndex++) {
-                String listFullUrl = listApiUrl + "?pageIndex=" + pageIndex + "&numOfRows=5&type=json";
+                String listFullUrl = listApiUrl + "?pageIndex=" + pageIndex + "&pageNo=" + page + "&numOfRows=5&type=json";
                 String listXmlResponse = restTemplate.getForObject(listFullUrl, String.class);
                 JSONObject listJsonObject = XML.toJSONObject(listXmlResponse);
 
@@ -51,7 +51,7 @@ public class AdminCulturalPropertiesServiceImpl implements AdminCulturalProperti
                     String ccbaCtcd = listItemObject.optString("ccbaCtcd");
 
                     // Detail API 호출하여 XML 데이터 받아오기
-                    String detailFullUrl = detailApiUrl + "?ccbaKdcd=" + ccbaKdcd + "&ccbaAsno=" + ccbaAsno + "&ccbaCtcd=" + ccbaCtcd;
+                    String detailFullUrl = detailApiUrl + "?ccbaKdcd=" + ccbaKdcd + "&ccbaAsno=" + ccbaAsno + "&ccbaCtcd=" + ccbaCtcd + "&pageNo=" + page + "&numOfRows=5&type=json";
                     String detailXmlResponse = restTemplate.getForObject(detailFullUrl, String.class);
                     JSONObject detailJsonObject = XML.toJSONObject(detailXmlResponse);
 
@@ -76,7 +76,7 @@ public class AdminCulturalPropertiesServiceImpl implements AdminCulturalProperti
                     String latitude = listItemObject.optString("latitude");
 
                     // Image API 호출하여 XML 데이터 받아오기
-                    String imageFullUrl = imageApiUrl + "?ccbaKdcd=" + ccbaKdcd + "&ccbaAsno=" + ccbaAsno + "&ccbaCtcd=" + ccbaCtcd;
+                    String imageFullUrl = imageApiUrl + "?ccbaKdcd=" + ccbaKdcd + "&ccbaAsno=" + ccbaAsno + "&ccbaCtcd=" + ccbaCtcd + "&pageNo=" + page + "&numOfRows=5&type=json";
                     String imageXmlResponse = restTemplate.getForObject(imageFullUrl, String.class);
 
                     // XML 데이터 문자열 치환
@@ -121,7 +121,7 @@ public class AdminCulturalPropertiesServiceImpl implements AdminCulturalProperti
                     }
 
 
-                    String videoFullUrl = videoApiUrl + "?ccbaKdcd=" + ccbaKdcd + "&ccbaAsno=" + ccbaAsno + "&ccbaCtcd=" + ccbaCtcd;
+                    String videoFullUrl = videoApiUrl + "?ccbaKdcd=" + ccbaKdcd + "&ccbaAsno=" + ccbaAsno + "&ccbaCtcd=" + ccbaCtcd + "&pageNo=" + page + "&numOfRows=5&type=json";
                     String videoXmlResponse = restTemplate.getForObject(videoFullUrl, String.class);
                     JSONObject videoJsonObject = null;
 
@@ -151,7 +151,7 @@ public class AdminCulturalPropertiesServiceImpl implements AdminCulturalProperti
                     String[] voiceUrls = new String[languages.length];
                     for (int langIndex = 0; langIndex < languages.length; langIndex++) {
                         String language = languages[langIndex];
-                        String voiceFullUrl = voiceApiUrl + "?ccbaKdcd=" + ccbaKdcd + "&ccbaAsno=" + ccbaAsno + "&ccbaCtcd=" + ccbaCtcd + "&ccbaGbn=" + language;
+                        String voiceFullUrl = voiceApiUrl + "?ccbaKdcd=" + ccbaKdcd + "&ccbaAsno=" + ccbaAsno + "&ccbaCtcd=" + ccbaCtcd + "&ccbaGbn=" + language + "&pageNo=" + page + "&numOfRows=5&type=json";
                         String voiceXmlResponse = restTemplate.getForObject(voiceFullUrl, String.class);
 
                         JSONObject voiceJsonObject;
@@ -248,6 +248,8 @@ public class AdminCulturalPropertiesServiceImpl implements AdminCulturalProperti
         }
         return culturalPropertiesList;
     }
+
+
 
 
 }
