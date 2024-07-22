@@ -6,6 +6,7 @@
       layout:decorate="~{/common/layout/layoutAdminPage}">
 <head>
     <link rel="stylesheet" th:href="@{/css/culturalProperties/culturalPropertiesRegulate.css}">
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
     <style>
         #festivalRegulate {
             display: flex;
@@ -81,7 +82,7 @@
                 <th scope="col">DB관리</th>
             </tr>
             </thead>
-<!--            <tbody id="list2">-->
+            <tbody id="list2">
 <!--            &lt;!&ndash; culturalPropertiesList를 순회하며 데이터 표시 &ndash;&gt;-->
 <!--            <tr th:each="culturalProperty, rowStat : ${culturalPropertiesList}-->
 <!--                      ${#numbers.sequence(rowStat.index * 5, rowStat.index * 5 + 4)}">-->
@@ -92,56 +93,152 @@
 <!--                <td th:text="${culturalProperty.dynasty}"></td>-->
 <!--                <td>&lt;!&ndash; DB 관리 기능 추가 &ndash;&gt;</td>-->
 <!--            </tr>-->
-<!--            </tbody>-->
+            </tbody>
             <script th:inline="javascript">
-                $(document).ready(function() {
-                    var page = 0; // 초기 페이지
-                    var pageSize = 5; // 한 번에 로드할 데이터 수
 
-                    loadCulturalProperties(page);
 
-                    function loadCulturalProperties(page) {
-                        $.ajax({
-                            url: /* 서버 측 URL */,
-                            type: 'GET',
-                            data: {
-                                page: page,
-                                size: pageSize
-                            },
-                            success: function(data) {
-                                $('#culturalPropertiesBody').empty();
-                                $.each(data, function(index, culturalProperty) {
-                                    var row = '<tr>' +
-                                                '<td>' + (index + 1) + '</td>' +
-                                                '<td>' + culturalProperty.culturalPropertiesName + '</td>' +
-                                                '<td>' + culturalProperty.categoryName + '</td>' +
-                                                '<td>' + culturalProperty.region + '</td>' +
-                                                '<td>' + culturalProperty.dynasty + '</td>' +
-                                                '<td><!-- DB 관리 기능 추가 --></td>' +
-                                              '</tr>';
-                                    $('#culturalPropertiesBody').append(row);
-                                });
-                            },
-                            error: function(xhr, status, error) {
-                                console.error('Error loading cultural properties: ' + error);
-                            }
-                        });
-                    }
+                $(document).ready(
+                    function(){
 
-                    // 페이지네이션 또는 버튼 클릭 시 다음 페이지 로드
-                    $('#nextButton').click(function() {
-                        page++;
-                        loadCulturalProperties(page);
-                    });
 
-                    // 이전 페이지 로드
-                    $('#prevButton').click(function() {
-                        if (page > 0) {
-                            page--;
-                            loadCulturalProperties(page);
+                // api table
+                function fetchApiData(page){
+
+                    $('#list2').html("");
+                    console.log("확인");
+
+                    $.ajax({
+
+                        url: '/admin/cultural-properties-regulate/fetchApiData?page=' + page,
+                        method: 'POST',
+                        contentType: 'application/json',
+                        success: function(list){
+                            console.log(list);
+                            $.each(list, function(index, culturalProperties){
+                                console.log(culturalProperties);
+                                var index1 = (index + 1) + (page-1)*5;
+
+
+                                var htmlCheck = ``;
+
+
+                                htmlCheck = `<tr>
+                                        <td><input class="check2" type="checkbox" name="index" value="${index}"/></td>`
+
+
+
+                                var htmlContent =`
+
+                                        <td class="index1">${index1}</td>
+                                        <td class="culturalPropertieId">${culturalPropertie.culturalPropertieId}</td>
+                                        <td class="culturalPropertiesName">${culturalProperties.culturalPropertiesName}</td>
+                                        <td class="categoryName">${culturalProperties.categoryName}</td>
+                                        <td class="region">${culturalProperties.region}</td>
+                                        <td class="dynasty">${culturalProperties.dynasty}</td>
+
+                                    </tr>
+
+                                `;
+                                var finalHtml = htmlCheck + htmlContent;
+
+                                $('#list2').append(finalHtml);
+
+                            })
+
+
                         }
-                    });
+
+                    })
+                }
+
+                // 초기 페이지 로드시 데이터 가져오기
+                fetchApiData(1);
+
+                // 페이지 번호 버튼 클릭시 해당 페이지 데이터 가져오기
+                $(document).on('click', '.pageBtn2', function() {
+                    var page = $(this).text();
+                    fetchApiData(page);
                 });
+            });
+
+
+<!--                fetchApiData(1);-->
+<!--                fetchApiDataCount(20);-->
+
+
+
+<!--                // api table page number-->
+<!--                function fetchApiDataCount(page){-->
+
+<!--                    $('#pageNum2').html("");-->
+
+<!--                   for(var p=1; p<=page; p++){-->
+
+<!--                    $('#pageNum2').append(`<button class="pageBtn2">${p}</button>`)-->
+
+<!--                    }-->
+
+<!--                    $(document).on('click','.pageBtn2', function(){-->
+
+<!--                        const page = $(this).text();-->
+<!--                        fetchApiData(page);-->
+
+<!--                    })-->
+<!--                }-->
+
+
+
+
+
+
+<!--                $(document).ready(function() {-->
+<!--                    var page = 0; // 초기 페이지-->
+<!--                    var pageSize = 5; // 한 번에 로드할 데이터 수-->
+
+<!--                    loadCulturalProperties(page);-->
+
+<!--                    function loadCulturalProperties(page) {-->
+<!--                        $.ajax({-->
+<!--                            url: /* 서버 측 URL */,-->
+<!--                            type: 'GET',-->
+<!--                            data: {-->
+<!--                                page: page,-->
+<!--                                size: pageSize-->
+<!--                            },-->
+<!--                            success: function(data) {-->
+<!--                                $('#culturalPropertiesBody').empty();-->
+<!--                                $.each(data, function(index, culturalProperty) {-->
+<!--                                    var row = '<tr>' +-->
+<!--                                                '<td>' + (index + 1) + '</td>' +-->
+<!--                                                '<td>' + culturalProperty.culturalPropertiesName + '</td>' +-->
+<!--                                                '<td>' + culturalProperty.categoryName + '</td>' +-->
+<!--                                                '<td>' + culturalProperty.region + '</td>' +-->
+<!--                                                '<td>' + culturalProperty.dynasty + '</td>' +-->
+<!--                                                '<td>&lt;!&ndash; DB 관리 기능 추가 &ndash;&gt;</td>' +-->
+<!--                                              '</tr>';-->
+<!--                                    $('#culturalPropertiesBody').append(row);-->
+<!--                                });-->
+<!--                            },-->
+<!--                            error: function(xhr, status, error) {-->
+<!--                                console.error('Error loading cultural properties: ' + error);-->
+<!--                            }-->
+<!--                        });-->
+<!--                    }-->
+
+<!--                    // 페이지네이션 또는 버튼 클릭 시 다음 페이지 로드-->
+<!--                    $('#nextButton').click(function() {-->
+<!--                        page++;-->
+<!--                        loadCulturalProperties(page);-->
+<!--                    });-->
+
+<!--                    // 이전 페이지 로드-->
+<!--                    $('#prevButton').click(function() {-->
+<!--                        if (page > 0) {-->
+<!--                            page&#45;&#45;;-->
+<!--                            loadCulturalProperties(page);-->
+<!--                        }-->
+<!--                    });-->
+<!--                });-->
             </script>
         </table>
 

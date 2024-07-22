@@ -10,5 +10,9 @@ import java.util.List;
 public interface AdminCulturalPropertiesService {
 
 
-    List<CulturalPropertiesDTO> fetchApiData();
+//    List<CulturalPropertiesDTO> fetchApiData();
+
+    List<CulturalPropertiesDTO> fetchApiData(int page);
+
+//    List<CulturalPropertiesDTO> findAPIList(int page);
 }
