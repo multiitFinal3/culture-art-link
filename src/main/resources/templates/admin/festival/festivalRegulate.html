@@ -71,7 +71,7 @@
                                         <td><input class="check2" type="checkbox" name="index" value="${index}"/></td>`
                                 }
 
-                                var htmlContent =`
+                                var htmlContent1 =`
                                         <td class="index1">${index1}</td>
                                         <td class="regionId">${festival.regionId}</td>
                                         <td class="timeId">${festival.timeId}</td>
@@ -89,12 +89,28 @@
                                         <td class="endDate">${festival.formattedEnd}</td>
                                         <td class="avgRate">${festival.avgRate}</td>
                                         <td class="season">${festival.season}</td>
-                                        <td class="imgUrl"><img src="${festival.imgUrl}" width="40px"></td>
-
-                                    </tr>
 
                                 `;
-                                var finalHtml = htmlCheck + htmlContent;
+
+                                var htmlContent2 = ``;
+
+                                if(! festival.imgUrl || festival.imgUrl == "null"){
+
+                                    htmlContent2= `
+                                    <td class="imgUrl"></td></tr>
+                                    `
+
+
+                                }else{
+
+                                     htmlContent2 = `
+                                     <td class="imgUrl"><img src="${festival.imgUrl}" width="40px"></td></tr>
+                                    `
+                                }
+
+
+
+                                var finalHtml = htmlCheck + htmlContent1 + htmlContent2;
 
                                 $('#list2').append(finalHtml);
 
@@ -223,7 +239,7 @@
                                 "없음";
 
 
-                                var htmlContent =`
+                                var htmlContent1 =`
 
                                     <tr>
 
@@ -254,13 +270,32 @@
                                         <td class="formattedEnd">${festival.formattedEnd}</td>
                                         <td class="avgRate">${festival.avgRate}</td>
                                         <td class="season">${festival.season}</td>
-                                        <td class="imgUrl"><img src="${festival.imgUrl}" width="40px"></td>
 
-                                    </tr>
 
                                 `;
 
-                                $('#list1').append(htmlContent);
+                                var htmlContent2 = ``;
+
+                                if(! festival.imgUrl || festival.imgUrl == "null"){
+
+                                    htmlContent2= `
+                                    <td class="imgUrl"></td></tr>
+                                    `
+
+
+                                }else{
+
+                                     htmlContent2 = `
+                                     <td class="imgUrl"><img src="${festival.imgUrl}" width="40px"></td></tr>
+                                    `
+                                }
+
+
+
+                                var finalHtml = htmlContent1 + htmlContent2;
+
+                                $('#list1').append(finalHtml);
+
 
 
 
