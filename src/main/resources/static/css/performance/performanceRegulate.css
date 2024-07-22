@@ -40,21 +40,24 @@ td#performanceName {
 }
 
 button {
-    background-color: #4CAF50;
+    background-color: #2E78F1;
     color: white;
     border: none;
     padding: 10px 20px;
     text-align: center;
+    align-items: center;
+    justify-content: center;
     text-decoration: none;
     display: inline-block;
     font-size: 16px;
     margin: 4px 2px;
     cursor: pointer;
-    border-radius: 12px;
+    border-radius: 3px;
+    /*width: 300px;*/
 }
 
 button:hover {
-    background-color: #45a049;
+    background-color: #286BD2;
 }
 
 /* 페이지네이션 */
@@ -96,5 +99,3 @@ button:hover {
     margin-left: 5px;
     font-size: 16px;
 }
-
-
