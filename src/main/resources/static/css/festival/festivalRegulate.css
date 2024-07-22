@@ -78,7 +78,20 @@
 
     }
 
-    .pageBtn1, .pageBtn2, .pageBtn3, .pageBtn5, .pageBtn6{
+
+    #pageNum1, #pageNum2{
+
+        display: flex;
+        flex-direction: row;
+
+
+    }
+
+    .pageBtn1,
+    .pageBtn2,
+    .pageBtn3,
+    .pageBtn5,
+    .pageBtn6{
 
         margin: 0.9%;
         width: 30px;
@@ -119,3 +132,10 @@
         background-color: #8FBC8F;
 
     }
+
+    .pageBtn1{
+
+        margin: 5%;
+
+    }
+

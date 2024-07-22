@@ -575,7 +575,7 @@ $(document).ready(
 
                     $.each(list2, function(index, time){
 
-                        var htmlContent = `<option value="${time.timeId}">${time.timeName}</option>`;
+                        var htmlContent = `<option value="${time.timeId}">${time.timeDescription}</option>`;
                         $('#searchTime1').append(htmlContent);
 
                     })
@@ -659,9 +659,10 @@ $(document).ready(
                         "없음";
 
 
-                        var htmlContent =`
+                        var htmlContent11 =`
 
                             <tr>
+
                                 <td>
 
                                     <input class="check1" type="checkbox" name="index" value="${festival.festivalId}"/><br><hr>
@@ -671,8 +672,6 @@ $(document).ready(
                                     <button type="button" class="btn btn-primary"  id="contentKeywordInsertBtn" value="${festival.festivalId}">내용 키워드 추가</button>
 
                                 </td>
-
-
                                 <td class="index1" style="width : 20px; height: 20px;">${index1}</td>
                                 <td class="festivalId">${festival.festivalId}</td>
                                 <td class="regionId">${festival.regionId}</td>
@@ -682,7 +681,30 @@ $(document).ready(
                                 <td class="manageInstitution">${inst1}</td>
                                 <td class="hostInstitution">${inst2}</td>
                                 <td class="sponserInstitution">${inst3}</td>
-                                <td class="tel">${festival.tel}</td>
+                                <td class="tel">${festival.tel}</td>`;
+
+                        var htmlContent12 =``;
+
+                        if(! festival.homepageUrl || festival.homepageUrl == "null" || festival.homepageUrl == ""){
+
+                            htmlContent12 = `
+
+                                <td class="homepageUrl"></td>
+                                <td class="detailAddress">${festival.detailAddress}</td>
+
+                                <td class="place">${festival.place}</td>
+                                <td class="formattedStart">${festival.formattedStart}</td>
+                                <td class="formattedEnd">${festival.formattedEnd}</td>
+                                <td class="avgRate">${festival.avgRate}</td>
+                                <td class="season">${festival.season}</td>
+
+
+                            `;
+
+                        }else{
+
+                           htmlContent12 = `
+
                                 <td class="homepageUrl"><a href="${festival.homepageUrl}">클릭!</a></td>
                                 <td class="detailAddress">${festival.detailAddress}</td>
 
@@ -691,13 +713,34 @@ $(document).ready(
                                 <td class="formattedEnd">${festival.formattedEnd}</td>
                                 <td class="avgRate">${festival.avgRate}</td>
                                 <td class="season">${festival.season}</td>
-                                <td class="imgUrl"><img src="${festival.imgUrl}" width="40px"></td>
 
-                            </tr>
+                            `;
 
-                        `;
 
-                        $('#list1').append(htmlContent);
+                        }
+
+
+                        var htmlContent2 = ``;
+
+                        if(! festival.imgUrl || festival.imgUrl == "null"){
+
+                            htmlContent2= `
+                            <td class="imgUrl"></td></tr>
+                            `
+
+                        }else{
+
+                             htmlContent2 = `
+                             <td class="imgUrl"><img src="${festival.imgUrl}" width="40px"></td></tr>
+                            `
+                        }
+
+
+                        var finalHtml = htmlContent11 + htmlContent12 + htmlContent2;
+
+                        $('#list1').append(finalHtml);
+
+
 
                     })
 
@@ -721,7 +764,7 @@ $(document).ready(
 
                     $('#pageNum1').html("");
                     // 상세검색 전으로 돌아가기 버튼
-                    $('#pageNum1').append(`<button class="pageBtn4" onclick=>전체검색</button>`);
+                    $('#pageNum1').append(`<button class="pageBtn4">전체</button>`);
 
                     $(document).on('click','.pageBtn4', function(){
 
@@ -930,7 +973,7 @@ $(document).ready(
 
                     $('#pageNum2').html("");
                     // 상세검색 전으로 돌아가기 버튼
-                    $('#pageNum2').append(`<button class="pageBtn6" onclick=>전체검색</button>`);
+                    $('#pageNum2').append(`<button class="pageBtn6">전체</button>`);
 
                     $(document).on('click','.pageBtn6', function(){
 
@@ -974,6 +1017,8 @@ $(document).ready(
 
 
         }
+
+
     }
 )
 

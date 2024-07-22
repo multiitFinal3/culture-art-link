@@ -487,8 +487,6 @@ public class AdminFestivalController {
 				
 			}
 			
-			
-			System.out.println("첫번째 : " + list.get(0));
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
@@ -1209,6 +1207,12 @@ public class AdminFestivalController {
 		
 		
 		ArrayList<String> list = null;
+		
+		try {
+			list = adminFestivalService.insertContentKeywordByFestivalId(festivalId);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
 		
 		
 		return list;
