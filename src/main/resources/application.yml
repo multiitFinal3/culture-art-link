@@ -12,7 +12,6 @@ mybatis:
 
 server:
   port: 8094
-  #port: 8080
 
 spring-boot:
   run:
