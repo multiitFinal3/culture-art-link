@@ -59,6 +59,7 @@ public class PerformanceAPIService {
         return new PageImpl<>(performances.subList(start, end), PageRequest.of(page, size), performances.size());
     }
 
+
     private List<PerformanceDTO> parseXML(String xmlContent) {
         List<PerformanceDTO> performances = new ArrayList<>();
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -77,15 +78,15 @@ public class PerformanceAPIService {
                 if (node.getNodeType() == Node.ELEMENT_NODE) {
                     Element element = (Element) node;
                     PerformanceDTO performance = new PerformanceDTO();
-                    performance.setId(getValue("mt20id", element));
+                    performance.setCode(getValue("mt20id", element));
                     performance.setTitle(getValue("prfnm", element));
-                    performance.setState(getValue("prfstate", element));
+                    performance.setStatus(getValue("prfstate", element));
                     performance.setStartDate(getValue("prfpdfrom", element));
                     performance.setEndDate(getValue("prfpdto", element));
-                    performance.setVenue(getValue("fcltynm", element));
-                    performance.setPoster(getValue("poster", element));
+                    performance.setLocation(getValue("fcltynm", element));
+                    performance.setImageMain(getValue("poster", element));
                     performance.setGenre(getValue("genrenm", element));
-                    performance.setOpenRun(getValue("openrun", element));
+                    //performance.setOpenRun(getValue("openrun", element));
                     performances.add(performance);
                 }
             }
@@ -94,6 +95,8 @@ public class PerformanceAPIService {
         }
         return performances;
     }
+
+
 
     private String getValue(String tag, Element element) {
         NodeList nodes = element.getElementsByTagName(tag);
