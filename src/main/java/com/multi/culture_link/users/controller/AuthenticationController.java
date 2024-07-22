@@ -8,10 +8,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class AuthenticationController {
 	
 	
-	@GetMapping("/users/login")
+	@GetMapping("/user/login")
 	public String login(){
 		
-		return "/users/login";
+		return "/user/login";
 	}
 	
 	
