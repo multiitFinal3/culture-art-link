@@ -58,7 +58,7 @@ public class AdminFestivalServiceImpl implements AdminFestivalService {
 		
 		//크롬인 것 처럼 속이려했으나 빠르게 클릭하면 여전히 네이버 서버에서 막는다
 		Request request = new Request.Builder()
-				.url("http://api.data.go.kr/openapi/tn_pubr_public_cltur_fstvl_api?serviceKey=chNg8jx96krRfOCTvGcO2PvBKnrCrH0Qm6/JmV1TOw/Yu1T0x3jy0fHM8SOcZFnJIxdc7oqyM03PVmMA9UFOsA==&pageNo=" + page + "&numOfRows=5&type=json")
+				.url("http://api.data.go.kr/openapi/tn_pubr_public_cltur_fstvl_api?serviceKey=chNg8jx96krRfOCTvGcO2PvBKnrCrH0Qm6/JmV1TOw/Yu1T0x3jy0fHM8SOcZFnJIxdc7oqyM03PVmMA9UFOsA==&pageNo=1&numOfRows=100&type=json")
 				.addHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36")
 				.addHeader("Connection", "keep-alive")
 				.get()
@@ -74,6 +74,11 @@ public class AdminFestivalServiceImpl implements AdminFestivalService {
 		/*System.out.println("items : " + items);*/
 		
 		ArrayList<FestivalDTO> list = new ArrayList<>();
+		
+		PageDTO pageDTO = new PageDTO();
+		pageDTO.setStartEnd(page);
+		int start = pageDTO.getStart();
+		int end = pageDTO.getEnd();
 		
 		for (int i = 0; i < items.size(); i++) {
 			
@@ -274,30 +279,11 @@ public class AdminFestivalServiceImpl implements AdminFestivalService {
 			
 			festivalDTO.setTimeId(timeId);
 			
-			//festival content
 			
 			String content1 = item.get("fstvlCo").getAsString().replace("+", ", ") + ". ";
 			
 			
-			Document document = Jsoup.connect("https://search.naver.com/search.naver?sm=tab_hty.top&where=nexearch&ssc=tab.nx.all&query=" + festivalName + "+기본정보").get();
-			
-			String title = document.title();
-			System.out.println("title : " + title);
-			
-			
-			String imgUrl = document.select("div.detail_info > a > img").attr("src");
-			
-			if (!imgUrl.equals("")) {
-				
-				festivalDTO.setImgUrl(imgUrl);
-				
-			}
-			
-			String content2 = document.select("div.intro_box > p.text").text();
-			
-			
-			String festivalContent = content1 + content2;
-			festivalDTO.setFestivalContent(festivalContent);
+			festivalDTO.setFestivalContent(content1);
 			
 			String manageInstitution = item.get("mnnstNm").getAsString().replace("+", ", ");
 			String hostInstitution = item.get("auspcInsttNm").getAsString().replace("+", ", ");
@@ -333,7 +319,8 @@ public class AdminFestivalServiceImpl implements AdminFestivalService {
 			
 			if (festivalExist != null) {
 				System.out.println("리스트에서 제외 : " + festivalExist.toString());
-				festivalDTO.setExist("Y");
+				/*festivalDTO.setExist("Y");*/
+				continue;
 				
 			}
 			
@@ -347,7 +334,15 @@ public class AdminFestivalServiceImpl implements AdminFestivalService {
 		
 		this.list = list;
 		
-		return list;
+		ArrayList<FestivalDTO> list2 = new ArrayList<FestivalDTO>();
+		
+		for (int i = start - 1; i <= end - 1; i++) {
+			
+			list2.add(list.get(i));
+			
+		}
+		
+		return list2;
 		
 		
 	}
@@ -359,6 +354,32 @@ public class AdminFestivalServiceImpl implements AdminFestivalService {
 		for (int i : numList) {
 			
 			FestivalDTO festivalDTO = list.get(i);
+			
+			String festivalName = festivalDTO.getFestivalName();
+			String content1 = festivalDTO.getFestivalContent();
+			
+			
+			//festival naver content + img
+			
+			Document document = Jsoup.connect("https://search.naver.com/search.naver?sm=tab_hty.top&where=nexearch&ssc=tab.nx.all&query=" + festivalName + "+기본정보").get();
+			
+			String title = document.title();
+			System.out.println("title : " + title);
+			
+			
+			String imgUrl = document.select("div.detail_info > a > img").attr("src");
+			
+			if (!imgUrl.equals("")) {
+				
+				festivalDTO.setImgUrl(imgUrl);
+				
+			}
+			
+			String content2 = document.select("div.intro_box > p.text").text();
+			
+			
+			String festivalContent = content1 + content2;
+			
 			
 			System.out.println(festivalDTO.toString());
 			
@@ -439,15 +460,15 @@ public class AdminFestivalServiceImpl implements AdminFestivalService {
 		
 		int page = festivalDTO.getPageDTO().getPage();
 		
-		String url1 = "http://api.data.go.kr/openapi/tn_pubr_public_cltur_fstvl_api?serviceKey=chNg8jx96krRfOCTvGcO2PvBKnrCrH0Qm6/JmV1TOw/Yu1T0x3jy0fHM8SOcZFnJIxdc7oqyM03PVmMA9UFOsA==&pageNo=";
+		String url1 = "http://api.data.go.kr/openapi/tn_pubr_public_cltur_fstvl_api?serviceKey=chNg8jx96krRfOCTvGcO2PvBKnrCrH0Qm6/JmV1TOw/Yu1T0x3jy0fHM8SOcZFnJIxdc7oqyM03PVmMA9UFOsA==&pageNo=1";
 		
 		// 조건에 의한 파라미터들
 		String url2 = urls;
-
-		String url3 = "&numOfRows=5&type=json";
+		
+		String url3 = "&numOfRows=100&type=json";
 		
 		
-		String urlFinal = url1 + page + url2 + url3;
+		String urlFinal = url1 + url2 + url3;
 		System.out.println("urlFinal : " + urlFinal);
 		
 		Request request = new Request.Builder()
@@ -467,6 +488,11 @@ public class AdminFestivalServiceImpl implements AdminFestivalService {
 		/*System.out.println("items : " + items);*/
 		
 		ArrayList<FestivalDTO> list = new ArrayList<>();
+		
+		PageDTO pageDTO = new PageDTO();
+		pageDTO.setStartEnd(page);
+		int start = pageDTO.getStart();
+		int end = pageDTO.getEnd();
 		
 		for (int i = 0; i < items.size(); i++) {
 			
@@ -720,7 +746,8 @@ public class AdminFestivalServiceImpl implements AdminFestivalService {
 			
 			if (festivalExist != null) {
 				System.out.println("리스트에서 제외 : " + festivalExist.toString());
-				festivalDTO2.setExist("Y");
+				/*festivalDTO2.setExist("Y");*/
+				continue;
 				
 			}
 			
@@ -734,7 +761,15 @@ public class AdminFestivalServiceImpl implements AdminFestivalService {
 		
 		this.list = list;
 		
-		return list;
+		ArrayList<FestivalDTO> list2 = new ArrayList<FestivalDTO>();
+		
+		for (int i = start - 1; i <= end - 1; i++) {
+			
+			list2.add(list.get(i));
+			
+		}
+		
+		return list2;
 	}
 	
 	@Override
@@ -745,7 +780,7 @@ public class AdminFestivalServiceImpl implements AdminFestivalService {
 		// 조건에 의한 파라미터들
 		String url2 = urls;
 		
-		String url3 = "&numOfRows=10&type=json";
+		String url3 = "&numOfRows=100&type=json";
 		
 		
 		String urlFinal = url1 + url2 + url3;
@@ -764,7 +799,7 @@ public class AdminFestivalServiceImpl implements AdminFestivalService {
 		JsonObject json = gson.fromJson(responseBody, JsonObject.class);
 		JsonObject response1 = json.getAsJsonObject("response");
 		JsonObject body1 = response1.getAsJsonObject("body");
-		int count  = body1.getAsJsonPrimitive("totalCount").getAsInt();
+		int count = body1.getAsJsonPrimitive("totalCount").getAsInt();
 		
 		System.out.println("count : " + count);
 		
