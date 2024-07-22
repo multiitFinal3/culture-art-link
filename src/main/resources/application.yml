@@ -1,6 +1,7 @@
 spring:
   datasource:
-    url: jdbc:log4jdbc:mysql://db-oa18v.pub-cdb.ntruss.com:3306/culturelinkdb
+    url: jdbc:mysql://db-oa18v.pub-cdb.ntruss.com:3306/culturelinkdb
+
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: user
     password: user123@
@@ -20,9 +21,13 @@ spring-boot:
 logging:
   level:
     org:
+      mybatis: DEBUG
       springframework:
         jdbc: DEBUG
         transaction: DEBUG
     com:
-      .zaxxer: DEBUG
+      .zaxxer: DEBUG    
     sql: DEBUG
+
+API-KEY:
+  clientKey: c9130d29-65ea-495e-9701-9025010a1b92
