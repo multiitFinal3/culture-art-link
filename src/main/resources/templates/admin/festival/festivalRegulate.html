@@ -71,7 +71,7 @@
                                         <td><input class="check2" type="checkbox" name="index" value="${index}"/></td>`
                                 }
 
-                                var htmlContent1 =`
+                                var htmlContent11 =`
                                         <td class="index1">${index1}</td>
                                         <td class="regionId">${festival.regionId}</td>
                                         <td class="timeId">${festival.timeId}</td>
@@ -80,7 +80,31 @@
                                         <td class="manageInstitution">${inst1}</td>
                                         <td class="hostInstitution">${inst2}</td>
                                         <td class="sponserInstitution">${inst3}</td>
-                                        <td class="tel">${festival.tel}</td>
+                                        <td class="tel">${festival.tel}</td>`;
+
+                                var htmlContent12 =``;
+
+
+                                if(! festival.homepageUrl || festival.homepageUrl == "null" || festival.homepageUrl == ""){
+
+                                    htmlContent12 = `
+
+                                        <td class="homepageUrl"></td>
+                                        <td class="detailAddress">${festival.detailAddress}</td>
+
+                                        <td class="place">${festival.place}</td>
+                                        <td class="startDate">${festival.formattedStart}</td>
+                                        <td class="endDate">${festival.formattedEnd}</td>
+                                        <td class="avgRate">${festival.avgRate}</td>
+                                        <td class="season">${festival.season}</td>
+
+
+                                    `;
+
+                                }else{
+
+                                    htmlContent12 = `
+
                                         <td class="homepageUrl"><a href="${festival.homepageUrl}">클릭!</a></td>
                                         <td class="detailAddress">${festival.detailAddress}</td>
 
@@ -90,7 +114,10 @@
                                         <td class="avgRate">${festival.avgRate}</td>
                                         <td class="season">${festival.season}</td>
 
-                                `;
+
+                                    `;
+
+                                }
 
                                 var htmlContent2 = ``;
 
@@ -110,7 +137,7 @@
 
 
 
-                                var finalHtml = htmlCheck + htmlContent1 + htmlContent2;
+                                var finalHtml = htmlCheck + htmlContent11 + htmlContent12 + htmlContent2;
 
                                 $('#list2').append(finalHtml);
 
@@ -239,7 +266,7 @@
                                 "없음";
 
 
-                                var htmlContent1 =`
+                                var htmlContent11 =`
 
                                     <tr>
 
@@ -261,8 +288,15 @@
                                         <td class="manageInstitution">${inst1}</td>
                                         <td class="hostInstitution">${inst2}</td>
                                         <td class="sponserInstitution">${inst3}</td>
-                                        <td class="tel">${festival.tel}</td>
-                                        <td class="homepageUrl"><a href="${festival.homepageUrl}">클릭!</a></td>
+                                        <td class="tel">${festival.tel}</td>`;
+
+                                var htmlContent12 =``;
+
+                                if(! festival.homepageUrl || festival.homepageUrl == "null" || festival.homepageUrl == ""){
+
+                                    htmlContent12 = `
+
+                                        <td class="homepageUrl"></td>
                                         <td class="detailAddress">${festival.detailAddress}</td>
 
                                         <td class="place">${festival.place}</td>
@@ -272,7 +306,26 @@
                                         <td class="season">${festival.season}</td>
 
 
-                                `;
+                                    `;
+
+                                }else{
+
+                                   htmlContent12 = `
+
+                                        <td class="homepageUrl"><a href="${festival.homepageUrl}">클릭!</a></td>
+                                        <td class="detailAddress">${festival.detailAddress}</td>
+
+                                        <td class="place">${festival.place}</td>
+                                        <td class="formattedStart">${festival.formattedStart}</td>
+                                        <td class="formattedEnd">${festival.formattedEnd}</td>
+                                        <td class="avgRate">${festival.avgRate}</td>
+                                        <td class="season">${festival.season}</td>
+
+                                    `;
+
+
+                                }
+
 
                                 var htmlContent2 = ``;
 
@@ -282,7 +335,6 @@
                                     <td class="imgUrl"></td></tr>
                                     `
 
-
                                 }else{
 
                                      htmlContent2 = `
@@ -291,11 +343,9 @@
                                 }
 
 
-
-                                var finalHtml = htmlContent1 + htmlContent2;
+                                var finalHtml = htmlContent11 + htmlContent12 + htmlContent2;
 
                                 $('#list1').append(finalHtml);
-
 
 
 
