@@ -15,14 +15,16 @@ import okhttp3.Request;
 import okhttp3.Response;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
 
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.InputStreamReader;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 	/*public static void main(String[] args) throws IOException {
 		
@@ -49,13 +51,15 @@ public class AdminFestivalServiceImpl implements AdminFestivalService {
 	private final AdminFestivalMapper adminFestivalMapper;
 	private final OkHttpClient client;
 	private final Gson gson;
+	private ResourceLoader resourceLoader;
 	
 	ArrayList<FestivalDTO> list = new ArrayList<>();
 	
-	public AdminFestivalServiceImpl(OkHttpClient client, Gson gson, OkHttpClient client1, AdminFestivalMapper adminFestivalMapper) {
+	public AdminFestivalServiceImpl(OkHttpClient client, Gson gson, OkHttpClient client1, AdminFestivalMapper adminFestivalMapper, ResourceLoader resourceLoader) {
 		this.client = client;
 		this.gson = gson;
 		this.adminFestivalMapper = adminFestivalMapper;
+		this.resourceLoader = resourceLoader;
 	}
 	
 	@Override
@@ -861,13 +865,33 @@ public class AdminFestivalServiceImpl implements AdminFestivalService {
 		
 		ArrayList<String> list = (ArrayList<String>) analyzeResultList.getNouns();
 		
+		ArrayList<String> stopWords = new ArrayList<String>();
+		
+		
+		
+		Resource resource = resourceLoader.getResource("classpath:static/txt/stop.txt");
+		
+		BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(new FileInputStream(resource.getFile())));
+		
+		String line = null;
+		
+		while ((line = bufferedReader.readLine())!=null){
+			
+			if (line.trim().length()>0){
+				stopWords.add(line.trim());
+			}
+		}
+		
+		System.out.println("stopWords : " + stopWords.toString());
+		
+		
 		
 		
 		ArrayList<String> list2 = new ArrayList<>();
 		
 		for (String token : list){
 			
-			if (!list2.contains(token)){
+			if ((!list2.contains(token)) && (!stopWords.contains(token))){
 				
 				list2.add(token);
 				
