@@ -11,7 +11,7 @@ mybatis:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 
 server:
-  port: 8088
+  port: 8094
 
 spring-boot:
   run:
@@ -21,9 +21,13 @@ spring-boot:
 logging:
   level:
     org:
+      mybatis: DEBUG
       springframework:
         jdbc: DEBUG
         transaction: DEBUG
     com:
       .zaxxer: DEBUG    
     sql: DEBUG
+
+API-KEY:
+  clientKey: c9130d29-65ea-495e-9701-9025010a1b92

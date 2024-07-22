@@ -13,4 +13,19 @@ public interface AdminFestivalService {
 	ArrayList<FestivalDTO> findDBFestivalList(PageDTO pageDTO) throws Exception;
 	
 	int findDBFestivalCount() throws Exception;
+	
+	void deleteDBFestivalList(ArrayList<Integer> checks) throws Exception;
+	
+	FestivalDTO findDBFestivalByFestivalId(int festivalId) throws Exception;
+	
+	void updateDBFestivalByFestival(FestivalDTO festivalDTO) throws Exception;
+	
+	
+	ArrayList<FestivalDTO> findDBFestivalByMultiple(FestivalDTO festivalDTO) throws Exception;
+	
+	int findDBFestivalMultipleCount(FestivalDTO festivalDTO) throws Exception;
+	
+	ArrayList<FestivalDTO> findAPIFestivalByMultiple(FestivalDTO festivalDTO, String urls) throws Exception;
+	
+	int findAPIFestivalByMultipleCount(FestivalDTO festivalDTO, String urls) throws Exception;
 }
