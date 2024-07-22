@@ -12,6 +12,7 @@ mybatis:
 
 server:
   port: 8094
+  #port: 8080
 
 spring-boot:
   run:
@@ -31,3 +32,5 @@ logging:
 
 API-KEY:
   clientKey: c9130d29-65ea-495e-9701-9025010a1b92
+
+
