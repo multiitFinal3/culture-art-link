@@ -2,124 +2,27 @@ package com.multi.culture_link.admin.festival.controller;
 
 
 import com.multi.culture_link.admin.festival.service.AdminFestivalService;
+import com.multi.culture_link.common.region.model.dto.RegionDTO;
+import com.multi.culture_link.common.region.service.RegionService;
+import com.multi.culture_link.common.time.model.dto.TimeDTO;
+import com.multi.culture_link.common.time.service.TimeService;
 import com.multi.culture_link.festival.model.dto.FestivalDTO;
 import com.multi.culture_link.festival.model.dto.PageDTO;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 
-@Controller
-@RequestMapping("/admin/festival-regulate")
-public class AdminFestivalController {
-	
-	private final AdminFestivalService adminFestivalService;
-	private ArrayList<FestivalDTO> list2;
-	
-	public AdminFestivalController(AdminFestivalService adminFestivalService, ArrayList<FestivalDTO> list2) {
-		this.adminFestivalService = adminFestivalService;
-		this.list2 = list2;
-	}
-	
-	@GetMapping
-	public String festivalManage() {
-		
-		
-		return "/admin/festival/festivalRegulate";
-		
-	}
-	
-	
-	@PostMapping("/findAPIFestivalList")
-	@ResponseBody
-	public ArrayList<FestivalDTO> findAPIFestivalList(@RequestParam("page") int page) {
-		
-		ArrayList<FestivalDTO> list = null;
-		try {
-			list = adminFestivalService.findAPIFestivalList(page);
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-		
-		
-		System.out.println("list : " + list);
-		
-		return list;
-		
-		
-	}
-	
-	
-	@PostMapping("/insertAPIFestivalList")
-	@ResponseBody
-	public String insertAPIFestivalList(@RequestBody ArrayList<Integer> checks) {
-		
-		System.out.println("checks : " + checks);
-		
-		ArrayList<Integer> list = new ArrayList();
-		
-		for (int i : checks) {
-			
-			list.add(i);
-		}
-		
-		
-		try {
-			adminFestivalService.insertAPIFestivalList(list);
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-		
-		return "삽입 성공";
-	}
-	
-	
-	@PostMapping("/findDBFestivalList")
-	@ResponseBody
-	public ArrayList<FestivalDTO> findDBFestivalList(@RequestParam("page") int page) {
-		
-		System.out.println("page : " + page);
-		
-		PageDTO pageDTO = new PageDTO();
-		pageDTO.setStartEnd(page);
-		
-		ArrayList<FestivalDTO> list = null;
-		try {
-			list = adminFestivalService.findDBFestivalList(pageDTO);
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-		
-		System.out.println("list : " + list);
-		
-		return list;
-		
-		
-	}
-	
-	
-	@PostMapping("/findDBFestivalCount")
-	@ResponseBody
-	public int findDBFestivalCount(){
-		
-		int count = 0;
-		try {
-			count = adminFestivalService.findDBFestivalCount();
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-		
-		
-		System.out.println("count : " + count);
-		
-		return count;
-		
-		
-	}
-	
-	
-	// json 파싱 예시
+// json 파싱 예시
 	/*public static void main(String[] args) throws IOException {
 		
 		Request request = new Request.Builder()
@@ -384,9 +287,9 @@ public class AdminFestivalController {
 		
 		
 	}*/
-	
-	
-	// jsoup 로 네이버 축제 기본정보 파싱 예제
+
+
+// jsoup 로 네이버 축제 기본정보 파싱 예제
 	/*public static void main(String[] args) throws IOException {
 		
 		
@@ -410,9 +313,9 @@ public class AdminFestivalController {
 		
 	
 	}*/
-	
-	
-	// xml >> json 바로 예시
+
+
+// xml >> json 바로 예시
 	/*public static void main(String[] args) {
 		
 		
@@ -440,9 +343,9 @@ public class AdminFestivalController {
 		// JSON 객체 출력
 		System.out.println(jsonObject.toString(4)); // 들여쓰기 포함 출력
 	}*/
-	
-	
-	// XML >> string >> json 예시
+
+
+// XML >> string >> json 예시
 	/*public static void main(String[] args) {
 		
 		final String xmlStr = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n"+
@@ -479,4 +382,843 @@ public class AdminFestivalController {
 		
 		
 	}*/
+
+
+@Controller
+@RequestMapping("/admin/festival-regulate")
+public class AdminFestivalController {
+	
+	private final AdminFestivalService adminFestivalService;
+	private final RegionService regionService;
+	private final TimeService timeService;
+	private ArrayList<FestivalDTO> list2;
+	
+	public AdminFestivalController(AdminFestivalService adminFestivalService, RegionService regionService, TimeService timeService, ArrayList<FestivalDTO> list2) {
+		this.adminFestivalService = adminFestivalService;
+		this.regionService = regionService;
+		this.timeService = timeService;
+		this.list2 = list2;
+	}
+	
+	@GetMapping
+	public String festivalManage() {
+		
+		
+		return "/admin/festival/festivalRegulate";
+		
+	}
+	
+	
+	@PostMapping("/findAPIFestivalList")
+	@ResponseBody
+	public ArrayList<FestivalDTO> findAPIFestivalList(@RequestParam("page") int page) {
+		
+		ArrayList<FestivalDTO> list = null;
+		try {
+			list = adminFestivalService.findAPIFestivalList(page);
+			
+			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+			
+			for (FestivalDTO festivalDTO : list) {
+				
+				
+				festivalDTO.setFormattedEnd(dateFormat.format(festivalDTO.getEndDate()));
+				festivalDTO.setFormattedStart(dateFormat.format(festivalDTO.getStartDate()));
+				
+			}
+			
+			
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+		
+		
+		System.out.println("list : " + list);
+		
+		return list;
+		
+		
+	}
+	
+	
+	@PostMapping("/insertAPIFestivalList")
+	@ResponseBody
+	public String insertAPIFestivalList(@RequestBody ArrayList<Integer> checks) {
+		
+		System.out.println("checks : " + checks);
+		
+		ArrayList<Integer> list = new ArrayList();
+		
+		for (int i : checks) {
+			
+			list.add(i);
+		}
+		
+		
+		try {
+			adminFestivalService.insertAPIFestivalList(list);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+		
+		return "삽입 성공";
+	}
+	
+	
+	@PostMapping("/findDBFestivalList")
+	@ResponseBody
+	public ArrayList<FestivalDTO> findDBFestivalList(@RequestParam("page") int page) {
+		
+		System.out.println("page : " + page);
+		
+		PageDTO pageDTO = new PageDTO();
+		pageDTO.setStartEnd(page);
+		
+		ArrayList<FestivalDTO> list = null;
+		try {
+			list = adminFestivalService.findDBFestivalList(pageDTO);
+			
+			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+			
+			for (FestivalDTO festivalDTO : list) {
+				
+				festivalDTO.setFormattedEnd(dateFormat.format(festivalDTO.getEndDate()));
+				festivalDTO.setFormattedStart(dateFormat.format(festivalDTO.getStartDate()));
+				
+			}
+			
+			
+			System.out.println("첫번째 : " + list.get(0));
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+		
+		System.out.println("list : " + list);
+		
+		return list;
+		
+		
+	}
+	
+	
+	@PostMapping("/findDBFestivalCount")
+	@ResponseBody
+	public int findDBFestivalCount() {
+		
+		int count = 0;
+		try {
+			count = adminFestivalService.findDBFestivalCount();
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+		
+		
+		System.out.println("count : " + count);
+		
+		return count;
+		
+		
+	}
+	
+	
+	@PostMapping("/deleteDBFestivalList")
+	@ResponseBody
+	public String deleteDBFestivalList(@RequestBody ArrayList<Integer> checks) {
+		
+		System.out.println("checks : " + checks);
+		
+		
+		try {
+			adminFestivalService.deleteDBFestivalList(checks);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+		
+		return "삭제 성공";
+	}
+	
+	@PostMapping("/findDBFestivalByFestivalId")
+	@ResponseBody
+	public FestivalDTO findDBFestivalByFestivalId(@RequestBody Map<String, Integer> request) {
+		
+		int festivalId = request.get("festivalId");
+		
+		System.out.println("받은 페스티벌 아이디 : " + festivalId);
+		
+		FestivalDTO festivalDTO = null;
+		try {
+			festivalDTO = adminFestivalService.findDBFestivalByFestivalId(festivalId);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+		
+		System.out.println("start : " + festivalDTO.getStartDate());
+		
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		festivalDTO.setFormattedEnd(dateFormat.format(festivalDTO.getEndDate()));
+		festivalDTO.setFormattedStart(dateFormat.format(festivalDTO.getStartDate()));
+		
+		
+		return festivalDTO;
+		
+		
+	}
+	
+	
+	@PostMapping("/updateDBFestivalByFestival")
+	public String updateDBFestivalByFestival(FestivalDTO festivalDTO, RedirectAttributes redirectAttributes) {
+		
+		System.out.println("form : " + festivalDTO);
+		
+		
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		
+		
+		Date start = null;
+		Date end = null;
+		try {
+			start = dateFormat.parse(festivalDTO.getFormattedStart());
+			festivalDTO.setStartDate(start);
+			
+			
+			end = dateFormat.parse(festivalDTO.getFormattedEnd());
+			festivalDTO.setEndDate(end);
+			
+			adminFestivalService.updateDBFestivalByFestival(festivalDTO);
+			
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+		
+		
+		return "redirect:/admin/festival-regulate";
+		
+		
+	}
+	
+	
+	@PostMapping("/findAllRegionAndTime")
+	@ResponseBody
+	public Map<String, ArrayList> findAllRegionAndTime() {
+		
+		ArrayList<RegionDTO> list1 = null;
+		ArrayList<TimeDTO> list2 = null;
+		
+		try {
+			list1 = regionService.findAllRegion();
+			list2 = timeService.findAllTime();
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+		
+		Map<String, ArrayList> map = new HashMap<String, ArrayList>();
+		
+		map.put("regionList", list1);
+		map.put("timeList", list2);
+		
+		
+		return map;
+		
+		
+	}
+	
+	
+	@PostMapping("/findDBFestivalByMultiple")
+	@ResponseBody
+	public ArrayList<FestivalDTO> findDBFestivalByMultiple(
+			@RequestBody ArrayList<HashMap<String, String>> mapList,
+			@RequestParam("page") int page) {
+		
+		
+		System.out.println("findDBFestivalByMultiple : " + mapList.toString());
+		
+		
+		FestivalDTO festivalDTO = new FestivalDTO();
+		PageDTO pageDTO = new PageDTO();
+		pageDTO.setPage(page);
+		pageDTO.setStartEnd(pageDTO.getPage());
+		festivalDTO.setPageDTO(pageDTO);
+		
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		
+		
+		for (int i = 0; i < mapList.size(); i++) {
+			
+			if (!mapList.get(i).get("value").isEmpty()) {
+				
+				switch (i) {
+					
+					case 0:
+						festivalDTO.setRegionId(Integer.parseInt(mapList.get(i).get("value")));
+						break;
+					
+					case 1:
+						festivalDTO.setTimeId(mapList.get(i).get("value"));
+						break;
+					
+					case 2:
+						festivalDTO.setFestivalName(mapList.get(i).get("value").trim());
+						break;
+					
+					case 3:
+						festivalDTO.setFestivalContent(mapList.get(i).get("value").trim());
+						break;
+					
+					case 4:
+						festivalDTO.setManageInstitution(mapList.get(i).get("value").trim());
+						break;
+					
+					case 5:
+						festivalDTO.setHostInstitution(mapList.get(i).get("value").trim());
+						break;
+					
+					
+					case 6:
+						festivalDTO.setSponserInstitution(mapList.get(i).get("value").trim());
+						break;
+					
+					
+					case 7:
+						festivalDTO.setTel(mapList.get(i).get("value").replace("-", "").trim());
+						break;
+					
+					
+					case 8:
+						festivalDTO.setPlace(mapList.get(i).get("value").replace("-", "").trim());
+						break;
+					
+					
+					case 9:
+						System.out.println("start-c: " + mapList.get(i).get("value").trim());
+						Date date = null;
+						try {
+							date = simpleDateFormat.parse(mapList.get(i).get("value").trim());
+						} catch (ParseException e) {
+							throw new RuntimeException(e);
+						}
+						festivalDTO.setStartDate(date);
+						break;
+					
+					
+					case 10:
+						Date date2 = null;
+						try {
+							date2 = simpleDateFormat.parse(mapList.get(i).get("value").trim());
+						} catch (ParseException e) {
+							throw new RuntimeException(e);
+						}
+						festivalDTO.setEndDate(date2);
+						break;
+					
+					case 11:
+						festivalDTO.setAvgRate(Double.valueOf(mapList.get(i).get("value").trim()));
+						break;
+					
+					
+					case 12:
+						festivalDTO.setSeason(mapList.get(i).get("value").trim());
+						break;
+					
+				}
+				
+				
+			}
+			
+		}
+		
+		
+		System.out.println("findDBFestivalByMultiple 정보가 담긴 축제 : " + festivalDTO.toString());
+		
+		//		정보가 담긴 축제 : FestivalDTO(festivalId=0, regionId=11, regionName=null, timeId=평일, festivalName=null, festivalContent=null, manageInstitution=null, hostInstitution=null, sponserInstitution=null, tel=null, homepageUrl=null, detailAddress=null, latitude=0.0, longtitude=0.0, place=null, startDate=null, endDate=null, formattedStart=null, formattedEnd=null, avgRate=0.0, season=봄, imgUrl=null, exist=null)
+		
+		
+		ArrayList<FestivalDTO> list = null;
+		try {
+			list = adminFestivalService.findDBFestivalByMultiple(festivalDTO);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+		
+		System.out.println("받아온 리스트 : " + list);
+		for (FestivalDTO festivalDTO1 : list) {
+			
+			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+			
+			festivalDTO1.setFormattedStart(dateFormat.format(festivalDTO1.getStartDate()));
+			festivalDTO1.setFormattedEnd(dateFormat.format(festivalDTO1.getEndDate()));
+			
+			
+			System.out.println(festivalDTO1.toString());
+			
+		}
+		
+		return list;
+	}
+	
+	
+	@PostMapping("/findDBFestivalMultipleCount")
+	@ResponseBody
+	public int findDBFestivalMultipleCount(@RequestBody ArrayList<HashMap<String, String>> mapList) {
+		
+		
+		System.out.println("findDBFestivalMultipleCount : " + mapList.toString());
+		
+		FestivalDTO festivalDTO = new FestivalDTO();
+		
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		
+		
+		for (int i = 0; i < mapList.size(); i++) {
+			
+			if (!mapList.get(i).get("value").isEmpty()) {
+				
+				switch (i) {
+					
+					case 0:
+						festivalDTO.setRegionId(Integer.parseInt(mapList.get(i).get("value")));
+						break;
+					
+					case 1:
+						festivalDTO.setTimeId(mapList.get(i).get("value"));
+						break;
+					
+					case 2:
+						festivalDTO.setFestivalName(mapList.get(i).get("value"));
+						break;
+					
+					case 3:
+						festivalDTO.setFestivalContent(mapList.get(i).get("value"));
+						break;
+					
+					case 4:
+						festivalDTO.setManageInstitution(mapList.get(i).get("value"));
+						break;
+					
+					case 5:
+						festivalDTO.setHostInstitution(mapList.get(i).get("value"));
+						break;
+					
+					
+					case 6:
+						festivalDTO.setSponserInstitution(mapList.get(i).get("value"));
+						break;
+					
+					
+					case 7:
+						festivalDTO.setTel(mapList.get(i).get("value"));
+						break;
+					
+					
+					case 8:
+						festivalDTO.setPlace(mapList.get(i).get("value"));
+						break;
+					
+					
+					case 9:
+						System.out.println("start : " + mapList.get(i).get("value").trim());
+						System.out.println();
+						Date date = null;
+						try {
+							date = simpleDateFormat.parse(mapList.get(i).get("value").trim());
+							System.out.println("c: start pared date : " + date);
+						} catch (ParseException e) {
+							throw new RuntimeException(e);
+						}
+						
+						System.out.println(date);
+						festivalDTO.setStartDate(date);
+						break;
+					
+					
+					case 10:
+						System.out.println();
+						Date date2 = null;
+						try {
+							System.out.println("c : date2");
+							date2 = simpleDateFormat.parse(mapList.get(i).get("value").trim());
+							System.out.println("parsed : " + date2);
+						} catch (ParseException e) {
+							throw new RuntimeException(e);
+						}
+						festivalDTO.setEndDate(date2);
+						break;
+					
+					case 11:
+						festivalDTO.setAvgRate(Double.valueOf(mapList.get(i).get("value")));
+						break;
+					
+					
+					case 12:
+						festivalDTO.setSeason(mapList.get(i).get("value"));
+						break;
+					
+				}
+				
+				
+			}
+			
+		}
+		
+		
+		System.out.println("findDBFestivalMultipleCount 정보가 담긴 축제 : " + festivalDTO.toString());
+		
+		
+		int count = 0;
+		try {
+			count = adminFestivalService.findDBFestivalMultipleCount(festivalDTO);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+		
+		
+		System.out.println("MULTIPLE count : " + count);
+		
+		return count;
+		
+		
+	}
+	
+	
+	// api 상세조건 검색 내용 받기
+	@PostMapping("/findAPIFestivalByMultiple")
+	@ResponseBody
+	public ArrayList<FestivalDTO> findAPIFestivalByMultiple(
+			@RequestBody ArrayList<HashMap<String, String>> mapList,
+			@RequestParam("page") int page) {
+		
+		
+		System.out.println("findDBFestivalByMultiple : " + mapList.toString());
+		
+		
+		FestivalDTO festivalDTO = new FestivalDTO();
+		PageDTO pageDTO = new PageDTO();
+		pageDTO.setPage(page);
+		pageDTO.setStartEnd(pageDTO.getPage());
+		festivalDTO.setPageDTO(pageDTO);
+		
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		
+		StringBuilder stringBuilder = new StringBuilder();
+		
+		
+		// 받아온 정보를 깔끔하게 바꾸기
+		for (int i = 0; i < mapList.size(); i++) {
+			
+			String value = mapList.get(i).get("value");
+			
+			if (!value.isEmpty()) {
+				
+				switch (i) {
+					
+					case 0:
+						festivalDTO.setFestivalName(value);
+						try {
+							stringBuilder.append("&fstvlNm=").append(URLEncoder.encode(value, "UTF-8"));
+						} catch (UnsupportedEncodingException e) {
+							throw new RuntimeException(e);
+						}
+						break;
+					
+					case 1:
+						festivalDTO.setManageInstitution(value);
+						try {
+							stringBuilder.append("&mnnstNm=").append(URLEncoder.encode(value, "UTF-8"));
+						} catch (UnsupportedEncodingException e) {
+							throw new RuntimeException(e);
+						}
+						break;
+					
+					case 2:
+						festivalDTO.setHostInstitution(value);
+						try {
+							stringBuilder.append("&auspcInsttNm=").append(URLEncoder.encode(value, "UTF-8"));
+						} catch (UnsupportedEncodingException e) {
+							throw new RuntimeException(e);
+						}
+						break;
+					
+					
+					case 3:
+						festivalDTO.setSponserInstitution(value);
+						try {
+							stringBuilder.append("&suprtInsttNm=").append(URLEncoder.encode(value, "UTF-8"));
+						} catch (UnsupportedEncodingException e) {
+							throw new RuntimeException(e);
+						}
+						break;
+					
+					
+					case 4:
+						
+						String tel = value.replace("-", "").trim();
+						
+						tel = tel.substring(0, 3) + "-" + tel.substring(3, 6) + "-" + tel.substring(6);
+						
+						festivalDTO.setSponserInstitution(value);
+						try {
+							stringBuilder.append("&phoneNumber=").append(URLEncoder.encode(value, "UTF-8"));
+						} catch (UnsupportedEncodingException e) {
+							throw new RuntimeException(e);
+						}
+						break;
+					
+					
+					case 5:
+						
+						try {
+							stringBuilder.append("&opar=").append(URLEncoder.encode(value, "UTF-8"));
+						} catch (UnsupportedEncodingException e) {
+							throw new RuntimeException(e);
+						}
+						break;
+					
+					
+					case 6:
+						String date1 = value;
+						Date date = null;
+						try {
+							date = simpleDateFormat.parse(date1);
+						} catch (ParseException e) {
+							throw new RuntimeException(e);
+						}
+						festivalDTO.setStartDate(date);
+						festivalDTO.setFormattedStart(date1);
+						
+						try {
+							stringBuilder.append("&fstvlStartDate=").append(URLEncoder.encode(date1, "UTF-8"));
+						} catch (UnsupportedEncodingException e) {
+							throw new RuntimeException(e);
+						}
+						
+						break;
+					
+					
+					case 7:
+						String date2 = value;
+						Date dateEnd = null;
+						try {
+							dateEnd = simpleDateFormat.parse(date2);
+						} catch (ParseException e) {
+							throw new RuntimeException(e);
+						}
+						festivalDTO.setEndDate(dateEnd);
+						festivalDTO.setFormattedEnd(date2);
+						
+						try {
+							stringBuilder.append("&fstvlEndDate=").append(URLEncoder.encode(date2, "UTF-8"));
+						} catch (UnsupportedEncodingException e) {
+							throw new RuntimeException(e);
+						}
+						
+						break;
+					
+					
+				}
+				
+				
+			}
+			
+		}
+		
+		
+		System.out.println("findAPIFestivalByMultiple 정보가 담긴 축제 : " + festivalDTO.toString());
+		
+		String urls = stringBuilder.toString();
+		
+		ArrayList<FestivalDTO> list = null;
+		try {
+			list = adminFestivalService.findAPIFestivalByMultiple(festivalDTO, urls);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+		
+		System.out.println("받아온 리스트 : " + list);
+		for (FestivalDTO festivalDTO1 : list) {
+			
+			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+			
+			festivalDTO1.setFormattedStart(dateFormat.format(festivalDTO1.getStartDate()));
+			festivalDTO1.setFormattedEnd(dateFormat.format(festivalDTO1.getEndDate()));
+			
+			
+			System.out.println(festivalDTO1.toString());
+			
+		}
+		
+		return list;
+	}
+	
+	
+	@PostMapping("/findAPIFestivalMultipleCount")
+	@ResponseBody
+	public int findAPIFestivalMultipleCount(@RequestBody ArrayList<HashMap<String, String>> mapList) {
+		
+		
+		System.out.println("findDBFestivalByMultiple : " + mapList.toString());
+		
+		
+		FestivalDTO festivalDTO = new FestivalDTO();
+		
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		
+		StringBuilder stringBuilder = new StringBuilder();
+		
+		
+		// 받아온 정보를 깔끔하게 바꾸기
+		for (int i = 0; i < mapList.size(); i++) {
+			
+			String value = mapList.get(i).get("value");
+			
+			if (!value.isEmpty()) {
+				
+				switch (i) {
+					
+					case 0:
+						festivalDTO.setFestivalName(value);
+						try {
+							stringBuilder.append("&fstvlNm=").append(URLEncoder.encode(value, "UTF-8"));
+						} catch (UnsupportedEncodingException e) {
+							throw new RuntimeException(e);
+						}
+						break;
+					
+					case 1:
+						festivalDTO.setManageInstitution(value);
+						try {
+							stringBuilder.append("&mnnstNm=").append(URLEncoder.encode(value, "UTF-8"));
+						} catch (UnsupportedEncodingException e) {
+							throw new RuntimeException(e);
+						}
+						break;
+					
+					case 2:
+						festivalDTO.setHostInstitution(value);
+						try {
+							stringBuilder.append("&auspcInsttNm=").append(URLEncoder.encode(value, "UTF-8"));
+						} catch (UnsupportedEncodingException e) {
+							throw new RuntimeException(e);
+						}
+						break;
+					
+					
+					case 3:
+						festivalDTO.setSponserInstitution(value);
+						try {
+							stringBuilder.append("&suprtInsttNm=").append(URLEncoder.encode(value, "UTF-8"));
+						} catch (UnsupportedEncodingException e) {
+							throw new RuntimeException(e);
+						}
+						break;
+					
+					
+					case 4:
+						
+						String tel = value.replace("-", "").trim();
+						
+						tel = tel.substring(0, 3) + "-" + tel.substring(3, 6) + "-" + tel.substring(6);
+						
+						festivalDTO.setSponserInstitution(value);
+						try {
+							stringBuilder.append("&phoneNumber=").append(URLEncoder.encode(value, "UTF-8"));
+						} catch (UnsupportedEncodingException e) {
+							throw new RuntimeException(e);
+						}
+						break;
+					
+					
+					case 5:
+						
+						try {
+							stringBuilder.append("&opar=").append(URLEncoder.encode(value, "UTF-8"));
+						} catch (UnsupportedEncodingException e) {
+							throw new RuntimeException(e);
+						}
+						break;
+					
+					
+					case 6:
+						String date1 = value;
+						Date date = null;
+						try {
+							date = simpleDateFormat.parse(date1);
+						} catch (ParseException e) {
+							throw new RuntimeException(e);
+						}
+						festivalDTO.setStartDate(date);
+						festivalDTO.setFormattedStart(date1);
+						
+						try {
+							stringBuilder.append("&fstvlStartDate=").append(URLEncoder.encode(date1, "UTF-8"));
+						} catch (UnsupportedEncodingException e) {
+							throw new RuntimeException(e);
+						}
+						
+						break;
+					
+					
+					case 7:
+						String date2 = value;
+						Date dateEnd = null;
+						try {
+							dateEnd = simpleDateFormat.parse(date2);
+						} catch (ParseException e) {
+							throw new RuntimeException(e);
+						}
+						festivalDTO.setEndDate(dateEnd);
+						festivalDTO.setFormattedEnd(date2);
+						
+						try {
+							stringBuilder.append("&fstvlEndDate=").append(URLEncoder.encode(date2, "UTF-8"));
+						} catch (UnsupportedEncodingException e) {
+							throw new RuntimeException(e);
+						}
+						
+						break;
+					
+					
+				}
+				
+				
+			}
+		}
+		
+		
+		System.out.println("findAPIFestivalByMultiple 정보가 담긴 축제 : " + festivalDTO.toString());
+		
+		String urls = stringBuilder.toString();
+		
+		int count = 0;
+		try {
+			count = adminFestivalService.findAPIFestivalByMultipleCount(festivalDTO, urls);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+		
+		System.out.println("받아온 카운트 : " + count);
+		
+		
+		return count;
+		
+		
+	}
+	
+	
+	
+	
+	@PostMapping("/insertContentKeywordByFestivalId")
+	@ResponseBody
+	public ArrayList<String> insertContentKeywordByFestivalId(@RequestParam("festivalId") int festivalId) {
+		
+		
+		ArrayList<String> list = null;
+		
+		
+		
+		return list;
+		
+		
+	}
+	
+	
+	
 }

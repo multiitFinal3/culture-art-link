@@ -6,8 +6,9 @@
         flex-flow: column;
         align-items: center;
         justify-content: center;
-        margin-top: 14%;
-        margin-left: 10%;
+        margin-top: 8%;
+        margin-left: 5%;
+        margin-right: 5%;
         overflow-x: scroll;
     }
 
@@ -55,5 +56,57 @@
     td#festivalContent, td#festivalName{
 
         width: 400px;
+
+    }
+
+    .neverClickable{
+
+        pointer-events: none !important;
+        background-color: #f0f0f1 !important;
+        text-align: center;
+
+    }
+
+
+    .autoWidth{
+
+        display: inline-block;
+        width: auto;
+        padding: 1px;
+        text-align: left;
+
+
+    }
+
+
+    .pageBtn3{
+
+        color: black;
+        background-color: #FAEBD7;
+
+    }
+
+
+    .pageBtn4{
+
+        color: black;
+        background-color: #8FBC8F;
+
+    }
+
+
+
+    .pageBtn5{
+
+        color: black;
+        background-color: #20B2AA;
+
+    }
+
+
+    .pageBtn6{
+
+        color: black;
+        background-color: #8FBC8F;
 
     }

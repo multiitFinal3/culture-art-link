@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.multi.culture_link.exhibition.model.dao.ExhibitionDao"><!-- 메퍼위치하고  동일하게 네임스페이스 작성-->
+<!--    다중 검색-->
+    <select id="searchExhibition" parameterType="map" resultType="com.multi.culture_link.admin.exhibition.model.dto.api.ExhibitionApiDto">
+        SELECT * FROM exhibition
+        WHERE 1=1
+        <if test="title != null and title != ''">
+            AND title LIKE CONCAT('%', #{title}, '%')
+        </if>
+        <if test="artist != null and artist != ''">
+            AND artist LIKE CONCAT('%', #{artist}, '%')
+        </if>
+        <if test="museum != null and museum != ''">
+            AND museum LIKE CONCAT('%', #{museum}, '%')
+        </if>
+    </select>
+
+</mapper>
