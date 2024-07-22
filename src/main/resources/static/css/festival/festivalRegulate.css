@@ -78,11 +78,20 @@
 
     }
 
+    .pageBtn1, .pageBtn2, .pageBtn3, .pageBtn4, .pageBtn5, .pageBtn6{
+
+        margin: 0.9%;
+        width: 30px;
+        text-align: center;
+
+    }
+
 
     .pageBtn3{
 
         color: black;
         background-color: #FAEBD7;
+
 
     }
 

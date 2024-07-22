@@ -1203,8 +1203,6 @@ public class AdminFestivalController {
 	}
 	
 	
-	
-	
 	@PostMapping("/insertContentKeywordByFestivalId")
 	@ResponseBody
 	public ArrayList<String> insertContentKeywordByFestivalId(@RequestParam("festivalId") int festivalId) {
@@ -1213,12 +1211,10 @@ public class AdminFestivalController {
 		ArrayList<String> list = null;
 		
 		
-		
 		return list;
 		
 		
 	}
-	
 	
 	
 }
