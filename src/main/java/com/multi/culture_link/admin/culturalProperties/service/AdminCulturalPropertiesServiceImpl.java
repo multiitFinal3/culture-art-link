@@ -8,10 +8,10 @@ import org.json.XML;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.thymeleaf.util.StringUtils.escapeXml;
 
 
 @Slf4j
@@ -39,19 +39,23 @@ public class AdminCulturalPropertiesServiceImpl implements AdminCulturalProperti
                 String listXmlResponse = restTemplate.getForObject(listFullUrl, String.class);
                 JSONObject listJsonObject = XML.toJSONObject(listXmlResponse);
 
+                // List API에서 필요한 데이터 추출
                 JSONObject listResultObject = listJsonObject.getJSONObject("result");
                 JSONArray listItemArray = listResultObject.getJSONArray("item");
 
+                // Detail API에서 필요한 데이터 추출하여 매칭
                 for (int i = 0; i < listItemArray.length(); i++) {
                     JSONObject listItemObject = listItemArray.getJSONObject(i);
                     String ccbaKdcd = listItemObject.optString("ccbaKdcd");
                     String ccbaAsno = listItemObject.optString("ccbaAsno");
                     String ccbaCtcd = listItemObject.optString("ccbaCtcd");
 
+                    // Detail API 호출하여 XML 데이터 받아오기
                     String detailFullUrl = detailApiUrl + "?ccbaKdcd=" + ccbaKdcd + "&ccbaAsno=" + ccbaAsno + "&ccbaCtcd=" + ccbaCtcd;
                     String detailXmlResponse = restTemplate.getForObject(detailFullUrl, String.class);
                     JSONObject detailJsonObject = XML.toJSONObject(detailXmlResponse);
 
+                    // Detail API에서 필요한 데이터 추출
                     JSONObject detailResultObject = detailJsonObject.getJSONObject("result").getJSONObject("item");
                     String gcodeName = detailResultObject.optString("gcodeName");
                     String bcodeName = detailResultObject.optString("bcodeName");
@@ -65,14 +69,22 @@ public class AdminCulturalPropertiesServiceImpl implements AdminCulturalProperti
                     String imageUrl = detailResultObject.optString("imageUrl");
                     String content = detailResultObject.optString("content");
 
+                    // List API에서의 필드 추출
                     String ccmaName = listItemObject.optString("ccmaName");
                     String ccbaMnm1 = listItemObject.optString("ccbaMnm1");
                     String longitude = listItemObject.optString("longitude");
                     String latitude = listItemObject.optString("latitude");
 
+                    // Image API 호출하여 XML 데이터 받아오기
                     String imageFullUrl = imageApiUrl + "?ccbaKdcd=" + ccbaKdcd + "&ccbaAsno=" + ccbaAsno + "&ccbaCtcd=" + ccbaCtcd;
                     String imageXmlResponse = restTemplate.getForObject(imageFullUrl, String.class);
 
+                    // XML 데이터 문자열 치환
+                    imageXmlResponse = imageXmlResponse.replaceAll("<ccimDesc>", "<ccimDesc><![CDATA[");
+                    imageXmlResponse = imageXmlResponse.replaceAll("</ccimDesc>", "]]></ccimDesc>");
+
+
+                    // Image API에서 필요한 데이터 추출
                     JSONObject imageJsonObject;
                     try {
                         imageJsonObject = XML.toJSONObject(imageXmlResponse);
@@ -87,6 +99,7 @@ public class AdminCulturalPropertiesServiceImpl implements AdminCulturalProperti
 
                     JSONArray imageUrlArray = new JSONArray();
 
+                    // Image URL 추출
                     if (imageResultObject.has("imageUrl")) {
                         Object imageUrlObject = imageResultObject.get("imageUrl");
                         if (imageUrlObject instanceof JSONArray) {
@@ -97,72 +110,15 @@ public class AdminCulturalPropertiesServiceImpl implements AdminCulturalProperti
                     }
 
 
-//                    JSONArray ccimDescArray = new JSONArray();
-//                    if (imageResultObject.has("ccimDesc")) {
-//                        Object ccimDescObject = imageResultObject.get("ccimDesc");
-//
-//                        // ccimDesc 값을 HTML 엔티티로 변환
-//                        String ccimDescXml = ccimDescObject.toString();
-//                        ccimDescXml = ccimDescXml.replace("<", "&lt;").replace(">", "&gt;");
-//
-//                        // HTML 엔티티로 변환된 ccimDesc를 JSON 객체로 변환
-//                        JSONObject ccimDescJsonObject = XML.toJSONObject("<ccimDesc>" + ccimDescXml + "</ccimDesc>");
-//
-//
-////                        if (ccimDescObject instanceof JSONArray) {
-////                            ccimDescArray = (JSONArray) ccimDescObject;
-////                        } else if (ccimDescObject instanceof String) {
-////                            // 이미지 설명이 하나만 있는 경우 JSONArray로 변환
-////                            ccimDescArray.put(ccimDescJsonObject);
-////                        }
-//
-//                        if (ccimDescJsonObject != null) {
-//                            ccimDescArray.put(ccimDescJsonObject);
-//                        }
-//                    }
-
-
-
                     JSONArray ccimDescArray = new JSONArray();
                     if (imageResultObject.has("ccimDesc")) {
                         Object ccimDescObject = imageResultObject.get("ccimDesc");
-
-                        if (ccimDescObject instanceof String) {
-                            // ccimDesc 값이 String인 경우에 대한 처리
-                            String ccimDescXml = escapeXml(ccimDescObject.toString());
-                            JSONObject ccimDescJsonObject = XML.toJSONObject("<ccimDesc>" + ccimDescXml + "</ccimDesc>");
-                            ccimDescArray.put(ccimDescJsonObject);
-                        } else if (ccimDescObject instanceof JSONArray) {
-                            // ccimDesc 값이 JSONArray인 경우에 대한 처리
-                            JSONArray ccimDescArrayObject = (JSONArray) ccimDescObject;
-                            for (int j = 0; j < ccimDescArrayObject.length(); j++) {
-                                String ccimDescXml = escapeXml(ccimDescArrayObject.optString(j));
-                                JSONObject ccimDescJsonObject = XML.toJSONObject("<ccimDesc>" + ccimDescXml + "</ccimDesc>");
-                                ccimDescArray.put(ccimDescJsonObject);
-                            }
+                        if (ccimDescObject instanceof JSONArray) {
+                            ccimDescArray = (JSONArray) ccimDescObject;
+                        } else if (ccimDescObject instanceof String) {
+                            ccimDescArray.put(ccimDescObject);
                         }
                     }
-//                    JSONArray imageUrlArray;
-//                    if (imageResultObject.has("imageUrl")) {
-//                        Object imageUrlObject = imageResultObject.get("imageUrl");
-//                        if (imageUrlObject instanceof JSONArray) {
-//                            imageUrlArray = (JSONArray) imageUrlObject;
-//                        } else {
-//                            imageUrlArray = new JSONArray().put(imageUrlObject);
-//                        }
-//                    } else {
-//                        imageUrlArray = new JSONArray();
-//                    }
-//
-//                    JSONArray ccimDescArray = new JSONArray();
-//                    if (imageResultObject.has("ccimDesc")) {
-//                        Object ccimDescObject = imageResultObject.get("ccimDesc");
-//                        if (ccimDescObject instanceof JSONArray) {
-//                            ccimDescArray = (JSONArray) ccimDescObject;
-//                        } else if (ccimDescObject instanceof String) {
-//                            ccimDescArray.put(ccimDescObject);
-//                        }
-//                    }
 
 
                     String videoFullUrl = videoApiUrl + "?ccbaKdcd=" + ccbaKdcd + "&ccbaAsno=" + ccbaAsno + "&ccbaCtcd=" + ccbaCtcd;
@@ -250,6 +206,7 @@ public class AdminCulturalPropertiesServiceImpl implements AdminCulturalProperti
                     dto.setContent(content);
                     dto.setMainImgUrl(imageUrl);
 
+                    // 이미지 URL 및 설명 리스트 설정
                     List<String> imageUrls = new ArrayList<>();
                     for (int j = 0; j < imageUrlArray.length(); j++) {
                         imageUrls.add(imageUrlArray.getString(j));
@@ -290,17 +247,6 @@ public class AdminCulturalPropertiesServiceImpl implements AdminCulturalProperti
             System.out.println(dto); // DTO 내용 출력 (toString 메서드 필요)
         }
         return culturalPropertiesList;
-    }
-
-
-    private String escapeXml(String xmlString) {
-        // XML 특수 문자를 JSON으로 변환할 때 이스케이핑 처리
-        return xmlString.replaceAll("&", "&amp;")
-                .replaceAll("<", "&lt;")
-                .replaceAll(">", "&gt;")
-                .replaceAll("\"", "&quot;")
-                .replaceAll("'", "&apos;");
-
     }
 
 
