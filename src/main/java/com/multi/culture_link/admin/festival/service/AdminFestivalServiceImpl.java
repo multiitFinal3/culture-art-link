@@ -6,6 +6,10 @@ import com.google.gson.JsonObject;
 import com.multi.culture_link.admin.festival.model.mapper.AdminFestivalMapper;
 import com.multi.culture_link.festival.model.dto.FestivalDTO;
 import com.multi.culture_link.festival.model.dto.PageDTO;
+import kr.co.shineware.nlp.komoran.constant.DEFAULT_MODEL;
+import kr.co.shineware.nlp.komoran.core.Komoran;
+import kr.co.shineware.nlp.komoran.model.KomoranResult;
+import kr.co.shineware.nlp.komoran.model.Token;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -18,6 +22,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 	/*public static void main(String[] args) throws IOException {
 		
@@ -834,6 +839,48 @@ public class AdminFestivalServiceImpl implements AdminFestivalService {
 	
 	@Override
 	public ArrayList<String> insertContentKeywordByFestivalId(int festivalId) throws Exception {
+		
+		FestivalDTO festivalDTO = adminFestivalMapper.findDBFestivalByFestivalId(festivalId);
+		String content = festivalDTO.getFestivalContent();
+		String title = festivalDTO.getFestivalName();
+		
+		String all = content + " " + title;
+		
+		
+		Komoran komoran = new Komoran(DEFAULT_MODEL.FULL);
+		
+		KomoranResult analyzeResultList = komoran.analyze(all);
+		
+		System.out.println("analyzeResultList.getPlainText() : " + analyzeResultList.getPlainText());
+		
+		List<Token> tokenList = analyzeResultList.getTokenList();
+		for (Token token : tokenList) {
+			System.out.println("token");
+			System.out.format("(%2d, %2d) %s/%s\n", token.getBeginIndex(), token.getEndIndex(), token.getMorph(), token.getPos());
+		}
+		
+		ArrayList<String> list = (ArrayList<String>) analyzeResultList.getNouns();
+		
+		
+		
+		ArrayList<String> list2 = new ArrayList<>();
+		
+		for (String token : list){
+			
+			if (!list2.contains(token)){
+				
+				list2.add(token);
+				
+			}
+			
+		}
+		
+		System.out.println("analyzeResultList.getNouns() : " + list);
+		System.out.println("eliminate replica : " + list2);
+		
+		
+		
+		
 		
 		
 		return null;
