@@ -191,6 +191,7 @@ public class AdminFestivalServiceImpl implements AdminFestivalService {
 			Date startDate = null;
 			Date endDate = null;
 			String timeId = "";
+			String timeDescription = "";
 			
 			try {
 				startDate = format.parse(startD);
@@ -262,22 +263,26 @@ public class AdminFestivalServiceImpl implements AdminFestivalService {
 				
 				if ((days.contains(2)) || (days.contains(3)) || (days.contains(4)) || (days.contains(5)) || (days.contains(6))) {
 					
-					timeId = "전체";
+					timeId = "A";
+					timeDescription = "평일 , 주말 전부 포함";
 					
 				} else {
 					
-					timeId = "주말";
+					timeId = "WE";
+					timeDescription = "토~ 일 사이";
 					
 				}
 				
 			} else {
 				
-				timeId = "평일";
+				timeId = "WD";
+				timeDescription = "월 ~ 금 사이";
 				
 			}
 			
 			
 			festivalDTO.setTimeId(timeId);
+			festivalDTO.setTimeDescription(timeDescription);
 			
 			
 			String content1 = item.get("fstvlCo").getAsString().replace("+", ", ") + ". ";
@@ -385,6 +390,8 @@ public class AdminFestivalServiceImpl implements AdminFestivalService {
 			
 			
 			String festivalContent = content1 + content2;
+			
+			festivalDTO.setFestivalContent(festivalContent);
 			
 			
 			System.out.println(festivalDTO.toString());
@@ -605,6 +612,7 @@ public class AdminFestivalServiceImpl implements AdminFestivalService {
 			Date startDate = null;
 			Date endDate = null;
 			String timeId = "";
+			String timeDescription = "";
 			
 			try {
 				startDate = format.parse(startD);
@@ -676,22 +684,26 @@ public class AdminFestivalServiceImpl implements AdminFestivalService {
 				
 				if ((days.contains(2)) || (days.contains(3)) || (days.contains(4)) || (days.contains(5)) || (days.contains(6))) {
 					
-					timeId = "전체";
+					timeId = "A";
+					timeDescription = "평일 , 주말 전부 포함";
 					
 				} else {
 					
-					timeId = "주말";
+					timeId = "WE";
+					timeDescription = "토~ 일 사이";
 					
 				}
 				
 			} else {
 				
-				timeId = "평일";
+				timeId = "WD";
+				timeDescription = "월 ~ 금 사이";
 				
 			}
 			
 			
 			festivalDTO2.setTimeId(timeId);
+			festivalDTO2.setTimeDescription(timeDescription);
 			
 			//festival content
 			
@@ -818,6 +830,13 @@ public class AdminFestivalServiceImpl implements AdminFestivalService {
 		
 		
 		return count;
+	}
+	
+	@Override
+	public ArrayList<String> insertContentKeywordByFestivalId(int festivalId) throws Exception {
+		
+		
+		return null;
 	}
 	
 	
