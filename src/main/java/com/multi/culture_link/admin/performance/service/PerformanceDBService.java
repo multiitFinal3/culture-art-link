@@ -59,6 +59,11 @@ public class PerformanceDBService { // 상세데이터
         return savedCount;
     }
 
+    // 선택된 공연 ID 목록을 삭제
+    public int deletePerformances(List<String> selectedIds) {
+        return performanceMapper.deletePerformances(selectedIds);
+    }
+
     // 특정 공연 ID에 대해 API를 호출해 상세 데이터를 가져오기
     private PerformanceDTO fetchDetailData(String id) throws IOException {
         CloseableHttpClient httpClient = HttpClients.createDefault();
@@ -131,7 +136,7 @@ public class PerformanceDBService { // 상세데이터
         return performance;
     }
 
-    // XML 요소에서 특정 태그의 값을 가져오기 ~!~!~!~!~~
+    // XML 요소에서 특정 태그의 값을 가져오기
     private String getValue(String tag, Element element) {
         NodeList nodes = element.getElementsByTagName(tag);
         if (nodes.getLength() > 0) {

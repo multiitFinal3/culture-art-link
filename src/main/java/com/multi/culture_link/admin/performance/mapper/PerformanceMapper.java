@@ -8,5 +8,8 @@ import java.util.List;
 @Mapper
 public interface PerformanceMapper {
     List<PerformanceDTO> getAllPerformances();
+
     void insertPerformance(PerformanceDTO performance);
+
+    int deletePerformances(List<String> selectedIds);
 }
