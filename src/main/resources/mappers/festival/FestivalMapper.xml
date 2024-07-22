@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.multi.culture_link.admin.festival.model.mapper.AdminFestivalMapper">
+
+
+    <insert id="insertAPIFestival" parameterType="festivalDTO">
+
+        INSERT INTO festival
+        VALUES(NULL,#{regionId},#{timeId},#{festivalName},#{festivalContent},#{manageInstitution},#{hostInstitution}
+        ,#{sponserInstitution}, #{tel}, #{homepageUrl}, #{detailAddress}, #{latitude}, #{longtitude}, #{place},
+        #{startDate}, #{endDate}, #{avgRate}, #{season}, #{imgUrl}, CURRENT_DATE(), CURRENT_DATE()
+        );
+
+    </insert>
+
+    <select id="findDBFestivalList" parameterType="pageDTO">
+
+        SELECT *
+        FROM (
+
+        SELECT ROW_NUMBER() OVER(ORDER BY festival_id ASC) AS rownum, f.*
+        FROM festival f) f2
+
+        WHERE
+        f2.rownum BETWEEN ${start} and ${end};
+
+    </select>
+
+    <select id="findDBFestivalCount">
+
+        SELECT COUNT(*) FROM festival;
+
+    </select>
+
+
+</mapper>
