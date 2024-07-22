@@ -336,9 +336,15 @@ public class AdminFestivalServiceImpl implements AdminFestivalService {
 		
 		ArrayList<FestivalDTO> list2 = new ArrayList<FestivalDTO>();
 		
-		for (int i = start - 1; i <= end - 1; i++) {
+		int realEnd = list.size() > end ? end : list.size();
+		
+		if (list.size() > 0) {
 			
-			list2.add(list.get(i));
+			for (int i = start - 1; i <= realEnd - 1; i++) {
+				
+				list2.add(list.get(i));
+				
+			}
 			
 		}
 		
@@ -763,11 +769,18 @@ public class AdminFestivalServiceImpl implements AdminFestivalService {
 		
 		ArrayList<FestivalDTO> list2 = new ArrayList<FestivalDTO>();
 		
-		for (int i = start - 1; i <= end - 1; i++) {
+		int realEnd = list.size() > end ? end : list.size();
+		
+		if (list.size() > 0) {
 			
-			list2.add(list.get(i));
+			for (int i = start - 1; i <= realEnd - 1; i++) {
+				
+				list2.add(list.get(i));
+				
+			}
 			
 		}
+		
 		
 		return list2;
 	}
