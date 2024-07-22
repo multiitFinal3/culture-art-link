@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+
+    <div id="signUp">
+
+        <form th:action="@{/user/signUp}" method="post">
+
+            아이디 : <input name="userId">
+            이메일 :  <input name="email">
+            비밀번호 :  <input name="password">
+            이름 :  <input name="userName">
+            번호 :  <input name="tel">
+            번호 :  <input name="gender">
+            지역번호 :  <input name="regionId">
+
+
+            <button type="submit">제출</button>
+
+
+
+        </form>
+
+
+
+
+
+    </div>
+
+
+</body>
+</html>
