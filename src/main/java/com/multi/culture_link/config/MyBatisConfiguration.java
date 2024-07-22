@@ -1,6 +1,11 @@
 package com.multi.culture_link.config;
 
+import com.multi.culture_link.common.region.model.dto.RegionDTO;
+import com.multi.culture_link.common.time.model.dto.TimeDTO;
+import com.multi.culture_link.festival.model.dto.FestivalDTO;
+import com.multi.culture_link.festival.model.dto.PageDTO;
 import com.multi.culture_link.users.model.dto.RoleDTO;
+import com.multi.culture_link.users.model.dto.UserDTO;
 import com.multi.culture_link.users.model.dto.VWUserRoleDTO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -47,6 +52,11 @@ public class MyBatisConfiguration {
 		// DTO 별명 설정
 		configuration.getTypeAliasRegistry().registerAlias("vwUserRoleDTO", VWUserRoleDTO.class);
 		configuration.getTypeAliasRegistry().registerAlias("roleDTO", RoleDTO.class);
+		configuration.getTypeAliasRegistry().registerAlias("userDTO", UserDTO.class);
+		configuration.getTypeAliasRegistry().registerAlias("festivalDTO", FestivalDTO.class);
+		configuration.getTypeAliasRegistry().registerAlias("pageDTO", PageDTO.class);
+		configuration.getTypeAliasRegistry().registerAlias("regionDTO", RegionDTO.class);
+		configuration.getTypeAliasRegistry().registerAlias("timeDTO", TimeDTO.class);
 		
 		
 		
