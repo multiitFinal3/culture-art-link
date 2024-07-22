@@ -11,8 +11,6 @@
 
 
         $(document).ready(
-
-
             function(){
 
 
@@ -27,10 +25,6 @@
                         method: 'POST',
                         contentType: 'application/json',
                         success: function(list){
-
-                            $('#list2').html("");
-
-
                             $.each(list, function(index, festival){
 
                                 var index1 = (index + 1) + (page-1)*5;
@@ -77,10 +71,7 @@
                                         <td><input class="check2" type="checkbox" name="index" value="${index}"/></td>`
                                 }
 
-
                                 var htmlContent =`
-
-
                                         <td class="index1">${index1}</td>
                                         <td class="regionId">${festival.regionId}</td>
                                         <td class="timeId">${festival.timeId}</td>
@@ -103,12 +94,9 @@
                                     </tr>
 
                                 `;
-
                                 var finalHtml = htmlCheck + htmlContent;
 
                                 $('#list2').append(finalHtml);
-
-
 
                             })
 
@@ -915,15 +903,6 @@
 
 
                 }
-
-
-
-
-
-
-
-
-
             }
         )
 
@@ -941,7 +920,6 @@
 
 
     <div id="festivalRegulate">
-
         <!-- Modal : db 상세 검색 -->
         <div class="modal fade" id="searchModal1" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document">
@@ -1050,7 +1028,6 @@
 
 
         <br><br><br><br><br><br>
-
         <!-- 전국축제 api 실시간 검색 조건 Modal -->
         <div class="modal fade" id="searchModal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document">

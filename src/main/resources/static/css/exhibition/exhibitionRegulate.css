@@ -1,0 +1,43 @@
+#festivalRegulate {
+  display: flex;
+  flex-flow: column;
+  align-items: center;
+  justify-content: center;
+  margin-top: 14%;
+  margin-left: 10%;
+  overflow-x: scroll;
+}
+
+table {
+  margin-bottom: 50px;
+}
+
+table,
+th,
+td {
+  border: 1px solid black;
+  width: 100px;
+}
+
+th,
+td {
+  text-align: center;
+  width: 150px;
+}
+
+th {
+  background-color: #c6d6ef;
+}
+
+td {
+  background-color: #e7eef9;
+}
+
+td#festivalContent,
+td#festivalName {
+  width: 400px;
+}
+
+.resize-img {
+  width: 150px;
+}
