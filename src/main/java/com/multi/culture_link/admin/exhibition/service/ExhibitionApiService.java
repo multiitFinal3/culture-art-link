@@ -88,6 +88,7 @@ public class ExhibitionApiService {
             eachData.setTitle(responseDatum.getTitle());
             eachData.setArtist(responseDatum.getAuthor());
             eachData.setMuseum(responseDatum.getCntcInsttNm());
+            eachData.setLocalId(responseDatum.getLocalId());
             eachData.setStartDate(responseDatum.getStart_date());
             eachData.setEndDate(responseDatum.getEnd_date());
             eachData.setPrice(responseDatum.getCharge());
