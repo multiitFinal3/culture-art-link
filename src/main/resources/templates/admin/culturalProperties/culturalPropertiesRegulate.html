@@ -1,0 +1,152 @@
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
+      layout:decorate="~{/common/layout/layoutAdminPage}">
+<head>
+    <link rel="stylesheet" th:href="@{/css/culturalProperties/culturalPropertiesRegulate.css}">
+    <style>
+        #festivalRegulate {
+            display: flex;
+            flex-flow: column;
+            align-items: center;
+            justify-content: center;
+            margin-top: 14%;
+            margin-left: 10%;
+        }
+
+        table {
+            margin-bottom: 50px;
+            border-collapse: collapse; /* 테이블 셀 경계를 합치도록 설정 */
+            width: 80%; /* 테이블 너비를 조정할 수 있습니다. */
+            margin-top: 20px; /* 원하는 만큼 상단 여백을 추가할 수 있습니다. */
+        }
+
+        table, th, td {
+            border: 1px solid black;
+            padding: 8px; /* 셀 안의 콘텐츠와 테두리 사이의 간격을 조정합니다. */
+        }
+
+        th, td {
+            text-align: center;
+            width: auto; /* 셀 너비를 자동으로 조정하거나 필요에 따라 조절할 수 있습니다. */
+        }
+
+        th {
+            background-color: #C6D6EF;
+        }
+
+        td {
+            background-color: #E7EEF9;
+        }
+    </style>
+</head>
+<body>
+<div layout:fragment="content2">
+
+    <div id="culturalPropertiesRegulate">
+
+        문화재 관리자 페이지 입니다.
+
+        <h2>문화재 DB 현황</h2>
+        <table class="table table-striped" id="culturalPropertiesDB">
+
+            <thead class="table-light">
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">문화재 이름</th>
+                <th scope="col">종목</th>
+                <th scope="col">지역</th>
+                <th scope="col">시대</th>
+                <th scope="col">DB관리</th>
+            </tr>
+            </thead>
+            <tbody id="list1">
+
+            </tbody>
+
+        </table>
+
+        <h2>전국 문화재 실시간</h2>
+        <table class="table table-striped" id="culturalPropertiesAPI">
+
+            <thead class="table-light">
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">문화재 이름</th>
+                <th scope="col">종목</th>
+                <th scope="col">지역</th>
+                <th scope="col">시대</th>
+                <th scope="col">DB관리</th>
+            </tr>
+            </thead>
+<!--            <tbody id="list2">-->
+<!--            &lt;!&ndash; culturalPropertiesList를 순회하며 데이터 표시 &ndash;&gt;-->
+<!--            <tr th:each="culturalProperty, rowStat : ${culturalPropertiesList}-->
+<!--                      ${#numbers.sequence(rowStat.index * 5, rowStat.index * 5 + 4)}">-->
+<!--                <td th:text="${rowStat.index + 1}"></td>-->
+<!--                <td th:text="${culturalProperty.culturalPropertiesName}"></td>-->
+<!--                <td th:text="${culturalProperty.categoryName}"></td>-->
+<!--                <td th:text="${culturalProperty.region}"></td>-->
+<!--                <td th:text="${culturalProperty.dynasty}"></td>-->
+<!--                <td>&lt;!&ndash; DB 관리 기능 추가 &ndash;&gt;</td>-->
+<!--            </tr>-->
+<!--            </tbody>-->
+            <script th:inline="javascript">
+                $(document).ready(function() {
+                    var page = 0; // 초기 페이지
+                    var pageSize = 5; // 한 번에 로드할 데이터 수
+
+                    loadCulturalProperties(page);
+
+                    function loadCulturalProperties(page) {
+                        $.ajax({
+                            url: /* 서버 측 URL */,
+                            type: 'GET',
+                            data: {
+                                page: page,
+                                size: pageSize
+                            },
+                            success: function(data) {
+                                $('#culturalPropertiesBody').empty();
+                                $.each(data, function(index, culturalProperty) {
+                                    var row = '<tr>' +
+                                                '<td>' + (index + 1) + '</td>' +
+                                                '<td>' + culturalProperty.culturalPropertiesName + '</td>' +
+                                                '<td>' + culturalProperty.categoryName + '</td>' +
+                                                '<td>' + culturalProperty.region + '</td>' +
+                                                '<td>' + culturalProperty.dynasty + '</td>' +
+                                                '<td><!-- DB 관리 기능 추가 --></td>' +
+                                              '</tr>';
+                                    $('#culturalPropertiesBody').append(row);
+                                });
+                            },
+                            error: function(xhr, status, error) {
+                                console.error('Error loading cultural properties: ' + error);
+                            }
+                        });
+                    }
+
+                    // 페이지네이션 또는 버튼 클릭 시 다음 페이지 로드
+                    $('#nextButton').click(function() {
+                        page++;
+                        loadCulturalProperties(page);
+                    });
+
+                    // 이전 페이지 로드
+                    $('#prevButton').click(function() {
+                        if (page > 0) {
+                            page--;
+                            loadCulturalProperties(page);
+                        }
+                    });
+                });
+            </script>
+        </table>
+
+    </div>
+
+</div>
+</body>
+</html>
