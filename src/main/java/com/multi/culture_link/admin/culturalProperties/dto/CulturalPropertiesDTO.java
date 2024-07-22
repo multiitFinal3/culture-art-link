@@ -2,7 +2,6 @@ package com.multi.culture_link.admin.culturalProperties.dto;
 
 import lombok.Data;
 
-import java.util.Date;
 import java.util.List;
 
 @Data
@@ -64,8 +63,8 @@ public class CulturalPropertiesDTO {
 //    private String videoUrl;
 //    private String narrationUrl;
 
-    private List<String> imgUrl;
-    private List<String> imgDesc;
+    private String imgUrl;
+    private String imgDesc;
     private List<String> videoUrl;
     private List<String> narrationUrl;
 
