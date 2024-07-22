@@ -56,3 +56,45 @@ button {
 button:hover {
     background-color: #45a049;
 }
+
+/* 페이지네이션 */
+.pagination-container {
+    display: flex; /* 플렉스박스를 사용하여 정렬 */
+    justify-content: center; /* 중앙 정렬 */
+    align-items: center; /* 수직 중앙 정렬 */
+    gap: 10px; /* 요소 사이 간격 */
+}
+
+.page-number a, .page-arrow a {
+    text-decoration: none; /* 밑줄 제거 */
+    color: #5c5c5c; /* 일반 색상 */
+    font-size: 16px; /* 글꼴 크기 */
+}
+
+.page-number.active a {
+    color: #7c5eea; /* 활성 페이지 색상 */
+    font-weight: bold; /* 활성 페이지 굵게 표시 */
+    text-decoration: underline; /* 활성 페이지 밑줄 표시 */
+}
+
+.page-number a:hover, .page-arrow a:hover {
+    color: #7c5eea; /* 호버 시 색상 변경 */
+}
+
+.page-ellipsis {
+    font-size: 16px; /* 글꼴 크기 */
+    color: #5c5c5c; /* 색상 */
+}
+
+.select-all-container {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.select-all-container label {
+    margin-left: 5px;
+    font-size: 16px;
+}
+
+

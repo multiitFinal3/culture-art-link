@@ -2,6 +2,14 @@
 <html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5" layout:decorate="~{/common/layout/layoutAdminPage}">
 <head>
     <link rel="stylesheet" th:href="@{/css/performance/performanceRegulate.css}">
+    <script>
+        function toggle(source, checkboxesName) {
+            checkboxes = document.getElementsByName(checkboxesName);
+            for (var i = 0, n = checkboxes.length; i < n; i++) {
+                checkboxes[i].checked = source.checked;
+            }
+        }
+    </script>
 </head>
 <body>
 <div layout:fragment="content2">
@@ -10,7 +18,9 @@
         <table class="table table-striped" id="performanceDB">
             <thead class="table-light">
             <tr>
-                <th scope="col">선택</th>
+                <th scope="col">
+                    <input type="checkbox" id="selectAllDB" onclick="toggle(this, 'dbPerformancesCheckbox')">
+                </th>
                 <th scope="col">#</th>
                 <th scope="col">이미지</th>
                 <th scope="col">TITLE</th>
@@ -20,7 +30,7 @@
             </thead>
             <tbody id="list1" th:each="performance, stat : ${dbPerformances}">
             <tr>
-                <td><input type="checkbox" th:value="${performance.code}"></td>
+                <td><input type="checkbox" name="dbPerformancesCheckbox" th:value="${performance.code}"></td>
                 <td th:text="${stat.index + 1}"></td>
                 <td><img th:src="${performance.imageMain}" alt="Poster" width="50"></td>
                 <td th:text="${performance.title}"></td>
@@ -29,7 +39,32 @@
             </tr>
             </tbody>
         </table>
-        <div id="pageNum1"></div>
+        <div id="pageNum1" class="pagination">
+            <!-- 페이지네이션 부분 시작 -->
+            <div class="pagination-container">
+                <!-- 이전 페이지 버튼 -->
+                <span th:if="${dbCurrentPage > 0}" class="page-arrow">
+                    <a th:href="@{|/admin/performance-regulate?dbPage=${dbCurrentPage - 1}&apiPage=${apiCurrentPage}&size=20|}">
+                        &lt;
+                    </a>
+                </span>
+                <!-- 페이지 번호 -->
+                <span th:each="i : ${#numbers.sequence(0, dbTotalPages - 1)}"
+                      th:if="${i < 10 or (i >= dbCurrentPage and i < dbCurrentPage + 10)}"
+                      th:classappend="${i == dbCurrentPage} ? 'active page-number' : 'page-number'">
+                    <a th:href="@{|/admin/performance-regulate?dbPage=${i}&apiPage=${apiCurrentPage}&size=20|}" th:text="${i + 1}"></a>
+                </span>
+                <!-- "..." 표시 -->
+                <span th:if="${dbCurrentPage + 10 < dbTotalPages}" class="page-ellipsis">...</span>
+                <!-- 다음 페이지 버튼 -->
+                <span th:if="${dbCurrentPage < dbTotalPages - 1}" class="page-arrow">
+                    <a th:href="@{|/admin/performance-regulate?dbPage=${dbCurrentPage + 1}&apiPage=${apiCurrentPage}&size=20|}">
+                        &gt;
+                    </a>
+                </span>
+            </div>
+            <!-- 페이지네이션 부분 끝 -->
+        </div>
         <div class="button-container">
             <button id="dbDeleteBtn">DB 삭제</button>
         </div>
@@ -38,12 +73,15 @@
 
         <h2>전국 공연 실시간</h2>
         <form action="/admin/performance-regulate/saveToDB" method="post">
-            <input type="hidden" name="page" th:value="${currentPage}">
+            <input type="hidden" name="apiPage" th:value="${apiCurrentPage}">
+            <input type="hidden" name="dbPage" th:value="${dbCurrentPage}">
             <input type="hidden" name="size" th:value="${size}">
             <table class="table table-striped" id="performanceAPI">
                 <thead class="table-light">
                 <tr>
-                    <th scope="col">선택</th>
+                    <th scope="col">
+                        <input type="checkbox" id="selectAllAPI" onclick="toggle(this, 'selectedIds')">
+                    </th>
                     <th scope="col">#</th>
                     <th scope="col">이미지</th>
                     <th scope="col">TITLE</th>
@@ -66,22 +104,22 @@
                 <!-- 페이지네이션 부분 시작 -->
                 <div class="pagination-container">
                     <!-- 이전 페이지 버튼 -->
-                    <span th:if="${currentPage > 0}" class="page-arrow">
-                        <a th:href="@{|/admin/performance-regulate?page=${currentPage - 1}&size=20|}">
+                    <span th:if="${apiCurrentPage > 0}" class="page-arrow">
+                        <a th:href="@{|/admin/performance-regulate?apiPage=${apiCurrentPage - 1}&dbPage=${dbCurrentPage}&size=20|}">
                             &lt;
                         </a>
                     </span>
                     <!-- 페이지 번호 -->
-                    <span th:each="i : ${#numbers.sequence(0, totalPages - 1)}"
-                          th:if="${i < 10 or (i >= currentPage and i < currentPage + 10)}"
-                          th:classappend="${i == currentPage} ? 'active page-number' : 'page-number'">
-                        <a th:href="@{|/admin/performance-regulate?page=${i}&size=20|}" th:text="${i + 1}"></a>
+                    <span th:each="i : ${#numbers.sequence(0, apiTotalPages - 1)}"
+                          th:if="${i < 10 or (i >= apiCurrentPage and i < apiCurrentPage + 10)}"
+                          th:classappend="${i == apiCurrentPage} ? 'active page-number' : 'page-number'">
+                        <a th:href="@{|/admin/performance-regulate?apiPage=${i}&dbPage=${dbCurrentPage}&size=20|}" th:text="${i + 1}"></a>
                     </span>
                     <!-- "..." 표시 -->
-                    <span th:if="${currentPage + 10 < totalPages}" class="page-ellipsis">...</span>
+                    <span th:if="${apiCurrentPage + 10 < apiTotalPages}" class="page-ellipsis">...</span>
                     <!-- 다음 페이지 버튼 -->
-                    <span th:if="${currentPage < totalPages - 1}" class="page-arrow">
-                        <a th:href="@{|/admin/performance-regulate?page=${currentPage + 1}&size=20|}">
+                    <span th:if="${apiCurrentPage < apiTotalPages - 1}" class="page-arrow">
+                        <a th:href="@{|/admin/performance-regulate?apiPage=${apiCurrentPage + 1}&dbPage=${dbCurrentPage}&size=20|}">
                             &gt;
                         </a>
                     </span>

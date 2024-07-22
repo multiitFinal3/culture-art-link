@@ -38,7 +38,7 @@ public class PerformanceAPIService {
     public Page<PerformanceDTO> fetchData(int page, int size) throws IOException {
         List<PerformanceDTO> performances = new ArrayList<>();
         CloseableHttpClient httpClient = HttpClients.createDefault();
-        HttpGet httpGet = new HttpGet(String.format("%s?service=%s&stdate=20240501&eddate=20240719&rows=10000000&cpage=1", url, key));
+        HttpGet httpGet = new HttpGet(String.format("%s?service=%s&stdate=20240701&eddate=20240722&rows=10000000&cpage=1", url, key));
         CloseableHttpResponse httpResponse = httpClient.execute(httpGet);
         System.out.println(httpResponse.getStatusLine().getStatusCode());
 
