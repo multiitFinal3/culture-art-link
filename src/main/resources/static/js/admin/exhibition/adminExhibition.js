@@ -343,7 +343,7 @@ $(document).ready(function () {
     };
 
     renderTable(exhibitionDB, "list1");
-    // 여기에 서버로 업데이트된 데이터를 보내는 API 호출을 추가할 수 있습니다.
+    // 여기에 서버로 업데이트된 데이터를 보내는 API 호출을 추가
   }
 
   function cancelRowEdit(row) {
