@@ -13,7 +13,7 @@ public class ExhibitionViewController {
     @GetMapping
     public String exhibition() {
 
-        return "/exhibition";
+        return "/exhibition/exhibition";
 
     }
 }
