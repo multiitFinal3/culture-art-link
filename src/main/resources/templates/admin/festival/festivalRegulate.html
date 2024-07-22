@@ -245,7 +245,7 @@
 
                                             <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalLong" id="dbUpdateBtn" value="${festival.festivalId}">상세 수정</button><br><hr>
 
-                                            <button type="button" class="btn btn-primary"  id="contentKeyowrdInsertBtn" value="${festival.festivalId}">내용 키워드 추가</button>
+                                            <button type="button" class="btn btn-primary"  id="contentKeywordInsertBtn" value="${festival.festivalId}">내용 키워드 추가</button>
 
                                         </td>
                                         <td class="index1" style="width : 20px; height: 20px;">${index1}</td>
@@ -334,8 +334,41 @@
                 })
 
 
-                // 일괄 삭제 기능
+                // 내용 키워드 추가 기능
 
+                $(document).on('click','#contentKeywordInsertBtn', function(){
+
+                    var festivalId = $(this).val();
+
+                    $.ajax({
+
+                        url: '/admin/festival-regulate/insertContentKeywordByFestivalId?festivalId=' + festivalId,
+                        method: 'POST',
+                        contentType: 'application/json',
+                        success: function(list){
+
+                            $.each(list, function(index, keyword){
+
+                                console.log(keyword);
+
+                            })
+
+
+                        }
+
+
+                    })
+
+
+                })
+
+
+
+
+
+
+
+                // 일괄 삭제 기능
 
                 $(document).on('click','#dbDeleteBtn', function(){
 
@@ -572,7 +605,7 @@
 
                                             <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalLong" id="dbUpdateBtn" value="${festival.festivalId}">상세 수정</button><br><hr>
 
-                                            <button type="button" class="btn btn-primary"  id="contentKeyowrdInsertBtn" value="${festival.festivalId}">내용 키워드 추가</button>
+                                            <button type="button" class="btn btn-primary"  id="contentKeywordInsertBtn" value="${festival.festivalId}">내용 키워드 추가</button>
 
                                         </td>
 
