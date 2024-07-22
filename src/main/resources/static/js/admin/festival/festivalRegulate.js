@@ -821,7 +821,6 @@ $(document).ready(
         // API 수정 조건 폼 보내기
          function findAPIFestivalByMultiple(data2, page){
 
-
             console.log(data2);
 
             $.ajax({
@@ -854,8 +853,6 @@ $(document).ready(
                         var inst3 = festival.sponserInstitution.length > 15?
                         festival.sponserInstitution.substring(0,15) + "..."
                         : festival.sponserInstitution;
-
-
 
 
                         var start = festival.startDate.length >0?
@@ -900,7 +897,6 @@ $(document).ready(
                                 <td class="endDate">${festival.formattedEnd}</td>
                                 <td class="avgRate">${festival.avgRate}</td>
                                 <td class="season">${festival.season}</td>
-                                <td class="imgUrl"><img src="${festival.imgUrl}" width="40px"></td>
 
                             </tr>
 
