@@ -1,0 +1,276 @@
+body {
+    font-family: 'Inter', sans-serif;
+    margin: 0;
+    padding: 0;
+    background: white;
+}
+
+.container {
+    width: 1440px;
+    margin: 0 auto;
+    position: relative;
+}
+
+.header {
+    width: 100%;
+    height: 99px;
+    padding: 32px 10px;
+    background: white;
+    border-bottom: 1px solid #D9D9D9;
+    display: flex;
+    justify-content: flex-end; /* 변경된 부분 */
+    align-items: center;
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    margin-right: auto;
+}
+
+.header-center {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 12px; /* gap 조정 */
+}
+
+.logo-border {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 18px;
+    height: 60px;
+    margin-top: 1px; /* 위로 올리기 위해 margin-top 추가 */
+}
+
+.logo-border img {
+    width: 40px; /* 로고 너비 조정 */
+    height: auto; /* 비율에 맞게 자동 조정 */
+}
+
+.menu-item {
+    padding: 8px;
+    border-radius: 8px;
+    color: #1E1E1E;
+    font-size: 16px;
+    font-weight: 400;
+}
+
+.menu-item.active {
+    background: #F5F5F5;
+    color: #444444;
+}
+
+.login-button, .signup-button {
+    padding: 8px;
+    border-radius: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 16px;
+    font-weight: 400;
+}
+
+.login-button {
+    background: #E3E3E3;
+    border: 1px solid #767676;
+    color: #1E1E1E;
+}
+
+.signup-button {
+    background: #2C2C2C;
+    border: 1px solid #2C2C2C;
+    color: #F5F5F5;
+}
+
+.title {
+    font-size: 40px;
+    font-weight: 400;
+    color: black;
+    margin-left: 10px; /* 로고와의 간격 조정 */
+}
+
+.search-bar {
+    display: flex;
+    align-items: center;
+    background: #2B292F;
+    border-radius: 28px;
+    overflow: hidden;
+    padding: 0 10px;
+}
+
+.search-bar input {
+    width: 400px;
+    height: 36px;
+    border: none;
+    outline: none;
+    padding: 0 10px;
+    background: none;
+    color: white;
+    font-size: 16px;
+    font-family: 'Inter', sans-serif;
+}
+
+.search-bar button {
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.search-bar img {
+    width: 20px;
+    height: 20px;
+}
+
+.content, .recommendations {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    margin-top: 20px;
+}
+
+.card {
+    width: 240px;
+    height: 342px;
+    padding: 24px;
+    background: white;
+    border: 1px solid #D9D9D9;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+}
+
+.card img {
+    width: 160px;
+    height: 160px;
+    background: linear-gradient(0deg, #E3E3E3 0%, #E3E3E3 100%);
+}
+
+.card-text {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+}
+
+.card-title {
+    font-size: 24px;
+    font-weight: 600;
+    color: #1E1E1E;
+}
+
+.card-body {
+    font-size: 16px;
+    font-weight: 400;
+    color: #757575;
+}
+
+.ranking {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.ranking-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: black;
+}
+
+.ranking-items {
+    display: flex;
+    justify-content: space-between; /* 나란히 배치 */
+    gap: 20px; /* 카드 사이 간격 */
+}
+
+.ranking-item {
+    font-size: 57px;
+    font-weight: 400;
+    color: black;
+    text-align: center;
+}
+
+.filter-container { /* 필터 컨테이너 추가 */
+    display: flex;
+    justify-content: space-between;
+    margin: 20px 0;
+}
+
+.genre-filter {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.genre-item {
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 400;
+    color: #1E1E1E;
+    cursor: pointer;
+}
+
+.genre-item.active {
+    background: #F5F5F5;
+    color: #444444;
+}
+
+.extra-filter {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.extra-item {
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 400;
+    color: #1E1E1E;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.extra-item img {
+    width: 20px; /* 아이콘 크기 조정 */
+    height: 20px; /* 아이콘 크기 조정 */
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.page-item {
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 400;
+    color: #1E1E1E;
+}
+
+.page-item.active {
+    background: #2C2C2C;
+    color: #F5F5F5;
+}
+
+.recommendations-title {
+    margin-top: 40px;
+    font-size: 20px;
+    font-weight: 600;
+    color: black;
+    text-align: center;
+}
