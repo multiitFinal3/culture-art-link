@@ -67,14 +67,15 @@ public class AdminPerformanceController {
     }
 
     @PostMapping("/saveToDB")
-    public String saveToDB(@RequestParam("selectedIds") List<String> selectedIds,
+    public String saveToDB(@RequestParam(name = "selectedIdsAPI", required = false) List<String> selectedIdsAPI,
                            @RequestParam(name = "apiPage", defaultValue = "0") int apiPage,
                            @RequestParam(name = "dbPage", defaultValue = "0") int dbPage,
                            @RequestParam(name = "size", defaultValue = "20") int size,
                            Model model) {
-        System.out.println("Selected IDs: " + selectedIds);
-        int savedCount = performanceDBService.savePerformances(selectedIds);
-        System.out.println("데이터 베이스 저장 (" + savedCount + "개) 성공");
+        if (selectedIdsAPI != null && !selectedIdsAPI.isEmpty()) {
+            int savedCount = performanceDBService.savePerformances(selectedIdsAPI);
+            System.out.println("데이터 베이스 저장 (" + savedCount + "개) 성공");
+        }
 
         try {
             // DB에서 최신 데이터 가져오기
@@ -105,10 +106,47 @@ public class AdminPerformanceController {
         // 페이지 번호와 사이즈를 리다이렉트 경로에 추가
         return "redirect:/admin/performance-regulate?dbPage=" + dbPage + "&apiPage=" + apiPage + "&size=" + size;
     }
+
+    @PostMapping("/deleteFromDB")
+    public String deleteFromDB(@RequestParam(name = "selectedIds", required = false) List<String> selectedIds,
+                               @RequestParam(name = "apiPage", defaultValue = "0") int apiPage,
+                               @RequestParam(name = "dbPage", defaultValue = "0") int dbPage,
+                               @RequestParam(name = "size", defaultValue = "20") int size,
+                               Model model) {
+        if (selectedIds != null && !selectedIds.isEmpty()) {
+            int deletedCount = performanceDBService.deletePerformances(selectedIds);
+            System.out.println("데이터 베이스 삭제 (" + deletedCount + "개) 성공");
+
+            model.addAttribute("deletedCount", deletedCount);
+        }
+
+        try {
+            // DB에서 최신 데이터 가져오기
+            List<PerformanceDTO> dbPerformances = performanceDBService.getAllPerformances();
+
+            // 전체 API 데이터를 가져와서 필터링
+            List<PerformanceDTO> allApiPerformances = performanceAPIService.fetchData(0, Integer.MAX_VALUE).getContent();
+            List<PerformanceDTO> filteredPerformances = allApiPerformances.stream()
+                    .filter(p -> dbPerformances.stream().noneMatch(db -> db.getCode().equals(p.getCode())))
+                    .collect(Collectors.toList());
+
+            // 현재 페이지에 맞게 20개로 자르기
+            int fromIndex = apiPage * size;
+            int toIndex = Math.min(fromIndex + size, filteredPerformances.size());
+            List<PerformanceDTO> paginatedPerformances = filteredPerformances.subList(fromIndex, Math.min(toIndex, filteredPerformances.size()));
+
+            // 모델에 속성 추가
+            model.addAttribute("performances", paginatedPerformances);
+            model.addAttribute("dbPerformances", dbPerformances.subList(0, Math.min(size, dbPerformances.size())));
+            model.addAttribute("dbCurrentPage", dbPage);
+            model.addAttribute("apiCurrentPage", apiPage);
+            model.addAttribute("apiTotalPages", (int) Math.ceil((double) filteredPerformances.size() / size));
+            model.addAttribute("dbTotalPages", (int) Math.ceil((double) dbPerformances.size() / size));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        // 페이지 번호와 사이즈를 리다이렉트 경로에 추가
+        return "redirect:/admin/performance-regulate?dbPage=" + dbPage + "&apiPage=" + apiPage + "&size=" + size + (model.containsAttribute("deletedCount") ? "&deletedCount=" + model.getAttribute("deletedCount") : "");
+    }
 }
-
-
-
-
-
-
