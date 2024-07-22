@@ -1,17 +1,13 @@
 package com.multi.culture_link.admin.culturalProperties.controller;
 
 
-
 import com.multi.culture_link.admin.culturalProperties.dto.CulturalPropertiesDTO;
 import com.multi.culture_link.admin.culturalProperties.service.AdminCulturalPropertiesService;
-import com.multi.culture_link.festival.model.dto.FestivalDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -39,20 +35,19 @@ public class AdminCulturalPropertiesController {
 
 	@PostMapping("/fetchApiData")
 	@ResponseBody
-	public List<CulturalPropertiesDTO> culturalPropertiesList(@RequestParam("page") int page) {
+	public List<CulturalPropertiesDTO> culturalPropertiesList(@RequestParam("page") int page, Model model) {
 
 		System.out.println("list확인");
-//		List<CulturalPropertiesDTO> list = adminCulturalPropertiesService.fetchApiData(page);
-//		model.addAttribute("culturalPropertiesList", list);
-		List<CulturalPropertiesDTO> list = null;
-//		try {
-//			list = adminCulturalPropertiesService.fetchApiData(page);
-//
-//
-//
-//		} catch (Exception e) {
-//			throw new RuntimeException(e);
-//		}
+		List<CulturalPropertiesDTO> list = adminCulturalPropertiesService.fetchApiData(page);
+		model.addAttribute("culturalPropertiesList", list);
+		try {
+			list = adminCulturalPropertiesService.fetchApiData(page);
+
+
+
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
 
 
 		System.out.println("list : " + list);

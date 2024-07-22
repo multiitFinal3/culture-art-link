@@ -29,12 +29,17 @@ public class AdminCulturalPropertiesServiceImpl implements AdminCulturalProperti
 
     @Override
     public List<CulturalPropertiesDTO> fetchApiData(int page) {
+        
+        System.out.println("서비스임플1");
+        
         List<CulturalPropertiesDTO> culturalPropertiesList = new ArrayList<>();
-
+        
+        System.out.println("서비스임플2");
 
         try {
             // 1716 페이지까지 반복
-            for (int pageIndex = 1; pageIndex <= 1716; pageIndex++) {
+            for (int pageIndex = 1; pageIndex <= 2; pageIndex++) {
+                System.out.println("서비스임플1 : pageIndex" + pageIndex);
                 String listFullUrl = listApiUrl + "?pageIndex=" + pageIndex + "&pageNo=" + page + "&numOfRows=5&type=json";
                 String listXmlResponse = restTemplate.getForObject(listFullUrl, String.class);
                 JSONObject listJsonObject = XML.toJSONObject(listXmlResponse);
@@ -240,6 +245,8 @@ public class AdminCulturalPropertiesServiceImpl implements AdminCulturalProperti
             e.printStackTrace();
             System.out.println("API 응답 처리 중 오류 발생: " + e.getMessage());
         }
+        
+        System.out.println("serviceImpl 5");
 
         // DTOs가 culturalPropertiesList에 저장되어 있으므로 필요한 작업 수행
         for (CulturalPropertiesDTO dto : culturalPropertiesList) {
