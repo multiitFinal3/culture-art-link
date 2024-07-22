@@ -1,46 +1,123 @@
 package com.multi.culture_link.users.model.dto;
 
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 
-public class VWUserRoleDTO extends User{
+public class VWUserRoleDTO implements UserDetails {
 	
 	
-	private String email;
-	private String password;
-	private String roleName;
-
+	private UserDTO userDTO;
 	
-	public VWUserRoleDTO(String email, String password,  Collection<? extends GrantedAuthority> authorities) {
-		super(email, password, authorities);
+	public VWUserRoleDTO vwUserRoleDTO;
+	
+	public VWUserRoleDTO(UserDTO userDTO) {
+		this.userDTO = userDTO;
 	}
 	
-	
-	public String getEmail() {
-		return email;
-	}
-	
-	public void setEmail(String email) {
-		this.email = email;
+	@Override
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+		
+		Collection<GrantedAuthority> collection = new ArrayList<>();
+		collection.add(new GrantedAuthority() {
+			@Override
+			public String getAuthority() {
+				return userDTO.getRoleId();
+			}
+		});
+		
+		System.out.println("collection : " + collection);
+		return collection;
 	}
 	
 	@Override
 	public String getPassword() {
-		return password;
+		System.out.println("getPassword : "+userDTO.getPassword());
+		return userDTO.getPassword();
 	}
 	
-	public void setPassword(String password) {
-		this.password = password;
+	@Override
+	public String getUsername() {
+		System.out.println("getUsername : "+ userDTO.getUserName());
+		return userDTO.getUserName();
 	}
 	
-	public String getRoleName() {
-		return roleName;
+	public int getUserId(){
+		
+		System.out.println("getUserId : "+ userDTO.getUserId());
+		return userDTO.getUserId();
+		
 	}
 	
-	public void setRoleName(String roleName) {
-		this.roleName = roleName;
+	public String getTel(){
+		
+		System.out.println("getTel : "+ userDTO.getTel());
+		return userDTO.getTel();
+		
+	}
+	
+	public String getGender(){
+		
+		System.out.println("getGender : "+ userDTO.getGender());
+		return userDTO.getGender();
+		
+	}
+	
+	public int getRegionId(){
+		
+		System.out.println("getRegionId : "+ userDTO.getRegionId());
+		return userDTO.getRegionId();
+		
+	}
+	
+	public String getRoleId(){
+		
+		System.out.println("getRoleId : "+ userDTO.getRoleId());
+		return userDTO.getRoleId();
+		
+	}
+	
+	public String getRoleContent(){
+		
+		System.out.println("getRoleContent : "+ userDTO.getRoleContent());
+		return userDTO.getRoleContent();
+		
+	}
+	
+	@Override
+	public boolean isAccountNonExpired() {
+		return true;
+	}
+	
+	@Override
+	public boolean isAccountNonLocked() {
+		return true;
+	}
+	
+	@Override
+	public boolean isCredentialsNonExpired() {
+		return true;
+	}
+	
+	@Override
+	public boolean isEnabled() {
+		return true;
+	}
+	
+	public UserDTO getUser(){
+		System.out.println("getUserDTO");
+		return userDTO;
+		
+	}
+	
+	@Override
+	public String toString() {
+		return "VWUserRoleDTO{" +
+				"userDTO=" + userDTO +
+				", vwUserRoleDTO=" + vwUserRoleDTO +
+				'}';
 	}
 }

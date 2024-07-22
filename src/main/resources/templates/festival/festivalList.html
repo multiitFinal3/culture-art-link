@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.w3.org/1999/xhtml">
+<html layout:decorate="~{common/layout/layoutMenubar}">
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<div layout:fragment="content">
+
+    축제 처음 페이지입니다~~
+
+    <p th:text="${user}"></p>
+    <p th:text="${user.userName}"></p>
+    <p th:text="${user.roleId}"></p>
+
+
+
+</div>
+
+</body>
+</html>
