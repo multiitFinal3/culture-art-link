@@ -1,5 +1,6 @@
 package com.multi.culture_link.admin.exhibition.controller;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.multi.culture_link.admin.exhibition.model.dto.api.ExhibitionApiDto;
 import com.multi.culture_link.admin.exhibition.model.dto.api.ExhibitionApiResponseDto;
 import com.multi.culture_link.admin.exhibition.service.ExhibitionApiService;
@@ -21,7 +22,9 @@ public class AdminExhibitionController {
     @GetMapping("/exhibition")
     public List<ExhibitionApiResponseDto.Item> listExhibitions(Model model) {
         ExhibitionApiResponseDto responseData= exhibitionApiService.fetchJsonData();
-        // 나중에 client 에서 필요한 값만, 리스트로 보여주기
+        System.out.println("getNumOfRows: " + responseData.getBody().getNumOfRows());
+        System.out.println("pageNo: " + responseData.getBody().getPageNo());
+        System.out.println("totalCount: " + responseData.getBody().getTotalCount());
         // System.out.println(responseData.getBody().getItems().getItem().get(1));
         return responseData.getBody().getItems().getItem();
     }

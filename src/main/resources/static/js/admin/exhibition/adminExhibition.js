@@ -6,21 +6,40 @@ function parseDateRange(dateString) {
       endDate: null,
     };
   }
-  const [start, end] = dateString?.split("~");
+
+  const splitStr = dateString?.includes(" - ") ? " - " : "~";
+  const [start, end] = dateString?.trim()?.split(splitStr);
 
   function formatDate(date) {
+    if (!date) return null;
+
+    // 'YYYY-MM-DD HH:mm:ss' 형식을 'YYYY-MM-DD'로 변환
+    if (date.includes("-") && date.length > 10) {
+      return date.substring(0, 10);
+    }
+
+    // 'YYYYMMDD' 형식을 'YYYY-MM-DD'로 변환
+    if (date.length === 8) {
+      return date.replace(/(\d{4})(\d{2})(\d{2})/, "$1-$2-$3");
+    }
+
+    // 이미 'YYYY-MM-DD' 형식이면 그대로 반환
     if (date.includes("-") && date.length === 10) {
       return date;
     }
 
-    return date.replace(/(\d{4})(\d{2})(\d{2})/, "$1-$2-$3");
+    // 다른 형식의 경우 null 반환
+    return date.slice(0, 10);
   }
 
   return {
-    startDate: formatDate(start),
-    endDate: formatDate(end),
+    startDate: formatDate(start?.trim()),
+    endDate: formatDate(end?.trim()),
   };
 }
+
+let exhibition = [];
+let exhibitionDB = [];
 
 // init 함수
 $(document).ready(function () {
@@ -28,13 +47,11 @@ $(document).ready(function () {
   const itemsPerPage = 10;
   let currentPage = 1;
   const maxPageButtons = 10;
-  let exhibition = [];
-  let exhibitionDB = [];
 
-  async function searchButton() {
-    const title = $("#searchTitle").val();
-    const artist = $("#searchArtist").val();
-    const museum = $("#searchMuseum").val();
+  async function searchButtonDB() {
+    const title = $("#searchTitleDB").val();
+    const artist = $("#searchArtistDB").val();
+    const museum = $("#searchMuseumDB").val();
 
     let url = "/exhibition/search-exhibition?";
 
@@ -53,7 +70,28 @@ $(document).ready(function () {
     console.log("search data : ", response1.data);
     renderTable(response1.data, "list1");
     renderPagination(response1.data, "pageNum1");
-    fetchData();
+  }
+
+  // api 다중 검색
+  async function searchButton() {
+    const title = $("#searchTitle").val();
+    const museum = $("#searchMuseum").val();
+
+    const response1 = await axios.get("/admin/exhibition-regulate/exhibition");
+    exhibition = response1.data;
+    console.log("exhibition length: ", response1.data.length);
+    if (title) {
+      exhibition = exhibition.filter((v) => v.TITLE.includes(title));
+    }
+
+    if (museum) {
+      exhibition = exhibition.filter((v) => v.CNTC_INSTT_NM.includes(museum));
+    }
+
+    console.log("search data : ", exhibition);
+
+    renderTable(exhibition, "list2");
+    renderPagination(exhibition, "pageNum2");
   }
 
   // 데이터 가져와서 table에 세팅
@@ -66,12 +104,14 @@ $(document).ready(function () {
       const response2 = await axios.get(
         "/admin/exhibition-regulate/db-exhibition"
       );
+      console.log("response1 : ", response1);
       exhibition = response1.data;
+      exhibitionDB = response2.data;
+
       renderTable(response1.data, "list2");
       renderPagination(response1.data, "pageNum2");
 
       console.log("response2 : ", response2);
-      exhibitionDB = response2.data;
       renderTable(response2.data, "list1");
       renderPagination(response2.data, "pageNum1");
     } catch (error) {
@@ -83,52 +123,87 @@ $(document).ready(function () {
   function renderTable(allData, tableId) {
     const startIndex = (currentPage - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
-    const pageData = allData.slice(startIndex, endIndex);
+
+    // 데이터를 DB 존재 여부에 따라 정렬
+    const sortedData = allData.sort((a, b) => {
+      const aExists = exhibitionDB.find((v) => v.localId === a.LOCAL_ID);
+      const bExists = exhibitionDB.find((v) => v.localId === b.LOCAL_ID);
+      if (aExists && !bExists) return 1;
+      if (!aExists && bExists) return -1;
+      return 0;
+    });
+
+    const pageData = sortedData.slice(startIndex, endIndex);
 
     const tableBody = document.getElementById(tableId);
     tableBody.innerHTML = "";
 
     pageData.forEach((item, index) => {
+      // 날짜 형식 변경 함수
+      const formatDate = (dateString) => {
+        if (!dateString) return null;
+        if (dateString.includes(" ")) {
+          return dateString.split(" ")[0];
+        }
+        return dateString;
+      };
+
       const { startDate, endDate } = parseDateRange(item?.PERIOD);
-      item.startDate = item.startDate ? item.startDate : startDate;
-      item.endDate = item.endDate ? item.endDate : endDate;
-      item.start_date = item.endDate;
+
+      console.log("PERIOD : ", item?.PERIOD);
+      console.log("data : ", item?.startDate, "  ", item?.endDate);
+      console.log("data2 : ", startDate, "  ", endDate);
+
+      item.startDate = item.startDate || startDate;
+      item.endDate = item.endDate || endDate;
+      item.start_date = item.startDate;
       item.end_date = item.endDate;
 
       let row = "";
 
       if (tableId === "list2") {
+        const existsInDB = exhibitionDB.find(
+          (v) => v.localId === item.LOCAL_ID
+        );
         row = `
-                <tr>
-                  <td scope="col"><input type="checkbox" class="row-checkbox" data-index="${
-                    startIndex + index
-                  }"></td>
-                  <td scope="col">${startIndex + index + 1}</td>
-                  <td scope="col">${item.TITLE}</td>
-                  <td scope="col">${item.CNTC_INSTT_NM}</td>
-                  <td scope="col">${item.startDate}</td>
-                  <td scope="col">${item.endDate}</td>
-                </tr>
-              `;
+          <tr>
+            <td scope="col">
+            ${
+              existsInDB
+                ? "DB 존재"
+                : `
+                <input type="checkbox" class="row-checkbox" data-index="${
+                  startIndex + index
+                }">
+            `
+            }
+            </td>
+            <td scope="col">${startIndex + index + 1}</td>
+            <td scope="col">${item.TITLE}</td>
+            <td scope="col">${item.CNTC_INSTT_NM}</td>
+            <td scope="col">${item.startDate}</td>
+            <td scope="col">${item.endDate}</td>
+          </tr>
+        `;
       } else {
         row = `
-                <tr>
-                  <td scope="col"><input type="checkbox" class="row-checkbox" data-index="${
-                    startIndex + index
-                  }"></td>
-                  <td scope="col">${startIndex + index + 1}</td>
-                  <td scope="col">${item.title}</td>
-                  <td scope="col">${item.artist}</td>
-                  <td scope="col">${item.museum}</td>
-                  <td scope="col">${item.startDate}</td>
-                  <td scope="col">${item.endDate}</td>
-                  <td scope="col">${item.price}</td>
-                  <td scope="col"><img class="resize-img" src="${
-                    item.image
-                  }"></img></td>
-                   <td scope="col"><button class="edit-button">수정</button></td>
-                </tr>
-              `;
+          <tr>
+            <td scope="col"><input type="checkbox" class="row-checkbox" data-index="${
+              startIndex + index
+            }"></td>
+            <td scope="col">${startIndex + index + 1}</td>
+            <td scope="col">${item.title}</td>
+            <td scope="col">${item.artist}</td>
+            <td scope="col">${item.museum}</td>
+            <td scope="col">${item.startDate}</td>
+            <td scope="col">${item.endDate}</td>
+            <td scope="col">${item.price}</td>
+            <td scope="col"><img class="resize-img" src="${
+              item.image
+            }"></img></td>
+            <td scope="col"><button class="edit-button">수정</button></td>
+          </tr>
+        `;
       }
       tableBody.innerHTML += row;
     });
@@ -158,6 +233,14 @@ $(document).ready(function () {
       endPage = totalPages;
       startPage = Math.max(endPage - maxPageButtons + 1, 1);
     }
+
+    // 첫 페이지 버튼
+    const firstButton = createPageButton("처음", () => {
+      currentPage = 1;
+      renderTable(allData, pageNumId === "pageNum2" ? "list2" : "list1");
+      renderPagination(allData, pageNumId);
+    });
+    paginationElement.appendChild(firstButton);
 
     // 이전 버튼
     if (startPage > 1) {
@@ -191,6 +274,14 @@ $(document).ready(function () {
       });
       paginationElement.appendChild(nextButton);
     }
+
+    // 마지막 페이지 버튼
+    const lastButton = createPageButton("마지막", () => {
+      currentPage = totalPages;
+      renderTable(allData, pageNumId === "pageNum2" ? "list2" : "list1");
+      renderPagination(allData, pageNumId);
+    });
+    paginationElement.appendChild(lastButton);
   }
 
   // 추가 버튼 기능
@@ -362,6 +453,10 @@ $(document).ready(function () {
   document
     .getElementById("dbUpdateBtn")
     .addEventListener("click", updateExhibisionDB);
+
+  document
+    .getElementById("searchButtonDB")
+    .addEventListener("click", searchButtonDB);
 
   document
     .getElementById("searchButton")

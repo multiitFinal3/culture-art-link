@@ -50,21 +50,22 @@
   CONSTRAINT `exhibition_interested_ibfk_2` FOREIGN KEY (`exhibition_id`) REFERENCES `exhibition` (`id`)
 );"
 "CREATE TABLE `exhibition` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `title` varchar(100) NOT NULL,
-  `artist` varchar(255) DEFAULT NULL,
-  `museum` varchar(100) NOT NULL,
-  `start_date` datetime DEFAULT NULL,
-  `end_date` datetime DEFAULT NULL,
-  `price` varchar(100) DEFAULT NULL,
-  `image` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
-  `description` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci,
-  `sub_description` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
-  `url` varchar(255) DEFAULT NULL,
-  `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `updated_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`)
-);"
+   `id` int NOT NULL AUTO_INCREMENT,
+   `title` varchar(100) NOT NULL,
+   `artist` varchar(255) DEFAULT NULL,
+   `museum` varchar(100) NOT NULL,
+   `start_date` datetime DEFAULT NULL,
+   `end_date` datetime DEFAULT NULL,
+   `price` varchar(100) DEFAULT NULL,
+   `image` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+   `description` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci,
+   `sub_description` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+   `url` varchar(255) DEFAULT NULL,
+   `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+   `updated_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+   `local_id` varchar(100) NOT NULL,
+   PRIMARY KEY (`id`)
+ );"
 "CREATE TABLE `exhibition_interested_keyword` (
   `id` int NOT NULL AUTO_INCREMENT,
   `exhibition_id` int NOT NULL,
