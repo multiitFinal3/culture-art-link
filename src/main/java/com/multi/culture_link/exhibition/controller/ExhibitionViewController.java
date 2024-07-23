@@ -11,9 +11,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class ExhibitionViewController {
 
     @GetMapping
-    public String exhibition() {
+    public String searchExhibition() {
 
-        return "/exhibition";
+        return "/exhibition/exhibition";
 
     }
+
+
 }
