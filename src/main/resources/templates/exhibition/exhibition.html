@@ -88,7 +88,6 @@
           let exhibitions = [];
           let viewStatus = "all"; // pre, current, future, unknown 어떤 버튼 눌렀는지
 
-          // 예시임 수정 필요
           function changeViewStatus() {
             viewStatus = $("#view-status").val();
           }
@@ -157,7 +156,103 @@
           }
 
           //페이지에 들어갔을 때 실행 되는 init 함수
-          $(document).ready(init);
+          // $(document).ready(init);
+          $(document).ready(function () {
+            init();
+
+            // 버튼 클릭 이벤트 처리
+            $("#currentBtn").click(function () {
+              changeViewStatus("current");
+            });
+            $("#pastBtn").click(function () {
+              changeViewStatus("past");
+            });
+            $("#futureBtn").click(function () {
+              changeViewStatus("future");
+            });
+            $("#unknownBtn").click(function () {
+              changeViewStatus("unknown");
+            });
+          });
+
+          function changeViewStatus(status) {
+            viewStatus = status;
+            filterAndRenderExhibitions();
+          }
+
+          async function getExhibitions() {
+            const response = await axios.get(
+              "/admin/exhibition-regulate/db-exhibition"
+            );
+
+            exhibitions = response.data.map((item) => ({
+              image: item.image,
+              title: item.title,
+              artist: item.artist,
+              museum: item.museum,
+              startDate: item.startDate ? new Date(item.startDate) : null,
+              endDate: item.endDate ? new Date(item.endDate) : null,
+            }));
+
+            filterAndRenderExhibitions();
+          }
+
+          function filterAndRenderExhibitions() {
+            const today = new Date();
+            const filteredExhibitions = exhibitions.filter((item) => {
+              if (viewStatus === "all") return true;
+              if (!item.startDate || !item.endDate)
+                return viewStatus === "unknown";
+
+              switch (viewStatus) {
+                case "current":
+                  return item.startDate <= today && today <= item.endDate;
+                case "past":
+                  return item.endDate < today;
+                case "future":
+                  return today < item.startDate;
+                default:
+                  return false;
+              }
+            });
+
+            renderExhibitions(filteredExhibitions);
+          }
+
+          function renderExhibitions(exhibitionsToRender) {
+            const $exhibitionList = $(".exhibition-list");
+            $exhibitionList.empty();
+
+            $.each(exhibitionsToRender, function (index, exhibition) {
+              const $li = $("<li>").addClass("exhibition-item");
+              $li.html(`
+                    <img src="${
+                      exhibition.image
+                    }" alt="${exhibition.title}" class="exhibition-image">
+                    <div class="exhibition-info">
+                        <h3>${exhibition.title}</h3>
+                        <p>${exhibition.artist}</p>
+                        <p>${exhibition.museum}</p>
+                        <p>시작일: ${
+                          exhibition.startDate
+                            ? exhibition.startDate.toISOString().split("T")[0]
+                            : "미정"
+                        }</p>
+                        <p>종료일: ${
+                          exhibition.endDate
+                            ? exhibition.endDate.toISOString().split("T")[0]
+                            : "미정"
+                        }</p>
+                    </div>
+                    <div class="exhibition-actions">
+                        <button class="action-button">♡</button>
+                        <button class="action-button">□</button>
+                    </div>
+                `);
+              $exhibitionList.append($li);
+            });
+          }
+          //
 
           function init() {
             getExhibitions();
@@ -179,10 +274,10 @@
       <body>
         <div layout:fragment="content">
           <div class="tab-menu">
-            <button>현재 전시</button>
-            <button>지난 전시</button>
-            <button>예정 전시</button>
-            <button>미정</button>
+            <button id="currentBtn">현재 전시</button>
+            <button id="pastBtn">지난 전시</button>
+            <button id="futureBtn">예정 전시</button>
+            <button id="unknownBtn">미정</button>
           </div>
 
           <div class="search-bar">
