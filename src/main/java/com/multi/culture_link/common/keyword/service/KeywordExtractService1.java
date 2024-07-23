@@ -4,13 +4,13 @@ import kr.co.shineware.nlp.komoran.constant.DEFAULT_MODEL;
 import kr.co.shineware.nlp.komoran.core.Komoran;
 import kr.co.shineware.nlp.komoran.model.KomoranResult;
 import kr.co.shineware.nlp.komoran.model.Token;
+import org.apache.lucene.analysis.core.KeywordTokenizer;
+import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
 
-import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,7 +40,7 @@ public class KeywordExtractService1 {
 	 * @return 키워드 리스트
 	 * @throws Exception 예외를 앞단으로 던짐
 	 */
-	public ArrayList<String> getKeyword(String all) throws Exception{
+	public ArrayList<String> getKeywordByKomoran(String all) throws Exception{
 		
 		Komoran komoran = new Komoran(DEFAULT_MODEL.FULL);
 		
@@ -94,6 +94,37 @@ public class KeywordExtractService1 {
 		
 		return list2;
 		
+		
+	}
+	
+	
+	
+	public ArrayList<String> getKeywordByApacheLucene(String all) throws Exception{
+		
+		// 아파치 루신의 키워드 토크나이저(KeywordTokenizer)를 사용하여 텍스트를 토큰화
+		KeywordTokenizer tokenizer = new KeywordTokenizer();
+		tokenizer.setReader(new StringReader(all));
+		
+		ArrayList<String> list = new ArrayList<String>();
+		
+		// 키워드 추출 및 출력
+		CharTermAttribute termAttr = tokenizer.addAttribute(CharTermAttribute.class);
+		try {
+			tokenizer.reset();
+			while (tokenizer.incrementToken()) {
+				list.add(termAttr.toString());
+				System.out.println("apache luceu 추가되는 키워드 : " + termAttr.toString());
+				System.out.println(termAttr.toString());
+			}
+			tokenizer.end();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			tokenizer.close();
+		}
+		
+		System.out.println("list.toString() : " + list.toString());
+		return list;
 		
 	}
 	
