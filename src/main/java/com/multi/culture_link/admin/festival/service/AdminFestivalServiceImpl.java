@@ -883,10 +883,7 @@ public class AdminFestivalServiceImpl implements AdminFestivalService {
 		}
 		
 		System.out.println("stopWords : " + stopWords.toString());
-		
-		
-		
-		
+
 		ArrayList<String> list2 = new ArrayList<>();
 		
 		for (String token : list){
@@ -900,9 +897,7 @@ public class AdminFestivalServiceImpl implements AdminFestivalService {
 		}
 		
 		System.out.println("analyzeResultList.getNouns() : " + list);
-		System.out.println("eliminate replica : " + list2);
-		
-		
+		System.out.println("final list : " + list2);
 		
 		
 		
