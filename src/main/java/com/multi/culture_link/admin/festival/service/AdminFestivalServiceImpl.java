@@ -237,8 +237,7 @@ public class AdminFestivalServiceImpl implements AdminFestivalService {
 				season = "가을";
 				
 			}
-			
-			System.out.println("계절 : " + season);
+
 			festivalDTO.setSeason(season);
 			
 			ArrayList<Integer> days = new ArrayList<Integer>();
@@ -312,14 +311,11 @@ public class AdminFestivalServiceImpl implements AdminFestivalService {
 			festivalDTO.setLongtitude(longi);
 			
 			festivalDTO.setAvgRate(0);
-			
-			System.out.println("festivalDTO : " + festivalDTO.toString());
-			
-			
+
 			FestivalDTO festivalExist = adminFestivalMapper.findDBFestivalByFestival(festivalDTO);
 			
 			if (festivalExist != null) {
-				System.out.println("리스트에서 제외 : " + festivalExist.toString());
+				/*System.out.println("리스트에서 제외 : " + festivalExist.toString());*/
 				/*festivalDTO.setExist("Y");*/
 				continue;
 				
@@ -329,10 +325,7 @@ public class AdminFestivalServiceImpl implements AdminFestivalService {
 			list.add(festivalDTO);
 			
 		}
-		
-		
-		System.out.println("impl list: " + list);
-		
+
 		this.list = list;
 		
 		ArrayList<FestivalDTO> list2 = new ArrayList<FestivalDTO>();
@@ -378,8 +371,6 @@ public class AdminFestivalServiceImpl implements AdminFestivalService {
 			Document document = Jsoup.connect("https://search.naver.com/search.naver?sm=tab_hty.top&where=nexearch&ssc=tab.nx.all&query=" + festivalName + "+기본정보").get();
 			
 			String title = document.title();
-			System.out.println("title : " + title);
-			
 			
 			String imgUrl = document.select("div.detail_info > a > img").attr("src");
 			
@@ -395,9 +386,6 @@ public class AdminFestivalServiceImpl implements AdminFestivalService {
 			String festivalContent = content1 + content2;
 			
 			festivalDTO.setFestivalContent(festivalContent);
-			
-			
-			System.out.println(festivalDTO.toString());
 			
 			adminFestivalMapper.insertAPIFestival(festivalDTO);
 			
@@ -418,9 +406,7 @@ public class AdminFestivalServiceImpl implements AdminFestivalService {
 	public ArrayList<FestivalDTO> findDBFestivalList(PageDTO pageDTO) throws Exception {
 		
 		ArrayList<FestivalDTO> list = adminFestivalMapper.findDBFestivalList(pageDTO);
-		
-		System.out.println("impl list : " + list);
-		
+
 		return list;
 		
 	}
@@ -434,8 +420,6 @@ public class AdminFestivalServiceImpl implements AdminFestivalService {
 	@Override
 	public int findDBFestivalCount() throws Exception {
 		int count = adminFestivalMapper.findDBFestivalCount();
-		
-		System.out.println("impl count : " + count);
 		return count;
 	}
 	
@@ -452,8 +436,6 @@ public class AdminFestivalServiceImpl implements AdminFestivalService {
 		for (int i = 0; i < checks.size(); i++) {
 			
 			int festivalId = checks.get(i);
-			
-			System.out.println(festivalId);
 			
 			adminFestivalMapper.deleteDBFestivalList(festivalId);
 			
@@ -540,8 +522,7 @@ public class AdminFestivalServiceImpl implements AdminFestivalService {
 		
 		
 		String urlFinal = url1 + url2 + url3;
-		System.out.println("urlFinal : " + urlFinal);
-		
+
 		Request request = new Request.Builder()
 				.url(urlFinal)
 				.addHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36")
@@ -720,8 +701,7 @@ public class AdminFestivalServiceImpl implements AdminFestivalService {
 				season = "가을";
 				
 			}
-			
-			System.out.println("계절 : " + season);
+
 			festivalDTO2.setSeason(season);
 			
 			ArrayList<Integer> days = new ArrayList<Integer>();
@@ -771,8 +751,6 @@ public class AdminFestivalServiceImpl implements AdminFestivalService {
 			Document document = Jsoup.connect("https://search.naver.com/search.naver?sm=tab_hty.top&where=nexearch&ssc=tab.nx.all&query=" + festivalName + "+기본정보").get();
 			
 			String title = document.title();
-			System.out.println("title : " + title);
-			
 			
 			String imgUrl = document.select("div.detail_info > a > img").attr("src");
 			
@@ -815,13 +793,10 @@ public class AdminFestivalServiceImpl implements AdminFestivalService {
 			
 			festivalDTO2.setAvgRate(0);
 			
-			System.out.println("festivalDTO2 : " + festivalDTO2.toString());
-			
-			
 			FestivalDTO festivalExist = adminFestivalMapper.findDBFestivalByFestival(festivalDTO2);
 			
 			if (festivalExist != null) {
-				System.out.println("리스트에서 제외 : " + festivalExist.toString());
+				/*System.out.println("리스트에서 제외 : " + festivalExist.toString());*/
 				/*festivalDTO2.setExist("Y");*/
 				continue;
 				
@@ -914,7 +889,7 @@ public class AdminFestivalServiceImpl implements AdminFestivalService {
 		
 		String all = content + " " + title;
 		
-		/*ArrayList<String> list = keywordExtractService.getKeywordByKomoran(all);*/
+		ArrayList<String> list2 = keywordExtractService.getKeywordByKomoran(all);
 		ArrayList<String> list = keywordExtractService.getKeywordByApacheLucene(all);
 		
 		
