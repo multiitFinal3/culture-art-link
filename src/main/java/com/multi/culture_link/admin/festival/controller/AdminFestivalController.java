@@ -939,19 +939,19 @@ public class AdminFestivalController {
 	 */
 	@PostMapping("/insertContentKeywordByFestivalId")
 	@ResponseBody
-	public ArrayList<String> insertContentKeywordByFestivalId(@RequestParam("festivalId") int festivalId) {
+	public HashMap<String, Integer> insertContentKeywordByFestivalId(@RequestParam("festivalId") int festivalId) {
 		
 		
-		ArrayList<String> list = null;
+		HashMap<String, Integer> map = null;
 		
 		try {
-			list = adminFestivalService.insertContentKeywordByFestivalId(festivalId);
+			map = adminFestivalService.insertContentKeywordByFestivalId(festivalId);
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
 		
 		
-		return list;
+		return map;
 		
 		
 	}

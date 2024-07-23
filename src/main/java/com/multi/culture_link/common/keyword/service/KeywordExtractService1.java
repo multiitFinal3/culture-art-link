@@ -17,8 +17,7 @@ import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 
 /**
@@ -49,12 +48,12 @@ public class KeywordExtractService1 {
 	 * @return 키워드 리스트
 	 * @throws Exception 예외를 앞단으로 던짐
 	 */
-	public ArrayList<String> getKeywordByKomoran(String all) throws Exception {
+	public HashMap<String, Integer> getKeywordByKomoran(String all) throws Exception {
 		
 		Komoran komoran = new Komoran(DEFAULT_MODEL.FULL);
 		
 		KomoranResult analyzeResultList = komoran.analyze(all);
-		
+
 //		System.out.println("analyzeResultList.getPlainText() : " + analyzeResultList.getPlainText());
 		
 		List<Token> tokenList = analyzeResultList.getTokenList();
@@ -81,26 +80,52 @@ public class KeywordExtractService1 {
 				stopWords.add(line.trim());
 			}
 		}
-		
+
 //		System.out.println("stopWords : " + stopWords.toString());
+
+//		ArrayList<String> list2 = new ArrayList<>();
 		
-		ArrayList<String> list2 = new ArrayList<>();
+		HashMap<String, Integer> map = new HashMap<String, Integer>();
+
+
+//		for (String token : list) {
+//
+//			if ((!list2.contains(token)) && (!stopWords.contains(token))) {
+//
+//				list2.add(token);
+//
+//			}
+//
+//		}
 		
 		for (String token : list) {
 			
-			if ((!list2.contains(token)) && (!stopWords.contains(token))) {
+			if (!stopWords.contains(token)) {
 				
-				list2.add(token);
+				
+				if (map.keySet().contains(token)) {
+					
+					int val = map.get(token);
+					map.put(token, val + 1);
+					
+				} else {
+					
+					map.put(token, 1);
+					
+					
+				}
+				
 				
 			}
 			
 		}
 		
-//		System.out.println("Komoran before : " + list);
-		System.out.println("Komoran after : " + list2);
+		
+		System.out.println("Komoran before : " + list);
+		System.out.println("Komoran after : " + map);
 		
 		
-		return list2;
+		return map;
 		
 		
 	}
@@ -115,6 +140,20 @@ public class KeywordExtractService1 {
 	 */
 	public ArrayList<String> getKeywordByApacheLucene(String all) throws Exception {
 		
+		ArrayList<String> stopWords = new ArrayList<String>();
+		
+		Resource resource = resourceLoader.getResource("classpath:static/txt/stop.txt");
+		
+		BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(new FileInputStream(resource.getFile())));
+		
+		String line = null;
+		
+		while ((line = bufferedReader.readLine()) != null) {
+			
+			if (line.trim().length() > 0) {
+				stopWords.add(line.trim());
+			}
+		}
 		
 		KoreanAnalyzer analyzer = new KoreanAnalyzer();
 		
@@ -128,8 +167,8 @@ public class KeywordExtractService1 {
 				PositionIncrementAttribute posAttr = stream.getAttribute(PositionIncrementAttribute.class);
 				TypeAttribute typeAttr = stream.getAttribute(TypeAttribute.class);
 				PartOfSpeechAttribute partOfSpeechAttribute = stream.getAttribute(PartOfSpeechAttribute.class);
-				
-				
+
+
 //				System.out.println("코리안 분석기");
 //				System.out.println(new String(termAttr.buffer(), 0, termAttr.length()));
 //
@@ -139,12 +178,12 @@ public class KeywordExtractService1 {
 //
 //					list.add(new String(termAttr.buffer(), 0, termAttr.length()));
 //				}
-				
+
 //				System.out.println(partOfSpeechAttribute.getPOSType());
 //				System.out.println(partOfSpeechAttribute.getLeftPOS());
 //				System.out.println(partOfSpeechAttribute.getRightPOS());
 				
-				if ((partOfSpeechAttribute.getPOSType() == POS.Type.MORPHEME) && ((partOfSpeechAttribute.getLeftPOS() == POS.Tag.NNG) || (partOfSpeechAttribute.getLeftPOS() == POS.Tag.NNP))) {
+				if ((partOfSpeechAttribute.getPOSType() == POS.Type.MORPHEME) && ((partOfSpeechAttribute.getLeftPOS() == POS.Tag.NNG) || (partOfSpeechAttribute.getLeftPOS() == POS.Tag.NNP)) && (!stopWords.contains(partOfSpeechAttribute.getLeftPOS().toString()))) {
 					
 					list.add(termAttr.toString());
 					
@@ -172,7 +211,7 @@ public class KeywordExtractService1 {
 		System.out.println("ApacheLucene : " + list2);
 		
 		return list2;
-		
+
 //		Komoran after : [춘천, 예술, 문화, 축제, 한여름, 밤, 여름밤, 아리아]
 //		ApacheLucene : [춘천, 예술, 문화, 축제, 여름, 밤, 아리아]
 //
@@ -187,7 +226,7 @@ public class KeywordExtractService1 {
 //
 //		Komoran after : [산수유, 꽃, 프로그램, 새봄, 정취, 대한민국, 대표, 봄꽃, 축제, 개화, 봄, 소식, 꽃말, 영원불변, 사랑, 주제, 체험, 음악회, 개최, 구례, 산수유꽃축제]
 //		ApacheLucene : [산, 수유, 꽃, 프로그램, 봄, 정취, 대한, 민국, 대표, 축제, 개화, 소식, 말, 영원, 불변, 사랑, 주제, 체험, 음악, 회, 개최, 구례]
-
+	
 	}
 	
 	
