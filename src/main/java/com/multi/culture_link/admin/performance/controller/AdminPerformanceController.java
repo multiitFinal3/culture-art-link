@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/admin/performance-regulate")
-public class AdminPerformanceController { //관리자가 공연 데이터를 조회, 저장 및 삭제
+public class AdminPerformanceController {
 
     @Autowired
     private PerformanceAPIService performanceAPIService;
@@ -36,12 +36,15 @@ public class AdminPerformanceController { //관리자가 공연 데이터를 조
                                     @RequestParam(name = "dbSearchKeyword", required = false) String dbSearchKeyword,
                                     @RequestParam(name = "apiSearchKeyword", required = false) String apiSearchKeyword) {
         try {
-            List<PerformanceDTO> dbPerformances;
+            List<PerformanceDTO> dbPerformances; // DB에서 검색 키워드가 있을 경우 해당 키워드로 공연 검색
             if (dbSearchKeyword != null && !dbSearchKeyword.isEmpty()) {
                 dbPerformances = performanceDBService.searchPerformances(dbSearchKeyword);
             } else {
                 dbPerformances = performanceDBService.getAllPerformances();
             }
+
+            // 날짜 형식을 업데이트
+            dbPerformances.forEach(PerformanceDTO::updateFormattedDate);
 
             int dbStart = Math.min(dbPage * size, dbPerformances.size());
             int dbEnd = Math.min(dbStart + size, dbPerformances.size());
@@ -49,11 +52,11 @@ public class AdminPerformanceController { //관리자가 공연 데이터를 조
 
             List<PerformanceDTO> filteredPerformances;
             if (apiSearchKeyword != null && !apiSearchKeyword.isEmpty()) {
-                filteredPerformances = performanceAPIService.searchPerformances(apiSearchKeyword); // API에서 키워드로 검색
+                filteredPerformances = performanceAPIService.searchPerformances(apiSearchKeyword);
             } else {
                 List<PerformanceDTO> allApiPerformances = performanceAPIService.fetchData(0, Integer.MAX_VALUE).getContent();
                 filteredPerformances = allApiPerformances.stream()
-                        .filter(p -> dbPerformances.stream().noneMatch(db -> db.getCode().equals(p.getCode()))) // DB에 없는 공연 데이터 필터링
+                        .filter(p -> dbPerformances.stream().noneMatch(db -> db.getCode().equals(p.getCode())))
                         .collect(Collectors.toList());
             }
 
@@ -74,6 +77,7 @@ public class AdminPerformanceController { //관리자가 공연 데이터를 조
         }
         return "/admin/performance/performanceRegulate";
     }
+
 
 
     @PostMapping("/saveToDB") // 선택된 API 공연 데이터를 DB에 저장하는 메소드
