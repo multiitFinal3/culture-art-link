@@ -47,28 +47,7 @@
     </update>
 
     <select id="getData" resultType="com.multi.culture_link.admin.exhibition.model.dto.api.ExhibitionApiDto">
-        SELECT * FROM exhibition
-    </select>
-
-<!--    다중 검색-->
-    <select id="searchExhibition" parameterType="map" resultType="com.multi.culture_link.admin.exhibition.model.dto.api.ExhibitionApiDto">
-        SELECT * FROM exhibition
-        WHERE 1=1
-        <if test="title != null and title != ''">
-            AND title LIKE CONCAT('%', #{title}, '%')
-        </if>
-        <if test="artist != null and artist != ''">
-            AND artist LIKE CONCAT('%', #{artist}, '%')
-        </if>
-        <if test="museum != null and museum != ''">
-            AND museum LIKE CONCAT('%', #{museum}, '%')
-        </if>
-<!--        <if test="startDate != null and startDate != ''">-->
-<!--            AND startDate >= #{startDate}-->
-<!--        </if>-->
-<!--        <if test="endDate != null and endDate != ''">-->
-<!--            AND endDate <= #{endDate}-->
-<!--        </if>-->
+        SELECT * FROM exhibition ORDER BY created_at DESC
     </select>
 
 </mapper>
