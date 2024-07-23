@@ -14,6 +14,9 @@ $(document).ready(
                 method: 'POST',
                 contentType: 'application/json',
                 success: function(list){
+
+                    $('#list2').html("");
+
                     $.each(list, function(index, festival){
 
                         var index1 = (index + 1) + (page-1)*5;
@@ -975,15 +978,6 @@ $(document).ready(
                     // 상세검색 전으로 돌아가기 버튼
                     $('#pageNum2').append(`<button class="pageBtn6">전체</button>`);
 
-                    $(document).on('click','.pageBtn6', function(){
-
-                        findAPIFestivalList(1);
-                        findAPIFestivalCount(20);
-
-                    })
-
-
-
                     console.log("카운트는...")
                     console.log(count)
 
@@ -1017,6 +1011,17 @@ $(document).ready(
 
 
         }
+
+
+        $(document).on('click','.pageBtn6', function(){
+
+            $('#list2').html("");
+            console.log("pageBtn6")
+            findAPIFestivalList(1);
+            findAPIFestivalCount(20);
+
+        })
+
 
 
     }
