@@ -23,7 +23,7 @@ import java.io.StringReader;
 import java.util.List;
 
 @Service
-public class PerformanceDBService { // 상세데이터
+public class PerformanceDBService { // 상세데이터, 외부 API로부터 공연 상세 데이터를 가져와 데이터베이스에 저장
 
     @Autowired
     private PerformanceMapper performanceMapper;
@@ -36,6 +36,11 @@ public class PerformanceDBService { // 상세데이터
     // 모든 공연 데이터
     public List<PerformanceDTO> getAllPerformances() {
         return performanceMapper.getAllPerformances();
+    }
+
+    // 키워드를 사용하여 공연 데이터를 검색
+    public List<PerformanceDTO> searchPerformances(String keyword) {
+        return performanceMapper.searchPerformances(keyword);
     }
 
     // 선택된 공연 ID 목록을 받아, 각 ID에 대해 공연 상세 데이터를 API에서 가져오고, 데이터베이스에 저장

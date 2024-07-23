@@ -12,4 +12,6 @@ public interface PerformanceMapper {
     void insertPerformance(PerformanceDTO performance);
 
     int deletePerformances(List<String> selectedIds);
+
+    List<PerformanceDTO> searchPerformances(String keyword);
 }

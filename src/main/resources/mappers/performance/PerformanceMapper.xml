@@ -23,4 +23,11 @@
         </foreach>
     </delete>
 
+    <select id="searchPerformances" resultType="com.multi.culture_link.admin.performance.model.dto.PerformanceDTO">
+        SELECT *
+        FROM performance_info
+        WHERE title LIKE CONCAT('%', #{keyword}, '%')
+        OR location LIKE CONCAT('%', #{keyword}, '%')
+    </select>
+
 </mapper>
