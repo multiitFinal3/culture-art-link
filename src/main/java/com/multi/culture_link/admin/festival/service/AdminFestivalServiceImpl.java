@@ -4,68 +4,67 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.multi.culture_link.admin.festival.model.mapper.AdminFestivalMapper;
+import com.multi.culture_link.common.keyword.service.KeywordExtractService1;
 import com.multi.culture_link.festival.model.dto.FestivalDTO;
 import com.multi.culture_link.festival.model.dto.PageDTO;
-import kr.co.shineware.nlp.komoran.constant.DEFAULT_MODEL;
-import kr.co.shineware.nlp.komoran.core.Komoran;
-import kr.co.shineware.nlp.komoran.model.KomoranResult;
-import kr.co.shineware.nlp.komoran.model.Token;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
 
-import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.InputStreamReader;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
-	/*public static void main(String[] args) throws IOException {
-		
-		
-		Document document = Jsoup.connect("https://search.naver.com/search.naver?sm=tab_hty.top&where=nexearch&ssc=tab.nx.all&query=" + "눈축제" + "+기본정보").get();
-		
-		String title = document.title();
-		System.out.println("title : " + title);
-		
-		
-		String imgUrl = document.select("div.detail_info > a > img").attr("src");
-		
-		System.out.println("?? : " + imgUrl);
-		
-		System.out.println(imgUrl==null);
-		System.out.println(imgUrl.equals("")); //true
-		
-		
-	}*/
 
+/**
+ * 페스티벌 관리자의 서비스 구현 클래스
+ *
+ * @author 안지연
+ * @since 2024-07-23
+ */
 @Service
 public class AdminFestivalServiceImpl implements AdminFestivalService {
 	
 	private final AdminFestivalMapper adminFestivalMapper;
 	private final OkHttpClient client;
 	private final Gson gson;
-	private ResourceLoader resourceLoader;
+	private final KeywordExtractService1 keywordExtractService;
+	
 	
 	ArrayList<FestivalDTO> list = new ArrayList<>();
 	
-	public AdminFestivalServiceImpl(OkHttpClient client, Gson gson, OkHttpClient client1, AdminFestivalMapper adminFestivalMapper, ResourceLoader resourceLoader) {
+	
+	/**
+	 * 생성자 주입
+	 *
+	 * @param client                api와의 통신을 위해 사용
+	 * @param gson                  json 오브젝트를 다시 java 객체로 역직렬화
+	 * @param adminFestivalMapper   페스티벌 관리자 매퍼
+	 * @param keywordExtractService 키워드 추출 서비스
+	 */
+	public AdminFestivalServiceImpl(OkHttpClient client, Gson gson, OkHttpClient client1, AdminFestivalMapper adminFestivalMapper, KeywordExtractService1 keywordExtractService) {
 		this.client = client;
 		this.gson = gson;
 		this.adminFestivalMapper = adminFestivalMapper;
-		this.resourceLoader = resourceLoader;
+		this.keywordExtractService = keywordExtractService;
 	}
 	
+	
+	/**
+	 * api에서 받은 리스트를 가공하여 서비스임플단에 저장하고 페이지에 해당하는 목록을 찾아 일부만 반환
+	 *
+	 * @param page 페이지 버튼에서 받아오는 페이지 번호
+	 * @return 페스티벌들의 리스트를 반환
+	 * @throws Exception 예외를 컨트롤러까지 던짐
+	 */
 	@Override
 	public ArrayList<FestivalDTO> findAPIFestivalList(int page) throws Exception {
 		
-		//크롬인 것 처럼 속이려했으나 빠르게 클릭하면 여전히 네이버 서버에서 막는다
 		Request request = new Request.Builder()
 				.url("http://api.data.go.kr/openapi/tn_pubr_public_cltur_fstvl_api?serviceKey=chNg8jx96krRfOCTvGcO2PvBKnrCrH0Qm6/JmV1TOw/Yu1T0x3jy0fHM8SOcZFnJIxdc7oqyM03PVmMA9UFOsA==&pageNo=1&numOfRows=100&type=json")
 				.addHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36")
@@ -92,12 +91,6 @@ public class AdminFestivalServiceImpl implements AdminFestivalService {
 		for (int i = 0; i < items.size(); i++) {
 			
 			JsonObject item = items.get(i).getAsJsonObject();
-			
-			/*System.out.println((i+1) + " : " + item);
-			System.out.println(item.get("fstvlNm").getAsString());*/
-			
-			//			400 : {"fstvlNm":"한탄강얼음트레킹축제","opar":"철원 한탄강 물윗길 트레킹 코스 일원","fstvlStartDate":"2024-01-13","fstvlEndDate":"2024-01-21","fstvlCo":"공연+행사+포토존+아이스 썰매존+아이스 겨울 놀이터+아이스 고드름 터널+픽토그램 눈썰매장 등","mnnstNm":"철원문화재단","auspcInsttNm":"철원문화재단","suprtInsttNm":"강원특별자치도 철원군청+철원군의회","phoneNumber":"033-455-7072","homepageUrl":"https://gcwcf.or.kr/w1_c_6_1/4","relateInfo":"","rdnmadr":"강원특별자치도 철원군 동송읍 한탄강길 208","lnmadr":"강원특별자치도 철원군 동송읍 장흥리 725","latitude":"38.20344715","longitude":"127.2700356","referenceDate":"2024-05-27","insttCode":"B551011"}
-			//			한탄강얼음트레킹축제
 			
 			FestivalDTO festivalDTO = new FestivalDTO();
 			
@@ -215,20 +208,14 @@ public class AdminFestivalServiceImpl implements AdminFestivalService {
 			
 			int diffDays = (int) ((endDate.getTime() - startDate.getTime()) / (1000 * 24 * 60 * 60));
 			
-			/*System.out.println(startDate);
-			System.out.println(endDate);
-			System.out.println("일 수 차이 : " + diffDays);*/
-			
 			
 			Calendar calendar1 = Calendar.getInstance();
 			calendar1.setTime(startDate);
 			int startMonth = calendar1.get(Calendar.MONTH) + 1;
-			/*System.out.println("시작월 : " + startMonth);*/
 			
 			Calendar calendar2 = Calendar.getInstance();
 			calendar2.setTime(endDate);
 			int endMonth = calendar2.get(Calendar.MONTH) + 1;
-			/*System.out.println(endMonth);*/
 			
 			
 			String season = "";
@@ -367,6 +354,13 @@ public class AdminFestivalServiceImpl implements AdminFestivalService {
 		
 	}
 	
+	
+	/**
+	 * 현재 저장되어있는 페스티벌 리스트의 번호를 받아 DB에 저장함
+	 *
+	 * @param numList 삽입을 할 리스트의 번호로, 현재 impl 단에서 저장된 리스트의 순서이다
+	 * @throws Exception 예외를 컨트롤러까지 던짐
+	 */
 	@Override
 	public void insertAPIFestivalList(ArrayList<Integer> numList) throws Exception {
 		
@@ -412,6 +406,14 @@ public class AdminFestivalServiceImpl implements AdminFestivalService {
 		
 	}
 	
+	
+	/**
+	 * 페이지 버튼에서 넘어간 페이지 번호에 해당하는 DB의 페스티벌 리스트를 반환하며 1페이지 당 5개씩 가져옴
+	 *
+	 * @param pageDTO 페이지 버튼의 숫자
+	 * @return 해당하는 페스티벌 리스트
+	 * @throws Exception 예외를 컨트롤러까지 던짐
+	 */
 	@Override
 	public ArrayList<FestivalDTO> findDBFestivalList(PageDTO pageDTO) throws Exception {
 		
@@ -423,6 +425,12 @@ public class AdminFestivalServiceImpl implements AdminFestivalService {
 		
 	}
 	
+	/**
+	 * 전체 축제 DB의 갯수를 반환함
+	 *
+	 * @return DB에 저장된 전체 축제 갯수
+	 * @throws Exception
+	 */
 	@Override
 	public int findDBFestivalCount() throws Exception {
 		int count = adminFestivalMapper.findDBFestivalCount();
@@ -431,6 +439,12 @@ public class AdminFestivalServiceImpl implements AdminFestivalService {
 		return count;
 	}
 	
+	/**
+	 * 페스티벌 리스트 삭제를 위해 해당 번호의 리스트를 받아서 DB에서 삭제
+	 *
+	 * @param checks 체크된 항목의 번호 리스트
+	 * @throws Exception 예외를 컨트롤러까지 던짐
+	 */
 	@Override
 	public void deleteDBFestivalList(ArrayList<Integer> checks) throws Exception {
 		
@@ -448,6 +462,13 @@ public class AdminFestivalServiceImpl implements AdminFestivalService {
 		
 	}
 	
+	/**
+	 * 페스티벌 아이디를 이용해 페스티벌을 찾음
+	 *
+	 * @param festivalId DB의 페스티벌 아이디
+	 * @return 페스티벌 DTO 반환
+	 * @throws Exception 예외를 컨트롤러까지 던짐
+	 */
 	@Override
 	public FestivalDTO findDBFestivalByFestivalId(int festivalId) throws Exception {
 		
@@ -456,6 +477,12 @@ public class AdminFestivalServiceImpl implements AdminFestivalService {
 		return festivalDTO;
 	}
 	
+	/**
+	 * 페스티벌 DTO를 이용해 페스티벌의 정보를 업데이트 함
+	 *
+	 * @param festivalDTO 해당 DB번호 및 수정된 정보를 담고있는 페스티벌 DTO
+	 * @throws Exception 예외를 컨트롤러까지 던짐
+	 */
 	@Override
 	public void updateDBFestivalByFestival(FestivalDTO festivalDTO) throws Exception {
 		
@@ -463,6 +490,13 @@ public class AdminFestivalServiceImpl implements AdminFestivalService {
 		
 	}
 	
+	/**
+	 * 다중 조건을 이용한 DB검색으로 축제 리스트를 반환
+	 *
+	 * @param festivalDTO 조건의 내용을 담고있는 페스티벌 DTO
+	 * @return 페스티벌  DTO 리스트 반환
+	 * @throws Exception 예외를 컨트롤러까지 던짐
+	 */
 	@Override
 	public ArrayList<FestivalDTO> findDBFestivalByMultiple(FestivalDTO festivalDTO) throws Exception {
 		ArrayList<FestivalDTO> list = adminFestivalMapper.findDBFestivalByMultiple(festivalDTO);
@@ -470,6 +504,13 @@ public class AdminFestivalServiceImpl implements AdminFestivalService {
 		return list;
 	}
 	
+	/**
+	 * 다중 조건을 만족하는 축제 데이터의 갯수 반환
+	 *
+	 * @param festivalDTO 다중조건 담고있는 페스티벌 DTO
+	 * @return 다중 조건을 만족 축제 데이터의 갯수
+	 * @throws Exception 예외를 컨트롤러까지 던짐
+	 */
 	@Override
 	public int findDBFestivalMultipleCount(FestivalDTO festivalDTO) throws Exception {
 		int count = adminFestivalMapper.findDBFestivalMultipleCount(festivalDTO);
@@ -477,6 +518,14 @@ public class AdminFestivalServiceImpl implements AdminFestivalService {
 		return count;
 	}
 	
+	/**
+	 * API 다중조건 검색 및 가공 후 서비스 임플단에 저장, 해당 페이지의 부분만 반환
+	 *
+	 * @param festivalDTO 필요한 페이지 정보를 담고있는 페스티벌 DTO
+	 * @param urls        요청 파라미터들을 다 연결한 전체 스트링
+	 * @return 해당하는 축제 리스트 반환
+	 * @throws Exception 예외를 컨트롤러까지 던짐
+	 */
 	@Override
 	public ArrayList<FestivalDTO> findAPIFestivalByMultiple(FestivalDTO festivalDTO, String urls) throws Exception {
 		
@@ -806,6 +855,14 @@ public class AdminFestivalServiceImpl implements AdminFestivalService {
 		return list2;
 	}
 	
+	/**
+	 * API 다중조건 검색 후 전체 갯수 반환
+	 *
+	 * @param festivalDTO
+	 * @param urls
+	 * @return
+	 * @throws Exception
+	 */
 	@Override
 	public int findAPIFestivalByMultipleCount(FestivalDTO festivalDTO, String urls) throws Exception {
 		
@@ -841,6 +898,13 @@ public class AdminFestivalServiceImpl implements AdminFestivalService {
 		return count;
 	}
 	
+	/**
+	 * 해당 축제의 내용에서 추출한 키워드를 삽입
+	 *
+	 * @param festivalId
+	 * @return
+	 * @throws Exception
+	 */
 	@Override
 	public ArrayList<String> insertContentKeywordByFestivalId(int festivalId) throws Exception {
 		
@@ -850,59 +914,10 @@ public class AdminFestivalServiceImpl implements AdminFestivalService {
 		
 		String all = content + " " + title;
 		
-		
-		Komoran komoran = new Komoran(DEFAULT_MODEL.FULL);
-		
-		KomoranResult analyzeResultList = komoran.analyze(all);
-		
-		System.out.println("analyzeResultList.getPlainText() : " + analyzeResultList.getPlainText());
-		
-		List<Token> tokenList = analyzeResultList.getTokenList();
-		for (Token token : tokenList) {
-			System.out.println("token");
-			System.out.format("(%2d, %2d) %s/%s\n", token.getBeginIndex(), token.getEndIndex(), token.getMorph(), token.getPos());
-		}
-		
-		ArrayList<String> list = (ArrayList<String>) analyzeResultList.getNouns();
-		
-		ArrayList<String> stopWords = new ArrayList<String>();
+		ArrayList<String> list = keywordExtractService.getKeyword(all);
 		
 		
-		
-		Resource resource = resourceLoader.getResource("classpath:static/txt/stop.txt");
-		
-		BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(new FileInputStream(resource.getFile())));
-		
-		String line = null;
-		
-		while ((line = bufferedReader.readLine())!=null){
-			
-			if (line.trim().length()>0){
-				stopWords.add(line.trim());
-			}
-		}
-		
-		System.out.println("stopWords : " + stopWords.toString());
-
-		ArrayList<String> list2 = new ArrayList<>();
-		
-		for (String token : list){
-			
-			if ((!list2.contains(token)) && (!stopWords.contains(token))){
-				
-				list2.add(token);
-				
-			}
-			
-		}
-		
-		System.out.println("analyzeResultList.getNouns() : " + list);
-		System.out.println("final list : " + list2);
-		
-		
-		
-		
-		return null;
+		return list;
 	}
 	
 	

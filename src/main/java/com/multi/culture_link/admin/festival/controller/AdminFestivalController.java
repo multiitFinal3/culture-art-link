@@ -10,7 +10,6 @@ import com.multi.culture_link.festival.model.dto.FestivalDTO;
 import com.multi.culture_link.festival.model.dto.PageDTO;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -20,300 +19,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-
-
-// json 파싱 예시
-	/*public static void main(String[] args) throws IOException {
-		
-		Request request = new Request.Builder()
-				.url("http://api.data.go.kr/openapi/tn_pubr_public_cltur_fstvl_api?serviceKey=chNg8jx96krRfOCTvGcO2PvBKnrCrH0Qm6/JmV1TOw/Yu1T0x3jy0fHM8SOcZFnJIxdc7oqyM03PVmMA9UFOsA==&pageNo=1&numOfRows=10&type=json")
-				.get()
-				.build();
-		
-		
-		OkHttpClient client = new OkHttpClient();
-		Response response = client.newCall(request).execute();
-		String responseBody = response.body().string();
-		Gson gson = new Gson();
-		JsonObject json = gson.fromJson(responseBody, JsonObject.class);
-		JsonObject response1 = json.getAsJsonObject("response");
-		JsonObject body1 = response1.getAsJsonObject("body");
-		JsonArray items = body1.getAsJsonArray("items");
-		*//*System.out.println("items : " + items);*//*
-		
-		ArrayList<FestivalDTO> list = new ArrayList<>();
-		
-		for (int i = 0; i < items.size(); i++) {
-			
-			JsonObject item = items.get(i).getAsJsonObject();
-			
-			*//*System.out.println((i+1) + " : " + item);
-			System.out.println(item.get("fstvlNm").getAsString());*//*
-			
-			//			400 : {"fstvlNm":"한탄강얼음트레킹축제","opar":"철원 한탄강 물윗길 트레킹 코스 일원","fstvlStartDate":"2024-01-13","fstvlEndDate":"2024-01-21","fstvlCo":"공연+행사+포토존+아이스 썰매존+아이스 겨울 놀이터+아이스 고드름 터널+픽토그램 눈썰매장 등","mnnstNm":"철원문화재단","auspcInsttNm":"철원문화재단","suprtInsttNm":"강원특별자치도 철원군청+철원군의회","phoneNumber":"033-455-7072","homepageUrl":"https://gcwcf.or.kr/w1_c_6_1/4","relateInfo":"","rdnmadr":"강원특별자치도 철원군 동송읍 한탄강길 208","lnmadr":"강원특별자치도 철원군 동송읍 장흥리 725","latitude":"38.20344715","longitude":"127.2700356","referenceDate":"2024-05-27","insttCode":"B551011"}
-			//			한탄강얼음트레킹축제
-			
-			FestivalDTO festivalDTO = new FestivalDTO();
-			
-			String festivalName = item.get("fstvlNm").getAsString();
-			festivalDTO.setFestivalName(festivalName);
-			
-			String place = item.get("opar").getAsString();
-			festivalDTO.setPlace(place);
-			
-			String detailAddress = item.get("lnmadr").getAsString().trim();
-			festivalDTO.setDetailAddress(detailAddress);
-			
-			String firstAddress = detailAddress.split(" ")[0];
-			
-			int regionId = 0;
-			
-			switch (firstAddress) {
-				
-				case "서울특별시":
-					regionId = 11;
-					break;
-				
-				case "부산광역시":
-					regionId = 21;
-					break;
-				
-				case "대구광역시":
-					regionId = 21;
-					break;
-				
-				case "인천광역시":
-					regionId = 23;
-					break;
-				
-				case "광주광역시":
-					regionId = 24;
-					break;
-				
-				case "대전광역시":
-					regionId = 25;
-					break;
-				
-				case "울산광역시":
-					regionId = 26;
-					break;
-				
-				case "경기도":
-					regionId = 31;
-					break;
-				
-				case "강원특별자치도":
-					regionId = 32;
-					break;
-				
-				case "충청북도":
-					regionId = 33;
-					break;
-				
-				case "충청남도":
-					regionId = 34;
-					break;
-				
-				case "전북특별자치도":
-					regionId = 35;
-					break;
-				
-				case "전라남도":
-					regionId = 36;
-					break;
-				
-				case "경상북도":
-					regionId = 37;
-					break;
-				
-				
-				case "경상남도":
-					regionId = 38;
-					break;
-				
-				
-				case "세종특별자치시":
-					regionId = 45;
-					break;
-				
-				
-				case "제주특별자치도":
-					regionId = 50;
-					break;
-				
-				
-			}
-			
-			festivalDTO.setRegionId(regionId);
-			
-			String startD = item.get("fstvlStartDate").getAsString();
-			String endD = item.get("fstvlEndDate").getAsString();
-			
-			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-			
-			Date startDate = null;
-			Date endDate = null;
-			String timeId = "";
-			
-			try {
-				startDate = format.parse(startD);
-				endDate = format.parse(endD);
-			} catch (ParseException e) {
-				throw new RuntimeException(e);
-			}
-			
-			festivalDTO.setStartDate(startDate);
-			festivalDTO.setEndDate(endDate);
-			
-			
-			int diffDays = (int) ((endDate.getTime() - startDate.getTime())/(1000*24*60*60));
-			
-			System.out.println(startDate);
-			System.out.println(endDate);
-			System.out.println("일 수 차이 : " + diffDays);
-			
-			
-			Calendar calendar1 = Calendar.getInstance();
-			calendar1.setTime(startDate);
-			int startMonth = calendar1.get(Calendar.MONTH) + 1;
-			System.out.println("시작월 : " + startMonth);
-			
-			Calendar calendar2 = Calendar.getInstance();
-			calendar2.setTime(endDate);
-			int endMonth = calendar2.get(Calendar.MONTH) + 1;
-			System.out.println(endMonth);
-			
-			
-			
-			String season= "";
-			
-			if ((startMonth==12) || (startMonth==1) || (startMonth==2)){
-				
-				season="겨울";
-			
-			}else if((startMonth==3) || (startMonth==4) || (startMonth==5)){
-				
-				season="봄";
-				
-			}else if((startMonth==6) || (startMonth==7) || (startMonth==8)){
-				
-				season="여름";
-				
-			}else{
-				
-				season="가을";
-				
-			}
-			
-			System.out.println("계절 : " + season);
-			festivalDTO.setSeason(season);
-			
-			ArrayList<Integer> days = new ArrayList<Integer>();
-			
-			for (int j = 0; j < diffDays+1; j++) {
-				
-				System.out.println("축제 기간 : " + (diffDays + 1));
-				Calendar calendar = Calendar.getInstance();
-				calendar.setTime(startDate);
-				calendar.add(Calendar.DATE, j);
-				
-				System.out.println("calendar.get(Calendar.DAY_OF_WEEK) : " + calendar.get(Calendar.DAY_OF_WEEK));
-				days.add(calendar.get(Calendar.DAY_OF_WEEK));
-				
-			}
-			
-			if (((days.contains(1)) || (days.contains(7)))) {
-				
-				if ((days.contains(2)) || (days.contains(3)) || (days.contains(4)) || (days.contains(5)) || (days.contains(6))) {
-					
-					timeId = "전체";
-					
-				} else {
-					
-					timeId = "주말";
-					
-				}
-				
-			} else {
-				
-				timeId = "평일";
-				
-			}
-			
-			
-			festivalDTO.setTimeId(timeId);
-			
-			//festival content
-			
-			String content1 = item.get("fstvlCo").getAsString().replace("+", ", ") + ". ";
-			
-			
-			Document document = Jsoup.connect("https://search.naver.com/search.naver?sm=tab_hty.top&where=nexearch&ssc=tab.nx.all&query="+ festivalName + "+기본정보").get();
-			
-			String title = document.title();
-			System.out.println("title : " + title);
-			
-			
-			
-			
-			String imgUrl = document.select("div.detail_info > a > img").attr("src");
-			festivalDTO.setImgUrl(imgUrl);
-			
-			
-			String content2 = document.select("div.intro_box > p.text").text();
-			
-			
-			String festivalContent = content1 + content2;
-			festivalDTO.setFestivalContent(festivalContent);
-			
-			String manageInstitution = item.get("mnnstNm").getAsString().replace("+", ", ");
-			String hostInstitution = item.get("auspcInsttNm").getAsString().replace("+", ", ");
-			String sponserInstitution = item.get("suprtInsttNm").getAsString().replace("+", ", ");
-			
-			festivalDTO.setManageInstitution(manageInstitution);
-			festivalDTO.setHostInstitution(hostInstitution);
-			festivalDTO.setSponserInstitution(sponserInstitution);
-			
-			festivalDTO.setTel(item.get("phoneNumber").getAsString());
-			festivalDTO.setHomepageUrl(item.get("homepageUrl").getAsString());
-			festivalDTO.setLatitude(item.get("latitude").getAsDouble());
-			festivalDTO.setLongtitude(item.get("longitude").getAsDouble());
-			
-			festivalDTO.setAvgRate(0);
-			
-			System.out.println("festivalDTO : " + festivalDTO.toString());
-			
-		}
-		
-		
-	}*/
-
-
-// jsoup 로 네이버 축제 기본정보 파싱 예제
-	/*public static void main(String[] args) throws IOException {
-		
-		
-		Document document = Jsoup.connect("https://search.naver.com/search.naver?sm=tab_hty.top&where=nexearch&ssc=tab.nx.all&query=%EC%95%88%EC%82%B0%EA%B5%AD%EC%A0%9C%EA%B1%B0%EB%A6%AC%EA%B7%B9%EC%B6%95%EC%A0%9C+%EA%B8%B0%EB%B3%B8%EC%A0%95%EB%B3%B4&oquery=%EC%95%88%EC%82%B0%EA%B5%AD%EC%A0%9C%EA%B1%B0%EB%A6%AC%EA%B7%B9%EC%B6%95%EC%A0%9C+%EA%B8%B0%EB%B3%B8%EC%A0%95%EB%B3%B4&tqi=ipQIGdqo15wssg7RjWNssssssK0-415284").get();
-		
-		String title = document.title();
-		
-		System.out.println("title : " + title);
-		
-		Element element = document.getElementsByTag("img").get(0);
-		
-		System.out.println("src : " + element.attr("src"));
-		
-		String target = document.select("div.intro_box > p.text").text();
-		
-		System.out.println(target);
-
-		//title : 안산국제거리극축제 기본정보 : 네이버 검색
-		//src : https://search.pstatic.net/common?type=n&size=174x250&quality=85&direct=true&src=https%3A%2F%2Fcsearch-phinf.pstatic.net%2F20240215_25%2F1707961154908D68E9_JPEG%2F110_25962793_manual_image_url_1707961154877.jpg
-		//	안산국제거리극축제는 안산의 도시적 특성을 살리고 지역에 활력을 불어넣기 위해 지난 2005년부터 20년간 시민과 함께 지속해온 거리예술축제다. 매년 5월 어린이날 전후로 안산문화광장 일대를 공연, 거리미술, 놀이, 워크숍 등으로 채우며 시민에게 예술적 감동과 일상의 특별한 경험을 선사했다. 올해도 작년에 이어 ‘광장’, ‘도시’, ‘숲’, ‘횡단’ 4가지 키워드를 바탕으로 축제를 구성한다. 나아가 다양한 관객의 취향과 관심사를 반영하여 모두에게 열린 축제를 만든다.
-		
-	
-	}*/
-
 
 // xml >> json 바로 예시
 	/*public static void main(String[] args) {
@@ -393,6 +98,14 @@ public class AdminFestivalController {
 	private final TimeService timeService;
 	private ArrayList<FestivalDTO> list2;
 	
+	/**
+	 * 생성자 주입
+	 *
+	 * @param adminFestivalService 축제 관리자 서비스
+	 * @param regionService        지역 서비스
+	 * @param timeService          시간 서비스
+	 * @param list2                현재 서비스단에 저장된 축제 리스트
+	 */
 	public AdminFestivalController(AdminFestivalService adminFestivalService, RegionService regionService, TimeService timeService, ArrayList<FestivalDTO> list2) {
 		this.adminFestivalService = adminFestivalService;
 		this.regionService = regionService;
@@ -400,15 +113,23 @@ public class AdminFestivalController {
 		this.list2 = list2;
 	}
 	
+	/**
+	 * 축제 관리자 화면으로 전환
+	 * @return 축제 관리자 화면
+	 */
 	@GetMapping
 	public String festivalManage() {
-		
 		
 		return "/admin/festival/festivalRegulate";
 		
 	}
 	
 	
+	/**
+	 * 요구되는 페이지의 축제 api 정보를 반환
+	 * @param page 실시간 축제 정보의 요구 페이지 번호
+	 * @return 페스티벌 dto 리스트
+	 */
 	@PostMapping("/findAPIFestivalList")
 	@ResponseBody
 	public ArrayList<FestivalDTO> findAPIFestivalList(@RequestParam("page") int page) {
@@ -440,7 +161,11 @@ public class AdminFestivalController {
 		
 	}
 	
-	
+	/**
+	 * api 리스트에서 체크된 부분을 DB에 저장
+	 * @param checks 체크된 숫자 번호로 서비스단에 저장된 리스트의 순서 번호와 일치
+	 * @return 삽입성공 알림 스트링 반환
+	 */
 	@PostMapping("/insertAPIFestivalList")
 	@ResponseBody
 	public String insertAPIFestivalList(@RequestBody ArrayList<Integer> checks) {
@@ -464,7 +189,11 @@ public class AdminFestivalController {
 		return "삽입 성공";
 	}
 	
-	
+	/**
+	 * DB에서 해당하는 부분의 행들을 반환
+	 * @param page 페이지 번호로 1페이지에 5개씩 반환
+	 * @return 해당하는 페스티벌 DTO 리스트
+	 */
 	@PostMapping("/findDBFestivalList")
 	@ResponseBody
 	public ArrayList<FestivalDTO> findDBFestivalList(@RequestParam("page") int page) {
@@ -498,7 +227,10 @@ public class AdminFestivalController {
 		
 	}
 	
-	
+	/**
+	 * 전체 축제 DB 갯수 반환
+	 * @return 갯수를 반환
+	 */
 	@PostMapping("/findDBFestivalCount")
 	@ResponseBody
 	public int findDBFestivalCount() {
@@ -518,7 +250,11 @@ public class AdminFestivalController {
 		
 	}
 	
-	
+	/**
+	 * 체크된 목록을 DB에서 삭제
+	 * @param checks 체크된 DB 번호 리스트
+	 * @return 삭제 성공 스트링 반환
+	 */
 	@PostMapping("/deleteDBFestivalList")
 	@ResponseBody
 	public String deleteDBFestivalList(@RequestBody ArrayList<Integer> checks) {
@@ -535,6 +271,11 @@ public class AdminFestivalController {
 		return "삭제 성공";
 	}
 	
+	/**
+	 *
+	 * @param request 페스티벌 DB 번호가 담긴 맵
+	 * @return 해당 페스티벌 DTO 반환
+	 */
 	@PostMapping("/findDBFestivalByFestivalId")
 	@ResponseBody
 	public FestivalDTO findDBFestivalByFestivalId(@RequestBody Map<String, Integer> request) {
@@ -562,9 +303,13 @@ public class AdminFestivalController {
 		
 	}
 	
-	
+	/**
+	 * 해당 페스티벌의 내용을 수정
+	 * @param festivalDTO 해당 번호와 수정된 내용을 담고있는 페스티벌 DTO
+	 * @return 리다이렉트 주소
+	 */
 	@PostMapping("/updateDBFestivalByFestival")
-	public String updateDBFestivalByFestival(FestivalDTO festivalDTO, RedirectAttributes redirectAttributes) {
+	public String updateDBFestivalByFestival(FestivalDTO festivalDTO) {
 		
 		System.out.println("form : " + festivalDTO);
 		
@@ -594,7 +339,10 @@ public class AdminFestivalController {
 		
 	}
 	
-	
+	/**
+	 * DB에 있는 지역, 시간을 전부 반환
+	 * @return 맵 형태로 지역, 시간 리스트를 반환
+	 */
 	@PostMapping("/findAllRegionAndTime")
 	@ResponseBody
 	public Map<String, ArrayList> findAllRegionAndTime() {
@@ -620,7 +368,12 @@ public class AdminFestivalController {
 		
 	}
 	
-	
+	/**
+	 * DB 데이터를 다중 조건을 가공 및 적용해 반환함
+	 * @param mapList 다중 조건 리스트
+	 * @param page 요구되는 페이지 번호
+	 * @return 페스티벌 DTO 리스트
+	 */
 	@PostMapping("/findDBFestivalByMultiple")
 	@ResponseBody
 	public ArrayList<FestivalDTO> findDBFestivalByMultiple(
@@ -753,7 +506,11 @@ public class AdminFestivalController {
 		return list;
 	}
 	
-	
+	/**
+	 * DB 데이터에 다중 조건을 적용한 총 숫자
+	 * @param mapList 다중 조건 리스트
+	 * @return 해당 갯수
+	 */
 	@PostMapping("/findDBFestivalMultipleCount")
 	@ResponseBody
 	public int findDBFestivalMultipleCount(@RequestBody ArrayList<HashMap<String, String>> mapList) {
@@ -877,7 +634,12 @@ public class AdminFestivalController {
 	}
 	
 	
-	// api 상세조건 검색 내용 받기
+	/**
+	 * API 데이터에서 다중조건을 적용한 결과
+	 * @param mapList 다중 조건
+	 * @param page 요구되는 페이지 숫자
+	 * @return 페스티벌 DTO 리스트
+	 */
 	@PostMapping("/findAPIFestivalByMultiple")
 	@ResponseBody
 	public ArrayList<FestivalDTO> findAPIFestivalByMultiple(
@@ -1046,7 +808,11 @@ public class AdminFestivalController {
 		return list;
 	}
 	
-	
+	/**
+	 * API 데이터에서 다중조건을 적용한 결과 갯수
+	 * @param mapList 다중 조건
+	 * @return 갯수
+	 */
 	@PostMapping("/findAPIFestivalMultipleCount")
 	@ResponseBody
 	public int findAPIFestivalMultipleCount(@RequestBody ArrayList<HashMap<String, String>> mapList) {
@@ -1200,7 +966,11 @@ public class AdminFestivalController {
 		
 	}
 	
-	
+	/**
+	 * 축제 내용 키워드를 삽입
+	 * @param festivalId
+	 * @return 키워드 스트링
+	 */
 	@PostMapping("/insertContentKeywordByFestivalId")
 	@ResponseBody
 	public ArrayList<String> insertContentKeywordByFestivalId(@RequestParam("festivalId") int festivalId) {
@@ -1219,9 +989,6 @@ public class AdminFestivalController {
 		
 		
 	}
-	
-	
-	
 	
 	
 }
