@@ -6,6 +6,12 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 
+/**
+ * 지역 관련 서비스 클래스
+ *
+ * @author 안지연
+ * @since 2024-07-23
+ */
 @Service
 public class RegionServiceImpl implements RegionService {
 	

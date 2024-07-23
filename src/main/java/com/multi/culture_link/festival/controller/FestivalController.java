@@ -8,6 +8,13 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+
+/**
+ * 일반회원 축제 관련 클래스
+ *
+ * @author 안지연
+ * @since 2024-07-23
+ */
 @Controller
 @RequestMapping("/festival")
 public class FestivalController {

@@ -88,7 +88,12 @@ import java.util.Map;
 		
 	}*/
 
-
+/**
+ * 관리자 축제 관련 컨트롤러 클래스
+ *
+ * @author 안지연
+ * @since 2024-07-23
+ */
 @Controller
 @RequestMapping("/admin/festival-regulate")
 public class AdminFestivalController {
