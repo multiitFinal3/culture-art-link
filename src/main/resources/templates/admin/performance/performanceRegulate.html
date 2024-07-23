@@ -23,7 +23,7 @@
 </head>
 <body>
 <div layout:fragment="content2">
-    <div id="performanceRegulate">
+    <div id="performanceRegulate" style="width: 90%;"> <!-- 컨테이너 가로 크기 조정 -->
         <h2>공연 DB 현황</h2>
         <form id="searchFormDB" action="/admin/performance-regulate" method="get">
             <input type="text" name="dbSearchKeyword" placeholder="검색어를 입력하세요" th:value="${dbSearchKeyword}">
@@ -83,7 +83,7 @@
                 <!-- 페이지네이션 부분 끝 -->
             </div>
             <div class="button-container">
-                <button type="submit" id="dbDeleteBtn">DB 삭제</button>
+                <button type="submit" id="dbDeleteBtn" class="btn btn-primary">삭제</button>
             </div>
         </form>
 
@@ -151,7 +151,7 @@
                 <!-- 페이지네이션 부분 끝 -->
             </div>
             <div class="button-container">
-                <button type="submit" id="apiInsertBtn">DB에 추가</button>
+                <button type="submit" id="apiInsertBtn" class="btn btn-primary">DB에 추가</button>
             </div>
         </form>
     </div>

@@ -1,44 +1,59 @@
-#performanceRegulate {
+#performanceRegulate{
     display: flex;
     flex-flow: column;
     align-items: center;
     justify-content: center;
-    margin-top: 14%;
-    margin-left: 10%;
+    margin-top: 8%;
+    margin-left: 5%;
+    margin-right: 5%;
     overflow-x: scroll;
 }
 
+
+/* 테이블 기본 스타일 */
 table {
     margin-bottom: 50px;
-    border: 1px solid black;
-    width: 100px;
+    width: 100%; /* 테이블을 부모 컨테이너의 100% 너비로 설정 */
 }
 
-th, td {
+/* 테이블 셀 기본 스타일 */
+table, th, td {
+    border: 1px solid black;
     text-align: center;
-    width: 150px;
-    border: 1px solid black;
 }
 
+/* 헤더 스타일 */
 th {
     background-color: #C6D6EF;
 }
 
+/* 본문 스타일 */
 td {
     background-color: #E7EEF9;
 }
 
-td#performanceContent, 
+/* 특정 칼럼 스타일 */
+td#performanceContent,
 td#performanceName {
     width: 400px;
 }
 
+/* 체크박스와 # 칸 스타일 */
+th:first-child, th:nth-child(2),
+td:first-child, td:nth-child(2) {
+    width: auto;
+    max-width: 50px; /* 필요한 경우 크기를 조정 */
+    min-width: 30px; /* 필요한 경우 크기를 조정 */
+}
+
+/* 버튼 컨테이너 스타일 */
 .button-container {
     display: flex;
     justify-content: center;
     margin-top: 20px;
 }
 
+/* 버튼 스타일 */
 button {
     background-color: #2E78F1;
     color: white;
@@ -53,40 +68,39 @@ button {
     margin: 4px 2px;
     cursor: pointer;
     border-radius: 3px;
-    /*width: 300px;*/
 }
 
 button:hover {
     background-color: #286BD2;
 }
 
-/* 페이지네이션 */
+/* 페이지네이션 스타일 */
 .pagination-container {
-    display: flex; /* 플렉스박스를 사용하여 정렬 */
-    justify-content: center; /* 중앙 정렬 */
-    align-items: center; /* 수직 중앙 정렬 */
-    gap: 10px; /* 요소 사이 간격 */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
 }
 
 .page-number a, .page-arrow a {
-    text-decoration: none; /* 밑줄 제거 */
-    color: #5c5c5c; /* 일반 색상 */
-    font-size: 16px; /* 글꼴 크기 */
+    text-decoration: none;
+    color: #5c5c5c;
+    font-size: 16px;
 }
 
 .page-number.active a {
-    color: #7c5eea; /* 활성 페이지 색상 */
-    font-weight: bold; /* 활성 페이지 굵게 표시 */
-    text-decoration: underline; /* 활성 페이지 밑줄 표시 */
+    color: #7c5eea;
+    font-weight: bold;
+    text-decoration: underline;
 }
 
 .page-number a:hover, .page-arrow a:hover {
-    color: #7c5eea; /* 호버 시 색상 변경 */
+    color: #7c5eea;
 }
 
 .page-ellipsis {
-    font-size: 16px; /* 글꼴 크기 */
-    color: #5c5c5c; /* 색상 */
+    font-size: 16px;
+    color: #5c5c5c;
 }
 
 .select-all-container {
