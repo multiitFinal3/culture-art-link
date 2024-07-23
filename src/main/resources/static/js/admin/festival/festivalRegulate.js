@@ -3,211 +3,12 @@ $(document).ready(
     function(){
 
 
-        // api table
-        function findAPIFestivalList(page){
-
-            $('#list2').html("");
-
-            $.ajax({
-
-                url: '/admin/festival-regulate/findAPIFestivalList?page=' + page,
-                method: 'POST',
-                contentType: 'application/json',
-                success: function(list){
-
-                    $('#list2').html("");
-
-                    $.each(list, function(index, festival){
-
-                        var index1 = (index + 1) + (page-1)*5;
-                        var indexFromZero = index1 - 1;
-
-                        var content = festival.festivalContent.length > 30?
-                        festival.festivalContent.substring(0,30) + "..."
-                        : festival.festivalContent;
-
-                        var inst1 = festival.manageInstitution.length > 15?
-                        festival.manageInstitution.substring(0,15) + "..."
-                        : festival.manageInstitution;
-
-                        var inst2 = festival.hostInstitution.length > 15?
-                        festival.hostInstitution.substring(0,15) + "..."
-                        : festival.hostInstitution;
-
-                        var inst3 = festival.sponserInstitution.length > 15?
-                        festival.sponserInstitution.substring(0,15) + "..."
-                        : festival.sponserInstitution;
-
-
-
-
-                        var start = festival.startDate.length >0?
-                        festival.startDate.substring(0,10):
-                        "링크없음";
-
-                        var end = festival.endDate.length >0?
-                        festival.endDate.substring(0,10):
-                        "링크없음";
-
-
-                        var htmlCheck = ``;
-
-                        if(festival.exist=="Y"){
-
-                            htmlCheck= `<tr>
-                                <td>DB<br>존재</td>`
-
-
-                        }else{
-
-                             htmlCheck = `<tr>
-                                <td><input class="check2" type="checkbox" name="index" value="${indexFromZero}"/></td>`
-                        }
-
-                        var htmlContent11 =`
-                                <td class="index1">${index1}</td>
-                                <td class="regionId">${festival.regionId}</td>
-                                <td class="timeId">${festival.timeId}</td>
-                                <td class="festivalName">${festival.festivalName}</td>
-                                <td class="festivalContent">${content}</td>
-                                <td class="manageInstitution">${inst1}</td>
-                                <td class="hostInstitution">${inst2}</td>
-                                <td class="sponserInstitution">${inst3}</td>
-                                <td class="tel">${festival.tel}</td>`;
-
-                        var htmlContent12 =``;
-
-
-                        if(! festival.homepageUrl || festival.homepageUrl == "null" || festival.homepageUrl == ""){
-
-                            htmlContent12 = `
-
-                                <td class="homepageUrl"></td>
-                                <td class="detailAddress">${festival.detailAddress}</td>
-
-                                <td class="place">${festival.place}</td>
-                                <td class="startDate">${festival.formattedStart}</td>
-                                <td class="endDate">${festival.formattedEnd}</td>
-                                <td class="avgRate">${festival.avgRate}</td>
-                                <td class="season">${festival.season}</td>
-
-
-                            `;
-
-                        }else{
-
-                            htmlContent12 = `
-
-                                <td class="homepageUrl"><a href="${festival.homepageUrl}">클릭!</a></td>
-                                <td class="detailAddress">${festival.detailAddress}</td>
-
-                                <td class="place">${festival.place}</td>
-                                <td class="startDate">${festival.formattedStart}</td>
-                                <td class="endDate">${festival.formattedEnd}</td>
-                                <td class="avgRate">${festival.avgRate}</td>
-                                <td class="season">${festival.season}</td>
-
-
-                            `;
-
-                        }
-
-//                        var htmlContent2 = ``;
-
-//                        if(! festival.imgUrl || festival.imgUrl == "null"){
-//
-//                            htmlContent2= `
-//                            <td class="imgUrl"></td></tr>
-//                            `
-//
-//
-//                        }else{
-//
-//                             htmlContent2 = `
-//                             <td class="imgUrl"><img src="${festival.imgUrl}" width="40px"></td></tr>
-//                            `
-//                        }
-
-
-
-                        var finalHtml = htmlCheck + htmlContent11 + htmlContent12;
-
-                        $('#list2').append(finalHtml);
-
-                    })
-
-
-                }
-
-            })
-        }
-
-
-        findAPIFestivalList(1);
-        findAPIFestivalCount(20);
-
-
-
-        // api table page number
-        function findAPIFestivalCount(page){
-
-            $('#pageNum2').html("");
-
-           for(var p=1; p<=page; p++){
-
-            $('#pageNum2').append(`<button class="pageBtn2">${p}</button>`)
-
-            }
-
-            $(document).on('click','.pageBtn2', function(){
-
-                const page = $(this).text();
-                findAPIFestivalList(page);
-
-            })
-        }
-
-
-
-
-        $(document).on('click','#apiInsertBtn', function(){
-
-            var checks = [];
-
-            var selectedChecks = document.querySelectorAll("input[type='checkbox'].check2:checked");
-
-            $.each(selectedChecks, function(index, item){
-
-
-                checks.push($(item).val());
-                console.log($(item).val());
-
-            })
-
-            console.log(checks)
-
-            $.ajax({
-
-                url: '/admin/festival-regulate/insertAPIFestivalList',
-                method: 'POST',
-                contentType: 'application/json',
-                data: JSON.stringify(checks),
-                success: function(response){
-
-                    alert(response);
-                    window.location.href='/admin/festival-regulate';
-
-                }
-
-
-            })
-
-
-        })
-
-
-        // db 조회 기능
-
+        //#region DB 관련 함수
+
+        /**
+       * DB 전체 리스트 페이지별 조회 기능
+       * @param {int} page 페이지
+       */
         function findDBFestivalList(page){
 
             $('#list1').html("");
@@ -350,11 +151,12 @@ $(document).ready(
             })
         }
 
-
-
+        // 1페이지 호출
         findDBFestivalList(1);
 
-
+        /**
+       * DB 전체 갯수를 알아와 페이지 버튼 추가 기능
+       */
         function findDBFestivalCount(){
 
             $.ajax({
@@ -390,8 +192,12 @@ $(document).ready(
 
         }
 
+        // 버튼 붙히기
         findDBFestivalCount();
 
+        /**
+       * DB 페이지 버튼에 해당 페이지의 순서에 해당하는 데이터 보이는 클릭 이벤트 추가
+       */
         $(document).on('click','.pageBtn1', function(){
 
             const page = $(this).text();
@@ -399,9 +205,9 @@ $(document).ready(
 
         })
 
-
-        // 내용 키워드 추가 기능
-
+        /**
+       * 선택한 DB 축제 내용에 해당하는 키워드 추가 기능
+       */
         $(document).on('click','#contentKeywordInsertBtn', function(){
 
             var festivalId = $(this).val();
@@ -429,13 +235,9 @@ $(document).ready(
         })
 
 
-
-
-
-
-
-        // 일괄 삭제 기능
-
+        /**
+       * 선택한 리스트 일괄 삭제 기능
+       */
         $(document).on('click','#dbDeleteBtn', function(){
 
             var checks = [];
@@ -471,9 +273,9 @@ $(document).ready(
 
         })
 
-        // 상세 수정 - 모달 클릭 시 보여주기
-
-
+        /**
+       * 상세 수정 모달을 클릭 시 보여주기
+       */
         $(document).on('click','#dbUpdateBtn', function(){
 
             var festivalId = $(this).val();
@@ -547,10 +349,9 @@ $(document).ready(
 
         })
 
-
-
-        // db 다중조건 검색 모달 클릭
-
+        /**
+       * db 다중조건 검색 모달 클릭
+       */
          $(document).on('click','#search1', function(){
 
             $.ajax({
@@ -589,9 +390,9 @@ $(document).ready(
 
         })
 
-
-        // db 상세 모달 클릭
-
+        /**
+       * db 다중조건을 이용힌 검색 버튼 클릭
+       */
          $(document).on('click','#searchBtn1', function(){
 
             var data = $("#searchForm1").serializeArray();
@@ -609,8 +410,11 @@ $(document).ready(
 
          })
 
-
-        // 수정 조건 폼 보내기
+        /**
+       * 다중 조건을 담은 폼 데이터 보내기
+       * @param {int} page 페이지
+       * @param {Array<{name: string, value: string}>} data1 직렬화 된 폼 데이터
+       */
          function findDBFestivalByMultiple(data1, page){
 
 
@@ -754,7 +558,10 @@ $(document).ready(
 
          }
 
-         // 상세검색 페이지 버튼 붙히기
+         /**
+        * 다중 조건 검색에 해당하는 전체 갯수를 구하고 그 수만큼 페이지 버튼 붙히기
+        * @param {Array<{name: string, value: string}>} data1 직렬화 된 폼 데이터
+        */
          function findDBFestivalMultipleCount(data1){
 
             $.ajax({
@@ -813,9 +620,227 @@ $(document).ready(
         }
 
 
+        //#endregion
 
-        // api 다중조건 검색 모달 클릭
 
+
+
+
+        //#region API 관련 함수
+
+        /**
+         * 전체 API리스트를 페이지 번호에 따라 가져옴
+         * @param {int} page 페이지
+         */
+        function findAPIFestivalList(page){
+
+            $('#list2').html("");
+
+            $.ajax({
+
+                url: '/admin/festival-regulate/findAPIFestivalList?page=' + page,
+                method: 'POST',
+                contentType: 'application/json',
+                success: function(list){
+
+                    $('#list2').html("");
+
+                    $.each(list, function(index, festival){
+
+                        var index1 = (index + 1) + (page-1)*5;
+                        var indexFromZero = index1 - 1;
+
+                        var content = festival.festivalContent.length > 30?
+                        festival.festivalContent.substring(0,30) + "..."
+                        : festival.festivalContent;
+
+                        var inst1 = festival.manageInstitution.length > 15?
+                        festival.manageInstitution.substring(0,15) + "..."
+                        : festival.manageInstitution;
+
+                        var inst2 = festival.hostInstitution.length > 15?
+                        festival.hostInstitution.substring(0,15) + "..."
+                        : festival.hostInstitution;
+
+                        var inst3 = festival.sponserInstitution.length > 15?
+                        festival.sponserInstitution.substring(0,15) + "..."
+                        : festival.sponserInstitution;
+
+
+
+
+                        var start = festival.startDate.length >0?
+                        festival.startDate.substring(0,10):
+                        "링크없음";
+
+                        var end = festival.endDate.length >0?
+                        festival.endDate.substring(0,10):
+                        "링크없음";
+
+
+                        var htmlCheck = ``;
+
+                        if(festival.exist=="Y"){
+
+                            htmlCheck= `<tr>
+                                <td>DB<br>존재</td>`
+
+
+                        }else{
+
+                             htmlCheck = `<tr>
+                                <td><input class="check2" type="checkbox" name="index" value="${indexFromZero}"/></td>`
+                        }
+
+                        var htmlContent11 =`
+                                <td class="index1">${index1}</td>
+                                <td class="regionId">${festival.regionId}</td>
+                                <td class="timeId">${festival.timeId}</td>
+                                <td class="festivalName">${festival.festivalName}</td>
+                                <td class="festivalContent">${content}</td>
+                                <td class="manageInstitution">${inst1}</td>
+                                <td class="hostInstitution">${inst2}</td>
+                                <td class="sponserInstitution">${inst3}</td>
+                                <td class="tel">${festival.tel}</td>`;
+
+                        var htmlContent12 =``;
+
+
+                        if(! festival.homepageUrl || festival.homepageUrl == "null" || festival.homepageUrl == ""){
+
+                            htmlContent12 = `
+
+                                <td class="homepageUrl"></td>
+                                <td class="detailAddress">${festival.detailAddress}</td>
+
+                                <td class="place">${festival.place}</td>
+                                <td class="startDate">${festival.formattedStart}</td>
+                                <td class="endDate">${festival.formattedEnd}</td>
+                                <td class="avgRate">${festival.avgRate}</td>
+                                <td class="season">${festival.season}</td>
+
+
+                            `;
+
+                        }else{
+
+                            htmlContent12 = `
+
+                                <td class="homepageUrl"><a href="${festival.homepageUrl}">클릭!</a></td>
+                                <td class="detailAddress">${festival.detailAddress}</td>
+
+                                <td class="place">${festival.place}</td>
+                                <td class="startDate">${festival.formattedStart}</td>
+                                <td class="endDate">${festival.formattedEnd}</td>
+                                <td class="avgRate">${festival.avgRate}</td>
+                                <td class="season">${festival.season}</td>
+
+
+                            `;
+
+                        }
+
+    //                        var htmlContent2 = ``;
+
+    //                        if(! festival.imgUrl || festival.imgUrl == "null"){
+    //
+    //                            htmlContent2= `
+    //                            <td class="imgUrl"></td></tr>
+    //                            `
+    //
+    //
+    //                        }else{
+    //
+    //                             htmlContent2 = `
+    //                             <td class="imgUrl"><img src="${festival.imgUrl}" width="40px"></td></tr>
+    //                            `
+    //                        }
+
+
+
+                        var finalHtml = htmlCheck + htmlContent11 + htmlContent12;
+
+                        $('#list2').append(finalHtml);
+
+                    })
+
+
+                }
+
+            })
+        }
+
+
+        /**
+         * 전체 API리스트의 페이지 갯수를 결정 후 페이지 버튼 추가
+         * @param {int} page 페이지
+         */
+        function findAPIFestivalCount(page){
+
+            $('#pageNum2').html("");
+
+           for(var p=1; p<=page; p++){
+
+            $('#pageNum2').append(`<button class="pageBtn2">${p}</button>`)
+
+            }
+
+            $(document).on('click','.pageBtn2', function(){
+
+                const page = $(this).text();
+                findAPIFestivalList(page);
+
+            })
+        }
+
+        // 처음 들어가면 1페이지 불러옴
+        findAPIFestivalList(1);
+
+        // 처음 들어가면 페이지 버튼 20개 생성
+        findAPIFestivalCount(20);
+
+        /**
+         * 체크된 API 리스트의 축제들을 DB에 저장함
+         */
+        $(document).on('click','#apiInsertBtn', function(){
+
+            var checks = [];
+
+            var selectedChecks = document.querySelectorAll("input[type='checkbox'].check2:checked");
+
+            $.each(selectedChecks, function(index, item){
+
+
+                checks.push($(item).val());
+                console.log($(item).val());
+
+            })
+
+            console.log(checks)
+
+            $.ajax({
+
+                url: '/admin/festival-regulate/insertAPIFestivalList',
+                method: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(checks),
+                success: function(response){
+
+                    alert(response);
+                    window.location.href='/admin/festival-regulate';
+
+                }
+
+
+            })
+
+
+        })
+
+
+        /**
+         * api 다중조건 검색 모달 클릭
+         */
          $(document).on('click','#search2', function(){
 
             $.ajax({
@@ -843,9 +868,9 @@ $(document).ready(
         })
 
 
-
-        // api 다중조건 검색 버튼 클릭
-
+         /**
+          * api 다중조건 검색 버튼 클릭
+          */
          $(document).on('click','#searchBtn2', function(){
 
             var data = $("#searchForm2").serializeArray();
@@ -864,7 +889,12 @@ $(document).ready(
          })
 
 
-        // API 수정 조건 폼 보내기
+
+          /**
+           * API 수정 조건 폼 보내기
+           * @param {Array<{name: string, value: string}>} data2 직렬화 된 폼 데이터
+           * @param {int} page 페이지
+           */
          function findAPIFestivalByMultiple(data2, page){
 
             console.log(data2);
@@ -963,7 +993,12 @@ $(document).ready(
 
          }
 
-         // API 상세검색 페이지 버튼 붙히기
+
+
+         /**
+        * API 상세검색 갯수 알아와서 페이지 버튼 갯수만큼 붙히기
+        * @param {Array<{name: string, value: string}>} data2 직렬화 된 폼 데이터
+        */
          function findAPIFestivalMultipleCount(data2){
 
             $.ajax({
@@ -1012,7 +1047,9 @@ $(document).ready(
 
         }
 
-
+        /**
+        * 전체 버튼으로 API 상세검색에서 API 전체리스트로 돌아가는 클릭 이벤트
+        */
         $(document).on('click','.pageBtn6', function(){
 
             $('#list2').html("");
@@ -1021,6 +1058,10 @@ $(document).ready(
             findAPIFestivalCount(20);
 
         })
+
+
+        //#endregion
+
 
 
 

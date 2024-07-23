@@ -14,6 +14,12 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 키워드 추출 서비스 클래스
+ *
+ * @author 안지연
+ * @since 2024-07-23
+ */
 @Service
 public class KeywordExtractService1 {
 	
