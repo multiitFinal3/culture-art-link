@@ -914,7 +914,8 @@ public class AdminFestivalServiceImpl implements AdminFestivalService {
 		
 		String all = content + " " + title;
 		
-		ArrayList<String> list = keywordExtractService.getKeyword(all);
+		/*ArrayList<String> list = keywordExtractService.getKeywordByKomoran(all);*/
+		ArrayList<String> list = keywordExtractService.getKeywordByApacheLucene(all);
 		
 		
 		return list;
