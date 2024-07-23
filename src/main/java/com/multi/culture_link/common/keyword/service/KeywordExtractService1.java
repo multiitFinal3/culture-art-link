@@ -123,7 +123,7 @@ public class KeywordExtractService1 {
 			tokenizer.close();
 		}
 		
-		System.out.println(list.toString());
+		System.out.println("list.toString() : " + list.toString());
 		return list;
 		
 	}
