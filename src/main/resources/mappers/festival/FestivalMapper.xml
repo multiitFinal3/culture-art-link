@@ -21,7 +21,7 @@
         SELECT *
         FROM (
 
-        SELECT ROW_NUMBER() OVER(ORDER BY festival_id ASC) AS rownum, f.*
+        SELECT ROW_NUMBER() OVER(ORDER BY festival_id DESC) AS rownum, f.*
         FROM festival f) f2
 
         WHERE
@@ -265,6 +265,43 @@
 
 
     </select>
+
+
+    <select id="findKeywordByKeyword" parameterType="festivalKeywordDTO">
+
+        SELECT * FROM festival_keyword
+        WHERE festival_keyword_id = #{festivalKeywordId};
+
+
+    </select>
+
+
+    <insert id="insertKeywordByKeyword" parameterType="festivalKeywordDTO">
+
+        INSERT INTO festival_keyword(festival_keyword_id, emotion_stat)
+        VALUES(#{festivalKeywordId}, #{emotionStat});
+
+    </insert>
+
+
+    <select id="findKeywordMappingByKeywordMapping" parameterType="festivalContentReviewNaverKeywordMapping">
+
+        SELECT * FROM festival_content_review_naver_keyword_mapping
+        WHERE festival_id = #{festivalId}
+        AND sort_code = #{sortCode}
+        AND festival_keyword_id = #{festivalKeywordId};
+
+    </select>
+
+
+    <insert id="insertKeywordMappingByKeywordMapping" parameterType="festivalContentReviewNaverKeywordMapping">
+
+        INSERT INTO festival_content_review_naver_keyword_mapping(festival_id, sort_code, festival_keyword_id)
+        VALUES(#{festivalId}, #{sortCode},  #{festivalKeywordId});
+
+    </insert>
+
+
 
 
 </mapper>

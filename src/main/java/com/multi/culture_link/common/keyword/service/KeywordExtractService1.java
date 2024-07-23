@@ -17,7 +17,9 @@ import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 
 /**
@@ -68,7 +70,7 @@ public class KeywordExtractService1 {
 		ArrayList<String> stopWords = new ArrayList<String>();
 		
 		
-		Resource resource = resourceLoader.getResource("classpath:static/txt/stop.txt");
+		Resource resource = resourceLoader.getResource("classpath:static/txt/festival/stop.txt");
 		
 		BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(new FileInputStream(resource.getFile())));
 		
@@ -100,8 +102,21 @@ public class KeywordExtractService1 {
 		
 		for (String token : list) {
 			
-			if (!stopWords.contains(token)) {
+			boolean isStop = false;
+			
+			for (String stop : stopWords) {
 				
+				
+				if ((stopWords.contains(token)) || (stop.contains(token)) || (token.contains(stop))) {
+					
+					isStop = true;
+					break;
+					
+				}
+				
+			}
+			
+			if (!isStop) {
 				
 				if (map.keySet().contains(token)) {
 					
@@ -112,21 +127,16 @@ public class KeywordExtractService1 {
 					
 					map.put(token, 1);
 					
-					
 				}
-				
 				
 			}
 			
 		}
 		
-		
 		System.out.println("Komoran before : " + list);
 		System.out.println("Komoran after : " + map);
 		
-		
 		return map;
-		
 		
 	}
 	
@@ -142,7 +152,7 @@ public class KeywordExtractService1 {
 		
 		ArrayList<String> stopWords = new ArrayList<String>();
 		
-		Resource resource = resourceLoader.getResource("classpath:static/txt/stop.txt");
+		Resource resource = resourceLoader.getResource("classpath:static/txt/festival/stop.txt");
 		
 		BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(new FileInputStream(resource.getFile())));
 		
