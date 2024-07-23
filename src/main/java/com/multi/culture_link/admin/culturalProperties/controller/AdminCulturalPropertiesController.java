@@ -3,13 +3,13 @@ package com.multi.culture_link.admin.culturalProperties.controller;
 
 import com.multi.culture_link.admin.culturalProperties.model.dto.CulturalPropertiesDTO;
 import com.multi.culture_link.admin.culturalProperties.service.AdminCulturalPropertiesService;
-import com.multi.culture_link.admin.exhibition.model.dto.api.ExhibitionApiDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -86,21 +86,35 @@ public class AdminCulturalPropertiesController {
 //		for (String index : checkedItem) {
 //			CulturalPropertiesDTO dto = new CulturalPropertiesDTO();
 //			dto.setId(Integer.parseInt(index));
-			adminCulturalPropertiesService.insertDB(checkedItem);
+			adminCulturalPropertiesService.insertDB((CulturalPropertiesDTO) checkedItem);
 //		}
 		return ResponseEntity.ok("문화재가 DB에 성공적으로 추가되었습니다.");
 	}
 
 
-	@GetMapping("/getDBData")
-	public List<CulturalPropertiesDTO> selectDB() {
-
-		return adminCulturalPropertiesService.selectDB(); // 모든 문화재 데이터 가져오기
+	@GetMapping("/select")
+	@ResponseBody
+	public ArrayList<CulturalPropertiesDTO> selectDB() {
+		
+		ArrayList<CulturalPropertiesDTO> list = new ArrayList<CulturalPropertiesDTO>();
+		list = (ArrayList<CulturalPropertiesDTO>) adminCulturalPropertiesService.selectDB();
+		
+		System.out.println("가져온 리스트 : " + list);
+		
+		return list; // 모든 문화재 데이터 가져오기
 	}
 
 
-
-
+	@PostMapping("/addDBData")
+	@ResponseBody
+	public void addDBData(@RequestBody ArrayList<Integer> numList){
+		
+		System.out.println("numList : " + numList.toString());
+		
+		adminCulturalPropertiesService.addDBData(numList);
+		
+	}
+	
 
 
 

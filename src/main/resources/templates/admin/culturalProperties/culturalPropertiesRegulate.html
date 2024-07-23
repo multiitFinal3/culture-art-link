@@ -350,13 +350,19 @@
                 // 체크된 데이터 가져오기
                 var checkedItem = [];
                 $('.check2:checked').each(function() {
+
                     var index = $(this).val(); // 선택된 인덱스(데이터 식별자) 가져오기
+                    console.log("$('.check2:checked').each(function()");
+                    console.log(index);
                     checkedItem.push(index); // 선택된 데이터를 배열에 추가
                 });
 
+                console.log("체크된 내용");
+                console.log(checkedItem);
+
                 // 선택된 데이터를 서버로 전송
                 $.ajax({
-                    url: '/admin/cultural-properties-regulate/getDBData',
+                    url: '/admin/cultural-properties-regulate/addDBData',
                     method: 'POST',
                     contentType: 'application/json',
                     data: JSON.stringify(checkedItem), // 선택된 데이터를 JSON 형태로 전송
