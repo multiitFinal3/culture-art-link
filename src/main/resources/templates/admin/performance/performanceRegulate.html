@@ -23,23 +23,25 @@
 </head>
 <body>
 <div layout:fragment="content2">
-    <div id="performanceRegulate" style="width: 90%;"> <!-- 컨테이너 가로 크기 조정 -->
-        <h2>공연 DB 현황</h2>
-        <form id="searchFormDB" action="/admin/performance-regulate" method="get">
-            <input type="text" name="dbSearchKeyword" placeholder="검색어를 입력하세요" th:value="${dbSearchKeyword}">
-            <button type="submit">검색</button>
-            <input type="hidden" name="apiPage" th:value="${apiCurrentPage}">
-            <input type="hidden" name="dbPage" th:value="${dbCurrentPage}">
-        </form>
+    <div id="performanceRegulate" style="width: 90%;">
+        <div class="search-container">
+            <h2>공연 DB 현황</h2>
+            <form id="searchFormDB" action="/admin/performance-regulate" method="get" class="form-inline">
+                <input type="text" name="dbSearchKeyword" placeholder="검색어를 입력하세요" th:value="${dbSearchKeyword}" class="search-bar">
+                <button type="submit" class="search-button">검색</button>
+                <input type="hidden" name="apiPage" th:value="${apiCurrentPage}">
+                <input type="hidden" name="dbPage" th:value="${dbCurrentPage}">
+            </form>
+        </div>
         <form id="deleteForm" action="/admin/performance-regulate/deleteFromDB" method="post">
             <table class="table table-striped" id="performanceDB">
                 <thead class="table-light">
                 <tr>
-                    <th scope="col">
+                    <th scope="col" class="small-column">
                         <input type="checkbox" id="selectAllDB" onclick="toggle(this, 'selectedIds')">
                     </th>
-                    <th scope="col">#</th>
-                    <th scope="col">이미지</th>
+                    <th scope="col" class="small-column">#</th>
+                    <th scope="col" class="image-column">이미지</th>
                     <th scope="col">TITLE</th>
                     <th scope="col">장소</th>
                     <th scope="col">날짜</th>
@@ -47,40 +49,34 @@
                 </thead>
                 <tbody id="list1" th:each="performance, stat : ${dbPerformances}">
                 <tr>
-                    <td><input type="checkbox" name="selectedIds" th:value="${performance.code}"></td>
-                    <td th:text="${stat.index + 1}"></td>
-                    <td><img th:src="${performance.imageMain}" alt="Poster" width="50"></td>
+                    <td class="small-column"><input type="checkbox" name="selectedIds" th:value="${performance.code}"></td>
+                    <td class="small-column" th:text="${stat.index + 1}"></td>
+                    <td class="image-column"><img th:src="${performance.imageMain}" alt="Poster" width="50"></td>
                     <td th:text="${performance.title}"></td>
                     <td th:text="${performance.location}"></td>
-                    <td th:text="${performance.startDate} + ' - ' + ${performance.endDate}"></td>
+                    <td th:text="${performance.formattedDate}"></td>
                 </tr>
                 </tbody>
             </table>
             <div id="pageNum1" class="pagination">
-                <!-- 페이지네이션 부분 시작 -->
                 <div class="pagination-container">
-                    <!-- 이전 페이지 버튼 -->
                     <span th:if="${dbCurrentPage > 0}" class="page-arrow">
                         <a th:href="@{|/admin/performance-regulate?dbPage=${dbCurrentPage - 1}&apiPage=${apiCurrentPage}&size=20|}">
                             &lt;
                         </a>
                     </span>
-                    <!-- 페이지 번호 -->
                     <span th:each="i : ${#numbers.sequence(0, dbTotalPages - 1)}"
                           th:if="${i < 10 or (i >= dbCurrentPage and i < dbCurrentPage + 10)}"
                           th:classappend="${i == dbCurrentPage} ? 'active page-number' : 'page-number'">
                         <a th:href="@{|/admin/performance-regulate?dbPage=${i}&apiPage=${apiCurrentPage}&size=20|}" th:text="${i + 1}"></a>
                     </span>
-                    <!-- "..." 표시 -->
                     <span th:if="${dbCurrentPage + 10 < dbTotalPages}" class="page-ellipsis">...</span>
-                    <!-- 다음 페이지 버튼 -->
                     <span th:if="${dbCurrentPage < dbTotalPages - 1}" class="page-arrow">
                         <a th:href="@{|/admin/performance-regulate?dbPage=${dbCurrentPage + 1}&apiPage=${apiCurrentPage}&size=20|}">
                             &gt;
                         </a>
                     </span>
                 </div>
-                <!-- 페이지네이션 부분 끝 -->
             </div>
             <div class="button-container">
                 <button type="submit" id="dbDeleteBtn" class="btn btn-primary">삭제</button>
@@ -89,13 +85,15 @@
 
         <br><br><br><br><br><br>
 
-        <h2>전국 공연 실시간</h2>
-        <form id="searchFormAPI" action="/admin/performance-regulate" method="get">
-            <input type="text" name="apiSearchKeyword" placeholder="검색어를 입력하세요" th:value="${apiSearchKeyword}">
-            <button type="submit">검색</button>
-            <input type="hidden" name="apiPage" th:value="${apiCurrentPage}">
-            <input type="hidden" name="dbPage" th:value="${dbCurrentPage}">
-        </form>
+        <div class="search-container">
+            <h2>전국 공연 실시간</h2>
+            <form id="searchFormAPI" action="/admin/performance-regulate" method="get" class="form-inline">
+                <input type="text" name="apiSearchKeyword" placeholder="검색어를 입력하세요" th:value="${apiSearchKeyword}" class="search-bar">
+                <button type="submit" class="search-button">검색</button>
+                <input type="hidden" name="apiPage" th:value="${apiCurrentPage}">
+                <input type="hidden" name="dbPage" th:value="${dbCurrentPage}">
+            </form>
+        </div>
         <form action="/admin/performance-regulate/saveToDB" method="post">
             <input type="hidden" name="apiPage" th:value="${apiCurrentPage}">
             <input type="hidden" name="dbPage" th:value="${dbCurrentPage}">
@@ -103,11 +101,11 @@
             <table class="table table-striped" id="performanceAPI">
                 <thead class="table-light">
                 <tr>
-                    <th scope="col">
+                    <th scope="col" class="small-column">
                         <input type="checkbox" id="selectAllAPI" onclick="toggle(this, 'selectedIdsAPI')">
                     </th>
-                    <th scope="col">#</th>
-                    <th scope="col">이미지</th>
+                    <th scope="col" class="small-column">#</th>
+                    <th scope="col" class="image-column">이미지</th>
                     <th scope="col">TITLE</th>
                     <th scope="col">장소</th>
                     <th scope="col">날짜</th>
@@ -115,9 +113,9 @@
                 </thead>
                 <tbody>
                 <tr th:each="performance, stat : ${performances}">
-                    <td><input type="checkbox" name="selectedIdsAPI" th:value="${performance.code}"></td>
-                    <td th:text="${stat.index + 1}"></td>
-                    <td><img th:src="${performance.imageMain}" alt="Poster" width="50"></td>
+                    <td class="small-column"><input type="checkbox" name="selectedIdsAPI" th:value="${performance.code}"></td>
+                    <td class="small-column" th:text="${stat.index + 1}"></td>
+                    <td class="image-column"><img th:src="${performance.imageMain}" alt="Poster" width="50"></td>
                     <td th:text="${performance.title}"></td>
                     <td th:text="${performance.location}"></td>
                     <td th:text="${performance.startDate} + ' - ' + ${performance.endDate}"></td>
@@ -125,30 +123,24 @@
                 </tbody>
             </table>
             <div id="pageNum2" class="pagination">
-                <!-- 페이지네이션 부분 시작 -->
                 <div class="pagination-container">
-                    <!-- 이전 페이지 버튼 -->
                     <span th:if="${apiCurrentPage > 0}" class="page-arrow">
                         <a th:href="@{|/admin/performance-regulate?apiPage=${apiCurrentPage - 1}&dbPage=${dbCurrentPage}&size=20|}">
                             &lt;
                         </a>
                     </span>
-                    <!-- 페이지 번호 -->
                     <span th:each="i : ${#numbers.sequence(0, apiTotalPages - 1)}"
                           th:if="${i < 10 or (i >= apiCurrentPage and i < apiCurrentPage + 10)}"
                           th:classappend="${i == apiCurrentPage} ? 'active page-number' : 'page-number'">
                         <a th:href="@{|/admin/performance-regulate?apiPage=${i}&dbPage=${dbCurrentPage}&size=20|}" th:text="${i + 1}"></a>
                     </span>
-                    <!-- "..." 표시 -->
                     <span th:if="${apiCurrentPage + 10 < apiTotalPages}" class="page-ellipsis">...</span>
-                    <!-- 다음 페이지 버튼 -->
                     <span th:if="${apiCurrentPage < apiTotalPages - 1}" class="page-arrow">
                         <a th:href="@{|/admin/performance-regulate?apiPage=${apiCurrentPage + 1}&dbPage=${dbCurrentPage}&size=20|}">
                             &gt;
                         </a>
                     </span>
                 </div>
-                <!-- 페이지네이션 부분 끝 -->
             </div>
             <div class="button-container">
                 <button type="submit" id="apiInsertBtn" class="btn btn-primary">DB에 추가</button>
