@@ -8,5 +8,6 @@ public class TimeDTO {
 
 	private String timeId;
 	private String timeName;
+	private String timeDescription;
 
 }
