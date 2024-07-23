@@ -103,16 +103,15 @@
     .pageBtn3{
 
         color: black;
-        background-color: #FAEBD7;
 
 
     }
 
 
-    .pageBtn4{
+    .pageBtn4, .pageBtn6{
         margin: 0.9%;
         color: black;
-        background-color: #8FBC8F;
+        width: 60px;
 
     }
 
@@ -121,21 +120,31 @@
     .pageBtn5{
 
         color: black;
-        background-color: #20B2AA;
-
     }
 
 
     .pageBtn6{
 
         color: black;
-        background-color: #8FBC8F;
 
     }
 
     .pageBtn1{
 
         margin: 5%;
+
+    }
+
+    .checkHead{
+
+        width: 50px;
+
+    }
+
+    .buttonHead{
+
+        width: 200px;
+
 
     }
 
