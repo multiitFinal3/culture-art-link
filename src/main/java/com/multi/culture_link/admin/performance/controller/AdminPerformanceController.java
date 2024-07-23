@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/admin/performance-regulate")
-public class AdminPerformanceController {
+public class AdminPerformanceController { //관리자가 공연 데이터를 조회, 저장 및 삭제
 
     @Autowired
     private PerformanceAPIService performanceAPIService;
@@ -28,45 +28,55 @@ public class AdminPerformanceController {
     @Autowired
     private PerformanceDBService performanceDBService;
 
-    @GetMapping
+    @GetMapping // 공연 관리 페이지를 반환하는 메소드
     public String performanceManage(Model model,
                                     @RequestParam(name = "dbPage", defaultValue = "0") int dbPage,
                                     @RequestParam(name = "apiPage", defaultValue = "0") int apiPage,
-                                    @RequestParam(name = "size", defaultValue = "20") int size) {
+                                    @RequestParam(name = "size", defaultValue = "20") int size,
+                                    @RequestParam(name = "dbSearchKeyword", required = false) String dbSearchKeyword,
+                                    @RequestParam(name = "apiSearchKeyword", required = false) String apiSearchKeyword) {
         try {
-            // 전체 API 데이터를 가져오기
-            List<PerformanceDTO> allApiPerformances = performanceAPIService.fetchData(0, Integer.MAX_VALUE).getContent();
+            List<PerformanceDTO> dbPerformances;
+            if (dbSearchKeyword != null && !dbSearchKeyword.isEmpty()) {
+                dbPerformances = performanceDBService.searchPerformances(dbSearchKeyword);
+            } else {
+                dbPerformances = performanceDBService.getAllPerformances();
+            }
 
-            // DB에서 데이터 가져오기 및 페이지 처리
-            List<PerformanceDTO> dbPerformances = performanceDBService.getAllPerformances();
             int dbStart = Math.min(dbPage * size, dbPerformances.size());
             int dbEnd = Math.min(dbStart + size, dbPerformances.size());
             Page<PerformanceDTO> dbPerformancesPage = new PageImpl<>(dbPerformances.subList(dbStart, dbEnd), PageRequest.of(dbPage, size), dbPerformances.size());
 
-            // DB에 없는 공연을 필터링하여 전국 공연 실시간 목록에 추가
-            List<PerformanceDTO> filteredPerformances = allApiPerformances.stream()
-                    .filter(p -> dbPerformances.stream().noneMatch(db -> db.getCode().equals(p.getCode())))
-                    .collect(Collectors.toList());
+            List<PerformanceDTO> filteredPerformances;
+            if (apiSearchKeyword != null && !apiSearchKeyword.isEmpty()) {
+                filteredPerformances = performanceAPIService.searchPerformances(apiSearchKeyword); // API에서 키워드로 검색
+            } else {
+                List<PerformanceDTO> allApiPerformances = performanceAPIService.fetchData(0, Integer.MAX_VALUE).getContent();
+                filteredPerformances = allApiPerformances.stream()
+                        .filter(p -> dbPerformances.stream().noneMatch(db -> db.getCode().equals(p.getCode()))) // DB에 없는 공연 데이터 필터링
+                        .collect(Collectors.toList());
+            }
 
-            // 현재 페이지에 맞게 20개로 자르기
             int fromIndex = apiPage * size;
             int toIndex = Math.min(fromIndex + size, filteredPerformances.size());
             List<PerformanceDTO> paginatedPerformances = filteredPerformances.subList(fromIndex, Math.min(toIndex, filteredPerformances.size()));
 
-            // 모델에 속성 추가
             model.addAttribute("performances", paginatedPerformances);
             model.addAttribute("dbPerformances", dbPerformancesPage.getContent());
             model.addAttribute("dbCurrentPage", dbPage);
             model.addAttribute("apiCurrentPage", apiPage);
             model.addAttribute("apiTotalPages", (int) Math.ceil((double) filteredPerformances.size() / size));
             model.addAttribute("dbTotalPages", dbPerformancesPage.getTotalPages());
+            model.addAttribute("dbSearchKeyword", dbSearchKeyword);
+            model.addAttribute("apiSearchKeyword", apiSearchKeyword);
         } catch (IOException e) {
             e.printStackTrace();
         }
         return "/admin/performance/performanceRegulate";
     }
 
-    @PostMapping("/saveToDB")
+
+    @PostMapping("/saveToDB") // 선택된 API 공연 데이터를 DB에 저장하는 메소드
     public String saveToDB(@RequestParam(name = "selectedIdsAPI", required = false) List<String> selectedIdsAPI,
                            @RequestParam(name = "apiPage", defaultValue = "0") int apiPage,
                            @RequestParam(name = "dbPage", defaultValue = "0") int dbPage,
@@ -106,6 +116,7 @@ public class AdminPerformanceController {
         // 페이지 번호와 사이즈를 리다이렉트 경로에 추가
         return "redirect:/admin/performance-regulate?dbPage=" + dbPage + "&apiPage=" + apiPage + "&size=" + size;
     }
+
 
     @PostMapping("/deleteFromDB")
     public String deleteFromDB(@RequestParam(name = "selectedIds", required = false) List<String> selectedIds,
@@ -149,4 +160,7 @@ public class AdminPerformanceController {
         // 페이지 번호와 사이즈를 리다이렉트 경로에 추가
         return "redirect:/admin/performance-regulate?dbPage=" + dbPage + "&apiPage=" + apiPage + "&size=" + size + (model.containsAttribute("deletedCount") ? "&deletedCount=" + model.getAttribute("deletedCount") : "");
     }
+
 }
+
+

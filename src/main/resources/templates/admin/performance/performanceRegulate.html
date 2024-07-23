@@ -25,6 +25,12 @@
 <div layout:fragment="content2">
     <div id="performanceRegulate">
         <h2>공연 DB 현황</h2>
+        <form id="searchFormDB" action="/admin/performance-regulate" method="get">
+            <input type="text" name="dbSearchKeyword" placeholder="검색어를 입력하세요" th:value="${dbSearchKeyword}">
+            <button type="submit">검색</button>
+            <input type="hidden" name="apiPage" th:value="${apiCurrentPage}">
+            <input type="hidden" name="dbPage" th:value="${dbCurrentPage}">
+        </form>
         <form id="deleteForm" action="/admin/performance-regulate/deleteFromDB" method="post">
             <table class="table table-striped" id="performanceDB">
                 <thead class="table-light">
@@ -84,6 +90,12 @@
         <br><br><br><br><br><br>
 
         <h2>전국 공연 실시간</h2>
+        <form id="searchFormAPI" action="/admin/performance-regulate" method="get">
+            <input type="text" name="apiSearchKeyword" placeholder="검색어를 입력하세요" th:value="${apiSearchKeyword}">
+            <button type="submit">검색</button>
+            <input type="hidden" name="apiPage" th:value="${apiCurrentPage}">
+            <input type="hidden" name="dbPage" th:value="${dbCurrentPage}">
+        </form>
         <form action="/admin/performance-regulate/saveToDB" method="post">
             <input type="hidden" name="apiPage" th:value="${apiCurrentPage}">
             <input type="hidden" name="dbPage" th:value="${dbCurrentPage}">
