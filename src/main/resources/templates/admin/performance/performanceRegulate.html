@@ -18,7 +18,18 @@
             }
         }
 
-        document.addEventListener('DOMContentLoaded', showAlertIfDeleted);
+        function showAlertIfSaved() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const savedCount = urlParams.get('savedCount');
+            if (savedCount) {
+                alert(savedCount + '개의 공연이 추가되었습니다.');
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            showAlertIfDeleted();
+            showAlertIfSaved();
+        });
     </script>
 </head>
 <body>
