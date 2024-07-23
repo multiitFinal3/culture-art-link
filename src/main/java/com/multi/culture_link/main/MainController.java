@@ -6,15 +6,16 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class MainController {
 	
-	@GetMapping(value = {"/","/home"})
-	public String main(){
-		
-		
-		
+	/**
+	 * 메인화면으로 이동
+	 * @return 메인화면 주소
+	 */
+	@GetMapping(value = {"/", "/home"})
+	public String main() {		
 		
 		return "main/main";
+		
 	}
-	
 	
 	
 }
