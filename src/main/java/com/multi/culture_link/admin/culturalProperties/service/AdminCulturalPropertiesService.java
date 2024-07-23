@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 
@@ -284,7 +285,19 @@ public class AdminCulturalPropertiesService {
 	
 	
 	public List<CulturalPropertiesDTO> selectDB() {
-		return adminCulturalPropertiesDAO.selectDB();
+		
+		
+		ArrayList<CulturalPropertiesDTO> list = (ArrayList<CulturalPropertiesDTO>) adminCulturalPropertiesDAO.selectDB();
+		
+		for(CulturalPropertiesDTO culturalPropertiesDTO : list){
+			
+			culturalPropertiesDTO.setImgDesc(Collections.singletonList(culturalPropertiesDTO.getImgDesc().get(0)));
+			culturalPropertiesDTO.setContent(culturalPropertiesDTO.getContent().substring(0,30) + "....");
+			culturalPropertiesDTO.setImgUrl(Collections.singletonList(culturalPropertiesDTO.getImgUrl().get(0)));
+			
+		}
+		
+		return list;
 	}
 	
 	public void addDBData(ArrayList<Integer> numList) {
