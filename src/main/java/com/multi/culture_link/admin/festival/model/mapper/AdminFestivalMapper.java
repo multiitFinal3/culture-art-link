@@ -10,9 +10,6 @@ import java.util.ArrayList;
 @Mapper
 public interface AdminFestivalMapper {
 	
-	
-	
-	
 	void insertAPIFestival(FestivalDTO festivalDTO) throws Exception;
 	
 	ArrayList<FestivalDTO> findDBFestivalList(PageDTO pageDTO) throws Exception;

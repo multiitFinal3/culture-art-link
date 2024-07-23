@@ -33,7 +33,7 @@
                 <if test="data.title != null and data.title != ''">title = #{data.title},</if>
                 <if test="data.artist != null and data.artist != ''">artist = #{data.artist},</if>
                 <if test="data.museum != null and data.museum != ''">museum = #{data.museum},</if>
-                <if test="data.localId != null and data.localId != ''">localId = #{data.localId},</if>
+                <if test="data.localId != null and data.localId != ''">local_id = #{data.localId},</if>
                 <if test="data.startDate != null">start_date = #{data.startDate},</if>
                 <if test="data.endDate != null">end_date = #{data.endDate},</if>
                 <if test="data.price != null and data.price != ''">price = #{data.price},</if>
