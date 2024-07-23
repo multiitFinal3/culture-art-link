@@ -1,7 +1,6 @@
 
     #festivalRegulate{
 
-
         display: flex;
         flex-flow: column;
         align-items: center;
@@ -9,7 +8,6 @@
         margin-top: 8%;
         margin-left: 5%;
         margin-right: 5%;
-        overflow-x: scroll;
     }
 
     table{
