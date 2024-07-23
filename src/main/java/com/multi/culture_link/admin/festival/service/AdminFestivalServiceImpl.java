@@ -893,7 +893,7 @@ public class AdminFestivalServiceImpl implements AdminFestivalService {
 		ArrayList<String> list = keywordExtractService.getKeywordByApacheLucene(all);
 		
 		
-		return list;
+		return list2;
 	}
 	
 	
