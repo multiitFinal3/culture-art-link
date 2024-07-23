@@ -123,7 +123,7 @@ $(document).ready(
                             <td class="imgUrl"></td>
                             <td class="buttonHead">
                                 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalLong" id="dbUpdateBtn" value="${festival.festivalId}">상세수정</button><br><hr>
-                                <button type="button" class="btn btn-primary"  id="contentKeywordInsertBtn" value="${festival.festivalId}">키워드추가</button>
+                                <button type="button" class="btn btn-primary contentKeywordInsertBtn" value="${festival.festivalId}">키워드추가</button>
                             </td>
                             </tr>
                             `
@@ -134,7 +134,7 @@ $(document).ready(
                              <td class="imgUrl"><img src="${festival.imgUrl}" width="40px" alt="이미지 없음"></td>
                              <td class="buttonHead">
                                  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalLong" id="dbUpdateBtn" value="${festival.festivalId}">상세수정</button><br><hr>
-                                 <button type="button" class="btn btn-primary"  id="contentKeywordInsertBtn" value="${festival.festivalId}">키워드추가</button>
+                                 <button type="button" class="btn btn-primary contentKeywordInsertBtn" value="${festival.festivalId}">키워드추가</button>
                              </td>
                              </tr>
                             `
@@ -212,7 +212,7 @@ $(document).ready(
         /**
        * 선택한 DB 축제 내용에 해당하는 키워드 추가 기능
        */
-        $(document).on('click','#contentKeywordInsertBtn', function(){
+        $(document).on('click','.contentKeywordInsertBtn', function(){
 
             var festivalId = $(this).val();
 
@@ -223,11 +223,7 @@ $(document).ready(
                 contentType: 'application/json',
                 success: function(list){
 
-                    $.each(list, function(index, keyword){
-
-                        console.log(keyword);
-
-                    })
+                    alert("키워드 : " + list + ". 키워드 삽입 성공!")
 
 
                 }
@@ -480,7 +476,7 @@ $(document).ready(
 
                                     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalLong" id="dbUpdateBtn" value="${festival.festivalId}">상세 수정</button><br><hr>
 
-                                    <button type="button" class="btn btn-primary"  id="contentKeywordInsertBtn" value="${festival.festivalId}">내용 키워드 추가</button>
+                                    <button type="button" class="btn btn-primary"  class="contentKeywordInsertBtn" value="${festival.festivalId}">내용 키워드 추가</button>
 
                                 </td>
                                 <td class="index1" style="width : 20px; height: 20px;">${index1}</td>
@@ -540,7 +536,7 @@ $(document).ready(
 
                             <td class="buttonHead">
                                 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalLong" id="dbUpdateBtn" value="${festival.festivalId}">상세수정</button><br><hr>
-                                <button type="button" class="btn btn-primary"  id="contentKeywordInsertBtn" value="${festival.festivalId}">키워드추가</button>
+                                <button type="button" class="btn btn-primary contentKeywordInsertBtn" value="${festival.festivalId}">키워드추가</button>
                             </td>
                             </tr>
                             `
@@ -552,7 +548,7 @@ $(document).ready(
 
                              <td class="buttonHead">
                                  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalLong" id="dbUpdateBtn" value="${festival.festivalId}">상세수정</button><br><hr>
-                                 <button type="button" class="btn btn-primary"  id="contentKeywordInsertBtn" value="${festival.festivalId}">키워드추가</button>
+                                 <button type="button" class="btn btn-primary contentKeywordInsertBtn" value="${festival.festivalId}">키워드추가</button>
                              </td>
                              </tr>
                             `
@@ -634,6 +630,7 @@ $(document).ready(
 
 
         }
+
 
 
         //#endregion
