@@ -120,6 +120,7 @@ public class AdminFestivalController {
 	
 	/**
 	 * 축제 관리자 화면으로 전환
+	 *
 	 * @return 축제 관리자 화면
 	 */
 	@GetMapping
@@ -132,6 +133,7 @@ public class AdminFestivalController {
 	
 	/**
 	 * 요구되는 페이지의 축제 api 정보를 반환
+	 *
 	 * @param page 실시간 축제 정보의 요구 페이지 번호
 	 * @return 페스티벌 dto 리스트
 	 */
@@ -158,9 +160,6 @@ public class AdminFestivalController {
 			throw new RuntimeException(e);
 		}
 		
-		
-		System.out.println("list : " + list);
-		
 		return list;
 		
 		
@@ -168,14 +167,13 @@ public class AdminFestivalController {
 	
 	/**
 	 * api 리스트에서 체크된 부분을 DB에 저장
+	 *
 	 * @param checks 체크된 숫자 번호로 서비스단에 저장된 리스트의 순서 번호와 일치
 	 * @return 삽입성공 알림 스트링 반환
 	 */
 	@PostMapping("/insertAPIFestivalList")
 	@ResponseBody
 	public String insertAPIFestivalList(@RequestBody ArrayList<Integer> checks) {
-		
-		System.out.println("checks : " + checks);
 		
 		ArrayList<Integer> list = new ArrayList();
 		
@@ -196,14 +194,13 @@ public class AdminFestivalController {
 	
 	/**
 	 * DB에서 해당하는 부분의 행들을 반환
+	 *
 	 * @param page 페이지 번호로 1페이지에 5개씩 반환
 	 * @return 해당하는 페스티벌 DTO 리스트
 	 */
 	@PostMapping("/findDBFestivalList")
 	@ResponseBody
 	public ArrayList<FestivalDTO> findDBFestivalList(@RequestParam("page") int page) {
-		
-		System.out.println("page : " + page);
 		
 		PageDTO pageDTO = new PageDTO();
 		pageDTO.setStartEnd(page);
@@ -225,8 +222,6 @@ public class AdminFestivalController {
 			throw new RuntimeException(e);
 		}
 		
-		System.out.println("list : " + list);
-		
 		return list;
 		
 		
@@ -234,6 +229,7 @@ public class AdminFestivalController {
 	
 	/**
 	 * 전체 축제 DB 갯수 반환
+	 *
 	 * @return 갯수를 반환
 	 */
 	@PostMapping("/findDBFestivalCount")
@@ -247,9 +243,6 @@ public class AdminFestivalController {
 			throw new RuntimeException(e);
 		}
 		
-		
-		System.out.println("count : " + count);
-		
 		return count;
 		
 		
@@ -257,15 +250,13 @@ public class AdminFestivalController {
 	
 	/**
 	 * 체크된 목록을 DB에서 삭제
+	 *
 	 * @param checks 체크된 DB 번호 리스트
 	 * @return 삭제 성공 스트링 반환
 	 */
 	@PostMapping("/deleteDBFestivalList")
 	@ResponseBody
 	public String deleteDBFestivalList(@RequestBody ArrayList<Integer> checks) {
-		
-		System.out.println("checks : " + checks);
-		
 		
 		try {
 			adminFestivalService.deleteDBFestivalList(checks);
@@ -277,7 +268,6 @@ public class AdminFestivalController {
 	}
 	
 	/**
-	 *
 	 * @param request 페스티벌 DB 번호가 담긴 맵
 	 * @return 해당 페스티벌 DTO 반환
 	 */
@@ -286,8 +276,6 @@ public class AdminFestivalController {
 	public FestivalDTO findDBFestivalByFestivalId(@RequestBody Map<String, Integer> request) {
 		
 		int festivalId = request.get("festivalId");
-		
-		System.out.println("받은 페스티벌 아이디 : " + festivalId);
 		
 		FestivalDTO festivalDTO = null;
 		try {
@@ -310,15 +298,13 @@ public class AdminFestivalController {
 	
 	/**
 	 * 해당 페스티벌의 내용을 수정
+	 *
 	 * @param festivalDTO 해당 번호와 수정된 내용을 담고있는 페스티벌 DTO
 	 * @return 리다이렉트 주소
 	 */
 	@PostMapping("/updateDBFestivalByFestival")
 	public String updateDBFestivalByFestival(FestivalDTO festivalDTO) {
-		
-		System.out.println("form : " + festivalDTO);
-		
-		
+
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		
 		
@@ -327,7 +313,6 @@ public class AdminFestivalController {
 		try {
 			start = dateFormat.parse(festivalDTO.getFormattedStart());
 			festivalDTO.setStartDate(start);
-			
 			
 			end = dateFormat.parse(festivalDTO.getFormattedEnd());
 			festivalDTO.setEndDate(end);
@@ -346,6 +331,7 @@ public class AdminFestivalController {
 	
 	/**
 	 * DB에 있는 지역, 시간을 전부 반환
+	 *
 	 * @return 맵 형태로 지역, 시간 리스트를 반환
 	 */
 	@PostMapping("/findAllRegionAndTime")
@@ -375,8 +361,9 @@ public class AdminFestivalController {
 	
 	/**
 	 * DB 데이터를 다중 조건을 가공 및 적용해 반환함
+	 *
 	 * @param mapList 다중 조건 리스트
-	 * @param page 요구되는 페이지 번호
+	 * @param page    요구되는 페이지 번호
 	 * @return 페스티벌 DTO 리스트
 	 */
 	@PostMapping("/findDBFestivalByMultiple")
@@ -384,10 +371,7 @@ public class AdminFestivalController {
 	public ArrayList<FestivalDTO> findDBFestivalByMultiple(
 			@RequestBody ArrayList<HashMap<String, String>> mapList,
 			@RequestParam("page") int page) {
-		
-		
-		System.out.println("findDBFestivalByMultiple : " + mapList.toString());
-		
+
 		
 		FestivalDTO festivalDTO = new FestivalDTO();
 		PageDTO pageDTO = new PageDTO();
@@ -445,7 +429,6 @@ public class AdminFestivalController {
 					
 					
 					case 9:
-						System.out.println("start-c: " + mapList.get(i).get("value").trim());
 						Date date = null;
 						try {
 							date = simpleDateFormat.parse(mapList.get(i).get("value").trim());
@@ -513,16 +496,14 @@ public class AdminFestivalController {
 	
 	/**
 	 * DB 데이터에 다중 조건을 적용한 총 숫자
+	 *
 	 * @param mapList 다중 조건 리스트
 	 * @return 해당 갯수
 	 */
 	@PostMapping("/findDBFestivalMultipleCount")
 	@ResponseBody
 	public int findDBFestivalMultipleCount(@RequestBody ArrayList<HashMap<String, String>> mapList) {
-		
-		
-		System.out.println("findDBFestivalMultipleCount : " + mapList.toString());
-		
+
 		FestivalDTO festivalDTO = new FestivalDTO();
 		
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -575,28 +556,20 @@ public class AdminFestivalController {
 					
 					
 					case 9:
-						System.out.println("start : " + mapList.get(i).get("value").trim());
-						System.out.println();
 						Date date = null;
 						try {
 							date = simpleDateFormat.parse(mapList.get(i).get("value").trim());
-							System.out.println("c: start pared date : " + date);
 						} catch (ParseException e) {
 							throw new RuntimeException(e);
 						}
-						
-						System.out.println(date);
 						festivalDTO.setStartDate(date);
 						break;
 					
 					
 					case 10:
-						System.out.println();
 						Date date2 = null;
 						try {
-							System.out.println("c : date2");
 							date2 = simpleDateFormat.parse(mapList.get(i).get("value").trim());
-							System.out.println("parsed : " + date2);
 						} catch (ParseException e) {
 							throw new RuntimeException(e);
 						}
@@ -641,8 +614,9 @@ public class AdminFestivalController {
 	
 	/**
 	 * API 데이터에서 다중조건을 적용한 결과
+	 *
 	 * @param mapList 다중 조건
-	 * @param page 요구되는 페이지 숫자
+	 * @param page    요구되는 페이지 숫자
 	 * @return 페스티벌 DTO 리스트
 	 */
 	@PostMapping("/findAPIFestivalByMultiple")
@@ -650,11 +624,7 @@ public class AdminFestivalController {
 	public ArrayList<FestivalDTO> findAPIFestivalByMultiple(
 			@RequestBody ArrayList<HashMap<String, String>> mapList,
 			@RequestParam("page") int page) {
-		
-		
-		System.out.println("findDBFestivalByMultiple : " + mapList.toString());
-		
-		
+
 		FestivalDTO festivalDTO = new FestivalDTO();
 		PageDTO pageDTO = new PageDTO();
 		pageDTO.setPage(page);
@@ -785,9 +755,6 @@ public class AdminFestivalController {
 			
 		}
 		
-		
-		System.out.println("findAPIFestivalByMultiple 정보가 담긴 축제 : " + festivalDTO.toString());
-		
 		String urls = stringBuilder.toString();
 		
 		ArrayList<FestivalDTO> list = null;
@@ -796,17 +763,13 @@ public class AdminFestivalController {
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
-		
-		System.out.println("받아온 리스트 : " + list);
+
 		for (FestivalDTO festivalDTO1 : list) {
 			
 			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 			
 			festivalDTO1.setFormattedStart(dateFormat.format(festivalDTO1.getStartDate()));
 			festivalDTO1.setFormattedEnd(dateFormat.format(festivalDTO1.getEndDate()));
-			
-			
-			System.out.println(festivalDTO1.toString());
 			
 		}
 		
@@ -815,17 +778,14 @@ public class AdminFestivalController {
 	
 	/**
 	 * API 데이터에서 다중조건을 적용한 결과 갯수
+	 *
 	 * @param mapList 다중 조건
 	 * @return 갯수
 	 */
 	@PostMapping("/findAPIFestivalMultipleCount")
 	@ResponseBody
 	public int findAPIFestivalMultipleCount(@RequestBody ArrayList<HashMap<String, String>> mapList) {
-		
-		
-		System.out.println("findDBFestivalByMultiple : " + mapList.toString());
-		
-		
+
 		FestivalDTO festivalDTO = new FestivalDTO();
 		
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -973,6 +933,7 @@ public class AdminFestivalController {
 	
 	/**
 	 * 축제 내용 키워드를 삽입
+	 *
 	 * @param festivalId
 	 * @return 키워드 스트링
 	 */

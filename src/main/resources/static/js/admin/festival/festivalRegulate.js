@@ -64,14 +64,8 @@ $(document).ready(
 
                             <tr>
 
-                                <td>
-
-                                    <input class="check1" type="checkbox" name="index" value="${festival.festivalId}"/><br><hr>
-
-                                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalLong" id="dbUpdateBtn" value="${festival.festivalId}">상세 수정</button><br><hr>
-
-                                    <button type="button" class="btn btn-primary"  id="contentKeywordInsertBtn" value="${festival.festivalId}">내용 키워드 추가</button>
-
+                                <td class="buttonHead">
+                                    <input class="check1" type="checkbox" name="index" value="${festival.festivalId}"/><br>
                                 </td>
                                 <td class="index1" style="width : 20px; height: 20px;">${index1}</td>
                                 <td class="festivalId">${festival.festivalId}</td>
@@ -126,13 +120,23 @@ $(document).ready(
                         if(! festival.imgUrl || festival.imgUrl == "null"){
 
                             htmlContent2= `
-                            <td class="imgUrl"></td></tr>
+                            <td class="imgUrl"></td>
+                            <td class="buttonHead">
+                                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalLong" id="dbUpdateBtn" value="${festival.festivalId}">상세수정</button><br><hr>
+                                <button type="button" class="btn btn-primary"  id="contentKeywordInsertBtn" value="${festival.festivalId}">키워드추가</button>
+                            </td>
+                            </tr>
                             `
 
                         }else{
 
                              htmlContent2 = `
-                             <td class="imgUrl"><img src="${festival.imgUrl}" width="40px"></td></tr>
+                             <td class="imgUrl"><img src="${festival.imgUrl}" width="40px"></td>
+                             <td class="buttonHead">
+                                 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalLong" id="dbUpdateBtn" value="${festival.festivalId}">상세수정</button><br><hr>
+                                 <button type="button" class="btn btn-primary"  id="contentKeywordInsertBtn" value="${festival.festivalId}">키워드추가</button>
+                             </td>
+                             </tr>
                             `
                         }
 
@@ -470,9 +474,9 @@ $(document).ready(
 
                             <tr>
 
-                                <td>
+                                <td class="buttonHead">
 
-                                    <input class="check1" type="checkbox" name="index" value="${festival.festivalId}"/><br><hr>
+                                    <input class="check1" type="checkbox" name="index" value="${festival.festivalId}"/><br>
 
                                     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalLong" id="dbUpdateBtn" value="${festival.festivalId}">상세 수정</button><br><hr>
 
@@ -532,13 +536,25 @@ $(document).ready(
                         if(! festival.imgUrl || festival.imgUrl == "null"){
 
                             htmlContent2= `
-                            <td class="imgUrl"></td></tr>
+                            <td class="imgUrl"></td>
+
+                            <td class="buttonHead">
+                                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalLong" id="dbUpdateBtn" value="${festival.festivalId}">상세수정</button><br><hr>
+                                <button type="button" class="btn btn-primary"  id="contentKeywordInsertBtn" value="${festival.festivalId}">키워드추가</button>
+                            </td>
+                            </tr>
                             `
 
                         }else{
 
                              htmlContent2 = `
-                             <td class="imgUrl"><img src="${festival.imgUrl}" width="40px"></td></tr>
+                             <td class="imgUrl"><img src="${festival.imgUrl}" width="40px"></td>
+
+                             <td class="buttonHead">
+                                 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalLong" id="dbUpdateBtn" value="${festival.festivalId}">상세수정</button><br><hr>
+                                 <button type="button" class="btn btn-primary"  id="contentKeywordInsertBtn" value="${festival.festivalId}">키워드추가</button>
+                             </td>
+                             </tr>
                             `
                         }
 
