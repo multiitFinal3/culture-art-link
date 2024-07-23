@@ -183,7 +183,7 @@ public class KeywordExtractService1 {
 //				System.out.println(partOfSpeechAttribute.getLeftPOS());
 //				System.out.println(partOfSpeechAttribute.getRightPOS());
 				
-				if ((partOfSpeechAttribute.getPOSType() == POS.Type.MORPHEME) && ((partOfSpeechAttribute.getLeftPOS() == POS.Tag.NNG) || (partOfSpeechAttribute.getLeftPOS() == POS.Tag.NNP)) && (!stopWords.contains(partOfSpeechAttribute.getLeftPOS().toString()))) {
+				if ((partOfSpeechAttribute.getPOSType() == POS.Type.MORPHEME) && ((partOfSpeechAttribute.getLeftPOS() == POS.Tag.NNG) || (partOfSpeechAttribute.getLeftPOS() == POS.Tag.NNP)) && (!stopWords.contains(termAttr.toString()))) {
 					
 					list.add(termAttr.toString());
 					
