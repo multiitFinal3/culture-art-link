@@ -154,8 +154,8 @@ $(document).ready(function () {
       console.log("data : ", item?.startDate, "  ", item?.endDate);
       console.log("data2 : ", startDate, "  ", endDate);
 
-      item.startDate = item.startDate || startDate;
-      item.endDate = item.endDate || endDate;
+      item.startDate = (item.startDate || startDate).substring(0, 10);
+      item.endDate = (item.endDate || endDate).substring(0, 10);
       item.start_date = item.startDate;
       item.end_date = item.endDate;
 

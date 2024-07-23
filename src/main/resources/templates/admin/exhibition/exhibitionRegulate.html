@@ -18,8 +18,8 @@
     <div layout:fragment="content2">
       <div id="festivalRegulate">
         <h2>
-          전시 DB 현황 <button id="dbUpdateBtn">수정 반영</button
-          ><button id="dbDeleteBtn">DB 삭제</button>
+          전시 DB 현황 <button id="dbUpdateBtn" class="btn btn-primary">전체 수정</button
+          ><button id="dbDeleteBtn" class="btn btn-primary">DB 삭제</button>
         </h2>
 
         <div id="searchForm">
@@ -29,7 +29,7 @@
 
           <input type="text" id="searchMuseumDB" placeholder="미술관" />
 
-          <button id="searchButtonDB">검색</button>
+          <button id="searchButtonDB" class="btn btn-primary">검색</button>
         </div>
 
         <table class="table table-striped" id="exhibitionDB">
@@ -52,12 +52,12 @@
 
         <br /><br /><br /><br /><br /><br />
 
-        <h2>전시 실시간<button id="apiInsertBtn">DB에 추가</button></h2>
+        <h2>전시 실시간<button id="apiInsertBtn" class="btn btn-primary" >DB에 추가</button></h2>
 
         <div id="searchForm2">
           <input type="text" id="searchTitle" placeholder="전시 이름" />
           <input type="text" id="searchMuseum" placeholder="미술관" />
-          <button id="searchButton">검색</button>
+          <button id="searchButton" class="btn btn-primary">검색</button>
         </div>
 
         <table class="table table-striped" id="exhibitionAPI">

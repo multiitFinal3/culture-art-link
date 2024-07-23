@@ -28,4 +28,6 @@ public interface AdminFestivalService {
 	ArrayList<FestivalDTO> findAPIFestivalByMultiple(FestivalDTO festivalDTO, String urls) throws Exception;
 	
 	int findAPIFestivalByMultipleCount(FestivalDTO festivalDTO, String urls) throws Exception;
+	
+	ArrayList<String> insertContentKeywordByFestivalId(int festivalId) throws Exception;
 }
