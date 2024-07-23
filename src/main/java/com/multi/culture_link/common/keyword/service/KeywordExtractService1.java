@@ -6,6 +6,8 @@ import kr.co.shineware.nlp.komoran.model.KomoranResult;
 import kr.co.shineware.nlp.komoran.model.Token;
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.ko.KoreanAnalyzer;
+import org.apache.lucene.analysis.ko.POS;
+import org.apache.lucene.analysis.ko.tokenattributes.PartOfSpeechAttribute;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 import org.apache.lucene.analysis.tokenattributes.OffsetAttribute;
 import org.apache.lucene.analysis.tokenattributes.PositionIncrementAttribute;
@@ -53,12 +55,12 @@ public class KeywordExtractService1 {
 		
 		KomoranResult analyzeResultList = komoran.analyze(all);
 		
-		System.out.println("analyzeResultList.getPlainText() : " + analyzeResultList.getPlainText());
+//		System.out.println("analyzeResultList.getPlainText() : " + analyzeResultList.getPlainText());
 		
 		List<Token> tokenList = analyzeResultList.getTokenList();
 		for (Token token : tokenList) {
-			System.out.println("token");
-			System.out.format("(%2d, %2d) %s/%s\n", token.getBeginIndex(), token.getEndIndex(), token.getMorph(), token.getPos());
+//			System.out.println("token");
+//			System.out.format("(%2d, %2d) %s/%s\n", token.getBeginIndex(), token.getEndIndex(), token.getMorph(), token.getPos());
 		}
 		
 		ArrayList<String> list = (ArrayList<String>) analyzeResultList.getNouns();
@@ -80,7 +82,7 @@ public class KeywordExtractService1 {
 			}
 		}
 		
-		System.out.println("stopWords : " + stopWords.toString());
+//		System.out.println("stopWords : " + stopWords.toString());
 		
 		ArrayList<String> list2 = new ArrayList<>();
 		
@@ -94,7 +96,7 @@ public class KeywordExtractService1 {
 			
 		}
 		
-		System.out.println("Komoran before : " + list);
+//		System.out.println("Komoran before : " + list);
 		System.out.println("Komoran after : " + list2);
 		
 		
@@ -125,9 +127,28 @@ public class KeywordExtractService1 {
 				OffsetAttribute offAttr = stream.getAttribute(OffsetAttribute.class);
 				PositionIncrementAttribute posAttr = stream.getAttribute(PositionIncrementAttribute.class);
 				TypeAttribute typeAttr = stream.getAttribute(TypeAttribute.class);
+				PartOfSpeechAttribute partOfSpeechAttribute = stream.getAttribute(PartOfSpeechAttribute.class);
+				
+				
 //				System.out.println("코리안 분석기");
 //				System.out.println(new String(termAttr.buffer(), 0, termAttr.length()));
-				list.add(new String(termAttr.buffer(), 0, termAttr.length()));
+//
+//				System.out.println("type: " + typeAttr.type());
+//				type: word라서 소용 없음
+//				if (typeAttr.type().equals("NNP") || typeAttr.type().equals("NNG")){
+//
+//					list.add(new String(termAttr.buffer(), 0, termAttr.length()));
+//				}
+				
+//				System.out.println(partOfSpeechAttribute.getPOSType());
+//				System.out.println(partOfSpeechAttribute.getLeftPOS());
+//				System.out.println(partOfSpeechAttribute.getRightPOS());
+				
+				if ((partOfSpeechAttribute.getPOSType() == POS.Type.MORPHEME) && ((partOfSpeechAttribute.getLeftPOS() == POS.Tag.NNG) || (partOfSpeechAttribute.getLeftPOS() == POS.Tag.NNP))) {
+					
+					list.add(termAttr.toString());
+					
+				}
 				
 				
 			}
@@ -137,14 +158,36 @@ public class KeywordExtractService1 {
 			throw new RuntimeException(e);
 		}
 		
-		System.out.println("ApacheLucene : " + list);
-		return list;
 		
-		//		Komoran after : [아림, 예술제, 군민, 체육대회, 날, 기념식, 시작, 평생, 학습, 축제, 농산물, 자전거, 향우, 다문화, 가족, 행사, 거리, 퍼레이드, 시골, 밥상, 플라이, 보드, 판타지, 라이트, 쇼, 키즈랜드, 페스티벌, 푸드, 트럭, 야시장, 파쿠, 르, 챔피언십, 눈, 입맛, 마당]
+		ArrayList<String> list2 = new ArrayList<>();
 		
-		//		ApacheLucene : [아리, 예술, 제, 군민, 체육, 대회, 등, 군민, 날, 기념, 식, 시작, 군민, 체육, 대회, 아리, 예술, 제, 평생, 학습, 축제, 농산, 물, 대, 축제, 자전, 거, tour, 향우, 체육, 대회, 문화, 가족, 축제, 등, 모두, 즐기, 수, 있, 행사, 하, 거리, 퍼레이드, 시골, 밥, 상, 플라이, 보드, 판타지, 라이트, 이, 키즈, 랜드, 페스티벌, 푸드, 트럭, 거창, 야, 시장, 파쿠, 르, 챔피언, 십, 등, 눈, 사로잡, 입, 맛, 돋구, 다양, 길, 거리, 하, 거창, 마당, 대, 축제]
+		for (String s : list) {
+			
+			if (!list2.contains(s)) {
+				list2.add(s);
+			}
+			
+		}
 		
+		System.out.println("ApacheLucene : " + list2);
 		
+		return list2;
+		
+//		Komoran after : [춘천, 예술, 문화, 축제, 한여름, 밤, 여름밤, 아리아]
+//		ApacheLucene : [춘천, 예술, 문화, 축제, 여름, 밤, 아리아]
+//
+//		Komoran after : [폐막식, 단편, 영화, 시상, 상영, 관객, 대화, 부대, 행사, 춘천, 영화제]
+//		ApacheLucene : [개, 폐막, 식, 단편, 영화, 시상, 상영, 관객, 대화, 부대, 행사, 춘천, 제]
+//
+//		Komoran after : [국내외, 연극, 공연, 거창국제연극제]
+//		ApacheLucene : [국내, 외, 연극, 공연, 거창, 국제, 연극제]
+//
+//		Komoran after : [아림, 예술제, 군민, 체육대회, 날, 기념식, 시작, 평생, 학습, 축제, 농산물, 자전거, 향우, 다문화, 가족, 행사, 거리, 퍼레이드, 시골, 밥상, 플라이, 보드, 판타지, 라이트, 쇼, 키즈랜드, 페스티벌, 푸드, 트럭, 야시장, 파쿠, 르, 챔피언십, 눈, 입맛, 마당]
+//		ApacheLucene : [예술, 제, 군민, 체육, 대회, 날, 기념, 식, 시작, 평생, 학습, 축제, 농산, 물, 대, 자전, 거, 향우, 문화, 가족, 모두, 행사, 거리, 퍼레이드, 시골, 밥, 상, 플라이, 보드, 판타지, 라이트, 키즈, 랜드, 페스티벌, 푸드, 트럭, 야, 시장, 파쿠, 르, 챔피언, 눈, 입, 맛, 길, 마당]
+//
+//		Komoran after : [산수유, 꽃, 프로그램, 새봄, 정취, 대한민국, 대표, 봄꽃, 축제, 개화, 봄, 소식, 꽃말, 영원불변, 사랑, 주제, 체험, 음악회, 개최, 구례, 산수유꽃축제]
+//		ApacheLucene : [산, 수유, 꽃, 프로그램, 봄, 정취, 대한, 민국, 대표, 축제, 개화, 소식, 말, 영원, 불변, 사랑, 주제, 체험, 음악, 회, 개최, 구례]
+
 	}
 	
 	
