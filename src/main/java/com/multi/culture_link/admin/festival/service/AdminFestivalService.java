@@ -4,6 +4,7 @@ import com.multi.culture_link.festival.model.dto.FestivalDTO;
 import com.multi.culture_link.festival.model.dto.PageDTO;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public interface AdminFestivalService {
 	ArrayList<FestivalDTO> findAPIFestivalList(int page) throws Exception;
@@ -29,5 +30,5 @@ public interface AdminFestivalService {
 	
 	int findAPIFestivalByMultipleCount(FestivalDTO festivalDTO, String urls) throws Exception;
 	
-	ArrayList<String> insertContentKeywordByFestivalId(int festivalId) throws Exception;
+	HashMap<String, Integer> insertContentKeywordByFestivalId(int festivalId) throws Exception;
 }

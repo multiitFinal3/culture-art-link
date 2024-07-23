@@ -19,6 +19,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 
 
 /**
@@ -881,7 +882,7 @@ public class AdminFestivalServiceImpl implements AdminFestivalService {
 	 * @throws Exception
 	 */
 	@Override
-	public ArrayList<String> insertContentKeywordByFestivalId(int festivalId) throws Exception {
+	public HashMap<String, Integer> insertContentKeywordByFestivalId(int festivalId) throws Exception {
 		
 		FestivalDTO festivalDTO = adminFestivalMapper.findDBFestivalByFestivalId(festivalId);
 		String content = festivalDTO.getFestivalContent();
@@ -889,12 +890,14 @@ public class AdminFestivalServiceImpl implements AdminFestivalService {
 		
 		String all = content + " " + title;
 		
-		ArrayList<String> list2 = keywordExtractService.getKeywordByKomoran(all);
+		// 코모란으로 결정
+		HashMap<String, Integer> map = keywordExtractService.getKeywordByKomoran(all);
 		ArrayList<String> list = keywordExtractService.getKeywordByApacheLucene(all);
 		
 		
-		return list2;
+		return map;
 	}
 	
 	
 }
+
