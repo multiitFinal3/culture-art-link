@@ -281,13 +281,20 @@ public class AdminCulturalPropertiesService {
 	
 
 	
-	public List<CulturalPropertiesDTO> selectDB() {
-		
-		
-		ArrayList<CulturalPropertiesDTO> list = (ArrayList<CulturalPropertiesDTO>) adminCulturalPropertiesDAO.selectDB();
-		
+	public List<CulturalPropertiesDTO> selectDB(int startIndex, int endIndex) {
+
+
+		ArrayList<CulturalPropertiesDTO> list = (ArrayList<CulturalPropertiesDTO>) adminCulturalPropertiesDAO.selectDB(startIndex, endIndex);
+
+//		// 페이징을 위한 서브리스트 계산
+//		int startIndex = (page - 1) * itemsPerPage;
+//		int endIndex = Math.min(startIndex + itemsPerPage, list.size());
+//
+//		// sublist 메서드를 사용하여 페이지네이션 적용
+//		List<CulturalPropertiesDTO> properties = new ArrayList<>(list.subList(startIndex, endIndex));
+
 		for(CulturalPropertiesDTO culturalPropertiesDTO : list){
-			
+
 //			culturalPropertiesDTO.setImgDesc(Collections.singletonList(culturalPropertiesDTO.getImgDesc().get(0)));
 			culturalPropertiesDTO.setContent(culturalPropertiesDTO.getContent().substring(0,30) + "....");
 //			culturalPropertiesDTO.setImgUrl(Collections.singletonList(culturalPropertiesDTO.getImgUrl().get(0)));
@@ -299,9 +306,12 @@ public class AdminCulturalPropertiesService {
 			// 이미지 설명(ImgDesc)의 처음부터 세 번째까지의 요소만 리스트로 설정
 			List<String> imgDescSublist = culturalPropertiesDTO.getImgDesc().subList(0, Math.min(3, culturalPropertiesDTO.getImgDesc().size()));
 			culturalPropertiesDTO.setImgDesc(imgDescSublist);
+
+
 		}
-		
-		return list;
+
+		return properties;
+//		return list;
 	}
 	
 	public void addDBData(ArrayList<Integer> numList) {
@@ -320,10 +330,21 @@ public class AdminCulturalPropertiesService {
 
 	public int selectCount() {
 
-		int count = adminCulturalPropertiesDAO.selectCount();
+//		int count = adminCulturalPropertiesDAO.selectCount();
 
-		return count;
+		return adminCulturalPropertiesDAO.selectCount();
 	}
 
+//	public ArrayList<CulturalPropertiesDTO> getDbPage(int page, int itemsPerPage) {
+//		ArrayList<CulturalPropertiesDTO> list = (ArrayList<CulturalPropertiesDTO>) selectDB();
+//		int startIndex = (page - 1) * itemsPerPage;
+//		int endIndex = Math.min(startIndex + itemsPerPage, list.size());
+//		return new ArrayList<>(list.subList(startIndex, endIndex));
+//	}
 
+
+//	public ArrayList<CulturalPropertiesDTO> getDbPage(int page, int itemsPerPage) {
+//		int startIdx = (page - 1) * itemsPerPage;
+//		return adminCulturalPropertiesDAO.getDbPage(startIdx, itemsPerPage);
+//	}
 }

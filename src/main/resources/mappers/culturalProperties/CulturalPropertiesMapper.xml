@@ -21,13 +21,25 @@
         VALUES (#{id}, #{categoryCode}, #{managementNumber}, #{cityCode},  #{culturalPropertiesName}, #{categoryName}, #{region}, #{district}, #{dynasty}, #{address}, #{registrationDate}, #{classifyA}, #{classifyB}, #{classifyC}, #{classifyD}, #{content}, #{mainImgUrl}, #{imgUrl}, #{imgDesc}, #{videoUrl}, #{narrationUrl}, #{longitude}, #{latitude})
     </insert>
 
+<!--    <select id="selectDB" resultType="culturalPropertiesDTO">-->
+<!--        SELECT * FROM cultural_properties-->
+<!--    </select>-->
+
     <select id="selectDB" resultType="culturalPropertiesDTO">
         SELECT * FROM cultural_properties
+<!--        ORDER BY id-->
+        LIMIT #{endIndex} OFFSET #{startIndex} ;
     </select>
 
+
     <select id="selectCount" resultType="Integer">
-        select count(*) count from cultural_properties
+        select count(*) from cultural_properties
     </select>
+
+<!--    <select id="selectCulturalProperties" resultType="culturalPropertiesDTO">-->
+<!--        SELECT * FROM cultural_properties-->
+<!--        LIMIT #{itemsPerPage} OFFSET #{offset}-->
+<!--    </select>-->
 
 
 </mapper>

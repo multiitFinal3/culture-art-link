@@ -132,6 +132,40 @@
 
         <div class="pagination" id="paginationSection1">
 
+            <!-- 이전 페이지 버튼 -->
+            <button th:if="${currentPage > 1}" class="page-item">
+                <a class="page-link" th:href="@{|/admin/select?page=${currentPage - 1}&itemsPerPage=${itemsPerPage}|}" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </button>
+
+            <!-- 페이지 번호 -->
+            <span th:each="pageNum : ${#numbers.sequence(1, totalPages)}"
+                  th:classappend="${pageNum == currentPage} ? 'active page-number' : 'page-number'">
+        <button class="page-item">
+            <a class="page-link" th:href="@{|/admin/select?page=${pageNum}&itemsPerPage=${itemsPerPage}|}" th:text="${pageNum}"></a>
+        </button>
+    </span>
+
+            <!-- 다음 페이지 버튼 -->
+            <button th:if="${currentPage < totalPages}" class="page-item">
+                <a class="page-link" th:href="@{|/admin/select?page=${currentPage + 1}&itemsPerPage=${itemsPerPage}|}" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </button>
+
+<!--            <ul>-->
+<!--                <li th:if="${currentPage > 1}">-->
+<!--                    <a th:href="@{/admin/cultural-properties-regulate(page=${currentPage - 1})}">&laquo; 이전</a>-->
+<!--                </li>-->
+<!--                <li th:each="pageNum : ${#numbers.sequence(1, totalPages)}"-->
+<!--                    th:class="${pageNum == currentPage} ? 'active'">-->
+<!--                    <a th:href="@{/admin/cultural-properties-regulate(page=${pageNum})}" th:text="${pageNum}"></a>-->
+<!--                </li>-->
+<!--                <li th:if="${currentPage < totalPages}">-->
+<!--                    <a th:href="@{/admin/cultural-properties-regulate(page=${currentPage + 1})}">다음 &raquo;</a>-->
+<!--                </li>-->
+<!--            </ul>-->
         </div>
         <br><br><br>
 
@@ -242,10 +276,17 @@
 <!--            // AJAX를 사용해 서버에서 count 값을 받아오기-->
 <!--            $.ajax({-->
 <!--                type: "POST",-->
-<!--                url: "/admin/cultural-properties-regulate/count",-->
-<!--                success: function(response) {-->
-<!--                    totalPages1 = response; // 서버에서 받아온 count 값을 totalPages1 변수에 할당-->
-<!--                    renderPagination1(); // 페이지네이션 초기화-->
+<!--                url: "/admin/cultural-properties-regulate/select/count",-->
+<!--                success: function(count) {-->
+<!--&lt;!&ndash;                    totalPages1 = response; // 서버에서 받아온 count 값을 totalPages1 변수에 할당&ndash;&gt;-->
+<!--&lt;!&ndash;                    renderPagination1(); // 페이지네이션 초기화&ndash;&gt;-->
+<!--                    int page = 0;-->
+<!--                    if(count % 10 == 0) {-->
+<!--                        page = count / 10;-->
+<!--                    }else{-->
+<!--                        page = count / 10 + 1;-->
+<!--                    }-->
+<!--                    renderPagination1(page);-->
 <!--                },-->
 <!--                error: function() {-->
 <!--                    alert("데이터를 불러오는 중 오류가 발생했습니다.");-->
