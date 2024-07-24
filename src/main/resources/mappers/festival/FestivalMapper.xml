@@ -41,5 +41,13 @@
 
     </update>
 
+    <select id="findLoveList" parameterType="int" resultType="int">
+
+        SELECT festival_id FROM user_festival_love_hate_festival_mapping
+        WHERE user_id = #{userId}
+        AND sort_code = "L";
+
+    </select>
+
 
 </mapper>

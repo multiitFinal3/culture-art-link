@@ -103,7 +103,7 @@ $(document).ready(
 
                         $('#list1').append(finalHtml);
 
-
+                        findLoveList();
 
                     })
 
@@ -332,6 +332,7 @@ $(document).ready(
 
                         $('#list1').append(finalHtml);
 
+                        findLoveList();
 
 
                     })
@@ -361,14 +362,6 @@ $(document).ready(
                     // 상세검색 전으로 돌아가기 버튼
                     $('#pageNum1').append(`<button class="pageBtn4">전체</button>`);
 
-                    $(document).on('click','.pageBtn4', function(){
-
-                        findDBFestivalList(1);
-                        findDBFestivalCount();
-
-                    })
-
-
 
                     console.log("카운트는...")
                     console.log(count)
@@ -387,15 +380,12 @@ $(document).ready(
 
                     }
 
-
-
                     $(document).on('click','.pageBtn3', function(){
 
                         const page = $(this).text();
                         findDBFestivalByMultiple(data1, page);
 
                     })
-
 
                 }
 
@@ -405,7 +395,25 @@ $(document).ready(
         }
 
 
+        /**
+        * 상세 조건 검색에서 전체검색으로 돌아가기 버튼
+        *
+        */
+        $(document).on('click','.pageBtn4', function(){
 
+            $('#list1').html("");
+            findDBFestivalList(1);
+            findDBFestivalCount();
+
+        })
+
+
+
+
+        /**
+        * 찜하기 버튼
+        *
+        */
         $(document).on('click','.heart', function(){
 
             var button = $(this);
@@ -461,6 +469,41 @@ $(document).ready(
 
         })
 
+
+        /**
+        * 찜 리스트 찾아서 색 바꾸기
+        *
+        */
+        function findLoveList(){
+
+            var cardList = document.querySelectorAll(".card");
+
+            $.ajax({
+
+                url: '/festival/findLoveList',
+                method: 'POST',
+                contentType: 'application/json',
+                success: function(list){
+
+                    console.log(list);
+                    $.each(cardList, function(index, card){
+
+                        console.log("card.getAttribute('id')")
+                        console.log(card.getAttribute('id'));
+
+                        var cardString = card.getAttribute('id');
+                        var cardInt = parseInt(cardString, 10);
+
+                        if(list.includes(cardInt)){
+
+                            $(card).addClass("hasLove");
+
+                        }
+                    })
+                }
+            })
+
+        }
 
 
         //#endregion

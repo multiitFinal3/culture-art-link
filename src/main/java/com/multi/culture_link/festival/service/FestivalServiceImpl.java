@@ -84,4 +84,11 @@ public class FestivalServiceImpl implements FestivalService {
 		festivalMapper.updateUserKeywordMap(userMap);
 		
 	}
+	
+	@Override
+	public ArrayList<Integer> findLoveList(int userId) throws Exception {
+		ArrayList<Integer> list = festivalMapper.findLoveList(userId);
+		
+		return list;
+	}
 }

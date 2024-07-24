@@ -146,4 +146,23 @@ public class FestivalController {
 	}
 	
 	
+	@PostMapping("/findLoveList")
+	@ResponseBody
+	public ArrayList<Integer> findLoveList(@AuthenticationPrincipal VWUserRoleDTO user){
+		
+		int userId = user.getUserId();
+		
+		ArrayList<Integer> list = null;
+		try {
+			list = festivalService.findLoveList(userId);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+		
+		System.out.println("love list : " + list);
+		
+		return list;
+		
+	}
+	
 }

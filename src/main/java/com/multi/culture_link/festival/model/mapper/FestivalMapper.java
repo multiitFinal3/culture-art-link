@@ -19,4 +19,6 @@ public interface FestivalMapper {
 	void insertUserKeywordMap(UserFestivalLoveHateMapDTO userMap) throws Exception;
 	
 	void updateUserKeywordMap(UserFestivalLoveHateMapDTO userMap) throws Exception;
+	
+	ArrayList<Integer> findLoveList(int userId) throws Exception;
 }
