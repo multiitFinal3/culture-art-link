@@ -63,97 +63,93 @@
             font-size: 20px;
             margin-left: 10px;
           }
+          .exhibition-content {
+            display: flex;
+            flex-grow: 1;
+            cursor: pointer;
+          }
+
+          .exhibition-content:hover {
+            background-color: #f0f0f0;
+          }
         </style>
         <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-        <!-- 기존 head 내용 유지 -->
         <script>
-          // 전시회 데이터를 저장할 배열
-          /*  let exhibitions = [
-            {
-              image: "path_to_rembrandt_image.jpg",
-              title: "렘브란트, 17세기의 사진가",
-              location: "국립중앙박물관",
-              date: "2023-07-05~2023-09-29",
-            },
-            {
-              image: "path_to_yusungnam_image.jpg",
-              title: "제23회 이인성미술상 수상자전 《윤성남》",
-              location: "국립현대미술관",
-              date: "2023-07-05~2024-10-21",
-            },
-            // 추가 전시회 데이터...
-          ];  */
-
           let exhibitions = [];
           let viewStatus = "all"; // pre, current, future, unknown 어떤 버튼 눌렀는지
 
-          function changeViewStatus() {
-            viewStatus = $("#view-status").val();
-          }
 
-          async function getExhibitions() {
-            const response = await axios.get(
-              "/admin/exhibition-regulate/db-exhibition"
-            );
+          // async function getExhibitions() {
+          //   const response = await axios.get(
+          //     "/admin/exhibition-regulate/db-exhibition"
+          //   );
+          //
+          //   console.log("response : ", response);
+          //   exhibitions = response.data.map((item) => {
+          //     return {
+          //       id: item.id,
+          //       image: item.image,
+          //       title: item.title,
+          //       artist: item.artist,
+          //       museum: item.museum,
+          //       startDate: item.startDate?.substring(0, 10),
+          //       endDate: item.endDate?.substring(0, 10),
+          //     };
+          //   });
+          //
+          //   exhibitions = exhibitions.filter((item) => {
+          //     if (viewStatus === "all") {
+          //       return true;
+          //     }
+          //
+          //     if (viewStatus === "pre") {
+          //       today = new Date();
+          //
+          //       if (
+          //         item.startDate <= today.getTime() &&
+          //         item.endDate >= today.getTime()
+          //       ) {
+          //         return true;
+          //       }
+          //     }
+          //     return false;
+          //   });
+          //
+          //   renderExhibitions();
+          // }
 
-            console.log("response : ", response);
-            exhibitions = response.data.map((item) => {
-              return {
-                image: item.image,
-                title: item.title,
-                artist: item.artist,
-                museum: item.museum,
-                startDate: item.startDate?.substring(0, 10),
-                endDate: item.endDate?.substring(0, 10),
-              };
-            });
-
-            exhibitions = exhibitions.filter((item) => {
-              if (viewStatus === "all") {
-                return true;
-              }
-
-              if (viewStatus === "pre") {
-                today = new Date();
-
-                if (
-                  item.startDate <= today.getTime() &&
-                  item.endDate >= today.getTime()
-                ) {
-                  return true;
-                }
-              }
-              return false;
-            });
-
-            renderExhibitions();
-          }
-
-          // 전시회 목록을 렌더링하는 함수
-          function renderExhibitions() {
-            const $exhibitionList = $(".exhibition-list");F
-            $exhibitionList.empty(); // 기존 목록 초기화
-
-            $.each(exhibitions, function (index, exhibition) {
-              const $li = $("<li>").addClass("exhibition-item");
-              $li.html(`
-                        <img src="${exhibition.image}" alt="${exhibition.title}" class="exhibition-image">
-                        <div class="exhibition-info">
-                            <h3>${exhibition.title}</h3>
-                            <p>${exhibition.artist}</p>
-                            <p>${exhibition.museum}</p>
-                            <p>시작일: ${exhibition.startDate}</p>
-                            <p>종료일: ${exhibition.endDate}</p>
-                        </div>
-                        <div class="exhibition-actions">
-                            <button class="action-button">♡</button>
-                            <button class="action-button">□</button>
-                        </div>
-                    `);
-              $exhibitionList.append($li);
-            });
-          }
+          // // 전시회 목록을 렌더링하는 함수
+          // function renderExhibitions() {
+          //   const $exhibitionList = $(".exhibition-list");F
+          //   $exhibitionList.empty(); // 기존 목록 초기화
+          //
+          //   $.each(exhibitions, function (index, exhibition) {
+          //     const $li = $("<li>").addClass("exhibition-item");
+          //     $li.html(`
+          //               <img src="${exhibition.image}" alt="${exhibition.title}" class="exhibition-image">
+          //               <div class="exhibition-info">
+          //                   <h3>${exhibition.title}</h3>
+          //                   <p>${exhibition.artist}</p>
+          //                   <p>${exhibition.museum}</p>
+          //                   <p>시작일: ${exhibition.startDate}</p>
+          //                   <p>종료일: ${exhibition.endDate}</p>
+          //               </div>
+          //               <div class="exhibition-actions">
+          //                   <button class="action-button">♡</button>
+          //                   <button class="action-button">□</button>
+          //               </div>
+          //           `);
+          //     $exhibitionList.append($li);
+          //   });
+          //
+          //   // 클릭시 상세 페이지로 들어감
+          //   $(".exhibition-content").click(function() {
+          //     const exhibitionId = $(this).data("id");
+          //     window.location.href = `/exhibition-detail/${exhibitionId}`;
+          //   });
+          // }
+          //
 
           //페이지에 들어갔을 때 실행 되는 init 함수
           // $(document).ready(init);
@@ -186,6 +182,7 @@
             );
 
             exhibitions = response.data.map((item) => ({
+              id: item.id,
               image: item.image,
               title: item.title,
               artist: item.artist,
@@ -219,6 +216,7 @@
             renderExhibitions(filteredExhibitions);
           }
 
+          // 전시회 목록을 렌더링하는 함수
           function renderExhibitions(exhibitionsToRender) {
             const $exhibitionList = $(".exhibition-list");
             $exhibitionList.empty();
@@ -226,30 +224,28 @@
             $.each(exhibitionsToRender, function (index, exhibition) {
               const $li = $("<li>").addClass("exhibition-item");
               $li.html(`
-                    <img src="${
-                      exhibition.image
-                    }" alt="${exhibition.title}" class="exhibition-image">
-                    <div class="exhibition-info">
-                        <h3>${exhibition.title}</h3>
-                        <p>${exhibition.artist}</p>
-                        <p>${exhibition.museum}</p>
-                        <p>시작일: ${
-                          exhibition.startDate
-                            ? exhibition.startDate.toISOString().split("T")[0]
-                            : "미정"
-                        }</p>
-                        <p>종료일: ${
-                          exhibition.endDate
-                            ? exhibition.endDate.toISOString().split("T")[0]
-                            : "미정"
-                        }</p>
-                    </div>
-                    <div class="exhibition-actions">
-                        <button class="action-button">♡</button>
-                        <button class="action-button">□</button>
-                    </div>
-                `);
+                <div class="exhibition-content" data-id="${exhibition.id}">
+                  <img src="${exhibition.image}" alt="${exhibition.title}" class="exhibition-image">
+                  <div class="exhibition-info">
+                    <h3>${exhibition.title}</h3>
+                    <p>${exhibition.artist}</p>
+                    <p>${exhibition.museum}</p>
+                    <p>시작일: ${exhibition.startDate ? exhibition.startDate.toISOString().split("T")[0] : "미정"}</p>
+                    <p>종료일: ${exhibition.endDate ? exhibition.endDate.toISOString().split("T")[0] : "미정"}</p>
+                  </div>
+                </div>
+                <div class="exhibition-actions">
+                  <button class="action-button">♡</button>
+                  <button class="action-button">□</button>
+                </div>
+              `);
               $exhibitionList.append($li);
+            });
+
+            // 클릭하면 상세페이지로 들어감
+            $(".exhibition-content").click(function() {
+              const exhibitionId = $(this).data("id");
+              window.location.href = `/exhibition/detail/${exhibitionId}`;
             });
           }
           //
