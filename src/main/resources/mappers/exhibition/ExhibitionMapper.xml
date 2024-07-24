@@ -17,6 +17,7 @@
         <if test="museum != null and museum != ''">
             AND museum LIKE CONCAT('%', #{museum}, '%')
         </if>
+        ORDER BY created_at DESC
     </select>
 
 </mapper>

@@ -1,0 +1,69 @@
+body {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.exhibition-info {
+    color: #666;
+}
+
+.exhibition-image img {
+    width: 100%;
+    max-height: 500px;
+    object-fit: cover;
+}
+
+.map-section, .video-section {
+    margin: 20px 0;
+}
+
+#map {
+    height: 300px;
+    width: 100%;
+}
+
+.reviews-section {
+    margin-top: 40px;
+}
+
+.review {
+    display: flex;
+    margin-bottom: 20px;
+}
+
+.reviewer-image {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    margin-right: 20px;
+}
+
+.review-content {
+    flex: 1;
+}
+
+.review-rating {
+    color: gold;
+}
+
+.related-exhibitions {
+    margin-top: 40px;
+}
+
+.related-exhibition-list {
+    display: flex;
+    overflow-x: auto;
+}
