@@ -26,14 +26,10 @@
 
     #list2{
 
+        overflow-x: scroll;
+        margin: 3%;
+        text-align: center;
         display: flex;
-        flex-flow: row;
-        flex-wrap: wrap;
-        align-items: center;
-        justify-content: center;
-        margin-top: 8%;
-        margin-left: 5%;
-        margin-right: 5%;
 
 
     }
@@ -60,9 +56,17 @@
         flex-wrap: wrap;
         align-items: center;
         justify-content: center;
-        margin-top: 8%;
+        margin-top: 3%;
         margin-left: 5%;
         margin-right: 5%;
 
+
+    }
+
+    .card{
+
+        margin: 1%;
+        min-width: 300px;
+        max-width: 300px;
 
     }
