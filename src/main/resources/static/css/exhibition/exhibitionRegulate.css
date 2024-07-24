@@ -1,11 +1,11 @@
-#festivalRegulate {
+#exhibitionRegulate {
   display: flex;
   flex-flow: column;
   align-items: center;
   justify-content: center;
-  margin-top: 14%;
-  margin-left: 10%;
-  overflow-x: scroll;
+  margin-top: 8%;
+  margin-left: 6%;
+  margin-right: 5%;
 }
 
 table {
