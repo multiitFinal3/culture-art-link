@@ -88,7 +88,37 @@ $(document).ready(function() {
 //                });
 //            }
 
+            //
+            function getDBListCount(itemsPerPage){
 
+                $('#list1').html(""); // 테이블 내용 초기화
+
+                $.ajax({
+                    url: '/admin/cultural-properties-regulate/findListPage?itemsPerPage=' + itemsPerPage,
+                    method: 'GET',
+                    contentType: 'application/json',
+                    success: function(page) {
+
+                        console.log("page : ")
+                        console.log(page)
+
+                        $('#list33').html("");
+
+                        for(var p=1; p<=page; p++){
+
+                            $('#list33').append(`<button>${p}</button>`);
+
+                        }
+
+
+                    }
+
+
+                })
+
+            }
+
+            getDBListCount(10);
 
             // Ajax를 통해 DB 데이터 불러오기
             function getDBData(page, itemsPerPage) {
@@ -284,30 +314,30 @@ $(document).ready(function() {
 
 
             // DB 데이터와 비교하여 체크 박스 비활성화 함수
-//            function disableCheckboxes() {
-//                // 현재 페이지의 체크박스들을 모두 활성화 상태로 초기화
-//                $('#list2 .check2').prop('disabled', false).removeClass('disabled');
-//
-//                // DB 데이터와 현재 페이지의 데이터를 비교하여 이미 DB에 존재하는 경우 해당 체크 박스 비활성화 처리
-//                for (var i = 0; i < itemsPerPage2; i++) {
-//                    var dataIndex = (currentPage2 - 1) * itemsPerPage2 + i;
-//                    var checkbox = $('#list2').find('.check2').eq(dataIndex);
-//
-//                    // 해당 데이터가 DB에 이미 존재하는지 확인
-//                    var culturalPropertiesName = checkbox.closest('tr').find('.culturalPropertiesName').text().trim();
-//                    var existsInDB = dbData.some(function(item) {
-//                        return item.culturalPropertiesName === culturalPropertiesName;
-//                    });
-//
-//                    // DB에 존재하는 경우 체크 박스 비활성화 처리
-//                    if (existsInDB) {
-//                        checkbox.prop('disabled', true).addClass('disabled');
-//                    }
-//                }
-//            }
-//
-//
-//
+            function disableCheckboxes() {
+                // 현재 페이지의 체크박스들을 모두 활성화 상태로 초기화
+                $('#list2 .check2').prop('disabled', false).removeClass('disabled');
+
+                // DB 데이터와 현재 페이지의 데이터를 비교하여 이미 DB에 존재하는 경우 해당 체크 박스 비활성화 처리
+                for (var i = 0; i < itemsPerPage2; i++) {
+                    var dataIndex = (currentPage2 - 1) * itemsPerPage2 + i;
+                    var checkbox = $('#list2').find('.check2').eq(dataIndex);
+
+                    // 해당 데이터가 DB에 이미 존재하는지 확인
+                    var culturalPropertiesName = checkbox.closest('tr').find('.culturalPropertiesName').text().trim();
+                    var existsInDB = dbData.some(function(item) {
+                        return item.culturalPropertiesName === culturalPropertiesName;
+                    });
+
+                    // DB에 존재하는 경우 체크 박스 비활성화 처리
+                    if (existsInDB) {
+                        checkbox.prop('disabled', true).addClass('disabled');
+                    }
+                }
+            }
+
+
+
             // 초기 페이지 데이터 불러오기
 //            fetchApiData(currentPage2);
             getDBData(1,10); // 초기 DB 데이터 불러오기

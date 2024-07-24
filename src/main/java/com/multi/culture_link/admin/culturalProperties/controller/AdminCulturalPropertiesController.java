@@ -104,6 +104,23 @@ public class AdminCulturalPropertiesController {
 //
 //		return count;
 //	}
+	
+	
+	@GetMapping("/findListPage")
+	@ResponseBody
+	public int findListPage(@RequestParam("itemsPerPage") int itemsPerPage){
+		
+		// 전체 데이터 개수 가져오기
+		int totalCount = adminCulturalPropertiesService.selectCount();
+		
+		// 전체 페이지 수 계산
+		int totalPages = (int) Math.ceil((double) totalCount / itemsPerPage);
+		
+		System.out.println("total pages!! : " + totalPages);
+		
+		return totalPages;
+		
+	}
 
 
 	@PostMapping("/addDBData")

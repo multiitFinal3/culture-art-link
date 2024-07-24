@@ -80,6 +80,8 @@
 <body>
 <div layout:fragment="content2">
 
+    <h1 th:text="${totalPages}"></h1>
+
     <div id="loadingIndicator" style="display: none;">
         <!-- 로딩 스피너 또는 메시지 -->
         Loading...
@@ -167,6 +169,8 @@
 <!--                    <a th:href="@{/admin/cultural-properties-regulate(page=${currentPage + 1})}">다음 &raquo;</a>-->
 <!--                </li>-->
             </ul>
+
+
         </div>
         <br><br><br>
 
