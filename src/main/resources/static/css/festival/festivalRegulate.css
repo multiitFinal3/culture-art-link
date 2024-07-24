@@ -1,7 +1,6 @@
 
     #festivalRegulate{
 
-
         display: flex;
         flex-flow: column;
         align-items: center;
@@ -9,16 +8,12 @@
         margin-top: 8%;
         margin-left: 5%;
         margin-right: 5%;
-        overflow-x: scroll;
     }
 
     table{
 
         margin-bottom: 50px;
     }
-
-
-
 
 
 
@@ -93,7 +88,7 @@
     .pageBtn5,
     .pageBtn6{
 
-        margin: 0.9%;
+        margin: 0.5%;
         width: 30px;
         text-align: center;
 
@@ -103,16 +98,15 @@
     .pageBtn3{
 
         color: black;
-        background-color: #FAEBD7;
 
 
     }
 
 
-    .pageBtn4{
+    .pageBtn4, .pageBtn6{
         margin: 0.9%;
         color: black;
-        background-color: #8FBC8F;
+        width: 60px;
 
     }
 
@@ -121,21 +115,31 @@
     .pageBtn5{
 
         color: black;
-        background-color: #20B2AA;
-
     }
 
 
     .pageBtn6{
 
         color: black;
-        background-color: #8FBC8F;
 
     }
 
     .pageBtn1{
 
-        margin: 5%;
+        margin: 1%;
+
+    }
+
+    .checkHead{
+
+        width: 50px;
+
+    }
+
+    .buttonHead{
+
+        width: 200px;
+
 
     }
 

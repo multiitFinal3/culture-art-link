@@ -6,6 +6,11 @@ spring:
     username: user
     password: user123@
 
+  data:
+    mongodb:
+      uri: mongodb://winner:1234@localhost:27017/shop2
+      database: shop2
+
 mybatis:
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
