@@ -154,8 +154,8 @@ $(document).ready(function () {
       console.log("data : ", item?.startDate, "  ", item?.endDate);
       console.log("data2 : ", startDate, "  ", endDate);
 
-      item.startDate = (item.startDate || startDate).substring(0, 10);
-      item.endDate = (item.endDate || endDate).substring(0, 10);
+      item.startDate = ((item.startDate || startDate) || '').substring(0, 10) || '미정';
+      item.endDate = ((item.endDate || endDate) || '').substring(0, 10) || '미정';
       item.start_date = item.startDate;
       item.end_date = item.endDate;
 
@@ -199,8 +199,8 @@ $(document).ready(function () {
             <td scope="col">${item.endDate}</td>
             <td scope="col">${item.price}</td>
             <td scope="col"><img class="resize-img" src="${
-              item.image
-            }"></img></td>
+            item.image
+        }" style="width: 150px;"></img></td>
             <td scope="col"><button class="edit-button">수정</button></td>
           </tr>
         `;
