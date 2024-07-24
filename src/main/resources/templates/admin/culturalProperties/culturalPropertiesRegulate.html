@@ -135,13 +135,14 @@
 
         <div class="pagination" id="paginationSection1">
 
-            <!-- 이전 페이지 버튼 -->
-            <button th:if="${currentPage > 1}" class="page-item">
-                <a class="page-link" th:href="@{|/admin/select?page=${currentPage - 1}&itemsPerPage=${itemsPerPage}|}" aria-label="Previous">
-                    <span aria-hidden="true">&laquo;</span>
-                </a>
-            </button>
+<!--            &lt;!&ndash; 이전 페이지 버튼 &ndash;&gt;-->
+<!--            <button th:if="${currentPage > 1}" class="page-item">-->
+<!--                <a class="page-link" th:href="@{|/admin/select?page=${currentPage - 1}&itemsPerPage=${itemsPerPage}|}" aria-label="Previous">-->
+<!--                    <span aria-hidden="true">&laquo;</span>-->
+<!--                </a>-->
+<!--            </button>-->
 
+<!--<<<<<<< Updated upstream-->
             <!-- 페이지 번호 -->
             <!--<span th:each="pageNum : ${#numbers.sequence(1, totalPages)}"
                   th:classappend="${pageNum == currentPage} ? 'active page-number' : 'page-number'">
@@ -149,15 +150,57 @@
                     <a class="page-link" th:href="@{|/admin/select?page=${pageNum}&itemsPerPage=${itemsPerPage}|}" th:text="${pageNum}"></a>
                 </button>
             </span>-->
+<!--=======-->
+<!--            &lt;!&ndash; 페이지 번호 &ndash;&gt;-->
+<!--            <span th:each="pageNum : ${#numbers.sequence(1, totalPages)}"-->
+<!--                  th:classappend="${pageNum == currentPage} ? 'active page-number' : 'page-number'">-->
+<!--        <button class="page-item">-->
+<!--            <a class="page-link" th:href="@{|/admin/select?page=${pageNum}&itemsPerPage=${itemsPerPage}|}" th:text="${pageNum}"></a>-->
+<!--        </button>-->
+<!--    </span>-->
+<!--&gt;>>>>>> Stashed changes-->
 
-            <!-- 다음 페이지 버튼 -->
-            <button th:if="${currentPage < totalPages}" class="page-item">
-                <a class="page-link" th:href="@{|/admin/select?page=${currentPage + 1}&itemsPerPage=${itemsPerPage}|}" aria-label="Next">
-                    <span aria-hidden="true">&raquo;</span>
-                </a>
-            </button>
+<!--            &lt;!&ndash; 다음 페이지 버튼 &ndash;&gt;-->
+<!--            <button th:if="${currentPage < totalPages}" class="page-item">-->
+<!--                <a class="page-link" th:href="@{|/admin/select?page=${currentPage + 1}&itemsPerPage=${itemsPerPage}|}" aria-label="Next">-->
+<!--                    <span aria-hidden="true">&raquo;</span>-->
+<!--                </a>-->
+<!--            </button>-->
+<!--// 2 -->
+<!--            <ul>-->
+<!--                <li th:if="${currentPage > 1}">-->
+<!--                    <a th:href="@{/admin/cultural-properties-regulate/select(page=${currentPage - 1}, itemsPerPage=${itemsPerPage})}">&laquo; 이전</a>-->
+<!--                </li>-->
+<!--                <li th:each="pageNum : ${#numbers.sequence(1, totalPages)}"-->
+<!--                    th:class="${pageNum == currentPage} ? 'active'">-->
+<!--                    <a th:href="@{/admin/cultural-properties-regulate/select(page=${pageNum}, itemsPerPage=${itemsPerPage})}" th:text="${pageNum}"></a>-->
+<!--                </li>-->
+<!--                <li th:if="${currentPage < totalPages}">-->
+<!--                    <a th:href="@{/admin/cultural-properties-regulate/select(page=${currentPage + 1}, itemsPerPage=${itemsPerPage})}">다음 &raquo;</a>-->
+<!--                </li>-->
+<!--            </ul>-->
 
-            <ul id="list33">
+            <ul class="pagination justify-content-center">
+                <li class="page-item" id="prevPage1">
+                    <a class="page-link" href="#" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+
+                <!-- 페이지 번호 버튼 -->
+                <li class="page-item" th:each="pageNum : ${#numbers.sequence(1, totalPages)}">
+                    <a class="page-link" href="#" th:text="${pageNum}" th:attr="data-page=${pageNum}"></a>
+                </li>
+
+                <li class="page-item" id="nextPage1">
+                    <a class="page-link" href="#" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            </ul>
+
+<!--<<<<<<< Updated upstream-->
+<!--            <ul id="list33">-->
 <!--                <li th:if="${currentPage > 1}">-->
 <!--                    <a th:href="@{/admin/cultural-properties-regulate(page=${currentPage - 1})}">&laquo; 이전</a>-->
 <!--                </li>-->
@@ -168,9 +211,11 @@
 <!--                <li th:if="${currentPage < totalPages}">-->
 <!--                    <a th:href="@{/admin/cultural-properties-regulate(page=${currentPage + 1})}">다음 &raquo;</a>-->
 <!--                </li>-->
-            </ul>
+<!--            </ul>-->
 
 
+<!--=======-->
+<!--&gt;>>>>>> Stashed changes-->
         </div>
         <br><br><br>
 
@@ -206,12 +251,12 @@
 
     </div>
 
-    <!--<script th:inline="javascript">
+    <script th:inline="javascript">
         $(document).ready(function() {
-            var currentPage1 = 1; // 문화재 DB 현황 초기 페이지 설정
-            var totalPages1 = count; // 문화재 DB 현황 전체 페이지 수 (실제 데이터에 맞게 수정 필요)
-            var itemsPerPage1 = 10;
-            var checkedItems = {}; // 체크한 체크박스의 상태를 저장할 객체
+<!--            var currentPage1 = 1; // 문화재 DB 현황 초기 페이지 설정-->
+<!--            var totalPages1 = count; // 문화재 DB 현황 전체 페이지 수 (실제 데이터에 맞게 수정 필요)-->
+<!--            var itemsPerPage1 = 10;-->
+<!--            var checkedItems = {}; // 체크한 체크박스의 상태를 저장할 객체-->
 
             var currentPage2 = 1; // 초기 페이지 설정
             var totalPages2 = 1716; // 전체 페이지 수 (예시에서는 임의로 설정, 실제 데이터에 맞게 수정 필요)
@@ -219,84 +264,84 @@
             var dbData = []; // DB 데이터를 저장할 배열
             var selectedCheckboxes = []; // 선택된 체크박스 인덱스를 저장할 배열
 
-&lt;!&ndash;            // 페이지 로딩 시 초기화&ndash;&gt;
-&lt;!&ndash;            renderPagination1();&ndash;&gt;
+<!--            // 페이지 로딩 시 초기화-->
+<!--            renderPagination1();-->
 
-&lt;!&ndash;            function renderPagination1() {&ndash;&gt;
-&lt;!&ndash;                $('#paginationSection1').empty(); // 기존 버튼 제거&ndash;&gt;
+<!--            function renderPagination1() {-->
+<!--                $('#paginationSection1').empty(); // 기존 버튼 제거-->
 
-&lt;!&ndash;                // 이전 버튼&ndash;&gt;
-&lt;!&ndash;                var prevHtml = '<li class="page-item ' + (currentPage1 == 1 ? 'disabled' : '') + '">' +&ndash;&gt;
-&lt;!&ndash;                    '<a class="page-link prev-link1" href="#" data-page="' + (currentPage1 - 1) + '">이전</a>' +&ndash;&gt;
-&lt;!&ndash;                    '</li>';&ndash;&gt;
-&lt;!&ndash;                $('#paginationSection1').append(prevHtml);&ndash;&gt;
+<!--                // 이전 버튼-->
+<!--                var prevHtml = '<li class="page-item ' + (currentPage1 == 1 ? 'disabled' : '') + '">' +-->
+<!--                    '<a class="page-link prev-link1" href="#" data-page="' + (currentPage1 - 1) + '">이전</a>' +-->
+<!--                    '</li>';-->
+<!--                $('#paginationSection1').append(prevHtml);-->
 
-&lt;!&ndash;                // 페이지 번호 버튼&ndash;&gt;
-&lt;!&ndash;                var startPage = (Math.ceil(currentPage1 / itemsPerPage1) - 1) * itemsPerPage1 + 1;&ndash;&gt;
-&lt;!&ndash;                var endPage = Math.min(startPage + itemsPerPage1 - 1, totalPages1);&ndash;&gt;
+<!--                // 페이지 번호 버튼-->
+<!--                var startPage = (Math.ceil(currentPage1 / itemsPerPage1) - 1) * itemsPerPage1 + 1;-->
+<!--                var endPage = Math.min(startPage + itemsPerPage1 - 1, totalPages1);-->
 
-&lt;!&ndash;                for (var pageNum = startPage; pageNum <= endPage; pageNum++) {&ndash;&gt;
-&lt;!&ndash;                    var pageHtml = '<li class="page-item ' + (pageNum == currentPage1 ? 'active' : '') + '">' +&ndash;&gt;
-&lt;!&ndash;                        '<a class="page-link page-num1" href="#" data-page="' + pageNum + '">' + pageNum + '</a>' +&ndash;&gt;
-&lt;!&ndash;                        '</li>';&ndash;&gt;
-&lt;!&ndash;                    $('#paginationSection1').append(pageHtml);&ndash;&gt;
-&lt;!&ndash;                }&ndash;&gt;
+<!--                for (var pageNum = startPage; pageNum <= endPage; pageNum++) {-->
+<!--                    var pageHtml = '<li class="page-item ' + (pageNum == currentPage1 ? 'active' : '') + '">' +-->
+<!--                        '<a class="page-link page-num1" href="#" data-page="' + pageNum + '">' + pageNum + '</a>' +-->
+<!--                        '</li>';-->
+<!--                    $('#paginationSection1').append(pageHtml);-->
+<!--                }-->
 
-&lt;!&ndash;                // 다음 버튼&ndash;&gt;
-&lt;!&ndash;                var nextHtml = '<li class="page-item ' + (currentPage1 >= totalPages1 ? 'disabled' : '') + '">' +&ndash;&gt;
-&lt;!&ndash;                    '<a class="page-link next-link1" href="#" data-page="' + (currentPage1 + 1) + '">다음</a>' +&ndash;&gt;
-&lt;!&ndash;                    '</li>';&ndash;&gt;
-&lt;!&ndash;                $('#paginationSection1').append(nextHtml);&ndash;&gt;
+<!--                // 다음 버튼-->
+<!--                var nextHtml = '<li class="page-item ' + (currentPage1 >= totalPages1 ? 'disabled' : '') + '">' +-->
+<!--                    '<a class="page-link next-link1" href="#" data-page="' + (currentPage1 + 1) + '">다음</a>' +-->
+<!--                    '</li>';-->
+<!--                $('#paginationSection1').append(nextHtml);-->
 
-&lt;!&ndash;                // 페이지 번호 클릭 이벤트 핸들러&ndash;&gt;
-&lt;!&ndash;                $('.page-num1').click(function(e) {&ndash;&gt;
-&lt;!&ndash;                    e.preventDefault();&ndash;&gt;
-&lt;!&ndash;                    var page = $(this).data('page');&ndash;&gt;
-&lt;!&ndash;                    currentPage1 = page;&ndash;&gt;
-&lt;!&ndash;                    renderPagination1(); // 페이지네이션 다시 렌더링&ndash;&gt;
-&lt;!&ndash;                    // loadPageData(page); // 필요하다면 페이지 데이터 로드 함수 호출&ndash;&gt;
-&lt;!&ndash;                });&ndash;&gt;
+<!--                // 페이지 번호 클릭 이벤트 핸들러-->
+<!--                $('.page-num1').click(function(e) {-->
+<!--                    e.preventDefault();-->
+<!--                    var page = $(this).data('page');-->
+<!--                    currentPage1 = page;-->
+<!--                    renderPagination1(); // 페이지네이션 다시 렌더링-->
+<!--                    // loadPageData(page); // 필요하다면 페이지 데이터 로드 함수 호출-->
+<!--                });-->
 
-&lt;!&ndash;                // 이전 버튼 클릭 이벤트 핸들러&ndash;&gt;
-&lt;!&ndash;                $('.prev-link1').click(function(e) {&ndash;&gt;
-&lt;!&ndash;                    e.preventDefault();&ndash;&gt;
-&lt;!&ndash;                    if (currentPage1 > 1) {&ndash;&gt;
-&lt;!&ndash;                        currentPage1&#45;&#45;;&ndash;&gt;
-&lt;!&ndash;                        renderPagination1(); // 페이지네이션 다시 렌더링&ndash;&gt;
-&lt;!&ndash;                        // loadPageData(currentPage1); // 필요하다면 페이지 데이터 로드 함수 호출&ndash;&gt;
-&lt;!&ndash;                    }&ndash;&gt;
-&lt;!&ndash;                });&ndash;&gt;
+<!--                // 이전 버튼 클릭 이벤트 핸들러-->
+<!--                $('.prev-link1').click(function(e) {-->
+<!--                    e.preventDefault();-->
+<!--                    if (currentPage1 > 1) {-->
+<!--                        currentPage1--;-->
+<!--                        renderPagination1(); // 페이지네이션 다시 렌더링-->
+<!--                        // loadPageData(currentPage1); // 필요하다면 페이지 데이터 로드 함수 호출-->
+<!--                    }-->
+<!--                });-->
 
-&lt;!&ndash;                // 다음 버튼 클릭 이벤트 핸들러&ndash;&gt;
-&lt;!&ndash;                $('.next-link1').click(function(e) {&ndash;&gt;
-&lt;!&ndash;                    e.preventDefault();&ndash;&gt;
-&lt;!&ndash;                    if (currentPage1 < totalPages1) {&ndash;&gt;
-&lt;!&ndash;                        currentPage1++;&ndash;&gt;
-&lt;!&ndash;                        renderPagination1(); // 페이지네이션 다시 렌더링&ndash;&gt;
-&lt;!&ndash;                        // loadPageData(currentPage1); // 필요하다면 페이지 데이터 로드 함수 호출&ndash;&gt;
-&lt;!&ndash;                    }&ndash;&gt;
-&lt;!&ndash;                });&ndash;&gt;
-&lt;!&ndash;            }&ndash;&gt;
+<!--                // 다음 버튼 클릭 이벤트 핸들러-->
+<!--                $('.next-link1').click(function(e) {-->
+<!--                    e.preventDefault();-->
+<!--                    if (currentPage1 < totalPages1) {-->
+<!--                        currentPage1++;-->
+<!--                        renderPagination1(); // 페이지네이션 다시 렌더링-->
+<!--                        // loadPageData(currentPage1); // 필요하다면 페이지 데이터 로드 함수 호출-->
+<!--                    }-->
+<!--                });-->
+<!--            }-->
 
-&lt;!&ndash;            // AJAX를 사용해 서버에서 count 값을 받아오기&ndash;&gt;
-&lt;!&ndash;            $.ajax({&ndash;&gt;
-&lt;!&ndash;                type: "POST",&ndash;&gt;
-&lt;!&ndash;                url: "/admin/cultural-properties-regulate/select/count",&ndash;&gt;
-&lt;!&ndash;                success: function(count) {&ndash;&gt;
-&lt;!&ndash;&lt;!&ndash;                    totalPages1 = response; // 서버에서 받아온 count 값을 totalPages1 변수에 할당&ndash;&gt;&ndash;&gt;
-&lt;!&ndash;&lt;!&ndash;                    renderPagination1(); // 페이지네이션 초기화&ndash;&gt;&ndash;&gt;
-&lt;!&ndash;                    int page = 0;&ndash;&gt;
-&lt;!&ndash;                    if(count % 10 == 0) {&ndash;&gt;
-&lt;!&ndash;                        page = count / 10;&ndash;&gt;
-&lt;!&ndash;                    }else{&ndash;&gt;
-&lt;!&ndash;                        page = count / 10 + 1;&ndash;&gt;
-&lt;!&ndash;                    }&ndash;&gt;
-&lt;!&ndash;                    renderPagination1(page);&ndash;&gt;
-&lt;!&ndash;                },&ndash;&gt;
-&lt;!&ndash;                error: function() {&ndash;&gt;
-&lt;!&ndash;                    alert("데이터를 불러오는 중 오류가 발생했습니다.");&ndash;&gt;
-&lt;!&ndash;                }&ndash;&gt;
-&lt;!&ndash;            });&ndash;&gt;
+<!--            // AJAX를 사용해 서버에서 count 값을 받아오기-->
+<!--            $.ajax({-->
+<!--                type: "POST",-->
+<!--                url: "/admin/cultural-properties-regulate/select/count",-->
+                success: function(count) {
+<!--                    totalPages1 = response; // 서버에서 받아온 count 값을 totalPages1 변수에 할당-->
+<!--                    renderPagination1(); // 페이지네이션 초기화-->
+<!--                    int page = 0;-->
+<!--                    if(count % 10 == 0) {-->
+<!--                        page = count / 10;-->
+<!--                    }else{-->
+<!--                        page = count / 10 + 1;-->
+<!--                    }-->
+<!--                    renderPagination1(page);-->
+<!--                },-->
+<!--                error: function() {-->
+<!--                    alert("데이터를 불러오는 중 오류가 발생했습니다.");-->
+<!--                }-->
+<!--            });-->
 
 
             // 페이지 버튼 생성 함수
@@ -595,11 +640,11 @@
 
             // 초기 페이지 데이터 불러오기
             fetchApiData(currentPage2);
-            getDBData(1,10); // 초기 DB 데이터 불러오기
+            getDBData(); // 초기 DB 데이터 불러오기
 
 
         });
-    </script>-->
+    </script>
 </div>
 </body>
 </html>

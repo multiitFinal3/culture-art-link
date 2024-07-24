@@ -279,10 +279,10 @@ public class AdminCulturalPropertiesService {
 	
 
 	
-	public List<CulturalPropertiesDTO> selectDB(int startIndex, int endIndex) {
+	public List<CulturalPropertiesDTO> selectDB() {
 
 
-		ArrayList<CulturalPropertiesDTO> list = (ArrayList<CulturalPropertiesDTO>) adminCulturalPropertiesDAO.selectDB(startIndex, endIndex);
+		ArrayList<CulturalPropertiesDTO> list = (ArrayList<CulturalPropertiesDTO>) adminCulturalPropertiesDAO.selectDB();
 
 //		// 페이징을 위한 서브리스트 계산
 //		int startIndex = (page - 1) * itemsPerPage;

@@ -45,56 +45,56 @@ public class AdminCulturalPropertiesController {
 	}
 
 
-//	@GetMapping("/select")
-//	@ResponseBody
-//	public ArrayList<CulturalPropertiesDTO> selectDB(Model model) {
-//
-//		ArrayList<CulturalPropertiesDTO> list = new ArrayList<CulturalPropertiesDTO>();
-//		list = (ArrayList<CulturalPropertiesDTO>) adminCulturalPropertiesService.selectDB();
-//
-//		System.out.println("가져온 리스트 : " + list);
-//
-//		Object count = null;
-//		model.addAttribute("count", count);
-//
-//
-//		return list; // 모든 문화재 데이터 가져오기
-//	}
-
-
 	@GetMapping("/select")
 	@ResponseBody
-	public ArrayList<CulturalPropertiesDTO> selectDB(
-			@RequestParam(value = "page", defaultValue = "1") int page,
-			@RequestParam(value = "itemsPerPage", defaultValue = "10") int itemsPerPage,
-			Model model) {
+	public ArrayList<CulturalPropertiesDTO> selectDB(Model model) {
 
-		// 전체 데이터 개수 가져오기
-		int totalCount = adminCulturalPropertiesService.selectCount();
-
-		// 전체 페이지 수 계산
-		int totalPages = (int) Math.ceil((double) totalCount / itemsPerPage);
-
-		// startIndex, endIndex 계산
-		int startIndex = (page - 1) * itemsPerPage;
-		int endIndex = Math.min(startIndex + itemsPerPage, totalCount);
-
-
-		// 전체 문화재 데이터 가져오기
 		ArrayList<CulturalPropertiesDTO> list = new ArrayList<CulturalPropertiesDTO>();
-		list = (ArrayList<CulturalPropertiesDTO>) adminCulturalPropertiesService.selectDB(startIndex, endIndex);
+		list = (ArrayList<CulturalPropertiesDTO>) adminCulturalPropertiesService.selectDB();
+
+		System.out.println("가져온 리스트 : " + list);
+
+		Object count = null;
+		model.addAttribute("count", count);
 
 
-
-		// 모델에 필요한 데이터 추가
-		model.addAttribute("list", list); // 전체 데이터
-		model.addAttribute("currentPage", page); // 현재 페이지 번호
-		model.addAttribute("totalPages", totalPages); // 전체 페이지 수
-		
-		System.out.println("totalPages : " + totalPages);
-
-		return list; // 페이지네이션을 포함한 문화재 데이터 반환
+		return list; // 모든 문화재 데이터 가져오기
 	}
+
+
+//	@GetMapping("/select")
+//	@ResponseBody
+//	public ArrayList<CulturalPropertiesDTO> selectDB(
+//			@RequestParam(value = "page", defaultValue = "1") int page,
+//			@RequestParam(value = "itemsPerPage", defaultValue = "10") int itemsPerPage,
+//			Model model) {
+//
+//		// 전체 데이터 개수 가져오기
+//		int totalCount = adminCulturalPropertiesService.selectCount();
+//
+//		// 전체 페이지 수 계산
+//		int totalPages = (int) Math.ceil((double) totalCount / itemsPerPage);
+//
+//		// startIndex, endIndex 계산
+//		int startIndex = (page - 1) * itemsPerPage;
+//		int endIndex = Math.min(startIndex + itemsPerPage, totalCount);
+//
+//
+//		// 전체 문화재 데이터 가져오기
+//		ArrayList<CulturalPropertiesDTO> list = new ArrayList<CulturalPropertiesDTO>();
+//		list = (ArrayList<CulturalPropertiesDTO>) adminCulturalPropertiesService.selectDB(startIndex, endIndex);
+//
+//
+//
+//		// 모델에 필요한 데이터 추가
+//		model.addAttribute("list", list); // 전체 데이터
+//		model.addAttribute("currentPage", page); // 현재 페이지 번호
+//		model.addAttribute("totalPages", totalPages); // 전체 페이지 수
+//
+//		System.out.println("totalPages : " + totalPages);
+//
+//		return list; // 페이지네이션을 포함한 문화재 데이터 반환
+//	}
 
 //	@PostMapping("/count")
 //	@ResponseBody

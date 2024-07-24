@@ -13,11 +13,11 @@ public interface AdminCulturalPropertiesDAO {
 
     void insertDB(CulturalPropertiesDTO culturalPropertiesDTO);
 
-//    List<CulturalPropertiesDTO> selectDB();
+    List<CulturalPropertiesDTO> selectDB();
 
     int selectCount();
 
-    List<CulturalPropertiesDTO> selectDB(@Param("startIndex") int startIndex, @Param("endIndex") int endIndex);
+//    List<CulturalPropertiesDTO> selectDB(@Param("startIndex") int startIndex, @Param("endIndex") int endIndex);
 
 //    List<CulturalPropertiesDTO> selectCulturalProperties(
 //            @Param("page") int page,
