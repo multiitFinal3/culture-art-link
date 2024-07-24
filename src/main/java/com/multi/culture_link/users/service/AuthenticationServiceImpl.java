@@ -29,7 +29,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 	
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		System.out.println("email : " + username);
+//		System.out.println("email : " + username);
 		
 		try {
 			UserDTO userDTO = userMapper.findUserByEmail(username);

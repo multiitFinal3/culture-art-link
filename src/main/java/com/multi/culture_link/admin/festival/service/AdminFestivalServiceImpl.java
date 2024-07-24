@@ -5,7 +5,9 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.multi.culture_link.admin.festival.model.mapper.AdminFestivalMapper;
 import com.multi.culture_link.common.keyword.service.KeywordExtractService1;
+import com.multi.culture_link.festival.model.dto.FestivalContentReviewNaverKeywordMapping;
 import com.multi.culture_link.festival.model.dto.FestivalDTO;
+import com.multi.culture_link.festival.model.dto.FestivalKeywordDTO;
 import com.multi.culture_link.festival.model.dto.PageDTO;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -16,9 +18,8 @@ import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
+import java.util.*;
+import java.util.stream.Collectors;
 
 
 /**
@@ -834,7 +835,7 @@ public class AdminFestivalServiceImpl implements AdminFestivalService {
 	 * API 다중조건 검색 후 전체 갯수 반환
 	 *
 	 * @param festivalDTO
-	 * @param urls
+	 * @param urls 요청파라미터 url
 	 * @return
 	 * @throws Exception
 	 */
@@ -876,12 +877,12 @@ public class AdminFestivalServiceImpl implements AdminFestivalService {
 	/**
 	 * 해당 축제의 내용에서 추출한 키워드를 삽입
 	 *
-	 * @param festivalId
-	 * @return
+	 * @param festivalId 해당 페스티벌 DB 아이디
+	 * @return 키워드 해시맵 반환
 	 * @throws Exception
 	 */
 	@Override
-	public ArrayList<String> insertContentKeywordByFestivalId(int festivalId) throws Exception {
+	public HashMap<String, Integer> findContentKeywordByFestivalId(int festivalId) throws Exception {
 		
 		FestivalDTO festivalDTO = adminFestivalMapper.findDBFestivalByFestivalId(festivalId);
 		String content = festivalDTO.getFestivalContent();
@@ -889,12 +890,79 @@ public class AdminFestivalServiceImpl implements AdminFestivalService {
 		
 		String all = content + " " + title;
 		
-		ArrayList<String> list2 = keywordExtractService.getKeywordByKomoran(all);
-		ArrayList<String> list = keywordExtractService.getKeywordByApacheLucene(all);
+		// 코모란으로 결정
+		HashMap<String, Integer> map = keywordExtractService.getKeywordByKomoran(all);
+//		ArrayList<String> list = keywordExtractService.getKeywordByApacheLucene(all);
+		
+		LinkedList<Map.Entry<String, Integer>> list = new LinkedList<>(map.entrySet());
+		list.sort(Map.Entry.comparingByValue(Comparator.reverseOrder()));
+		
+		if (list.size() >= 5) {
+			
+			list = list.stream().limit(5).collect(Collectors.toCollection(LinkedList::new));
+			
+		}
+		
+		map = new HashMap<String, Integer>();
+		
+		for (int i = 0; i < list.size(); i++) {
+			
+			map.put(list.get(i).getKey(), list.get(i).getValue());
+			
+		}
+		
+		System.out.println("keyword map top 5: " + map);
 		
 		
-		return list;
+		return map;
+	}
+	
+	/**
+	 * 키워드가 키워드 테이블에 이미 존재하는 지 확인
+	 * @param keyword 키워드 DTO
+	 * @return 키워드 DTO
+	 * @throws Exception
+	 */
+	@Override
+	public FestivalKeywordDTO findKeywordByKeyword(FestivalKeywordDTO keyword) throws Exception {
+		
+		FestivalKeywordDTO festivalKeywordDTO =  adminFestivalMapper.findKeywordByKeyword(keyword);
+		
+		return festivalKeywordDTO;
+	}
+	
+	/**
+	 * 키워드를 키워드 테이블에 삽입
+	 * @param keyword 키워드 DTO
+	 * @throws Exception
+	 */
+	@Override
+	public void insertKeywordByKeyword(FestivalKeywordDTO keyword) throws Exception {
+		
+		adminFestivalMapper.insertKeywordByKeyword(keyword);
+	}
+	
+	/**
+	 * 해당 키워드의 매핑이 존재하는 지 확인
+	 * @param keywordMapping1 키워드 DTO
+	 * @return 키워드 매핑 DTO
+	 * @throws Exception
+	 */
+	@Override
+	public FestivalContentReviewNaverKeywordMapping findKeywordMappingByKeywordMapping(FestivalContentReviewNaverKeywordMapping keywordMapping1) throws Exception {
+		
+		FestivalContentReviewNaverKeywordMapping keywordMapping = adminFestivalMapper.findKeywordMappingByKeywordMapping(keywordMapping1);
+		
+		return keywordMapping;
+	}
+	
+	@Override
+	public void insertKeywordMappingByKeywordMapping(FestivalContentReviewNaverKeywordMapping keywordMapping) throws Exception {
+		
+		adminFestivalMapper.insertKeywordMappingByKeywordMapping(keywordMapping);
+		
 	}
 	
 	
 }
+

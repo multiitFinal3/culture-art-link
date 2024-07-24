@@ -6,8 +6,10 @@ import com.multi.culture_link.common.region.model.dto.RegionDTO;
 import com.multi.culture_link.common.region.service.RegionService;
 import com.multi.culture_link.common.time.model.dto.TimeDTO;
 import com.multi.culture_link.common.time.service.TimeService;
-import com.multi.culture_link.festival.model.dto.FestivalDTO;
-import com.multi.culture_link.festival.model.dto.PageDTO;
+import com.multi.culture_link.festival.model.dto.*;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -102,6 +104,7 @@ public class AdminFestivalController {
 	private final RegionService regionService;
 	private final TimeService timeService;
 	private ArrayList<FestivalDTO> list2;
+	private MongoTemplate mongoTemplate;
 	
 	/**
 	 * 생성자 주입
@@ -111,11 +114,12 @@ public class AdminFestivalController {
 	 * @param timeService          시간 서비스
 	 * @param list2                현재 서비스단에 저장된 축제 리스트
 	 */
-	public AdminFestivalController(AdminFestivalService adminFestivalService, RegionService regionService, TimeService timeService, ArrayList<FestivalDTO> list2) {
+	public AdminFestivalController(AdminFestivalService adminFestivalService, RegionService regionService, TimeService timeService, ArrayList<FestivalDTO> list2, MongoTemplate mongoTemplate) {
 		this.adminFestivalService = adminFestivalService;
 		this.regionService = regionService;
 		this.timeService = timeService;
 		this.list2 = list2;
+		this.mongoTemplate = mongoTemplate;
 	}
 	
 	/**
@@ -304,7 +308,7 @@ public class AdminFestivalController {
 	 */
 	@PostMapping("/updateDBFestivalByFestival")
 	public String updateDBFestivalByFestival(FestivalDTO festivalDTO) {
-
+		
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		
 		
@@ -371,7 +375,7 @@ public class AdminFestivalController {
 	public ArrayList<FestivalDTO> findDBFestivalByMultiple(
 			@RequestBody ArrayList<HashMap<String, String>> mapList,
 			@RequestParam("page") int page) {
-
+		
 		
 		FestivalDTO festivalDTO = new FestivalDTO();
 		PageDTO pageDTO = new PageDTO();
@@ -503,7 +507,7 @@ public class AdminFestivalController {
 	@PostMapping("/findDBFestivalMultipleCount")
 	@ResponseBody
 	public int findDBFestivalMultipleCount(@RequestBody ArrayList<HashMap<String, String>> mapList) {
-
+		
 		FestivalDTO festivalDTO = new FestivalDTO();
 		
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -624,7 +628,7 @@ public class AdminFestivalController {
 	public ArrayList<FestivalDTO> findAPIFestivalByMultiple(
 			@RequestBody ArrayList<HashMap<String, String>> mapList,
 			@RequestParam("page") int page) {
-
+		
 		FestivalDTO festivalDTO = new FestivalDTO();
 		PageDTO pageDTO = new PageDTO();
 		pageDTO.setPage(page);
@@ -760,10 +764,10 @@ public class AdminFestivalController {
 		ArrayList<FestivalDTO> list = null;
 		try {
 			list = adminFestivalService.findAPIFestivalByMultiple(festivalDTO, urls);
-		} catch (Exception e) {
+		}  catch (Exception e) {
 			throw new RuntimeException(e);
 		}
-
+		
 		for (FestivalDTO festivalDTO1 : list) {
 			
 			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -785,7 +789,7 @@ public class AdminFestivalController {
 	@PostMapping("/findAPIFestivalMultipleCount")
 	@ResponseBody
 	public int findAPIFestivalMultipleCount(@RequestBody ArrayList<HashMap<String, String>> mapList) {
-
+		
 		FestivalDTO festivalDTO = new FestivalDTO();
 		
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -942,18 +946,84 @@ public class AdminFestivalController {
 	public ArrayList<String> insertContentKeywordByFestivalId(@RequestParam("festivalId") int festivalId) {
 		
 		
-		ArrayList<String> list = null;
+		HashMap<String, Integer> map = new HashMap<String, Integer>();
 		
 		try {
-			list = adminFestivalService.insertContentKeywordByFestivalId(festivalId);
+			map = adminFestivalService.findContentKeywordByFestivalId(festivalId);
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
 		
 		
-		return list;
+		ArrayList<FestivalKeywordDTO> keywordList = new ArrayList<FestivalKeywordDTO>();
+		
+		for (Map.Entry<String, Integer> entry : map.entrySet()) {
+			
+			FestivalKeywordDTO festivalKeywordDTO = new FestivalKeywordDTO();
+			festivalKeywordDTO.setFestivalKeywordId(entry.getKey());
+			
+			DictionaryDTO dictionaryDTO = new DictionaryDTO();
+			
+			Query query = new Query(new Criteria("word").is(entry.getKey()));
+			dictionaryDTO = mongoTemplate.findOne(query, DictionaryDTO.class, "dictionary");
+			if (dictionaryDTO != null) {
+				festivalKeywordDTO.setEmotionStat(dictionaryDTO.getPolarity());
+			} else {
+				festivalKeywordDTO.setEmotionStat(0);
+			}
+			
+			keywordList.add(festivalKeywordDTO);
+			
+		}
 		
 		
+		System.out.println("keywordList : " + keywordList);
+		
+		for (FestivalKeywordDTO keyword : keywordList) {
+			
+			try {
+				FestivalKeywordDTO festivalKeywordDTO = adminFestivalService.findKeywordByKeyword(keyword);
+				if (festivalKeywordDTO == null) {
+					adminFestivalService.insertKeywordByKeyword(keyword);
+				}else {
+					
+					System.out.println("키워드 테이블에 존재");
+					
+				}
+				
+				FestivalContentReviewNaverKeywordMapping keywordMapping1 = new FestivalContentReviewNaverKeywordMapping();
+				keywordMapping1.setFestivalId(festivalId);
+				keywordMapping1.setFestivalKeywordId(keyword.getFestivalKeywordId());
+				keywordMapping1.setSortCode("C");
+				
+//				System.out.println("keywordMapping1 : " + keywordMapping1);
+				
+				FestivalContentReviewNaverKeywordMapping keywordMapping = adminFestivalService.findKeywordMappingByKeywordMapping(keywordMapping1);
+				
+				if (keywordMapping == null){
+					adminFestivalService.insertKeywordMappingByKeywordMapping(keywordMapping1);
+				
+				}else {
+					System.out.println("키워드 컨텐트 매핑 내역 존재");
+				}
+				
+			} catch (Exception e) {
+				throw new RuntimeException(e);
+			}
+			
+			
+		}
+		
+		
+		ArrayList<String> keys = new ArrayList<String>();
+		
+		for (String key : map.keySet()) {
+			
+			keys.add(key);
+			
+		}
+		
+		return keys;
 	}
 	
 	

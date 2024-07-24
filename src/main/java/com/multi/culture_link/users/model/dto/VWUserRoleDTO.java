@@ -29,13 +29,13 @@ public class VWUserRoleDTO implements UserDetails {
 			}
 		});
 		
-		System.out.println("collection : " + collection);
+//		System.out.println("collection : " + collection);
 		return collection;
 	}
 	
 	@Override
 	public String getPassword() {
-		System.out.println("getPassword : "+userDTO.getPassword());
+//		System.out.println("getPassword : "+userDTO.getPassword());
 		return userDTO.getPassword();
 	}
 	
