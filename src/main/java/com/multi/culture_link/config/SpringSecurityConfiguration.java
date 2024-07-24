@@ -26,7 +26,7 @@ public class SpringSecurityConfiguration {
 				
 				.requestMatchers("/","/home","/user/login/**","/user/logout/**","/user/signUp/**","/user/login2/**").permitAll()
 				.requestMatchers("/admin/**").hasRole("ADMIN")
-				.requestMatchers("/user/myPage/**").hasAnyRole("ADMIN", "USERS")
+				.requestMatchers("/user/myPage/**", "/festival/**","/museumEvent/**","/calendar/**","/mapDetail/**","/performance/**","/cultural-properties/**","/chat/**","/exhibition/**","/board/**").hasAnyRole("ADMIN", "USERS")
 				
 				.anyRequest().permitAll()
 		

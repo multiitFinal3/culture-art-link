@@ -28,7 +28,7 @@ public class FestivalController {
 	@GetMapping("/festival-list")
 	public String festivalListPage(@AuthenticationPrincipal VWUserRoleDTO user, Model model) {
 		
-		System.out.println("@AuthenticationPrincipal : " + user.toString());
+//		System.out.println("@AuthenticationPrincipal : " + user.toString());
 		model.addAttribute("user", user.getUser());
 		
 		return "/festival/festivalList";
