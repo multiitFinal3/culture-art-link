@@ -1,10 +1,10 @@
 $(document).ready(function() {
 
 
-            var currentPage1 = 1; // 문화재 DB 현황 초기 페이지 설정
-            var totalPages1 = count; // 문화재 DB 현황 전체 페이지 수 (실제 데이터에 맞게 수정 필요)
-            var itemsPerPage1 = 10;
-            var checkedItems = {}; // 체크한 체크박스의 상태를 저장할 객체
+//            var currentPage1 = 1; // 문화재 DB 현황 초기 페이지 설정
+//            var totalPages1 = count; // 문화재 DB 현황 전체 페이지 수 (실제 데이터에 맞게 수정 필요)
+//            var itemsPerPage1 = 10;
+//            var checkedItems = {}; // 체크한 체크박스의 상태를 저장할 객체
 
             var currentPage2 = 1; // 초기 페이지 설정
             var totalPages2 = 1716; // 전체 페이지 수 (예시에서는 임의로 설정, 실제 데이터에 맞게 수정 필요)

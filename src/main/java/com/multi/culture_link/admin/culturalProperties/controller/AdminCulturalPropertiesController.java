@@ -90,6 +90,8 @@ public class AdminCulturalPropertiesController {
 		model.addAttribute("list", list); // 전체 데이터
 		model.addAttribute("currentPage", page); // 현재 페이지 번호
 		model.addAttribute("totalPages", totalPages); // 전체 페이지 수
+		
+		System.out.println("totalPages : " + totalPages);
 
 		return list; // 페이지네이션을 포함한 문화재 데이터 반환
 	}
