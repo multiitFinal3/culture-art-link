@@ -46,6 +46,14 @@
     background-color: #286BD2; /* 호버 시 배경색 */
 }
 
+.delete-button-container {
+    display: flex;
+    justify-content: flex-end; /* 오른쪽 끝에 정렬 */
+    width: 100%;
+    margin-top: -40px;
+    margin-left: auto;
+}
+
 /* 테이블 기본 스타일 */
 table {
     margin-bottom: 50px;
