@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
@@ -20,7 +19,7 @@
         table {
             margin-bottom: 50px;
             border-collapse: collapse; /* 테이블 셀 경계를 합치도록 설정 */
-            width: 100%; /* 테이블 너비를 조정할 수 있습니다. */
+            width: 120%; /* 테이블 너비를 조정할 수 있습니다. */
             margin-top: 20px; /* 원하는 만큼 상단 여백을 추가할 수 있습니다. */
         }
 
@@ -41,6 +40,7 @@
         td {
             background-color: #E7EEF9;
         }
+
 
 
 
@@ -74,9 +74,6 @@
         width: 25%; /* 여섯 번째 열 너비 */
     }
 
-<!--    #culturalPropertiesAPI th:nth-child(7) {-->
-<!--        width: 15%; /* 일곱 번째 열 너비 */-->
-<!--    }-->
     </style>
 </head>
 <body>
@@ -91,7 +88,7 @@
 
         문화재 관리자 페이지 입니다.
 
-<!--        <h2>문화재 DB 현황</h2>-->
+        <!--        <h2>문화재 DB 현황</h2>-->
 
         <div class="d-flex justify-content-center align-items-center">
             <h2 class="mr-auto">문화재 DB 현황</h2>
@@ -124,7 +121,7 @@
                 <th scope="col">동영상URL</th>
                 <th scope="col">나레이션URL</th>
 
-<!--                <th scope="col">DB관리</th>-->
+                <!--                <th scope="col">DB관리</th>-->
             </tr>
             </thead>
             <tbody id="list1">
@@ -133,26 +130,17 @@
 
         </table>
 
-<!--        <h2>전국 문화재 실시간</h2>-->
-<!--        <button type="submit" class="btn btn-outline-primary" th:style="'float: right;'">DB 추가</button>-->
-<!--        <div class="d-flex justify-content-between align-items-center">-->
-<!--            <h2>전국 문화재 실시간</h2>-->
-<!--            <button type="submit" class="btn btn-outline-primary" th:style="'margin-left: 20px;'">DB 추가</button>-->
-<!--        </div>-->
+        <div class="pagination" id="paginationSection1">
+
+        </div>
+        <br><br><br>
+
 
         <div class="d-flex justify-content-center align-items-center">
             <h2 class="mr-auto">전국 문화재 실시간</h2>
             <button type="button" id="addDB" class="btn btn-outline-primary ml-3">DB 추가</button>
         </div>
 
-<!--        <div class="text-center">-->
-<!--            <div class="d-inline-block">-->
-<!--                <h2>전국 문화재 실시간</h2>-->
-<!--            </div>-->
-<!--            <div class="d-inline-block">-->
-<!--                <button type="submit" class="btn btn-outline-primary ml-3">DB 추가</button>-->
-<!--            </div>-->
-<!--        </div>-->
 
         <table class="table table-striped" id="culturalPropertiesAPI">
 
@@ -166,7 +154,7 @@
                 <th scope="col">종목</th>
                 <th scope="col">지역</th>
                 <th scope="col">시대</th>
-<!--                <th scope="col">DB관리</th>-->
+                <!--                <th scope="col">DB관리</th>-->
             </tr>
             </thead>
             <tbody id="list2">
@@ -174,44 +162,126 @@
 
         </table>
 
-        <div class="pagination" id="paginationSection">
-            <!-- 페이지 버튼이 여기에 추가될 예정 -->
+        <div class="pagination" id="paginationSection2">
         </div>
 
     </div>
 
     <script th:inline="javascript">
         $(document).ready(function() {
-            var currentPage = 1; // 초기 페이지 설정
-            var totalPages = 1716; // 전체 페이지 수 (예시에서는 임의로 설정, 실제 데이터에 맞게 수정 필요)
-            var itemsPerPage = 10; // 페이지당 표시할 항목 수
+<!--            var currentPage1 = 1; // 문화재 DB 현황 초기 페이지 설정-->
+<!--            var totalPages1 = count; // 문화재 DB 현황 전체 페이지 수 (실제 데이터에 맞게 수정 필요)-->
+<!--            var itemsPerPage1 = 10;-->
+<!--            var checkedItems = {}; // 체크한 체크박스의 상태를 저장할 객체-->
+
+            var currentPage2 = 1; // 초기 페이지 설정
+            var totalPages2 = 1716; // 전체 페이지 수 (예시에서는 임의로 설정, 실제 데이터에 맞게 수정 필요)
+            var itemsPerPage2 = 10; // 페이지당 표시할 항목 수
+            var dbData = []; // DB 데이터를 저장할 배열
+            var selectedCheckboxes = []; // 선택된 체크박스 인덱스를 저장할 배열
+
+<!--            // 페이지 로딩 시 초기화-->
+<!--            renderPagination1();-->
+
+<!--            function renderPagination1() {-->
+<!--                $('#paginationSection1').empty(); // 기존 버튼 제거-->
+
+<!--                // 이전 버튼-->
+<!--                var prevHtml = '<li class="page-item ' + (currentPage1 == 1 ? 'disabled' : '') + '">' +-->
+<!--                    '<a class="page-link prev-link1" href="#" data-page="' + (currentPage1 - 1) + '">이전</a>' +-->
+<!--                    '</li>';-->
+<!--                $('#paginationSection1').append(prevHtml);-->
+
+<!--                // 페이지 번호 버튼-->
+<!--                var startPage = (Math.ceil(currentPage1 / itemsPerPage1) - 1) * itemsPerPage1 + 1;-->
+<!--                var endPage = Math.min(startPage + itemsPerPage1 - 1, totalPages1);-->
+
+<!--                for (var pageNum = startPage; pageNum <= endPage; pageNum++) {-->
+<!--                    var pageHtml = '<li class="page-item ' + (pageNum == currentPage1 ? 'active' : '') + '">' +-->
+<!--                        '<a class="page-link page-num1" href="#" data-page="' + pageNum + '">' + pageNum + '</a>' +-->
+<!--                        '</li>';-->
+<!--                    $('#paginationSection1').append(pageHtml);-->
+<!--                }-->
+
+<!--                // 다음 버튼-->
+<!--                var nextHtml = '<li class="page-item ' + (currentPage1 >= totalPages1 ? 'disabled' : '') + '">' +-->
+<!--                    '<a class="page-link next-link1" href="#" data-page="' + (currentPage1 + 1) + '">다음</a>' +-->
+<!--                    '</li>';-->
+<!--                $('#paginationSection1').append(nextHtml);-->
+
+<!--                // 페이지 번호 클릭 이벤트 핸들러-->
+<!--                $('.page-num1').click(function(e) {-->
+<!--                    e.preventDefault();-->
+<!--                    var page = $(this).data('page');-->
+<!--                    currentPage1 = page;-->
+<!--                    renderPagination1(); // 페이지네이션 다시 렌더링-->
+<!--                    // loadPageData(page); // 필요하다면 페이지 데이터 로드 함수 호출-->
+<!--                });-->
+
+<!--                // 이전 버튼 클릭 이벤트 핸들러-->
+<!--                $('.prev-link1').click(function(e) {-->
+<!--                    e.preventDefault();-->
+<!--                    if (currentPage1 > 1) {-->
+<!--                        currentPage1&#45;&#45;;-->
+<!--                        renderPagination1(); // 페이지네이션 다시 렌더링-->
+<!--                        // loadPageData(currentPage1); // 필요하다면 페이지 데이터 로드 함수 호출-->
+<!--                    }-->
+<!--                });-->
+
+<!--                // 다음 버튼 클릭 이벤트 핸들러-->
+<!--                $('.next-link1').click(function(e) {-->
+<!--                    e.preventDefault();-->
+<!--                    if (currentPage1 < totalPages1) {-->
+<!--                        currentPage1++;-->
+<!--                        renderPagination1(); // 페이지네이션 다시 렌더링-->
+<!--                        // loadPageData(currentPage1); // 필요하다면 페이지 데이터 로드 함수 호출-->
+<!--                    }-->
+<!--                });-->
+<!--            }-->
+
+<!--            // AJAX를 사용해 서버에서 count 값을 받아오기-->
+<!--            $.ajax({-->
+<!--                type: "POST",-->
+<!--                url: "/admin/cultural-properties-regulate/count",-->
+<!--                success: function(response) {-->
+<!--                    totalPages1 = response; // 서버에서 받아온 count 값을 totalPages1 변수에 할당-->
+<!--                    renderPagination1(); // 페이지네이션 초기화-->
+<!--                },-->
+<!--                error: function() {-->
+<!--                    alert("데이터를 불러오는 중 오류가 발생했습니다.");-->
+<!--                }-->
+<!--            });-->
+
 
             // 페이지 버튼 생성 함수
-            function renderPagination() {
-                $('#paginationSection').empty(); // 기존 버튼 제거
+            function renderPagination2() {
+                $('#paginationSection2').empty(); // 기존 버튼 제거
 
                 // 이전 버튼
-                var prevHtml = '<li class="page-item ' + (currentPage == 1 ? 'disabled' : '') + '">' +
-                    '<a class="page-link prev-link" href="#" data-page="' + (currentPage - 1) + '">이전</a>' +
+                var prevHtml = '<li class="page-item ' + (currentPage2 == 1 ? 'disabled' : '') + '">' +
+                    '<a class="page-link prev-link" href="#" data-page="' + (currentPage2 - 1) + '">이전</a>' +
                     '</li>';
-                $('#paginationSection').append(prevHtml);
+                $('#paginationSection2').append(prevHtml);
 
                 // 페이지 번호 버튼
-                var startPage = (Math.ceil(currentPage / 10) - 1) * 10 + 1;
-                var endPage = Math.min(startPage + 9, totalPages);
+                var startPage = (Math.ceil(currentPage2 / 10) - 1) * 10 + 1;
+                var endPage = Math.min(startPage + 9, totalPages2);
 
                 for (var pageNum = startPage; pageNum <= endPage; pageNum++) {
-                    var pageHtml = '<li class="page-item ' + (pageNum == currentPage ? 'active' : '') + '">' +
+                    var pageHtml = '<li class="page-item ' + (pageNum == currentPage2 ? 'active' : '') + '">' +
                         '<a class="page-link page-num" href="#" data-page="' + pageNum + '">' + pageNum + '</a>' +
                         '</li>';
-                    $('#paginationSection').append(pageHtml);
+                    $('#paginationSection2').append(pageHtml);
                 }
 
                 // 다음 버튼
-                var nextHtml = '<li class="page-item ' + (currentPage >= totalPages ? 'disabled' : '') + '">' +
-                    '<a class="page-link next-link" href="#" data-page="' + (currentPage + 1) + '">다음</a>' +
+                var nextHtml = '<li class="page-item ' + (currentPage2 >= totalPages2 ? 'disabled' : '') + '">' +
+                    '<a class="page-link next-link" href="#" data-page="' + (currentPage2 + 1) + '">다음</a>' +
                     '</li>';
-                $('#paginationSection').append(nextHtml);
+                $('#paginationSection2').append(nextHtml);
+
+                // 데이터가 있는 페이지의 체크박스 비활성화 처리
+                disableCheckboxes();
             }
 
             // Ajax를 통해 데이터 불러오기
@@ -228,7 +298,7 @@
                     },
                     success: function(list) {
                         $.each(list, function(index, culturalProperties) {
-                            var index1 = (pageIndex - 1) * itemsPerPage + index + 1;
+                            var index1 = (pageIndex - 1) * itemsPerPage2 + index + 1;
 
                             var htmlCheck = '<tr><td><input class="check2" type="checkbox" name="index" value="' + index + '"/></td>';
                             var htmlContent =
@@ -243,7 +313,7 @@
                         });
 
                         // 페이지네이션 다시 그리기
-                        renderPagination();
+                        renderPagination2();
 
 
                         // 데이터를 모두 표시한 후 로딩 인디케이터 숨기기
@@ -256,9 +326,6 @@
                     error: function(xhr, status, error) {
                         console.error('API 호출 오류:', error);
                     },
-<!--                    complete: function() {-->
-<!--                        $('#loadingIndicator').hide(); // Ajax 요청 완료 후 로딩 표시 숨기기-->
-<!--                    }-->
                 });
             }
 
@@ -267,17 +334,18 @@
             // Ajax를 통해 DB 데이터 불러오기
             function getDBData() {
                 $('#list1').html(""); // 테이블 내용 초기화
-                $('#loadingIndicator').show(); // 로딩 표시
 
                 $.ajax({
                     url: '/admin/cultural-properties-regulate/select',
                     method: 'GET',
                     contentType: 'application/json',
-                    beforeSend: function() {
-                        // Ajax 요청 전에 로딩 인디케이터를 보여주도록 설정
-                        $('#loadingIndicator').show();
-                    },
                     success: function(list) {
+
+                        dbData = list; // DB 데이터를 배열에 저장
+
+                        // DB 데이터를 통해 API 데이터와 비교하여 체크 박스 비활성화
+                        disableCheckboxes();
+
                         $.each(list, function(index, culturalProperties) {
                             var htmlCheck = '<tr><td><input class="check1" type="checkbox" name="index" value="' + index + '"/></td>';
                             var htmlContent =
@@ -292,36 +360,103 @@
                                 '<td class="classifyB">' + culturalProperties.classifyB + '</td>' +
                                 '<td class="classifyC">' + culturalProperties.classifyC + '</td>' +
                                 '<td class="classifyD">' + culturalProperties.classifyD + '</td>' +
-                                '<td class="mainImgUrl">' + culturalProperties.mainImgUrl + '</td>' +
-                                '<td class="content">' + culturalProperties.content + '</td>' +
-                                '<td class="imgUrl">' + culturalProperties.imgUrl + '</td>' +
-                                '<td class="imgDesc">' + culturalProperties.imgDesc + '</td>' +
-                                '<td class="videoUrl">' + culturalProperties.videoUrl + '</td>' +
-                                '<td class="narrationUrl">' + culturalProperties.narrationUrl + '</td>' +
-                                '</tr>';
+                                '<td class="mainImgUrl"><a href="' + culturalProperties.mainImgUrl + '" target="_blank">클릭!</a></td>';
+
+                            // content 열 수정 시작
+                            var content = culturalProperties.content;
+                            var shortContent = content.substring(0, 20); // 처음 5글자만 추출
+                            var fullContent = content; // 전체 내용
+
+                            htmlContent +=
+                                '<td class="content" onmouseover="this.innerHTML=\'' + fullContent + '\'" onmouseout="this.innerHTML=\'' + shortContent + '\'">' + shortContent + '</td>';
+
+
+                            // imgUrl 열 수정 시작
+                            htmlContent += '<td class="imgUrl">';
+                            if (Array.isArray(culturalProperties.imgUrl) && culturalProperties.imgUrl.length > 0) {
+                                culturalProperties.imgUrl.forEach(function(url) {
+                                    htmlContent += '<a href="' + url + '" target="_blank">클릭!</a><br>';
+                                });
+                            } else {
+                                htmlContent += '-';
+                            }
+                            htmlContent += '</td>';
+
+
+                            // imgDesc 열 수정 시작
+                            htmlContent += '<td class="imgDesc">';
+                            if (Array.isArray(culturalProperties.imgDesc) && culturalProperties.imgDesc.length > 0) {
+                                culturalProperties.imgDesc.forEach(function(desc) {
+                                    htmlContent += desc + '<br>';
+                                });
+                            } else {
+                                htmlContent += '-';
+                            }
+                            htmlContent += '</td>';
+                            // imgDesc 열 수정 끝
+
+                            htmlContent +=
+
+
+                                '<td class="videoUrl">';
+                            if (Array.isArray(culturalProperties.videoUrl) && culturalProperties.videoUrl.length > 0) {
+                                culturalProperties.videoUrl.forEach(function(url) {
+                                    if (!url || url === 'http://116.67.83.213/webdata/file_data/media_data/videos/') {
+                                        htmlContent += '데이터가 존재하지 않습니다<br>';
+                                    } else {
+                                        htmlContent += '<a href="' + url + '" target="_blank">클릭!</a><br>';
+                                    }
+                                });
+                            } else {
+                                if (!culturalProperties.videoUrl || culturalProperties.videoUrl === 'http://116.67.83.213/webdata/file_data/media_data/videos/') {
+                                    htmlContent += '데이터가 존재하지 않습니다<br>';
+                                } else {
+                                    htmlContent += '-';
+                                }
+                            }
+                            htmlContent += '</td>' +
+                                '<td class="narrationUrl">';
+
+                            // narrationUrl이 배열인 경우 각 URL에 대해 링크 생성
+                            if (Array.isArray(culturalProperties.narrationUrl) && culturalProperties.narrationUrl.length > 0) {
+                                culturalProperties.narrationUrl.forEach(function(url, index) {
+                                    var language = '';
+                                    switch (index) {
+                                        case 0:
+                                            language = '한국어';
+                                            break;
+                                        case 1:
+                                            language = '영어';
+                                            break;
+                                        case 2:
+                                            language = '일본어';
+                                            break;
+                                        case 3:
+                                            language = '중국어';
+                                            break;
+                                        default:
+                                            language = '언어 ' + (index + 1); // 기본적으로 언어 1, 2, 3, ...
+                                            break;
+                                    }
+                                    htmlContent += '<a href="' + url + '" target="_blank">' + language + '</a><br>';
+                                });
+                            } else {
+                                htmlContent += '-';
+                            }
+                            htmlContent += '</td></tr>';
 
                             var finalHtml = htmlCheck + htmlContent;
                             $('#list1').append(finalHtml);
                         });
 
 
-                        // 데이터를 모두 표시한 후 로딩 인디케이터 숨기기
-                        setTimeout(function() {
-                            $('#loadingIndicator').hide();
-                        }); // 0.5초 후에 숨김 (필요에 따라 조정 가능)
-<!--                        }, 500); // 0.5초 후에 숨김 (필요에 따라 조정 가능)-->
-
 
                     },
                     error: function(xhr, status, error) {
                         console.error('DB 데이터 호출 오류:', error);
                     },
-<!--                    complete: function() {-->
-<!--                        $('#loadingIndicator').hide(); // Ajax 요청 완료 후 로딩 표시 숨기기-->
-<!--                    }-->
                 });
             }
-
 
 
 
@@ -329,8 +464,10 @@
             $(document).on('click', '.page-num, .prev-link, .next-link', function(e) {
                 e.preventDefault();
                 var pageIndex = parseInt($(this).attr('data-page'));
-                currentPage = pageIndex; // 클릭된 페이지를 현재 페이지로 설정
+                currentPage2 = pageIndex; // 클릭된 페이지를 현재 페이지로 설정
                 fetchApiData(pageIndex); // 데이터 불러오기
+
+                applyCheckboxState(); // 체크박스 상태 적용
             });
 
             // 전체 선택 체크박스 클릭 이벤트 (DB 현황)
@@ -366,23 +503,52 @@
                     method: 'POST',
                     contentType: 'application/json',
                     data: JSON.stringify(checkedItem), // 선택된 데이터를 JSON 형태로 전송
+                    beforeSend: function() {
+                        // Ajax 요청 전에 로딩 인디케이터를 보여주도록 설정
+                        $('#loadingIndicator').show();
+                    },
                     success: function(response) {
-                        // 서버에서 성공적으로 응답을 받았을 때 할 일
                         alert('데이터베이스에 성공적으로 추가되었습니다.');
                         // 추가된 데이터를 문화재 DB 현황 테이블에 업데이트
                         getDBData(); // 데이터베이스 데이터 다시 불러오기
 
-<!--                    },-->
-<!--                    error: function(xhr, status, error) {-->
-<!--                        console.error('데이터베이스 추가 오류:', error);-->
-<!--                        alert('데이터베이스 추가 중 오류가 발생했습니다.');-->
+
+                        // 체크박스 비활성화 처리
+                        $('.check2:checked').prop('disabled', true);
+
+                        $('#loadingIndicator').hide();
                     }
                 });
             });
 
 
+            // DB 데이터와 비교하여 체크 박스 비활성화 함수
+            function disableCheckboxes() {
+                // 현재 페이지의 체크박스들을 모두 활성화 상태로 초기화
+                $('#list2 .check2').prop('disabled', false).removeClass('disabled');
+
+                // DB 데이터와 현재 페이지의 데이터를 비교하여 이미 DB에 존재하는 경우 해당 체크 박스 비활성화 처리
+                for (var i = 0; i < itemsPerPage2; i++) {
+                    var dataIndex = (currentPage2 - 1) * itemsPerPage2 + i;
+                    var checkbox = $('#list2').find('.check2').eq(dataIndex);
+
+                    // 해당 데이터가 DB에 이미 존재하는지 확인
+                    var culturalPropertiesName = checkbox.closest('tr').find('.culturalPropertiesName').text().trim();
+                    var existsInDB = dbData.some(function(item) {
+                        return item.culturalPropertiesName === culturalPropertiesName;
+                    });
+
+                    // DB에 존재하는 경우 체크 박스 비활성화 처리
+                    if (existsInDB) {
+                        checkbox.prop('disabled', true).addClass('disabled');
+                    }
+                }
+            }
+
+
+
             // 초기 페이지 데이터 불러오기
-            fetchApiData(currentPage);
+            fetchApiData(currentPage2);
             getDBData(); // 초기 DB 데이터 불러오기
 
 

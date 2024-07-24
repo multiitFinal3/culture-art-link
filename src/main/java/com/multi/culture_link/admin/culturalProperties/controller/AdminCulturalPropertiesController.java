@@ -21,12 +21,6 @@ public class AdminCulturalPropertiesController {
 	@Autowired
 	private AdminCulturalPropertiesService adminCulturalPropertiesService;
 
-//	@GetMapping
-//	public String culturalPropertiesManage(Model model, int page) {
-//		List<CulturalPropertiesDTO> culturalPropertiesList = adminCulturalPropertiesService.fetchApiData(page);
-//		model.addAttribute("culturalPropertiesList", culturalPropertiesList);
-//		return "/admin/culturalProperties/culturalPropertiesRegulate";
-//	}
 
 	@GetMapping
 	public String culturalPropertiesManage() {
@@ -43,15 +37,6 @@ public class AdminCulturalPropertiesController {
 		System.out.println("list확인");
 		List<CulturalPropertiesDTO> list = adminCulturalPropertiesService.fetchApiData(pageIndex);
 		model.addAttribute("culturalPropertiesList", list);
-//		try {
-//			list = adminCulturalPropertiesService.fetchApiData(pageIndex);
-//
-//
-//
-//		} catch (Exception e) {
-//			throw new RuntimeException(e);
-//		}
-
 
 		System.out.println("list : " + list);
 
@@ -60,47 +45,19 @@ public class AdminCulturalPropertiesController {
 
 	}
 
-//	@PostMapping("/insert")
-//	@ResponseBody
-//	public String insertDB(@RequestBody List<String> checkedItems) {
-//		try {
-//			for (String index : checkedItems) {
-//				// index를 사용하여 CulturalPropertiesDTO 생성
-//				CulturalPropertiesDTO dto = new CulturalPropertiesDTO();
-//				dto.setId(Integer.parseInt(index)); // 예시로 id 설정
-//
-//				// 필요한 경우 다른 필드도 설정 가능
-//
-//				// CulturalPropertiesDTO를 사용하여 DB에 추가
-//				adminCulturalPropertiesService.insertDB(dto);
-//			}
-//			return "문화재가 DB에 성공적으로 추가되었습니다.";
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//			return "DB 추가 중 오류가 발생했습니다.";
-//		}
-//	}
-
-	@PostMapping("/insert")
-	public ResponseEntity<String> insertDB(@RequestBody List<CulturalPropertiesDTO> checkedItem){
-//		for (String index : checkedItem) {
-//			CulturalPropertiesDTO dto = new CulturalPropertiesDTO();
-//			dto.setId(Integer.parseInt(index));
-			adminCulturalPropertiesService.insertDB((CulturalPropertiesDTO) checkedItem);
-//		}
-		return ResponseEntity.ok("문화재가 DB에 성공적으로 추가되었습니다.");
-	}
-
 
 	@GetMapping("/select")
 	@ResponseBody
-	public ArrayList<CulturalPropertiesDTO> selectDB() {
+	public ArrayList<CulturalPropertiesDTO> selectDB(Model model) {
 		
 		ArrayList<CulturalPropertiesDTO> list = new ArrayList<CulturalPropertiesDTO>();
 		list = (ArrayList<CulturalPropertiesDTO>) adminCulturalPropertiesService.selectDB();
-		
+
 		System.out.println("가져온 리스트 : " + list);
-		
+
+		Object count = null;
+		model.addAttribute("count", count);
+
 		return list; // 모든 문화재 데이터 가져오기
 	}
 
@@ -114,7 +71,17 @@ public class AdminCulturalPropertiesController {
 		adminCulturalPropertiesService.addDBData(numList);
 		
 	}
-	
+
+
+	@PostMapping("/count")
+	@ResponseBody
+	public int selectCount() {
+		int count = 0;
+		count = adminCulturalPropertiesService.selectCount();
+
+		return count;
+	}
+
 
 
 

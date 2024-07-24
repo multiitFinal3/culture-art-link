@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.XML;
+import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -205,7 +206,7 @@ public class AdminCulturalPropertiesService {
 				dto.setCategoryCode(ccbaKdcd);
 				dto.setManagementNumber(ccbaAsno);
 				dto.setCityCode(ccbaCtcd);
-				dto.setNation("");
+//				dto.setNation("");
 				dto.setCategoryName(ccmaName);
 				dto.setCulturalPropertiesName(ccbaMnm1);
 				dto.setLongitude(longitude);
@@ -278,11 +279,7 @@ public class AdminCulturalPropertiesService {
 		return culturalPropertiesList;
 	}
 	
-	
-	public void insertDB(CulturalPropertiesDTO culturalPropertiesDTO) {
-		adminCulturalPropertiesDAO.insertDB(culturalPropertiesDTO);
-	}
-	
+
 	
 	public List<CulturalPropertiesDTO> selectDB() {
 		
@@ -291,10 +288,17 @@ public class AdminCulturalPropertiesService {
 		
 		for(CulturalPropertiesDTO culturalPropertiesDTO : list){
 			
-			culturalPropertiesDTO.setImgDesc(Collections.singletonList(culturalPropertiesDTO.getImgDesc().get(0)));
+//			culturalPropertiesDTO.setImgDesc(Collections.singletonList(culturalPropertiesDTO.getImgDesc().get(0)));
 			culturalPropertiesDTO.setContent(culturalPropertiesDTO.getContent().substring(0,30) + "....");
-			culturalPropertiesDTO.setImgUrl(Collections.singletonList(culturalPropertiesDTO.getImgUrl().get(0)));
-			
+//			culturalPropertiesDTO.setImgUrl(Collections.singletonList(culturalPropertiesDTO.getImgUrl().get(0)));
+
+			// 이미지 URL(ImgUrl)의 처음부터 세 번째까지의 요소들만 리스트로 설정
+			List<String> imgUrlSublist = culturalPropertiesDTO.getImgUrl().subList(0, Math.min(3, culturalPropertiesDTO.getImgUrl().size()));
+			culturalPropertiesDTO.setImgUrl(imgUrlSublist);
+
+			// 이미지 설명(ImgDesc)의 처음부터 세 번째까지의 요소만 리스트로 설정
+			List<String> imgDescSublist = culturalPropertiesDTO.getImgDesc().subList(0, Math.min(3, culturalPropertiesDTO.getImgDesc().size()));
+			culturalPropertiesDTO.setImgDesc(imgDescSublist);
 		}
 		
 		return list;
@@ -313,4 +317,13 @@ public class AdminCulturalPropertiesService {
 		}
 	
 	}
+
+	public int selectCount() {
+
+		int count = adminCulturalPropertiesDAO.selectCount();
+
+		return count;
+	}
+
+
 }

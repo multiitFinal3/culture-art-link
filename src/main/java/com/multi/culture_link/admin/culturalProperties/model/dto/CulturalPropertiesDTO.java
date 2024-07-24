@@ -44,7 +44,7 @@ public class CulturalPropertiesDTO {
     private String categoryCode;
     private String managementNumber;
     private String cityCode;
-    private String nation;
+//    private String nation;
     private String categoryName;
     private String culturalPropertiesName;
     private String address;

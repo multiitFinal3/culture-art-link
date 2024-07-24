@@ -25,5 +25,9 @@
         SELECT * FROM cultural_properties
     </select>
 
+    <select id="selectCount" resultType="Integer">
+        select count(*) count from cultural_properties
+    </select>
+
 
 </mapper>
