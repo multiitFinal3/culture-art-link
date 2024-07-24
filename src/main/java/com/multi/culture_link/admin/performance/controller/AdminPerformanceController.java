@@ -32,7 +32,7 @@ public class AdminPerformanceController {
     public String performanceManage(Model model,
                                     @RequestParam(name = "dbPage", defaultValue = "0") int dbPage,
                                     @RequestParam(name = "apiPage", defaultValue = "0") int apiPage,
-                                    @RequestParam(name = "size", defaultValue = "20") int size,
+                                    @RequestParam(name = "size", defaultValue = "100") int size,
                                     @RequestParam(name = "dbSearchKeyword", required = false) String dbSearchKeyword,
                                     @RequestParam(name = "apiSearchKeyword", required = false) String apiSearchKeyword) {
         try {
@@ -46,10 +46,6 @@ public class AdminPerformanceController {
             // 날짜 형식을 업데이트
             dbPerformances.forEach(PerformanceDTO::updateFormattedDate);
 
-            int dbStart = Math.min(dbPage * size, dbPerformances.size());
-            int dbEnd = Math.min(dbStart + size, dbPerformances.size());
-            Page<PerformanceDTO> dbPerformancesPage = new PageImpl<>(dbPerformances.subList(dbStart, dbEnd), PageRequest.of(dbPage, size), dbPerformances.size());
-
             List<PerformanceDTO> filteredPerformances;
             if (apiSearchKeyword != null && !apiSearchKeyword.isEmpty()) {
                 filteredPerformances = performanceAPIService.searchPerformances(apiSearchKeyword);
@@ -60,31 +56,46 @@ public class AdminPerformanceController {
                         .collect(Collectors.toList());
             }
 
-            int fromIndex = apiPage * size;
-            int toIndex = Math.min(fromIndex + size, filteredPerformances.size());
-            List<PerformanceDTO> paginatedPerformances = filteredPerformances.subList(fromIndex, Math.min(toIndex, filteredPerformances.size()));
+            // 페이지네이션을 적용한 데이터를 모델에 추가
+            Page<PerformanceDTO> dbPerformancesPage = paginateList(dbPerformances, dbPage, size);
+            Page<PerformanceDTO> apiPerformancesPage = paginateList(filteredPerformances, apiPage, size);
 
-            model.addAttribute("performances", paginatedPerformances);
+            model.addAttribute("performances", apiPerformancesPage.getContent());
             model.addAttribute("dbPerformances", dbPerformancesPage.getContent());
             model.addAttribute("dbCurrentPage", dbPage);
             model.addAttribute("apiCurrentPage", apiPage);
-            model.addAttribute("apiTotalPages", (int) Math.ceil((double) filteredPerformances.size() / size));
+            model.addAttribute("apiTotalPages", apiPerformancesPage.getTotalPages());
             model.addAttribute("dbTotalPages", dbPerformancesPage.getTotalPages());
             model.addAttribute("dbSearchKeyword", dbSearchKeyword);
             model.addAttribute("apiSearchKeyword", apiSearchKeyword);
+
+            // 검색 결과가 없는 경우 플래그 추가
+            if (dbPerformances.isEmpty()) {
+                model.addAttribute("dbSearchEmpty", true);
+            }
+            if (filteredPerformances.isEmpty()) {
+                model.addAttribute("apiSearchEmpty", true);
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
         return "/admin/performance/performanceRegulate";
     }
 
+    // 리스트를 페이지네이션하는 헬퍼 메소드
+    private Page<PerformanceDTO> paginateList(List<PerformanceDTO> list, int page, int size) {
+        int fromIndex = Math.min(page * size, list.size());
+        int toIndex = Math.min(fromIndex + size, list.size());
 
+        List<PerformanceDTO> paginatedList = list.subList(fromIndex, toIndex);
+        return new PageImpl<>(paginatedList, PageRequest.of(page, size), list.size());
+    }
 
     @PostMapping("/saveToDB")
     public String saveToDB(@RequestParam(name = "selectedIdsAPI", required = false) List<String> selectedIdsAPI,
                            @RequestParam(name = "apiPage", defaultValue = "0") int apiPage,
                            @RequestParam(name = "dbPage", defaultValue = "0") int dbPage,
-                           @RequestParam(name = "size", defaultValue = "20") int size,
+                           @RequestParam(name = "size", defaultValue = "100") int size,
                            Model model) {
         int savedCount = 0;
         if (selectedIdsAPI != null && !selectedIdsAPI.isEmpty()) {
@@ -100,16 +111,16 @@ public class AdminPerformanceController {
                     .filter(p -> dbPerformances.stream().noneMatch(db -> db.getCode().equals(p.getCode())))
                     .collect(Collectors.toList());
 
-            int fromIndex = apiPage * size;
-            int toIndex = Math.min(fromIndex + size, filteredPerformances.size());
-            List<PerformanceDTO> paginatedPerformances = filteredPerformances.subList(fromIndex, Math.min(toIndex, filteredPerformances.size()));
+            // 페이지네이션을 적용한 데이터를 모델에 추가
+            Page<PerformanceDTO> dbPerformancesPage = paginateList(dbPerformances, dbPage, size);
+            Page<PerformanceDTO> apiPerformancesPage = paginateList(filteredPerformances, apiPage, size);
 
-            model.addAttribute("performances", paginatedPerformances);
-            model.addAttribute("dbPerformances", dbPerformances.subList(0, Math.min(size, dbPerformances.size())));
+            model.addAttribute("performances", apiPerformancesPage.getContent());
+            model.addAttribute("dbPerformances", dbPerformancesPage.getContent());
             model.addAttribute("dbCurrentPage", dbPage);
             model.addAttribute("apiCurrentPage", apiPage);
-            model.addAttribute("apiTotalPages", (int) Math.ceil((double) filteredPerformances.size() / size));
-            model.addAttribute("dbTotalPages", (int) Math.ceil((double) dbPerformances.size() / size));
+            model.addAttribute("apiTotalPages", apiPerformancesPage.getTotalPages());
+            model.addAttribute("dbTotalPages", dbPerformancesPage.getTotalPages());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -117,13 +128,11 @@ public class AdminPerformanceController {
         return "redirect:/admin/performance-regulate?dbPage=" + dbPage + "&apiPage=" + apiPage + "&size=" + size + (model.containsAttribute("savedCount") ? "&savedCount=" + model.getAttribute("savedCount") : "");
     }
 
-
-
     @PostMapping("/deleteFromDB")
     public String deleteFromDB(@RequestParam(name = "selectedIds", required = false) List<String> selectedIds,
                                @RequestParam(name = "apiPage", defaultValue = "0") int apiPage,
                                @RequestParam(name = "dbPage", defaultValue = "0") int dbPage,
-                               @RequestParam(name = "size", defaultValue = "20") int size,
+                               @RequestParam(name = "size", defaultValue = "100") int size,
                                Model model) {
         if (selectedIds != null && !selectedIds.isEmpty()) {
             int deletedCount = performanceDBService.deletePerformances(selectedIds);
@@ -142,18 +151,16 @@ public class AdminPerformanceController {
                     .filter(p -> dbPerformances.stream().noneMatch(db -> db.getCode().equals(p.getCode())))
                     .collect(Collectors.toList());
 
-            // 현재 페이지에 맞게 20개로 자르기
-            int fromIndex = apiPage * size;
-            int toIndex = Math.min(fromIndex + size, filteredPerformances.size());
-            List<PerformanceDTO> paginatedPerformances = filteredPerformances.subList(fromIndex, Math.min(toIndex, filteredPerformances.size()));
+            // 페이지네이션을 적용한 데이터를 모델에 추가
+            Page<PerformanceDTO> dbPerformancesPage = paginateList(dbPerformances, dbPage, size);
+            Page<PerformanceDTO> apiPerformancesPage = paginateList(filteredPerformances, apiPage, size);
 
-            // 모델에 속성 추가
-            model.addAttribute("performances", paginatedPerformances);
-            model.addAttribute("dbPerformances", dbPerformances.subList(0, Math.min(size, dbPerformances.size())));
+            model.addAttribute("performances", apiPerformancesPage.getContent());
+            model.addAttribute("dbPerformances", dbPerformancesPage.getContent());
             model.addAttribute("dbCurrentPage", dbPage);
             model.addAttribute("apiCurrentPage", apiPage);
-            model.addAttribute("apiTotalPages", (int) Math.ceil((double) filteredPerformances.size() / size));
-            model.addAttribute("dbTotalPages", (int) Math.ceil((double) dbPerformances.size() / size));
+            model.addAttribute("apiTotalPages", apiPerformancesPage.getTotalPages());
+            model.addAttribute("dbTotalPages", dbPerformancesPage.getTotalPages());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -161,6 +168,4 @@ public class AdminPerformanceController {
         // 페이지 번호와 사이즈를 리다이렉트 경로에 추가
         return "redirect:/admin/performance-regulate?dbPage=" + dbPage + "&apiPage=" + apiPage + "&size=" + size + (model.containsAttribute("deletedCount") ? "&deletedCount=" + model.getAttribute("deletedCount") : "");
     }
-
 }
-
