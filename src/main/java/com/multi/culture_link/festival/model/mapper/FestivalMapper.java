@@ -1,11 +1,15 @@
-package com.multi.culture_link.festival.service;
+package com.multi.culture_link.festival.model.mapper;
 
 import com.multi.culture_link.festival.model.dto.FestivalKeywordDTO;
 import com.multi.culture_link.festival.model.dto.UserFestivalLoveHateMapDTO;
+import org.apache.ibatis.annotations.Mapper;
 
 import java.util.ArrayList;
 
-public interface FestivalService {
+@Mapper
+public interface FestivalMapper {
+	
+	
 	ArrayList<FestivalKeywordDTO> findFestivalKeywordByFestivalId(int festivalId) throws Exception;
 	
 	void insertUserLoveFestival(UserFestivalLoveHateMapDTO map1) throws Exception;

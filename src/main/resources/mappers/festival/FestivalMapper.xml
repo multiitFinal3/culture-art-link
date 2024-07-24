@@ -3,305 +3,43 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.multi.culture_link.admin.festival.model.mapper.AdminFestivalMapper">
+<mapper namespace="com.multi.culture_link.festival.model.mapper.FestivalMapper">
 
 
-    <insert id="insertAPIFestival" parameterType="festivalDTO">
+    <select id="findFestivalKeywordByFestivalId" resultType="festivalKeywordDTO">
 
-        INSERT INTO festival
-        VALUES(NULL,#{regionId},#{timeId},#{festivalName},#{festivalContent},#{manageInstitution},#{hostInstitution}
-        ,#{sponserInstitution}, #{tel}, #{homepageUrl}, #{detailAddress}, #{latitude}, #{longtitude}, #{place},
-        #{startDate}, #{endDate}, #{avgRate}, #{season}, #{imgUrl}, CURRENT_DATE(), CURRENT_DATE()
-        );
-
-    </insert>
-
-    <select id="findDBFestivalList" parameterType="pageDTO">
-
-        SELECT *
-        FROM (
-
-        SELECT ROW_NUMBER() OVER(ORDER BY festival_id DESC) AS rownum, f.*
-        FROM festival f) f2
-
-        WHERE
-        f2.rownum BETWEEN ${start} and ${end};
-
-    </select>
-
-    <select id="findDBFestivalCount">
-
-        SELECT COUNT(*) FROM festival;
-
-    </select>
-
-    <delete id="deleteDBFestivalList">
-
-        DELETE FROM festival
-        WHERE festival_id = ${festivalId};
-
-    </delete>
-
-
-    <select id="findDBFestivalByFestivalId">
-
-        SELECT * FROM festival
-        WHERE festival_id = ${festivalId};
-
-    </select>
-
-    <update id="updateDBFestivalByFestival" parameterType="festivalDTO">
-
-        UPDATE festival
-        SET
-        region_id = #{regionId},
-        time_id = #{timeId},
-        festival_name = #{festivalName},
-        festival_content = #{festivalContent},
-        manage_institution = #{manageInstitution},
-        host_institution = #{hostInstitution},
-        sponser_institution = #{sponserInstitution},
-        tel = #{tel},
-        homepage_url = #{homepageUrl},
-        detail_address = #{detailAddress},
-        latitude = #{latitude},
-        longtitude = #{longtitude},
-        place = #{place},
-        start_date = #{startDate},
-        end_date = #{endDate},
-        avg_Rate = #{avgRate},
-        season = #{season},
-        img_url = #{imgUrl}
-
+        SELECT festival_keyword_id FROM festival_content_review_naver_keyword_mapping
         WHERE festival_id = #{festivalId};
 
+    </select>
+
+    <insert id="insertUserLoveFestival" parameterType="userFestivalLoveHateDTO">
+
+        INSERT INTO user_festival_love_hate_festival_mapping(user_id, sort_code, festival_id)
+        VALUES(#{userId}, #{sortCode}, #{festivalId});
+
+    </insert>
+
+    <select id="findUserMapByUserMap" parameterType="userFestivalLoveHateDTO">
+
+        SELECT * from user_festival_love_hate_keyword_mapping
+        WHERE user_id = #{userId} AND sort_code = #{sortCode} AND festival_keyword_id = #{festivalKeywordId};
+
+    </select>
+
+    <insert id="insertUserKeywordMap" parameterType="userFestivalLoveHateDTO">
+
+        INSERT INTO user_festival_love_hate_keyword_mapping(user_id, sort_code, festival_keyword_id, festival_count)
+        VALUES(#{userId}, #{sortCode}, #{festivalKeywordId}, #{festivalCount});
+
+    </insert>
+
+    <update id="updateUserKeywordMap" parameterType="userFestivalLoveHateDTO">
+
+        UPDATE user_festival_love_hate_keyword_mapping
+        SET(user_id = #{userId}, sort_code = #{sortCode}, festival_keyword_id = #{festivalKeywordId}, festival_count = #{festivalCount});
+
     </update>
-
-    <select id="findDBFestivalByFestival" parameterType="festivalDTO">
-
-        SELECT * FROM festival
-        WHERE festival_name = #{festivalName}
-        AND start_date = #{startDate}
-        AND end_date = #{endDate};
-
-    </select>
-
-
-    <select id="findDBFestivalByMultiple" parameterType="festivalDTO" resultType="festivalDTO">
-
-        SELECT *
-
-        FROM (
-
-            SELECT ROW_NUMBER() OVER(ORDER BY festival_id DESC) AS rownum, f3.*
-            FROM (
-
-                SELECT * FROM festival
-
-                <where>
-
-                    <if test="regionId !=null and regionId !=''">
-                        AND region_id = #{regionId}
-                    </if>
-
-
-                    <if test="timeId !=null and timeId !=''">
-                        AND time_id = #{timeId}
-                    </if>
-
-
-                    <if test="festivalName !=null and festivalName !=''">
-                        AND festival_name LIKE CONCAT ('%', #{festivalName}, '%')
-                    </if>
-
-
-                    <if test="festivalContent !=null and festivalContent !=''">
-                        AND festival_content LIKE CONCAT ('%', #{festivalContent}, '%')
-                    </if>
-
-
-                    <if test="manageInstitution !=null and manageInstitution !=''">
-                        AND manage_institution LIKE CONCAT ('%', #{manageInstitution}, '%')
-                    </if>
-
-
-                    <if test="hostInstitution !=null and hostInstitution !=''">
-                        AND host_institution LIKE CONCAT ('%', #{hostInstitution}, '%')
-                    </if>
-
-
-                    <if test="sponserInstitution !=null and sponserInstitution !=''">
-                        AND sponser_institution LIKE CONCAT ('%', #{sponserInstitution}, '%')
-                    </if>
-
-
-                    <if test="tel !=null and tel !=''">
-                        AND tel LIKE CONCAT ('%', #{tel}, '%')
-                    </if>
-
-
-                    <if test="place !=null and place !=''">
-                        AND place LIKE CONCAT ('%', #{place}, '%')
-                    </if>
-
-
-                    <if test="startDate !=null">
-                        AND start_date &gt;= #{startDate}
-                    </if>
-
-
-                    <if test="endDate !=null">
-                        AND end_date &lt;= #{endDate}
-                    </if>
-
-
-                    <if test="avgRate !=null and avgRate !=''">
-                        AND  avg_rate &gt;= #{avgRate}
-                    </if>
-
-
-                    <if test="season !=null and season !=''">
-                        AND season = #{season}
-                    </if>
-
-                </where>
-
-            ) f3
-
-        ) f2
-
-        WHERE
-
-            f2.rownum BETWEEN #{pageDTO.start} AND #{pageDTO.end};
-
-
-
-    </select>
-
-
-    <select id="findDBFestivalMultipleCount" parameterType="festivalDTO">
-
-        SELECT COUNT(*)
-
-        FROM (
-
-            SELECT ROW_NUMBER() OVER(ORDER BY festival_id DESC) AS rownum, f3.*
-            FROM (
-
-            SELECT * FROM festival
-
-            <where>
-
-            <if test="regionId !=null and regionId !=''">
-                AND region_id = #{regionId}
-            </if>
-
-
-            <if test="timeId !=null and timeId !=''">
-                AND time_id = #{timeId}
-            </if>
-
-
-            <if test="festivalName !=null and festivalName !=''">
-                AND festival_name LIKE CONCAT ('%', #{festivalName}, '%')
-            </if>
-
-
-            <if test="festivalContent !=null and festivalContent !=''">
-                AND festival_content LIKE CONCAT ('%', #{festivalContent}, '%')
-            </if>
-
-
-            <if test="manageInstitution !=null and manageInstitution !=''">
-                AND manage_institution LIKE CONCAT ('%', #{manageInstitution}, '%')
-            </if>
-
-
-            <if test="hostInstitution !=null and hostInstitution !=''">
-                AND host_institution LIKE CONCAT ('%', #{hostInstitution}, '%')
-            </if>
-
-
-            <if test="sponserInstitution !=null and sponserInstitution !=''">
-                AND sponser_institution LIKE CONCAT ('%', #{sponserInstitution}, '%')
-            </if>
-
-
-            <if test="tel !=null and tel !=''">
-                AND tel LIKE CONCAT ('%', #{tel}, '%')
-            </if>
-
-
-            <if test="place !=null and place !=''">
-                AND place LIKE CONCAT ('%', #{place}, '%')
-            </if>
-
-
-            <if test="startDate !=null">
-                AND start_date &gt;= #{startDate}
-            </if>
-
-
-            <if test="endDate !=null">
-                AND end_date &lt;= #{endDate}
-            </if>
-
-
-            <if test="avgRate !=null and avgRate !=''">
-                AND  avg_rate &gt;= #{avgRate}
-            </if>
-
-
-            <if test="season !=null and season !=''">
-                AND season = #{season}
-            </if>
-
-        </where>
-
-            ) f3
-
-        ) f2;
-
-
-
-    </select>
-
-
-    <select id="findKeywordByKeyword" parameterType="festivalKeywordDTO">
-
-        SELECT * FROM festival_keyword
-        WHERE festival_keyword_id = #{festivalKeywordId};
-
-
-    </select>
-
-
-    <insert id="insertKeywordByKeyword" parameterType="festivalKeywordDTO">
-
-        INSERT INTO festival_keyword(festival_keyword_id, emotion_stat)
-        VALUES(#{festivalKeywordId}, #{emotionStat});
-
-    </insert>
-
-
-    <select id="findKeywordMappingByKeywordMapping" parameterType="festivalContentReviewNaverKeywordMapping">
-
-        SELECT * FROM festival_content_review_naver_keyword_mapping
-        WHERE festival_id = #{festivalId}
-        AND sort_code = #{sortCode}
-        AND festival_keyword_id = #{festivalKeywordId};
-
-    </select>
-
-
-    <insert id="insertKeywordMappingByKeywordMapping" parameterType="festivalContentReviewNaverKeywordMapping">
-
-        INSERT INTO festival_content_review_naver_keyword_mapping(festival_id, sort_code, festival_keyword_id)
-        VALUES(#{festivalId}, #{sortCode},  #{festivalKeywordId});
-
-    </insert>
-
-
 
 
 </mapper>

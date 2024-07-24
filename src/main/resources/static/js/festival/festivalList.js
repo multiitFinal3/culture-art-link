@@ -63,7 +63,7 @@ $(document).ready(
                         if(! festival.imgUrl || festival.imgUrl == "null"){
 
                             firstHtml = `
-                                <div class="card" style="width: 18rem;">
+                                <div class="card" style="width: 18rem;" id="${festival.festivalId}">
                                     <img class="card-img-top" src="/img/festival/noPhoto.png" alt="Card image cap" style="min-width: 380px; min-height: 400px;">
 
                             `;
@@ -71,7 +71,7 @@ $(document).ready(
                         }else{
 
                             firstHtml = `
-                                <div class="card" style="width: 18rem;">
+                                <div class="card" style="width: 18rem;" id="${festival.festivalId}">
                                     <img class="card-img-top" src="${festival.imgUrl}" alt="Card image cap" style="min-width: 380px; min-height: 400px;">
 
                             `;
@@ -292,7 +292,7 @@ $(document).ready(
                         if(! festival.imgUrl || festival.imgUrl == "null"){
 
                             firstHtml = `
-                                <div class="card" style="width: 18rem;">
+                                <div class="card" style="width: 18rem;" id="${festival.festivalId}">
                                     <img class="card-img-top" src="/img/festival/noPhoto.png" alt="Card image cap" style="min-width: 380px; min-height: 400px;">
 
                             `;
@@ -300,7 +300,7 @@ $(document).ready(
                         }else{
 
                             firstHtml = `
-                                <div class="card" style="width: 18rem;">
+                                <div class="card" style="width: 18rem;" id="${festival.festivalId}">
                                     <img class="card-img-top" src="${festival.imgUrl}" alt="Card image cap" style="min-width: 380px; min-height: 400px;">
 
                             `;
@@ -408,6 +408,7 @@ $(document).ready(
 
         $(document).on('click','.heart', function(){
 
+            var button = $(this);
             var festivalId = $(this).val();
 
             if($(this).hasClass("hasLove")){
@@ -417,9 +418,14 @@ $(document).ready(
                     url: '/festival/deleteUserLoveFestival?festivalId=' + festivalId,
                     method: 'POST',
                     contentType: 'application/json',
-                    success: function(){
-                        alert("찜이 삭제됐습니다.");
-                        $(this).removeClass("hasLove");
+                    success: function(res){
+                        alert(res);
+                        button.closest('.card').removeClass("hasLove");
+                    },
+                    error: function(res){
+
+                        alert(res);
+
                     }
                 })
 
@@ -430,13 +436,19 @@ $(document).ready(
                     url: '/festival/insertUserLoveFestival?festivalId=' + festivalId,
                     method: 'POST',
                     contentType: 'application/json',
-                    success: function(){
+                    success: function(res){
 
-                        alert("찜이 추가됐습니다.");
-                        $(this).addClass("hasLove");
+                        alert(res);
+                        button.closest(".card").addClass("hasLove");
+                        console.log("addClass('hasLove');")
 
 
-                    }
+                    },
+                     error: function(res){
+
+                         alert(res);
+
+                     }
 
                 })
 
@@ -447,7 +459,7 @@ $(document).ready(
 
 
 
-        }
+        })
 
 
 
