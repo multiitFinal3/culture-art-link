@@ -25,6 +25,7 @@ const utils = {
     const button = document.createElement("button");
     button.innerText = text;
     button.addEventListener("click", onClick);
+    button.className = "pageBtn1"
     return button;
   },
 };
@@ -185,7 +186,7 @@ function createTableRow(item, index, isApiList) {
         <td scope="col"><img class="resize-img" src="${
           item.image
         }" style="width: 150px;"></img></td>
-        <td scope="col"><button class="edit-button">수정</button></td>
+        <td scope="col"><button class="edit-button btn btn-primary" >수정</button></td>
       </tr>
     `;
   }
@@ -340,8 +341,8 @@ function makeRowEditable(row) {
 
   const actionsCell = row.querySelector("td:last-child");
   actionsCell.innerHTML = `
-    <button onclick="saveRowChanges(this)">저장</button>
-    <button onclick="cancelRowEdit(this)">취소</button>
+    <button onclick="saveRowChanges(this)" class="btn btn-primary">저장</button>
+    <button onclick="cancelRowEdit(this)" class="btn btn-primary">취소</button>
   `;
 }
 
