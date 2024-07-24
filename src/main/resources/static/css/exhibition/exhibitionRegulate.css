@@ -16,13 +16,13 @@ table,
 th,
 td {
   border: 1px solid black;
-  width: 100px;
+  width: 250px;
 }
 
 th,
 td {
   text-align: center;
-  width: 150px;
+  width: 250px;
 }
 
 th {
@@ -31,6 +31,9 @@ th {
 
 td {
   background-color: #e7eef9;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 td#festivalContent,
@@ -40,4 +43,22 @@ td#festivalName {
 
 .resize-img {
   width: 150px;
+}
+
+.td-title {
+  max-width: 300px;
+}
+
+.td-artist {
+  max-width: 150px;
+}
+
+.td-price {
+  max-width: 10px;
+  width: 50px;
+}
+
+.td-number,
+.td-index {
+  max-width: 10px;
 }

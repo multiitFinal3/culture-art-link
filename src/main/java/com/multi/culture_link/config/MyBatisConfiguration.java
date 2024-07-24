@@ -1,5 +1,7 @@
 package com.multi.culture_link.config;
 
+import com.multi.culture_link.admin.culturalProperties.model.dto.CulturalPropertiesDTO;
+import com.multi.culture_link.admin.culturalProperties.model.dto.StringListTypeHandler;
 import com.multi.culture_link.common.region.model.dto.RegionDTO;
 import com.multi.culture_link.common.time.model.dto.TimeDTO;
 import com.multi.culture_link.festival.model.dto.FestivalContentReviewNaverKeywordMapping;
@@ -42,6 +44,7 @@ public class MyBatisConfiguration {
 		factoryBean.setDataSource(dataSource);
 		Resource[] resources = new PathMatchingResourcePatternResolver().getResources("classpath:mappers/**/*.xml");
 		factoryBean.setMapperLocations(resources);
+
 		
 		// 테이블 속성들 _로 되어있는 것들과 dto의 필드에 camelCase로 되어있는 것들을 자동 연결 ex: user_id // userId
 		org.apache.ibatis.session.Configuration configuration = new org.apache.ibatis.session.Configuration();
@@ -62,6 +65,11 @@ public class MyBatisConfiguration {
 		configuration.getTypeAliasRegistry().registerAlias("festivalKeywordDTO", FestivalKeywordDTO.class);
 		configuration.getTypeAliasRegistry().registerAlias("festivalContentReviewNaverKeywordMapping", FestivalContentReviewNaverKeywordMapping.class);
 		
+		configuration.getTypeAliasRegistry().registerAlias("culturalPropertiesDTO", CulturalPropertiesDTO.class);
+
+
+		// TypeHandler 등록
+		configuration.getTypeHandlerRegistry().register(StringListTypeHandler.class);
 		
 		
 		

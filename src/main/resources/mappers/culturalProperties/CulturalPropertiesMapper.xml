@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.multi.culture_link.admin.culturalProperties.model.dao.AdminCulturalPropertiesDAO">
+
+    <resultMap id="culturalPropertiesResultMap" type="com.multi.culture_link.admin.culturalProperties.model.dto.CulturalPropertiesDTO">
+        <!-- List<String> imgUrl 매핑 -->
+        <result property="imgUrl" column="img_url" jdbcType="VARCHAR" javaType="java.util.List" typeHandler="com.multi.culture_link.admin.culturalProperties.model.dto.StringListTypeHandler"/>
+        <!-- imgDesc 매핑 -->
+        <result property="imgDesc" column="img_desc" jdbcType="VARCHAR"/>
+        <!-- videoUrl 매핑 -->
+        <result property="videoUrl" column="video_url" jdbcType="VARCHAR"/>
+        <!-- narrationUrl 매핑 -->
+        <result property="narrationUrl" column="narration_url" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <insert id="insertDB" parameterType="culturalPropertiesDTO">
+        INSERT INTO cultural_properties (id, category_code, management_number, city_code, cultural_properties_name, category_name, region, district, dynasty, address, registration_date, classify_a, classify_b, classify_c, classify_d, content, main_img_url, img_url, img_desc, video_url, narration_url, longitude, latitude)
+        VALUES (#{id}, #{categoryCode}, #{managementNumber}, #{cityCode},  #{culturalPropertiesName}, #{categoryName}, #{region}, #{district}, #{dynasty}, #{address}, #{registrationDate}, #{classifyA}, #{classifyB}, #{classifyC}, #{classifyD}, #{content}, #{mainImgUrl}, #{imgUrl}, #{imgDesc}, #{videoUrl}, #{narrationUrl}, #{longitude}, #{latitude})
+    </insert>
+
+    <select id="selectDB" resultType="culturalPropertiesDTO">
+        SELECT * FROM cultural_properties
+    </select>
+
+    <select id="selectCount" resultType="Integer">
+        select count(*) count from cultural_properties
+    </select>
+
+
+</mapper>
