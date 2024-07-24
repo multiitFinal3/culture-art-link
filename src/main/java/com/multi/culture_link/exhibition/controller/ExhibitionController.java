@@ -3,10 +3,7 @@ package com.multi.culture_link.exhibition.controller;
 import com.multi.culture_link.admin.exhibition.model.dto.api.ExhibitionApiDto;
 import com.multi.culture_link.exhibition.service.ExhibitionService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.List;
@@ -29,5 +26,11 @@ public class ExhibitionController {
         searchParams.put("museum", museum);
 
         return exhibitionService.searchExhibition(searchParams);
+    }
+
+    // id 기반 데이터 불러오기
+    @GetMapping("/{exhibitionId}")
+    public ExhibitionApiDto getExhibitionDetail(@PathVariable int exhibitionId){
+        return exhibitionService.getExhibitionById(exhibitionId);
     }
 }

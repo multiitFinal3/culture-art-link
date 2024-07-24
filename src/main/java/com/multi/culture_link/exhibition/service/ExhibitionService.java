@@ -18,4 +18,8 @@ public class ExhibitionService {
     public List<ExhibitionApiDto> searchExhibition(Map<String, String> searchParams) {
         return ExhibitionDao.searchExhibition(searchParams);
     }
+
+    public ExhibitionApiDto getExhibitionById(int id){
+        return ExhibitionDao.getExhibitionById(id);
+    }
 }

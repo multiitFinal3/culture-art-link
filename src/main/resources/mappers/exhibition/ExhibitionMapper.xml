@@ -20,4 +20,8 @@
         ORDER BY created_at DESC
     </select>
 
+    <select id="getExhibitionById" resultType="com.multi.culture_link.admin.exhibition.model.dto.api.ExhibitionApiDto">
+        SELECT * FROM exhibition WHERE id = #{id}
+    </select>
+
 </mapper>

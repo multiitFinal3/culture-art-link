@@ -8,5 +8,7 @@ import java.util.Map;
 
 @Mapper
 public interface ExhibitionDao {
+
     List<ExhibitionApiDto> searchExhibition(Map<String, String> searchParams);
+    ExhibitionApiDto getExhibitionById(int id);
 }
