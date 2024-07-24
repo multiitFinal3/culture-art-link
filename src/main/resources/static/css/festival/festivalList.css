@@ -66,7 +66,62 @@
     .card{
 
         margin: 1%;
-        min-width: 300px;
-        max-width: 300px;
+        min-width: 400px;
+        max-width: 400px;
+        min-height: 600px;
+        max-height: 600px;
 
     }
+
+
+   .card-img-top{
+
+        margin: 1%;
+        width: 380px;
+        height: 400px;
+
+
+    }
+
+
+    button{
+
+        margin: 1%;
+
+    }
+
+   #pageNum1{
+
+       display: flex;
+       flex-flow: row;
+       width: 30%;
+       align-items: center;
+       justify-content: center;
+
+
+   }
+
+   #pageNum1 button{
+
+        margin: 0.5%;
+
+   }
+
+   .trash, .heart{
+
+        min-width: 30px;
+        min-height: 30px;
+
+   }
+
+   .hasLove{
+
+        background-color: pink;
+
+   }
+
+   .hasHate{
+
+        background-color: lightgray;
+
+   }

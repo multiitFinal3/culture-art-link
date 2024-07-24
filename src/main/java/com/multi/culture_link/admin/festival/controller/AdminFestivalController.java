@@ -991,14 +991,14 @@ public class AdminFestivalController {
 					
 				}
 				
-				FestivalContentReviewNaverKeywordMapping keywordMapping1 = new FestivalContentReviewNaverKeywordMapping();
+				FestivalContentReviewNaverKeywordMapDTO keywordMapping1 = new FestivalContentReviewNaverKeywordMapDTO();
 				keywordMapping1.setFestivalId(festivalId);
 				keywordMapping1.setFestivalKeywordId(keyword.getFestivalKeywordId());
 				keywordMapping1.setSortCode("C");
 				
 //				System.out.println("keywordMapping1 : " + keywordMapping1);
 				
-				FestivalContentReviewNaverKeywordMapping keywordMapping = adminFestivalService.findKeywordMappingByKeywordMapping(keywordMapping1);
+				FestivalContentReviewNaverKeywordMapDTO keywordMapping = adminFestivalService.findKeywordMappingByKeywordMapping(keywordMapping1);
 				
 				if (keywordMapping == null){
 					adminFestivalService.insertKeywordMappingByKeywordMapping(keywordMapping1);
