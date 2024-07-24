@@ -6,13 +6,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.XML;
-import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 
@@ -310,8 +308,8 @@ public class AdminCulturalPropertiesService {
 
 		}
 
-		return properties;
-//		return list;
+//		return properties;
+		return list;
 	}
 	
 	public void addDBData(ArrayList<Integer> numList) {

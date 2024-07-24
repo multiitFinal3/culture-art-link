@@ -4,7 +4,6 @@ package com.multi.culture_link.admin.culturalProperties.controller;
 import com.multi.culture_link.admin.culturalProperties.model.dto.CulturalPropertiesDTO;
 import com.multi.culture_link.admin.culturalProperties.service.AdminCulturalPropertiesService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
