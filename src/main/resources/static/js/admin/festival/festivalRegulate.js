@@ -471,13 +471,7 @@ $(document).ready(
                             <tr>
 
                                 <td class="buttonHead">
-
                                     <input class="check1" type="checkbox" name="index" value="${festival.festivalId}"/><br>
-
-                                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalLong" id="dbUpdateBtn" value="${festival.festivalId}">상세 수정</button><br><hr>
-
-                                    <button type="button" class="btn btn-primary"  class="contentKeywordInsertBtn" value="${festival.festivalId}">내용 키워드 추가</button>
-
                                 </td>
                                 <td class="index1" style="width : 20px; height: 20px;">${index1}</td>
                                 <td class="festivalId">${festival.festivalId}</td>

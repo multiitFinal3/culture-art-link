@@ -107,8 +107,8 @@ public class KeywordExtractService1 {
 			for (String stop : stopWords) {
 				
 				
-				if ((stopWords.contains(token)) || (stop.contains(token)) || (token.contains(stop))) {
-					
+				if ((stopWords.contains(token)) || (stop.contains(token))) {
+					System.out.println(token + " : " + stop);
 					isStop = true;
 					break;
 					

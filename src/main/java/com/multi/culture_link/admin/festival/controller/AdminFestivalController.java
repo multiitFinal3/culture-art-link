@@ -764,7 +764,7 @@ public class AdminFestivalController {
 		ArrayList<FestivalDTO> list = null;
 		try {
 			list = adminFestivalService.findAPIFestivalByMultiple(festivalDTO, urls);
-		} catch (Exception e) {
+		}  catch (Exception e) {
 			throw new RuntimeException(e);
 		}
 		
@@ -996,7 +996,7 @@ public class AdminFestivalController {
 				keywordMapping1.setFestivalKeywordId(keyword.getFestivalKeywordId());
 				keywordMapping1.setSortCode("C");
 				
-				System.out.println("keywordMapping1 : " + keywordMapping1);
+//				System.out.println("keywordMapping1 : " + keywordMapping1);
 				
 				FestivalContentReviewNaverKeywordMapping keywordMapping = adminFestivalService.findKeywordMappingByKeywordMapping(keywordMapping1);
 				
