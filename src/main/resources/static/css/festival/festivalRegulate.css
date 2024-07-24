@@ -1,7 +1,6 @@
 
     #festivalRegulate{
 
-
         display: flex;
         flex-flow: column;
         align-items: center;
@@ -9,16 +8,12 @@
         margin-top: 8%;
         margin-left: 5%;
         margin-right: 5%;
-        overflow-x: scroll;
     }
 
     table{
 
         margin-bottom: 50px;
     }
-
-
-
 
 
 
@@ -93,7 +88,7 @@
     .pageBtn5,
     .pageBtn6{
 
-        margin: 0.9%;
+        margin: 0.5%;
         width: 30px;
         text-align: center;
 
@@ -131,7 +126,7 @@
 
     .pageBtn1{
 
-        margin: 5%;
+        margin: 1%;
 
     }
 
