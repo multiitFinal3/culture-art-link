@@ -411,7 +411,7 @@ $(document).ready(
 
 
         /**
-        * 찜하기 버튼
+        * 찜하기 / 찜 취소하기 버튼
         *
         */
         $(document).on('click','.heart', function(){
@@ -419,7 +419,7 @@ $(document).ready(
             var button = $(this);
             var festivalId = $(this).val();
 
-            if($(this).hasClass("hasLove")){
+            if(button.closest(".card").hasClass("hasLove")){
 
                 $.ajax({
 
@@ -430,9 +430,9 @@ $(document).ready(
                         alert(res);
                         button.closest('.card').removeClass("hasLove");
                     },
-                    error: function(res){
+                    error: function(xhr, status, error){
 
-                        alert(res);
+                        alert('error : ',error);
 
                     }
                 })
@@ -452,11 +452,11 @@ $(document).ready(
 
 
                     },
-                     error: function(res){
+                    error: function(xhr, status, error){
 
-                         alert(res);
+                     alert('error : ',error);
 
-                     }
+                    }
 
                 })
 

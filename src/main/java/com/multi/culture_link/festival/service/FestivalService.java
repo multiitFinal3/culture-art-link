@@ -17,4 +17,8 @@ public interface FestivalService {
 	void updateUserKeywordMap(UserFestivalLoveHateMapDTO userMap) throws Exception;
 	
 	ArrayList<Integer> findLoveList(int userId) throws Exception;
+	
+	void deleteUserLoveFestival(UserFestivalLoveHateMapDTO userMap1) throws Exception;
+	
+	void deleteUserKeywordMap(UserFestivalLoveHateMapDTO userMap2) throws Exception;
 }

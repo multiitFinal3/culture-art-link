@@ -91,4 +91,16 @@ public class FestivalServiceImpl implements FestivalService {
 		
 		return list;
 	}
+	
+	@Override
+	public void deleteUserLoveFestival(UserFestivalLoveHateMapDTO userMap1) throws Exception {
+		
+		festivalMapper.deleteUserLoveFestival(userMap1);
+		
+	}
+	
+	@Override
+	public void deleteUserKeywordMap(UserFestivalLoveHateMapDTO userMap2) throws Exception {
+		festivalMapper.deleteUserKeywordMap(userMap2);
+	}
 }

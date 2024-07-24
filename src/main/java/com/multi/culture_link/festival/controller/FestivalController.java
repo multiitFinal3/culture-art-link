@@ -134,7 +134,7 @@ public class FestivalController {
 				
 			}
 			
-			return "찜 성공";
+			return "찜하기 및 관련 키워드 추가 성공";
 			
 			
 		} catch (Exception e) {
@@ -146,6 +146,11 @@ public class FestivalController {
 	}
 	
 	
+	/**
+	 * 유저가 찜한 목록을 표시하기 위해 리스트를 가져옴
+	 * @param user
+	 * @return 축제 DB 번호
+	 */
 	@PostMapping("/findLoveList")
 	@ResponseBody
 	public ArrayList<Integer> findLoveList(@AuthenticationPrincipal VWUserRoleDTO user){
@@ -163,6 +168,73 @@ public class FestivalController {
 		
 		return list;
 		
+	}
+	
+	
+	/**
+	 * 찜한 목록을 삭제하고 그와 연관된 키워드도 전부 삭제
+	 * @param festivalId
+	 * @param user
+	 * @return
+	 */
+	@PostMapping("/deleteUserLoveFestival")
+	@ResponseBody
+	public String deleteUserLoveFestival(@RequestParam("festivalId") int festivalId, @AuthenticationPrincipal VWUserRoleDTO user){
+		
+		try {
+			
+			int userId = user.getUserId();
+			String sortCode = "L";
+			
+			UserFestivalLoveHateMapDTO userMap1 = new UserFestivalLoveHateMapDTO();
+			userMap1.setUserId(userId);
+			userMap1.setFestivalId(festivalId);
+			userMap1.setSortCode(sortCode);
+			festivalService.deleteUserLoveFestival(userMap1);
+			
+			ArrayList<FestivalKeywordDTO> keyList = festivalService.findFestivalKeywordByFestivalId(festivalId);
+			
+			ArrayList<FestivalKeywordDTO> list = new ArrayList<FestivalKeywordDTO>();
+			
+			for (FestivalKeywordDTO keywordDTO : keyList) {
+				
+				if (!list.contains(keywordDTO)) {
+					list.add(keywordDTO);
+				}
+				
+			}
+			
+			for (FestivalKeywordDTO keywordDTO : list) {
+				
+				UserFestivalLoveHateMapDTO userMap = new UserFestivalLoveHateMapDTO();
+				userMap.setUserId(userId);
+				userMap.setSortCode(sortCode);
+				userMap.setFestivalKeywordId(keywordDTO.getFestivalKeywordId());
+				
+				UserFestivalLoveHateMapDTO userMap2 = festivalService.findUserMapByUserMap(userMap);
+				
+				if (userMap2 != null) {
+					
+					festivalService.deleteUserKeywordMap(userMap2);
+					
+				}
+				
+			}
+			
+			
+			
+			
+			
+			
+			
+			
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+		
+		
+		return "찜 목록 및 관련 키워드 삭제 성공!";
+	
 	}
 	
 }

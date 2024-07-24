@@ -49,5 +49,23 @@
 
     </select>
 
+    <delete id="deleteUserLoveFestival" parameterType="userFestivalLoveHateDTO">
+
+        DELETE FROM user_festival_love_hate_festival_mapping
+        WHERE user_id = #{userId}
+        AND sort_code = #{sortCode}
+        AND festival_id = #{festivalId};
+
+    </delete>
+
+    <delete id="deleteUserKeywordMap" parameterType="userFestivalLoveHateDTO">
+
+        DELETE FROM user_festival_love_hate_keyword_mapping
+        WHERE user_id = #{userId}
+        AND sort_code = #{sortCode}
+        AND festival_keyword_id = #{festivalKeywordId};
+
+    </delete>
+
 
 </mapper>
