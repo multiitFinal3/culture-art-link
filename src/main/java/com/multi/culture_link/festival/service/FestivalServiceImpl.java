@@ -103,4 +103,16 @@ public class FestivalServiceImpl implements FestivalService {
 	public void deleteUserKeywordMap(UserFestivalLoveHateMapDTO userMap2) throws Exception {
 		festivalMapper.deleteUserKeywordMap(userMap2);
 	}
+	
+	@Override
+	public void insertUserHateFestival(UserFestivalLoveHateMapDTO map1) throws Exception {
+		festivalMapper.insertUserHateFestival(map1);
+	}
+	
+	@Override
+	public ArrayList<Integer> findHateList(int userId) throws Exception {
+		ArrayList<Integer> list = festivalMapper.findHateList(userId);
+		
+		return list;
+	}
 }

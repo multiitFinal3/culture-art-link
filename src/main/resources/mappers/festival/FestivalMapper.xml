@@ -67,5 +67,20 @@
 
     </delete>
 
+    <insert id="insertUserHateFestival">
+
+        INSERT INTO user_festival_love_hate_festival_mapping(user_id, sort_code, festival_id)
+        VALUES(#{userId}, #{sortCode}, #{festivalId});
+
+    </insert>
+
+    <select id="findHateList" parameterType="int" resultType="int">
+
+        SELECT festival_id FROM user_festival_love_hate_festival_mapping
+        WHERE user_id = #{userId}
+        AND sort_code = "H";
+
+    </select>
+
 
 </mapper>

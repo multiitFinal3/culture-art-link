@@ -25,4 +25,8 @@ public interface FestivalMapper {
 	void deleteUserLoveFestival(UserFestivalLoveHateMapDTO userMap1) throws Exception;
 	
 	void deleteUserKeywordMap(UserFestivalLoveHateMapDTO userMap2) throws Exception;
+	
+	void insertUserHateFestival(UserFestivalLoveHateMapDTO map1) throws Exception;
+	
+	ArrayList<Integer> findHateList(int userId) throws Exception;
 }

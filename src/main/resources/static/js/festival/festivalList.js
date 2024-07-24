@@ -84,12 +84,12 @@ $(document).ready(
                             <div class="card-body">
                                   <h5 class="card-title">${festival.festivalName}</h5>
                                   <p class="card-text">${content}</p>
-                                  <a href="/festival/festival-detail?festivalId=${festival.festivalId}" class="btn btn-primary heart">자세히</a>
+                                  <a href="/festival/festival-detail?festivalId=${festival.festivalId}" class="btn btn-primary">자세히</a>
                                   <button class="btn btn-primary heart" type="button" style="margin:0px" value="${festival.festivalId}">
                                       <img src="/img/festival/heart.png"
                                            style="width : 20px; height: 20px;">
                                   </button>
-                                  <button class="btn btn-primary trash" type="button" style="margin:0px" value="${festival.festivalId}">
+                                  <button class="btn btn-primary hate" type="button" style="margin:0px" value="${festival.festivalId}">
                                         <img src="/img/festival/trash.png"
                                              style="width : 20px; height: 20px;">
                                   </button>
@@ -104,6 +104,7 @@ $(document).ready(
                         $('#list1').append(finalHtml);
 
                         findLoveList();
+                        findHateList();
 
                     })
 
@@ -313,12 +314,12 @@ $(document).ready(
                             <div class="card-body">
                                   <h5 class="card-title">${festival.festivalName}</h5>
                                   <p class="card-text">${content}</p>
-                                  <a href="/festival/festival-detail?festivalId=${festival.festivalId}" class="btn btn-primary heart">자세히</a>
+                                  <a href="/festival/festival-detail?festivalId=${festival.festivalId}" class="btn btn-primary">자세히</a>
                                   <button class="btn btn-primary heart" type="button" style="margin:0px" value="${festival.festivalId}">
                                       <img src="/img/festival/heart.png"
                                            style="width : 20px; height: 20px;">
                                   </button>
-                                  <button class="btn btn-primary trash" type="button" style="margin:0px" value="${festival.festivalId}">
+                                  <button class="btn btn-primary hate" type="button" style="margin:0px" value="${festival.festivalId}">
                                         <img src="/img/festival/trash.png"
                                              style="width : 20px; height: 20px;">
                                   </button>
@@ -333,6 +334,7 @@ $(document).ready(
                         $('#list1').append(finalHtml);
 
                         findLoveList();
+                        findHateList();
 
 
                     })
@@ -439,6 +441,11 @@ $(document).ready(
 
             }else{
 
+                if(button.closest(".card").hasClass("hasHate")){
+                    button.closest(".card").find(".hate").click();
+                }
+
+
                 $.ajax({
 
                     url: '/festival/insertUserLoveFestival?festivalId=' + festivalId,
@@ -504,6 +511,115 @@ $(document).ready(
             })
 
         }
+
+
+
+
+
+
+       /**
+        * 관심없음 하기 / 관심없음 취소하기 버튼
+        *
+        */
+        $(document).on('click','.hate', function(){
+
+            var button = $(this);
+            var festivalId = $(this).val();
+
+            if(button.closest(".card").hasClass("hasHate")){
+
+                $.ajax({
+
+                    url: '/festival/deleteUserHateFestival?festivalId=' + festivalId,
+                    method: 'POST',
+                    contentType: 'application/json',
+                    success: function(res){
+                        alert(res);
+                        button.closest('.card').removeClass("hasHate");
+                    },
+                    error: function(xhr, status, error){
+
+                        alert('error : ',error);
+
+                    }
+                })
+
+            }else{
+
+                if(button.closest(".card").hasClass("hasLove")){
+                    button.closest(".card").find(".heart").click();
+                }
+
+                $.ajax({
+
+                    url: '/festival/insertUserHateFestival?festivalId=' + festivalId,
+                    method: 'POST',
+                    contentType: 'application/json',
+                    success: function(res){
+
+                        alert(res);
+                        button.closest(".card").addClass("hasHate");
+                        console.log("addClass('hasHate');")
+
+
+                    },
+                    error: function(xhr, status, error){
+
+                     alert('error : ',error);
+
+                    }
+
+                })
+
+
+            }
+
+
+
+
+
+        })
+
+
+        /**
+        * 관심없음 리스트 찾아서 색 바꾸기
+        *
+        */
+        function findHateList(){
+
+            var cardList = document.querySelectorAll(".card");
+
+            $.ajax({
+
+                url: '/festival/findHateList',
+                method: 'POST',
+                contentType: 'application/json',
+                success: function(list){
+
+                    console.log(list);
+                    $.each(cardList, function(index, card){
+
+                        console.log("card.getAttribute('id')")
+                        console.log(card.getAttribute('id'));
+
+                        var cardString = card.getAttribute('id');
+                        var cardInt = parseInt(cardString, 10);
+
+                        if(list.includes(cardInt)){
+
+                            $(card).addClass("hasHate");
+
+                        }
+                    })
+                }
+            })
+
+        }
+
+
+
+
+
 
 
         //#endregion
