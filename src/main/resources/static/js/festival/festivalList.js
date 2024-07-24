@@ -8,39 +8,105 @@ $(document).ready(
        * DB 전체 리스트 페이지별 조회 기능
        * @param {int} page 페이지
        */
-//        function findDBFestivalList(page){
-//
-//            $('#list1').html("");
-//
-//
-//            $.ajax({
-//
-//                url: '/admin/festival-regulate/findDBFestivalList?page=' + page,
-//                method: 'POST',
-//                contentType: 'application/json',
-//                success: function(list){
-//
-//                    console.log(list)
-//
-//                    $.each(list, function(index, festival){
-//
-//
-//                        var finalHtml = "";
-//
-//                        $('#list1').append(finalHtml);
-//
-//
-//
-//                    })
-//
-//
-//                }
-//
-//            })
-//        }
-//
-//        // 1페이지 호출
-//        findDBFestivalList(1);
+        function findDBFestivalList(page){
+
+            $('#list1').html("");
+
+
+            $.ajax({
+
+                url: '/admin/festival-regulate/findDBFestivalList?page=' + page,
+                method: 'POST',
+                contentType: 'application/json',
+                success: function(list){
+
+                    console.log(list);
+                    $.each(list, function(index, festival){
+
+                        var index1 = (index + 1) + (page-1)*5;
+
+
+                        var content = festival.festivalContent.length > 30?
+                        festival.festivalContent.substring(0,30) + "..."
+                        : festival.festivalContent;
+
+                        var inst1 = festival.manageInstitution.length > 15?
+                        festival.manageInstitution.substring(0,15) + "..."
+                        : festival.manageInstitution;
+
+                        var inst2 = festival.hostInstitution.length > 15?
+                        festival.hostInstitution.substring(0,15) + "..."
+                        : festival.hostInstitution;
+
+                        var inst3 = festival.sponserInstitution.length > 15?
+                        festival.sponserInstitution.substring(0,15) + "..."
+                        : festival.sponserInstitution;
+
+
+                        console.log("축제 날짜")
+                        console.log(festival.startDate);
+                        console.log(festival.endDate);
+
+                        var start = festival.startDate.length >0?
+                        festival.startDate.substring(0,10):
+                        "없음";
+
+                        var end = festival.endDate.length >0?
+                        festival.endDate.substring(0,10):
+                        "없음";
+
+
+
+
+                        var firstHtml= ``;
+
+                        if(! festival.imgUrl || festival.imgUrl == "null"){
+
+                            firstHtml = `
+                                <div class="card" style="width: 18rem;">
+                                    <img class="card-img-top" src="img/noPhoto.png" alt="Card image cap">
+
+                            `;
+
+                        }else{
+
+                            firstHtml = `
+                                <div class="card" style="width: 18rem;">
+                                    <img class="card-img-top" src="${festival.imgUrl}" alt="Card image cap">
+
+                            `;
+
+                        }
+
+
+
+                        var secondHtml = `
+                            <div class="card-body">
+                                  <h5 class="card-title">${festival.festivalName}</h5>
+                                  <p class="card-text">${content}</p>
+                                  <a href="#" class="btn btn-primary">Go somewhere</a>
+                            </div>
+                            
+                        </div>
+                        `;
+
+
+                        var finalHtml = firstHtml + secondHtml;
+
+                        $('#list1').append(finalHtml);
+
+
+
+                    })
+
+
+                }
+
+            })
+        }
+
+        // 1페이지 호출
+        findDBFestivalList(1);
 
 //        /**
 //       * DB 전체 갯수를 알아와 페이지 버튼 추가 기능
@@ -94,46 +160,46 @@ $(document).ready(
 //        })
 //
 //
-//        /**
-//       * db 다중조건 검색 모달 클릭
-//       */
-//         $(document).on('click','#search1', function(){
-//
-//            $.ajax({
-//
-//                url: '/admin/festival-regulate/findAllRegionAndTime',
-//                method: 'POST',
-//                contentType: 'application/json',
-//                success: function(map){
-//
-//                    var list1 = map.regionList;
-//                    var list2 = map.timeList;
-//
-//                    $('#searchRegion1').html("");
-//                    $('#searchRegion1').append(`<option value="">선택안함</option>`);
-//
-//                    $.each(list1, function(index, region){
-//
-//                        var htmlContent = `<option value="${region.regionId}">${region.regionName}</option>`;
-//                        $('#searchRegion1').append(htmlContent);
-//
-//                    })
-//
-//                    $('#searchTime1').html("");
-//                    $('#searchTime1').append(`<option value="">선택 안함</option>`);
-//
-//                    $.each(list2, function(index, time){
-//
-//                        var htmlContent = `<option value="${time.timeId}">${time.timeDescription}</option>`;
-//                        $('#searchTime1').append(htmlContent);
-//
-//                    })
-//
-//                }
-//
-//            })
-//
-//        })
+        /**
+       * db 다중조건 검색 모달 클릭
+       */
+         $(document).on('click','#search1', function(){
+
+            $.ajax({
+
+                url: '/admin/festival-regulate/findAllRegionAndTime',
+                method: 'POST',
+                contentType: 'application/json',
+                success: function(map){
+
+                    var list1 = map.regionList;
+                    var list2 = map.timeList;
+
+                    $('#searchRegion1').html("");
+                    $('#searchRegion1').append(`<option value="">선택안함</option>`);
+
+                    $.each(list1, function(index, region){
+
+                        var htmlContent = `<option value="${region.regionId}">${region.regionName}</option>`;
+                        $('#searchRegion1').append(htmlContent);
+
+                    })
+
+                    $('#searchTime1').html("");
+                    $('#searchTime1').append(`<option value="">선택 안함</option>`);
+
+                    $.each(list2, function(index, time){
+
+                        var htmlContent = `<option value="${time.timeId}">${time.timeDescription}</option>`;
+                        $('#searchTime1').append(htmlContent);
+
+                    })
+
+                }
+
+            })
+
+        })
 //
 //        /**
 //       * db 다중조건을 이용힌 검색 버튼 클릭
