@@ -17,9 +17,34 @@
     <div id="festivalRegulate">
 
 
-        <div id="festivalRecommendation">
+        <div id="festivalRecommendation" style="width:100%">
 
-            <p>추천 div</p>
+            <h2 th:text="${user.userName} + '님 이런 작품은 어때요?'"></h2>
+
+            <div id="list2">
+
+                <div class="card" style="width: 18rem;">
+                    <img class="card-img-top" src="..." alt="Card image cap">
+                    <div class="card-body">
+                        <h5 class="card-title">Card title</h5>
+                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                        <a href="#" class="btn btn-primary">Go somewhere</a>
+                    </div>
+                </div>
+
+                <div class="card" style="width: 18rem;">
+                    <img class="card-img-top" src="..." alt="Card image cap">
+                    <div class="card-body">
+                        <h5 class="card-title">Card title</h5>
+                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                        <a href="#" class="btn btn-primary">Go somewhere</a>
+                    </div>
+                </div>
+
+
+            </div>
+
+            <div id="pageNum2"></div>
 
 
         </div>
@@ -76,42 +101,40 @@
                     </div>
                 </div>
             </div>
+
             <h2>축제 DB 현황
                 <button id="search1" type="button" class="btn btn-primary" data-toggle="modal" data-target="#searchModal1">
                     <img src="https://play-lh.googleusercontent.com/jLQTklRid_7HfQ1a6hzrM8WO439CyZ6dWCVnI0eiaeW8k7W3Mn69j4oy7lYedZ2QqKM" style="width : 20px; height: 20px;">
                 </button>
-                <button id="dbDeleteBtn">삭제</button></h2>
-            <table class="table table-striped" id="festivalDB">
+                <button id="dbDeleteBtn">삭제</button>
+            </h2>
 
-                <thead class="table-light">
-                <tr>
-                    <th scope="col" class="checkHead">체크</th>
-                    <th scope="col">#</th>
-                    <th scope="col">DB번호</th>
-                    <th scope="col">지역</th>
-                    <th scope="col">시간</th>
-                    <th scope="col">이름</th>
-                    <th scope="col">설명</th>
-                    <th scope="col">주관</th>
-                    <th scope="col">주체</th>
-                    <th scope="col">후원</th>
-                    <th scope="col">번호</th>
-                    <th scope="col">홈페이지</th>
-                    <th scope="col">주소</th>
-                    <th scope="col">장소</th>
-                    <th scope="col">시작</th>
-                    <th scope="col">종료</th>
-                    <th scope="col">별점평균</th>
-                    <th scope="col">계절</th>
-                    <th scope="col">이미지</th>
-                    <th scope="col" class="buttonHead">버튼</th>
+            <div id="list1">
 
-                </tr>
-                </thead>
-                <tbody id="list1"></tbody>
+                <div class="card" style="width: 18rem;">
+                    <img class="card-img-top" src="..." alt="Card image cap">
+                    <div class="card-body">
+                        <h5 class="card-title">Card title</h5>
+                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                        <a href="#" class="btn btn-primary">Go somewhere</a>
+                    </div>
+                </div>
+
+                <div class="card" style="width: 18rem;">
+                    <img class="card-img-top" src="..." alt="Card image cap">
+                    <div class="card-body">
+                        <h5 class="card-title">Card title</h5>
+                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                        <a href="#" class="btn btn-primary">Go somewhere</a>
+                    </div>
+                </div>
 
 
-            </table>
+            </div>
+
+
+
+
             <div id="pageNum1"></div>
 
 
