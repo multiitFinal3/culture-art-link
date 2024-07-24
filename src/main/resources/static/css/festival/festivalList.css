@@ -1,4 +1,17 @@
-#festivalRegulate{
+
+    #festivalRegulate{
+
+        display: flex;
+        flex-flow: column;
+        align-items: center;
+        justify-content: center;
+        margin-left: 5%;
+        margin-right: 5%;
+
+    }
+
+
+    #festivalRecommendation{
 
         display: flex;
         flex-flow: column;
@@ -7,138 +20,49 @@
         margin-top: 8%;
         margin-left: 5%;
         margin-right: 5%;
-    }
-
-    table{
-
-        margin-bottom: 50px;
-    }
-
-
-
-    table, th, td{
-
-        border: 1px solid black;
-        width: 100px;
-
 
     }
 
 
-
-
-    th, td{
-        text-align : center;
-        width: 150px;
-    }
-
-
-    th{
-
-        background-color: #C6D6EF;
-
-    }
-
-
-
-    td{
-        background-color: #E7EEF9;
-
-    }
-
-
-    td#festivalContent, td#festivalName{
-
-        width: 400px;
-
-    }
-
-    .neverClickable{
-
-        pointer-events: none !important;
-        background-color: #f0f0f1 !important;
-        text-align: center;
-
-    }
-
-
-    .autoWidth{
-
-        display: inline-block;
-        width: auto;
-        padding: 1px;
-        text-align: left;
-
-
-    }
-
-
-    #pageNum1, #pageNum2{
+    #list2{
 
         display: flex;
-        flex-direction: row;
-
-
-    }
-
-    .pageBtn1,
-    .pageBtn2,
-    .pageBtn3,
-    .pageBtn5,
-    .pageBtn6{
-
-        margin: 0.5%;
-        width: 30px;
-        text-align: center;
-
-    }
-
-
-    .pageBtn3{
-
-        color: black;
+        flex-flow: row;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: center;
+        margin-top: 8%;
+        margin-left: 5%;
+        margin-right: 5%;
 
 
     }
 
 
-    .pageBtn4, .pageBtn6{
-        margin: 0.9%;
-        color: black;
-        width: 60px;
+    #festivalList{
+
+        display: flex;
+        width: 100%;
+        flex-flow: column;
+        align-items: center;
+        justify-content: center;
+        margin-top: 8%;
+        margin-left: 5%;
+        margin-right: 5%;
 
     }
 
 
+    #list1{
 
-    .pageBtn5{
-
-        color: black;
-    }
-
-
-    .pageBtn6{
-
-        color: black;
-
-    }
-
-    .pageBtn1{
-
-        margin: 1%;
-
-    }
-
-    .checkHead{
-
-        width: 50px;
-
-    }
-
-    .buttonHead{
-
-        width: 200px;
+        display: flex;
+        flex-flow: row;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: center;
+        margin-top: 8%;
+        margin-left: 5%;
+        margin-right: 5%;
 
 
     }
-
