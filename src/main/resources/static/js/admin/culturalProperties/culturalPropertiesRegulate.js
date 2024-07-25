@@ -146,14 +146,15 @@
 //                    url: "/admin/cultural-properties-regulate/findListPage?itemsPerPage=" + itemsPerPage,
                     url: "/admin/cultural-properties-regulate/findListPage?page="+ currentPage + "&itemsPerPage=" + itemsPerPage,
                     success: function(totalPages) {
-                    // 페이지네이션 초기화 및 렌더링
-                    renderPagination(totalPages);
-//                    success: function(response) {
-//                        var totalPages = response;
-//                        totalPages = response; // 서버에서 받아온 전체 페이지 수를 totalPages1 변수에 할당
-    //                    renderPagination1(); // 페이지네이션 초기화
-
+                        // 페이지네이션 초기화 및 렌더링
                         $('#paginationSection1').empty();
+                        renderPagination1(currentPage, totalPages);
+    //                    success: function(response) {
+    //                        var totalPages = response;
+    //                        totalPages = response; // 서버에서 받아온 전체 페이지 수를 totalPages1 변수에 할당
+        //                    renderPagination1(); // 페이지네이션 초기화
+
+
                         console.log(itemsPerPage);
                         console.log(totalPages);
 
@@ -195,7 +196,7 @@
 
 
                 // renderPagination1 함수
-                function renderPagination1() {
+                function renderPagination1(currentPage1, totalPages1) {
                     $('#paginationSection1').empty(); // 기존 버튼 제거
 
                     // 이전 버튼
@@ -227,7 +228,7 @@
                         var page = $(this).data('page');
                         if (page !== currentPage1) {
                             currentPage1 = page;
-                            renderPagination1(); // 페이지 재렌더링
+                            renderPagination1(1, totalPages1); // 페이지 재렌더링
                             getDBData(); // 데이터 가져오는 예시 함수 (실제로 필요에 맞게 수정 필요)
                         }
                     });
@@ -632,7 +633,7 @@
             // 초기 페이지 데이터 불러오기
             fetchApiData(currentPage2);
             getDBData(1); // 초기 DB 데이터 불러오기
-            findListPage(1, itemsPerPage);
+            findListPage(1, 10);
 
 
         });
