@@ -48,12 +48,18 @@ public class AdminCulturalPropertiesController {
 
 	@GetMapping("/select")
 	@ResponseBody
-	public ArrayList<CulturalPropertiesDTO> selectDB(Model model, PageDTO pageDto) {
+	public ArrayList<CulturalPropertiesDTO> selectDB(Model model, @RequestParam("page") int page) {
 
-		pageDto.setStartEnd(pageDto.getPage());
-
+		PageDTO pageDTO = new PageDTO();
+		pageDTO.setPage(page);
+		
+		
+		pageDTO.setStartEnd(pageDTO.getPage());
+		System.out.println("pageDTO : " + pageDTO);
+		
+		
 		ArrayList<CulturalPropertiesDTO> list = new ArrayList<CulturalPropertiesDTO>();
-		list = (ArrayList<CulturalPropertiesDTO>) adminCulturalPropertiesService.selectDB(pageDto);
+		list = (ArrayList<CulturalPropertiesDTO>) adminCulturalPropertiesService.selectDB(pageDTO);
 
 
 		System.out.println("가져온 리스트 : " + list);

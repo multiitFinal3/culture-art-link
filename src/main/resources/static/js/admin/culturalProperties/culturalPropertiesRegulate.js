@@ -338,11 +338,11 @@
 
 
             // Ajax를 통해 DB 데이터 불러오기
-            function getDBData() {
+            function getDBData(page) {
                 $('#list1').html(""); // 테이블 내용 초기화
 
                 $.ajax({
-                    url: '/admin/cultural-properties-regulate/select',
+                    url: '/admin/cultural-properties-regulate/select?page='+ page,
                     method: 'GET',
                     contentType: 'application/json',
                     success: function(list) {
@@ -526,7 +526,7 @@
                     success: function(response) {
                         alert('데이터베이스에 성공적으로 추가되었습니다.');
                         // 추가된 데이터를 문화재 DB 현황 테이블에 업데이트
-                        getDBData(); // 데이터베이스 데이터 다시 불러오기
+                        getDBData(1); // 데이터베이스 데이터 다시 불러오기
 
 
                         // 체크박스 비활성화 처리
@@ -565,7 +565,7 @@
 
             // 초기 페이지 데이터 불러오기
             fetchApiData(currentPage2);
-            getDBData(); // 초기 DB 데이터 불러오기
+            getDBData(1); // 초기 DB 데이터 불러오기
 
 
         });

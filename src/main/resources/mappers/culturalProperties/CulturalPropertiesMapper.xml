@@ -28,7 +28,7 @@
     <select id="selectDB" resultType="culturalPropertiesDTO">
         SELECT *
         FROM( SELECT ROW_NUMBER() OVER(ORDER BY id DESC) AS rownum, c.*
-        FROM cultural_properties c) c2 cultural_properties
+        FROM cultural_properties c) c2
         WHERE c2.rownum BETWEEN ${start} AND ${end};
 
     </select>
