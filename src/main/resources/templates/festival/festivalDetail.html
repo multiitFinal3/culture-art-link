@@ -5,7 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
-    <link rel="stylesheet" th:href="@{/css/festival/festivalList.css}">
+    <link rel="stylesheet" th:href="@{/css/festival/festivalDetail.css}">
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
     <script th:src="@{/js/festival/festivalDetail.js}"></script>
 </head>
@@ -13,42 +13,402 @@
 
 <div layout:fragment="content">
 
-<!--    상세 페이지입니다.-->
-<!--    <h3 th:text="${festival}"></h3>-->
+    <div id="columnFlow" style="width:100%">
 
-    <div id="rowFlow">
+        <div id="upperZone">
 
-        <div id="detailCard">
+            <div id="detailCardZone">
+
+                <div class="card" id="detailCard" style="width: 18rem;" th:value="${festival.festivalId}">
+
+                    <div th:switch="${festival.imgUrl}">
+
+                        <img th:case="''" class="card-img-top" src="/img/festival/noPhoto.png" alt="이미지가 없습니다">
+                        <img th:case="'null'" class="card-img-top" src="/img/festival/noPhoto.png" alt="이미지가 없습니다">
+                        <img th:case="null" class="card-img-top" src="/img/festival/noPhoto.png" alt="이미지가 없습니다">
+                        <img th:case="*" class="card-img-top" th:src="@{${festival.imgUrl}}" alt="이미지가 없습니다">
+
+                    </div>
 
 
+                    <div class="card-body" style="width:100%">
+
+                        <h1 class="card-title" th:text="${festival.festivalName}"></h1>
+
+                        <div id="keywordZone" style="width:100%">
+
+                            <div id="contentKeyword" style="width:100%">
+                                컨텐트 키워드
+                                <button class="keyword contentKeyword">1산수유</button><button class="keyword contentKeyword">산수유</button><button class="keyword contentKeyword">산수유</button><button class="keyword contentKeyword">산수유</button>
+                            </div>
+
+                            <div id="naverKeyword" style="width:100%">
+                                네이버 키워드
+                                <button class="keyword naverKeyword">2산수유</button><button class="keyword naverKeyword">산수유</button><button class="keyword naverKeyword">산수유</button><button class="keyword naverKeyword">산수유</button>
+                            </div>
+
+                        </div>
+
+                        <div th:switch="${festival.detailAddress}">
+
+                            <p th:case="''"></p>
+                            <p th:case="'null'"></p>
+                            <p th:case="null"></p>
+                            <p th:case="*" th:text="'주소 : '+${festival.detailAddress}"></p>
+
+                        </div>
+
+
+                        <div th:switch="${festival.season}">
+
+                            <p th:case="''"></p>
+                            <p th:case="'null'"></p>
+                            <p th:case="null"></p>
+                            <p th:case="*" th:text="'계절 : '+${festival.season}"></p>
+
+                        </div>
+
+
+                        <div th:switch="${festival.startDate}">
+                            시작일 종료일 양식 바꾸기
+                            <p th:case="''"></p>
+                            <p th:case="'null'"></p>
+                            <p th:case="null"></p>
+                            <p th:case="*" th:text="'시작일 : '+${festival.startDate}"></p>
+
+                        </div>
+
+                        <div th:switch="${festival.endDate}">
+                            시작일 종료일 양식 바꾸기
+                            <p th:case="''"></p>
+                            <p th:case="'null'"></p>
+                            <p th:case="null"></p>
+                            <p th:case="*" th:text="'종료일 : '+${festival.endDate}"></p>
+
+                        </div>
+
+                        <div th:value="${festival.timeId}" id="timeId">
+
+                            <p> 시간대 자세한 설명 ajax</p>
+
+                        </div>
+
+                        <div th:switch="${festival.manageInstitution}">
+
+                            <p th:case="''"></p>
+                            <p th:case="'null'"></p>
+                            <p th:case="null"></p>
+                            <p th:case="*" th:text="'주체기관 : '+${festival.manageInstitution}"></p>
+
+                        </div>
+
+
+                        <div th:switch="${festival.hostInstitution}">
+
+                            <p th:case="''"></p>
+                            <p th:case="'null'"></p>
+                            <p th:case="null"></p>
+                            <p th:case="*" th:text="'주관기관 : '+${festival.hostInstitution}"></p>
+
+                        </div>
+
+
+                        <div th:switch="${festival.sponserInstitution}">
+
+                            <p th:case="''"></p>
+                            <p th:case="'null'"></p>
+                            <p th:case="null"></p>
+                            <p th:case="*" th:text="'후원기관 : '+${festival.sponserInstitution}"></p>
+
+                        </div>
+
+
+                        <div th:switch="${festival.homepageUrl}">
+
+                            <a th:case="''"></a>
+                            <a th:case="'null'"></a>
+                            <a th:case="null"></a>
+                            <a th:if="${!festival.homepageUrl.startsWith('https') and !festival.homepageUrl.startsWith('http') and !festival.homepageUrl.startsWith('www')}"></a>
+                            <a th:if="${festival.homepageUrl.startsWith('https') or festival.homepageUrl.startsWith('http') or festival.homepageUrl.startsWith('www')}" th:href="@{${festival.homepageUrl}}">홈페이지</a>
+
+                        </div>
+
+                        <div th:switch="${festival.place}">
+
+                            <p th:case="''"></p>
+                            <p th:case="'null'"></p>
+                            <p th:case="null"></p>
+                            <p th:case="*" th:text="'장소 : '+${festival.place}"></p>
+
+                        </div>
+
+                        <div th:switch="${festival.tel}">
+
+                            <p th:case="''"></p>
+                            <p th:case="'null'"></p>
+                            <p th:case="null"></p>
+                            <p th:case="*" th:text="'전화번호 : '+${festival.tel}"></p>
+
+                        </div>
+
+
+                        <p class="card-text" th:text="${festival.festivalContent}"></p>
+
+                        <div id="buttonZone">
+
+                            <button class="btn btn-primary heart" type="button" style="margin:0.5%" th:value="${festival.festivalId}">
+                                <img src="/img/festival/heart.png"
+                                     style="width : 20px; height: 20px;">
+                            </button>
+                            <button class="btn btn-primary hate" type="button" style="margin:0.5%" th:value="${festival.festivalId}">
+                                <img src="/img/festival/trash.png"
+                                     style="width : 20px; height: 20px;">
+                            </button>
+
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+
+
+
+            <div id="rightZone">
+
+                <div id="review" style="width: 100%">
+                    <h3>리뷰 작성하기</h3>
+
+                    <div>
+
+                        <textarea id="reviewTextArea" rows="4" cols="150">
+                            리뷰를 입력하세요
+                        </textarea>
+                        <input id="reviewStar" type="number" step="0.5" value="3" max="5" min="0" style="width: 40px; height: 40px">
+                        <button id="reviewInsertBtn">리뷰 제출</button>
+
+                    </div>
+
+                    <div id="reviewList">
+
+                        <p>
+                            <span>
+                                <img src="/img/festival/star.png" height="50px">
+                            </span>
+
+                            <span>안지윤님</span>
+
+                            <span>
+                                <textarea id="1" class="reviewText" rows="2" cols="100"> 추웠어요...산에는 다시는 가고 싶지 않아요</textarea>
+                            </span>
+
+                            <span><img src="/img/festival/star.png" height="50px"></span>
+
+                            <span><button value="1">수정</button></span>
+
+                            <span><button value="1">삭제</button></span>
+
+                        </p>
+
+
+
+                        <p>
+                            <span>
+                                <img src="/img/festival/star.png" height="50px">
+                            </span>
+
+                            <span>안지윤님</span>
+
+                            <span>
+                                <textarea id="2" class="reviewText" rows="2" cols="100"> 추웠어요...산에는 다시는 가고 싶지 않아요</textarea>
+                            </span>
+
+                            <span><img src="/img/festival/star.png" height="50px"></span>
+
+                            <span><button value="2">수정</button></span>
+
+                            <span><button value="2">삭제</button></span>
+
+                        </p>
+
+
+
+
+
+
+
+                    </div>
+
+                    <div id="reviewPages">
+
+                        <button>1</button>
+                        <button>2</button>
+                        <button>3</button>
+
+                    </div>
+
+                </div>
+
+
+
+                <div id="youtubeList" style="width: 100%">
+
+                    <h3>관련 동영상</h3>
+
+                    <div>
+
+                        <img src="/img/festival/star.png" height="250px">
+
+
+                    </div>
+
+                    <div id="youtubePages">
+
+                        <button>1</button>
+                        <button>2</button>
+                        <button>3</button>
+
+                    </div>
+
+                </div>
+
+
+
+
+
+                <div id="naverNews" style="width: 100%">
+
+                    <h3>네이버 기사</h3>
+
+                    <div>
+
+                        <img src="/img/festival/star.png" height="250px">
+
+                    </div>
+
+                    <div id="articlePages">
+
+                        <button>1</button>
+                        <button>2</button>
+                        <button>3</button>
+
+                    </div>
+
+                </div>
+
+                <div id="naverBlog" style="width: 100%">
+
+                    <h3>네이버 블로그</h3>
+
+
+
+                    <div>
+
+                        <img src="/img/festival/star.png" height="250px">
+
+                    </div>
+
+                    <div id="blogPages">
+
+                        <button>1</button>
+                        <button>2</button>
+                        <button>3</button>
+
+                    </div>
+
+                </div>
+
+            </div>
 
 
         </div>
 
-
-        <div>
-
+        <div id="downZone">
 
 
+            <div id="recommendCardZone">
+
+                <h3>
+                    <img src="/img/festival/star.png" alt="이미지 없음" height="50px"> 축제 추천 리스트
+                    <button class="btn btn-primary"  id="regionRecommend" th:value="${festival.regionId}">같은 지역</button>
+                    <button class="btn btn-primary" id="startDateRecommend" th:value="${festival.season}">같은 계절</button>
+                    <button class="btn btn-primary" id="manageInstRecommend" th:value="${festival.manageInstitution}">주체기관 동일</button>
+                    <button class="btn btn-primary" id="keywordRecommend" th:value="${festival.festivalId}">키워드 동일</button>
+                </h3>
+
+                <div id="recommendCardList">
+
+                    <div class="card recommendCard" style="width: 18rem;">
+                        <img class="card-img-top" src="..." alt="Card image cap">
+                        <div class="card-body">
+                            <h5 class="card-title">Card title</h5>
+                            <p class="card-text">Some quick example text to build on the card title and make up the bulk of
+                                the card's content.</p>
+                            <a href="#" class="btn btn-primary">Go somewhere</a>
+                        </div>
+                    </div>
+
+                    <div class="card recommendCard" style="width: 18rem;">
+                        <img class="card-img-top" src="..." alt="Card image cap">
+                        <div class="card-body">
+                            <h5 class="card-title">Card title</h5>
+                            <p class="card-text">Some quick example text to build on the card title and make up the bulk of
+                                the card's content.</p>
+                            <a href="#" class="btn btn-primary">Go somewhere</a>
+                        </div>
+                    </div>
+
+                    <div class="card recommendCard" style="width: 18rem;">
+                        <img class="card-img-top" src="..." alt="Card image cap">
+                        <div class="card-body">
+                            <h5 class="card-title">Card title</h5>
+                            <p class="card-text">Some quick example text to build on the card title and make up the bulk of
+                                the card's content.</p>
+                            <a href="#" class="btn btn-primary">Go somewhere</a>
+                        </div>
+                    </div>
+
+                    <div class="card recommendCard" style="width: 18rem;">
+                        <img class="card-img-top" src="..." alt="Card image cap">
+                        <div class="card-body">
+                            <h5 class="card-title">Card title</h5>
+                            <p class="card-text">Some quick example text to build on the card title and make up the bulk of
+                                the card's content.</p>
+                            <a href="#" class="btn btn-primary">Go somewhere</a>
+                        </div>
+                    </div>
+
+                    <div class="card recommendCard" style="width: 18rem;">
+                        <img class="card-img-top" src="..." alt="Card image cap">
+                        <div class="card-body">
+                            <h5 class="card-title">Card title</h5>
+                            <p class="card-text">Some quick example text to build on the card title and make up the bulk of
+                                the card's content.</p>
+                            <a href="#" class="btn btn-primary">Go somewhere</a>
+                        </div>
+                    </div>
+
+                    <div class="card recommendCard" style="width: 18rem;">
+                        <img class="card-img-top" src="..." alt="Card image cap">
+                        <div class="card-body">
+                            <h5 class="card-title">Card title</h5>
+                            <p class="card-text">Some quick example text to build on the card title and make up the bulk of
+                                the card's content.</p>
+                            <a href="#" class="btn btn-primary">Go somewhere</a>
+                        </div>
+                    </div>
+
+                </div>
 
 
+            </div>
 
         </div>
-
-
-
-
-
 
 
 
 
     </div>
-
-
-
-
-
 
 
 </div>
