@@ -39,6 +39,9 @@ async function loadExhibitionDetails(exhibitionId) {
         const response = await fetch(`/exhibition/${exhibitionId}`);
         const data = await response.json();
         console.log(data);
+
+        data.startDate =  data.startDate?.substring(0,10) || "미정";
+        data.endDate =  data.endDate?.substring(0,10) || "미정";
         renderExhibitionDetails(data);
     } catch (error) {
         console.error('Failed to load exhibition details:', error);
@@ -73,11 +76,35 @@ function initMap(location) {
 function renderInformation(exhibition) {
     $('#description').html(exhibition.description);
     $('#subDescription').text(exhibition.subDescription);
+    // const url = exhibition.url;
+    // if (url) {
+    //     $('#detailFrame').attr('src', url);
+    // }
     const url = exhibition.url;
     if (url) {
-        $('#detailFrame').attr('src', url);
+        $('#detailFrame').attr('data', url);
     }
+    // URL 정보를 데이터 속성으로 저장
+    // $('#exhibitionInformation').data('url', exhibition.url);
+    // loadDetailUrl();
     // $('#news').text(exhibition.title);
+}
+
+function loadDetailUrl() {
+    const url = $('#exhibitionInformation').data('url');
+    if (url) {
+        $.ajax({
+            url: '/exhibition/detail-url', // Spring Boot 서버 주소로 변경
+            data: { url: url },
+            success: function(response) {
+                console.log(response);
+                $('#detailContent').html(response);
+            },
+            error: function() {
+                $('#detailContent').html('페이지를 불러오는 데 실패했습니다.');
+            }
+        });
+    }
 }
 
 function renderVideo(videoId) {

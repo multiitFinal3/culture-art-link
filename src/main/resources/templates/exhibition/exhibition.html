@@ -72,91 +72,26 @@
           .exhibition-content:hover {
             background-color: #f0f0f0;
           }
+
+          .background-pink {
+            background-color: pink;
+          }
+
+          .background-gray {
+            background-color: gray;
+          }
         </style>
         <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
         <script>
           let exhibitions = [];
           let viewStatus = "all"; // pre, current, future, unknown 어떤 버튼 눌렀는지
+          let searchParams = { title: "", artist: "", museum: "" };
 
-
-          // async function getExhibitions() {
-          //   const response = await axios.get(
-          //     "/admin/exhibition-regulate/db-exhibition"
-          //   );
-          //
-          //   console.log("response : ", response);
-          //   exhibitions = response.data.map((item) => {
-          //     return {
-          //       id: item.id,
-          //       image: item.image,
-          //       title: item.title,
-          //       artist: item.artist,
-          //       museum: item.museum,
-          //       startDate: item.startDate?.substring(0, 10),
-          //       endDate: item.endDate?.substring(0, 10),
-          //     };
-          //   });
-          //
-          //   exhibitions = exhibitions.filter((item) => {
-          //     if (viewStatus === "all") {
-          //       return true;
-          //     }
-          //
-          //     if (viewStatus === "pre") {
-          //       today = new Date();
-          //
-          //       if (
-          //         item.startDate <= today.getTime() &&
-          //         item.endDate >= today.getTime()
-          //       ) {
-          //         return true;
-          //       }
-          //     }
-          //     return false;
-          //   });
-          //
-          //   renderExhibitions();
-          // }
-
-          // // 전시회 목록을 렌더링하는 함수
-          // function renderExhibitions() {
-          //   const $exhibitionList = $(".exhibition-list");F
-          //   $exhibitionList.empty(); // 기존 목록 초기화
-          //
-          //   $.each(exhibitions, function (index, exhibition) {
-          //     const $li = $("<li>").addClass("exhibition-item");
-          //     $li.html(`
-          //               <img src="${exhibition.image}" alt="${exhibition.title}" class="exhibition-image">
-          //               <div class="exhibition-info">
-          //                   <h3>${exhibition.title}</h3>
-          //                   <p>${exhibition.artist}</p>
-          //                   <p>${exhibition.museum}</p>
-          //                   <p>시작일: ${exhibition.startDate}</p>
-          //                   <p>종료일: ${exhibition.endDate}</p>
-          //               </div>
-          //               <div class="exhibition-actions">
-          //                   <button class="action-button">♡</button>
-          //                   <button class="action-button">□</button>
-          //               </div>
-          //           `);
-          //     $exhibitionList.append($li);
-          //   });
-          //
-          //   // 클릭시 상세 페이지로 들어감
-          //   $(".exhibition-content").click(function() {
-          //     const exhibitionId = $(this).data("id");
-          //     window.location.href = `/exhibition-detail/${exhibitionId}`;
-          //   });
-          // }
-          //
-
-          //페이지에 들어갔을 때 실행 되는 init 함수
-          // $(document).ready(init);
           $(document).ready(function () {
             init();
 
-            // 버튼 클릭 이벤트 처리
+            // 전시 여부 버튼
             $("#currentBtn").click(function () {
               changeViewStatus("current");
             });
@@ -171,6 +106,13 @@
             });
           });
 
+          // 검색 버튼
+          $(document).on('click', "#searchButton", function () {
+            searchExhibitions();
+          });
+
+
+
           function changeViewStatus(status) {
             viewStatus = status;
             filterAndRenderExhibitions();
@@ -178,7 +120,7 @@
 
           async function getExhibitions() {
             const response = await axios.get(
-              "/admin/exhibition-regulate/db-exhibition"
+              "/exhibition/exhibition"
             );
 
             exhibitions = response.data.map((item) => ({
@@ -189,6 +131,7 @@
               museum: item.museum,
               startDate: item.startDate ? new Date(item.startDate) : null,
               endDate: item.endDate ? new Date(item.endDate) : null,
+              state: item.state
             }));
 
             filterAndRenderExhibitions();
@@ -197,6 +140,8 @@
           function filterAndRenderExhibitions() {
             const today = new Date();
             const filteredExhibitions = exhibitions.filter((item) => {
+              if (!matchesSearch(item)) return false;
+
               if (viewStatus === "all") return true;
               if (!item.startDate || !item.endDate)
                 return viewStatus === "unknown";
@@ -216,6 +161,29 @@
             renderExhibitions(filteredExhibitions);
           }
 
+          function matchesSearch(exhibition) {
+            return (
+                    exhibition.title.toLowerCase().includes(searchParams.title.toLowerCase()) &&
+                    exhibition.artist.toLowerCase().includes(searchParams.artist.toLowerCase()) &&
+                    exhibition.museum.toLowerCase().includes(searchParams.museum.toLowerCase())
+            );
+          }
+
+          function searchExhibitions() {
+            searchParams = {
+              title: $("#searchTitle").val(),
+              artist: $("#searchArtist").val(),
+              museum: $("#searchMuseum").val(),
+            };
+            filterAndRenderExhibitions();
+          }
+
+
+
+
+
+
+
           // 전시회 목록을 렌더링하는 함수
           function renderExhibitions(exhibitionsToRender) {
             const $exhibitionList = $(".exhibition-list");
@@ -223,6 +191,13 @@
 
             $.each(exhibitionsToRender, function (index, exhibition) {
               const $li = $("<li>").addClass("exhibition-item");
+              if(exhibition.state === "interested") {
+                $li.addClass("background-pink")
+              }else if(exhibition.state === "not_interested"){
+                $li.addClass("background-gray")
+              }
+
+
               $li.html(`
                 <div class="exhibition-content" data-id="${exhibition.id}">
                   <img src="${exhibition.image}" alt="${exhibition.title}" class="exhibition-image">
@@ -235,8 +210,8 @@
                   </div>
                 </div>
                 <div class="exhibition-actions">
-                  <button class="action-button">♡</button>
-                  <button class="action-button">□</button>
+                  <button class="exhibition-like" data-id="${exhibition.id}">찜</button>
+                  <button class="exhibition-dislike" data-id="${exhibition.id}">관심없음</button>
                 </div>
               `);
               $exhibitionList.append($li);
@@ -247,24 +222,57 @@
               const exhibitionId = $(this).data("id");
               window.location.href = `/exhibition/detail/${exhibitionId}`;
             });
-          }
-          //
 
+            // 찜 버튼 클릭 이벤트
+            $(".exhibition-like").click(function(e) {
+              e.stopPropagation();
+              const exhibitionId = $(this).data("id");
+              console.log("exhibition-like btn : ",exhibitionId)
+              updateInterest(exhibitionId, 'interested');
+            });
+
+            // 관심없음 버튼 클릭 이벤트
+            $(".exhibition-dislike").click(function(e) {
+              e.stopPropagation();
+              const exhibitionId = $(this).data("id");
+              console.log("exhibition-dislike btn : ",exhibitionId)
+              updateInterest(exhibitionId, 'not_interested');
+            });
+          }
+
+          function updateInterest(exhibitionId, state) {
+            axios.post('/exhibition/interested', {
+              exhibitionId: Number(exhibitionId),
+              state: state
+            })
+            .then(function (response) {
+              console.log('Interest updated successfully');
+              // 여기에 UI 업데이트 로직을 추가할 수 있습니다.
+            })
+            .catch(function (error) {
+              console.error('Error updating interest:', error);
+            });
+          }
+
+
+
+
+          //페이지에 들어갔을 때 실행 되는 init 함수
           function init() {
             getExhibitions();
           }
 
-          // 전시회 추가 함수
-          function addExhibition(exhibition) {
-            exhibitions.push(exhibition);
-            renderExhibitions();
-          }
-
-          // 전시회 삭제 함수
-          function removeExhibition(index) {
-            exhibitions.splice(index, 1);
-            renderExhibitions();
-          }
+          // // 전시회 추가 함수
+          // function addExhibition(exhibition) {
+          //   exhibitions.push(exhibition);
+          //   renderExhibitions();
+          // }
+          //
+          // // 전시회 삭제 함수
+          // function removeExhibition(index) {
+          //   exhibitions.splice(index, 1);
+          //   renderExhibitions();
+          // }
         </script>
       </head>
       <body>
@@ -295,57 +303,9 @@
                 <p>국립중앙박물관</p>
                 <p>2023-07-05~2023-09-29</p>
               </div>
-              <div class="exhibition-actions">
-                <button class="action-button">♡</button>
-                <button class="action-button">□</button>
-              </div>
-            </li>
-            <li class="exhibition-item">
-              <img
-                src="path_to_yusungnam_image.jpg"
-                alt="제23회 이인성미술상 수상자전 《윤성남》"
-                class="exhibition-image"
-              />
-              <div class="exhibition-info">
-                <h3>제23회 이인성미술상 수상자전 《윤성남》</h3>
-                <p>국립현대미술관</p>
-                <p>2023-07-05~2024-10-21</p>
-              </div>
-              <div class="exhibition-actions">
-                <button class="action-button">♡</button>
-                <button class="action-button">□</button>
-              </div>
-            </li>
-            <li class="exhibition-item">
-              <img
-                src="path_to_sojeonggi_image.jpg"
-                alt="2024 소장품기획전 《회화적 지도 읽기》"
-                class="exhibition-image"
-              />
-              <div class="exhibition-info">
-                <h3>2024 소장품기획전 《회화적 지도 읽기》</h3>
-                <p>대전시립미술관</p>
-                <p>2024-04-09 ~ 2024-08-18</p>
-              </div>
-              <div class="exhibition-actions">
-                <button class="action-button">♡</button>
-                <button class="action-button">□</button>
-              </div>
-            </li>
-            <li class="exhibition-item">
-              <img
-                src="path_to_digest_image.jpg"
-                alt="2024 다이제스트 《이기창: 작업에서 연습으로》"
-                class="exhibition-image"
-              />
-              <div class="exhibition-info">
-                <h3>2024 다이제스트 《이기창: 작업에서 연습으로》</h3>
-                <p>서귀포시</p>
-                <p>2024-04-09 ~ 2024-08-18</p>
-              </div>
-              <div class="exhibition-actions">
-                <button class="action-button">♡</button>
-                <button class="action-button">□</button>
+              <div class="exhibition-interested">
+                <button class="exhibition-like">찜</button>
+                <button class="exhibition-dislike">관심없음</button>
               </div>
             </li>
           </ul>
