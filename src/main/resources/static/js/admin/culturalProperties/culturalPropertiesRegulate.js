@@ -6,7 +6,7 @@
 
             var currentPage = 1; // 초기 페이지는 1로 설정
             var totalPages = 0; // 초기에는 총 페이지 수를 알 수 없으므로 0으로 설정
-            var itemsPerPage = 10;
+//            var itemsPerPage = 10;
 //            var itemsPerPage = $('#itemsPerPageSelect').val();
 
 //            var currentPage = [[${currentPage}]];
@@ -139,41 +139,38 @@
 //                    disableCheckboxes(); // 실제 기능에 맞게 수정 필요
 //                }
 
-
+            function findListPage(itemsPerPage){
             // AJAX를 통해 서버에서 전체 페이지 수(totalPages)를 받아오기
-            $.ajax({
-                type: "GET", // GET 방식으로 변경 (서버에서 페이지 수를 가져오는 것이므로)
-                url: "/admin/cultural-properties-regulate/findListPage",
-                data: {
-                    itemsPerPage: itemsPerPage // itemsPerPage를 파라미터로 전달
-                },
-                success: function(response) {
-                    totalPages = response; // 서버에서 받아온 전체 페이지 수를 totalPages1 변수에 할당
-//                    renderPagination1(); // 페이지네이션 초기화
-console.log(itemsPerPage);
-                console.log(totalPages);
-                    // 이전 페이지 링크
-                    var prevDisabled = (currentPage === 1 || totalPages === 0) ? 'disabled' : '';
-                    var prevLink = (currentPage > 1) ? (currentPage - 1) : currentPage;
-                    var prevHtml = '<li class="page-item ' + prevDisabled + '"><a class="page-link" href="#" onclick="changePage(' + prevLink + ')">이전</a></li>';
-                    $('#pagination').append(prevHtml);
+                $.ajax({
+                    type: "GET", // GET 방식으로 변경 (서버에서 페이지 수를 가져오는 것이므로)
+                    url: "/admin/cultural-properties-regulate/findListPage?itemsPerPage" + itemsPerPage,
+                    success: function(response) {
+                        totalPages = response; // 서버에서 받아온 전체 페이지 수를 totalPages1 변수에 할당
+    //                    renderPagination1(); // 페이지네이션 초기화
+                        console.log(itemsPerPage);
+                        console.log(totalPages);
+                        // 이전 페이지 링크
+                        var prevDisabled = (currentPage === 1 || totalPages === 0) ? 'disabled' : '';
+                        var prevLink = (currentPage > 1) ? (currentPage - 1) : currentPage;
+                        var prevHtml = '<li class="page-item ' + prevDisabled + '"><a class="page-link" href="#" onclick="changePage(' + prevLink + ')">이전</a></li>';
+                        $('#pagination').append(prevHtml);
 
-                    // 페이지 번호 링크
-                    for (var i = 1; i <= totalPages; i++) {
-                        var activeClass = (currentPage === i) ? 'active' : '';
-                        var pageHtml = '<li class="page-item ' + activeClass + '"><a class="page-link" href="#" onclick="changePage(' + i + ')">' + i + '</a></li>';
-                        $('#pagination').append(pageHtml);
+                        // 페이지 번호 링크
+                        for (var i = 1; i <= totalPages; i++) {
+                            var activeClass = (currentPage === i) ? 'active' : '';
+                            var pageHtml = '<li class="page-item ' + activeClass + '"><a class="page-link" href="#" onclick="changePage(' + i + ')">' + i + '</a></li>';
+                            $('#pagination').append(pageHtml);
+                        }
+
+                        // 다음 페이지 링크
+                        var nextDisabled = (currentPage === totalPages || totalPages === 0) ? 'disabled' : '';
+                        var nextLink = (currentPage < totalPages) ? (currentPage + 1) : currentPage;
+                        var nextHtml = '<li class="page-item ' + nextDisabled + '"><a class="page-link" href="#" onclick="changePage(' + nextLink + ')">다음</a></li>';
+                        $('#pagination').append(nextHtml);
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error fetching pagination data: ' + error);
                     }
-
-                    // 다음 페이지 링크
-                    var nextDisabled = (currentPage === totalPages || totalPages === 0) ? 'disabled' : '';
-                    var nextLink = (currentPage < totalPages) ? (currentPage + 1) : currentPage;
-                    var nextHtml = '<li class="page-item ' + nextDisabled + '"><a class="page-link" href="#" onclick="changePage(' + nextLink + ')">다음</a></li>';
-                    $('#pagination').append(nextHtml);
-                },
-                error: function(xhr, status, error) {
-                    console.error('Error fetching pagination data: ' + error);
-                }
 
 
             });
@@ -181,6 +178,8 @@ console.log(itemsPerPage);
                 // 데이터가 있는 페이지의 체크박스 비활성화 처리
                 disableCheckboxes(); // 실제 기능에 맞게 수정 필요
 //            }
+
+                }
 
 
 

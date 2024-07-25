@@ -130,8 +130,7 @@ public class AdminCulturalPropertiesController {
 
 	@GetMapping("/findListPage")
 	@ResponseBody
-	public int findListPage(PageDTO pageDto,
-							@RequestParam(value = "itemsPerPage", defaultValue = "10") int itemsPerPage
+	public int findListPage(@RequestParam(value = "itemsPerPage", defaultValue = "10") int itemsPerPage
 							){
 
 		// 전체 데이터 개수 가져오기
