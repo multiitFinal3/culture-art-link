@@ -391,7 +391,7 @@ public class FestivalController {
 		}
 		
 		
-		return "찜 목록 및 관련 키워드 삭제 성공!";
+		return "관심없음 목록 및 관련 키워드 삭제 성공!";
 		
 	}
 	
