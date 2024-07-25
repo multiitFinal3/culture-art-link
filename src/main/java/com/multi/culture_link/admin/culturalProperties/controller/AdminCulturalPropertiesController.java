@@ -106,20 +106,39 @@ public class AdminCulturalPropertiesController {
 //	}
 	
 	
+//	@GetMapping("/findListPage")
+//	@ResponseBody
+//	public int findListPage(@RequestParam("itemsPerPage") int itemsPerPage){
+//
+//		// 전체 데이터 개수 가져오기
+//		int totalCount = adminCulturalPropertiesService.selectCount();
+//
+//		// 전체 페이지 수 계산
+//		int totalPages = (int) Math.ceil((double) totalCount / itemsPerPage);
+//
+////		System.out.println("totalCount :" + totalCount);
+//		System.out.println("total pages!! : " + totalPages);
+//
+//		return totalPages;
+//
+//	}
+
+
 	@GetMapping("/findListPage")
 	@ResponseBody
-	public int findListPage(@RequestParam("itemsPerPage") int itemsPerPage){
-		
+	public int findListPage(@RequestParam(value = "itemsPerPage", defaultValue = "10") int itemsPerPage){
+
 		// 전체 데이터 개수 가져오기
 		int totalCount = adminCulturalPropertiesService.selectCount();
-		
+
 		// 전체 페이지 수 계산
 		int totalPages = (int) Math.ceil((double) totalCount / itemsPerPage);
-		
+
+//		System.out.println("totalCount :" + totalCount);
 		System.out.println("total pages!! : " + totalPages);
-		
+
 		return totalPages;
-		
+
 	}
 
 
