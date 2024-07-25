@@ -2,6 +2,7 @@ package com.multi.culture_link.admin.culturalProperties.controller;
 
 
 import com.multi.culture_link.admin.culturalProperties.model.dto.CulturalPropertiesDTO;
+import com.multi.culture_link.admin.culturalProperties.model.dto.PageDTO;
 import com.multi.culture_link.admin.culturalProperties.service.AdminCulturalPropertiesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -47,10 +48,13 @@ public class AdminCulturalPropertiesController {
 
 	@GetMapping("/select")
 	@ResponseBody
-	public ArrayList<CulturalPropertiesDTO> selectDB(Model model) {
+	public ArrayList<CulturalPropertiesDTO> selectDB(Model model, PageDTO pageDto) {
+
+		pageDto.setStartEnd(pageDto.getPage());
 
 		ArrayList<CulturalPropertiesDTO> list = new ArrayList<CulturalPropertiesDTO>();
-		list = (ArrayList<CulturalPropertiesDTO>) adminCulturalPropertiesService.selectDB();
+		list = (ArrayList<CulturalPropertiesDTO>) adminCulturalPropertiesService.selectDB(pageDto);
+
 
 		System.out.println("가져온 리스트 : " + list);
 
@@ -126,13 +130,15 @@ public class AdminCulturalPropertiesController {
 
 	@GetMapping("/findListPage")
 	@ResponseBody
-	public int findListPage(@RequestParam(value = "itemsPerPage", defaultValue = "10") int itemsPerPage){
+	public int findListPage(PageDTO pageDto,
+							@RequestParam(value = "itemsPerPage", defaultValue = "10") int itemsPerPage
+							){
 
 		// 전체 데이터 개수 가져오기
-		int totalCount = adminCulturalPropertiesService.selectCount();
+		int count = adminCulturalPropertiesService.selectCount();
 
 		// 전체 페이지 수 계산
-		int totalPages = (int) Math.ceil((double) totalCount / itemsPerPage);
+		int totalPages = (int) Math.ceil((double) count / itemsPerPage);
 
 //		System.out.println("totalCount :" + totalCount);
 		System.out.println("total pages!! : " + totalPages);

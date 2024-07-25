@@ -6,8 +6,8 @@
 
             var currentPage = 1; // 초기 페이지는 1로 설정
             var totalPages = 0; // 초기에는 총 페이지 수를 알 수 없으므로 0으로 설정
-//            var itemsPerPage1 = 10;
-            var itemsPerPage = $('#itemsPerPageSelect').val();
+            var itemsPerPage = 10;
+//            var itemsPerPage = $('#itemsPerPageSelect').val();
 
 //            var currentPage = [[${currentPage}]];
 //            var totalPages = [[${totalPages}]];
@@ -150,7 +150,7 @@
                 success: function(response) {
                     totalPages = response; // 서버에서 받아온 전체 페이지 수를 totalPages1 변수에 할당
 //                    renderPagination1(); // 페이지네이션 초기화
-
+console.log(itemsPerPage);
                 console.log(totalPages);
                     // 이전 페이지 링크
                     var prevDisabled = (currentPage === 1 || totalPages === 0) ? 'disabled' : '';

@@ -2,6 +2,7 @@ package com.multi.culture_link.admin.culturalProperties.service;
 
 import com.multi.culture_link.admin.culturalProperties.model.dao.AdminCulturalPropertiesDAO;
 import com.multi.culture_link.admin.culturalProperties.model.dto.CulturalPropertiesDTO;
+import com.multi.culture_link.admin.culturalProperties.model.dto.PageDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -279,10 +280,10 @@ public class AdminCulturalPropertiesService {
 	
 
 	
-	public List<CulturalPropertiesDTO> selectDB() {
+	public List<CulturalPropertiesDTO> selectDB(PageDTO pageDto) {
 
 
-		ArrayList<CulturalPropertiesDTO> list = (ArrayList<CulturalPropertiesDTO>) adminCulturalPropertiesDAO.selectDB();
+		ArrayList<CulturalPropertiesDTO> list = (ArrayList<CulturalPropertiesDTO>) adminCulturalPropertiesDAO.selectDB(pageDto);
 
 //		// 페이징을 위한 서브리스트 계산
 //		int startIndex = (page - 1) * itemsPerPage;

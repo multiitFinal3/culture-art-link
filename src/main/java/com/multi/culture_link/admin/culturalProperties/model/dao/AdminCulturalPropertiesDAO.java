@@ -1,11 +1,9 @@
 package com.multi.culture_link.admin.culturalProperties.model.dao;
 
 import com.multi.culture_link.admin.culturalProperties.model.dto.CulturalPropertiesDTO;
+import com.multi.culture_link.admin.culturalProperties.model.dto.PageDTO;
 import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
-import org.mybatis.spring.SqlSessionTemplate;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Mapper
@@ -13,7 +11,7 @@ public interface AdminCulturalPropertiesDAO {
 
     void insertDB(CulturalPropertiesDTO culturalPropertiesDTO);
 
-    List<CulturalPropertiesDTO> selectDB();
+    List<CulturalPropertiesDTO> selectDB(PageDTO pageDto);
 
     int selectCount();
 
