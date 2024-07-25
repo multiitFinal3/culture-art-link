@@ -52,12 +52,12 @@ public class AdminCulturalPropertiesController {
 
 		PageDTO pageDTO = new PageDTO();
 		pageDTO.setPage(page);
-		
-		
+
+
 		pageDTO.setStartEnd(pageDTO.getPage());
 		System.out.println("pageDTO : " + pageDTO);
-		
-		
+
+
 		ArrayList<CulturalPropertiesDTO> list = new ArrayList<CulturalPropertiesDTO>();
 		list = (ArrayList<CulturalPropertiesDTO>) adminCulturalPropertiesService.selectDB(pageDTO);
 
@@ -136,14 +136,21 @@ public class AdminCulturalPropertiesController {
 
 	@GetMapping("/findListPage")
 	@ResponseBody
-	public int findListPage(@RequestParam(value = "itemsPerPage", defaultValue = "10") int itemsPerPage
+	public int findListPage(@RequestParam(value = "page", defaultValue = "1") int page,
+							@RequestParam(value = "itemsPerPage", defaultValue = "10") int itemsPerPage
 							){
+
+//		PageDTO pageDTO = new PageDTO();
+//		pageDTO.setPage(page);
 
 		// 전체 데이터 개수 가져오기
 		int count = adminCulturalPropertiesService.selectCount();
 
 		// 전체 페이지 수 계산
 		int totalPages = (int) Math.ceil((double) count / itemsPerPage);
+
+//		System.out.println("page :" + page);
+		System.out.println("count :" + count);
 
 //		System.out.println("totalCount :" + totalCount);
 		System.out.println("total pages!! : " + totalPages);

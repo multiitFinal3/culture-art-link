@@ -139,34 +139,46 @@
 //                    disableCheckboxes(); // 실제 기능에 맞게 수정 필요
 //                }
 
-            function findListPage(itemsPerPage){
+            function findListPage(currentPage, itemsPerPage){
             // AJAX를 통해 서버에서 전체 페이지 수(totalPages)를 받아오기
                 $.ajax({
                     type: "GET", // GET 방식으로 변경 (서버에서 페이지 수를 가져오는 것이므로)
-                    url: "/admin/cultural-properties-regulate/findListPage?itemsPerPage" + itemsPerPage,
-                    success: function(response) {
-                        totalPages = response; // 서버에서 받아온 전체 페이지 수를 totalPages1 변수에 할당
+//                    url: "/admin/cultural-properties-regulate/findListPage?itemsPerPage=" + itemsPerPage,
+                    url: "/admin/cultural-properties-regulate/findListPage?page="+ currentPage + "&itemsPerPage=" + itemsPerPage,
+                    success: function(totalPages) {
+                    // 페이지네이션 초기화 및 렌더링
+                    renderPagination(totalPages);
+//                    success: function(response) {
+//                        var totalPages = response;
+//                        totalPages = response; // 서버에서 받아온 전체 페이지 수를 totalPages1 변수에 할당
     //                    renderPagination1(); // 페이지네이션 초기화
+
+                        $('#paginationSection1').empty();
                         console.log(itemsPerPage);
                         console.log(totalPages);
-                        // 이전 페이지 링크
-                        var prevDisabled = (currentPage === 1 || totalPages === 0) ? 'disabled' : '';
-                        var prevLink = (currentPage > 1) ? (currentPage - 1) : currentPage;
-                        var prevHtml = '<li class="page-item ' + prevDisabled + '"><a class="page-link" href="#" onclick="changePage(' + prevLink + ')">이전</a></li>';
-                        $('#pagination').append(prevHtml);
 
-                        // 페이지 번호 링크
-                        for (var i = 1; i <= totalPages; i++) {
-                            var activeClass = (currentPage === i) ? 'active' : '';
-                            var pageHtml = '<li class="page-item ' + activeClass + '"><a class="page-link" href="#" onclick="changePage(' + i + ')">' + i + '</a></li>';
-                            $('#pagination').append(pageHtml);
-                        }
 
-                        // 다음 페이지 링크
-                        var nextDisabled = (currentPage === totalPages || totalPages === 0) ? 'disabled' : '';
-                        var nextLink = (currentPage < totalPages) ? (currentPage + 1) : currentPage;
-                        var nextHtml = '<li class="page-item ' + nextDisabled + '"><a class="page-link" href="#" onclick="changePage(' + nextLink + ')">다음</a></li>';
-                        $('#pagination').append(nextHtml);
+//                        // 이전 페이지 링크
+//                        var prevDisabled = (currentPage === 1 || totalPages === 0) ? 'disabled' : '';
+//                        var prevLink = (currentPage > 1) ? (currentPage - 1) : currentPage;
+//                        var prevHtml = '<li class="page-item ' + prevDisabled + '"><a class="page-link" href="#" onclick="changePage(' + prevLink + ')">이전</a></li>';
+//                        $('#paginationSection1').append(prevHtml);
+//
+//                        // 페이지 번호 링크
+//                        for (var i = 1; i <= totalPages; i++) {
+//                            var activeClass = (currentPage === i) ? 'active' : '';
+//                            var pageHtml = '<li class="page-item ' + activeClass + '"><a class="page-link" href="#" onclick="changePage(' + i + ')">' + i + '</a></li>';
+//                            $('#paginationSection1').append(pageHtml);
+//                        }
+//
+//                        // 다음 페이지 링크
+//                        var nextDisabled = (currentPage === totalPages || totalPages === 0) ? 'disabled' : '';
+//                        var nextLink = (currentPage < totalPages) ? (currentPage + 1) : currentPage;
+//                        var nextHtml = '<li class="page-item ' + nextDisabled + '"><a class="page-link" href="#" onclick="changePage(' + nextLink + ')">다음</a></li>';
+//                        $('#paginationSection1').append(nextHtml);
+
+                        // 데이터 불러오기
+                        getDBData(currentPage, itemsPerPage);
                     },
                     error: function(xhr, status, error) {
                         console.error('Error fetching pagination data: ' + error);
@@ -176,10 +188,64 @@
             });
 
                 // 데이터가 있는 페이지의 체크박스 비활성화 처리
-                disableCheckboxes(); // 실제 기능에 맞게 수정 필요
+//                disableCheckboxes(); // 실제 기능에 맞게 수정 필요
 //            }
 
                 }
+
+
+                // renderPagination1 함수
+                function renderPagination1() {
+                    $('#paginationSection1').empty(); // 기존 버튼 제거
+
+                    // 이전 버튼
+                    var prevHtml = '<li class="page-item ' + (currentPage1 == 1 ? 'disabled' : '') + '">' +
+                        '<a class="page-link prev-link" href="#" data-page="' + (currentPage1 - 1) + '">이전</a>' +
+                        '</li>';
+                    $('#paginationSection1').append(prevHtml);
+
+                    // 페이지 번호 버튼
+                    var startPage = Math.floor((currentPage1 - 1) / 10) * 10 + 1;
+                    var endPage = Math.min(startPage + 9, totalPages1);
+
+                    for (var pageNum = startPage; pageNum <= endPage; pageNum++) {
+                        var pageHtml = '<li class="page-item ' + (pageNum == currentPage1 ? 'active' : '') + '">' +
+                            '<a class="page-link page-num" href="#" data-page="' + pageNum + '">' + pageNum + '</a>' +
+                            '</li>';
+                        $('#paginationSection1').append(pageHtml);
+                    }
+
+                    // 다음 버튼
+                    var nextHtml = '<li class="page-item ' + (currentPage1 >= totalPages1 ? 'disabled' : '') + '">' +
+                        '<a class="page-link next-link" href="#" data-page="' + (currentPage1 + 1) + '">다음</a>' +
+                        '</li>';
+                    $('#paginationSection1').append(nextHtml);
+
+                    // 페이지 번호 클릭 이벤트 처리
+                    $('.page-link').on('click', function(e) {
+                        e.preventDefault();
+                        var page = $(this).data('page');
+                        if (page !== currentPage1) {
+                            currentPage1 = page;
+                            renderPagination1(); // 페이지 재렌더링
+                            getDBData(); // 데이터 가져오는 예시 함수 (실제로 필요에 맞게 수정 필요)
+                        }
+                    });
+
+                    // 데이터가 있는 페이지의 체크박스 비활성화 처리
+                    disableCheckboxes(); // 실제 기능에 맞게 수정 필요
+                }
+
+//                function renderPagination(totalPages) {
+//                    // 페이지네이션 초기화
+//                    $('#paginationSection').empty();
+//
+//                    // 페이지 번호 링크 추가
+//                    for (var i = 1; i <= totalPages; i++) {
+//                        var pageHtml = '<li class="page-item"><a class="page-link" href="#" onclick="fetchAndRenderPage(' + i + ')">' + i + '</a></li>';
+//                        $('#paginationSection').append(pageHtml);
+//                    }
+//                }
 
 
 
@@ -566,6 +632,7 @@
             // 초기 페이지 데이터 불러오기
             fetchApiData(currentPage2);
             getDBData(1); // 초기 DB 데이터 불러오기
+            findListPage(1, itemsPerPage);
 
 
         });
