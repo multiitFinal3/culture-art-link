@@ -37,7 +37,10 @@
     <update id="updateUserKeywordMap" parameterType="userFestivalLoveHateDTO">
 
         UPDATE user_festival_love_hate_keyword_mapping
-        SET(user_id = #{userId}, sort_code = #{sortCode}, festival_keyword_id = #{festivalKeywordId}, festival_count = #{festivalCount});
+        SET festival_count = #{festivalCount}
+        WHERE user_id = #{userId} AND
+              sort_code = #{sortCode} AND
+              festival_keyword_id = #{festivalKeywordId};
 
     </update>
 

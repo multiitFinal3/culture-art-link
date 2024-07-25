@@ -126,6 +126,7 @@ public class FestivalController {
 				} else {
 					
 					int count = userMap2.getFestivalCount() + 1;
+					System.out.println("count : " + count);
 					userMap2.setFestivalCount(count);
 					System.out.println("update : " + userMap2);
 					festivalService.updateUserKeywordMap(userMap2);

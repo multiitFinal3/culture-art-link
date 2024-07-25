@@ -85,6 +85,12 @@ public class FestivalServiceImpl implements FestivalService {
 		
 	}
 	
+	/**
+	 * 회원이 찜한 축제 리스트를 반환
+	 * @param userId
+	 * @return
+	 * @throws Exception
+	 */
 	@Override
 	public ArrayList<Integer> findLoveList(int userId) throws Exception {
 		ArrayList<Integer> list = festivalMapper.findLoveList(userId);
@@ -92,6 +98,11 @@ public class FestivalServiceImpl implements FestivalService {
 		return list;
 	}
 	
+	/**
+	 * 회원이 찜한 축제 매핑을 삭제
+	 * @param userMap1
+	 * @throws Exception
+	 */
 	@Override
 	public void deleteUserLoveFestival(UserFestivalLoveHateMapDTO userMap1) throws Exception {
 		
@@ -99,16 +110,32 @@ public class FestivalServiceImpl implements FestivalService {
 		
 	}
 	
+	/**
+	 * 회원과 찜 /관심없음 키워드 매핑을 삭제
+	 * @param userMap2
+	 * @throws Exception
+	 */
 	@Override
 	public void deleteUserKeywordMap(UserFestivalLoveHateMapDTO userMap2) throws Exception {
 		festivalMapper.deleteUserKeywordMap(userMap2);
 	}
 	
+	/**
+	 * 회원이 관심없음 버튼을 누른 페스티벌을 매핑 테이블에 삽입
+	 * @param map1
+	 * @throws Exception
+	 */
 	@Override
 	public void insertUserHateFestival(UserFestivalLoveHateMapDTO map1) throws Exception {
 		festivalMapper.insertUserHateFestival(map1);
 	}
 	
+	/**
+	 * 회원이 관심없음을 한 축제 목록을 반환
+	 * @param userId
+	 * @return
+	 * @throws Exception
+	 */
 	@Override
 	public ArrayList<Integer> findHateList(int userId) throws Exception {
 		ArrayList<Integer> list = festivalMapper.findHateList(userId);
