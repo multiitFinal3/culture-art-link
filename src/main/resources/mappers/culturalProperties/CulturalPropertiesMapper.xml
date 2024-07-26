@@ -71,7 +71,7 @@
 
                 <where>
 
-                    <if test="categoryName != null and categoryName != ''">
+                    <if test="categoryName != null and !categoryName.equals('전체')">
                         AND category_name = #{categoryName}
                     </if>
 
@@ -79,7 +79,7 @@
                         AND cultural_properties_name LIKE CONCAT('%', #{culturalPropertiesName}, '%')
                     </if>
 
-                    <if test="region!=null and !region.equals('') and !region.equals(' , ')">
+                    <if test="region!=null and !region.equals('')">
                         AND region LIKE CONCAT('%', #{region}, '%')
                     </if>
 

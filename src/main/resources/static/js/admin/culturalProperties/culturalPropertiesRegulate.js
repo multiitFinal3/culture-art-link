@@ -636,12 +636,6 @@ $(document).ready(function() {
             $.ajax({
                 url: '/admin/cultural-properties-regulate/search?page=' + page + "&category=" + category + "&name=" + name +"&region=" + region +"&dynasty=" + dynasty,
                 method: 'POST',
-                data: {
-                    categoryName: category,
-                    culturalPropertiesName: name,
-                    region: region,
-                    dynasty: dynasty
-                },
                 success: function(response) {
                     // 서버로부터 응답을 받았을 때 실행되는 함수
                     console.log('검색 결과:', response);
