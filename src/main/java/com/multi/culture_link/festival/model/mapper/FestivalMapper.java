@@ -1,5 +1,7 @@
 package com.multi.culture_link.festival.model.mapper;
 
+import com.multi.culture_link.common.time.model.dto.TimeDTO;
+import com.multi.culture_link.festival.model.dto.FestivalContentReviewNaverKeywordMapDTO;
 import com.multi.culture_link.festival.model.dto.FestivalKeywordDTO;
 import com.multi.culture_link.festival.model.dto.UserFestivalLoveHateMapDTO;
 import org.apache.ibatis.annotations.Mapper;
@@ -29,4 +31,8 @@ public interface FestivalMapper {
 	void insertUserHateFestival(UserFestivalLoveHateMapDTO map1) throws Exception;
 	
 	ArrayList<Integer> findHateList(int userId) throws Exception;
+	
+	ArrayList<FestivalContentReviewNaverKeywordMapDTO> findContentKeywordListByFestivalId(int festivalId) throws Exception;
+	
+	TimeDTO findTimeIdByFestivalId(int festivalId) throws Exception;
 }

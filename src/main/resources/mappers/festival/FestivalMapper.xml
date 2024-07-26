@@ -85,5 +85,24 @@
 
     </select>
 
+    <select id="findContentKeywordListByFestivalId" resultType="festivalContentReviewNaverKeywordMapping">
+
+        SELECT * FROM festival_content_review_naver_keyword_mapping
+        WHERE festival_id = #{festivalId}
+        AND sort_code = "C";
+
+    </select>
+
+
+    <select id="findTimeIdByFestivalId" resultType="timeDTO">
+
+        SELECT * FROM time t
+        WHERE t.time_id = (
+            SELECT f.time_id FROM festival f
+            WHERE f.festival_id = #{festivalId}
+        );
+
+    </select>
+
 
 </mapper>

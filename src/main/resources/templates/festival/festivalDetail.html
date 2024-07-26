@@ -8,6 +8,75 @@
     <link rel="stylesheet" th:href="@{/css/festival/festivalDetail.css}">
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
     <script th:src="@{/js/festival/festivalDetail.js}"></script>
+    <script th:inline="javascript">
+
+
+        var festival = [[${festival}]];
+        var festivalId = festival.festivalId;
+
+
+        /**
+        * 컨텐트 키워드 가져와서 넣어주기
+        *
+        */
+        function findContentKeywordList(festivalId){
+
+            $.ajax({
+
+                url: '/festival/findContentKeywordListByFestivalId?festivalId=' + festivalId,
+                method: 'POST',
+                contentType: 'application/json',
+                success: function(list){
+
+                    $('div#contentKeyword').html("");
+
+                    console.log(list);
+                    $.each(list, function(index, keyword){
+
+                        var keywordHtml = `<button class="keyword contentKeyword">${keyword.festivalKeywordId}</button>`;
+                        $('#contentKeyword').append(keywordHtml);
+
+                    })
+
+                }
+
+            })
+
+        }
+
+        findContentKeywordList(festivalId);
+
+
+        /**
+        * 컨텐트 키워드 가져와서 넣어주기
+        *
+        */
+        function findTimeIdByFestivalId(festivalId){
+
+            $.ajax({
+
+                url: '/festival/findTimeIdByFestivalId?festivalId=' + festivalId,
+                method: 'POST',
+                contentType: 'application/json',
+                success: function(time){
+
+                    $('div#timeId').html("");
+
+                    var timeHtml = `<p>시간대 : ${time.timeDescription}</p>`;
+                    $('div#timeId').append(timeHtml);
+
+                }
+
+            })
+
+        }
+
+        findTimeIdByFestivalId(festivalId);
+
+
+
+
+    </script>
 </head>
 <body>
 
@@ -38,8 +107,6 @@
                         <div id="keywordZone" style="width:100%">
 
                             <div id="contentKeyword" style="width:100%">
-                                컨텐트 키워드
-                                <button class="keyword contentKeyword">1산수유</button><button class="keyword contentKeyword">산수유</button><button class="keyword contentKeyword">산수유</button><button class="keyword contentKeyword">산수유</button>
                             </div>
 
                             <div id="naverKeyword" style="width:100%">
@@ -69,21 +136,19 @@
                         </div>
 
 
-                        <div th:switch="${festival.startDate}">
-                            시작일 종료일 양식 바꾸기
+                        <div th:switch="${festival.formattedStart}">
                             <p th:case="''"></p>
                             <p th:case="'null'"></p>
                             <p th:case="null"></p>
-                            <p th:case="*" th:text="'시작일 : '+${festival.startDate}"></p>
+                            <p th:case="*" th:text="'시작일 : '+${festival.formattedStart}"></p>
 
                         </div>
 
-                        <div th:switch="${festival.endDate}">
-                            시작일 종료일 양식 바꾸기
+                        <div th:switch="${festival.formattedEnd}">
                             <p th:case="''"></p>
                             <p th:case="'null'"></p>
                             <p th:case="null"></p>
-                            <p th:case="*" th:text="'종료일 : '+${festival.endDate}"></p>
+                            <p th:case="*" th:text="'종료일 : '+${festival.formattedEnd}"></p>
 
                         </div>
 

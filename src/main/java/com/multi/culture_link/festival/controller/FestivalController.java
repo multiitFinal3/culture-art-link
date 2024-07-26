@@ -2,6 +2,8 @@ package com.multi.culture_link.festival.controller;
 
 
 import com.multi.culture_link.admin.festival.service.AdminFestivalService;
+import com.multi.culture_link.common.time.model.dto.TimeDTO;
+import com.multi.culture_link.festival.model.dto.FestivalContentReviewNaverKeywordMapDTO;
 import com.multi.culture_link.festival.model.dto.FestivalDTO;
 import com.multi.culture_link.festival.model.dto.FestivalKeywordDTO;
 import com.multi.culture_link.festival.model.dto.UserFestivalLoveHateMapDTO;
@@ -393,6 +395,43 @@ public class FestivalController {
 		
 		
 		return "관심없음 목록 및 관련 키워드 삭제 성공!";
+		
+	}
+	
+	
+	/**
+	 * 해당 축제의 컨텐트 키워드를 반환
+	 * @param festivalId
+	 * @return
+	 */
+	@PostMapping("findContentKeywordListByFestivalId")
+	@ResponseBody
+	public ArrayList<FestivalContentReviewNaverKeywordMapDTO> findContentKeywordListByFestivalId(@RequestParam("festivalId") int festivalId){
+		
+		ArrayList<FestivalContentReviewNaverKeywordMapDTO> list = null;
+		try {
+			list = festivalService.findContentKeywordListByFestivalId(festivalId);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+		
+		return list;
+		
+	}
+	
+	
+	@PostMapping("/findTimeIdByFestivalId")
+	@ResponseBody
+	public TimeDTO findTimeIdByFestivalId(@RequestParam("festivalId") int festivalId){
+		
+		TimeDTO timeDTO = null;
+		try {
+			timeDTO = festivalService.findTimeIdByFestivalId(festivalId);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+		
+		return timeDTO;
 		
 	}
 	

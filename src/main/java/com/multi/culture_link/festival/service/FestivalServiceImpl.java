@@ -1,5 +1,7 @@
 package com.multi.culture_link.festival.service;
 
+import com.multi.culture_link.common.time.model.dto.TimeDTO;
+import com.multi.culture_link.festival.model.dto.FestivalContentReviewNaverKeywordMapDTO;
 import com.multi.culture_link.festival.model.dto.FestivalKeywordDTO;
 import com.multi.culture_link.festival.model.dto.UserFestivalLoveHateMapDTO;
 import com.multi.culture_link.festival.model.mapper.FestivalMapper;
@@ -141,5 +143,29 @@ public class FestivalServiceImpl implements FestivalService {
 		ArrayList<Integer> list = festivalMapper.findHateList(userId);
 		
 		return list;
+	}
+	
+	/**
+	 * 해당 축제의 컨텐트 키워드를 반환
+	 * @param festivalId
+	 * @return
+	 * @throws Exception
+	 */
+	@Override
+	public ArrayList<FestivalContentReviewNaverKeywordMapDTO> findContentKeywordListByFestivalId(int festivalId) throws Exception {
+		
+		ArrayList<FestivalContentReviewNaverKeywordMapDTO> list = festivalMapper.findContentKeywordListByFestivalId(festivalId);
+		
+		return list;
+		
+	}
+	
+	@Override
+	public TimeDTO findTimeIdByFestivalId(int festivalId) throws Exception {
+		
+		TimeDTO timeDTO = festivalMapper.findTimeIdByFestivalId(festivalId);
+		
+		return timeDTO;
+		
 	}
 }

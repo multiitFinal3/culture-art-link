@@ -457,6 +457,14 @@ public class AdminFestivalServiceImpl implements AdminFestivalService {
 		
 		FestivalDTO festivalDTO = adminFestivalMapper.findDBFestivalByFestivalId(festivalId);
 		
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		
+		String formattedStart = simpleDateFormat.format(festivalDTO.getStartDate());
+		String formattedEnd = simpleDateFormat.format(festivalDTO.getEndDate());
+		
+		festivalDTO.setFormattedStart(formattedStart);
+		festivalDTO.setFormattedEnd(formattedEnd);
+		
 		return festivalDTO;
 	}
 	

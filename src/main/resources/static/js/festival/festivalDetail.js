@@ -2,7 +2,6 @@ $(document).ready(
     function(){
 
 
-
         /**
         * 찜하기 / 찜 취소하기 버튼
         *
@@ -60,10 +59,6 @@ $(document).ready(
 
 
             }
-
-
-
-
 
         })
 
@@ -211,11 +206,6 @@ $(document).ready(
 
         findLoveList();
         findHateList();
-
-
-
-
-
 
 
 
