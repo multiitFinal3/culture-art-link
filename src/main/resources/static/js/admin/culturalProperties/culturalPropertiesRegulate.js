@@ -496,7 +496,20 @@ $(document).ready(function() {
 //    }
 
 
-    $(document).ready(function() {
+
+
+        function 새로운 함수(페이지 넣기) {
+
+
+
+        }
+
+
+        새로운 함수(1,...);
+
+    
+
+
         $('#searchDB').click(function(category, name, region, dynasty) {
             // 사용자가 입력한 값을 가져오기
             var category = $('#categoryFilter').val();
@@ -551,23 +564,23 @@ $(document).ready(function() {
                         console.error('AJAX 오류:', status, error);
                     }
                 });
-                }
+            }
+
+
+            // 초기화 버튼 클릭 이벤트
+            $('#reset').click(function() {
+                // 검색 필터 초기화
+                $('#categoryFilter').val('all');
+                $('#searchName').val('');
+                $('#searchRegion').val('');
+                $('#searchDynasty').val('');
+
+                // 모든 행 보이기
+                $('#list1').show();
             });
 
-                // 초기화 버튼 클릭 이벤트
-                $('#reset').click(function() {
-                    // 검색 필터 초기화
-                    $('#categoryFilter').val('all');
-                    $('#searchName').val('');
-                    $('#searchRegion').val('');
-                    $('#searchDynasty').val('');
 
-                    // 모든 행 보이기
-                    $('#list1').show();
-                });
-            });
-
-
+        })
 
 
 //    $(document).ready(function() {

@@ -115,8 +115,8 @@ public class AdminCulturalPropertiesController {
 	@ResponseBody
 	public List<CulturalPropertiesDTO> searchCulturalProperties(
 			@RequestParam("page") int page,
-			@RequestParam(required = false) String categoryName,
-			@RequestParam(required = false) String culturalPropertiesName,
+			@RequestParam(required = false) String category,
+			@RequestParam(required = false) String name,
 			@RequestParam(required = false) String region,
 			@RequestParam(required = false) String dynasty
 	) {
@@ -128,7 +128,7 @@ public class AdminCulturalPropertiesController {
 		System.out.println("검색pageDTO : " + pageDTO);
 
 
-		return adminCulturalPropertiesService.searchCulturalProperties(pageDTO, categoryName, culturalPropertiesName, region, dynasty);
+		return adminCulturalPropertiesService.searchCulturalProperties(pageDTO, category, name, region, dynasty);
 	}
 
 
