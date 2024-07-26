@@ -74,131 +74,133 @@
           }
 
           .background-pink {
-            background-color: pink;
+            background-color: #ffe5ea;
           }
 
           .background-gray {
-            background-color: gray;
+            background-color: #dfdfdf;
           }
         </style>
         <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-        <script>
-          let exhibitions = [];
-          let viewStatus = "all"; // pre, current, future, unknown 어떤 버튼 눌렀는지
-          let searchParams = { title: "", artist: "", museum: "" };
+      </head>
+      <body>
+      <div layout:fragment="content">
+        <div class="tab-menu">
+          <button id="currentBtn">현재 전시</button>
+          <button id="pastBtn">지난 전시</button>
+          <button id="futureBtn">예정 전시</button>
+          <button id="unknownBtn">미정</button>
+          <script>
+            let exhibitions = [];
+            let viewStatus = "all"; // pre, current, future, unknown 어떤 버튼 눌렀는지
+            let searchParams = { title: "", artist: "", museum: "" };
 
-          $(document).ready(function () {
-            init();
+            $(document).ready(function () {
+              init();
 
-            // 전시 여부 버튼
-            $("#currentBtn").click(function () {
-              changeViewStatus("current");
-            });
-            $("#pastBtn").click(function () {
-              changeViewStatus("past");
-            });
-            $("#futureBtn").click(function () {
-              changeViewStatus("future");
-            });
-            $("#unknownBtn").click(function () {
-              changeViewStatus("unknown");
-            });
-          });
-
-          // 검색 버튼
-          $(document).on('click', "#searchButton", function () {
-            searchExhibitions();
-          });
-
-
-
-          function changeViewStatus(status) {
-            viewStatus = status;
-            filterAndRenderExhibitions();
-          }
-
-          async function getExhibitions() {
-            const response = await axios.get(
-              "/exhibition/exhibition"
-            );
-
-            exhibitions = response.data.map((item) => ({
-              id: item.id,
-              image: item.image,
-              title: item.title,
-              artist: item.artist,
-              museum: item.museum,
-              startDate: item.startDate ? new Date(item.startDate) : null,
-              endDate: item.endDate ? new Date(item.endDate) : null,
-              state: item.state
-            }));
-
-            filterAndRenderExhibitions();
-          }
-
-          function filterAndRenderExhibitions() {
-            const today = new Date();
-            const filteredExhibitions = exhibitions.filter((item) => {
-              if (!matchesSearch(item)) return false;
-
-              if (viewStatus === "all") return true;
-              if (!item.startDate || !item.endDate)
-                return viewStatus === "unknown";
-
-              switch (viewStatus) {
-                case "current":
-                  return item.startDate <= today && today <= item.endDate;
-                case "past":
-                  return item.endDate < today;
-                case "future":
-                  return today < item.startDate;
-                default:
-                  return false;
-              }
+              // 전시 여부 버튼
+              $("#currentBtn").click(function () {
+                changeViewStatus("current");
+              });
+              $("#pastBtn").click(function () {
+                changeViewStatus("past");
+              });
+              $("#futureBtn").click(function () {
+                changeViewStatus("future");
+              });
+              $("#unknownBtn").click(function () {
+                changeViewStatus("unknown");
+              });
             });
 
-            renderExhibitions(filteredExhibitions);
-          }
-
-          function matchesSearch(exhibition) {
-            return (
-                    exhibition.title.toLowerCase().includes(searchParams.title.toLowerCase()) &&
-                    exhibition.artist.toLowerCase().includes(searchParams.artist.toLowerCase()) &&
-                    exhibition.museum.toLowerCase().includes(searchParams.museum.toLowerCase())
-            );
-          }
-
-          function searchExhibitions() {
-            searchParams = {
-              title: $("#searchTitle").val(),
-              artist: $("#searchArtist").val(),
-              museum: $("#searchMuseum").val(),
-            };
-            filterAndRenderExhibitions();
-          }
+            // 검색 버튼
+            $(document).on('click', "#searchButton", function () {
+              searchExhibitions();
+            });
 
 
 
+            function changeViewStatus(status) {
+              viewStatus = status;
+              filterAndRenderExhibitions();
+            }
+
+            async function getExhibitions() {
+              const response = await axios.get(
+                      "/exhibition/exhibition"
+              );
+
+              exhibitions = response.data.map((item) => ({
+                id: item.id,
+                image: item.image,
+                title: item.title,
+                artist: item.artist,
+                museum: item.museum,
+                startDate: item.startDate ? new Date(item.startDate) : null,
+                endDate: item.endDate ? new Date(item.endDate) : null,
+                state: item.state
+              }));
+
+              filterAndRenderExhibitions();
+            }
+
+            function filterAndRenderExhibitions() {
+              const today = new Date();
+              const filteredExhibitions = exhibitions.filter((item) => {
+                if (!matchesSearch(item)) return false;
+
+                if (viewStatus === "all") return true;
+                if (!item.startDate || !item.endDate)
+                  return viewStatus === "unknown";
+
+                switch (viewStatus) {
+                  case "current":
+                    return item.startDate <= today && today <= item.endDate;
+                  case "past":
+                    return item.endDate < today;
+                  case "future":
+                    return today < item.startDate;
+                  default:
+                    return false;
+                }
+              });
+
+              renderExhibitions(filteredExhibitions);
+            }
+
+            function matchesSearch(exhibition) {
+              return (
+                      exhibition.title.toLowerCase().includes(searchParams.title.toLowerCase()) &&
+                      exhibition.artist.toLowerCase().includes(searchParams.artist.toLowerCase()) &&
+                      exhibition.museum.toLowerCase().includes(searchParams.museum.toLowerCase())
+              );
+            }
+
+            function searchExhibitions() {
+              searchParams = {
+                title: $("#searchTitle").val(),
+                artist: $("#searchArtist").val(),
+                museum: $("#searchMuseum").val(),
+              };
+              filterAndRenderExhibitions();
+            }
+
+            // 전시회 목록을 렌더링하는 함수
+            function renderExhibitions(exhibitionsToRender) {
+              const $exhibitionList = $(".exhibition-list");
+              $exhibitionList.empty();
+
+              $.each(exhibitionsToRender, function (index, exhibition) {
+                const $li = $("<li>").addClass("exhibition-item");
+                if(exhibition.state === "interested") {
+                  $li.addClass("background-pink")
+                }else if(exhibition.state === "not_interested"){
+                  $li.addClass("background-gray")
+                }
 
 
-
-
-          // 전시회 목록을 렌더링하는 함수
-          function renderExhibitions(exhibitionsToRender) {
-            const $exhibitionList = $(".exhibition-list");
-            $exhibitionList.empty();
-
-            $.each(exhibitionsToRender, function (index, exhibition) {
-              const $li = $("<li>").addClass("exhibition-item");
-              if(exhibition.state === "interested") {
-                $li.addClass("background-pink")
-              }else if(exhibition.state === "not_interested"){
-                $li.addClass("background-gray")
-              }
-
-
-              $li.html(`
+                $li.html(`
                 <div class="exhibition-content" data-id="${exhibition.id}">
                   <img src="${exhibition.image}" alt="${exhibition.title}" class="exhibition-image">
                   <div class="exhibition-info">
@@ -214,75 +216,82 @@
                   <button class="exhibition-dislike" data-id="${exhibition.id}">관심없음</button>
                 </div>
               `);
-              $exhibitionList.append($li);
-            });
+                $exhibitionList.append($li);
+              });
 
-            // 클릭하면 상세페이지로 들어감
-            $(".exhibition-content").click(function() {
-              const exhibitionId = $(this).data("id");
-              window.location.href = `/exhibition/detail/${exhibitionId}`;
-            });
+              // 클릭하면 상세페이지로 들어감
+              $(".exhibition-content").click(function() {
+                const exhibitionId = $(this).data("id");
+                window.location.href = `/exhibition/detail/${exhibitionId}`;
+              });
 
-            // 찜 버튼 클릭 이벤트
-            $(".exhibition-like").click(function(e) {
-              e.stopPropagation();
-              const exhibitionId = $(this).data("id");
-              console.log("exhibition-like btn : ",exhibitionId)
-              updateInterest(exhibitionId, 'interested');
-            });
+              // 찜 버튼 클릭 이벤트
+              $(".exhibition-like").click(function(e) {
+                e.stopPropagation();
+                const exhibitionId = $(this).data("id");
+                console.log("exhibition-like btn : ",exhibitionId)
+                updateInterest(exhibitionId, 'interested');
+              });
 
-            // 관심없음 버튼 클릭 이벤트
-            $(".exhibition-dislike").click(function(e) {
-              e.stopPropagation();
-              const exhibitionId = $(this).data("id");
-              console.log("exhibition-dislike btn : ",exhibitionId)
-              updateInterest(exhibitionId, 'not_interested');
-            });
-          }
+              // 관심없음 버튼 클릭 이벤트
+              $(".exhibition-dislike").click(function(e) {
+                e.stopPropagation();
+                const exhibitionId = $(this).data("id");
+                console.log("exhibition-dislike btn : ",exhibitionId)
+                updateInterest(exhibitionId, 'not_interested');
+              });
+            }
 
-          function updateInterest(exhibitionId, state) {
-            axios.post('/exhibition/interested', {
-              exhibitionId: Number(exhibitionId),
-              state: state
-            })
-            .then(function (response) {
-              console.log('Interest updated successfully');
-              // 여기에 UI 업데이트 로직을 추가할 수 있습니다.
-            })
-            .catch(function (error) {
-              console.error('Error updating interest:', error);
-            });
-          }
+            async function updateInterest(exhibitionId, state) {
+              console.log('update interest: ',exhibitionId, state)
+              try {
+                const response = await axios.post('/exhibition/interested', {
+                  exhibitionId: Number(exhibitionId),
+                  state: state
+                })
+
+                const contentDiv = document.querySelector(`.exhibition-content[data-id="${exhibitionId}"]`).closest('li');
+
+                console.log("dom : ",contentDiv)
+                if (state === 'interested') {
+                  contentDiv.classList.add('background-pink')
+                  if (contentDiv.classList.contains('background-gray')) {
+                    contentDiv.classList.remove('background-gray');
+                  }
+                }else {
+                  contentDiv.classList.add('background-gray')
+                  if (contentDiv.classList.contains('background-pink')) {
+                    contentDiv.classList.remove('background-pink');
+                  }
+                }
+              }catch(e) {
+                console.log('error : ',e)
+                alert(`${state === 'interested'} ? "찜 설정 실패" : "관심 없음 설정 실패"`)
+              }
+
+            }
 
 
 
 
-          //페이지에 들어갔을 때 실행 되는 init 함수
-          function init() {
-            getExhibitions();
-          }
+            //페이지에 들어갔을 때 실행 되는 init 함수
+            function init() {
+              getExhibitions();
+            }
 
-          // // 전시회 추가 함수
-          // function addExhibition(exhibition) {
-          //   exhibitions.push(exhibition);
-          //   renderExhibitions();
-          // }
-          //
-          // // 전시회 삭제 함수
-          // function removeExhibition(index) {
-          //   exhibitions.splice(index, 1);
-          //   renderExhibitions();
-          // }
-        </script>
-      </head>
-      <body>
-        <div layout:fragment="content">
-          <div class="tab-menu">
-            <button id="currentBtn">현재 전시</button>
-            <button id="pastBtn">지난 전시</button>
-            <button id="futureBtn">예정 전시</button>
-            <button id="unknownBtn">미정</button>
-          </div>
+            // // 전시회 추가 함수
+            // function addExhibition(exhibition) {
+            //   exhibitions.push(exhibition);
+            //   renderExhibitions();
+            // }
+            //
+            // // 전시회 삭제 함수
+            // function removeExhibition(index) {
+            //   exhibitions.splice(index, 1);
+            //   renderExhibitions();
+            // }
+          </script>
+        </div>
 
           <div class="search-bar">
             <input type="text" id="searchTitle" placeholder="전시 이름" />

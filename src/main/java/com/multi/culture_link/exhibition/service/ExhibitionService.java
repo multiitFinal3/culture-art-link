@@ -24,8 +24,8 @@ public class ExhibitionService {
         return ExhibitionDao.getExhibitionById(id);
     }
 
-    public void setInterested(int useId, int exhibitionId, String state){
-        ExhibitionDao.setInterested(useId, exhibitionId, state);
+    public void setInterested(int userId, int exhibitionId, String state){
+        ExhibitionDao.setInterested(userId, exhibitionId, state);
     }
 
     public List<ExhibitionDto> getExhibition(){

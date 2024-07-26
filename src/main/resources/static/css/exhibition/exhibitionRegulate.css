@@ -66,3 +66,7 @@ td#festivalName {
 button {
   margin: 3px;
 }
+
+.width-100{
+  width: 100%;
+}
