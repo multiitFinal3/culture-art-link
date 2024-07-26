@@ -187,4 +187,11 @@ public class FestivalServiceImpl implements FestivalService {
 		return count;
 		
 	}
+	
+	@Override
+	public void insertFestivalReview(VWUserReviewDataDTO userReviewDataDTO) throws Exception {
+		
+		festivalMapper.insertFestivalReview(userReviewDataDTO);
+		
+	}
 }

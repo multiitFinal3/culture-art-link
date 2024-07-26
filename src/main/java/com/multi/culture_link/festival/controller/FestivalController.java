@@ -10,8 +10,14 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.UUID;
 
 
 /**
@@ -470,7 +476,11 @@ public class FestivalController {
 		
 	}
 	
-	
+	/**
+	 * 특정 축제에 대한 리뷰가 총 몇개인 지 반환함
+	 * @param festivalId
+	 * @return
+	 */
 	@PostMapping("/findFestivalReviewCountByVWUserReviewDTO")
 	@ResponseBody
 	public int findFestivalReviewCountByVWUserReviewDTO(@RequestParam("festivalId") int festivalId){
@@ -486,6 +496,66 @@ public class FestivalController {
 		
 	}
 	
-	
+	/**
+	 * 리뷰로 업로드 된 파일의 이름을 바꾸고 저장 후 경로를 DB에 저장함
+	 * @param reviewTextArea
+	 * @param reviewStar
+	 * @param uploadFile
+	 * @return
+	 */
+	@PostMapping("/insertFestivalReview")
+	public String insertFestivalReview(@RequestParam("reviewTextArea") String reviewTextArea, @RequestParam("reviewStar") double reviewStar, @RequestParam("uploadFile") MultipartFile uploadFile, @RequestParam("festivalId") int festivalId, @AuthenticationPrincipal VWUserRoleDTO user){
+		
+		try {
+			
+			String fileUUIDName = UUID.randomUUID().toString() + "_" + uploadFile.getOriginalFilename();
+			String uploadDir = System.getProperty("user.dir") + "/src/main/resources/static/img/festival/reviewAttach/";
+			Files.createDirectories(Paths.get(uploadDir));
+			
+			System.out.println("id : " + festivalId);
+			
+			File savedFile = new File(uploadDir + fileUUIDName);
+			
+			System.out.println("savedFile.getAbsolutePath() : " + savedFile.getAbsolutePath());
+			System.out.println("savedFile.getName() : " + savedFile.getName());
+			System.out.println("path : " + savedFile.getPath());
+			System.out.println(System.getProperty("user.dir"));
+			
+			uploadFile.transferTo(savedFile);
+			
+			String attachment = uploadDir + fileUUIDName;
+			
+			VWUserReviewDataDTO userReviewDataDTO = new VWUserReviewDataDTO();
+			userReviewDataDTO.setFestivalId(festivalId);
+			userReviewDataDTO.setFestivalReviewStar(reviewStar);
+			userReviewDataDTO.setFestivalReviewContent(reviewTextArea);
+			
+			int userId = user.getUserId();
+			
+			
+			int startIndex = attachment.indexOf("/img");
+			System.out.println(startIndex);
+			attachment = attachment.substring(startIndex);
+			
+			
+			userReviewDataDTO.setAttachment(attachment);
+			userReviewDataDTO.setUserId(userId);
+			
+			System.out.println("controller userReviewDTO : " + userReviewDataDTO);
+			
+			try {
+				festivalService.insertFestivalReview(userReviewDataDTO);
+			} catch (Exception e) {
+				throw new RuntimeException(e);
+			}
+			
+			
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+		
+		
+		return "redirect:/festival/festival-detail?festivalId="+festivalId;
+	}
 	
 }

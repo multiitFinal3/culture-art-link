@@ -126,5 +126,12 @@
 
     </select>
 
+    <insert id="insertFestivalReview" parameterType="vwUserReviewDTO">
+
+        INSERT INTO festival_review(user_id, festival_id, festival_review_star, festival_review_content, attachment)
+        VALUES(#{userId}, #{festivalId}, #{festivalReviewStar}, #{festivalReviewContent}, #{attachment});
+
+    </insert>
+
 
 </mapper>

@@ -36,4 +36,6 @@ public interface FestivalService {
 	ArrayList<VWUserReviewDataDTO> findFestivalReviewListByVWUserReviewDTO(VWUserReviewDataDTO vwUserReviewDataDTO) throws Exception;
 	
 	int findFestivalReviewCountByVWUserReviewDTO(int festivalId) throws Exception;
+	
+	void insertFestivalReview(VWUserReviewDataDTO userReviewDataDTO) throws Exception;
 }

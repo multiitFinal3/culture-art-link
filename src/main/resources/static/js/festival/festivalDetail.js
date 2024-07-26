@@ -214,7 +214,7 @@ $(document).ready(
 
 
 
-        //#region 오른쪽 리뷰 관련 함수
+        //#region 리뷰 관련 함수
 
 
 
