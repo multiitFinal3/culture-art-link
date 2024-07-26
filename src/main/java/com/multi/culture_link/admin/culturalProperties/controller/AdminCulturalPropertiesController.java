@@ -4,7 +4,6 @@ package com.multi.culture_link.admin.culturalProperties.controller;
 import com.multi.culture_link.admin.culturalProperties.model.dto.CulturalPropertiesDTO;
 import com.multi.culture_link.admin.culturalProperties.model.dto.PageDTO;
 import com.multi.culture_link.admin.culturalProperties.service.AdminCulturalPropertiesService;
-import com.multi.culture_link.festival.model.dto.FestivalDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -176,7 +175,6 @@ public class AdminCulturalPropertiesController {
 		System.out.println(name);
 		System.out.println(region);
 		System.out.println(dynasty);
-
 		CulturalPropertiesDTO culturalPropertiesDTO = new CulturalPropertiesDTO();
 		culturalPropertiesDTO.setCategoryName(category);
 
@@ -188,7 +186,6 @@ public class AdminCulturalPropertiesController {
 //
 //		festivalDTO.setPageDTO(pageDTO2);
 //
-
 		category = category.trim();
 		name= name.trim();
 		region = region.trim().replace(",","");

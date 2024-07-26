@@ -347,7 +347,7 @@ public class AdminCulturalPropertiesService {
 
 		int start = pageDTO.getStart();
 		int end = pageDTO.getEnd();
-
+		
 
 		System.out.println("service-categoryName : " + categoryName);
 		System.out.println("culturalPropertiesName : " + culturalPropertiesName);
@@ -356,6 +356,20 @@ public class AdminCulturalPropertiesService {
 		System.out.println("start : " + start);
 		System.out.println("end : " + end);
 		System.out.println();
+		
+		
+		CulturalPropertiesDTO culturalPropertiesDTO = new CulturalPropertiesDTO();
+		culturalPropertiesDTO.setCategoryName(categoryName);
+		culturalPropertiesDTO.setCulturalPropertiesName(culturalPropertiesName);
+		culturalPropertiesDTO.setRegion(region);
+		culturalPropertiesDTO.setDynasty(dynasty);
+		culturalPropertiesDTO.setPageDTO(pageDTO);
+		culturalPropertiesDTO.setStart(start);
+		culturalPropertiesDTO.setEnd(end);
+		
+		
+		System.out.println("dto : " + culturalPropertiesDTO);
+		
 
 
 		CulturalPropertiesDTO culturalPropertiesDTO = new CulturalPropertiesDTO();
