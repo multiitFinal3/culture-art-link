@@ -7,6 +7,9 @@
     <link rel="stylesheet" th:href="@{/css/culturalProperties/culturalPropertiesRegulate.css}">
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
     <script th:src="@{/js/admin/culturalProperties/culturalPropertiesRegulate.js}"></script>
+    <!-- Bootstrap JavaScript -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
     <style>
         #culturalPropertiesRegulate {
             display: flex;
@@ -75,6 +78,44 @@
         width: 25%; /* 여섯 번째 열 너비 */
     }
 
+
+    /* 툴팁 배경색을 회색으로 설정 */
+    .tooltip-inner {
+        background-color: #808080; /* 회색 배경색 */
+        color: #fff; /* 글자색을 흰색으로 설정 */
+        max-width: 400px; /* 원하는 최대 가로 크기 설정 */
+        width: auto; /* 내용에 맞게 자동으로 크기 조절 */
+    }
+
+
+        /* 버튼 스타일링 */
+    .search-btn btn-lg {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        font-size: 25px;
+        cursor: pointer;
+        border-radius: 5px;
+        transition: background-color 0.3s ease;
+    }
+
+    /* 버튼에 호버 효과 추가 */
+    .search-btn:hover {
+        background-color: #0056b3;
+    }
+
+    /* 검색 옵션 패널 스타일 */
+    .search-options {
+        display: none; /* 초기에는 숨김 */
+        background-color: #f8f9fa;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        margin-top: 10px;
+    }
+
+
     </style>
 </head>
 <body>
@@ -82,7 +123,7 @@
 
     <h1 th:text="${totalPages}"></h1>
 
-    <div id="loadingIndicator" style="display: none;">
+    <div id="loadingIndicator" style="display: none; font-size: 35px; padding-left: 20px;">
         <!-- 로딩 스피너 또는 메시지 -->
         Loading...
     </div>
@@ -91,12 +132,50 @@
 
         문화재 관리자 페이지 입니다.
 
-        <!--        <h2>문화재 DB 현황</h2>-->
 
-        <div class="d-flex justify-content-center align-items-center">
-            <h2 class="mr-auto">문화재 DB 현황</h2>
-            <button type="submit" class="btn btn-outline-primary ml-3">DB 수정</button>
-            <button type="submit" class="btn btn-outline-primary ml-3">DB 삭제</button>
+
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col d-flex justify-content-start align-items-center">
+                    <button class="search-btn btn-lg" id="toggleOptionsBtn">🔍</button>
+
+                    <div class="search-options" id="searchOptions">
+                        <label>종목:</label>
+                        <select id="categoryFilter">
+                            <option value="all">전체</option>
+                            <option value="category1">국보</option>
+                            <option value="category2">보물</option>
+                            <option value="category3">사적</option>
+                            <option value="category4">사적및명승</option>
+                            <option value="category5">명승</option>
+                            <option value="category6">천연기념물</option>
+                            <option value="category7">국가무형유산</option>
+                            <option value="category8">국가민속문화유산</option>
+                            <option value="category9">시도유형문화유산</option>
+                            <option value="category10">시도무형유산</option>
+                            <option value="category11">시도기념물</option>
+                            <option value="category12">시도민속문화유산</option>
+                            <option value="category13">시도등록유산</option>
+                            <option value="category14">문화유산자료</option>
+                            <option value="category15">국가등록유산</option>
+                            <option value="category16">이북5도 무형유산</option>
+                        </select>
+                        <input type="text" id="searchName" maxlength="20" placeholder="문화재 이름" />
+                        <input type="text" id="searchRegion" maxlength="10" placeholder="지역"/>
+                        <input type="text" id="searchDynasty" maxlength="10" placeholder="시대"/>
+
+                        <button id="searchDB" class="btn btn-outline-primary ml-3" >검색</button>
+                        <button id="reset" class="btn btn-outline-primary ml-3" >초기화</button>
+                    </div>
+
+                </div>
+                <div class="col d-flex justify-content-center align-items-center">
+                    <h2 class="text-center">문화재 DB 현황</h2>
+                </div>
+                <div class="col d-flex justify-content-end align-items-center">
+                    <button type="button" class="btn btn-outline-primary"> 삭제 </button>
+                </div>
+            </div>
         </div>
 
         <table class="table table-striped" id="culturalPropertiesDB">
@@ -117,14 +196,14 @@
                 <th scope="col">분류2</th>
                 <th scope="col">분류3</th>
                 <th scope="col">분류4</th>
-                <th scope="col">대표이미지URL</th>
+                <th scope="col">대표이미지</th>
                 <th scope="col">설명</th>
                 <th scope="col">이미지URL</th>
                 <th scope="col">이미지설명</th>
                 <th scope="col">동영상URL</th>
                 <th scope="col">나레이션URL</th>
+                <th scope="col">DB관리</th>
 
-                <!--                <th scope="col">DB관리</th>-->
             </tr>
             </thead>
             <tbody id="list1">
@@ -134,91 +213,7 @@
         </table>
 
         <div class="pagination" id="paginationSection1">
-<!--            <ul id="paginationSection1" class="pagination justify-content-center">-->
-<!--                &lt;!&ndash; Pagination links will be dynamically added here &ndash;&gt;-->
-<!--            </ul>-->
 
-            <!--            &lt;!&ndash; 이전 페이지 버튼 &ndash;&gt;-->
-            <!--            <button th:if="${currentPage > 1}" class="page-item">-->
-            <!--                <a class="page-link" th:href="@{|/admin/select?page=${currentPage - 1}&itemsPerPage=${itemsPerPage}|}" aria-label="Previous">-->
-            <!--                    <span aria-hidden="true">&laquo;</span>-->
-            <!--                </a>-->
-            <!--            </button>-->
-
-            <!--<<<<<<< Updated upstream-->
-            <!-- 페이지 번호 -->
-            <!--<span th:each="pageNum : ${#numbers.sequence(1, totalPages)}"
-                  th:classappend="${pageNum == currentPage} ? 'active page-number' : 'page-number'">
-                <button class="page-item">
-                    <a class="page-link" th:href="@{|/admin/select?page=${pageNum}&itemsPerPage=${itemsPerPage}|}" th:text="${pageNum}"></a>
-                </button>
-            </span>-->
-            <!--=======-->
-            <!--            &lt;!&ndash; 페이지 번호 &ndash;&gt;-->
-            <!--            <span th:each="pageNum : ${#numbers.sequence(1, totalPages)}"-->
-            <!--                  th:classappend="${pageNum == currentPage} ? 'active page-number' : 'page-number'">-->
-            <!--        <button class="page-item">-->
-            <!--            <a class="page-link" th:href="@{|/admin/select?page=${pageNum}&itemsPerPage=${itemsPerPage}|}" th:text="${pageNum}"></a>-->
-            <!--        </button>-->
-            <!--    </span>-->
-            <!--&gt;>>>>>> Stashed changes-->
-
-            <!--            &lt;!&ndash; 다음 페이지 버튼 &ndash;&gt;-->
-            <!--            <button th:if="${currentPage < totalPages}" class="page-item">-->
-            <!--                <a class="page-link" th:href="@{|/admin/select?page=${currentPage + 1}&itemsPerPage=${itemsPerPage}|}" aria-label="Next">-->
-            <!--                    <span aria-hidden="true">&raquo;</span>-->
-            <!--                </a>-->
-            <!--            </button>-->
-            <!--// 2 -->
-            <!--            <ul>-->
-            <!--                <li th:if="${currentPage > 1}">-->
-            <!--                    <a th:href="@{/admin/cultural-properties-regulate/select(page=${currentPage - 1}, itemsPerPage=${itemsPerPage})}">&laquo; 이전</a>-->
-            <!--                </li>-->
-            <!--                <li th:each="pageNum : ${#numbers.sequence(1, totalPages)}"-->
-            <!--                    th:class="${pageNum == currentPage} ? 'active'">-->
-            <!--                    <a th:href="@{/admin/cultural-properties-regulate/select(page=${pageNum}, itemsPerPage=${itemsPerPage})}" th:text="${pageNum}"></a>-->
-            <!--                </li>-->
-            <!--                <li th:if="${currentPage < totalPages}">-->
-            <!--                    <a th:href="@{/admin/cultural-properties-regulate/select(page=${currentPage + 1}, itemsPerPage=${itemsPerPage})}">다음 &raquo;</a>-->
-            <!--                </li>-->
-            <!--            </ul>-->
-
-            <!--            <ul class="pagination justify-content-center">-->
-            <!--                <li class="page-item" id="prevPage1">-->
-            <!--                    <a class="page-link" href="#" aria-label="Previous">-->
-            <!--                        <span aria-hidden="true">&laquo;</span>-->
-            <!--                    </a>-->
-            <!--                </li>-->
-
-            <!--                &lt;!&ndash; 페이지 번호 버튼 &ndash;&gt;-->
-            <!--                <li class="page-item" th:each="pageNum : ${#numbers.sequence(1, totalPages)}">-->
-            <!--                    <a class="page-link" href="#" th:text="${pageNum}" th:attr="data-page=${pageNum}"></a>-->
-            <!--                </li>-->
-
-            <!--                <li class="page-item" id="nextPage1">-->
-            <!--                    <a class="page-link" href="#" aria-label="Next">-->
-            <!--                        <span aria-hidden="true">&raquo;</span>-->
-            <!--                    </a>-->
-            <!--                </li>-->
-            <!--            </ul>-->
-
-            <!--<<<<<<< Updated upstream-->
-            <!--            <ul id="list33">-->
-            <!--                <li th:if="${currentPage > 1}">-->
-            <!--                    <a th:href="@{/admin/cultural-properties-regulate(page=${currentPage - 1})}">&laquo; 이전</a>-->
-            <!--                </li>-->
-            <!--                <li th:each="pageNum : ${#numbers.sequence(1, totalPages)}"-->
-            <!--                    th:class="${pageNum == currentPage} ? 'active'">-->
-            <!--                    <a th:href="@{/admin/cultural-properties-regulate(page=${pageNum})}" th:text="${pageNum}"></a>-->
-            <!--                </li>-->
-            <!--                <li th:if="${currentPage < totalPages}">-->
-            <!--                    <a th:href="@{/admin/cultural-properties-regulate(page=${currentPage + 1})}">다음 &raquo;</a>-->
-            <!--                </li>-->
-            <!--            </ul>-->
-
-
-            <!--=======-->
-            <!--&gt;>>>>>> Stashed changes-->
         </div>
         <br><br><br>
 
@@ -241,7 +236,6 @@
                 <th scope="col">종목</th>
                 <th scope="col">지역</th>
                 <th scope="col">시대</th>
-                <!--                <th scope="col">DB관리</th>-->
             </tr>
             </thead>
             <tbody id="list2">
@@ -255,544 +249,17 @@
     </div>
 
     <script th:inline="javascript">
-<!--        $(document).ready(function() {-->
-<!--&lt;!&ndash;            var currentPage1 = 1; // 문화재 DB 현황 초기 페이지 설정&ndash;&gt;-->
-<!--&lt;!&ndash;            var totalPages1 = count; // 문화재 DB 현황 전체 페이지 수 (실제 데이터에 맞게 수정 필요)&ndash;&gt;-->
-<!--&lt;!&ndash;            var itemsPerPage1 = 10;&ndash;&gt;-->
-<!--&lt;!&ndash;            var checkedItems = {}; // 체크한 체크박스의 상태를 저장할 객체&ndash;&gt;-->
+<!--        검색-->
+        document.getElementById('toggleOptionsBtn').addEventListener('click', function() {
+            var optionsPanel = document.getElementById('searchOptions');
+            if (optionsPanel.style.display === 'none') {
+                optionsPanel.style.display = 'block';
+            } else {
+                optionsPanel.style.display = 'none';
+            }
+        });
 
-<!--            var currentPage1 = 1; // 초기 페이지는 1로 설정-->
-<!--            var totalPages1 = 0; // 초기에는 총 페이지 수를 알 수 없으므로 0으로 설정-->
-<!--&lt;!&ndash;            var itemsPerPage1 = 10;&ndash;&gt;-->
 
-<!--            var currentPage2 = 1; // 초기 페이지 설정-->
-<!--            var totalPages2 = 1716; // 전체 페이지 수 (예시에서는 임의로 설정, 실제 데이터에 맞게 수정 필요)-->
-<!--            var itemsPerPage2 = 10; // 페이지당 표시할 항목 수-->
-<!--            var dbData = []; // DB 데이터를 저장할 배열-->
-<!--            var selectedCheckboxes = []; // 선택된 체크박스 인덱스를 저장할 배열-->
-
-<!--&lt;!&ndash;            // 페이지 로딩 시 초기화&ndash;&gt;-->
-<!--&lt;!&ndash;            renderPagination1();&ndash;&gt;-->
-
-<!--&lt;!&ndash;            function renderPagination1() {&ndash;&gt;-->
-<!--&lt;!&ndash;                $('#paginationSection1').empty(); // 기존 버튼 제거&ndash;&gt;-->
-
-<!--&lt;!&ndash;                // 이전 버튼&ndash;&gt;-->
-<!--&lt;!&ndash;                var prevHtml = '<li class="page-item ' + (currentPage1 == 1 ? 'disabled' : '') + '">' +&ndash;&gt;-->
-<!--&lt;!&ndash;                    '<a class="page-link prev-link1" href="#" data-page="' + (currentPage1 - 1) + '">이전</a>' +&ndash;&gt;-->
-<!--&lt;!&ndash;                    '</li>';&ndash;&gt;-->
-<!--&lt;!&ndash;                $('#paginationSection1').append(prevHtml);&ndash;&gt;-->
-
-<!--&lt;!&ndash;                // 페이지 번호 버튼&ndash;&gt;-->
-<!--&lt;!&ndash;                var startPage = (Math.ceil(currentPage1 / itemsPerPage1) - 1) * itemsPerPage1 + 1;&ndash;&gt;-->
-<!--&lt;!&ndash;                var endPage = Math.min(startPage + itemsPerPage1 - 1, totalPages1);&ndash;&gt;-->
-
-<!--&lt;!&ndash;                for (var pageNum = startPage; pageNum <= endPage; pageNum++) {&ndash;&gt;-->
-<!--&lt;!&ndash;                    var pageHtml = '<li class="page-item ' + (pageNum == currentPage1 ? 'active' : '') + '">' +&ndash;&gt;-->
-<!--&lt;!&ndash;                        '<a class="page-link page-num1" href="#" data-page="' + pageNum + '">' + pageNum + '</a>' +&ndash;&gt;-->
-<!--&lt;!&ndash;                        '</li>';&ndash;&gt;-->
-<!--&lt;!&ndash;                    $('#paginationSection1').append(pageHtml);&ndash;&gt;-->
-<!--&lt;!&ndash;                }&ndash;&gt;-->
-
-<!--&lt;!&ndash;                // 다음 버튼&ndash;&gt;-->
-<!--&lt;!&ndash;                var nextHtml = '<li class="page-item ' + (currentPage1 >= totalPages1 ? 'disabled' : '') + '">' +&ndash;&gt;-->
-<!--&lt;!&ndash;                    '<a class="page-link next-link1" href="#" data-page="' + (currentPage1 + 1) + '">다음</a>' +&ndash;&gt;-->
-<!--&lt;!&ndash;                    '</li>';&ndash;&gt;-->
-<!--&lt;!&ndash;                $('#paginationSection1').append(nextHtml);&ndash;&gt;-->
-
-<!--&lt;!&ndash;                // 페이지 번호 클릭 이벤트 핸들러&ndash;&gt;-->
-<!--&lt;!&ndash;                $('.page-num1').click(function(e) {&ndash;&gt;-->
-<!--&lt;!&ndash;                    e.preventDefault();&ndash;&gt;-->
-<!--&lt;!&ndash;                    var page = $(this).data('page');&ndash;&gt;-->
-<!--&lt;!&ndash;                    currentPage1 = page;&ndash;&gt;-->
-<!--&lt;!&ndash;                    renderPagination1(); // 페이지네이션 다시 렌더링&ndash;&gt;-->
-<!--&lt;!&ndash;                    // loadPageData(page); // 필요하다면 페이지 데이터 로드 함수 호출&ndash;&gt;-->
-<!--&lt;!&ndash;                });&ndash;&gt;-->
-
-<!--&lt;!&ndash;                // 이전 버튼 클릭 이벤트 핸들러&ndash;&gt;-->
-<!--&lt;!&ndash;                $('.prev-link1').click(function(e) {&ndash;&gt;-->
-<!--&lt;!&ndash;                    e.preventDefault();&ndash;&gt;-->
-<!--&lt;!&ndash;                    if (currentPage1 > 1) {&ndash;&gt;-->
-<!--&lt;!&ndash;                        currentPage1&#45;&#45;;&ndash;&gt;-->
-<!--&lt;!&ndash;                        renderPagination1(); // 페이지네이션 다시 렌더링&ndash;&gt;-->
-<!--&lt;!&ndash;                        // loadPageData(currentPage1); // 필요하다면 페이지 데이터 로드 함수 호출&ndash;&gt;-->
-<!--&lt;!&ndash;                    }&ndash;&gt;-->
-<!--&lt;!&ndash;                });&ndash;&gt;-->
-
-<!--&lt;!&ndash;                // 다음 버튼 클릭 이벤트 핸들러&ndash;&gt;-->
-<!--&lt;!&ndash;                $('.next-link1').click(function(e) {&ndash;&gt;-->
-<!--&lt;!&ndash;                    e.preventDefault();&ndash;&gt;-->
-<!--&lt;!&ndash;                    if (currentPage1 < totalPages1) {&ndash;&gt;-->
-<!--&lt;!&ndash;                        currentPage1++;&ndash;&gt;-->
-<!--&lt;!&ndash;                        renderPagination1(); // 페이지네이션 다시 렌더링&ndash;&gt;-->
-<!--&lt;!&ndash;                        // loadPageData(currentPage1); // 필요하다면 페이지 데이터 로드 함수 호출&ndash;&gt;-->
-<!--&lt;!&ndash;                    }&ndash;&gt;-->
-<!--&lt;!&ndash;                });&ndash;&gt;-->
-<!--&lt;!&ndash;            }&ndash;&gt;-->
-
-<!--&lt;!&ndash;            // AJAX를 사용해 서버에서 count 값을 받아오기&ndash;&gt;-->
-<!--&lt;!&ndash;            $.ajax({&ndash;&gt;-->
-<!--&lt;!&ndash;                type: "POST",&ndash;&gt;-->
-<!--&lt;!&ndash;                url: "/admin/cultural-properties-regulate/select/count",&ndash;&gt;-->
-<!--&lt;!&ndash;                success: function(count) {&ndash;&gt;-->
-<!--&lt;!&ndash;                    totalPages1 = response; // 서버에서 받아온 count 값을 totalPages1 변수에 할당&ndash;&gt;-->
-<!--&lt;!&ndash;                    renderPagination1(); // 페이지네이션 초기화&ndash;&gt;-->
-<!--&lt;!&ndash;                    int page = 0;&ndash;&gt;-->
-<!--&lt;!&ndash;                    if(count % 10 == 0) {&ndash;&gt;-->
-<!--&lt;!&ndash;                        page = count / 10;&ndash;&gt;-->
-<!--&lt;!&ndash;                    }else{&ndash;&gt;-->
-<!--&lt;!&ndash;                        page = count / 10 + 1;&ndash;&gt;-->
-<!--&lt;!&ndash;                    }&ndash;&gt;-->
-<!--&lt;!&ndash;                    renderPagination1(page);&ndash;&gt;-->
-<!--&lt;!&ndash;                },&ndash;&gt;-->
-<!--&lt;!&ndash;                error: function() {&ndash;&gt;-->
-<!--&lt;!&ndash;                    alert("데이터를 불러오는 중 오류가 발생했습니다.");&ndash;&gt;-->
-<!--&lt;!&ndash;                }&ndash;&gt;-->
-<!--&lt;!&ndash;            });&ndash;&gt;-->
-
-<!--// renderPagination1 함수-->
-<!--function renderPagination1() {-->
-<!--    $('#paginationSection1').empty(); // 기존 버튼 제거-->
-
-<!--    // 이전 버튼-->
-<!--    var prevHtml = '<li class="page-item ' + (currentPage1 == 1 ? 'disabled' : '') + '">' +-->
-<!--        '<a class="page-link prev-link" href="#" data-page="' + (currentPage1 - 1) + '">이전</a>' +-->
-<!--        '</li>';-->
-<!--    $('#paginationSection1').append(prevHtml);-->
-
-<!--    // 페이지 번호 버튼-->
-<!--    var startPage = Math.floor((currentPage1 - 1) / 10) * 10 + 1;-->
-<!--    var endPage = Math.min(startPage + 9, totalPages1);-->
-
-<!--    for (var pageNum = startPage; pageNum <= endPage; pageNum++) {-->
-<!--        var pageHtml = '<li class="page-item ' + (pageNum == currentPage1 ? 'active' : '') + '">' +-->
-<!--            '<a class="page-link page-num" href="#" data-page="' + pageNum + '">' + pageNum + '</a>' +-->
-<!--            '</li>';-->
-<!--        $('#paginationSection1').append(pageHtml);-->
-<!--    }-->
-
-<!--    // 다음 버튼-->
-<!--    var nextHtml = '<li class="page-item ' + (currentPage1 >= totalPages1 ? 'disabled' : '') + '">' +-->
-<!--        '<a class="page-link next-link" href="#" data-page="' + (currentPage1 + 1) + '">다음</a>' +-->
-<!--        '</li>';-->
-<!--    $('#paginationSection1').append(nextHtml);-->
-
-<!--&lt;!&ndash;    // 페이지 번호 클릭 이벤트 처리&ndash;&gt;-->
-<!--&lt;!&ndash;    $('.page-link').on('click', function(e) {&ndash;&gt;-->
-<!--&lt;!&ndash;        e.preventDefault();&ndash;&gt;-->
-<!--&lt;!&ndash;        var page = $(this).data('page');&ndash;&gt;-->
-<!--&lt;!&ndash;        if (page !== currentPage1) {&ndash;&gt;-->
-<!--&lt;!&ndash;            currentPage1 = page;&ndash;&gt;-->
-<!--&lt;!&ndash;            renderPagination1(); // 페이지 재렌더링&ndash;&gt;-->
-<!--&lt;!&ndash;            getDBData(currentPage1, itemsPerPage1); // 데이터 가져오는 함수 호출 (currentPage1 및 itemsPerPage1은 필요에 따라 설정 필요)&ndash;&gt;-->
-<!--&lt;!&ndash;        }&ndash;&gt;-->
-
-<!--&lt;!&ndash;// 페이지 번호 클릭 이벤트 처리&ndash;&gt;-->
-<!--&lt;!&ndash;    $('.page-link').on('click', function(e) {&ndash;&gt;-->
-<!--&lt;!&ndash;        e.preventDefault();&ndash;&gt;-->
-<!--&lt;!&ndash;        var page = $(this).data('page');&ndash;&gt;-->
-<!--&lt;!&ndash;        if (page !== currentPage1) {&ndash;&gt;-->
-<!--&lt;!&ndash;            currentPage1 = page;&ndash;&gt;-->
-<!--&lt;!&ndash;            renderPagination1(); // 페이지 재렌더링&ndash;&gt;-->
-<!--&lt;!&ndash;            getDBData(); // 데이터 가져오는 함수 호출 (currentPage1 및 itemsPerPage1은 필요에 따라 설정 필요)&ndash;&gt;-->
-<!--&lt;!&ndash;        }&ndash;&gt;-->
-
-<!--        });-->
-
-<!--    });-->
-
-<!--    // 데이터가 있는 페이지의 체크박스 비활성화 처리-->
-<!--    disableCheckboxes(); // 실제 기능에 맞게 수정 필요-->
-<!--}-->
-
-
-
-
-<!--            // 페이지 버튼 생성 함수-->
-<!--            function renderPagination2() {-->
-<!--                $('#paginationSection2').empty(); // 기존 버튼 제거-->
-
-<!--                // 이전 버튼-->
-<!--                var prevHtml = '<li class="page-item ' + (currentPage2 == 1 ? 'disabled' : '') + '">' +-->
-<!--                    '<a class="page-link prev-link" href="#" data-page="' + (currentPage2 - 1) + '">이전</a>' +-->
-<!--                    '</li>';-->
-<!--                $('#paginationSection2').append(prevHtml);-->
-
-<!--                // 페이지 번호 버튼-->
-<!--                var startPage = (Math.ceil(currentPage2 / 10) - 1) * 10 + 1;-->
-<!--                var endPage = Math.min(startPage + 9, totalPages2);-->
-
-<!--                for (var pageNum = startPage; pageNum <= endPage; pageNum++) {-->
-<!--                    var pageHtml = '<li class="page-item ' + (pageNum == currentPage2 ? 'active' : '') + '">' +-->
-<!--                        '<a class="page-link page-num" href="#" data-page="' + pageNum + '">' + pageNum + '</a>' +-->
-<!--                        '</li>';-->
-<!--                    $('#paginationSection2').append(pageHtml);-->
-<!--                }-->
-
-<!--                // 다음 버튼-->
-<!--                var nextHtml = '<li class="page-item ' + (currentPage2 >= totalPages2 ? 'disabled' : '') + '">' +-->
-<!--                    '<a class="page-link next-link" href="#" data-page="' + (currentPage2 + 1) + '">다음</a>' +-->
-<!--                    '</li>';-->
-<!--                $('#paginationSection2').append(nextHtml);-->
-
-<!--                // 데이터가 있는 페이지의 체크박스 비활성화 처리-->
-<!--                disableCheckboxes();-->
-<!--            }-->
-
-<!--            // Ajax를 통해 API 데이터 불러오기-->
-<!--            function fetchApiData(pageIndex) {-->
-<!--                $('#list2').html(""); // 테이블 내용 초기화-->
-<!--                $('#loadingIndicator').show(); // 로딩 표시-->
-
-<!--                $.ajax({-->
-<!--                    url: '/admin/cultural-properties-regulate/fetchApiData?pageIndex=' + pageIndex,-->
-<!--                    method: 'POST',-->
-<!--                    contentType: 'application/json',-->
-<!--                    beforeSend: function() {-->
-<!--                        $('#loadingIndicator').show(); // Ajax 요청 전에 로딩 표시 보이기-->
-<!--                    },-->
-<!--                    success: function(list) {-->
-<!--                        $.each(list, function(index, culturalProperties) {-->
-<!--                            var index1 = (pageIndex - 1) * itemsPerPage2 + index + 1;-->
-
-<!--                            var htmlCheck = '<tr><td><input class="check2" type="checkbox" name="index" value="' + index + '"/></td>';-->
-<!--                            var htmlContent =-->
-<!--                                '<td class="culturalPropertieId">' + index1 + '</td>' +-->
-<!--                                '<td class="culturalPropertiesName">' + culturalProperties.culturalPropertiesName + '</td>' +-->
-<!--                                '<td class="categoryName">' + culturalProperties.categoryName + '</td>' +-->
-<!--                                '<td class="region">' + culturalProperties.region + '</td>' +-->
-<!--                                '<td class="dynasty">' + culturalProperties.dynasty + '</td></tr>';-->
-
-<!--                            var finalHtml = htmlCheck + htmlContent;-->
-<!--                            $('#list2').append(finalHtml);-->
-<!--                        });-->
-
-<!--                        // 페이지네이션 다시 그리기-->
-<!--                        renderPagination2();-->
-
-
-<!--                        // 데이터를 모두 표시한 후 로딩 인디케이터 숨기기-->
-<!--                        setTimeout(function() {-->
-<!--                            $('#loadingIndicator').hide();-->
-<!--                        }); // 0.5초 후에 숨김 (필요에 따라 조정 가능)-->
-
-
-<!--                    },-->
-<!--                    error: function(xhr, status, error) {-->
-<!--                        console.error('API 호출 오류:', error);-->
-<!--                    }-->
-<!--                });-->
-
-
-<!--            }-->
-
-
-
-
-<!--             //-->
-<!--            function getDBListCount(itemsPerPage){-->
-
-<!--                $('#list1').html(""); // 테이블 내용 초기화-->
-
-<!--                $.ajax({-->
-<!--                    url: '/admin/cultural-properties-regulate/findListPage?itemsPerPage=' + itemsPerPage,-->
-<!--                    method: 'GET',-->
-<!--                    contentType: 'application/json',-->
-<!--                    success: function(page) {-->
-
-<!--                        console.log("page : ")-->
-<!--                        console.log(page)-->
-
-<!--                        $('#paginationSection1').html("");-->
-
-<!--                        for(var p=1; p<=page; p++){-->
-
-<!--                            $('#list33').append(`<button>${p}</button>`);-->
-
-<!--                        }-->
-
-
-<!--                    }-->
-
-
-<!--                })-->
-
-<!--            }-->
-
-<!--            getDBListCount(10);-->
-
-
-
-
-
-
-
-<!--&lt;!&ndash;// AJAX를 통해 서버에서 페이지 수를 받아오고 totalPages1 변수 업데이트&ndash;&gt;-->
-<!--&lt;!&ndash;function getDBListCount(itemsPerPage) {&ndash;&gt;-->
-<!--&lt;!&ndash;    $('#list1').html(""); // 테이블 내용 초기화&ndash;&gt;-->
-
-<!--&lt;!&ndash;    $.ajax({&ndash;&gt;-->
-<!--&lt;!&ndash;        url: '/admin/cultural-properties-regulate/findListPage?itemsPerPage=' + itemsPerPage,&ndash;&gt;-->
-<!--&lt;!&ndash;        method: 'GET',&ndash;&gt;-->
-<!--&lt;!&ndash;        contentType: 'application/json',&ndash;&gt;-->
-<!--&lt;!&ndash;        success: function(totalPages) {&ndash;&gt;-->
-<!--&lt;!&ndash;            console.log("Total pages: " + totalPages);&ndash;&gt;-->
-
-<!--&lt;!&ndash;            // totalPages1 업데이트&ndash;&gt;-->
-<!--&lt;!&ndash;            totalPages1 = totalPages;&ndash;&gt;-->
-
-<!--&lt;!&ndash;            // renderPagination1 함수 호출하여 페이지 버튼 생성&ndash;&gt;-->
-<!--&lt;!&ndash;            renderPagination1();&ndash;&gt;-->
-
-<!--&lt;!&ndash;            // 초기 데이터 로드&ndash;&gt;-->
-<!--&lt;!&ndash;            getDBData(currentPage1, itemsPerPage);&ndash;&gt;-->
-<!--&lt;!&ndash;        },&ndash;&gt;-->
-<!--&lt;!&ndash;        error: function(xhr, status, error) {&ndash;&gt;-->
-<!--&lt;!&ndash;            console.error('페이지 수 요청 중 오류 발생:', error);&ndash;&gt;-->
-<!--&lt;!&ndash;        }&ndash;&gt;-->
-<!--&lt;!&ndash;    });&ndash;&gt;-->
-<!--&lt;!&ndash;}&ndash;&gt;-->
-
-<!--&lt;!&ndash;// 초기 페이지 로드&ndash;&gt;-->
-<!--&lt;!&ndash;$(document).ready(function() {&ndash;&gt;-->
-<!--&lt;!&ndash;    // 초기 데이터 로드 및 페이지 버튼 생성&ndash;&gt;-->
-<!--&lt;!&ndash;    var itemsPerPage = 10; // 페이지당 아이템 수&ndash;&gt;-->
-<!--&lt;!&ndash;    getDBListCount(itemsPerPage);&ndash;&gt;-->
-<!--&lt;!&ndash;});&ndash;&gt;-->
-
-
-<!--            // Ajax를 통해 DB 데이터 불러오기-->
-<!--            function getDBData() {-->
-<!--                $('#list1').html(""); // 테이블 내용 초기화-->
-
-<!--                $.ajax({-->
-<!--                    url: '/admin/cultural-properties-regulate/select',-->
-<!--                    method: 'GET',-->
-<!--                    contentType: 'application/json',-->
-<!--                    success: function(list) {-->
-
-<!--                        dbData = list; // DB 데이터를 배열에 저장-->
-
-<!--                        // DB 데이터를 통해 API 데이터와 비교하여 체크 박스 비활성화-->
-<!--                        disableCheckboxes();-->
-
-<!--                        $.each(list, function(index, culturalProperties) {-->
-<!--                            var htmlCheck = '<tr><td><input class="check1" type="checkbox" name="index" value="' + index + '"/></td>';-->
-<!--                            var htmlContent =-->
-<!--                                '<td class="id">' + culturalProperties.id + '</td>' +-->
-<!--                                '<td class="culturalPropertiesName">' + culturalProperties.culturalPropertiesName + '</td>' +-->
-<!--                                '<td class="categoryName">' + culturalProperties.categoryName + '</td>' +-->
-<!--                                '<td class="region">' + culturalProperties.region + '</td>' +-->
-<!--                                '<td class="dynasty">' + culturalProperties.dynasty + '</td>' +-->
-<!--                                '<td class="address">' + culturalProperties.address + '</td>' +-->
-<!--                                '<td class="registrationDate">' + culturalProperties.registrationDate + '</td>' +-->
-<!--                                '<td class="classifyA">' + culturalProperties.classifyA + '</td>' +-->
-<!--                                '<td class="classifyB">' + culturalProperties.classifyB + '</td>' +-->
-<!--                                '<td class="classifyC">' + culturalProperties.classifyC + '</td>' +-->
-<!--                                '<td class="classifyD">' + culturalProperties.classifyD + '</td>' +-->
-<!--                                '<td class="mainImgUrl"><a href="' + culturalProperties.mainImgUrl + '" target="_blank">클릭!</a></td>';-->
-
-<!--                            // content 열 수정 시작-->
-<!--                            var content = culturalProperties.content;-->
-<!--                            var shortContent = content.substring(0, 20); // 처음 5글자만 추출-->
-<!--                            var fullContent = content; // 전체 내용-->
-
-<!--                            htmlContent +=-->
-<!--                                '<td class="content" onmouseover="this.innerHTML=\'' + fullContent + '\'" onmouseout="this.innerHTML=\'' + shortContent + '\'">' + shortContent + '</td>';-->
-
-
-<!--                            // imgUrl 열 수정 시작-->
-<!--                            htmlContent += '<td class="imgUrl">';-->
-<!--                            if (Array.isArray(culturalProperties.imgUrl) && culturalProperties.imgUrl.length > 0) {-->
-<!--                                culturalProperties.imgUrl.forEach(function(url) {-->
-<!--                                    htmlContent += '<a href="' + url + '" target="_blank">클릭!</a><br>';-->
-<!--                                });-->
-<!--                            } else {-->
-<!--                                htmlContent += '-';-->
-<!--                            }-->
-<!--                            htmlContent += '</td>';-->
-
-
-<!--                            // imgDesc 열 수정 시작-->
-<!--                            htmlContent += '<td class="imgDesc">';-->
-<!--                            if (Array.isArray(culturalProperties.imgDesc) && culturalProperties.imgDesc.length > 0) {-->
-<!--                                culturalProperties.imgDesc.forEach(function(desc) {-->
-<!--                                    htmlContent += desc + '<br>';-->
-<!--                                });-->
-<!--                            } else {-->
-<!--                                htmlContent += '-';-->
-<!--                            }-->
-<!--                            htmlContent += '</td>';-->
-<!--                            // imgDesc 열 수정 끝-->
-
-<!--                            htmlContent +=-->
-
-
-<!--                                '<td class="videoUrl">';-->
-<!--                            if (Array.isArray(culturalProperties.videoUrl) && culturalProperties.videoUrl.length > 0) {-->
-<!--                                culturalProperties.videoUrl.forEach(function(url) {-->
-<!--                                    if (!url || url === 'http://116.67.83.213/webdata/file_data/media_data/videos/') {-->
-<!--                                        htmlContent += '데이터가 존재하지 않습니다<br>';-->
-<!--                                    } else {-->
-<!--                                        htmlContent += '<a href="' + url + '" target="_blank">클릭!</a><br>';-->
-<!--                                    }-->
-<!--                                });-->
-<!--                            } else {-->
-<!--                                if (!culturalProperties.videoUrl || culturalProperties.videoUrl === 'http://116.67.83.213/webdata/file_data/media_data/videos/') {-->
-<!--                                    htmlContent += '데이터가 존재하지 않습니다<br>';-->
-<!--                                } else {-->
-<!--                                    htmlContent += '-';-->
-<!--                                }-->
-<!--                            }-->
-<!--                            htmlContent += '</td>' +-->
-<!--                                '<td class="narrationUrl">';-->
-
-<!--                            // narrationUrl이 배열인 경우 각 URL에 대해 링크 생성-->
-<!--                            if (Array.isArray(culturalProperties.narrationUrl) && culturalProperties.narrationUrl.length > 0) {-->
-<!--                                culturalProperties.narrationUrl.forEach(function(url, index) {-->
-<!--                                    var language = '';-->
-<!--                                    switch (index) {-->
-<!--                                        case 0:-->
-<!--                                            language = '한국어';-->
-<!--                                            break;-->
-<!--                                        case 1:-->
-<!--                                            language = '영어';-->
-<!--                                            break;-->
-<!--                                        case 2:-->
-<!--                                            language = '일본어';-->
-<!--                                            break;-->
-<!--                                        case 3:-->
-<!--                                            language = '중국어';-->
-<!--                                            break;-->
-<!--                                        default:-->
-<!--                                            language = '언어 ' + (index + 1); // 기본적으로 언어 1, 2, 3, ...-->
-<!--                                            break;-->
-<!--                                    }-->
-<!--                                    htmlContent += '<a href="' + url + '" target="_blank">' + language + '</a><br>';-->
-<!--                                });-->
-<!--                            } else {-->
-<!--                                htmlContent += '-';-->
-<!--                            }-->
-<!--                            htmlContent += '</td></tr>';-->
-
-<!--                            var finalHtml = htmlCheck + htmlContent;-->
-<!--                            $('#list1').append(finalHtml);-->
-<!--                        });-->
-
-
-
-<!--                    },-->
-<!--                    error: function(xhr, status, error) {-->
-<!--                        console.error('DB 데이터 호출 오류:', error);-->
-<!--                    }-->
-<!--                });-->
-<!--            }-->
-
-
-<!--            // 페이지 버튼 클릭 이벤트-->
-<!--            $(document).on('click', '.page-num, .prev-link, .next-link', function(e) {-->
-<!--                e.preventDefault();-->
-<!--                var page = parseInt($(this).attr('data-page'));-->
-<!--                currentPage1 = page; // 클릭된 페이지를 현재 페이지로 설정-->
-<!--                getDBData(page); // 데이터 불러오기-->
-
-<!--&lt;!&ndash;                applyCheckboxState(); // 체크박스 상태 적용&ndash;&gt;-->
-<!--            });-->
-
-
-<!--            // 페이지 버튼 클릭 이벤트-->
-<!--            $(document).on('click', '.page-num, .prev-link, .next-link', function(e) {-->
-<!--                e.preventDefault();-->
-<!--                var pageIndex = parseInt($(this).attr('data-page'));-->
-<!--                currentPage2 = pageIndex; // 클릭된 페이지를 현재 페이지로 설정-->
-<!--                fetchApiData(pageIndex); // 데이터 불러오기-->
-
-<!--&lt;!&ndash;                applyCheckboxState(); // 체크박스 상태 적용&ndash;&gt;-->
-<!--            });-->
-
-<!--            // 전체 선택 체크박스 클릭 이벤트 (DB 현황)-->
-<!--            $('#selectAllCheckDB').click(function() {-->
-<!--                var isChecked = $(this).prop('checked');-->
-<!--                $('#culturalPropertiesDB').find('.check1').prop('checked', isChecked);-->
-<!--            });-->
-
-<!--            // 전체 선택 체크박스 클릭 이벤트 (API 데이터)-->
-<!--            $('#selectAllCheckAPI').click(function() {-->
-<!--                var isChecked = $(this).prop('checked');-->
-<!--                $('#culturalPropertiesAPI').find('.check2').prop('checked', isChecked);-->
-<!--            });-->
-
-<!--            // "DB 추가" 버튼 클릭 이벤트 핸들러-->
-<!--            $('#addDB').click(function() {-->
-<!--                // 체크된 데이터 가져오기-->
-<!--                var checkedItem = [];-->
-<!--                $('.check2:checked').each(function() {-->
-
-<!--                    var index = $(this).val(); // 선택된 인덱스(데이터 식별자) 가져오기-->
-<!--                    console.log("$('.check2:checked').each(function()");-->
-<!--                    console.log(index);-->
-<!--                    checkedItem.push(index); // 선택된 데이터를 배열에 추가-->
-<!--                });-->
-
-<!--                console.log("체크된 내용");-->
-<!--                console.log(checkedItem);-->
-
-<!--                // 선택된 데이터를 서버로 전송-->
-<!--                $.ajax({-->
-<!--                    url: '/admin/cultural-properties-regulate/addDBData',-->
-<!--                    method: 'POST',-->
-<!--                    contentType: 'application/json',-->
-<!--                    data: JSON.stringify(checkedItem), // 선택된 데이터를 JSON 형태로 전송-->
-<!--                    beforeSend: function() {-->
-<!--                        // Ajax 요청 전에 로딩 인디케이터를 보여주도록 설정-->
-<!--                        $('#loadingIndicator').show();-->
-<!--                    },-->
-<!--                    success: function(response) {-->
-<!--                        alert('데이터베이스에 성공적으로 추가되었습니다.');-->
-<!--                        // 추가된 데이터를 문화재 DB 현황 테이블에 업데이트-->
-<!--                        getDBData(); // 데이터베이스 데이터 다시 불러오기-->
-
-
-<!--                        // 체크박스 비활성화 처리-->
-<!--                        $('.check2:checked').prop('disabled', true);-->
-
-<!--                        $('#loadingIndicator').hide();-->
-<!--                    }-->
-<!--                });-->
-<!--            });-->
-
-
-<!--            // DB 데이터와 비교하여 체크 박스 비활성화 함수-->
-<!--            function disableCheckboxes() {-->
-<!--                // 현재 페이지의 체크박스들을 모두 활성화 상태로 초기화-->
-<!--                $('#list2 .check2').prop('disabled', false).removeClass('disabled');-->
-
-<!--                // DB 데이터와 현재 페이지의 데이터를 비교하여 이미 DB에 존재하는 경우 해당 체크 박스 비활성화 처리-->
-<!--                for (var i = 0; i < itemsPerPage2; i++) {-->
-<!--                    var dataIndex = (currentPage2 - 1) * itemsPerPage2 + i;-->
-<!--                    var checkbox = $('#list2').find('.check2').eq(dataIndex);-->
-
-<!--                    // 해당 데이터가 DB에 이미 존재하는지 확인-->
-<!--                    var culturalPropertiesName = checkbox.closest('tr').find('.culturalPropertiesName').text().trim();-->
-<!--                    var existsInDB = dbData.some(function(item) {-->
-<!--                        return item.culturalPropertiesName === culturalPropertiesName;-->
-<!--                    });-->
-
-<!--                    // DB에 존재하는 경우 체크 박스 비활성화 처리-->
-<!--                    if (existsInDB) {-->
-<!--                        checkbox.prop('disabled', true).addClass('disabled');-->
-<!--                    }-->
-<!--                }-->
-<!--            }-->
-
-
-
-<!--            // 초기 페이지 데이터 불러오기-->
-<!--            fetchApiData(currentPage2);-->
-<!--            getDBData(); // 초기 DB 데이터 불러오기-->
-
-
-<!--        });-->
     </script>
 </div>
 </body>

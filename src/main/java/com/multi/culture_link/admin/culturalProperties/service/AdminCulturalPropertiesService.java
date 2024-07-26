@@ -205,7 +205,6 @@ public class AdminCulturalPropertiesService {
 				dto.setCategoryCode(ccbaKdcd);
 				dto.setManagementNumber(ccbaAsno);
 				dto.setCityCode(ccbaCtcd);
-//				dto.setNation("");
 				dto.setCategoryName(ccmaName);
 				dto.setCulturalPropertiesName(ccbaMnm1);
 				dto.setLongitude(longitude);
@@ -285,31 +284,18 @@ public class AdminCulturalPropertiesService {
 
 		ArrayList<CulturalPropertiesDTO> list = (ArrayList<CulturalPropertiesDTO>) adminCulturalPropertiesDAO.selectDB(pageDto);
 
-//		// 페이징을 위한 서브리스트 계산
-//		int startIndex = (page - 1) * itemsPerPage;
-//		int endIndex = Math.min(startIndex + itemsPerPage, list.size());
-//
-//		// sublist 메서드를 사용하여 페이지네이션 적용
-//		List<CulturalPropertiesDTO> properties = new ArrayList<>(list.subList(startIndex, endIndex));
-
 		for(CulturalPropertiesDTO culturalPropertiesDTO : list){
 
-//			culturalPropertiesDTO.setImgDesc(Collections.singletonList(culturalPropertiesDTO.getImgDesc().get(0)));
-			culturalPropertiesDTO.setContent(culturalPropertiesDTO.getContent().substring(0,30) + "....");
-//			culturalPropertiesDTO.setImgUrl(Collections.singletonList(culturalPropertiesDTO.getImgUrl().get(0)));
-
 			// 이미지 URL(ImgUrl)의 처음부터 세 번째까지의 요소들만 리스트로 설정
-			List<String> imgUrlSublist = culturalPropertiesDTO.getImgUrl().subList(0, Math.min(3, culturalPropertiesDTO.getImgUrl().size()));
+			List<String> imgUrlSublist = culturalPropertiesDTO.getImgUrl().subList(0, Math.min(4, culturalPropertiesDTO.getImgUrl().size()));
 			culturalPropertiesDTO.setImgUrl(imgUrlSublist);
 
 			// 이미지 설명(ImgDesc)의 처음부터 세 번째까지의 요소만 리스트로 설정
-			List<String> imgDescSublist = culturalPropertiesDTO.getImgDesc().subList(0, Math.min(3, culturalPropertiesDTO.getImgDesc().size()));
+			List<String> imgDescSublist = culturalPropertiesDTO.getImgDesc().subList(0, Math.min(4, culturalPropertiesDTO.getImgDesc().size()));
 			culturalPropertiesDTO.setImgDesc(imgDescSublist);
 
 
 		}
-
-//		return properties;
 		return list;
 	}
 	
@@ -329,21 +315,16 @@ public class AdminCulturalPropertiesService {
 
 	public int selectCount() {
 
-//		int count = adminCulturalPropertiesDAO.selectCount();
-
 		return adminCulturalPropertiesDAO.selectCount();
 	}
 
-//	public ArrayList<CulturalPropertiesDTO> getDbPage(int page, int itemsPerPage) {
-//		ArrayList<CulturalPropertiesDTO> list = (ArrayList<CulturalPropertiesDTO>) selectDB();
-//		int startIndex = (page - 1) * itemsPerPage;
-//		int endIndex = Math.min(startIndex + itemsPerPage, list.size());
-//		return new ArrayList<>(list.subList(startIndex, endIndex));
+
+//	public List<CulturalPropertiesDTO> searchCulturalProperties(
+//			String categoryName, String culturalPropertiesName, String region, String dynasty) {
+//
+//		return adminCulturalPropertiesDAO.searchCulturalProperties(categoryName, culturalPropertiesName, region, dynasty);
 //	}
 
 
-//	public ArrayList<CulturalPropertiesDTO> getDbPage(int page, int itemsPerPage) {
-//		int startIdx = (page - 1) * itemsPerPage;
-//		return adminCulturalPropertiesDAO.getDbPage(startIdx, itemsPerPage);
-//	}
+
 }

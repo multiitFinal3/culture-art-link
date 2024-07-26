@@ -29,7 +29,7 @@
         SELECT *
         FROM( SELECT ROW_NUMBER() OVER(ORDER BY id DESC) AS rownum, c.*
         FROM cultural_properties c) c2
-        WHERE c2.rownum BETWEEN ${start} AND ${end};
+        WHERE c2.rownum BETWEEN ${start} AND ${end}
 
     </select>
 
@@ -42,6 +42,27 @@
 <!--        SELECT * FROM cultural_properties-->
 <!--        LIMIT #{itemsPerPage} OFFSET #{offset}-->
 <!--    </select>-->
+
+
+<!--    <select id="searchCulturalProperties" resultType="culturalPropertiesDTO">-->
+<!--        SELECT *-->
+<!--        FROM cultural_properties-->
+<!--        WHERE 1=1-->
+<!--        AND (#{categoryName} IS NULL OR category_name = #{categoryName})-->
+<!--        AND (#{culturalPropertiesName} IS NULL OR cultural_properties_name LIKE CONCAT('%', #{culturalPropertiesName}, '%'))-->
+<!--        AND (#{region} IS NULL OR region = #{region})-->
+<!--        AND (#{dynasty} IS NULL OR dynasty = #{dynasty})-->
+<!--    </select>-->
+
+    <select id="searchCulturalProperties" resultType="culturalPropertiesDTO">
+        SELECT *
+        FROM cultural_properties
+        WHERE 1=1
+        AND (#{categoryName} IS NULL OR category_name = #{categoryName})
+        AND (#{culturalPropertiesName} IS NULL OR cultural_properties_name LIKE CONCAT('%', #{culturalPropertiesName}, '%'))
+        AND (#{region} IS NULL OR region LIKE CONCAT('%', #{region}, '%'))
+        AND (#{dynasty} IS NULL OR dynasty LIKE CONCAT('%', #{dynasty}, '%'))
+    </select>
 
 
 </mapper>
