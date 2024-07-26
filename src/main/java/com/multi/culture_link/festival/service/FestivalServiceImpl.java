@@ -171,9 +171,9 @@ public class FestivalServiceImpl implements FestivalService {
 	}
 	
 	@Override
-	public ArrayList<VWUserReviewDataDTO> findFestivalReviewListByFestivalId(int festivalId) throws Exception {
+	public ArrayList<VWUserReviewDataDTO> findFestivalReviewListByVWUserReviewDTO(VWUserReviewDataDTO vwUserReviewDataDTO) throws Exception {
 		
-		ArrayList<VWUserReviewDataDTO> list = festivalMapper.findFestivalReviewListByFestivalId(festivalId);
+		ArrayList<VWUserReviewDataDTO> list = festivalMapper.findFestivalReviewListByVWUserReviewDTO(vwUserReviewDataDTO);
 		
 		return list;
 		

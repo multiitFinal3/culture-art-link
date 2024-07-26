@@ -104,10 +104,17 @@
 
     </select>
 
-    <select id="findFestivalReviewListByFestivalId" resultType="vwUserReviewDTO">
+    <select id="findFestivalReviewListByVWUserReviewDTO" resultType="vwUserReviewDTO">
 
-        SELECT * FROM vw_user_review_data
-        WHERE festival_id = #{festivalId};
+        SELECT * FROM (
+
+            SELECT ROW_NUM() OVER (ORDER BY festival_review_id DESC) AS rownum, urd.*
+            FROM vw_user_review_data urd
+        
+        ) f1
+
+        WHERE f1.festival_id = #{festivalId}
+        AND f1.rownum BETWEEN #{pageDTO.start} AND #{pageDTO.end};
 
     </select>
 

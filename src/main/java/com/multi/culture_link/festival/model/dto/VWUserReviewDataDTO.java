@@ -13,5 +13,6 @@ public class VWUserReviewDataDTO {
 	private String attachment;
 	private String userName;
 	private String userProfilePic;
+	private PageDTO pageDTO;
 	
 }

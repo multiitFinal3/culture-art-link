@@ -81,11 +81,11 @@
         * 리뷰 리스트 가져와서 넣어주기
         *
         */
-        function findFestivalReviewListByFestivalId(festivalId, userId, page){
+        function findFestivalReviewListByVWUserReviewDTO(festivalId, userId, page){
 
             $.ajax({
 
-                url: '/festival/findFestivalReviewListByFestivalId?festivalId=' + festivalId + "&page=" + page,
+                url: '/festival/findFestivalReviewListByVWUserReviewDTO?festivalId=' + festivalId + "&page=" + page,
                 method: 'POST',
                 contentType: 'application/json',
                 success: function(list){
@@ -177,7 +177,7 @@
 
         }
 
-        findFestivalReviewListByFestivalId(festivalId);
+        findFestivalReviewListByVWUserReviewDTO(festivalId,1);
 
 
 

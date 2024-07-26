@@ -33,5 +33,5 @@ public interface FestivalService {
 	
 	TimeDTO findTimeIdByFestivalId(int festivalId) throws Exception;
 	
-	ArrayList<VWUserReviewDataDTO> findFestivalReviewListByFestivalId(int festivalId) throws Exception;
+	ArrayList<VWUserReviewDataDTO> findFestivalReviewListByVWUserReviewDTO(VWUserReviewDataDTO vwUserReviewDataDTO) throws Exception;
 }

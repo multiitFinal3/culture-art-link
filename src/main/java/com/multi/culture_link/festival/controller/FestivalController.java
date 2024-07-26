@@ -436,13 +436,21 @@ public class FestivalController {
 	}
 	
 	
-	@PostMapping("/findFestivalReviewListByFestivalId")
+	@PostMapping("/findFestivalReviewListByVWUserReviewDTO")
 	@ResponseBody
-	public ArrayList<VWUserReviewDataDTO> findFestivalReviewListByFestivalId(@RequestParam("festivalId") int festivalId){
+	public ArrayList<VWUserReviewDataDTO> findFestivalReviewListByVWUserReviewDTO(@RequestParam("festivalId") int festivalId, @RequestParam("page") int page){
+		
+		VWUserReviewDataDTO vwUserReviewDataDTO = new VWUserReviewDataDTO();
+		PageDTO pageDTO = new PageDTO();
+		pageDTO.setPage(page);
+		pageDTO.setStartEnd(pageDTO.getPage());
+		vwUserReviewDataDTO.setPageDTO(pageDTO);
+		
 		
 		ArrayList<VWUserReviewDataDTO> list = null;
 		try {
-			list = festivalService.findFestivalReviewListByFestivalId(festivalId);
+			list = festivalService.findFestivalReviewListByFestivalId(vwUserReviewDataDTO);
+			
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
