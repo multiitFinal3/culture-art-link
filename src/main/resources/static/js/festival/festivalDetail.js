@@ -2,6 +2,9 @@ $(document).ready(
     function(){
 
 
+        //#region 찜 / 관심없음 관련 함수
+
+
         /**
         * 찜하기 / 찜 취소하기 버튼
         *
@@ -207,7 +210,18 @@ $(document).ready(
         findLoveList();
         findHateList();
 
+        //#endregion
 
+
+
+        //#region 오른쪽 리뷰 관련 함수
+
+
+
+
+
+
+        //#endregion
 
 
 

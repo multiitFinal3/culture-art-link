@@ -107,8 +107,49 @@
                             var index1 = (index + 1) + (page-1)*5;
 
                             var reviewHtml = ``;
+                            var profilePic = ``;
+                            var attachment = ``;
 
                             var reviewUserId = review.userId;
+
+                            if((review.userProfilePic == null) || (review.userProfilePic == "")){
+
+                                 profilePic = `
+                                 <td class="userProfilePic" style="width: 100px">
+                                    <img src="/img/festival/noPhoto.png" style="height: 50px;">
+                                 </td>
+                                `
+
+
+                            }else{
+
+                                profilePic = `
+                                <td class="userProfilePic" style="width: 100px">
+                                    <img src="${review.userProfilePic}" height="50px">
+                                </td>
+                                `
+                            }
+
+
+
+                            if((review.attachment == null) || (review.attachment == "")){
+
+                                attachment = `
+                                <td style="width: 100px">
+                                    <img src="/img/festival/noPhoto.png" style="height: 50px;">
+                                </td>
+                                `
+
+                            }else{
+
+                                attachment = `
+                                <td style="width: 100px">
+                                    <img src="${review.attachment}" height="50px">
+                                </td>
+                                `
+
+                            }
+
 
                             if(userId == reviewUserId){
 
@@ -116,35 +157,37 @@
 
                                     <tr class="reviewRow" id="review.festivalReviewId">
 
-                                        <td class="index1">
+                                        <td class="index1" style="width: 100px">
                                             ${index1}
-                                        </td>
+                                        </td>` +
 
-                                        <td class="userProfilePic">
-                                            <img src="${review.userProfilePic}" height="25px">
-                                        </td>
+                                        profilePic
 
-                                        <td class="reviewUserName">
+                                        +
+
+                                        `<td class="reviewUserName" style="width: 100px">
                                             ${review.userName}
                                         </td>
 
-                                        <td>
-                                            <img src="/img/festival/star.png" height="25px">&nbsp;&nbsp;<input id="reviewStar" type="number" step="0.5" value="${review.festivalReviewStar}" max="5" min="0" style="width: 45px; height: 45px;     text-align: center;">
+                                        <td style="width: 100px">
+                                            <img src="/img/festival/star.png" height="25px">&nbsp;&nbsp;<input id="reviewStar" type="number" step="0.5" value="${review.festivalReviewStar}" max="5" min="0" style="width: 45px; height: 45px; text-align: center;">
                                         </td>
 
-                                        <td>
+                                        <td style="width: 100px">
                                         <textarea class="reviewText" rows="2" cols="100" style="text-align: center;">${review.festivalReviewContent}</textarea>
-                                        </td>
+                                        </td>`
 
-                                        <td>
-                                            <img src="${review.attachment}" height="50px">
-                                        </td>
+                                        +
 
-                                        <td>
+                                        attachment
+
+                                        +
+
+                                        `<td style="width: 100px">
                                             <button class="updateBtn" value="review.festivalReviewId">수정</button>
                                         </td>
 
-                                        <td>
+                                        <td style="width: 100px">
                                             <button class="deleteBtn" value="review.festivalReviewId">삭제</button>
                                         </td>
 
@@ -159,13 +202,15 @@
 
                                         <td class="index1" style="width: 15px">
                                             ${index1}
-                                        </td>
+                                        </td>`
 
-                                        <td class="userProfilePic" style="width: 100px">
-                                            <img src="${review.userProfilePic}" height="25px">
-                                        </td>
+                                        +
 
-                                        <td class="reviewUserName" style="width: 100px">
+                                        profilePic
+
+                                        +
+
+                                        `<td class="reviewUserName" style="width: 100px">
                                             ${review.userName}
                                         </td>
 
@@ -175,13 +220,15 @@
 
                                         <td style="width: 500px">
                                             <p class="reviewText" rows="2" cols="100">${review.festivalReviewContent}</p>
-                                        </td>
+                                        </td>`
 
-                                        <td style="width: 100px">
-                                            <img src="${review.attachment}" height="50px">
-                                        </td>
+                                        +
 
-                                        <td style="width: 100px">
+                                        attachment
+
+                                        +
+
+                                        `<td style="width: 100px">
                                         </td>
 
                                         <td style="width: 100px">
@@ -191,6 +238,10 @@
                                  `;
 
                             }
+
+
+
+
 
                             $('#reviewList').append(reviewHtml);
 
@@ -253,6 +304,12 @@
                 findFestivalReviewListByVWUserReviewDTO(festivalId, userId, page);
 
             })
+
+
+
+
+
+
 
 
             //#endregion
@@ -450,6 +507,7 @@
                             리뷰를 입력하세요
                         </textarea>
                         <input id="reviewStar" type="number" step="0.5" value="3" max="5" min="0" style="width: 40px; height: 40px">
+                        <input type="file">
                         <button id="reviewInsertBtn">리뷰 제출</button>
 
                     </div>
@@ -478,10 +536,6 @@
                     </div>
 
                     <div id="reviewPages">
-
-                        <button>1</button>
-                        <button>2</button>
-                        <button>3</button>
 
                     </div>
 

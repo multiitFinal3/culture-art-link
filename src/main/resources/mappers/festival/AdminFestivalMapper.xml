@@ -110,37 +110,37 @@
             </if>
 
 
-            <if test="festivalName !=null and festivalName !=''">
+            <if test="festivalName !=null and !festivalName.equals('')">
                 AND festival_name LIKE CONCAT ('%', #{festivalName}, '%')
             </if>
 
 
-            <if test="festivalContent !=null and festivalContent !=''">
+            <if test="festivalContent !=null and !festivalConten.equals('')">
                 AND festival_content LIKE CONCAT ('%', #{festivalContent}, '%')
             </if>
 
 
-            <if test="manageInstitution !=null and manageInstitution !=''">
+            <if test="manageInstitution !=null and !manageInstitution.equals('')">
                 AND manage_institution LIKE CONCAT ('%', #{manageInstitution}, '%')
             </if>
 
 
-            <if test="hostInstitution !=null and hostInstitution !=''">
+            <if test="hostInstitution !=null and !hostInstitution.equals('')">
                 AND host_institution LIKE CONCAT ('%', #{hostInstitution}, '%')
             </if>
 
 
-            <if test="sponserInstitution !=null and sponserInstitution !=''">
+            <if test="sponserInstitution !=null and !sponserInstitution.equals('')">
                 AND sponser_institution LIKE CONCAT ('%', #{sponserInstitution}, '%')
             </if>
 
 
-            <if test="tel !=null and tel !=''">
+            <if test="tel !=null and !tel.equals('')">
                 AND tel LIKE CONCAT ('%', #{tel}, '%')
             </if>
 
 
-            <if test="place !=null and place !=''">
+            <if test="place !=null and !place.equals('')">
                 AND place LIKE CONCAT ('%', #{place}, '%')
             </if>
 
@@ -155,12 +155,12 @@
             </if>
 
 
-            <if test="avgRate !=null and avgRate !=''">
+            <if test="avgRate !=null and !avgRate.equals('')">
                 AND avg_rate &gt;= #{avgRate}
             </if>
 
 
-            <if test="season !=null and season !=''">
+            <if test="season !=null and !season.equals('')">
                 AND season = #{season}
             </if>
 
