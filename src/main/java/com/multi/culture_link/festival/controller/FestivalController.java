@@ -528,6 +528,9 @@ public class FestivalController {
 			VWUserReviewDataDTO userReviewDataDTO = new VWUserReviewDataDTO();
 			userReviewDataDTO.setFestivalId(festivalId);
 			userReviewDataDTO.setFestivalReviewStar(reviewStar);
+			
+			reviewTextArea = reviewTextArea.trim();
+			
 			userReviewDataDTO.setFestivalReviewContent(reviewTextArea);
 			
 			int userId = user.getUserId();
@@ -557,5 +560,53 @@ public class FestivalController {
 		
 		return "redirect:/festival/festival-detail?festivalId="+festivalId;
 	}
+	
+	
+	/**
+	 * 리뷰 삭제
+	 * @param festivalReviewId
+	 * @return
+	 */
+	@PostMapping("/deleteFestivalReviewByReviewId")
+	@ResponseBody
+	public String deleteFestivalReviewByReviewId(@RequestParam("festivalReviewId") int festivalReviewId){
+		
+		try {
+			festivalService.deleteFestivalReviewByReviewId(festivalReviewId);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+		
+		return "삭제 성공";
+	}
+	
+	
+	
+	/**
+	 * 리뷰 수정
+	 * @param festivalReviewId
+	 * @return
+	 */
+	@PostMapping("/updateFestivalReview")
+	@ResponseBody
+	public String updateFestivalReview(@RequestParam("festivalReviewId") int festivalReviewId, @RequestParam("reviewText") String reviewText, @RequestParam("reviewStar") double reviewStar){
+		
+		try {
+			
+			VWUserReviewDataDTO vwUserReviewDataDTO = new VWUserReviewDataDTO();
+			vwUserReviewDataDTO.setFestivalReviewContent(reviewText);
+			vwUserReviewDataDTO.setFestivalReviewStar(reviewStar);
+			vwUserReviewDataDTO.setFestivalReviewId(festivalReviewId);
+			festivalService.updateFestivalReview(vwUserReviewDataDTO);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+		
+		return "수정 성공";
+	}
+	
+	
+	
+	
 	
 }

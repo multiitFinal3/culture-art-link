@@ -38,4 +38,8 @@ public interface FestivalService {
 	int findFestivalReviewCountByVWUserReviewDTO(int festivalId) throws Exception;
 	
 	void insertFestivalReview(VWUserReviewDataDTO userReviewDataDTO) throws Exception;
+	
+	void deleteFestivalReviewByReviewId(int festivalReviewId) throws Exception;
+	
+	void updateFestivalReview(VWUserReviewDataDTO vwUserReviewDataDTO) throws Exception;
 }

@@ -134,4 +134,21 @@
     </insert>
 
 
+    <delete id="deleteFestivalReviewByReviewId">
+
+        DELETE FROM festival_review
+        WHERE festival_review_id = #{festivalReviewId};
+
+    </delete>
+
+    <update id="updateFestivalReview" parameterType="vwUserReviewDTO">
+
+        UPDATE festival_review
+        SET festival_review_star = #{festivalReviewStar},
+            festival_review_content = #{festivalReviewContent}
+        WHERE festival_review_id = #{festivalReviewId};
+
+    </update>
+
+
 </mapper>

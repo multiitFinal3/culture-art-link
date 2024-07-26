@@ -194,4 +194,18 @@ public class FestivalServiceImpl implements FestivalService {
 		festivalMapper.insertFestivalReview(userReviewDataDTO);
 		
 	}
+	
+	@Override
+	public void deleteFestivalReviewByReviewId(int festivalReviewId) throws Exception {
+		
+		festivalMapper.deleteFestivalReviewByReviewId(festivalReviewId);
+		
+	}
+	
+	@Override
+	public void updateFestivalReview(VWUserReviewDataDTO vwUserReviewDataDTO) throws Exception {
+		
+		festivalMapper.updateFestivalReview(vwUserReviewDataDTO);
+		
+	}
 }
