@@ -2,8 +2,6 @@ package com.multi.culture_link.admin.culturalProperties.model.dto;
 
 import lombok.Data;
 
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 @Data
@@ -64,10 +62,9 @@ public class CulturalPropertiesDTO {
     private List<String> imgDesc;
     private List<String> videoUrl;
     private List<String> narrationUrl;
-
-
-
-
-
-
+    
+    private PageDTO pageDTO;
+    private int start;
+    private int end;
+    
 }
