@@ -319,24 +319,62 @@ public class AdminCulturalPropertiesService {
 	}
 
 
+//	public List<CulturalPropertiesDTO> searchCulturalProperties(
+//			PageDTO pageDTO, String categoryName, String culturalPropertiesName, String region, String dynasty) {
+//
+//		int start = pageDTO.getStart();
+//		int end = pageDTO.getEnd();
+//
+//		System.out.println(categoryName);
+//		System.out.println(culturalPropertiesName);
+//		System.out.println(region);
+//		System.out.println(dynasty);
+//		System.out.println(start);
+//		System.out.println(end);
+//		System.out.println();
+//
+//		List<CulturalPropertiesDTO> list = adminCulturalPropertiesDAO.searchCulturalProperties(categoryName, culturalPropertiesName, region, dynasty, start, end);
+//
+//
+//		System.out.println(""+list);
+////		return adminCulturalPropertiesDAO.searchCulturalProperties(categoryName, culturalPropertiesName, region, dynasty, start, end);
+//		return list;
+//	}
+
+
 	public List<CulturalPropertiesDTO> searchCulturalProperties(
 			PageDTO pageDTO, String categoryName, String culturalPropertiesName, String region, String dynasty) {
 
 		int start = pageDTO.getStart();
 		int end = pageDTO.getEnd();
 
-		System.out.println(categoryName);
-		System.out.println(culturalPropertiesName);
-		System.out.println(region);
-		System.out.println(dynasty);
-		System.out.println(start);
-		System.out.println(end);
+
+		System.out.println("service-categoryName : " + categoryName);
+		System.out.println("culturalPropertiesName : " + culturalPropertiesName);
+		System.out.println("region : " + region);
+		System.out.println("dynasty : " + dynasty);
+		System.out.println("start : " + start);
+		System.out.println("end : " + end);
 		System.out.println();
 
-		List<CulturalPropertiesDTO> list = adminCulturalPropertiesDAO.searchCulturalProperties(categoryName, culturalPropertiesName, region, dynasty, start, end);
+
+		CulturalPropertiesDTO culturalPropertiesDTO = new CulturalPropertiesDTO();
+		culturalPropertiesDTO.setCategoryName(categoryName);
+		culturalPropertiesDTO.setCulturalPropertiesName(culturalPropertiesName);
+		culturalPropertiesDTO.setRegion(region);
+		culturalPropertiesDTO.setDynasty(dynasty);
+		culturalPropertiesDTO.setPageDTO(pageDTO);
+		culturalPropertiesDTO.setStart(start);
+		culturalPropertiesDTO.setEnd(end);
 
 
-		System.out.println(""+list);
+		System.out.println("dto : " + culturalPropertiesDTO);
+
+
+		List<CulturalPropertiesDTO> list = adminCulturalPropertiesDAO.searchCulturalProperties(culturalPropertiesDTO);
+
+
+		System.out.println("list : "+list);
 //		return adminCulturalPropertiesDAO.searchCulturalProperties(categoryName, culturalPropertiesName, region, dynasty, start, end);
 		return list;
 	}

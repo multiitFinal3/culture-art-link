@@ -634,7 +634,7 @@ $(document).ready(function() {
         } else {
             // AJAX를 사용하여 서버로 데이터 전송
             $.ajax({
-                url: '/admin/cultural-properties-regulate/search?page=' + page,
+                url: '/admin/cultural-properties-regulate/search?page=' + page + "&category=" + category + "&name=" + name +"&region=" + region +"&dynasty=" + dynasty,
                 method: 'POST',
                 data: {
                     categoryName: category,

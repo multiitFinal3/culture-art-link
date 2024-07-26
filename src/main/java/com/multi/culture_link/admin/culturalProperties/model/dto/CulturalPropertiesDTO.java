@@ -68,6 +68,11 @@ public class CulturalPropertiesDTO {
 
 
 
+    private PageDTO pageDTO;
+    private int start;
+    private int end;
+
+
 
 
 }
