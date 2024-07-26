@@ -16,9 +16,9 @@
             flex-flow: column;
             align-items: center;
             justify-content: center;
-            margin-left: 100px;
+            margin-left: 80px;
             margin-top: 100px;
-            margin-right: 100px;
+            margin-right: 80px;
         }
 
         table {
@@ -45,8 +45,6 @@
         td {
             background-color: #E7EEF9;
         }
-
-
 
 
         #culturalPropertiesAPI th {
@@ -172,9 +170,10 @@
                 </div>
                 <div class="col d-flex justify-content-center align-items-center">
                     <h2 class="text-center">문화재 DB 현황</h2>
+                    <button type="button" class="btn btn-outline-primary ml-3"> 삭제 </button>
                 </div>
                 <div class="col d-flex justify-content-end align-items-center">
-                    <button type="button" class="btn btn-outline-primary"> 삭제 </button>
+<!--                    <button type="button" class="btn btn-outline-primary"> 삭제 </button>-->
                 </div>
             </div>
         </div>
@@ -219,9 +218,54 @@
         <br><br><br>
 
 
-        <div class="d-flex justify-content-center align-items-center">
-            <h2 class="mr-auto">전국 문화재 실시간</h2>
-            <button type="button" id="addDB" class="btn btn-outline-primary ml-3">DB 추가</button>
+<!--        <div class="d-flex justify-content-center align-items-center">-->
+<!--            <h2 class="mr-auto">전국 문화재 실시간</h2>-->
+<!--            <button type="button" id="addDB" class="btn btn-outline-primary ml-3">DB 추가</button>-->
+<!--        </div>-->
+
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col d-flex justify-content-start align-items-center">
+                    <button class="search-btn btn-lg" id="toggleOptionsBtn2">🔍</button>
+
+                    <div class="search-options" id="searchOptions2">
+                        <label>종목:</label>
+                        <select id="categoryFilter2">
+                            <option value="all">전체</option>
+                            <option value="category1">국보</option>
+                            <option value="category2">보물</option>
+                            <option value="category3">사적</option>
+                            <option value="category4">사적및명승</option>
+                            <option value="category5">명승</option>
+                            <option value="category6">천연기념물</option>
+                            <option value="category7">국가무형유산</option>
+                            <option value="category8">국가민속문화유산</option>
+                            <option value="category9">시도유형문화유산</option>
+                            <option value="category10">시도무형유산</option>
+                            <option value="category11">시도기념물</option>
+                            <option value="category12">시도민속문화유산</option>
+                            <option value="category13">시도등록유산</option>
+                            <option value="category14">문화유산자료</option>
+                            <option value="category15">국가등록유산</option>
+                            <option value="category16">이북5도 무형유산</option>
+                        </select>
+                        <input type="text" id="searchName2" maxlength="20" placeholder="문화재 이름" />
+                        <input type="text" id="searchRegion2" maxlength="10" placeholder="지역"/>
+                        <input type="text" id="searchDynasty2" maxlength="10" placeholder="시대"/>
+
+                        <button id="searchDB2" class="btn btn-outline-primary ml-3" >검색</button>
+                        <button id="reset2" class="btn btn-outline-primary ml-3" >초기화</button>
+                    </div>
+
+                </div>
+                <div class="col d-flex justify-content-center align-items-center">
+                    <h2 class="text-center">전국 문화재 실시간</h2>
+                    <button type="button" id="addDB" class="btn btn-outline-primary ml-3">DB 추가</button>
+                </div>
+                <div class="col d-flex justify-content-end align-items-center">
+<!--                    <button type="button" id="addDB" class="btn btn-outline-primary ml-3">DB 추가</button>-->
+                </div>
+            </div>
         </div>
 
 
@@ -246,6 +290,7 @@
 
         <div class="pagination" id="paginationSection2">
         </div>
+        <br><br><br>
 
     </div>
 
@@ -259,6 +304,16 @@
                 optionsPanel.style.display = 'none';
             }
         });
+        <!--        검색-->
+        document.getElementById('toggleOptionsBtn2').addEventListener('click', function() {
+            var optionsPanel = document.getElementById('searchOptions2');
+            if (optionsPanel.style.display === 'none') {
+                optionsPanel.style.display = 'block';
+            } else {
+                optionsPanel.style.display = 'none';
+            }
+        });
+
 
 
     </script>

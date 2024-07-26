@@ -279,7 +279,7 @@ $(document).ready(function() {
                         htmlContent += '-';
                     }
 
-                    htmlContent +=  '<td><button class="btn btn-outline-primary ml-3" data-index="' + index + '">수정</button></td>';
+                    htmlContent +=  '<td><button class="btn btn-outline-primary" data-index="' + index + '">수정</button></td>';
 
                     var finalHtml = htmlCheck + htmlContent;
                     $('#list1').append(finalHtml);
@@ -440,7 +440,7 @@ $(document).ready(function() {
 //                // AJAX를 사용하여 서버로 데이터 전송
 //                $.ajax({
 //                    url: '/admin/cultural-properties-regulate/search?category=' + category + '&name=' + name + '&region=' + region + '&dynasty=' + dynasty, // 서버 API 엔드포인트 주소
-//                    method: 'GET', // HTTP 메서드
+//                    method: 'POST', // HTTP 메서드
 ////                    data: {
 ////                        category: category,
 ////                        name: name,
@@ -494,6 +494,78 @@ $(document).ready(function() {
 //            listContainer.append('<div>일치하는 검색 결과가 없습니다.</div>');
 //        }
 //    }
+
+
+    $(document).ready(function() {
+        $('#searchDB').click(function(category, name, region, dynasty) {
+            // 사용자가 입력한 값을 가져오기
+            var category = $('#categoryFilter').val();
+            var name = $('#searchName').val();
+            var region = $('#searchRegion').val();
+            var dynasty = $('#searchDynasty').val();
+
+            if (category === 'all') {
+                // 전체를 선택한 경우 초기 화면을 표시
+                displayInitialScreen();
+            } else {
+                // AJAX를 사용하여 서버로 데이터 전송
+                $.ajax({
+                    url: '/admin/cultural-properties-regulate/search?category=' + category + '&name=' + name + '&region=' + region + '&dynasty=' + dynasty, // 서버 API 엔드포인트 주소
+                    method: 'POST', // HTTP 메서드
+//                    data: {
+//                        category: category,
+//                        name: name,
+//                        region: region,
+//                        dynasty: dynasty
+//                    },
+                    success: function(response) {
+                        // 서버로부터 응답을 받았을 때 실행되는 함수
+                        console.log('검색 결과:', response);
+
+                        // 클라이언트 측 데이터와 비교하여 일치하는 것을 처리하는 예시
+                        $('#list1').each(function() {
+                            var row = $(this);
+                            var culturalPropertiesName = row.find('.culturalPropertiesName').text().trim();
+
+                            // 검색 결과에 culturalPropertiesName이 포함되어 있는지 확인
+                            var existsInSearchResult = response.some(function(item) {
+                                return item.culturalPropertiesName === culturalPropertiesName;
+                            });
+
+                            // 일치하는 경우 행 보이기, 그렇지 않으면 숨기기
+                            if (existsInSearchResult) {
+                                row.show();
+                            } else {
+                                row.hide();
+                            }
+                        });
+
+                        // 검색 결과가 없으면 알림창을 띄우기
+                        if (response.length === 0) {
+                            alert('일치하는 검색 결과가 없습니다.');
+                        }
+                    },
+
+                    error: function(xhr, status, error) {
+                        // AJAX 요청이 실패했을 때 실행되는 함수
+                        console.error('AJAX 오류:', status, error);
+                    }
+                });
+                }
+            });
+
+                // 초기화 버튼 클릭 이벤트
+                $('#reset').click(function() {
+                    // 검색 필터 초기화
+                    $('#categoryFilter').val('all');
+                    $('#searchName').val('');
+                    $('#searchRegion').val('');
+                    $('#searchDynasty').val('');
+
+                    // 모든 행 보이기
+                    $('#list1').show();
+                });
+            });
 
 
 
@@ -631,51 +703,51 @@ $(document).ready(function() {
 //    }
 
 
-    $(document).ready(function() {
-        // 검색 버튼 클릭 이벤트
-        $('#searchDB').on('click', function() {
-            var category = $('#categoryFilter').val();
-            var name = $('#searchName').val().trim();
-            var region = $('#searchRegion').val().trim();
-            var dynasty = $('#searchDynasty').val().trim();
-
-            // 현재 목록에서 데이터 가져오기
-            var currentRows = $('#list1');
-
-            // 필터링된 데이터에 대한 배열 생성
-            var filteredRows = currentRows.filter(function() {
-                var row = $(this);
-                var id = row.find('.id').text();
-                var culturalPropertiesName = row.find('.culturalPropertiesName').text();
-                var categoryName = row.find('.categoryName').text();
-                var regionText = row.find('.region').text();
-                var dynastyText = row.find('.dynasty').text();
-
-                return (category === 'all' || categoryName === category) &&
-                       (name === '' || culturalPropertiesName.includes(name)) &&
-                       (region === '' || regionText.includes(region)) &&
-                       (dynasty === '' || dynastyText.includes(dynasty));
-            }); console.log(currentRows);
-
-            // 모든 행을 숨기고 필터링된 행만 보이게 하기
-            currentRows.hide();
-            if (filteredRows.length > 0) {
-                filteredRows.show();
-            } else {
-                // 일치하는 결과가 없을 때 알림창 띄우기
-                alert('일치하는 검색 결과가 존재하지 않습니다.');
-            }
-        });
-
-        // 초기화 버튼 클릭 이벤트
-        $('#reset').on('click', function() {
-            $('#categoryFilter').val('all');
-            $('#searchName').val('');
-            $('#searchRegion').val('');
-            $('#searchDynasty').val('');
-            $('#list1').show(); // 모든 행을 보이게 함
-        });
-    });
+//    $(document).ready(function() {
+//        // 검색 버튼 클릭 이벤트
+//        $('#searchDB').on('click', function() {
+//            var category = $('#categoryFilter').val();
+//            var name = $('#searchName').val().trim();
+//            var region = $('#searchRegion').val().trim();
+//            var dynasty = $('#searchDynasty').val().trim();
+//
+//            // 현재 목록에서 데이터 가져오기
+//            var currentRows = $('#list1');
+//
+//            // 필터링된 데이터에 대한 배열 생성
+//            var filteredRows = currentRows.filter(function() {
+//                var row = $(this);
+//                var id = row.find('.id').text();
+//                var culturalPropertiesName = row.find('.culturalPropertiesName').text();
+//                var categoryName = row.find('.categoryName').text();
+//                var regionText = row.find('.region').text();
+//                var dynastyText = row.find('.dynasty').text();
+//
+//                return (category === 'all' || categoryName === category) &&
+//                       (name === '' || culturalPropertiesName.includes(name)) &&
+//                       (region === '' || regionText.includes(region)) &&
+//                       (dynasty === '' || dynastyText.includes(dynasty));
+//            }); console.log(currentRows);
+//
+//            // 모든 행을 숨기고 필터링된 행만 보이게 하기
+//            currentRows.hide();
+//            if (filteredRows.length > 0) {
+//                filteredRows.show();
+//            } else {
+//                // 일치하는 결과가 없을 때 알림창 띄우기
+//                alert('일치하는 검색 결과가 존재하지 않습니다.');
+//            }
+//        });
+//
+//        // 초기화 버튼 클릭 이벤트
+//        $('#reset').on('click', function() {
+//            $('#categoryFilter').val('all');
+//            $('#searchName').val('');
+//            $('#searchRegion').val('');
+//            $('#searchDynasty').val('');
+//            $('#list1').show(); // 모든 행을 보이게 함
+//        });
+//    });
 
 
 

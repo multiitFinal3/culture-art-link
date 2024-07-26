@@ -111,16 +111,25 @@ public class AdminCulturalPropertiesController {
 
 
 
-//	@GetMapping("/search")
-//	@ResponseBody
-//	public List<CulturalPropertiesDTO> searchCulturalProperties(
-//			@RequestParam(required = false) String categoryName,
-//			@RequestParam(required = false) String culturalPropertiesName,
-//			@RequestParam(required = false) String region,
-//			@RequestParam(required = false) String dynasty
-//	) {
-//		return adminCulturalPropertiesService.searchCulturalProperties(categoryName, culturalPropertiesName, region, dynasty);
-//	}
+	@PostMapping("/search")
+	@ResponseBody
+	public List<CulturalPropertiesDTO> searchCulturalProperties(
+			@RequestParam("page") int page,
+			@RequestParam(required = false) String categoryName,
+			@RequestParam(required = false) String culturalPropertiesName,
+			@RequestParam(required = false) String region,
+			@RequestParam(required = false) String dynasty
+	) {
+
+		PageDTO pageDTO = new PageDTO();
+		pageDTO.setPage(page);
+		pageDTO.setStartEnd(pageDTO.getPage());
+
+		System.out.println("검색pageDTO : " + pageDTO);
+
+
+		return adminCulturalPropertiesService.searchCulturalProperties(pageDTO, categoryName, culturalPropertiesName, region, dynasty);
+	}
 
 
 

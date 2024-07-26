@@ -16,10 +16,10 @@ public interface AdminCulturalPropertiesDAO {
 
     int selectCount();
 
-//    List<CulturalPropertiesDTO> searchCulturalProperties(
-//            @Param("categoryName") String categoryName,
-//            @Param("culturalPropertiesName") String culturalPropertiesName,
-//            @Param("region") String region,
-//            @Param("dynasty") String dynasty);
-//
+    List<CulturalPropertiesDTO> searchCulturalProperties(
+            @Param("categoryName") String categoryName,
+            @Param("culturalPropertiesName") String culturalPropertiesName,
+            @Param("region") String region,
+            @Param("dynasty") String dynasty);
+
 }

@@ -319,11 +319,11 @@ public class AdminCulturalPropertiesService {
 	}
 
 
-//	public List<CulturalPropertiesDTO> searchCulturalProperties(
-//			String categoryName, String culturalPropertiesName, String region, String dynasty) {
-//
-//		return adminCulturalPropertiesDAO.searchCulturalProperties(categoryName, culturalPropertiesName, region, dynasty);
-//	}
+	public List<CulturalPropertiesDTO> searchCulturalProperties(
+			PageDTO pageDTO, String categoryName, String culturalPropertiesName, String region, String dynasty) {
+
+		return adminCulturalPropertiesDAO.searchCulturalProperties(categoryName, culturalPropertiesName, region, dynasty);
+	}
 
 
 
