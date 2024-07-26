@@ -178,4 +178,13 @@ public class FestivalServiceImpl implements FestivalService {
 		return list;
 		
 	}
+	
+	@Override
+	public int findFestivalReviewCountByVWUserReviewDTO(int festivalId) throws Exception {
+		
+		int count = festivalMapper.findFestivalReviewCountByVWUserReviewDTO(festivalId);
+		
+		return count;
+		
+	}
 }

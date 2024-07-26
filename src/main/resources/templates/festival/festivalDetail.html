@@ -10,175 +10,264 @@
     <script th:src="@{/js/festival/festivalDetail.js}"></script>
     <script th:inline="javascript">
 
-
-        var festival = [[${festival}]];
-        var festivalId = festival.festivalId;
-
-        var userId = [[${userId}]];
+    $(document).ready(
+        function(){
 
 
-        /**
-        * 컨텐트 키워드 가져와서 넣어주기
-        *
-        */
-        function findContentKeywordList(festivalId){
-
-            $.ajax({
-
-                url: '/festival/findContentKeywordListByFestivalId?festivalId=' + festivalId,
-                method: 'POST',
-                contentType: 'application/json',
-                success: function(list){
-
-                    $('div#contentKeyword').html("");
-
-                    console.log(list);
-                    $.each(list, function(index, keyword){
-
-                        var keywordHtml = `<button class="keyword contentKeyword">${keyword.festivalKeywordId}</button>`;
-                        $('#contentKeyword').append(keywordHtml);
-
-                    })
-
-                }
-
-            })
-
-        }
-
-        findContentKeywordList(festivalId);
+            var festival = [[${festival}]];
+            var festivalId = festival.festivalId;
+            var userId = [[${userId}]];
 
 
-        /**
-        * 컨텐트 키워드 가져와서 넣어주기
-        *
-        */
-        function findTimeIdByFestivalId(festivalId){
+            //#region 왼쪽 디테일 카드 관련 함수
 
-            $.ajax({
+            /**
+            * 컨텐트 키워드 가져와서 넣어주기
+            *
+            */
+            function findContentKeywordList(festivalId){
 
-                url: '/festival/findTimeIdByFestivalId?festivalId=' + festivalId,
-                method: 'POST',
-                contentType: 'application/json',
-                success: function(time){
+                $.ajax({
 
-                    $('div#timeId').html("");
+                    url: '/festival/findContentKeywordListByFestivalId?festivalId=' + festivalId,
+                    method: 'POST',
+                    contentType: 'application/json',
+                    success: function(list){
 
-                    var timeHtml = `<p>시간대 : ${time.timeDescription}</p>`;
-                    $('div#timeId').append(timeHtml);
+                        $('div#contentKeyword').html("");
 
-                }
+                        console.log(list);
+                        $.each(list, function(index, keyword){
 
-            })
+                            var keywordHtml = `<button class="keyword contentKeyword">${keyword.festivalKeywordId}</button>`;
+                            $('#contentKeyword').append(keywordHtml);
 
-        }
+                        })
 
-        findTimeIdByFestivalId(festivalId);
+                    }
+
+                })
+
+            }
+
+            findContentKeywordList(festivalId);
+
+
+            /**
+            * 컨텐트 키워드 가져와서 넣어주기
+            *
+            */
+            function findTimeIdByFestivalId(festivalId){
+
+                $.ajax({
+
+                    url: '/festival/findTimeIdByFestivalId?festivalId=' + festivalId,
+                    method: 'POST',
+                    contentType: 'application/json',
+                    success: function(time){
+
+                        $('div#timeId').html("");
+
+                        var timeHtml = `<p>시간대 : ${time.timeDescription}</p>`;
+                        $('div#timeId').append(timeHtml);
+
+                    }
+
+                })
+
+            }
+
+            findTimeIdByFestivalId(festivalId);
+
+            //#endregion
 
 
 
-        /**
-        * 리뷰 리스트 가져와서 넣어주기
-        *
-        */
-        function findFestivalReviewListByVWUserReviewDTO(festivalId, userId, page){
 
-            $.ajax({
+            //#region 오른쪽 리뷰 관련 함수
 
-                url: '/festival/findFestivalReviewListByVWUserReviewDTO?festivalId=' + festivalId + "&page=" + page,
-                method: 'POST',
-                contentType: 'application/json',
-                success: function(list){
+            /**
+            * 페이지당 리뷰 리스트 가져와서 넣어주기
+            *
+            */
+            function findFestivalReviewListByVWUserReviewDTO(festivalId, userId, page){
 
-                    $('div#reviewList').html("");
+                $.ajax({
 
-                    console.log(list);
-                    $.each(list, function(index, review){
+                    url: '/festival/findFestivalReviewListByVWUserReviewDTO?festivalId=' + festivalId + "&page=" + page,
+                    method: 'POST',
+                    contentType: 'application/json',
+                    success: function(list){
 
-                        var index1 = (index + 1) + (page-1)*5;
+                        $('#reviewList').html("");
 
-                        var reviewHtml = ``;
+                        console.log(list);
+                        $.each(list, function(index, review){
 
-                        var reviewUserId = review.userId;
+                            var index1 = (index + 1) + (page-1)*5;
 
-                        if(userId == reviewUserId){
+                            var reviewHtml = ``;
 
-                            reviewHtml = `
+                            var reviewUserId = review.userId;
 
-                                <p class="reviewRow" id="review.festivalReviewId">
+                            if(userId == reviewUserId){
 
-                                    <span>
-                                        # ${index1}
-                                    </span>
-                                    <span id="userProfilePic">
-                                        <img src="${review.userProfilePic}" height="25px">
-                                    </span>
-                                    <span>
-                                        ${review.userName}
-                                    </span>
-                                    <span>
-                                        <img src="/img/festival/star.png" height="25px">&nbsp;&nbsp;<input id="reviewStar" type="number" step="0.5" value="${review.festivalReviewStar}" max="5" min="0" style="width: 40px; height: 40px">
-                                    </span>
-                                    <span>
-                                        <textarea class="reviewText" rows="2" cols="100">${review.festivalReviewContent}</textarea>
-                                    </span>
-                                    <span>
-                                        <img src="${review.attachment}" height="50px">
-                                    </span>
-                                    <span>
-                                        <button class="updateBtn" value="review.festivalReviewId">수정</button>
-                                    </span>
-                                    <span>
-                                        <button class="deleteBtn" value="review.festivalReviewId">삭제</button>
-                                    </span>
-                                </p>
-                            `;
+                                 reviewHtml = `
 
+                                    <tr class="reviewRow" id="review.festivalReviewId">
+
+                                        <td class="index1">
+                                            ${index1}
+                                        </td>
+
+                                        <td class="userProfilePic">
+                                            <img src="${review.userProfilePic}" height="25px">
+                                        </td>
+
+                                        <td class="reviewUserName">
+                                            ${review.userName}
+                                        </td>
+
+                                        <td>
+                                            <img src="/img/festival/star.png" height="25px">&nbsp;&nbsp;<input id="reviewStar" type="number" step="0.5" value="${review.festivalReviewStar}" max="5" min="0" style="width: 45px; height: 45px;     text-align: center;">
+                                        </td>
+
+                                        <td>
+                                        <textarea class="reviewText" rows="2" cols="100" style="text-align: center;">${review.festivalReviewContent}</textarea>
+                                        </td>
+
+                                        <td>
+                                            <img src="${review.attachment}" height="50px">
+                                        </td>
+
+                                        <td>
+                                            <button class="updateBtn" value="review.festivalReviewId">수정</button>
+                                        </td>
+
+                                        <td>
+                                            <button class="deleteBtn" value="review.festivalReviewId">삭제</button>
+                                        </td>
+
+                                    </tr>
+                                 `;
+
+                            }else{
+
+                                reviewHtml = `
+
+                                    <tr class="reviewRow" id="review.festivalReviewId">
+
+                                        <td class="index1" style="width: 15px">
+                                            ${index1}
+                                        </td>
+
+                                        <td class="userProfilePic" style="width: 100px">
+                                            <img src="${review.userProfilePic}" height="25px">
+                                        </td>
+
+                                        <td class="reviewUserName" style="width: 100px">
+                                            ${review.userName}
+                                        </td>
+
+                                        <td style="width: 100px">
+                                            <img src="/img/festival/star.png" height="25px">&nbsp;&nbsp;<span id="reviewStar" value="${review.festivalReviewStar}" style="width: 30px; height: 30px">${review.festivalReviewStar}</span>
+                                        </td>
+
+                                        <td style="width: 500px">
+                                            <p class="reviewText" rows="2" cols="100">${review.festivalReviewContent}</p>
+                                        </td>
+
+                                        <td style="width: 100px">
+                                            <img src="${review.attachment}" height="50px">
+                                        </td>
+
+                                        <td style="width: 100px">
+                                        </td>
+
+                                        <td style="width: 100px">
+                                        </td>
+
+                                    </tr>
+                                 `;
+
+                            }
+
+                            $('#reviewList').append(reviewHtml);
+
+                        })
+
+                    }
+
+                })
+
+            }
+
+            findFestivalReviewListByVWUserReviewDTO(festivalId,userId, 1);
+
+
+            /**
+            * 전체 리뷰 페이지 버튼 만들기
+            *
+            */
+            function findFestivalReviewCountByVWUserReviewDTO(festivalId){
+
+                $.ajax({
+
+                    url: '/festival/findFestivalReviewCountByVWUserReviewDTO?festivalId=' + festivalId,
+                    method: 'POST',
+                    contentType: 'application/json',
+                    success: function(count){
+
+                        $('#reviewPages').html("");
+
+                        var pages = 0;
+
+                        if(count % 5 == 0){
+                            pages = count / 5;
                         }else{
+                            pages = count / 5 + 1;
+                        }
 
-                            reviewHtml = `
+                        for(var p=1; p<=pages; p++){
 
-                                <p class="reviewRow" id="review.festivalReviewId">
-
-                                    <span>
-                                        # ${index1}
-                                    </span>
-                                    <span id="userProfilePic">
-                                        <img src="${review.userProfilePic}" height="25px">
-                                    </span>
-                                    <span>
-                                        ${review.userName}
-                                    </span>
-                                    <span>
-                                        <img src="/img/festival/star.png" height="25px">&nbsp;&nbsp;${review.festivalReviewStar}
-                                    </span>
-                                    <span>
-                                        <p>${review.festivalReviewContent}</p>
-                                    </span>
-                                    <span>
-                                        <img src="${review.attachment}" height="50px">
-                                    </span>
-                                </p>
-                            `;
+                            $('#reviewPages').append(`<button class="pageBtn1">${p}</button>`)
 
                         }
 
 
+                    }
+
+                })
+            }
 
 
+            findFestivalReviewCountByVWUserReviewDTO(festivalId);
 
-                        $('#reviewList').append(reviewHtml);
 
-                    })
+            /**
+           * 리뷰 페이지 버튼에 해당 페이지의 순서에 해당하는 데이터 보이는 클릭 이벤트 추가
+           */
+            $(document).on('click','.pageBtn1', function(){
 
-                }
+                const page = $(this).text();
+                findFestivalReviewListByVWUserReviewDTO(festivalId, userId, page);
 
             })
 
+
+            //#endregion
+
+
+
+            //#region 오른쪽  관련 함수
+
+
+            //#endregion
+
+
+
         }
-
-        findFestivalReviewListByVWUserReviewDTO(festivalId,1);
-
+    )
 
 
 
@@ -365,54 +454,27 @@
 
                     </div>
 
-                    <div id="reviewList">
+                    <div id="reviewListHead">
 
-                        <p>
-                            <span>
-                                <img src="/img/festival/star.png" height="50px">
-                            </span>
+                        <table class="table table-striped" id="reviewTable" style="text-align: center;">
 
-                            <span>안지윤님</span>
+                            <thead class="table-light">
+                            <tr style="text-align: center;">
+                                <th scope="col" style="width: 15px">#</th>
+                                <th scope="col" style="width: 100px">프로필</th>
+                                <th scope="col" style="width: 100px">이름</th>
+                                <th scope="col" style="width: 200px">별점</th>
+                                <th scope="col" style="width: 500px">내용</th>
+                                <th scope="col" style="width: 100px">첨부파일</th>
+                                <th scope="col" style="width: 100px">수정</th>
+                                <th scope="col" style="width: 100px">삭제</th>
+                            </tr>
+                            </thead>
+                            <tbody id="reviewList">
 
-                            <span>
-                                <textarea id="1" class="reviewText" rows="2" cols="100"> 추웠어요...산에는 다시는 가고 싶지 않아요</textarea>
-                            </span>
+                            </tbody>
 
-                            <span><img src="/img/festival/star.png" height="50px"></span>
-
-                            <span><button value="1">수정</button></span>
-
-                            <span><button value="1">삭제</button></span>
-
-                        </p>
-
-
-
-                        <p>
-                            <span>
-                                <img src="/img/festival/star.png" height="50px">
-                            </span>
-
-                            <span>안지윤님</span>
-
-                            <span>
-                                <textarea id="2" class="reviewText" rows="2" cols="100"> 추웠어요...산에는 다시는 가고 싶지 않아요</textarea>
-                            </span>
-
-                            <span><img src="/img/festival/star.png" height="50px"></span>
-
-                            <span><button value="2">수정</button></span>
-
-                            <span><button value="2">삭제</button></span>
-
-                        </p>
-
-
-
-
-
-
-
+                        </table>
                     </div>
 
                     <div id="reviewPages">

@@ -419,7 +419,11 @@ public class FestivalController {
 		
 	}
 	
-	
+	/**
+	 * 해당 축제의 시간대 구하기
+	 * @param festivalId
+	 * @return
+	 */
 	@PostMapping("/findTimeIdByFestivalId")
 	@ResponseBody
 	public TimeDTO findTimeIdByFestivalId(@RequestParam("festivalId") int festivalId){
@@ -435,7 +439,12 @@ public class FestivalController {
 		
 	}
 	
-	
+	/**
+	 * 특정 축제의 리뷰를 리뷰 페이지 번호에 맞게 가져오기
+	 * @param festivalId
+	 * @param page
+	 * @return
+	 */
 	@PostMapping("/findFestivalReviewListByVWUserReviewDTO")
 	@ResponseBody
 	public ArrayList<VWUserReviewDataDTO> findFestivalReviewListByVWUserReviewDTO(@RequestParam("festivalId") int festivalId, @RequestParam("page") int page){
@@ -445,11 +454,13 @@ public class FestivalController {
 		pageDTO.setPage(page);
 		pageDTO.setStartEnd(pageDTO.getPage());
 		vwUserReviewDataDTO.setPageDTO(pageDTO);
+		vwUserReviewDataDTO.setFestivalId(festivalId);
 		
+		System.out.println("보내는 : " + vwUserReviewDataDTO);
 		
 		ArrayList<VWUserReviewDataDTO> list = null;
 		try {
-			list = festivalService.findFestivalReviewListByFestivalId(vwUserReviewDataDTO);
+			list = festivalService.findFestivalReviewListByVWUserReviewDTO(vwUserReviewDataDTO);
 			
 		} catch (Exception e) {
 			throw new RuntimeException(e);
@@ -458,6 +469,23 @@ public class FestivalController {
 		return list;
 		
 	}
+	
+	
+	@PostMapping("/findFestivalReviewCountByVWUserReviewDTO")
+	@ResponseBody
+	public int findFestivalReviewCountByVWUserReviewDTO(@RequestParam("festivalId") int festivalId){
+		
+		int count = 0;
+		try {
+			count = festivalService.findFestivalReviewCountByVWUserReviewDTO(festivalId);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+		
+		return count;
+		
+	}
+	
 	
 	
 }
