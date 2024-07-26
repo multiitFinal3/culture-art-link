@@ -4,6 +4,7 @@ package com.multi.culture_link.admin.culturalProperties.controller;
 import com.multi.culture_link.admin.culturalProperties.model.dto.CulturalPropertiesDTO;
 import com.multi.culture_link.admin.culturalProperties.model.dto.PageDTO;
 import com.multi.culture_link.admin.culturalProperties.service.AdminCulturalPropertiesService;
+import com.multi.culture_link.festival.model.dto.FestivalDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -127,8 +128,23 @@ public class AdminCulturalPropertiesController {
 
 		System.out.println("검색pageDTO : " + pageDTO);
 
-
-		return adminCulturalPropertiesService.searchCulturalProperties(pageDTO, category, name, region, dynasty);
+		
+		CulturalPropertiesDTO culturalPropertiesDTO = new CulturalPropertiesDTO();
+		culturalPropertiesDTO.setCategoryName(category);
+		
+		FestivalDTO festivalDTO = new FestivalDTO();
+		
+		com.multi.culture_link.festival.model.dto.PageDTO pageDTO2 = new com.multi.culture_link.festival.model.dto.PageDTO();
+		pageDTO2.setPage(page);
+		pageDTO2.setStartEnd(pageDTO2.getPage());
+		
+		festivalDTO.setPageDTO(pageDTO2);
+		
+		
+		
+//		return adminCulturalPropertiesService.searchCulturalProperties(pageDTO, category, name, region, dynasty);
+		
+		return adminCulturalPropertiesService.searchCulturalProperties(festivalDTO)
 	}
 
 

@@ -497,7 +497,7 @@ $(document).ready(function() {
 
 
 
-
+        function(category, name, region, dynasty, page)
         function 새로운 함수(페이지 넣기) {
 
 
@@ -505,9 +505,14 @@ $(document).ready(function() {
         }
 
 
-        새로운 함수(1,...);
 
-    
+
+         $(document).on('click','#searchDB', function(){
+
+            새로운 함수(1,...);
+
+         }
+
 
 
         $('#searchDB').click(function(category, name, region, dynasty) {
