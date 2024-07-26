@@ -3,10 +3,7 @@ package com.multi.culture_link.festival.controller;
 
 import com.multi.culture_link.admin.festival.service.AdminFestivalService;
 import com.multi.culture_link.common.time.model.dto.TimeDTO;
-import com.multi.culture_link.festival.model.dto.FestivalContentReviewNaverKeywordMapDTO;
-import com.multi.culture_link.festival.model.dto.FestivalDTO;
-import com.multi.culture_link.festival.model.dto.FestivalKeywordDTO;
-import com.multi.culture_link.festival.model.dto.UserFestivalLoveHateMapDTO;
+import com.multi.culture_link.festival.model.dto.*;
 import com.multi.culture_link.festival.service.FestivalService;
 import com.multi.culture_link.users.model.dto.VWUserRoleDTO;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -60,11 +57,14 @@ public class FestivalController {
 	 * @return 화면으로 이동
 	 */
 	@GetMapping("/festival-detail")
-	public String festivalDetail(@RequestParam("festivalId") int festivalId, Model model) {
+	public String festivalDetail(@RequestParam("festivalId") int festivalId, Model model, @AuthenticationPrincipal VWUserRoleDTO user) {
 		
 		try {
 			FestivalDTO festivalDTO = adminFestivalService.findDBFestivalByFestivalId(festivalId);
 			model.addAttribute("festival", festivalDTO);
+			
+			int userId = user.getUserId();
+			model.addAttribute("userId", userId);
 			
 		} catch (Exception e) {
 			throw new RuntimeException(e);
@@ -432,6 +432,22 @@ public class FestivalController {
 		}
 		
 		return timeDTO;
+		
+	}
+	
+	
+	@PostMapping("/findFestivalReviewListByFestivalId")
+	@ResponseBody
+	public ArrayList<VWUserReviewDataDTO> findFestivalReviewListByFestivalId(@RequestParam("festivalId") int festivalId){
+		
+		ArrayList<VWUserReviewDataDTO> list = null;
+		try {
+			list = festivalService.findFestivalReviewListByFestivalId(festivalId);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+		
+		return list;
 		
 	}
 	

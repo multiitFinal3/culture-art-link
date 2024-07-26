@@ -14,6 +14,8 @@
         var festival = [[${festival}]];
         var festivalId = festival.festivalId;
 
+        var userId = [[${userId}]];
+
 
         /**
         * 컨텐트 키워드 가져와서 넣어주기
@@ -72,6 +74,115 @@
         }
 
         findTimeIdByFestivalId(festivalId);
+
+
+
+        /**
+        * 리뷰 리스트 가져와서 넣어주기
+        *
+        */
+        function findFestivalReviewListByFestivalId(festivalId, userId, page){
+
+            $.ajax({
+
+                url: '/festival/findFestivalReviewListByFestivalId?festivalId=' + festivalId + "&page=" + page,
+                method: 'POST',
+                contentType: 'application/json',
+                success: function(list){
+
+                    $('div#reviewList').html("");
+
+                    console.log(list);
+                    $.each(list, function(index, review){
+
+                        var index1 = (index + 1) + (page-1)*5;
+
+                        var reviewHtml = ``;
+
+                        var reviewUserId = review.userId;
+
+                        if(userId == reviewUserId){
+
+                            reviewHtml = `
+
+                                <p class="reviewRow" id="review.festivalReviewId">
+
+                                    <span>
+                                        # ${index1}
+                                    </span>
+                                    <span id="userProfilePic">
+                                        <img src="${review.userProfilePic}" height="25px">
+                                    </span>
+                                    <span>
+                                        ${review.userName}
+                                    </span>
+                                    <span>
+                                        <img src="/img/festival/star.png" height="25px">&nbsp;&nbsp;<input id="reviewStar" type="number" step="0.5" value="${review.festivalReviewStar}" max="5" min="0" style="width: 40px; height: 40px">
+                                    </span>
+                                    <span>
+                                        <textarea class="reviewText" rows="2" cols="100">${review.festivalReviewContent}</textarea>
+                                    </span>
+                                    <span>
+                                        <img src="${review.attachment}" height="50px">
+                                    </span>
+                                    <span>
+                                        <button class="updateBtn" value="review.festivalReviewId">수정</button>
+                                    </span>
+                                    <span>
+                                        <button class="deleteBtn" value="review.festivalReviewId">삭제</button>
+                                    </span>
+                                </p>
+                            `;
+
+                        }else{
+
+                            reviewHtml = `
+
+                                <p class="reviewRow" id="review.festivalReviewId">
+
+                                    <span>
+                                        # ${index1}
+                                    </span>
+                                    <span id="userProfilePic">
+                                        <img src="${review.userProfilePic}" height="25px">
+                                    </span>
+                                    <span>
+                                        ${review.userName}
+                                    </span>
+                                    <span>
+                                        <img src="/img/festival/star.png" height="25px">&nbsp;&nbsp;${review.festivalReviewStar}
+                                    </span>
+                                    <span>
+                                        <p>${review.festivalReviewContent}</p>
+                                    </span>
+                                    <span>
+                                        <img src="${review.attachment}" height="50px">
+                                    </span>
+                                </p>
+                            `;
+
+                        }
+
+
+
+
+
+                        $('#reviewList').append(reviewHtml);
+
+                    })
+
+                }
+
+            })
+
+        }
+
+        findFestivalReviewListByFestivalId(festivalId);
+
+
+
+
+
 
 
 

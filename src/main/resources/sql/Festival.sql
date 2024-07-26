@@ -551,4 +551,16 @@ ALTER TABLE festival_naver_url
 DROP CONSTRAINT PRIMARY;
 
 
+CREATE VIEW vw_user_review_data AS
+	SELECT
+		fr.*,
+		u.user_name,
+		u.user_profile_pic
+
+	FROM user u
+		JOIN
+			festival_review fr
+		ON
+			u.user_id=fr.user_id;
+
 

@@ -4,6 +4,7 @@ import com.multi.culture_link.common.time.model.dto.TimeDTO;
 import com.multi.culture_link.festival.model.dto.FestivalContentReviewNaverKeywordMapDTO;
 import com.multi.culture_link.festival.model.dto.FestivalKeywordDTO;
 import com.multi.culture_link.festival.model.dto.UserFestivalLoveHateMapDTO;
+import com.multi.culture_link.festival.model.dto.VWUserReviewDataDTO;
 import com.multi.culture_link.festival.model.mapper.FestivalMapper;
 import org.springframework.stereotype.Service;
 
@@ -166,6 +167,15 @@ public class FestivalServiceImpl implements FestivalService {
 		TimeDTO timeDTO = festivalMapper.findTimeIdByFestivalId(festivalId);
 		
 		return timeDTO;
+		
+	}
+	
+	@Override
+	public ArrayList<VWUserReviewDataDTO> findFestivalReviewListByFestivalId(int festivalId) throws Exception {
+		
+		ArrayList<VWUserReviewDataDTO> list = festivalMapper.findFestivalReviewListByFestivalId(festivalId);
+		
+		return list;
 		
 	}
 }

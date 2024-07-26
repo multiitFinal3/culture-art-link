@@ -104,5 +104,12 @@
 
     </select>
 
+    <select id="findFestivalReviewListByFestivalId" resultType="vwUserReviewDTO">
+
+        SELECT * FROM vw_user_review_data
+        WHERE festival_id = #{festivalId};
+
+    </select>
+
 
 </mapper>

@@ -62,6 +62,7 @@ public class MyBatisConfiguration {
 		configuration.getTypeAliasRegistry().registerAlias("festivalKeywordDTO", FestivalKeywordDTO.class);
 		configuration.getTypeAliasRegistry().registerAlias("festivalContentReviewNaverKeywordMapping", FestivalContentReviewNaverKeywordMapDTO.class);
 		configuration.getTypeAliasRegistry().registerAlias("userFestivalLoveHateDTO", UserFestivalLoveHateMapDTO.class);
+		configuration.getTypeAliasRegistry().registerAlias("vwUserReviewDTO", VWUserReviewDataDTO.class);
 		
 		configuration.getTypeAliasRegistry().registerAlias("culturalPropertiesDTO", CulturalPropertiesDTO.class);
 

@@ -25,7 +25,6 @@ $(document).ready(
 
                         var index1 = (index + 1) + (page-1)*5;
 
-
                         var content = festival.festivalContent.length > 30?
                         festival.festivalContent.substring(0,30) + "..."
                         : festival.festivalContent;
