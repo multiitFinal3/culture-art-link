@@ -2,8 +2,10 @@ package com.multi.culture_link.exhibition.controller;
 
 import com.multi.culture_link.admin.exhibition.model.dto.api.ExhibitionApiDto;
 import com.multi.culture_link.exhibition.model.dto.ExhibitionDto;
+import com.multi.culture_link.exhibition.model.dto.ExhibitionInterestDto;
 import com.multi.culture_link.exhibition.service.ExhibitionService;
 import com.multi.culture_link.users.model.dto.UserDTO;
+import com.multi.culture_link.users.model.dto.VWUserRoleDTO;
 import lombok.RequiredArgsConstructor;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -69,13 +71,12 @@ public class ExhibitionController {
     // 찜, 관심없음 설정
     @PostMapping("/interested")
     public void setInterested(
-            @AuthenticationPrincipal UserDTO currentUser,
-            @RequestBody int exhibitionId,
-            @RequestBody String state
-    ) {
+            @AuthenticationPrincipal VWUserRoleDTO currentUser,
+            @RequestBody ExhibitionInterestDto data
+            ) {
         System.out.println("컨트롤러");
-        System.out.println("1: " + currentUser + " 2: " +  exhibitionId  + " 3: " + state);
-        exhibitionService.setInterested(currentUser.getUserId(), exhibitionId, state);
+        System.out.println("1: " + currentUser + " 2: " +  data.getExhibitionId()  + " 3: " + data.getState());
+        exhibitionService.setInterested(currentUser.getUserId(), data.getExhibitionId(), data.getState());
     }
 
     // 관심도 연결한 전시 list 불러오기
