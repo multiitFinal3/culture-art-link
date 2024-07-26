@@ -79,15 +79,15 @@
                         AND cultural_properties_name LIKE CONCAT('%', #{culturalPropertiesName}, '%')
                     </if>
 
-<!--                    <if test="region!=null and !region.equals('')">-->
-<!--                        AND region LIKE CONCAT('%', #{region}, '%')-->
-<!--                    </if>-->
+                    <if test="region!=null and !region.equals('') and !region.equals(' , ')">
                         AND region LIKE CONCAT('%', #{region}, '%')
+                    </if>
 
 
-<!--                    <if test="dynasty != null and dynasty != ''">-->
-<!--                        AND dynasty LIKE CONCAT('%', #{dynasty}, '%')-->
-<!--                    </if>-->
+
+                    <if test="dynasty != null and dynasty != ''">
+                        AND dynasty LIKE CONCAT('%', #{dynasty}, '%')
+                    </if>
                 </where>
                 ) AS c
             ) AS c2

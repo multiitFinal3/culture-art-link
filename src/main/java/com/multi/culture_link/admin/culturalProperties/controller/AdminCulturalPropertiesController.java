@@ -149,8 +149,8 @@ public class AdminCulturalPropertiesController {
 		
 		category = category.trim();
 		name= name.trim();
-		region = region.trim();
-		dynasty = dynasty.trim();
+		region = region.trim().replace(",","");
+		dynasty = dynasty.trim().replace(",","");
 		
 		
 		return adminCulturalPropertiesService.searchCulturalProperties(pageDTO, category, name, region, dynasty);
