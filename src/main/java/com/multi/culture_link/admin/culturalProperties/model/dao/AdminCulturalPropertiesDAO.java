@@ -20,6 +20,7 @@ public interface AdminCulturalPropertiesDAO {
             @Param("categoryName") String categoryName,
             @Param("culturalPropertiesName") String culturalPropertiesName,
             @Param("region") String region,
-            @Param("dynasty") String dynasty);
+            @Param("dynasty") String dynasty,
+            @Param("start")int start, @Param("end")int end);
 
 }

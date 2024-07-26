@@ -322,7 +322,23 @@ public class AdminCulturalPropertiesService {
 	public List<CulturalPropertiesDTO> searchCulturalProperties(
 			PageDTO pageDTO, String categoryName, String culturalPropertiesName, String region, String dynasty) {
 
-		return adminCulturalPropertiesDAO.searchCulturalProperties(categoryName, culturalPropertiesName, region, dynasty);
+		int start = pageDTO.getStart();
+		int end = pageDTO.getEnd();
+
+		System.out.println(categoryName);
+		System.out.println(culturalPropertiesName);
+		System.out.println(region);
+		System.out.println(dynasty);
+		System.out.println(start);
+		System.out.println(end);
+		System.out.println();
+
+		List<CulturalPropertiesDTO> list = adminCulturalPropertiesDAO.searchCulturalProperties(categoryName, culturalPropertiesName, region, dynasty, start, end);
+
+
+		System.out.println(""+list);
+//		return adminCulturalPropertiesDAO.searchCulturalProperties(categoryName, culturalPropertiesName, region, dynasty, start, end);
+		return list;
 	}
 
 

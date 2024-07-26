@@ -497,95 +497,198 @@ $(document).ready(function() {
 
 
 
-        function(category, name, region, dynasty, page)
-        function 새로운 함수(페이지 넣기) {
 
 
 
-        }
-
-
-
-
-         $(document).on('click','#searchDB', function(){
-
-            새로운 함수(1,...);
-
-         }
-
-
-
-        $('#searchDB').click(function(category, name, region, dynasty) {
-            // 사용자가 입력한 값을 가져오기
-            var category = $('#categoryFilter').val();
-            var name = $('#searchName').val();
-            var region = $('#searchRegion').val();
-            var dynasty = $('#searchDynasty').val();
-
-            if (category === 'all') {
-                // 전체를 선택한 경우 초기 화면을 표시
-                displayInitialScreen();
-            } else {
-                // AJAX를 사용하여 서버로 데이터 전송
-                $.ajax({
-                    url: '/admin/cultural-properties-regulate/search?category=' + category + '&name=' + name + '&region=' + region + '&dynasty=' + dynasty, // 서버 API 엔드포인트 주소
-                    method: 'POST', // HTTP 메서드
-//                    data: {
-//                        category: category,
-//                        name: name,
-//                        region: region,
-//                        dynasty: dynasty
+//
+//        function(category, name, region, dynasty, page)
+//        function 새로운 함수(페이지 넣기) {
+//
+//
+//
+//        }
+//
+//
+//
+//
+//         $(document).on('click','#searchDB', function(){
+//
+//            새로운 함수(1,...);
+//
+//         }
+//
+//
+//
+//        $('#searchDB').click(function(category, name, region, dynasty) {
+//            // 사용자가 입력한 값을 가져오기
+//            var category = $('#categoryFilter').val();
+//            var name = $('#searchName').val();
+//            var region = $('#searchRegion').val();
+//            var dynasty = $('#searchDynasty').val();
+//
+//            if (category === 'all') {
+//                // 전체를 선택한 경우 초기 화면을 표시
+//                displayInitialScreen();
+//            } else {
+//                // AJAX를 사용하여 서버로 데이터 전송
+//                $.ajax({
+//                    url: '/admin/cultural-properties-regulate/search?category=' + category + '&name=' + name + '&region=' + region + '&dynasty=' + dynasty, // 서버 API 엔드포인트 주소
+//                    method: 'POST', // HTTP 메서드
+////                    data: {
+////                        category: category,
+////                        name: name,
+////                        region: region,
+////                        dynasty: dynasty
+////                    },
+//                    success: function(response) {
+//                        // 서버로부터 응답을 받았을 때 실행되는 함수
+//                        console.log('검색 결과:', response);
+//
+//                        // 클라이언트 측 데이터와 비교하여 일치하는 것을 처리하는 예시
+//                        $('#list1').each(function() {
+//                            var row = $(this);
+//                            var culturalPropertiesName = row.find('.culturalPropertiesName').text().trim();
+//
+//                            // 검색 결과에 culturalPropertiesName이 포함되어 있는지 확인
+//                            var existsInSearchResult = response.some(function(item) {
+//                                return item.culturalPropertiesName === culturalPropertiesName;
+//                            });
+//
+//                            // 일치하는 경우 행 보이기, 그렇지 않으면 숨기기
+//                            if (existsInSearchResult) {
+//                                row.show();
+//                            } else {
+//                                row.hide();
+//                            }
+//                        });
+//
+//                        // 검색 결과가 없으면 알림창을 띄우기
+//                        if (response.length === 0) {
+//                            alert('일치하는 검색 결과가 없습니다.');
+//                        }
 //                    },
-                    success: function(response) {
-                        // 서버로부터 응답을 받았을 때 실행되는 함수
-                        console.log('검색 결과:', response);
+//
+//                    error: function(xhr, status, error) {
+//                        // AJAX 요청이 실패했을 때 실행되는 함수
+//                        console.error('AJAX 오류:', status, error);
+//                    }
+//                });
+//            }
+//
+//
+//            // 초기화 버튼 클릭 이벤트
+//            $('#reset').click(function() {
+//                // 검색 필터 초기화
+//                $('#categoryFilter').val('all');
+//                $('#searchName').val('');
+//                $('#searchRegion').val('');
+//                $('#searchDynasty').val('');
+//
+//                // 모든 행 보이기
+//                $('#list1').show();
+//            });
+//
+//
+//        })
 
-                        // 클라이언트 측 데이터와 비교하여 일치하는 것을 처리하는 예시
-                        $('#list1').each(function() {
-                            var row = $(this);
-                            var culturalPropertiesName = row.find('.culturalPropertiesName').text().trim();
 
-                            // 검색 결과에 culturalPropertiesName이 포함되어 있는지 확인
-                            var existsInSearchResult = response.some(function(item) {
-                                return item.culturalPropertiesName === culturalPropertiesName;
-                            });
 
-                            // 일치하는 경우 행 보이기, 그렇지 않으면 숨기기
-                            if (existsInSearchResult) {
-                                row.show();
-                            } else {
-                                row.hide();
-                            }
+
+
+
+
+
+
+    // 검색 버튼 클릭 이벤트
+    $('#searchDB').on('click', function() {
+        // 사용자가 입력한 값을 가져오기
+        var category = $('#categoryFilter').val();
+        var name = $('#searchName').val();
+        var region = $('#searchRegion').val();
+        var dynasty = $('#searchDynasty').val();
+
+        console.log(category);
+        console.log(name);
+        console.log(region);
+        console.log(dynasty);
+
+        searchDBCulturalProperties(category, name, region, dynasty, 1);
+    });
+
+    // 초기화 버튼 클릭 이벤트
+    $('#reset').on('click', function() {
+        // 검색 필터 초기화
+        $('#categoryFilter').val('all');
+        $('#searchName').val('');
+        $('#searchRegion').val('');
+        $('#searchDynasty').val('');
+
+        // 모든 행 보이기
+        $('#list1').show();
+    });
+
+    function searchDBCulturalProperties(category, name, region, dynasty, page) {
+        if (category === 'all') {
+            // 전체를 선택한 경우 초기 화면을 표시
+            displayInitialScreen();
+        } else {
+            // AJAX를 사용하여 서버로 데이터 전송
+            $.ajax({
+                url: '/admin/cultural-properties-regulate/search?page=' + page,
+                method: 'POST',
+                data: {
+                    categoryName: category,
+                    culturalPropertiesName: name,
+                    region: region,
+                    dynasty: dynasty
+                },
+                success: function(response) {
+                    // 서버로부터 응답을 받았을 때 실행되는 함수
+                    console.log('검색 결과:', response);
+
+                    // 클라이언트 측 데이터와 비교하여 일치하는 것을 처리하는 예시
+                    $('#list1').each(function() {
+                        var row = $(this);
+                        var culturalPropertiesName = row.find('.culturalPropertiesName').text().trim();
+
+                        // 검색 결과에 culturalPropertiesName이 포함되어 있는지 확인
+                        var existsInSearchResult = response.some(function(item) {
+                            return item.culturalPropertiesName === culturalPropertiesName;
                         });
 
-                        // 검색 결과가 없으면 알림창을 띄우기
-                        if (response.length === 0) {
-                            alert('일치하는 검색 결과가 없습니다.');
+                        // 일치하는 경우 행 보이기, 그렇지 않으면 숨기기
+                        if (existsInSearchResult) {
+                            row.show();
+                        } else {
+                            row.hide();
                         }
-                    },
+                    });
 
-                    error: function(xhr, status, error) {
-                        // AJAX 요청이 실패했을 때 실행되는 함수
-                        console.error('AJAX 오류:', status, error);
+                    // 검색 결과가 없으면 알림창을 띄우기
+                    if (response.length === 0) {
+                        alert('일치하는 검색 결과가 없습니다.');
                     }
-                });
-            }
-
-
-            // 초기화 버튼 클릭 이벤트
-            $('#reset').click(function() {
-                // 검색 필터 초기화
-                $('#categoryFilter').val('all');
-                $('#searchName').val('');
-                $('#searchRegion').val('');
-                $('#searchDynasty').val('');
-
-                // 모든 행 보이기
-                $('#list1').show();
+                },
+                error: function(xhr, status, error) {
+                    // AJAX 요청이 실패했을 때 실행되는 함수
+                    console.error('AJAX 오류:', status, error);
+                }
             });
+        }
+    }
 
 
-        })
+    function displayInitialScreen() {
+        // 결과 영역을 비우기
+        $('#list1').empty();
+
+        // 초기 화면에 보여줄 내용을 설정 (예: 기본 텍스트 또는 모든 데이터 로드)
+        $('#list1').show();
+//        $('#list1').html('<tr><td colspan="5">초기 화면입니다. 검색어를 입력하거나 필터를 선택하세요.</td></tr>');
+
+
+    }
+
 
 
 //    $(document).ready(function() {

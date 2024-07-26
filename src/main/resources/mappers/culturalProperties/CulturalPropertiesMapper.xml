@@ -55,13 +55,20 @@
 <!--    </select>-->
 
     <select id="searchCulturalProperties" resultType="culturalPropertiesDTO">
-        SELECT *
-        FROM cultural_properties
-        WHERE 1=1
-        AND (#{categoryName} IS NULL OR category_name = #{categoryName})
-        AND (#{culturalPropertiesName} IS NULL OR cultural_properties_name LIKE CONCAT('%', #{culturalPropertiesName}, '%'))
-        AND (#{region} IS NULL OR region LIKE CONCAT('%', #{region}, '%'))
-        AND (#{dynasty} IS NULL OR dynasty LIKE CONCAT('%', #{dynasty}, '%'))
+        SELECT COUNT(*)
+        FROM( SELECT ROW_NUMBER() OVER(ORDER BY id DESC) AS rownum, c.*
+            FROM(
+                SELECT * FROM cultural_properties
+                WHERE 1=1
+                    AND (category_name = #{categoryName})
+<!--                AND (#{categoryName} IS NULL OR category_name = #{categoryName})-->
+<!--                AND (#{culturalPropertiesName} IS NULL OR cultural_properties_name LIKE CONCAT('%', #{culturalPropertiesName}, '%'))-->
+<!--                AND (#{region} IS NULL OR region LIKE CONCAT('%', #{region}, '%'))-->
+<!--                AND (#{dynasty} IS NULL OR dynasty LIKE CONCAT('%', #{dynasty}, '%'))-->
+            ) c
+        ) c2
+        WHERE c2.rownum BETWEEN #{start} AND #{end}
+
     </select>
 
 
