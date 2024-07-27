@@ -217,6 +217,8 @@ public class AdminFestivalController {
 			
 			for (FestivalDTO festivalDTO : list) {
 				
+				double avgRate = Math.round(festivalDTO.getAvgRate()*100)/100.0;
+				festivalDTO.setAvgRate(avgRate);
 				festivalDTO.setFormattedEnd(dateFormat.format(festivalDTO.getEndDate()));
 				festivalDTO.setFormattedStart(dateFormat.format(festivalDTO.getStartDate()));
 				
@@ -293,6 +295,8 @@ public class AdminFestivalController {
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		festivalDTO.setFormattedEnd(dateFormat.format(festivalDTO.getEndDate()));
 		festivalDTO.setFormattedStart(dateFormat.format(festivalDTO.getStartDate()));
+		double avgRate = Math.round(festivalDTO.getAvgRate()*100)/100.0;
+		festivalDTO.setAvgRate(avgRate);
 		
 		
 		return festivalDTO;
@@ -484,6 +488,9 @@ public class AdminFestivalController {
 		
 		System.out.println("받아온 리스트 : " + list);
 		for (FestivalDTO festivalDTO1 : list) {
+			
+			double avgRate = Math.round(festivalDTO1.getAvgRate()*100)/100.0;
+			festivalDTO1.setAvgRate(avgRate);
 			
 			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 			

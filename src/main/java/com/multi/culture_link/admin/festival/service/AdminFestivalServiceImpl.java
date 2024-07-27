@@ -490,6 +490,9 @@ public class AdminFestivalServiceImpl implements AdminFestivalService {
 	 */
 	@Override
 	public ArrayList<FestivalDTO> findDBFestivalByMultiple(FestivalDTO festivalDTO) throws Exception {
+		
+		System.out.println("ser impl findDBFestivalByMultiple: " + festivalDTO);
+		
 		ArrayList<FestivalDTO> list = adminFestivalMapper.findDBFestivalByMultiple(festivalDTO);
 		
 		return list;
@@ -504,6 +507,9 @@ public class AdminFestivalServiceImpl implements AdminFestivalService {
 	 */
 	@Override
 	public int findDBFestivalMultipleCount(FestivalDTO festivalDTO) throws Exception {
+		
+		System.out.println("ser impl findDBFestivalMultipleCount" + festivalDTO);
+		
 		int count = adminFestivalMapper.findDBFestivalMultipleCount(festivalDTO);
 		
 		return count;

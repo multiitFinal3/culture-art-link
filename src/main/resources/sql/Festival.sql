@@ -143,7 +143,7 @@ CREATE TABLE festival(
     culture_id INT,*/
     region_id INT,
     time_id INT,
-    avg_rate DOUBLE,
+--    avg_rate DOUBLE,
     festival_name VARCHAR(100),
     season VARCHAR(100),
     start_date DATETIME,
@@ -564,3 +564,18 @@ CREATE VIEW vw_user_review_data AS
 			u.user_id=fr.user_id;
 
 
+ALTER TABLE festival_naver_url
+DROP CONSTRAINT PRIMARY;
+
+CREATE OR REPLACE VIEW vw_festival_review_manage_data AS
+SELECT
+	f.*,
+		COUNT(fr.festival_review_id) review_count,
+	AVG(fr.festival_review_star) avg_rate
+
+FROM
+	festival f
+LEFT JOIN
+	festival_review fr  ON f.festival_id = fr.festival_id
+GROUP BY
+	f.festival_id;
