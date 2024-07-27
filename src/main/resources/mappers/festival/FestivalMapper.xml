@@ -150,5 +150,30 @@
 
     </update>
 
+    <select id="findSameRegionFestivalByRegionId" parameterType="festivalDTO" resultType="festivalDTO">
+
+        SELECT * FROM festival
+        WHERE region_id = #{regionId}
+        AND festival_id != #{festivalId};
+
+    </select>
+
+    <select id="findSameSeasonFestivalBySeason" parameterType="festivalDTO" resultType="festivalDTO">
+
+        SELECT * FROM festival
+        WHERE season = #{season}
+        AND festival_id != #{festivalId};
+
+    </select>
+
+
+    <select id="findSameManageFestivalByManageInstitution" parameterType="festivalDTO" resultType="festivalDTO">
+
+        SELECT * FROM festival
+        WHERE manage_institution = #{manageInstitution}
+        AND festival_id != #{festivalId};
+
+    </select>
+
 
 </mapper>

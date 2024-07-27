@@ -1,10 +1,7 @@
 package com.multi.culture_link.festival.model.mapper;
 
 import com.multi.culture_link.common.time.model.dto.TimeDTO;
-import com.multi.culture_link.festival.model.dto.FestivalContentReviewNaverKeywordMapDTO;
-import com.multi.culture_link.festival.model.dto.FestivalKeywordDTO;
-import com.multi.culture_link.festival.model.dto.UserFestivalLoveHateMapDTO;
-import com.multi.culture_link.festival.model.dto.VWUserReviewDataDTO;
+import com.multi.culture_link.festival.model.dto.*;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.ArrayList;
@@ -46,4 +43,10 @@ public interface FestivalMapper {
 	void deleteFestivalReviewByReviewId(int festivalReviewId) throws Exception;
 	
 	void updateFestivalReview(VWUserReviewDataDTO vwUserReviewDataDTO) throws Exception;
+	
+	ArrayList<FestivalDTO> findSameRegionFestivalByRegionId(FestivalDTO festivalDTO) throws Exception;
+	
+	ArrayList<FestivalDTO> findSameSeasonFestivalBySeason(FestivalDTO festivalDTO) throws Exception;
+	
+	ArrayList<FestivalDTO> findSameManageFestivalByManageInstitution(FestivalDTO festivalDTO) throws Exception;
 }

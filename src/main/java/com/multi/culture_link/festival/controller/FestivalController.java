@@ -407,12 +407,13 @@ public class FestivalController {
 	
 	/**
 	 * 해당 축제의 컨텐트 키워드를 반환
+	 *
 	 * @param festivalId
 	 * @return
 	 */
 	@PostMapping("findContentKeywordListByFestivalId")
 	@ResponseBody
-	public ArrayList<FestivalContentReviewNaverKeywordMapDTO> findContentKeywordListByFestivalId(@RequestParam("festivalId") int festivalId){
+	public ArrayList<FestivalContentReviewNaverKeywordMapDTO> findContentKeywordListByFestivalId(@RequestParam("festivalId") int festivalId) {
 		
 		ArrayList<FestivalContentReviewNaverKeywordMapDTO> list = null;
 		try {
@@ -427,12 +428,13 @@ public class FestivalController {
 	
 	/**
 	 * 해당 축제의 시간대 구하기
+	 *
 	 * @param festivalId
 	 * @return
 	 */
 	@PostMapping("/findTimeIdByFestivalId")
 	@ResponseBody
-	public TimeDTO findTimeIdByFestivalId(@RequestParam("festivalId") int festivalId){
+	public TimeDTO findTimeIdByFestivalId(@RequestParam("festivalId") int festivalId) {
 		
 		TimeDTO timeDTO = null;
 		try {
@@ -447,13 +449,14 @@ public class FestivalController {
 	
 	/**
 	 * 특정 축제의 리뷰를 리뷰 페이지 번호에 맞게 가져오기
+	 *
 	 * @param festivalId
 	 * @param page
 	 * @return
 	 */
 	@PostMapping("/findFestivalReviewListByVWUserReviewDTO")
 	@ResponseBody
-	public ArrayList<VWUserReviewDataDTO> findFestivalReviewListByVWUserReviewDTO(@RequestParam("festivalId") int festivalId, @RequestParam("page") int page){
+	public ArrayList<VWUserReviewDataDTO> findFestivalReviewListByVWUserReviewDTO(@RequestParam("festivalId") int festivalId, @RequestParam("page") int page) {
 		
 		VWUserReviewDataDTO vwUserReviewDataDTO = new VWUserReviewDataDTO();
 		PageDTO pageDTO = new PageDTO();
@@ -478,12 +481,13 @@ public class FestivalController {
 	
 	/**
 	 * 특정 축제에 대한 리뷰가 총 몇개인 지 반환함
+	 *
 	 * @param festivalId
 	 * @return
 	 */
 	@PostMapping("/findFestivalReviewCountByVWUserReviewDTO")
 	@ResponseBody
-	public int findFestivalReviewCountByVWUserReviewDTO(@RequestParam("festivalId") int festivalId){
+	public int findFestivalReviewCountByVWUserReviewDTO(@RequestParam("festivalId") int festivalId) {
 		
 		int count = 0;
 		try {
@@ -498,13 +502,14 @@ public class FestivalController {
 	
 	/**
 	 * 리뷰로 업로드 된 파일의 이름을 바꾸고 저장 후 경로를 DB에 저장함
+	 *
 	 * @param reviewTextArea
 	 * @param reviewStar
 	 * @param uploadFile
 	 * @return
 	 */
 	@PostMapping("/insertFestivalReview")
-	public String insertFestivalReview(@RequestParam("reviewTextArea") String reviewTextArea, @RequestParam("reviewStar") double reviewStar, @RequestParam("uploadFile") MultipartFile uploadFile, @RequestParam("festivalId") int festivalId, @AuthenticationPrincipal VWUserRoleDTO user){
+	public String insertFestivalReview(@RequestParam("reviewTextArea") String reviewTextArea, @RequestParam("reviewStar") double reviewStar, @RequestParam("uploadFile") MultipartFile uploadFile, @RequestParam("festivalId") int festivalId, @AuthenticationPrincipal VWUserRoleDTO user) {
 		
 		try {
 			
@@ -558,18 +563,19 @@ public class FestivalController {
 		}
 		
 		
-		return "redirect:/festival/festival-detail?festivalId="+festivalId;
+		return "redirect:/festival/festival-detail?festivalId=" + festivalId;
 	}
 	
 	
 	/**
 	 * 리뷰 삭제
+	 *
 	 * @param festivalReviewId
 	 * @return
 	 */
 	@PostMapping("/deleteFestivalReviewByReviewId")
 	@ResponseBody
-	public String deleteFestivalReviewByReviewId(@RequestParam("festivalReviewId") int festivalReviewId){
+	public String deleteFestivalReviewByReviewId(@RequestParam("festivalReviewId") int festivalReviewId) {
 		
 		try {
 			festivalService.deleteFestivalReviewByReviewId(festivalReviewId);
@@ -581,15 +587,15 @@ public class FestivalController {
 	}
 	
 	
-	
 	/**
 	 * 리뷰 수정
+	 *
 	 * @param festivalReviewId
 	 * @return
 	 */
 	@PostMapping("/updateFestivalReview")
 	@ResponseBody
-	public String updateFestivalReview(@RequestParam("festivalReviewId") int festivalReviewId, @RequestParam("reviewText") String reviewText, @RequestParam("reviewStar") double reviewStar){
+	public String updateFestivalReview(@RequestParam("festivalReviewId") int festivalReviewId, @RequestParam("reviewText") String reviewText, @RequestParam("reviewStar") double reviewStar) {
 		
 		try {
 			
@@ -606,7 +612,94 @@ public class FestivalController {
 	}
 	
 	
+	/**
+	 * 같은 지역의 축제를 추천리스트로 가져가며 본인은 제외함
+	 *
+	 * @param festivalId
+	 * @param regionId
+	 * @return
+	 */
+	@PostMapping("/findSameRegionFestivalByRegionId")
+	@ResponseBody
+	public ArrayList<FestivalDTO> findSameRegionFestivalByRegionId(@RequestParam("festivalId") int festivalId, @RequestParam("regionId") int regionId) {
+		
+		
+		ArrayList<FestivalDTO> list = null;
+		try {
+			
+			FestivalDTO festivalDTO = new FestivalDTO();
+			festivalDTO.setRegionId(regionId);
+			festivalDTO.setFestivalId(festivalId);
+			
+			list = festivalService.findSameRegionFestivalByRegionId(festivalDTO);
+			System.out.println("findSameRegionFestivalByRegionId list : " + list);
+			
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+		
+		return list;
+	}
 	
+	
+	/**
+	 * 같은 계절의 축제를 추천리스트로 가져가며 본인은 제외함
+	 *
+	 * @param festivalId
+	 * @param season
+	 * @return
+	 */
+	@PostMapping("/findSameSeasonFestivalBySeason")
+	@ResponseBody
+	public ArrayList<FestivalDTO> findSameSeasonFestivalBySeason(@RequestParam("festivalId") int festivalId, @RequestParam("season") String season) {
+		
+		
+		ArrayList<FestivalDTO> list = null;
+		try {
+			
+			FestivalDTO festivalDTO = new FestivalDTO();
+			festivalDTO.setSeason(season);
+			festivalDTO.setFestivalId(festivalId);
+			
+			list = festivalService.findSameSeasonFestivalBySeason(festivalDTO);
+			System.out.println("findSameSeasonFestivalBySeason list : " + list);
+			
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+		
+		return list;
+	}
+	
+	
+	/**
+	 * 같은 주체기관의 축제를 추천리스트로 가져가며 본인은 제외함
+	 *
+	 * @param festivalId
+	 * @param manageInstitution
+	 * @return
+	 */
+	@PostMapping("/findSameManageFestivalByManageInstitution")
+	@ResponseBody
+	public ArrayList<FestivalDTO> findSameManageFestivalByManageInstitution(@RequestParam("festivalId") int festivalId, @RequestParam("manageInstitution") String manageInstitution) {
+		
+		
+		ArrayList<FestivalDTO> list = null;
+		try {
+			
+			FestivalDTO festivalDTO = new FestivalDTO();
+			festivalDTO.setManageInstitution(manageInstitution);
+			festivalDTO.setFestivalId(festivalId);
+			
+			list = festivalService.findSameManageFestivalByManageInstitution(festivalDTO);
+			System.out.println("findSameManageFestivalByManageInstitution : " + list);
+			
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+		
+		return list;
+	}
 	
 	
 }

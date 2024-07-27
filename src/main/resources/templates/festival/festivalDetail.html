@@ -13,16 +13,233 @@
     $(document).ready(
         function(){
 
+            // 전역변수 선언
 
             var festival = [[${festival}]];
             var festivalId = festival.festivalId;
+            var regionId = festival.regionId;
+            var season = festival.season;
+            var manageInstitution = festival.manageInstitution;
             var userId = [[${userId}]];
+
+
+
+            //#region 찜 / 관심없음 관련 함수
+
+
+            /**
+            * 찜하기 / 찜 취소하기 버튼
+            *
+            */
+            $(document).on('click','.heart', function(){
+
+                var button = $(this);
+                var festivalId = $(this).val();
+
+                if(button.closest(".card").hasClass("hasLove")){
+
+                    $.ajax({
+
+                        url: '/festival/deleteUserLoveFestival?festivalId=' + festivalId,
+                        method: 'POST',
+                        contentType: 'application/json',
+                        success: function(res){
+                            alert(res);
+                            button.closest('.card').removeClass("hasLove");
+                        },
+                        error: function(xhr, status, error){
+
+                            alert('error : ',error);
+
+                        }
+                    })
+
+                }else{
+
+                    if(button.closest(".card").hasClass("hasHate")){
+                        button.closest(".card").find(".hate").click();
+                    }
+
+
+                    $.ajax({
+
+                        url: '/festival/insertUserLoveFestival?festivalId=' + festivalId,
+                        method: 'POST',
+                        contentType: 'application/json',
+                        success: function(res){
+
+                            alert(res);
+                            button.closest(".card").addClass("hasLove");
+                            console.log("addClass('hasLove');")
+
+
+                        },
+                        error: function(xhr, status, error){
+
+                         alert('error : ',error);
+
+                        }
+
+                    })
+
+
+                }
+
+            })
+
+
+            /**
+            * 찜 리스트 찾아서 색 바꾸기
+            *
+            */
+            function findLoveList(){
+
+                var cardList = document.querySelectorAll(".card");
+
+                $.ajax({
+
+                    url: '/festival/findLoveList',
+                    method: 'POST',
+                    contentType: 'application/json',
+                    success: function(list){
+
+                        console.log(list);
+                        $.each(cardList, function(index, card){
+
+                            console.log("card.getAttribute('value')")
+                            console.log(card.getAttribute('value'));
+
+                            var cardString = card.getAttribute('value');
+                            var cardInt = parseInt(cardString, 10);
+
+                            if(list.includes(cardInt)){
+
+                                $(card).addClass("hasLove");
+
+                            }
+                        })
+                    }
+                })
+
+            }
+
+
+
+
+
+
+           /**
+            * 관심없음 하기 / 관심없음 취소하기 버튼
+            *
+            */
+            $(document).on('click','.hate', function(){
+
+                var button = $(this);
+                var festivalId = $(this).val();
+
+                if(button.closest(".card").hasClass("hasHate")){
+
+                    $.ajax({
+
+                        url: '/festival/deleteUserHateFestival?festivalId=' + festivalId,
+                        method: 'POST',
+                        contentType: 'application/json',
+                        success: function(res){
+                            alert(res);
+                            button.closest('.card').removeClass("hasHate");
+                        },
+                        error: function(xhr, status, error){
+
+                            alert('error : ',error);
+
+                        }
+                    })
+
+                }else{
+
+                    if(button.closest(".card").hasClass("hasLove")){
+                        button.closest(".card").find(".heart").click();
+                    }
+
+                    $.ajax({
+
+                        url: '/festival/insertUserHateFestival?festivalId=' + festivalId,
+                        method: 'POST',
+                        contentType: 'application/json',
+                        success: function(res){
+
+                            alert(res);
+                            button.closest(".card").addClass("hasHate");
+                            console.log("addClass('hasHate');")
+
+
+                        },
+                        error: function(xhr, status, error){
+
+                         alert('error : ',error);
+
+                        }
+
+                    })
+
+
+                }
+
+
+
+
+
+            })
+
+
+            /**
+            * 관심없음 리스트 찾아서 색 바꾸기
+            *
+            */
+            function findHateList(){
+
+                var cardList = document.querySelectorAll(".card");
+
+                $.ajax({
+
+                    url: '/festival/findHateList',
+                    method: 'POST',
+                    contentType: 'application/json',
+                    success: function(list){
+
+                        console.log(list);
+                        $.each(cardList, function(index, card){
+
+                            console.log("card.getAttribute('value')")
+                            console.log(card.getAttribute('value'));
+
+                            var cardString = card.getAttribute('value');
+                            var cardInt = parseInt(cardString, 10);
+
+                            if(list.includes(cardInt)){
+
+                                $(card).addClass("hasHate");
+
+                            }
+                        })
+                    }
+                })
+
+            }
+
+
+
+            findLoveList();
+            findHateList();
+
+
 
 
             //#region 왼쪽 디테일 카드 관련 함수
 
             /**
             * 컨텐트 키워드 가져와서 넣어주기
+            * @param {int} festivalId 축제 아이디
             *
             */
             function findContentKeywordList(festivalId){
@@ -55,6 +272,7 @@
 
             /**
             * 컨텐트 키워드 가져와서 넣어주기
+            * @param {int} festivalId 축제 아이디
             *
             */
             function findTimeIdByFestivalId(festivalId){
@@ -88,7 +306,9 @@
 
             /**
             * 페이지당 리뷰 리스트 가져와서 넣어주기
-            *
+            * @param {int} festivalId 축제아이디
+            * @param {int} userId 유저아이디
+            * @param {int} page 페이지
             */
             function findFestivalReviewListByVWUserReviewDTO(festivalId, userId, page){
 
@@ -258,6 +478,7 @@
 
             /**
             * 전체 리뷰 페이지 버튼 만들기
+            * @param {int} festivalId 축제아이디
             *
             */
             function findFestivalReviewCountByVWUserReviewDTO(festivalId){
@@ -308,6 +529,7 @@
 
             /**
             * 리뷰를 테이블에 담고 이미지는 프로젝트 폴더에 저장함
+            * @param {int} festivalId 축제아이디
             *
             */
             $(document).on('click','#reviewInsertBtn', function(festivalId){
@@ -401,19 +623,392 @@
             })
 
 
-
-
-
-
-
-
-
-
             //#endregion
 
 
 
-            //#region 오른쪽  관련 함수
+            //#region 아래 축제 추천 리스트 관련 함수
+
+
+            /**
+            * 해당 축제를 제외한 같은 지역의 축제의 리스트 가져오기
+            * @param {int} festivalId 축제아이디
+            * @param {int} regionId 지역아이디
+            */
+            function findSameRegionFestivalByRegionId(festivalId, regionId){
+
+                $.ajax({
+
+                    url: '/festival/findSameRegionFestivalByRegionId',
+                    method: 'POST',
+                    data: {
+                        festivalId: festivalId,
+                        regionId: regionId
+                    },
+                    success: function(list){
+
+                        $('#recommendCardList').html("");
+
+                        $.each(list, function(index, festival){
+
+                            var content = festival.festivalContent.length > 30?
+                            festival.festivalContent.substring(0,30) + "..."
+                            : festival.festivalContent;
+
+                            var inst1 = festival.manageInstitution.length > 15?
+                            festival.manageInstitution.substring(0,15) + "..."
+                            : festival.manageInstitution;
+
+                            var inst2 = festival.hostInstitution.length > 15?
+                            festival.hostInstitution.substring(0,15) + "..."
+                            : festival.hostInstitution;
+
+                            var inst3 = festival.sponserInstitution.length > 15?
+                            festival.sponserInstitution.substring(0,15) + "..."
+                            : festival.sponserInstitution;
+
+                            var start = festival.startDate.length >0?
+                            festival.startDate.substring(0,10):
+                            "없음";
+
+                            var end = festival.endDate.length >0?
+                            festival.endDate.substring(0,10):
+                            "없음";
+
+                            var firstHtml= ``;
+
+                            if(! festival.imgUrl || festival.imgUrl == "null"){
+
+                                firstHtml = `
+                                    <div class="card recommendCard" style="width: 18rem;" id="${festival.festivalId}" value="${festival.festivalId}">
+                                        <img class="card-img-top" src="/img/festival/noPhoto.png" alt="Card image cap" style="min-width: 380px; min-height: 400px;">
+
+                                `;
+
+                            }else{
+
+                                firstHtml = `
+                                    <div class="card recommendCard" style="width: 18rem;" id="${festival.festivalId}" value="${festival.festivalId}">
+                                        <img class="card-img-top" src="${festival.imgUrl}" alt="Card image cap" style="min-width: 380px; min-height: 400px;">
+
+                                `;
+
+                            }
+
+
+                            var secondHtml = `
+                                <div class="card-body">
+                                      <h5 class="card-title">${festival.festivalName}</h5>
+                                      <p class="card-text">${content}</p>
+                                      <div>
+                                          <a href="/festival/festival-detail?festivalId=${festival.festivalId}" class="btn btn-primary">자세히</a>
+                                          <button class="btn btn-primary heart" type="button" style="margin:0px" value="${festival.festivalId}">
+                                              <img src="/img/festival/heart.png"
+                                                   style="width : 20px; height: 20px;">
+                                          </button>
+                                          <button class="btn btn-primary hate" type="button" style="margin:0px" value="${festival.festivalId}">
+                                                <img src="/img/festival/trash.png"
+                                                     style="width : 20px; height: 20px;">
+                                          </button>
+                                      </div>
+                                </div>
+
+                            </div>
+                            `;
+
+
+                            var finalHtml = firstHtml + secondHtml;
+
+                            $('#recommendCardList').append(finalHtml);
+
+                            findLoveList();
+                            findHateList();
+
+
+
+                        })
+
+                    }
+
+                })
+
+            }
+
+
+
+
+            /**
+            * 같은 지역 추천 리스트 버튼 클릭 이벤트 함수
+            *
+            */
+            $(document).on('click','#regionRecommend', function(){
+
+                var regionId = $(this).val();
+                findSameRegionFestivalByRegionId(festivalId, regionId);
+
+            })
+
+
+            // 초기 화면에 같은 지역 추천 보이게 하기
+            findSameRegionFestivalByRegionId(festivalId, regionId);
+
+
+
+
+            /**
+            * 해당 축제를 제외한 같은 계절의 축제의 리스트 가져오기
+            * @param {int} festivalId 축제아이디
+            * @param {string} season 계절
+            */
+            function findSameSeasonFestivalBySeason(festivalId, season){
+
+                $.ajax({
+
+                    url: '/festival/findSameSeasonFestivalBySeason',
+                    method: 'POST',
+                    data: {
+                        festivalId: festivalId,
+                        season: season
+                    },
+                    success: function(list){
+
+                        $('#recommendCardList').html("");
+
+                        $.each(list, function(index, festival){
+
+                            var content = festival.festivalContent.length > 30?
+                            festival.festivalContent.substring(0,30) + "..."
+                            : festival.festivalContent;
+
+                            var inst1 = festival.manageInstitution.length > 15?
+                            festival.manageInstitution.substring(0,15) + "..."
+                            : festival.manageInstitution;
+
+                            var inst2 = festival.hostInstitution.length > 15?
+                            festival.hostInstitution.substring(0,15) + "..."
+                            : festival.hostInstitution;
+
+                            var inst3 = festival.sponserInstitution.length > 15?
+                            festival.sponserInstitution.substring(0,15) + "..."
+                            : festival.sponserInstitution;
+
+                            var start = festival.startDate.length >0?
+                            festival.startDate.substring(0,10):
+                            "없음";
+
+                            var end = festival.endDate.length >0?
+                            festival.endDate.substring(0,10):
+                            "없음";
+
+                            var firstHtml= ``;
+
+                            if(! festival.imgUrl || festival.imgUrl == "null"){
+
+                                firstHtml = `
+                                    <div class="card recommendCard" style="width: 18rem;" id="${festival.festivalId}" value="${festival.festivalId}">
+                                        <img class="card-img-top" src="/img/festival/noPhoto.png" alt="Card image cap" style="min-width: 380px; min-height: 400px;">
+
+                                `;
+
+                            }else{
+
+                                firstHtml = `
+                                    <div class="card recommendCard" style="width: 18rem;" id="${festival.festivalId}" value="${festival.festivalId}">
+                                        <img class="card-img-top" src="${festival.imgUrl}" alt="Card image cap" style="min-width: 380px; min-height: 400px;">
+
+                                `;
+
+                            }
+
+
+                            var secondHtml = `
+                                <div class="card-body">
+                                      <h5 class="card-title">${festival.festivalName}</h5>
+                                      <p class="card-text">${content}</p>
+                                      <div>
+                                          <a href="/festival/festival-detail?festivalId=${festival.festivalId}" class="btn btn-primary">자세히</a>
+                                          <button class="btn btn-primary heart" type="button" style="margin:0px" value="${festival.festivalId}">
+                                              <img src="/img/festival/heart.png"
+                                                   style="width : 20px; height: 20px;">
+                                          </button>
+                                          <button class="btn btn-primary hate" type="button" style="margin:0px" value="${festival.festivalId}">
+                                                <img src="/img/festival/trash.png"
+                                                     style="width : 20px; height: 20px;">
+                                          </button>
+                                      </div>
+                                </div>
+
+                            </div>
+                            `;
+
+
+                            var finalHtml = firstHtml + secondHtml;
+
+                            $('#recommendCardList').append(finalHtml);
+
+                            findLoveList();
+                            findHateList();
+
+
+
+                        })
+
+                    }
+
+                })
+
+            }
+
+
+
+
+            /**
+            * 같은 계절 추천 리스트 버튼 클릭 이벤트 함수
+            *
+            */
+            $(document).on('click','#seasonRecommend', function(){
+
+                var season = $(this).val();
+                findSameSeasonFestivalBySeason(festivalId, season);
+
+            })
+
+
+
+            /**
+            * 해당 축제를 제외한 같은 주체기관의 축제의 리스트 가져오기
+            * @param {int} festivalId 축제아이디
+            * @param {manageInstitution} manageInstitution 주체기관
+            */
+            function findSameManageFestivalByManageInstitution(festivalId, manageInstitution){
+
+                $.ajax({
+
+                    url: '/festival/findSameManageFestivalByManageInstitution',
+                    method: 'POST',
+                    data: {
+                        festivalId: festivalId,
+                        manageInstitution: manageInstitution
+                    },
+                    success: function(list){
+
+                        $('#recommendCardList').html("");
+
+                        $.each(list, function(index, festival){
+
+                            var content = festival.festivalContent.length > 30?
+                            festival.festivalContent.substring(0,30) + "..."
+                            : festival.festivalContent;
+
+                            var inst1 = festival.manageInstitution.length > 15?
+                            festival.manageInstitution.substring(0,15) + "..."
+                            : festival.manageInstitution;
+
+                            var inst2 = festival.hostInstitution.length > 15?
+                            festival.hostInstitution.substring(0,15) + "..."
+                            : festival.hostInstitution;
+
+                            var inst3 = festival.sponserInstitution.length > 15?
+                            festival.sponserInstitution.substring(0,15) + "..."
+                            : festival.sponserInstitution;
+
+                            var start = festival.startDate.length >0?
+                            festival.startDate.substring(0,10):
+                            "없음";
+
+                            var end = festival.endDate.length >0?
+                            festival.endDate.substring(0,10):
+                            "없음";
+
+                            var firstHtml= ``;
+
+                            if(! festival.imgUrl || festival.imgUrl == "null"){
+
+                                firstHtml = `
+                                    <div class="card recommendCard" style="width: 18rem;" id="${festival.festivalId}" value="${festival.festivalId}">
+                                        <img class="card-img-top" src="/img/festival/noPhoto.png" alt="Card image cap" style="min-width: 380px; min-height: 400px;">
+
+                                `;
+
+                            }else{
+
+                                firstHtml = `
+                                    <div class="card recommendCard" style="width: 18rem;" id="${festival.festivalId}" value="${festival.festivalId}">
+                                        <img class="card-img-top" src="${festival.imgUrl}" alt="Card image cap" style="min-width: 380px; min-height: 400px;">
+
+                                `;
+
+                            }
+
+
+                            var secondHtml = `
+                                <div class="card-body">
+                                      <h5 class="card-title">${festival.festivalName}</h5>
+                                      <p class="card-text">${content}</p>
+                                      <div>
+                                          <a href="/festival/festival-detail?festivalId=${festival.festivalId}" class="btn btn-primary">자세히</a>
+                                          <button class="btn btn-primary heart" type="button" style="margin:0px" value="${festival.festivalId}">
+                                              <img src="/img/festival/heart.png"
+                                                   style="width : 20px; height: 20px;">
+                                          </button>
+                                          <button class="btn btn-primary hate" type="button" style="margin:0px" value="${festival.festivalId}">
+                                                <img src="/img/festival/trash.png"
+                                                     style="width : 20px; height: 20px;">
+                                          </button>
+                                      </div>
+                                </div>
+
+                            </div>
+                            `;
+
+
+                            var finalHtml = firstHtml + secondHtml;
+
+                            $('#recommendCardList').append(finalHtml);
+
+                            findLoveList();
+                            findHateList();
+
+
+
+                        })
+
+                    }
+
+                })
+
+            }
+
+
+
+
+            /**
+            * 같은 주체기관 추천 리스트 버튼 클릭 이벤트 함수
+            *
+            */
+            $(document).on('click','#manageInstRecommend', function(){
+
+                var manageInstitution = $(this).val();
+                findSameManageFestivalByManageInstitution(festivalId, manageInstitution);
+
+            })
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
             //#endregion
@@ -726,7 +1321,7 @@
                 <h3>
                     <img src="/img/festival/star.png" alt="이미지 없음" height="50px"> 축제 추천 리스트
                     <button class="btn btn-primary"  id="regionRecommend" th:value="${festival.regionId}">같은 지역</button>
-                    <button class="btn btn-primary" id="startDateRecommend" th:value="${festival.season}">같은 계절</button>
+                    <button class="btn btn-primary" id="seasonRecommend" th:value="${festival.season}">같은 계절</button>
                     <button class="btn btn-primary" id="manageInstRecommend" th:value="${festival.manageInstitution}">주체기관 동일</button>
                     <button class="btn btn-primary" id="keywordRecommend" th:value="${festival.festivalId}">키워드 동일</button>
                 </h3>
