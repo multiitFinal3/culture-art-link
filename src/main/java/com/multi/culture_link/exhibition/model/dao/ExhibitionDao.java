@@ -11,7 +11,7 @@ import java.util.Map;
 public interface ExhibitionDao {
 
     List<ExhibitionApiDto> searchExhibition(Map<String, String> searchParams);
-    ExhibitionApiDto getExhibitionById(int id);
+    ExhibitionDto getExhibitionById(int userId, int exhibitionId);
     // 찜, 관심없음 변동
     void setInterested(int userId, int exhibitionId, String state);
     // 전시 리스트 관심 연동하여 가져오기

@@ -45,8 +45,12 @@ public class ExhibitionController {
 
     // 전시 id 기반 데이터 불러오기(상세정보)
     @GetMapping("/{exhibitionId}")
-    public ExhibitionApiDto getExhibitionDetail(@PathVariable int exhibitionId){
-        return exhibitionService.getExhibitionById(exhibitionId);
+    public ExhibitionDto getExhibitionDetail(
+            @AuthenticationPrincipal VWUserRoleDTO currentUser,
+            @PathVariable int exhibitionId
+    ){
+        System.out.println("exhibition: " + exhibitionService.getExhibitionById(currentUser.getUserId(), exhibitionId));
+        return exhibitionService.getExhibitionById(currentUser.getUserId(), exhibitionId);
     }
 
     // 데이터별 상세 정보 url 연결
@@ -74,8 +78,8 @@ public class ExhibitionController {
             @AuthenticationPrincipal VWUserRoleDTO currentUser,
             @RequestBody ExhibitionInterestDto data
             ) {
-        System.out.println("컨트롤러");
-        System.out.println("1: " + currentUser + " 2: " +  data.getExhibitionId()  + " 3: " + data.getState());
+//        System.out.println("컨트롤러");
+//        System.out.println("1: " + currentUser + " 2: " +  data.getExhibitionId()  + " 3: " + data.getState());
         exhibitionService.setInterested(currentUser.getUserId(), data.getExhibitionId(), data.getState());
     }
 
@@ -84,4 +88,5 @@ public class ExhibitionController {
     public List<ExhibitionDto> getDbExhibitions(){
         return exhibitionService.getExhibition();
     }
+
 }
