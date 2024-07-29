@@ -6,6 +6,7 @@ import com.multi.culture_link.common.time.model.dto.TimeDTO;
 import com.multi.culture_link.festival.model.dto.*;
 import com.multi.culture_link.festival.service.FestivalService;
 import com.multi.culture_link.users.model.dto.VWUserRoleDTO;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -32,6 +33,9 @@ public class FestivalController {
 	
 	private final AdminFestivalService adminFestivalService;
 	private final FestivalService festivalService;
+	
+	@Value("${API-KEY.naverClientId}")
+	private String naverClientId;
 	
 	public FestivalController(AdminFestivalService adminFestivalService, FestivalService festivalService) {
 		this.adminFestivalService = adminFestivalService;
@@ -71,6 +75,9 @@ public class FestivalController {
 			
 			int userId = user.getUserId();
 			model.addAttribute("userId", userId);
+			model.addAttribute("naverCliendId", naverClientId);
+			
+			System.out.println("naverClientId : " + naverClientId);
 			
 		} catch (Exception e) {
 			throw new RuntimeException(e);

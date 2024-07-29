@@ -8,6 +8,7 @@
     <link rel="stylesheet" th:href="@{/css/festival/festivalDetail.css}">
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
     <script th:src="@{/js/festival/festivalDetail.js}"></script>
+
     <script th:inline="javascript">
 
     $(document).ready(
@@ -16,15 +17,20 @@
             // 전역변수 선언
 
             var festival = [[${festival}]];
+            var naverClientId = [[${naverClientId}]];
             var festivalId = festival.festivalId;
             var regionId = festival.regionId;
             var season = festival.season;
             var manageInstitution = festival.manageInstitution;
             var festivalName = festival.festivalName;
             var formattedStart = festival.formattedStart;
+            var latitude = festival.latitude;
+            var longtitude = festival.longtitude;
+
+
             var userId = [[${userId}]];
 
-
+            console.log("naverClientId : " , naverClientId)
 
             //#region 찜 / 관심없음 관련 함수
 
@@ -1104,12 +1110,12 @@
 
                         if( festival.imgUrl || festival.imgUrl != "null" || festival.imgUrl != ""){
 
-                            imgHtml = `<img class="card-img-top" src="${imgUrl}" alt="이미지 로딩 실패">`;
+                            imgHtml = `<img class="card-img-top" src="${imgUrl}" alt="이미지 로딩 실패" style="height:300px">`;
 
                         }else{
 
 
-                            imgHtml = `<img class="card-img-top" src="/img/festival/noPhoto.png" alt="이미지 로딩 실패">`;
+                            imgHtml = `<img class="card-img-top" src="/img/festival/noPhoto.png" alt="이미지 로딩 실패" style="height:300px">`;
 
                         }
 
@@ -1279,17 +1285,18 @@
 
 
 
+
+
         }
     )
 
-
-
-
-
-
-
-
     </script>
+    <script th:inline="javascript" th:src="'https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=' + ${naverClientId}"></script>
+
+
+
+
+
 </head>
 <body>
 
@@ -1503,8 +1510,6 @@
 
                 </div>
 
-
-
                 <div id="youtubeList" style="width: 100%">
 
                     <h3>관련 동영상</h3>
@@ -1516,10 +1521,6 @@
                     </div>
 
                 </div>
-
-
-
-
 
                 <div id="naverNews" style="width: 100%">
 
@@ -1546,6 +1547,51 @@
                     <div id="blogPages">
 
                     </div>
+
+                </div>
+
+                <div id="mapDiv" style="width: 100%">
+
+                    <h3>찾아오는 길</h3>
+
+                    <div id="map" style="width:100%;height:800px;"></div>
+                    <script th:inline="javascript">
+
+                        //#region 네이버 지도
+
+                            var festival = [[${festival}]];
+                            var latitude = festival.latitude;
+                            var longtitude = festival.longtitude;
+
+
+                            console.log("위도")
+                            console.log(latitude)
+
+                            var position = new naver.maps.LatLng(latitude, longtitude);
+
+                            var map = new naver.maps.Map('map', {
+                                center: position,
+                                zoom: 15
+                            });
+
+                            var marker = new naver.maps.Marker({
+                                position: position,
+                                map: map
+                            });
+
+                            if(latitude==0 || longtitude==0){
+
+                                $('#mapDiv').html("");
+
+                            }
+
+
+
+                            //#endregion
+
+
+                    </script>
+
 
                 </div>
 
