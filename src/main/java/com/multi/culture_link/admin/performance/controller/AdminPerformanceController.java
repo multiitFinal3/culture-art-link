@@ -18,6 +18,9 @@ import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * The type Admin performance controller.
+ */
 @Controller
 @RequestMapping("/admin/performance-regulate")
 public class AdminPerformanceController {
@@ -28,6 +31,17 @@ public class AdminPerformanceController {
     @Autowired
     private PerformanceDBService performanceDBService;
 
+    /**
+     * Performance manage string.
+     *
+     * @param model            the model
+     * @param dbPage           the db page
+     * @param apiPage          the api page
+     * @param size             the size
+     * @param dbSearchKeyword  the db search keyword
+     * @param apiSearchKeyword the api search keyword
+     * @return the string
+     */
     @GetMapping // 공연 관리 페이지를 반환하는 메소드
     public String performanceManage(Model model,
                                     @RequestParam(name = "dbPage", defaultValue = "0") int dbPage,
@@ -91,6 +105,16 @@ public class AdminPerformanceController {
         return new PageImpl<>(paginatedList, PageRequest.of(page, size), list.size());
     }
 
+    /**
+     * Save to db string.
+     *
+     * @param selectedIdsAPI the selected ids api
+     * @param apiPage        the api page
+     * @param dbPage         the db page
+     * @param size           the size
+     * @param model          the model
+     * @return the string
+     */
     @PostMapping("/saveToDB")
     public String saveToDB(@RequestParam(name = "selectedIdsAPI", required = false) List<String> selectedIdsAPI,
                            @RequestParam(name = "apiPage", defaultValue = "0") int apiPage,
@@ -128,6 +152,16 @@ public class AdminPerformanceController {
         return "redirect:/admin/performance-regulate?dbPage=" + dbPage + "&apiPage=" + apiPage + "&size=" + size + (model.containsAttribute("savedCount") ? "&savedCount=" + model.getAttribute("savedCount") : "");
     }
 
+    /**
+     * Delete from db string.
+     *
+     * @param selectedIds the selected ids
+     * @param apiPage     the api page
+     * @param dbPage      the db page
+     * @param size        the size
+     * @param model       the model
+     * @return the string
+     */
     @PostMapping("/deleteFromDB")
     public String deleteFromDB(@RequestParam(name = "selectedIds", required = false) List<String> selectedIds,
                                @RequestParam(name = "apiPage", defaultValue = "0") int apiPage,
