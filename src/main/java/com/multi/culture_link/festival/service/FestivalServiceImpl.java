@@ -9,10 +9,16 @@ import com.multi.culture_link.festival.model.mapper.FestivalMapper;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Locale;
 
 @Service
 public class FestivalServiceImpl implements FestivalService {
@@ -23,6 +29,12 @@ public class FestivalServiceImpl implements FestivalService {
 	
 	@Value("${API-KEY.youtubeKey}")
 	private String youtubeKey;
+	
+	@Value("${API-KEY.naverArticleClientId}")
+	private String XNaverClientId;
+	
+	@Value("${API-KEY.naverArticleClientSecret}")
+	private String XNaverClientSecret;
 	
 	
 	public FestivalServiceImpl(FestivalMapper festivalMapper, OkHttpClient client, Gson gson) {
@@ -352,4 +364,105 @@ public class FestivalServiceImpl implements FestivalService {
 		
 		return youtubeId;
 	}
+	
+	
+	/**
+	 * 네이버 api로 해당 기사의 대략적인 정보와 나와있는 원본 링크를 이용해 자세한 내용을 dto에 저장
+	 * @param page
+	 * @param formattedStart
+	 * @param festivalName
+	 * @return
+	 * @throws Exception
+	 */
+	@Override
+	public NaverArticleDTO findFestivalNaverArticle(int page, String formattedStart, String festivalName) throws Exception {
+		
+		
+		festivalName = formattedStart.substring(0,4) + festivalName + " ";
+		
+		Request request = new Request.Builder()
+				.url("https://openapi.naver.com/v1/search/news.json?query=" + festivalName + "&display=10&sort=sim")
+				.addHeader("X-Naver-Client-Id", XNaverClientId)
+				.addHeader("X-Naver-Client-Secret", XNaverClientSecret)
+				.get()
+				.build();
+		
+		
+		
+		Response response = client.newCall(request).execute();
+		String responseBody = response.body().string();
+		JsonObject json = gson.fromJson(responseBody, JsonObject.class);
+		JsonArray items = json.getAsJsonArray("items");
+		
+		JsonObject item = items.get(page-1).getAsJsonObject();
+		
+		String title = item.get("title").getAsString();
+		
+		
+		
+		
+		String originalLink = item.get("originallink").getAsString();
+		String description = item.get("description").getAsString();
+		String pubDate = item.get("pubDate").getAsString().substring(0,16);
+		
+		System.out.println("origin link : " + originalLink);
+		
+		SimpleDateFormat formatter = new SimpleDateFormat("EEE, dd MMM yyyy", Locale.ENGLISH);
+		Date date = formatter.parse(pubDate);
+		
+		
+		System.out.println(description);
+		
+		title = title.replaceAll("</[a-z]*>","").replaceAll("<[a-z]*>","").replaceAll("/","").replaceAll("▲","");
+		description = description.replaceAll("</[a-z]*>","").replaceAll("<[a-z]*>","").replaceAll("/","").replaceAll("▲","");
+		
+		System.out.println("description : " + description);
+		
+		NaverArticleDTO naverArticleDTO = new NaverArticleDTO();
+		naverArticleDTO.setDescription(description);
+		naverArticleDTO.setTitle(title);
+		naverArticleDTO.setPubDate(date);
+		naverArticleDTO.setOriginalLink(originalLink);
+
+		//festival naver content + img
+		
+		Document document = Jsoup.connect(originalLink).get();
+		
+		Element el = document.select("[itemprop=articleBody]").get(0);
+		
+		
+		String imgUrl = el.select("img").attr("src");
+		
+		if (!imgUrl.equals("")) {
+			
+			naverArticleDTO.setImgUrl(imgUrl);
+		
+		}
+		
+		
+		String content = el.text();
+		content= content.replaceAll("</[a-z]*>","").replaceAll("<[a-z]*>","").replaceAll("/","").replaceAll("▲","");
+		
+		if (content!=""){
+			naverArticleDTO.setTotalContent(content);
+		}
+		
+		System.out.println("serviceIMpl : naverArticleDTO : " + naverArticleDTO);
+		
+		return naverArticleDTO;
+	}
+	
+	
+	public static void main(String[] args) {
+
+
+		String a = "가운데 <b>2024</b>년 위천면 행정협의회 정기회의를 개최했다. /<b>거창</b>군 <b>거창</b>군 위천면(면장 강신여)은 지난 23일... 이날 정기회의는 제34회 <b>거창</b>국제연극제 개최, <b>거창</b>창포원 어린이 물놀이장 개장, <b>거창한마당 대축제</b> 기간 중... ";
+
+		a = a.replaceAll("</[a-z]*>","").replaceAll("<[a-z]*>","");
+
+		System.out.println(a);
+
+	}
+
+	
 }

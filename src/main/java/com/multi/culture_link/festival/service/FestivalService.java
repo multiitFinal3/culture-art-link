@@ -47,4 +47,6 @@ public interface FestivalService {
 	ArrayList<FestivalDTO> findSameManageFestivalByManageInstitution(FestivalDTO festivalDTO) throws Exception;
 	
 	String findFestivalYoutube(int page, String formattedStart, String festivalName) throws Exception;
+	
+	NaverArticleDTO findFestivalNaverArticle(int page, String formattedStart, String festivalName) throws Exception;
 }
