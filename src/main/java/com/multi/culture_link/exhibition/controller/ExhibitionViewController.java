@@ -17,5 +17,13 @@ public class ExhibitionViewController {
 
     }
 
+    @GetMapping("/detail/{exhibitionId}")
+    public String detailExhibition() {
+
+
+        return "/exhibition/exhibitionDetail";
+
+    }
+
 
 }
