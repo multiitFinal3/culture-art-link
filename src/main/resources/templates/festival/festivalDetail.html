@@ -21,6 +21,7 @@
             var season = festival.season;
             var manageInstitution = festival.manageInstitution;
             var festivalName = festival.festivalName;
+            var formattedStart = festival.formattedStart;
             var userId = [[${userId}]];
 
 
@@ -1006,7 +1007,7 @@
             * @param {string} festivalName 축제 이름
             * @param {int} page 유튜브 페이지
             */
-            function findFestivalYoutube(page, festivalName){
+            function findFestivalYoutube(page, formattedStart, festivalName){
 
                 $.ajax({
 
@@ -1014,6 +1015,7 @@
                     method: 'POST',
                     data: {
                         page: page,
+                        formattedStart: festival.formattedStart,
                         festivalName: festival.festivalName
                     },
                     success: function(youtubeId){
@@ -1032,7 +1034,7 @@
                 })
             }
 
-            findFestivalYoutube(1, festivalName);
+            findFestivalYoutube(1, formattedStart, festivalName);
 
             /**
             * 유투브 페이지 버튼 추가
@@ -1059,7 +1061,7 @@
             $(document).on('click','.youtubeBtn', function(){
 
                 var page = $(this).text();
-                findFestivalYoutube(page, festivalName);
+                findFestivalYoutube(page, formattedStart, festivalName);
 
             })
 

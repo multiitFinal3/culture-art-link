@@ -318,13 +318,17 @@ public class FestivalServiceImpl implements FestivalService {
 	/**
 	 * 관련된 유튜브 id를 반환
 	 * @param page
+	 * @param formattedStart
 	 * @param festivalName
 	 * @return
 	 * @throws Exception
 	 */
 	@Override
-	public String findFestivalYoutube(int page, String festivalName) throws Exception {
+	public String findFestivalYoutube(int page, String formattedStart, String festivalName) throws Exception {
 		
+		
+		festivalName = formattedStart.substring(0,4) + festivalName + " ";
+
 		Request request = new Request.Builder()
 				.url("https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=10&order=relevance&q=" + festivalName + "&regionCode=KR&videoDuration=any&type=video&videoEmbeddable=true" + "&key=" + youtubeKey)
 				.addHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36")

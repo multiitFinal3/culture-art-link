@@ -710,12 +710,12 @@ public class FestivalController {
 	 */
 	@PostMapping("/findFestivalYoutube")
 	@ResponseBody
-	public String findFestivalYoutube(@RequestParam("page") int page, @RequestParam("festivalName") String festivalName) {
+	public String findFestivalYoutube(@RequestParam("page") int page, @RequestParam("formattedStart") String formattedStart, @RequestParam("festivalName") String festivalName) {
 		
 		String youtubeId = null;
 		
 		try {
-			youtubeId = festivalService.findFestivalYoutube(page, festivalName);
+			youtubeId = festivalService.findFestivalYoutube(page, formattedStart, festivalName);
 			System.out.println("findFestivalYoutube : " + youtubeId);
 			
 		} catch (Exception e) {
