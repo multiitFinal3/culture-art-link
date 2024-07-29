@@ -1072,12 +1072,7 @@
 
 
 
-
-
-
             //#region 관련 네이버 기사 추천 부분
-
-
 
 
             /**
@@ -1174,11 +1169,113 @@
             })
 
 
+            //#endregion
 
 
+
+
+            //#region 관련 네이버 블로그 추천 부분
+
+
+            /**
+            * 해당 축제의 이름과 관련된 네이버 블로그를 페이지 번호에 따라 가져오기
+            * @param {string} festivalName 축제 이름
+            * @param {int} page 블로그 페이지
+            */
+            function findFestivalNaverBlog(page, formattedStart, festivalName){
+
+                $.ajax({
+
+                    url: '/festival/findFestivalNaverBlog',
+                    method: 'POST',
+                    data: {
+                        page: page,
+                        formattedStart: festival.formattedStart,
+                        festivalName: festival.festivalName
+                    },
+                    success: function(blog){
+
+                        var imgUrl = blog.imgUrl;
+                        var desc = blog.description;
+                        var title = blog.title;
+                        var link = blog.link;
+                        var bloggerName = blog.bloggerName;
+
+                        $('#blogs').html("");
+
+                        var imgHtml = `<img class="card-img-top" src="/img/festival/naverBlog.png" alt="이미지 로딩 실패">`;
+
+<!--                        if( blog.imgUrl || blog.imgUrl != "null" || blog.imgUrl != ""){-->
+
+<!--                            imgHtml = `<img class="card-img-top" src="${imgUrl}" alt="이미지 로딩 실패">`;-->
+
+<!--                        }else{-->
+
+
+<!--                            imgHtml = `<img class="card-img-top" src="/img/festival/noPhoto.png" alt="이미지 로딩 실패">`;-->
+
+<!--                        }-->
+
+                        var blogHtml = `
+
+
+                            <div class="card" style="width: 30rem; height:55rem">`
+
+                             + imgHtml +
+
+                             `<div class="card-body">
+                                <h3 class="card-title">${title}</h5>
+                                <p>${bloggerName}</p>
+                                <p class="card-text">${desc}</p>
+                                <a href="${link}" class="btn btn-primary">블로그 보기</a>
+                              </div>
+                            </div>
+
+
+                            `;
+
+                        $('#blogs').html(blogHtml);
+
+
+                    }
+                })
+            }
+
+            findFestivalNaverBlog(1, formattedStart, festivalName);
+
+            /**
+            * 블로그 페이지 버튼 추가
+            * @param {int} numbers 기사 페이지 숫자
+            */
+            function findBlogPageBtns(numbers){
+
+                $('#blogPages').html("");
+
+                for(var p=1; p<=numbers; p++){
+
+                    $('#blogPages').append(`<button class="blogBtn">${p}</button>`);
+
+                }
+            }
+
+            findBlogPageBtns(5);
+
+
+            /**
+            * 블로그 페이지 클릭 함수
+            *
+            */
+            $(document).on('click','.blogBtn', function(){
+
+                var page = $(this).text();
+                findFestivalNaverBlog(page, formattedStart, festivalName);
+
+            })
 
 
             //#endregion
+
+
 
 
 
@@ -1430,15 +1527,9 @@
 
                     <div id="artlcles">
 
-                        <img src="/img/festival/star.png" height="250px">
-
                     </div>
 
                     <div id="articlePages">
-
-                        <button class="youtubePage">1</button>
-                        <button class="youtubePage">1</button>
-                        <button class="youtubePage">1</button>
 
                     </div>
 
@@ -1448,19 +1539,11 @@
 
                     <h3>네이버 블로그</h3>
 
-
-
-                    <div>
-
-                        <img src="/img/festival/star.png" height="250px">
+                    <div id="blogs">
 
                     </div>
 
                     <div id="blogPages">
-
-                        <button>1</button>
-                        <button>2</button>
-                        <button>3</button>
 
                     </div>
 

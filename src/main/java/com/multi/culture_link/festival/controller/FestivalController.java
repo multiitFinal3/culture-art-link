@@ -753,6 +753,31 @@ public class FestivalController {
 	
 	
 	
+	/**
+	 * 관련된 페스티벌 이름으로 네이버 블로그를 검색
+	 * @param page
+	 * @param festivalName
+	 * @return
+	 */
+	@PostMapping("/findFestivalNaverBlog")
+	@ResponseBody
+	public NaverBlogDTO findFestivalNaverBlog(@RequestParam("page") int page, @RequestParam("formattedStart") String formattedStart, @RequestParam("festivalName") String festivalName) {
+		
+		NaverBlogDTO naverBlogDTO = new NaverBlogDTO();
+		
+		try {
+			naverBlogDTO = festivalService.findFestivalNaverBlog(page, formattedStart, festivalName);
+			System.out.println("findFestivalNaverBlog : " + naverBlogDTO);
+			
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+		
+		return naverBlogDTO;
+	}
+	
+	
+	
 	
 	
 	

@@ -298,6 +298,7 @@ public class FestivalServiceImpl implements FestivalService {
 	
 	/**
 	 * 같은 계절이고 본인을 제외한 축제 리스트를 반환
+	 *
 	 * @param festivalDTO
 	 * @return
 	 * @throws Exception
@@ -314,6 +315,7 @@ public class FestivalServiceImpl implements FestivalService {
 	
 	/**
 	 * 같은 주체기관이고 본인을 제외한 축제 리스트를 반환
+	 *
 	 * @param festivalDTO
 	 * @return
 	 * @throws Exception
@@ -329,6 +331,7 @@ public class FestivalServiceImpl implements FestivalService {
 	
 	/**
 	 * 관련된 유튜브 id를 반환
+	 *
 	 * @param page
 	 * @param formattedStart
 	 * @param festivalName
@@ -339,8 +342,8 @@ public class FestivalServiceImpl implements FestivalService {
 	public String findFestivalYoutube(int page, String formattedStart, String festivalName) throws Exception {
 		
 		
-		festivalName = formattedStart.substring(0,4) + festivalName + " ";
-
+		festivalName = formattedStart.substring(0, 4) + festivalName + " ";
+		
 		Request request = new Request.Builder()
 				.url("https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=10&order=relevance&q=" + festivalName + "&regionCode=KR&videoDuration=any&type=video&videoEmbeddable=true" + "&key=" + youtubeKey)
 				.addHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36")
@@ -354,7 +357,7 @@ public class FestivalServiceImpl implements FestivalService {
 		JsonObject json = gson.fromJson(responseBody, JsonObject.class);
 		JsonArray items = json.getAsJsonArray("items");
 		
-		JsonObject item = items.get(page-1).getAsJsonObject();
+		JsonObject item = items.get(page - 1).getAsJsonObject();
 		
 		JsonObject id = item.getAsJsonObject("id");
 		String youtubeId = id.get("videoId").getAsString();
@@ -367,7 +370,8 @@ public class FestivalServiceImpl implements FestivalService {
 	
 	
 	/**
-	 * 네이버 api로 해당 기사의 대략적인 정보와 나와있는 원본 링크를 이용해 자세한 내용을 dto에 저장
+	 * 네이버 기사 api로 해당 기사의 대략적인 정보와 나와있는 원본 링크를 이용해 자세한 내용을 dto에 저장
+	 *
 	 * @param page
 	 * @param formattedStart
 	 * @param festivalName
@@ -378,7 +382,7 @@ public class FestivalServiceImpl implements FestivalService {
 	public NaverArticleDTO findFestivalNaverArticle(int page, String formattedStart, String festivalName) throws Exception {
 		
 		
-		festivalName = formattedStart.substring(0,4) + festivalName + " ";
+		festivalName = formattedStart.substring(0, 4) + festivalName + " ";
 		
 		Request request = new Request.Builder()
 				.url("https://openapi.naver.com/v1/search/news.json?query=" + festivalName + "&display=10&sort=sim")
@@ -388,22 +392,19 @@ public class FestivalServiceImpl implements FestivalService {
 				.build();
 		
 		
-		
 		Response response = client.newCall(request).execute();
 		String responseBody = response.body().string();
 		JsonObject json = gson.fromJson(responseBody, JsonObject.class);
 		JsonArray items = json.getAsJsonArray("items");
 		
-		JsonObject item = items.get(page-1).getAsJsonObject();
+		JsonObject item = items.get(page - 1).getAsJsonObject();
 		
 		String title = item.get("title").getAsString();
 		
 		
-		
-		
 		String originalLink = item.get("originallink").getAsString();
 		String description = item.get("description").getAsString();
-		String pubDate = item.get("pubDate").getAsString().substring(0,16);
+		String pubDate = item.get("pubDate").getAsString().substring(0, 16);
 		
 		System.out.println("origin link : " + originalLink);
 		
@@ -413,8 +414,8 @@ public class FestivalServiceImpl implements FestivalService {
 		
 		System.out.println(description);
 		
-		title = title.replaceAll("</[a-z]*>","").replaceAll("<[a-z]*>","").replaceAll("/","").replaceAll("▲","");
-		description = description.replaceAll("</[a-z]*>","").replaceAll("<[a-z]*>","").replaceAll("/","").replaceAll("▲","");
+		title = title.replaceAll("</[a-z]*>", "").replaceAll("<[a-z]*>", "").replaceAll("/", "").replaceAll("▲", "");
+		description = description.replaceAll("</[a-z]*>", "").replaceAll("<[a-z]*>", "").replaceAll("/", "").replaceAll("▲", "");
 		
 		System.out.println("description : " + description);
 		
@@ -423,7 +424,7 @@ public class FestivalServiceImpl implements FestivalService {
 		naverArticleDTO.setTitle(title);
 		naverArticleDTO.setPubDate(date);
 		naverArticleDTO.setOriginalLink(originalLink);
-
+		
 		//festival naver content + img
 		
 		Document document = Jsoup.connect(originalLink).get();
@@ -436,14 +437,14 @@ public class FestivalServiceImpl implements FestivalService {
 		if (!imgUrl.equals("")) {
 			
 			naverArticleDTO.setImgUrl(imgUrl);
-		
+			
 		}
 		
 		
 		String content = el.text();
-		content= content.replaceAll("</[a-z]*>","").replaceAll("<[a-z]*>","").replaceAll("/","").replaceAll("▲","");
+		content = content.replaceAll("</[a-z]*>", "").replaceAll("<[a-z]*>", "").replaceAll("/", "").replaceAll("▲", "");
 		
-		if (content!=""){
+		if (content != "") {
 			naverArticleDTO.setTotalContent(content);
 		}
 		
@@ -452,17 +453,88 @@ public class FestivalServiceImpl implements FestivalService {
 		return naverArticleDTO;
 	}
 	
-	
-	public static void main(String[] args) {
+	/**
+	 * 네이버 블로그 api로 해당 블로그의 대략적인 정보와 나와있는 원본 링크를 dto에 저장. 동적으로 열려 셀레니움 필요한 전체 내용과 이미지 크롤링은 실패함
+	 * @param page
+	 * @param formattedStart
+	 * @param festivalName
+	 * @return
+	 * @throws Exception
+	 */
+	@Override
+	public NaverBlogDTO findFestivalNaverBlog(int page, String formattedStart, String festivalName) throws Exception {
+		festivalName = formattedStart.substring(0, 4) + festivalName + " ";
+		
+		Request request = new Request.Builder()
+				.url("https://openapi.naver.com/v1/search/blog.json?query=" + festivalName + "&display=10&sort=sim")
+				.addHeader("X-Naver-Client-Id", XNaverClientId)
+				.addHeader("X-Naver-Client-Secret", XNaverClientSecret)
+				.get()
+				.build();
+		
+		
+		Response response = client.newCall(request).execute();
+		String responseBody = response.body().string();
+		JsonObject json = gson.fromJson(responseBody, JsonObject.class);
+		JsonArray items = json.getAsJsonArray("items");
+		
+		JsonObject item = items.get(page - 1).getAsJsonObject();
+		
+		String title = item.get("title").getAsString();
+		String link = item.get("link").getAsString();
+		String description = item.get("description").getAsString();
+		String bloggerName = item.get("bloggername").getAsString();
+		String postDate = item.get("postdate").getAsString();
+		
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyymmdd");
+		Date date = formatter.parse(postDate);
+		
+		
+		System.out.println(description);
+		
+		title = title.replaceAll("</[a-z]*>", "").replaceAll("<[a-z]*>", "").replaceAll("/", "").replaceAll("▲", "");
+		description = description.replaceAll("</[a-z]*>", "").replaceAll("<[a-z]*>", "").replaceAll("/", "").replaceAll("▲", "");
+		
+		System.out.println("description : " + description);
+		
+		
+		NaverBlogDTO naverBlogDTO = new NaverBlogDTO();
+		naverBlogDTO.setTitle(title);
+		naverBlogDTO.setDescription(description);
+		naverBlogDTO.setBloggerName(bloggerName);
+		naverBlogDTO.setLink(link);
+		naverBlogDTO.setPostDate(date);
 
-
-		String a = "가운데 <b>2024</b>년 위천면 행정협의회 정기회의를 개최했다. /<b>거창</b>군 <b>거창</b>군 위천면(면장 강신여)은 지난 23일... 이날 정기회의는 제34회 <b>거창</b>국제연극제 개최, <b>거창</b>창포원 어린이 물놀이장 개장, <b>거창한마당 대축제</b> 기간 중... ";
-
-		a = a.replaceAll("</[a-z]*>","").replaceAll("<[a-z]*>","");
-
-		System.out.println(a);
-
+		
+		
+		//festival naver content + img : dynamic하게 로딩되어 셀레니움이 필요해 일단 api 정보로만 저장함
+		
+//		Document document = Jsoup.connect(link).get();
+//
+//		System.out.println("blog link : " + link);
+//		Element el = document.select(".se-main-container").get(0);
+//
+//
+//		String imgUrl = el.select("img").attr("src");
+//
+//		if (!imgUrl.equals("")) {
+//
+//			naverBlogDTO.setImgUrl(imgUrl);
+//
+//		}
+//
+//
+//		String content = el.text();
+//		content = content.replaceAll("</[a-z]*>", "").replaceAll("<[a-z]*>", "").replaceAll("/", "").replaceAll("▲", "");
+//
+//		if (content != "") {
+//			naverBlogDTO.setTotalContent(content);
+//		}
+//
+		System.out.println("serviceIMpl : naverBlogDTO : " + naverBlogDTO);
+		
+		return naverBlogDTO;
 	}
-
+	
 	
 }
