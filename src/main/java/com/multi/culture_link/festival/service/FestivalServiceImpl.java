@@ -1,8 +1,15 @@
 package com.multi.culture_link.festival.service;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import com.multi.culture_link.common.time.model.dto.TimeDTO;
 import com.multi.culture_link.festival.model.dto.*;
 import com.multi.culture_link.festival.model.mapper.FestivalMapper;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -11,9 +18,17 @@ import java.util.ArrayList;
 public class FestivalServiceImpl implements FestivalService {
 	
 	private final FestivalMapper festivalMapper;
+	private final OkHttpClient client;
+	private final Gson gson;
 	
-	public FestivalServiceImpl(FestivalMapper festivalMapper) {
+	@Value("${API-KEY.youtubeKey}")
+	private String youtubeKey;
+	
+	
+	public FestivalServiceImpl(FestivalMapper festivalMapper, OkHttpClient client, Gson gson) {
 		this.festivalMapper = festivalMapper;
+		this.client = client;
+		this.gson = gson;
 	}
 	
 	/**
@@ -298,5 +313,39 @@ public class FestivalServiceImpl implements FestivalService {
 		
 		return list;
 		
+	}
+	
+	/**
+	 * 관련된 유튜브 id를 반환
+	 * @param page
+	 * @param festivalName
+	 * @return
+	 * @throws Exception
+	 */
+	@Override
+	public String findFestivalYoutube(int page, String festivalName) throws Exception {
+		
+		Request request = new Request.Builder()
+				.url("https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=10&order=relevance&q=" + festivalName + "&regionCode=KR&videoDuration=any&type=video&videoEmbeddable=true" + "&key=" + youtubeKey)
+				.addHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36")
+				.addHeader("Connection", "keep-alive")
+				.get()
+				.build();
+		
+		
+		Response response = client.newCall(request).execute();
+		String responseBody = response.body().string();
+		JsonObject json = gson.fromJson(responseBody, JsonObject.class);
+		JsonArray items = json.getAsJsonArray("items");
+		
+		JsonObject item = items.get(page-1).getAsJsonObject();
+		
+		JsonObject id = item.getAsJsonObject("id");
+		String youtubeId = id.get("videoId").getAsString();
+		
+		System.out.println("festivalName : " + festivalName);
+		System.out.println("youtubeId : " + youtubeId);
+		
+		return youtubeId;
 	}
 }

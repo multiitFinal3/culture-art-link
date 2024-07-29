@@ -20,6 +20,7 @@
             var regionId = festival.regionId;
             var season = festival.season;
             var manageInstitution = festival.manageInstitution;
+            var festivalName = festival.festivalName;
             var userId = [[${userId}]];
 
 
@@ -993,25 +994,81 @@
 
             })
 
+            //#endregion
 
 
 
+            //#region 관련 유튜브 추천 부분
 
 
+            /**
+            * 해당 축제의 이름과 관련된 유튜브를 페이지 번호에 따라 가져오기
+            * @param {string} festivalName 축제 이름
+            * @param {int} page 유튜브 페이지
+            */
+            function findFestivalYoutube(page, festivalName){
+
+                $.ajax({
+
+                    url: '/festival/findFestivalYoutube',
+                    method: 'POST',
+                    data: {
+                        page: page,
+                        festivalName: festival.festivalName
+                    },
+                    success: function(youtubeId){
+
+                        $('#players').html("");
+
+                        var youtubeHtml = `
+                            <iframe width="560" height="315" src="https://www.youtube.com/embed/`
+                            +  youtubeId  +
+                            `" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>`;
+
+                        $('#players').html(youtubeHtml);
 
 
+                    }
+                })
+            }
+
+            findFestivalYoutube(1, festivalName);
+
+            /**
+            * 유투브 페이지 버튼 추가
+            * @param {int} numbers 유튜브 페이지 숫자
+            */
+            function findYoutubePageBtns(numbers){
+
+                $('#youtubePages').html("");
+
+                for(var p=1; p<=numbers; p++){
+
+                        $('#youtubePages').append(`<button class="youtubeBtn">${p}</button>`)
+
+                }
+            }
+
+            findYoutubePageBtns(5);
 
 
+            /**
+            * 같은 주체기관 추천 리스트 버튼 클릭 이벤트 함수
+            *
+            */
+            $(document).on('click','.youtubeBtn', function(){
 
+                var page = $(this).text();
+                findFestivalYoutube(page, festivalName);
 
-
-
+            })
 
 
 
 
 
             //#endregion
+
 
 
 
@@ -1245,19 +1302,10 @@
 
                     <h3>관련 동영상</h3>
 
-                    <div>
-
-                        <img src="/img/festival/star.png" height="250px">
-
-
+                    <div id="players">
                     </div>
 
                     <div id="youtubePages">
-
-                        <button>1</button>
-                        <button>2</button>
-                        <button>3</button>
-
                     </div>
 
                 </div>
@@ -1278,9 +1326,9 @@
 
                     <div id="articlePages">
 
-                        <button>1</button>
-                        <button>2</button>
-                        <button>3</button>
+                        <button class="youtubePage">1</button>
+                        <button class="youtubePage">1</button>
+                        <button class="youtubePage">1</button>
 
                     </div>
 
@@ -1327,67 +1375,6 @@
                 </h3>
 
                 <div id="recommendCardList">
-
-                    <div class="card recommendCard" style="width: 18rem;">
-                        <img class="card-img-top" src="..." alt="Card image cap">
-                        <div class="card-body">
-                            <h5 class="card-title">Card title</h5>
-                            <p class="card-text">Some quick example text to build on the card title and make up the bulk of
-                                the card's content.</p>
-                            <a href="#" class="btn btn-primary">Go somewhere</a>
-                        </div>
-                    </div>
-
-                    <div class="card recommendCard" style="width: 18rem;">
-                        <img class="card-img-top" src="..." alt="Card image cap">
-                        <div class="card-body">
-                            <h5 class="card-title">Card title</h5>
-                            <p class="card-text">Some quick example text to build on the card title and make up the bulk of
-                                the card's content.</p>
-                            <a href="#" class="btn btn-primary">Go somewhere</a>
-                        </div>
-                    </div>
-
-                    <div class="card recommendCard" style="width: 18rem;">
-                        <img class="card-img-top" src="..." alt="Card image cap">
-                        <div class="card-body">
-                            <h5 class="card-title">Card title</h5>
-                            <p class="card-text">Some quick example text to build on the card title and make up the bulk of
-                                the card's content.</p>
-                            <a href="#" class="btn btn-primary">Go somewhere</a>
-                        </div>
-                    </div>
-
-                    <div class="card recommendCard" style="width: 18rem;">
-                        <img class="card-img-top" src="..." alt="Card image cap">
-                        <div class="card-body">
-                            <h5 class="card-title">Card title</h5>
-                            <p class="card-text">Some quick example text to build on the card title and make up the bulk of
-                                the card's content.</p>
-                            <a href="#" class="btn btn-primary">Go somewhere</a>
-                        </div>
-                    </div>
-
-                    <div class="card recommendCard" style="width: 18rem;">
-                        <img class="card-img-top" src="..." alt="Card image cap">
-                        <div class="card-body">
-                            <h5 class="card-title">Card title</h5>
-                            <p class="card-text">Some quick example text to build on the card title and make up the bulk of
-                                the card's content.</p>
-                            <a href="#" class="btn btn-primary">Go somewhere</a>
-                        </div>
-                    </div>
-
-                    <div class="card recommendCard" style="width: 18rem;">
-                        <img class="card-img-top" src="..." alt="Card image cap">
-                        <div class="card-body">
-                            <h5 class="card-title">Card title</h5>
-                            <p class="card-text">Some quick example text to build on the card title and make up the bulk of
-                                the card's content.</p>
-                            <a href="#" class="btn btn-primary">Go somewhere</a>
-                        </div>
-                    </div>
-
                 </div>
 
 

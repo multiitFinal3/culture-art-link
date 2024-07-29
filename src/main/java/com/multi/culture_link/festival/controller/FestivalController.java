@@ -702,4 +702,32 @@ public class FestivalController {
 	}
 	
 	
+	/**
+	 * 관련된 페스티벌 이름으로 유튜브 영상을 검색
+	 * @param page
+	 * @param festivalName
+	 * @return
+	 */
+	@PostMapping("/findFestivalYoutube")
+	@ResponseBody
+	public String findFestivalYoutube(@RequestParam("page") int page, @RequestParam("festivalName") String festivalName) {
+		
+		String youtubeId = null;
+		
+		try {
+			youtubeId = festivalService.findFestivalYoutube(page, festivalName);
+			System.out.println("findFestivalYoutube : " + youtubeId);
+			
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+		
+		return youtubeId;
+	}
+	
+	
+	
+	
+	
+	
 }
