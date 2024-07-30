@@ -67,6 +67,7 @@ public class ExhibitionController {
             }
         } catch (IOException e) {
             e.printStackTrace();
+            // System.out.println("");
             return ResponseEntity.status(500).body("Error fetching the page");
         }
         return ResponseEntity.status(500).body("Unknown error occurred");
