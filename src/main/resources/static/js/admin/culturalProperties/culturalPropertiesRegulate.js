@@ -583,6 +583,7 @@ $(document).ready(function() {
 
     // 수정 행 표시 함수
     function showEditRow($button) {
+    console.log($button); // 버튼 확인
         var $row = $button.closest('tr'); // 클릭한 버튼의 부모 행 찾기
         var rowData = {
             id: $row.find('td').eq(1).text(), // 두 번째 <td>에서 ID 값 가져오기
@@ -647,10 +648,36 @@ $(document).ready(function() {
         var classifyD = $editRow.find('.edit-classifyD').val();
         var mainImgUrl = $editRow.find('.edit-mainImgUrl').val();
         var content = $editRow.find('.edit-content').val();
-        var imgUrl = $editRow.find('.edit-imgUrl').val();
-        var imgDesc = $editRow.find('.edit-imgDesc').val();
-        var videoUrl = $editRow.find('.edit-videoUrl').val();
-        var narrationUrl = $editRow.find('.edit-narrationUrl').val();
+
+        // 리스트 데이터 수집
+            var imgUrl = [];
+            var imgDesc = [];
+            var videoUrl = [];
+            var narrationUrl = [];
+
+            // imgUrl, imgDesc 필드의 값을 가져오는 로직 (예시)
+            $editRow.find('.edit-imgUrl').each(function() {
+                imgUrl.push($(this).val());
+            });
+
+            $editRow.find('.edit-imgDesc').each(function() {
+                imgDesc.push($(this).val());
+            });
+
+            $editRow.find('.edit-videoUrl').each(function() {
+                videoUrl.push($(this).val());
+            });
+
+            $editRow.find('.edit-narrationUrl').each(function() {
+                narrationUrl.push($(this).val());
+            });
+
+//        var imgUrl = $editRow.find('.edit-imgUrl').val();
+//        var imgDesc = $editRow.find('.edit-imgDesc').val();
+//        var videoUrl = $editRow.find('.edit-videoUrl').val();
+//        var narrationUrl = $editRow.find('.edit-narrationUrl').val();
+
+
 
         // AJAX 요청을 보내 DB를 업데이트하는 코드 추가
         $.ajax({
@@ -677,7 +704,47 @@ $(document).ready(function() {
                 videoUrl: videoUrl,
                 narrationUrl: narrationUrl
             }]),
+//            success: function(response) {
+//                // 응답이 JavaScript 객체로 가정
+//                console.log('Success response:', response); // 성공 응답 로그
+//
+//                // 응답의 success 속성이 true인지 확인
+//                if (response.success) {
+//                    alert('수정이 완료되었습니다!');
+//
+//                    // 수정된 값을 테이블에 반영
+//                    var $row = $editRow.prev(); // 원래 행
+//                    $row.find('.culturalPropertiesName').text(response.culturalPropertiesName);
+//                    $row.find('.categoryName').text(response.categoryName);
+//                    $row.find('.region').text(response.region);
+//                    $row.find('.dynasty').text(response.dynasty);
+//                    $row.find('.address').text(response.address);
+//                    $row.find('.registrationDate').text(response.registrationDate);
+//                    $row.find('.classifyA').text(response.classifyA);
+//                    $row.find('.classifyB').text(response.classifyB);
+//                    $row.find('.classifyC').text(response.classifyC);
+//                    $row.find('.classifyD').text(response.classifyD);
+//                    $row.find('.mainImgUrl img').attr('src', response.mainImgUrl); // 이미지 업데이트
+//                    $row.find('.content .content-tooltip').attr('title', response.content).text(response.content); // Tooltip 업데이트
+//                    $row.find('.imgUrl a').attr('href', response.imgUrl); // 이미지 URL 업데이트
+//                    $row.find('.imgDesc').text(response.imgDesc); // 이미지 설명 업데이트
+//                    $row.find('.videoUrl a').attr('href', response.videoUrl); // 비디오 URL 업데이트
+//                    $row.find('.narrationUrl a').attr('href', response.narrationUrl); // 나레이션 URL 업데이트
+//
+//                    // 수정 행 삭제
+//                    $editRow.remove();
+//                } else {
+//                    alert('수정 실패: ' + response.message); // 실패 메시지 처리
+//                }
+//            },
+//            error: function(xhr, status, error) {
+//                console.error("수정 요청 실패:", error);
+//                console.log("응답 내용:", xhr.responseText); // 오류 응답 로그
+//            }
+
+
             success: function (response) {
+                console.log('Success response:', response); // 성공 응답 로그
                 alert('수정이 완료되었습니다!');
 
                 // 수정된 값을 테이블에 반영
@@ -732,7 +799,7 @@ $(document).ready(function() {
     getDBData(1); // 초기 DB 데이터 불러오기
     findListPage(1, 10);
 
-    handleUpdateButtonClick(); // 수정 버튼 클릭 이벤트 처리
+//    showEditRow(); // 수정 버튼 클릭 이벤트 처리
 
 
 //    $(document).ready(function() {
