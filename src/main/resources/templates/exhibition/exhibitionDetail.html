@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.w3.org/1999/xhtml">
+<html layout:decorate="~{common/layout/layoutMenubar}">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>전시 상세 정보</title>
+  <link rel="stylesheet" href="/css/exhibition/exhibitionDetail.css">
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY"></script>
+  <script src="/js/exhibition/exhibitionDetail.js"></script>
+</head>
+<body>
+<div layout:fragment="content">
+  <div class="container">
+    <main class="main-content">
+      <section class="left-section">
+        <div class="exhibition-image">
+          <img id="exhibitionImage" alt="전시회 이미지">
+        </div>
+      </section>
+      <section class="right-section">
+        <header>
+          <h1 id="exhibitionTitle"></h1>
+          <div class="exhibition-info">
+            <p id="exhibitionMuseum"></p>
+            <p id="exhibitionDate"></p>
+          </div>
+        </header>
+        <div class="map-section">
+          <div id="map"></div>
+        </div>
+      </section>
+    </main>
+
+    <section class="information-section">
+      <div class="tab-menu">
+        <button id="currentBtn" class="active">전시 소개</button>
+        <button id="pastBtn">상세 페이지</button>
+        <button id="futureBtn">관련 소식</button>
+      </div>
+      <div id="content">
+        <div id="exhibitionDescription" class="content-section active">
+          <h3>전시 소개</h3>
+          <p id="description">전시 소개 내용이 여기에 들어갑니다.</p>
+          <br>
+          <br>
+          <br>
+
+        </div>
+        <div id="exhibitionInformation" class="content-section">
+<!--          <iframe id="detailFrame" width="100%" height="600px" frameborder="0"></iframe>-->
+<!--          <div id="detailContent"></div>-->
+<!--          <iframe id="detailFrame" sandbox="allow-scripts allow-same-origin"></iframe>-->
+<!--          <object id="detailFrame" type="text/html"></object>-->
+          <h3>부가 정보</h3>
+          <p id="subDescription">추가 전시 소개 내용이 여기에 들어갑니다.</p>
+          <br>
+          <br>
+          <h3>부가 정보</h3>
+<!--          <p id="subDescription">추가 전시 소개 내용이 여기에 들어갑니다.</p>-->
+        </div>
+        <div id="exhibitionNews" class="content-section">
+          <p id="news">관련 소식 내용이 여기에 들어갑니다.</p>
+          <section class="video-section">
+            <div id="videoContainer"></div>
+          </section>
+        </div>
+      </div>
+    </section>
+
+
+
+    <section class="reviews-section">
+      <h2>리뷰</h2>
+      <div id="reviewsContainer"></div>
+    </section>
+    <footer>
+      <section class="related-exhibitions">
+        <h2>이 전시와 비슷한 전시</h2>
+        <div id="relatedExhibitionsContainer"></div>
+      </section>
+    </footer>
+  </div>
+</div>
+</body>
+</html>

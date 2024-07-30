@@ -23,7 +23,7 @@ import java.io.StringReader;
 import java.util.List;
 
 @Service
-public class PerformanceDBService { // 상세데이터
+public class PerformanceDBService { // 상세데이터, 외부 API로부터 공연 상세 데이터를 가져와 데이터베이스에 저장
 
     @Autowired
     private PerformanceMapper performanceMapper;
@@ -36,6 +36,11 @@ public class PerformanceDBService { // 상세데이터
     // 모든 공연 데이터
     public List<PerformanceDTO> getAllPerformances() {
         return performanceMapper.getAllPerformances();
+    }
+
+    // 키워드를 사용하여 공연 데이터를 검색
+    public List<PerformanceDTO> searchPerformances(String keyword) {
+        return performanceMapper.searchPerformances(keyword);
     }
 
     // 선택된 공연 ID 목록을 받아, 각 ID에 대해 공연 상세 데이터를 API에서 가져오고, 데이터베이스에 저장
@@ -57,6 +62,11 @@ public class PerformanceDBService { // 상세데이터
             }
         }
         return savedCount;
+    }
+
+    // 선택된 공연 ID 목록을 삭제
+    public int deletePerformances(List<String> selectedIds) {
+        return performanceMapper.deletePerformances(selectedIds);
     }
 
     // 특정 공연 ID에 대해 API를 호출해 상세 데이터를 가져오기
@@ -131,7 +141,7 @@ public class PerformanceDBService { // 상세데이터
         return performance;
     }
 
-    // XML 요소에서 특정 태그의 값을 가져오기 ~!~!~!~!~~
+    // XML 요소에서 특정 태그의 값을 가져오기
     private String getValue(String tag, Element element) {
         NodeList nodes = element.getElementsByTagName(tag);
         if (nodes.getLength() > 0) {

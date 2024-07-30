@@ -13,6 +13,7 @@ public class FestivalDTO {
 	private int regionId;
 	private String regionName;
 	private String timeId;
+	private String timeDescription;
 	private String festivalName;
 	private String festivalContent;
 	private String manageInstitution;
@@ -28,6 +29,7 @@ public class FestivalDTO {
 	private Date endDate;
 	private String formattedStart;
 	private String formattedEnd;
+	private int reviewCount;
 	private double avgRate;
 	private String season;
 	private String imgUrl;

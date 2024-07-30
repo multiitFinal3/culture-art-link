@@ -1,7 +1,9 @@
 package com.multi.culture_link.admin.festival.model.mapper;
 
 import com.multi.culture_link.common.region.model.dto.RegionDTO;
+import com.multi.culture_link.festival.model.dto.FestivalContentReviewNaverKeywordMapDTO;
 import com.multi.culture_link.festival.model.dto.FestivalDTO;
+import com.multi.culture_link.festival.model.dto.FestivalKeywordDTO;
 import com.multi.culture_link.festival.model.dto.PageDTO;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -9,8 +11,6 @@ import java.util.ArrayList;
 
 @Mapper
 public interface AdminFestivalMapper {
-	
-	
 	
 	
 	void insertAPIFestival(FestivalDTO festivalDTO) throws Exception;
@@ -32,4 +32,12 @@ public interface AdminFestivalMapper {
 	ArrayList<FestivalDTO> findDBFestivalByMultiple(FestivalDTO festivalDTO) throws Exception;
 	
 	int findDBFestivalMultipleCount(FestivalDTO festivalDTO) throws Exception;
+	
+	FestivalKeywordDTO findKeywordByKeyword(FestivalKeywordDTO keyword) throws Exception;
+	
+	void insertKeywordByKeyword(FestivalKeywordDTO keyword) throws Exception;
+	
+	FestivalContentReviewNaverKeywordMapDTO findKeywordMappingByKeywordMapping(FestivalContentReviewNaverKeywordMapDTO keywordMapping) throws Exception;
+	
+	void insertKeywordMappingByKeywordMapping(FestivalContentReviewNaverKeywordMapDTO keywordMapping) throws Exception;
 }

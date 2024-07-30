@@ -29,60 +29,60 @@ public class VWUserRoleDTO implements UserDetails {
 			}
 		});
 		
-		System.out.println("collection : " + collection);
+//		System.out.println("collection : " + collection);
 		return collection;
 	}
 	
 	@Override
 	public String getPassword() {
-		System.out.println("getPassword : "+userDTO.getPassword());
+//		System.out.println("getPassword : "+userDTO.getPassword());
 		return userDTO.getPassword();
 	}
 	
 	@Override
 	public String getUsername() {
-		System.out.println("getUsername : "+ userDTO.getUserName());
+		/*System.out.println("getUsername : "+ userDTO.getUserName());*/
 		return userDTO.getUserName();
 	}
 	
 	public int getUserId(){
 		
-		System.out.println("getUserId : "+ userDTO.getUserId());
+		/*System.out.println("getUserId : "+ userDTO.getUserId());*/
 		return userDTO.getUserId();
 		
 	}
 	
 	public String getTel(){
 		
-		System.out.println("getTel : "+ userDTO.getTel());
+		/*System.out.println("getTel : "+ userDTO.getTel());*/
 		return userDTO.getTel();
 		
 	}
 	
 	public String getGender(){
 		
-		System.out.println("getGender : "+ userDTO.getGender());
+		/*System.out.println("getGender : "+ userDTO.getGender());*/
 		return userDTO.getGender();
 		
 	}
 	
 	public int getRegionId(){
 		
-		System.out.println("getRegionId : "+ userDTO.getRegionId());
+		/*System.out.println("getRegionId : "+ userDTO.getRegionId());*/
 		return userDTO.getRegionId();
 		
 	}
 	
 	public String getRoleId(){
 		
-		System.out.println("getRoleId : "+ userDTO.getRoleId());
+		/*System.out.println("getRoleId : "+ userDTO.getRoleId());*/
 		return userDTO.getRoleId();
 		
 	}
 	
 	public String getRoleContent(){
 		
-		System.out.println("getRoleContent : "+ userDTO.getRoleContent());
+		/*System.out.println("getRoleContent : "+ userDTO.getRoleContent());*/
 		return userDTO.getRoleContent();
 		
 	}
@@ -108,7 +108,7 @@ public class VWUserRoleDTO implements UserDetails {
 	}
 	
 	public UserDTO getUser(){
-		System.out.println("getUserDTO");
+		/*System.out.println("getUserDTO");*/
 		return userDTO;
 		
 	}

@@ -17,6 +17,39 @@
         <if test="museum != null and museum != ''">
             AND museum LIKE CONCAT('%', #{museum}, '%')
         </if>
+        ORDER BY created_at DESC
     </select>
+
+    <select id="getExhibitionById" resultType="com.multi.culture_link.admin.exhibition.model.dto.api.ExhibitionApiDto">
+        SELECT * FROM exhibition WHERE id = #{id}
+    </select>
+
+    <!-- 관심 데이터가 없으면 생성, 있으면 업데이트 -->
+    <insert id="setInterested">
+        INSERT INTO exhibition_interested (user_id, exhibition_id, state)
+        VALUES (#{userId}, #{exhibitionId}, #{state})
+            ON DUPLICATE KEY UPDATE state = #{state}
+    </insert>
+
+    <!--  관심 연결된 전시 데이터 -->
+    <select id="getExhibition" resultType="com.multi.culture_link.exhibition.model.dto.ExhibitionDto">
+        SELECT ex.*, ei.state FROM exhibition ex LEFT JOIN exhibition_interested ei ON ex.id = ei.exhibition_id ORDER BY ex.created_at DESC
+    </select>
+
+
+
+
+
+    <!-- 사용자의 모든 관심 전시회 조회 -->
+    <select id="getUserInterestedExhibitions" resultType="com.multi.culture_link.admin.exhibition.model.dto.api.ExhibitionApiDto">
+        SELECT e.*
+        FROM exhibition e
+                 INNER JOIN exhibition_interested ei ON e.id = ei.exhibition_id
+        WHERE ei.user_id = #{userId} AND ei.state = 'interested'
+    </select>
+
+
+
+
 
 </mapper>

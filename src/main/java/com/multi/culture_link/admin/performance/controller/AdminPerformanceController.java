@@ -5,6 +5,8 @@ import com.multi.culture_link.admin.performance.service.PerformanceAPIService;
 import com.multi.culture_link.admin.performance.service.PerformanceDBService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,65 +28,144 @@ public class AdminPerformanceController {
     @Autowired
     private PerformanceDBService performanceDBService;
 
-    @GetMapping
+    @GetMapping // 공연 관리 페이지를 반환하는 메소드
     public String performanceManage(Model model,
-                                    @RequestParam(name = "page", defaultValue = "0") int page,
-                                    @RequestParam(name = "size", defaultValue = "20") int size) {
+                                    @RequestParam(name = "dbPage", defaultValue = "0") int dbPage,
+                                    @RequestParam(name = "apiPage", defaultValue = "0") int apiPage,
+                                    @RequestParam(name = "size", defaultValue = "100") int size,
+                                    @RequestParam(name = "dbSearchKeyword", required = false) String dbSearchKeyword,
+                                    @RequestParam(name = "apiSearchKeyword", required = false) String apiSearchKeyword) {
         try {
-            // API 및 DB에서 데이터 가져오기
-            Page<PerformanceDTO> performances = performanceAPIService.fetchData(page, size);
-            List<PerformanceDTO> dbPerformances = performanceDBService.getAllPerformances();
+            List<PerformanceDTO> dbPerformances; // DB에서 검색 키워드가 있을 경우 해당 키워드로 공연 검색
+            if (dbSearchKeyword != null && !dbSearchKeyword.isEmpty()) {
+                dbPerformances = performanceDBService.searchPerformances(dbSearchKeyword);
+            } else {
+                dbPerformances = performanceDBService.getAllPerformances();
+            }
 
-            // 이미 DB에 있는 공연을 필터링
-            List<PerformanceDTO> filteredPerformances = performances.getContent().stream()
-                    .filter(p -> dbPerformances.stream().noneMatch(db -> db.getCode().equals(p.getCode())))
-                    .collect(Collectors.toList());
+            // 날짜 형식을 업데이트
+            dbPerformances.forEach(PerformanceDTO::updateFormattedDate);
 
-            // 모델에 속성 추가
-            model.addAttribute("performances", filteredPerformances);
-            model.addAttribute("dbPerformances", dbPerformances);
-            model.addAttribute("currentPage", page);
-            model.addAttribute("totalPages", performances.getTotalPages());
+            List<PerformanceDTO> filteredPerformances;
+            if (apiSearchKeyword != null && !apiSearchKeyword.isEmpty()) {
+                filteredPerformances = performanceAPIService.searchPerformances(apiSearchKeyword);
+            } else {
+                List<PerformanceDTO> allApiPerformances = performanceAPIService.fetchData(0, Integer.MAX_VALUE).getContent();
+                filteredPerformances = allApiPerformances.stream()
+                        .filter(p -> dbPerformances.stream().noneMatch(db -> db.getCode().equals(p.getCode())))
+                        .collect(Collectors.toList());
+            }
+
+            // 페이지네이션을 적용한 데이터를 모델에 추가
+            Page<PerformanceDTO> dbPerformancesPage = paginateList(dbPerformances, dbPage, size);
+            Page<PerformanceDTO> apiPerformancesPage = paginateList(filteredPerformances, apiPage, size);
+
+            model.addAttribute("performances", apiPerformancesPage.getContent());
+            model.addAttribute("dbPerformances", dbPerformancesPage.getContent());
+            model.addAttribute("dbCurrentPage", dbPage);
+            model.addAttribute("apiCurrentPage", apiPage);
+            model.addAttribute("apiTotalPages", apiPerformancesPage.getTotalPages());
+            model.addAttribute("dbTotalPages", dbPerformancesPage.getTotalPages());
+            model.addAttribute("dbSearchKeyword", dbSearchKeyword);
+            model.addAttribute("apiSearchKeyword", apiSearchKeyword);
+
+            // 검색 결과가 없는 경우 플래그 추가
+            if (dbPerformances.isEmpty()) {
+                model.addAttribute("dbSearchEmpty", true);
+            }
+            if (filteredPerformances.isEmpty()) {
+                model.addAttribute("apiSearchEmpty", true);
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
         return "/admin/performance/performanceRegulate";
     }
 
+    // 리스트를 페이지네이션하는 헬퍼 메소드
+    private Page<PerformanceDTO> paginateList(List<PerformanceDTO> list, int page, int size) {
+        int fromIndex = Math.min(page * size, list.size());
+        int toIndex = Math.min(fromIndex + size, list.size());
+
+        List<PerformanceDTO> paginatedList = list.subList(fromIndex, toIndex);
+        return new PageImpl<>(paginatedList, PageRequest.of(page, size), list.size());
+    }
+
     @PostMapping("/saveToDB")
-    public String saveToDB(@RequestParam("selectedIds") List<String> selectedIds,
-                           @RequestParam(name = "page", defaultValue = "0") int page,
-                           @RequestParam(name = "size", defaultValue = "20") int size,
+    public String saveToDB(@RequestParam(name = "selectedIdsAPI", required = false) List<String> selectedIdsAPI,
+                           @RequestParam(name = "apiPage", defaultValue = "0") int apiPage,
+                           @RequestParam(name = "dbPage", defaultValue = "0") int dbPage,
+                           @RequestParam(name = "size", defaultValue = "100") int size,
                            Model model) {
-        System.out.println("Selected IDs: " + selectedIds);
-        int savedCount = performanceDBService.savePerformances(selectedIds);
-        System.out.println("데이터 베이스 저장 (" + savedCount + "개) 성공");
+        int savedCount = 0;
+        if (selectedIdsAPI != null && !selectedIdsAPI.isEmpty()) {
+            savedCount = performanceDBService.savePerformances(selectedIdsAPI);
+            System.out.println("데이터 베이스 저장 (" + savedCount + "개) 성공");
+            model.addAttribute("savedCount", savedCount);
+        }
+
+        try {
+            List<PerformanceDTO> dbPerformances = performanceDBService.getAllPerformances();
+            List<PerformanceDTO> allApiPerformances = performanceAPIService.fetchData(0, Integer.MAX_VALUE).getContent();
+            List<PerformanceDTO> filteredPerformances = allApiPerformances.stream()
+                    .filter(p -> dbPerformances.stream().noneMatch(db -> db.getCode().equals(p.getCode())))
+                    .collect(Collectors.toList());
+
+            // 페이지네이션을 적용한 데이터를 모델에 추가
+            Page<PerformanceDTO> dbPerformancesPage = paginateList(dbPerformances, dbPage, size);
+            Page<PerformanceDTO> apiPerformancesPage = paginateList(filteredPerformances, apiPage, size);
+
+            model.addAttribute("performances", apiPerformancesPage.getContent());
+            model.addAttribute("dbPerformances", dbPerformancesPage.getContent());
+            model.addAttribute("dbCurrentPage", dbPage);
+            model.addAttribute("apiCurrentPage", apiPage);
+            model.addAttribute("apiTotalPages", apiPerformancesPage.getTotalPages());
+            model.addAttribute("dbTotalPages", dbPerformancesPage.getTotalPages());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return "redirect:/admin/performance-regulate?dbPage=" + dbPage + "&apiPage=" + apiPage + "&size=" + size + (model.containsAttribute("savedCount") ? "&savedCount=" + model.getAttribute("savedCount") : "");
+    }
+
+    @PostMapping("/deleteFromDB")
+    public String deleteFromDB(@RequestParam(name = "selectedIds", required = false) List<String> selectedIds,
+                               @RequestParam(name = "apiPage", defaultValue = "0") int apiPage,
+                               @RequestParam(name = "dbPage", defaultValue = "0") int dbPage,
+                               @RequestParam(name = "size", defaultValue = "100") int size,
+                               Model model) {
+        if (selectedIds != null && !selectedIds.isEmpty()) {
+            int deletedCount = performanceDBService.deletePerformances(selectedIds);
+            System.out.println("데이터 베이스 삭제 (" + deletedCount + "개) 성공");
+
+            model.addAttribute("deletedCount", deletedCount);
+        }
 
         try {
             // DB에서 최신 데이터 가져오기
             List<PerformanceDTO> dbPerformances = performanceDBService.getAllPerformances();
 
-            // API에서 최신 데이터 가져오기
-            List<PerformanceDTO> allPerformances = performanceAPIService.fetchData(0, Integer.MAX_VALUE).getContent();
-            List<PerformanceDTO> filteredPerformances = allPerformances.stream()
+            // 전체 API 데이터를 가져와서 필터링
+            List<PerformanceDTO> allApiPerformances = performanceAPIService.fetchData(0, Integer.MAX_VALUE).getContent();
+            List<PerformanceDTO> filteredPerformances = allApiPerformances.stream()
                     .filter(p -> dbPerformances.stream().noneMatch(db -> db.getCode().equals(p.getCode())))
                     .collect(Collectors.toList());
 
-            // 현재 페이지에 맞게 20개로 자르기
-            int fromIndex = page * size;
-            int toIndex = Math.min(fromIndex + size, filteredPerformances.size());
-            List<PerformanceDTO> paginatedPerformances = filteredPerformances.subList(fromIndex, toIndex);
+            // 페이지네이션을 적용한 데이터를 모델에 추가
+            Page<PerformanceDTO> dbPerformancesPage = paginateList(dbPerformances, dbPage, size);
+            Page<PerformanceDTO> apiPerformancesPage = paginateList(filteredPerformances, apiPage, size);
 
-            // 모델에 속성 추가
-            model.addAttribute("performances", paginatedPerformances);
-            model.addAttribute("dbPerformances", dbPerformances);
-            model.addAttribute("currentPage", page);
-            model.addAttribute("totalPages", (int) Math.ceil((double) filteredPerformances.size() / size));
+            model.addAttribute("performances", apiPerformancesPage.getContent());
+            model.addAttribute("dbPerformances", dbPerformancesPage.getContent());
+            model.addAttribute("dbCurrentPage", dbPage);
+            model.addAttribute("apiCurrentPage", apiPage);
+            model.addAttribute("apiTotalPages", apiPerformancesPage.getTotalPages());
+            model.addAttribute("dbTotalPages", dbPerformancesPage.getTotalPages());
         } catch (IOException e) {
             e.printStackTrace();
         }
 
         // 페이지 번호와 사이즈를 리다이렉트 경로에 추가
-        return "redirect:/admin/performance-regulate?page=" + page + "&size=" + size;
+        return "redirect:/admin/performance-regulate?dbPage=" + dbPage + "&apiPage=" + apiPage + "&size=" + size + (model.containsAttribute("deletedCount") ? "&deletedCount=" + model.getAttribute("deletedCount") : "");
     }
 }

@@ -15,5 +15,19 @@
         VALUES (#{id}, #{code}, #{title}, #{status}, #{startDate}, #{endDate}, #{location}, #{regionId}, #{casting}, #{runtime}, #{age}, #{organizer}, #{producer}, #{price}, #{imageMain}, #{imageDetail1}, #{imageDetail2}, #{imageDetail3}, #{imageDetail4}, #{genre}, #{ticketing}, #{ticketingUrl}, #{avg}, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
     </insert>
 
+    <delete id="deletePerformances">
+        DELETE FROM performance_info
+        WHERE code IN
+        <foreach item="code" index="index" collection="list" open="(" separator="," close=")">
+            #{code}
+        </foreach>
+    </delete>
+
+    <select id="searchPerformances" resultType="com.multi.culture_link.admin.performance.model.dto.PerformanceDTO">
+        SELECT *
+        FROM performance_info
+        WHERE title LIKE CONCAT('%', #{keyword}, '%')
+        OR location LIKE CONCAT('%', #{keyword}, '%')
+    </select>
 
 </mapper>

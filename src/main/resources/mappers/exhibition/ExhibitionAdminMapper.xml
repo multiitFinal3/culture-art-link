@@ -10,9 +10,10 @@
 <!--    </resultMap>-->
 
     <insert id="saveData" parameterType="com.multi.culture_link.admin.exhibition.model.dto.api.ExhibitionApiDto">
-        INSERT INTO exhibition (title, artist, museum, start_date, end_date, price, image, description, sub_description, url) VALUES
+        INSERT IGNORE INTO exhibition (title, artist, museum, local_id, start_date, end_date, price, image, description, sub_description, url)
+        VALUES
         <foreach collection="processedData" item="data" separator=",">
-            (#{data.title}, #{data.artist}, #{data.museum}, #{data.startDate}, #{data.endDate},
+            (#{data.title}, #{data.artist}, #{data.museum}, #{data.localId}, #{data.startDate}, #{data.endDate},
             #{data.price}, #{data.image}, #{data.description}, #{data.subDescription}, #{data.url}
             )
         </foreach>
@@ -32,6 +33,7 @@
                 <if test="data.title != null and data.title != ''">title = #{data.title},</if>
                 <if test="data.artist != null and data.artist != ''">artist = #{data.artist},</if>
                 <if test="data.museum != null and data.museum != ''">museum = #{data.museum},</if>
+                <if test="data.localId != null and data.localId != ''">local_id = #{data.localId},</if>
                 <if test="data.startDate != null">start_date = #{data.startDate},</if>
                 <if test="data.endDate != null">end_date = #{data.endDate},</if>
                 <if test="data.price != null and data.price != ''">price = #{data.price},</if>
@@ -45,28 +47,7 @@
     </update>
 
     <select id="getData" resultType="com.multi.culture_link.admin.exhibition.model.dto.api.ExhibitionApiDto">
-        SELECT * FROM exhibition
-    </select>
-
-<!--    다중 검색-->
-    <select id="searchExhibition" parameterType="map" resultType="com.multi.culture_link.admin.exhibition.model.dto.api.ExhibitionApiDto">
-        SELECT * FROM exhibition
-        WHERE 1=1
-        <if test="title != null and title != ''">
-            AND title LIKE CONCAT('%', #{title}, '%')
-        </if>
-        <if test="artist != null and artist != ''">
-            AND artist LIKE CONCAT('%', #{artist}, '%')
-        </if>
-        <if test="museum != null and museum != ''">
-            AND museum LIKE CONCAT('%', #{museum}, '%')
-        </if>
-<!--        <if test="startDate != null and startDate != ''">-->
-<!--            AND startDate >= #{startDate}-->
-<!--        </if>-->
-<!--        <if test="endDate != null and endDate != ''">-->
-<!--            AND endDate <= #{endDate}-->
-<!--        </if>-->
+        SELECT * FROM exhibition ORDER BY created_at DESC
     </select>
 
 </mapper>

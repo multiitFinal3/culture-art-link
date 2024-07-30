@@ -29,15 +29,10 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 	
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		System.out.println("email : " + username);
+//		System.out.println("email : " + username);
 		
 		try {
-			System.out.println(1);
 			UserDTO userDTO = userMapper.findUserByEmail(username);
-			System.out.println(2);
-			System.out.println("userDTO : " + userDTO);
-			
-			System.out.println(3);
 			
 			if (userDTO==null){
 				
@@ -54,20 +49,20 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 			
 			
 			
-			System.out.println("loadUserByUsername : " + authorities.toString());
+			/*System.out.println("loadUserByUsername : " + authorities.toString());*/
 			
 			
 			
 			/*String encodedPassword = "{noop}" + userDTO.getPassword();*/
 			
-			System.out.println(userDTO.toString());
+			/*System.out.println(userDTO.toString());
 			
 			
-			System.out.println("encodedPassword : " + bCryptPasswordEncoder.encode(userDTO.getPassword()));
+			System.out.println("encodedPassword : " + bCryptPasswordEncoder.encode(userDTO.getPassword()));*/
 			
 			VWUserRoleDTO result =  new VWUserRoleDTO(userDTO);
 			
-			System.out.println("VWUserRoleDTO : " + result.toString());
+			/*System.out.println("VWUserRoleDTO : " + result.toString());*/
 			
 			return result;
 			
