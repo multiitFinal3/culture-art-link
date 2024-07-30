@@ -8,7 +8,8 @@
   <link rel="stylesheet" href="/css/exhibition/exhibitionDetail.css">
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY"></script>
-  <script src="/js/exhibition/exhibitionDetail.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="/js/exhibition/exhibitionDetail.js"></script>
 </head>
 <body>
 <div layout:fragment="content">
@@ -21,7 +22,13 @@
       </section>
       <section class="right-section">
         <header>
-          <h1 id="exhibitionTitle"></h1>
+            <div class="title-and-buttons">
+                <div class="action-buttons">
+                    <button id="favoriteBtn" class="action-btn favorite-btn">찜</button>
+                    <button id="notInterestedBtn" class="action-btn not-interested-btn">관심없음</button>
+                </div>
+                <h1 id="exhibitionTitle"></h1>
+            </div>
           <div class="exhibition-info">
             <p id="exhibitionMuseum"></p>
             <p id="exhibitionDate"></p>
@@ -56,9 +63,9 @@
           <h3>부가 정보</h3>
           <p id="subDescription">추가 전시 소개 내용이 여기에 들어갑니다.</p>
           <br>
-          <br>
-          <h3>부가 정보</h3>
-<!--          <p id="subDescription">추가 전시 소개 내용이 여기에 들어갑니다.</p>-->
+              <br>
+              <h3>상세 사이트</h3>
+          <a id="url" href="" target="_blank">url이 여기에 들어갑니다.</a>
         </div>
         <div id="exhibitionNews" class="content-section">
           <p id="news">관련 소식 내용이 여기에 들어갑니다.</p>
