@@ -75,9 +75,7 @@ public class FestivalController {
 			
 			int userId = user.getUserId();
 			model.addAttribute("userId", userId);
-			model.addAttribute("naverCliendId", naverClientId);
-			
-			System.out.println("naverClientId : " + naverClientId);
+			model.addAttribute("naverClientId", naverClientId);
 			
 		} catch (Exception e) {
 			throw new RuntimeException(e);

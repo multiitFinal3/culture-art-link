@@ -30,8 +30,6 @@
 
             var userId = [[${userId}]];
 
-            console.log("naverClientId : " , naverClientId)
-
             //#region 찜 / 관심없음 관련 함수
 
 
@@ -78,7 +76,6 @@
 
                             alert(res);
                             button.closest(".card").addClass("hasLove");
-                            console.log("addClass('hasLove');")
 
 
                         },
@@ -111,11 +108,7 @@
                     contentType: 'application/json',
                     success: function(list){
 
-                        console.log(list);
                         $.each(cardList, function(index, card){
-
-                            console.log("card.getAttribute('value')")
-                            console.log(card.getAttribute('value'));
 
                             var cardString = card.getAttribute('value');
                             var cardInt = parseInt(cardString, 10);
@@ -178,7 +171,6 @@
 
                             alert(res);
                             button.closest(".card").addClass("hasHate");
-                            console.log("addClass('hasHate');")
 
 
                         },
@@ -215,11 +207,7 @@
                     contentType: 'application/json',
                     success: function(list){
 
-                        console.log(list);
                         $.each(cardList, function(index, card){
-
-                            console.log("card.getAttribute('value')")
-                            console.log(card.getAttribute('value'));
 
                             var cardString = card.getAttribute('value');
                             var cardInt = parseInt(cardString, 10);
@@ -261,7 +249,6 @@
 
                         $('div#contentKeyword').html("");
 
-                        console.log(list);
                         $.each(list, function(index, keyword){
 
                             var keywordHtml = `<button class="keyword contentKeyword">${keyword.festivalKeywordId}</button>`;
@@ -329,7 +316,6 @@
 
                         $('#reviewList').html("");
 
-                        console.log(list);
                         $.each(list, function(index, review){
 
                             var index1 = (index + 1) + (page-1)*5;
@@ -1562,10 +1548,6 @@
                             var festival = [[${festival}]];
                             var latitude = festival.latitude;
                             var longtitude = festival.longtitude;
-
-
-                            console.log("위도")
-                            console.log(latitude)
 
                             var position = new naver.maps.LatLng(latitude, longtitude);
 
