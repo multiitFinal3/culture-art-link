@@ -5,7 +5,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.multi.culture_link.admin.festival.model.mapper.AdminFestivalMapper;
 import com.multi.culture_link.common.keyword.service.KeywordExtractService1;
-import com.multi.culture_link.festival.model.dto.FestivalContentReviewNaverKeywordMapping;
+import com.multi.culture_link.festival.model.dto.FestivalContentReviewNaverKeywordMapDTO;
 import com.multi.culture_link.festival.model.dto.FestivalDTO;
 import com.multi.culture_link.festival.model.dto.FestivalKeywordDTO;
 import com.multi.culture_link.festival.model.dto.PageDTO;
@@ -457,6 +457,14 @@ public class AdminFestivalServiceImpl implements AdminFestivalService {
 		
 		FestivalDTO festivalDTO = adminFestivalMapper.findDBFestivalByFestivalId(festivalId);
 		
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		
+		String formattedStart = simpleDateFormat.format(festivalDTO.getStartDate());
+		String formattedEnd = simpleDateFormat.format(festivalDTO.getEndDate());
+		
+		festivalDTO.setFormattedStart(formattedStart);
+		festivalDTO.setFormattedEnd(formattedEnd);
+		
 		return festivalDTO;
 	}
 	
@@ -482,6 +490,9 @@ public class AdminFestivalServiceImpl implements AdminFestivalService {
 	 */
 	@Override
 	public ArrayList<FestivalDTO> findDBFestivalByMultiple(FestivalDTO festivalDTO) throws Exception {
+		
+		System.out.println("ser impl findDBFestivalByMultiple: " + festivalDTO);
+		
 		ArrayList<FestivalDTO> list = adminFestivalMapper.findDBFestivalByMultiple(festivalDTO);
 		
 		return list;
@@ -496,6 +507,9 @@ public class AdminFestivalServiceImpl implements AdminFestivalService {
 	 */
 	@Override
 	public int findDBFestivalMultipleCount(FestivalDTO festivalDTO) throws Exception {
+		
+		System.out.println("ser impl findDBFestivalMultipleCount" + festivalDTO);
+		
 		int count = adminFestivalMapper.findDBFestivalMultipleCount(festivalDTO);
 		
 		return count;
@@ -949,15 +963,20 @@ public class AdminFestivalServiceImpl implements AdminFestivalService {
 	 * @throws Exception
 	 */
 	@Override
-	public FestivalContentReviewNaverKeywordMapping findKeywordMappingByKeywordMapping(FestivalContentReviewNaverKeywordMapping keywordMapping1) throws Exception {
+	public FestivalContentReviewNaverKeywordMapDTO findKeywordMappingByKeywordMapping(FestivalContentReviewNaverKeywordMapDTO keywordMapping1) throws Exception {
 		
-		FestivalContentReviewNaverKeywordMapping keywordMapping = adminFestivalMapper.findKeywordMappingByKeywordMapping(keywordMapping1);
+		FestivalContentReviewNaverKeywordMapDTO keywordMapping = adminFestivalMapper.findKeywordMappingByKeywordMapping(keywordMapping1);
 		
 		return keywordMapping;
 	}
 	
+	/**
+	 * 축제 - 키워드 매핑을 인서트
+	 * @param keywordMapping 키워드 매핑 DTO
+	 * @throws Exception
+	 */
 	@Override
-	public void insertKeywordMappingByKeywordMapping(FestivalContentReviewNaverKeywordMapping keywordMapping) throws Exception {
+	public void insertKeywordMappingByKeywordMapping(FestivalContentReviewNaverKeywordMapDTO keywordMapping) throws Exception {
 		
 		adminFestivalMapper.insertKeywordMappingByKeywordMapping(keywordMapping);
 		
