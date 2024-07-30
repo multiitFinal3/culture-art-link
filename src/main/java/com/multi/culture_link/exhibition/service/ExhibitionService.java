@@ -20,8 +20,8 @@ public class ExhibitionService {
         return ExhibitionDao.searchExhibition(searchParams);
     }
 
-    public ExhibitionApiDto getExhibitionById(int id){
-        return ExhibitionDao.getExhibitionById(id);
+    public ExhibitionDto getExhibitionById(int userId, int exhibitionId){
+        return ExhibitionDao.getExhibitionById(userId, exhibitionId);
     }
 
     public void setInterested(int userId, int exhibitionId, String state){

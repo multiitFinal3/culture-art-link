@@ -1,0 +1,222 @@
+
+    #columnFlow{
+
+        display: flex;
+        flex-flow: column;
+        align-items: center;
+        justify-content: center;
+        margin-right: 5%;
+
+    }
+
+    #upperZone{
+        width: 100%;
+        display: flex;
+        flex-flow: row;
+        align-items: start;
+        justify-content: space-between;
+        margin-top: 3%;
+        margin-right: 5%;
+
+    }
+
+
+    #detailCardZone{
+
+        margin-left: 5%;
+        width: 50%;
+
+    }
+
+    #rightZone{
+
+        width: 50%;
+        display: flex;
+        margin-left: 4%;
+        flex-flow: column;
+        height: 100%;
+        align-items: center;
+        justify-content: start;
+
+    }
+
+    #rightZone > div{
+
+        margin: 5%;
+
+
+    }
+
+    #recommendCardList{
+
+        overflow-x: scroll;
+        margin: 3%;
+        text-align: center;
+        display: flex;
+
+    }
+
+    #detailCard{
+
+        margin: 1%;
+        min-width: 1200px;
+        max-width: 1200px;
+        min-height: 2500px;
+        display : flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 30px;
+
+    }
+
+
+    #detailCard img.card-img-top{
+
+        margin: 1%;
+        width: 780px;
+        height: 600px;
+
+    }
+
+
+    .card-body{
+
+        display : flex;
+        flex-flow: column;
+        align-items: start;
+        justify-content: space-between;
+
+    }
+
+    .card-title{
+
+        text-align: center;
+        width: 100%;
+
+    }
+
+    #recommendCardZone{
+
+        margin-top: 6%
+
+    }
+
+
+    .recommendCard{
+
+        margin: 1%;
+        min-width: 400px;
+        max-width: 400px;
+        min-height: 600px;
+        max-height: 600px;
+
+
+    }
+
+    .card-text{
+
+        font-size: 20px !important;
+
+    }
+
+
+    .hasLove{
+
+        background-color: #ffe5ea;
+
+   }
+
+   .hasHate{
+
+        background-color: #dfdfdf;
+
+   }
+
+   #keywordZone{
+
+        display : flex;
+        flex-flow: column;
+        align-items: center;
+        justify-content: start;
+        margin: 1%;
+
+   }
+
+   button{
+
+      margin: 0.5%;
+
+   }
+
+   #contentKeyword{
+
+        display : flex;
+        flex-flow: row;
+        align-items: center;
+        justify-content: space-around;
+        margin: 1%;
+
+   }
+
+   #naverKeyword{
+
+        display : flex;
+        flex-flow: row;
+        align-items: center;
+        justify-content: space-around;
+        margin: 1%;
+
+
+   }
+
+   button.keyword{
+
+        width: 200px;
+        height: 50px;
+        font-size: 18px;
+
+   }
+
+   .card-text{
+
+        font-size: 35px;
+
+   }
+
+   button.contentKeyword{
+
+        background-color: #E6E6FA;
+        color: black;
+
+   }
+
+
+   button.naverKeyword{
+
+        background-color: #EBFAC0;
+        color: black;
+
+   }
+
+    #buttonZone{
+
+        width: 100%;
+        display: flex;
+        align-items: center;
+        flex-flow: row;
+        justify-content: center;
+
+    }
+
+    #downZone{
+
+        margin-left: 8%;
+        width: 100%;
+
+    }
+
+    span{
+
+        margin: 1%;
+
+    }
