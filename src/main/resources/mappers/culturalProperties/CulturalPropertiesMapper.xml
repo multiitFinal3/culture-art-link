@@ -134,17 +134,17 @@
             region = #{item.region},
             dynasty = #{item.dynasty},
             address = #{item.address},
-            registrationDate = #{item.registrationDate},
-            classifyA = #{item.classifyA},
-            classifyB = #{item.classifyB},
-            classifyC = #{item.classifyC},
-            classifyD = #{item.classifyD},
-            mainImgUrl = #{item.mainImgUrl},
+            registration_date = #{item.registrationDate},
+            classify_a = #{item.classifyA},
+            classify_b = #{item.classifyB},
+            classify_c = #{item.classifyC},
+            classify_d = #{item.classifyD},
+            main_img_url = #{item.mainImgUrl},
             content = #{item.content},
-            imgUrl = #{item.imgUrl},
-            imgDesc = #{item.imgDesc},
-            videoUrl = #{item.videoUrl},
-            narrationUrl = #{item.narrationUrl}
+            img_url = #{item.imgUrl},
+            img_desc = #{item.imgDesc},
+            video_url = #{item.videoUrl},
+            narration_url = #{item.narrationUrl}
 
             WHERE id = #{item.id}
         </foreach>
