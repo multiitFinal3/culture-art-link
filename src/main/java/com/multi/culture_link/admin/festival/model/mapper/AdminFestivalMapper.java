@@ -1,7 +1,7 @@
 package com.multi.culture_link.admin.festival.model.mapper;
 
 import com.multi.culture_link.common.region.model.dto.RegionDTO;
-import com.multi.culture_link.festival.model.dto.FestivalContentReviewNaverKeywordMapping;
+import com.multi.culture_link.festival.model.dto.FestivalContentReviewNaverKeywordMapDTO;
 import com.multi.culture_link.festival.model.dto.FestivalDTO;
 import com.multi.culture_link.festival.model.dto.FestivalKeywordDTO;
 import com.multi.culture_link.festival.model.dto.PageDTO;
@@ -37,7 +37,7 @@ public interface AdminFestivalMapper {
 	
 	void insertKeywordByKeyword(FestivalKeywordDTO keyword) throws Exception;
 	
-	FestivalContentReviewNaverKeywordMapping findKeywordMappingByKeywordMapping(FestivalContentReviewNaverKeywordMapping keywordMapping) throws Exception;
+	FestivalContentReviewNaverKeywordMapDTO findKeywordMappingByKeywordMapping(FestivalContentReviewNaverKeywordMapDTO keywordMapping) throws Exception;
 	
-	void insertKeywordMappingByKeywordMapping(FestivalContentReviewNaverKeywordMapping keywordMapping) throws Exception;
+	void insertKeywordMappingByKeywordMapping(FestivalContentReviewNaverKeywordMapDTO keywordMapping) throws Exception;
 }
