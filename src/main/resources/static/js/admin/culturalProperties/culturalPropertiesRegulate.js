@@ -678,6 +678,7 @@ $(document).ready(function() {
                 narrationUrl: narrationUrl
             }]),
             success: function (response) {
+                console.log('Success response:', response); // 성공 응답 로그
                 alert('수정이 완료되었습니다!');
 
                 // 수정된 값을 테이블에 반영
