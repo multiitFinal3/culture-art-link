@@ -2,17 +2,23 @@ package com.multi.culture_link.admin.culturalProperties.service;
 
 import com.multi.culture_link.admin.culturalProperties.model.dao.AdminCulturalPropertiesDAO;
 import com.multi.culture_link.admin.culturalProperties.model.dto.CulturalPropertiesDTO;
+import lombok.extern.slf4j.Slf4j;
 import com.multi.culture_link.admin.culturalProperties.model.dto.PageDTO;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.XML;
+import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
+
+@Slf4j
 @Service
 public class AdminCulturalPropertiesService {
 	
@@ -202,6 +208,7 @@ public class AdminCulturalPropertiesService {
 				dto.setCategoryCode(ccbaKdcd);
 				dto.setManagementNumber(ccbaAsno);
 				dto.setCityCode(ccbaCtcd);
+//				dto.setNation("");
 				dto.setCategoryName(ccmaName);
 				dto.setCulturalPropertiesName(ccbaMnm1);
 				dto.setLongitude(longitude);
@@ -311,6 +318,11 @@ public class AdminCulturalPropertiesService {
 	}
 
 	public int selectCount() {
+
+	// 	int count = adminCulturalPropertiesDAO.selectCount();
+
+	// 	return count;
+	// }
 
 		return adminCulturalPropertiesDAO.selectCount();
 	}

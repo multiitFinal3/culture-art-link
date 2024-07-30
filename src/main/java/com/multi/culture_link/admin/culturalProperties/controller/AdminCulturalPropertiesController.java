@@ -7,6 +7,7 @@ import com.multi.culture_link.admin.culturalProperties.service.AdminCulturalProp
 import com.multi.culture_link.admin.exhibition.model.dto.api.ExhibitionApiDto;
 import com.multi.culture_link.festival.model.dto.FestivalDTO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -114,6 +115,14 @@ public class AdminCulturalPropertiesController {
 
 
 
+	@PostMapping("/count")
+	@ResponseBody
+	public int selectCount() {
+		int count = 0;
+		count = adminCulturalPropertiesService.selectCount();
+
+		return count;
+
 //	@PostMapping("/search")
 //	@ResponseBody
 //	public List<CulturalPropertiesDTO> searchCulturalProperties(
@@ -151,7 +160,7 @@ public class AdminCulturalPropertiesController {
 //		return adminCulturalPropertiesService.searchCulturalProperties(pageDTO, category, name, region, dynasty);
 //
 ////		return adminCulturalPropertiesService.searchCulturalProperties(festivalDTO)
-//	}
+	}
 
 
 
