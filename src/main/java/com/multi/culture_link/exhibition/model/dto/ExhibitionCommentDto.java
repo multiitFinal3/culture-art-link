@@ -7,11 +7,12 @@ import java.time.LocalDateTime;
 
 @Data
 public class ExhibitionCommentDto {
-    private Long id;
-    private Long exhibitionId;
-    private String name;
+    private int id;
+    private int exhibitionId;
+    private int userId;
     private double stars;
     private String content;
+    private String name;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 }

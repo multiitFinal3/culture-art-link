@@ -1,8 +1,10 @@
 package com.multi.culture_link.exhibition.controller;
 
 import com.multi.culture_link.admin.exhibition.model.dto.api.ExhibitionApiDto;
+import com.multi.culture_link.exhibition.model.dto.ExhibitionCommentDto;
 import com.multi.culture_link.exhibition.model.dto.ExhibitionDto;
 import com.multi.culture_link.exhibition.model.dto.ExhibitionInterestDto;
+import com.multi.culture_link.exhibition.service.ExhibitionCommentService;
 import com.multi.culture_link.exhibition.service.ExhibitionService;
 import com.multi.culture_link.users.model.dto.UserDTO;
 import com.multi.culture_link.users.model.dto.VWUserRoleDTO;
@@ -27,6 +29,7 @@ import java.util.Map;
 @RequestMapping("/exhibition")
 public class ExhibitionController {
     private final ExhibitionService exhibitionService;
+    private final ExhibitionCommentService exhibitionCommentService;
     
     // 상세 검색
     @GetMapping("/search-exhibition")
@@ -88,6 +91,35 @@ public class ExhibitionController {
     @GetMapping("/exhibition")
     public List<ExhibitionDto> getDbExhibitions(){
         return exhibitionService.getExhibition();
+    }
+
+    // 댓글 목록 가져오기
+    @GetMapping("/exhibition/{exhibitionId}/comment")
+    public List<ExhibitionCommentDto> getComment(
+            @PathVariable int exhibitionId
+    ) {
+        return exhibitionCommentService.getComment(exhibitionId);
+    }
+
+    // 댓글 작성
+    @PostMapping("/exhibition/{exhibitionId}/comment")
+    public void setComment(
+            @RequestBody ExhibitionCommentDto comment,
+            @AuthenticationPrincipal VWUserRoleDTO currentUser,
+            @PathVariable int exhibitionId
+    ) {
+        comment.setExhibitionId(exhibitionId);
+        comment.setUserId(currentUser.getUserId());
+        exhibitionCommentService.createComment(comment);
+    }
+
+    // 댓글 삭제
+    @DeleteMapping("/exhibition/{exhibitionId}/comment")
+    public void deleteComment(
+            @AuthenticationPrincipal VWUserRoleDTO currentUser,
+            @PathVariable int exhibitionId
+    ) {
+        exhibitionCommentService.deleteComment(currentUser.getUserId(), exhibitionId);
     }
 
 }

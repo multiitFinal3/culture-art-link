@@ -114,3 +114,7 @@ button {
 .background-gray {
     background-color: #dfdfdf;
 }
+
+.action-buttons{
+    margin-left: auto;
+}

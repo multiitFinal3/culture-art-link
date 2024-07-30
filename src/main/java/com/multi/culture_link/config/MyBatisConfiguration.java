@@ -13,6 +13,7 @@ import com.multi.culture_link.users.model.dto.RoleDTO;
 import com.multi.culture_link.users.model.dto.UserDTO;
 import com.multi.culture_link.users.model.dto.VWUserRoleDTO;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.logging.stdout.StdOutImpl;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.type.JdbcType;
 import org.mybatis.spring.SqlSessionFactoryBean;
@@ -49,6 +50,7 @@ public class MyBatisConfiguration {
 		
 		// 테이블 속성들 _로 되어있는 것들과 dto의 필드에 camelCase로 되어있는 것들을 자동 연결 ex: user_id // userId
 		org.apache.ibatis.session.Configuration configuration = new org.apache.ibatis.session.Configuration();
+		configuration.setLogImpl(StdOutImpl.class);
 		configuration.setMapUnderscoreToCamelCase(true);
 		
 		// null 값 처리

@@ -76,7 +76,7 @@ function renderViewBackground(state) {
         if (contentDiv.classList.contains('background-gray')) {
             contentDiv.classList.remove('background-gray');
         }
-    }else {
+    }else if (state === 'not_interested') {
         contentDiv.classList.add('background-gray')
         if (contentDiv.classList.contains('background-pink')) {
             contentDiv.classList.remove('background-pink');
@@ -116,7 +116,8 @@ function renderExhibitionDetails(exhibition) {
     renderInformation(exhibition)
     renderViewBackground(exhibition?.state)
     renderVideo(exhibition.videoId);
-    // renderReviews(exhibition.reviews);
+
+    renderReviews(exhibition.reviews);
 }
 
 
