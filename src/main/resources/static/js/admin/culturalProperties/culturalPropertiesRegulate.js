@@ -733,7 +733,7 @@ $(document).ready(function() {
     getDBData(1); // 초기 DB 데이터 불러오기
     findListPage(1, 10);
 
-    handleUpdateButtonClick(); // 수정 버튼 클릭 이벤트 처리
+    showEditRow(); // 수정 버튼 클릭 이벤트 처리
 
 
 //    $(document).ready(function() {
