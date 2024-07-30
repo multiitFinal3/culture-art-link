@@ -5,6 +5,10 @@ $(document).ready(function() {
     const buttons = document.querySelectorAll('.tab-menu button');
     const contentSections = document.querySelectorAll('.content-section');
 
+
+    //버튼 이벤트 관리 함수
+    btnEvent()
+
     buttons.forEach(button => {
         button.addEventListener('click', function() {
             buttons.forEach(btn => btn.classList.remove('active'));
@@ -28,6 +32,58 @@ $(document).ready(function() {
         });
     });
 });
+
+function btnEvent() {
+    const favoriteBtn = document.getElementById('favoriteBtn');
+    const notInterestedBtn = document.getElementById('notInterestedBtn');
+
+    favoriteBtn.addEventListener('click', function() {
+        const exhibitionId = getExhibitionIdFromUrl()
+        console.log("exhibition-like btn : ",exhibitionId)
+        updateInterest(exhibitionId, 'interested');
+    });
+
+    notInterestedBtn.addEventListener('click', function() {
+        const exhibitionId = getExhibitionIdFromUrl()
+        console.log("exhibition-dislike btn : ",exhibitionId)
+        updateInterest(exhibitionId, 'not_interested');
+    });
+}
+
+
+async function updateInterest(exhibitionId, state) {
+    console.log('update interest: ',exhibitionId, state)
+    try {
+        const response = await axios.post('/exhibition/interested', {
+            exhibitionId: Number(exhibitionId),
+            state: state
+        })
+
+        renderViewBackground(state)
+    }catch(e) {
+        console.log('error : ',e)
+        alert(`${state === 'interested'} ? "찜 설정 실패" : "관심 없음 설정 실패"`)
+    }
+
+}
+
+function renderViewBackground(state) {
+    const contentDiv = document.querySelector(`.container`)
+
+    console.log("dom : ",contentDiv)
+    if (state === 'interested') {
+        contentDiv.classList.add('background-pink')
+        if (contentDiv.classList.contains('background-gray')) {
+            contentDiv.classList.remove('background-gray');
+        }
+    }else {
+        contentDiv.classList.add('background-gray')
+        if (contentDiv.classList.contains('background-pink')) {
+            contentDiv.classList.remove('background-pink');
+        }
+    }
+}
+
 
 function getExhibitionIdFromUrl() {
     const urlParts = window.location.pathname.split('/');
@@ -54,11 +110,13 @@ function renderExhibitionDetails(exhibition) {
     $('#exhibitionDate').text(`${exhibition.startDate} ~ ${exhibition.endDate}`);
     $('#exhibitionImage').attr('src', exhibition.image);
 
+    console.log('exhibition : ',exhibition)
+
     initMap(exhibition.location);
     renderInformation(exhibition)
+    renderViewBackground(exhibition?.state)
     renderVideo(exhibition.videoId);
     // renderReviews(exhibition.reviews);
-    renderRelatedExhibitions(exhibition.relatedExhibitions);
 }
 
 
@@ -76,14 +134,16 @@ function initMap(location) {
 function renderInformation(exhibition) {
     $('#description').html(exhibition.description);
     $('#subDescription').text(exhibition.subDescription);
+    $('#url').text(exhibition.url);
+    $('#url').attr('href', exhibition.url);
     // const url = exhibition.url;
     // if (url) {
     //     $('#detailFrame').attr('src', url);
     // }
-    const url = exhibition.url;
-    if (url) {
-        $('#detailFrame').attr('data', url);
-    }
+    // const url = exhibition.url;
+    // if (url) {
+    //     $('#detailFrame').attr('data', url);
+    // }
     // URL 정보를 데이터 속성으로 저장
     // $('#exhibitionInformation').data('url', exhibition.url);
     // loadDetailUrl();
@@ -129,13 +189,3 @@ function renderReviews(reviews) {
     $('#reviewsContainer').html(reviewsHtml);
 }
 
-function renderRelatedExhibitions(relatedExhibitions) {
-    const relatedHtml = relatedExhibitions.map(exhibition => `
-        <div class="related-exhibition">
-            <img src="${exhibition.image}" alt="${exhibition.title}">
-            <h3>${exhibition.title}</h3>
-            <p>${exhibition.museum}</p>
-        </div>
-    `).join('');
-    $('#relatedExhibitionsContainer').html(relatedHtml);
-}
