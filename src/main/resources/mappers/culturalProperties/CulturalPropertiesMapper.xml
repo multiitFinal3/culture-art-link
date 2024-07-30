@@ -79,7 +79,7 @@
 <!--    </select>-->
 
 
-    <select id="searchCulturalProperties" resultType="culturalPropertiesDTO" parameterType="culturalPropertiesDTO">
+    <select id="searchDBCulturalProperties" resultType="culturalPropertiesDTO" parameterType="culturalPropertiesDTO">
 
         SELECT * FROM (
             SELECT ROW_NUMBER()
@@ -89,7 +89,7 @@
 
                 <where>
 
-                    <if test="categoryName != null and !categoryName.equals('전체')">
+                    <if test="categoryName != null and !categoryName.equals('all')">
                         AND category_name = #{categoryName}
                     </if>
 
@@ -114,6 +114,41 @@
 
     </select>
 
+
+    <delete id="deleteDBData">
+        DELETE FROM cultural_properties
+<!--        WHERE id = #{id}-->
+
+        WHERE id IN
+        <foreach item="id" collection="list" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <update id="updateDBData">
+        <foreach item="item" collection="list" separator=";">
+            UPDATE cultural_properties
+            SET
+            cultural_properties_name = #{item.culturalPropertiesName},
+            category_name = #{item.categoryName},
+            region = #{item.region},
+            dynasty = #{item.dynasty},
+            address = #{item.address},
+            registrationDate = #{item.registrationDate},
+            classifyA = #{item.classifyA},
+            classifyB = #{item.classifyB},
+            classifyC = #{item.classifyC},
+            classifyD = #{item.classifyD},
+            mainImgUrl = #{item.mainImgUrl},
+            content = #{item.content},
+            imgUrl = #{item.imgUrl},
+            imgDesc = #{item.imgDesc},
+            videoUrl = #{item.videoUrl},
+            narrationUrl = #{item.narrationUrl}
+
+            WHERE id = #{item.id}
+        </foreach>
+    </update>
 
 
 </mapper>

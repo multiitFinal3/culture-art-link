@@ -5,7 +5,7 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class CulturalPropertiesDTO {
+public class CulturalPropertiesDTO extends PageDTO {
 
 
 //    private int id;

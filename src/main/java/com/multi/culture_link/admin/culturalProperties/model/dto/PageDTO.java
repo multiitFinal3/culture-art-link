@@ -3,7 +3,7 @@ package com.multi.culture_link.admin.culturalProperties.model.dto;
 import lombok.Data;
 
 @Data
-public class PageDTO {
+public class PageDTO{
 	
 	private int start;
 	private int end;
