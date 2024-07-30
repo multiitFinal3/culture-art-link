@@ -5,9 +5,11 @@
 
 <mapper namespace="com.multi.culture_link.admin.culturalProperties.model.dao.AdminCulturalPropertiesDAO">
 
-    <resultMap id="culturalPropertiesResultMap" type="com.multi.culture_link.admin.culturalProperties.model.dto.CulturalPropertiesDTO">
+    <resultMap id="culturalPropertiesResultMap"
+               type="com.multi.culture_link.admin.culturalProperties.model.dto.CulturalPropertiesDTO">
         <!-- List<String> imgUrl 매핑 -->
-        <result property="imgUrl" column="img_url" jdbcType="VARCHAR" javaType="java.util.List" typeHandler="com.multi.culture_link.admin.culturalProperties.model.dto.StringListTypeHandler"/>
+        <result property="imgUrl" column="img_url" jdbcType="VARCHAR" javaType="java.util.List"
+                typeHandler="com.multi.culture_link.admin.culturalProperties.model.dto.StringListTypeHandler"/>
         <!-- imgDesc 매핑 -->
         <result property="imgDesc" column="img_desc" jdbcType="VARCHAR"/>
         <!-- videoUrl 매핑 -->
@@ -17,17 +19,136 @@
     </resultMap>
 
     <insert id="insertDB" parameterType="culturalPropertiesDTO">
-        INSERT INTO cultural_properties (id, category_code, management_number, city_code, cultural_properties_name, category_name, region, district, dynasty, address, registration_date, classify_a, classify_b, classify_c, classify_d, content, main_img_url, img_url, img_desc, video_url, narration_url, longitude, latitude)
-        VALUES (#{id}, #{categoryCode}, #{managementNumber}, #{cityCode},  #{culturalPropertiesName}, #{categoryName}, #{region}, #{district}, #{dynasty}, #{address}, #{registrationDate}, #{classifyA}, #{classifyB}, #{classifyC}, #{classifyD}, #{content}, #{mainImgUrl}, #{imgUrl}, #{imgDesc}, #{videoUrl}, #{narrationUrl}, #{longitude}, #{latitude})
+        INSERT INTO cultural_properties (id, category_code, management_number, city_code, cultural_properties_name,
+        category_name, region, district, dynasty, address, registration_date, classify_a, classify_b, classify_c,
+        classify_d, content, main_img_url, img_url, img_desc, video_url, narration_url, longitude, latitude)
+        VALUES (#{id}, #{categoryCode}, #{managementNumber}, #{cityCode}, #{culturalPropertiesName}, #{categoryName},
+        #{region}, #{district}, #{dynasty}, #{address}, #{registrationDate}, #{classifyA}, #{classifyB}, #{classifyC},
+        #{classifyD}, #{content}, #{mainImgUrl}, #{imgUrl}, #{imgDesc}, #{videoUrl}, #{narrationUrl}, #{longitude},
+        #{latitude})
     </insert>
 
+    <!--    <select id="selectDB" resultType="culturalPropertiesDTO">-->
+    <!--        SELECT * FROM cultural_properties-->
+    <!--    </select>-->
+
     <select id="selectDB" resultType="culturalPropertiesDTO">
-        SELECT * FROM cultural_properties
+        SELECT *
+        FROM( SELECT ROW_NUMBER() OVER(ORDER BY id DESC) AS rownum, c.*
+        FROM cultural_properties c) c2
+        WHERE c2.rownum BETWEEN ${start} AND ${end}
+
     </select>
 
+
     <select id="selectCount" resultType="Integer">
-        select count(*) count from cultural_properties
+        select count(*) from cultural_properties
     </select>
+
+    <!--    <select id="selectCulturalProperties" resultType="culturalPropertiesDTO">-->
+    <!--        SELECT * FROM cultural_properties-->
+    <!--        LIMIT #{itemsPerPage} OFFSET #{offset}-->
+    <!--    </select>-->
+
+
+    <!--    <select id="searchCulturalProperties" resultType="culturalPropertiesDTO">-->
+    <!--        SELECT *-->
+    <!--        FROM cultural_properties-->
+    <!--        WHERE 1=1-->
+    <!--        AND (#{categoryName} IS NULL OR category_name = #{categoryName})-->
+    <!--        AND (#{culturalPropertiesName} IS NULL OR cultural_properties_name LIKE CONCAT('%', #{culturalPropertiesName}, '%'))-->
+    <!--        AND (#{region} IS NULL OR region = #{region})-->
+    <!--        AND (#{dynasty} IS NULL OR dynasty = #{dynasty})-->
+    <!--    </select>-->
+
+<!--    <select id="searchCulturalProperties" resultType="culturalPropertiesDTO">-->
+<!--        SELECT COUNT(*)-->
+<!--        FROM( SELECT ROW_NUMBER() OVER(ORDER BY id DESC) AS rownum, c.*-->
+<!--            FROM(-->
+<!--                SELECT * FROM cultural_properties-->
+<!--                WHERE 1=1-->
+<!--                    AND (category_name = #{categoryName})-->
+<!--&lt;!&ndash;                AND (#{categoryName} IS NULL OR category_name = #{categoryName})&ndash;&gt;-->
+<!--&lt;!&ndash;                AND (#{culturalPropertiesName} IS NULL OR cultural_properties_name LIKE CONCAT('%', #{culturalPropertiesName}, '%'))&ndash;&gt;-->
+<!--&lt;!&ndash;                AND (#{region} IS NULL OR region LIKE CONCAT('%', #{region}, '%'))&ndash;&gt;-->
+<!--&lt;!&ndash;                AND (#{dynasty} IS NULL OR dynasty LIKE CONCAT('%', #{dynasty}, '%'))&ndash;&gt;-->
+<!--            ) c-->
+<!--        ) c2-->
+<!--        WHERE c2.rownum BETWEEN #{start} AND #{end}-->
+
+<!--    </select>-->
+
+
+    <select id="searchDBCulturalProperties" resultType="culturalPropertiesDTO" parameterType="culturalPropertiesDTO">
+
+        SELECT * FROM (
+            SELECT ROW_NUMBER()
+                OVER(ORDER BY id DESC) AS rownum, c.*
+            FROM ( SELECT * FROM cultural_properties
+
+
+                <where>
+
+                    <if test="categoryName != null and !categoryName.equals('all')">
+                        AND category_name = #{categoryName}
+                    </if>
+
+                    <if test="culturalPropertiesName != null and culturalPropertiesName != ''">
+                        AND cultural_properties_name LIKE CONCAT('%', #{culturalPropertiesName}, '%')
+                    </if>
+
+                    <if test="region!=null and !region.equals('')">
+                        AND region LIKE CONCAT('%', #{region}, '%')
+                    </if>
+
+
+
+                    <if test="dynasty != null and dynasty != ''">
+                        AND dynasty LIKE CONCAT('%', #{dynasty}, '%')
+                    </if>
+                </where>
+                ) AS c
+            ) AS c2
+
+                WHERE c2.rownum BETWEEN #{start} AND #{end};
+
+    </select>
+
+
+    <delete id="deleteDBData">
+        DELETE FROM cultural_properties
+<!--        WHERE id = #{id}-->
+
+        WHERE id IN
+        <foreach item="id" collection="list" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <update id="updateDBData">
+        <foreach item="item" collection="list" separator=";">
+            UPDATE cultural_properties
+            SET
+            cultural_properties_name = #{item.culturalPropertiesName},
+            category_name = #{item.categoryName},
+            region = #{item.region},
+            dynasty = #{item.dynasty},
+            address = #{item.address},
+            registrationDate = #{item.registrationDate},
+            classifyA = #{item.classifyA},
+            classifyB = #{item.classifyB},
+            classifyC = #{item.classifyC},
+            classifyD = #{item.classifyD},
+            mainImgUrl = #{item.mainImgUrl},
+            content = #{item.content},
+            imgUrl = #{item.imgUrl},
+            imgDesc = #{item.imgDesc},
+            videoUrl = #{item.videoUrl},
+            narrationUrl = #{item.narrationUrl}
+
+            WHERE id = #{item.id}
+        </foreach>
+    </update>
 
 
 </mapper>
