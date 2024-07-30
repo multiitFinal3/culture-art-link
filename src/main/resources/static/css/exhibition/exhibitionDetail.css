@@ -39,6 +39,13 @@ header {
     margin-top: 40px;
 }
 
+.title-and-buttons {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+
 .review {
     display: flex;
     margin-bottom: 20px;
@@ -98,4 +105,12 @@ button {
 #content{
     width: 100%;
     border:1px solid rgba(0, 0, 0, 0.07);
+}
+
+.background-pink {
+    background-color: #ffe5ea;
+}
+
+.background-gray {
+    background-color: #dfdfdf;
 }

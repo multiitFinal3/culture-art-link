@@ -53,7 +53,7 @@ public class PerformanceController {
     public String performanceGenrePage(@AuthenticationPrincipal VWUserRoleDTO user,
                                        @RequestParam("genre") String genre,
                                        Model model) {
-        String date = "20240725"; // 일간 데이터 날짜
+        String date = "20240729"; // 일간 데이터 날짜
         List<PerformanceDTO> rankingData = performanceRankingService.fetchGenreRanking(genre, date);
         System.out.println("Fetched Data: " + rankingData); // 로그 추가
         model.addAttribute("user", user.getUser());
@@ -98,10 +98,17 @@ public class PerformanceController {
      */
     @GetMapping("/genre-rankings")
     public String getPerformanceGenreRankings(@RequestParam String genre, Model model) {
-        String date = "20240725"; // 일간 데이터 날짜
+        String date = "20240729"; // 일간 데이터 날짜
         List<PerformanceDTO> rankingData = performanceRankingService.fetchGenreRanking(genre, date);
         model.addAttribute("genre", genre);
         model.addAttribute("rankingData", rankingData);
         return "performance/performanceGenreRankings";
+    }
+
+
+    @GetMapping("/performance-Ranking")
+    public String performanceRankingPage(@AuthenticationPrincipal VWUserRoleDTO user, Model model) {
+        model.addAttribute("user", user.getUser());
+        return "/performance/performanceRanking";
     }
 }
