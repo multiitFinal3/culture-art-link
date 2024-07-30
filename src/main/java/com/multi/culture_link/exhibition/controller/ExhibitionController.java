@@ -119,6 +119,7 @@ public class ExhibitionController {
             @AuthenticationPrincipal VWUserRoleDTO currentUser,
             @PathVariable int exhibitionId
     ) {
+        System.out.println("exhibition: " + exhibitionCommentService.getComment(exhibitionId));
         exhibitionCommentService.deleteComment(currentUser.getUserId(), exhibitionId);
     }
 
