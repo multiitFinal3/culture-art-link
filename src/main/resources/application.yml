@@ -36,5 +36,12 @@ logging:
 
 API-KEY:
   clientKey: c9130d29-65ea-495e-9701-9025010a1b92
+  youtubeKey: AIzaSyCBfQCGZ8YfsYLJ7IjYB5xOE5yfIf9L4nY
+  naverArticleClientId: 4zTuD9CZkjOkps8VwmC5
+  naverArticleClientSecret: FCOaBi2Bcq
+  naverClientId: acum3zj3r2
 
+kopis:
+  api:
+    key: a0cfef9bedc443bc9153b8b024d1b1dc
 
