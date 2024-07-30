@@ -3,6 +3,7 @@ package com.multi.culture_link.admin.culturalProperties.service;
 import com.multi.culture_link.admin.culturalProperties.model.dao.AdminCulturalPropertiesDAO;
 import com.multi.culture_link.admin.culturalProperties.model.dto.CulturalPropertiesDTO;
 import lombok.extern.slf4j.Slf4j;
+import com.multi.culture_link.admin.culturalProperties.model.dto.PageDTO;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.XML;
@@ -281,26 +282,23 @@ public class AdminCulturalPropertiesService {
 	
 
 	
-	public List<CulturalPropertiesDTO> selectDB() {
-		
-		
-		ArrayList<CulturalPropertiesDTO> list = (ArrayList<CulturalPropertiesDTO>) adminCulturalPropertiesDAO.selectDB();
-		
+	public List<CulturalPropertiesDTO> selectDB(PageDTO pageDto) {
+
+
+		ArrayList<CulturalPropertiesDTO> list = (ArrayList<CulturalPropertiesDTO>) adminCulturalPropertiesDAO.selectDB(pageDto);
+
 		for(CulturalPropertiesDTO culturalPropertiesDTO : list){
-			
-//			culturalPropertiesDTO.setImgDesc(Collections.singletonList(culturalPropertiesDTO.getImgDesc().get(0)));
-			culturalPropertiesDTO.setContent(culturalPropertiesDTO.getContent().substring(0,30) + "....");
-//			culturalPropertiesDTO.setImgUrl(Collections.singletonList(culturalPropertiesDTO.getImgUrl().get(0)));
 
 			// 이미지 URL(ImgUrl)의 처음부터 세 번째까지의 요소들만 리스트로 설정
-			List<String> imgUrlSublist = culturalPropertiesDTO.getImgUrl().subList(0, Math.min(3, culturalPropertiesDTO.getImgUrl().size()));
+			List<String> imgUrlSublist = culturalPropertiesDTO.getImgUrl().subList(0, Math.min(4, culturalPropertiesDTO.getImgUrl().size()));
 			culturalPropertiesDTO.setImgUrl(imgUrlSublist);
 
 			// 이미지 설명(ImgDesc)의 처음부터 세 번째까지의 요소만 리스트로 설정
-			List<String> imgDescSublist = culturalPropertiesDTO.getImgDesc().subList(0, Math.min(3, culturalPropertiesDTO.getImgDesc().size()));
+			List<String> imgDescSublist = culturalPropertiesDTO.getImgDesc().subList(0, Math.min(4, culturalPropertiesDTO.getImgDesc().size()));
 			culturalPropertiesDTO.setImgDesc(imgDescSublist);
+
+
 		}
-		
 		return list;
 	}
 	
@@ -320,10 +318,149 @@ public class AdminCulturalPropertiesService {
 
 	public int selectCount() {
 
-		int count = adminCulturalPropertiesDAO.selectCount();
+	// 	int count = adminCulturalPropertiesDAO.selectCount();
 
-		return count;
+	// 	return count;
+	// }
+
+		return adminCulturalPropertiesDAO.selectCount();
 	}
+
+
+//	public List<CulturalPropertiesDTO> searchCulturalProperties(
+//			PageDTO pageDTO, String categoryName, String culturalPropertiesName, String region, String dynasty) {
+//
+//		int start = pageDTO.getStart();
+//		int end = pageDTO.getEnd();
+//
+//		System.out.println(categoryName);
+//		System.out.println(culturalPropertiesName);
+//		System.out.println(region);
+//		System.out.println(dynasty);
+//		System.out.println(start);
+//		System.out.println(end);
+//		System.out.println();
+//
+//		List<CulturalPropertiesDTO> list = adminCulturalPropertiesDAO.searchCulturalProperties(categoryName, culturalPropertiesName, region, dynasty, start, end);
+//
+//
+//		System.out.println(""+list);
+////		return adminCulturalPropertiesDAO.searchCulturalProperties(categoryName, culturalPropertiesName, region, dynasty, start, end);
+//		return list;
+//	}
+
+
+	public List<CulturalPropertiesDTO> searchDBCulturalProperties(
+			PageDTO pageDTO, String categoryName, String culturalPropertiesName, String region, String dynasty) {
+
+		int start = pageDTO.getStart();
+		int end = pageDTO.getEnd();
+
+
+		System.out.println("service-categoryName : " + categoryName);
+		System.out.println("culturalPropertiesName : " + culturalPropertiesName);
+		System.out.println("region : " + region);
+		System.out.println("dynasty : " + dynasty);
+		System.out.println("start : " + start);
+		System.out.println("end : " + end);
+		System.out.println();
+
+
+		CulturalPropertiesDTO culturalPropertiesDTO = new CulturalPropertiesDTO();
+		culturalPropertiesDTO.setCategoryName(categoryName);
+		culturalPropertiesDTO.setCulturalPropertiesName(culturalPropertiesName);
+		culturalPropertiesDTO.setRegion(region);
+		culturalPropertiesDTO.setDynasty(dynasty);
+		culturalPropertiesDTO.setPageDTO(pageDTO);
+		culturalPropertiesDTO.setStart(start);
+		culturalPropertiesDTO.setEnd(end);
+
+
+		System.out.println("dto : " + culturalPropertiesDTO);
+
+
+
+
+		List<CulturalPropertiesDTO> list = adminCulturalPropertiesDAO.searchDBCulturalProperties(culturalPropertiesDTO);
+//		List<CulturalPropertiesDTO> list = adminCulturalPropertiesDAO.searchDBCulturalProperties(pageDTO);
+
+		System.out.println("list : "+list);
+
+
+		for(CulturalPropertiesDTO dto : list){
+
+			// 이미지 URL(ImgUrl)의 처음부터 세 번째까지의 요소들만 리스트로 설정
+			List<String> imgUrlSublist = dto.getImgUrl().subList(0, Math.min(4, dto.getImgUrl().size()));
+			dto.setImgUrl(imgUrlSublist);
+
+			// 이미지 설명(ImgDesc)의 처음부터 세 번째까지의 요소만 리스트로 설정
+			List<String> imgDescSublist = dto.getImgDesc().subList(0, Math.min(4, dto.getImgDesc().size()));
+			dto.setImgDesc(imgDescSublist);
+
+
+		}
+
+
+		// 리스트의 개수 가져오기
+		int count = list.size();
+		System.out.println("리스트의 개수: " + count);
+
+//		return adminCulturalPropertiesDAO.searchCulturalProperties(categoryName, culturalPropertiesName, region, dynasty, start, end);
+		return list;
+	}
+
+//	public void deleteDBData(ArrayList<Integer> check) {
+//
+//		adminCulturalPropertiesDAO.deleteDBData(id);
+//	}
+
+
+	public void deleteDBData(ArrayList<Integer> id) {
+		// id를 사용하여 데이터베이스에서 삭제
+		if (id != null && !id.isEmpty()) {
+			adminCulturalPropertiesDAO.deleteDBData(id);
+		}
+	}
+
+	public void updateDBData(ArrayList<CulturalPropertiesDTO> data) {
+
+		adminCulturalPropertiesDAO.updateDBData(data);
+
+
+	}
+
+
+//	public List<CulturalPropertiesDTO> searchDBCulturalProperties(
+//			PageDTO pageDTO) {
+//
+//		List<CulturalPropertiesDTO> list = adminCulturalPropertiesDAO.searchDBCulturalProperties(pageDTO);
+//
+//		System.out.println("list : "+list);
+//
+//
+//		for(CulturalPropertiesDTO dto : list){
+//
+//			// 이미지 URL(ImgUrl)의 처음부터 세 번째까지의 요소들만 리스트로 설정
+//			List<String> imgUrlSublist = dto.getImgUrl().subList(0, Math.min(4, dto.getImgUrl().size()));
+//			dto.setImgUrl(imgUrlSublist);
+//
+//			// 이미지 설명(ImgDesc)의 처음부터 세 번째까지의 요소만 리스트로 설정
+//			List<String> imgDescSublist = dto.getImgDesc().subList(0, Math.min(4, dto.getImgDesc().size()));
+//			dto.setImgDesc(imgDescSublist);
+//
+//
+//		}
+//
+//
+//		// 리스트의 개수 가져오기
+//		int count = list.size();
+//		System.out.println("리스트의 개수: " + count);
+//
+//		return list;
+//	}
+
+
+
 
 
 }

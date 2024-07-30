@@ -217,6 +217,8 @@ public class AdminFestivalController {
 			
 			for (FestivalDTO festivalDTO : list) {
 				
+				double avgRate = Math.round(festivalDTO.getAvgRate()*100)/100.0;
+				festivalDTO.setAvgRate(avgRate);
 				festivalDTO.setFormattedEnd(dateFormat.format(festivalDTO.getEndDate()));
 				festivalDTO.setFormattedStart(dateFormat.format(festivalDTO.getStartDate()));
 				
@@ -293,6 +295,8 @@ public class AdminFestivalController {
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		festivalDTO.setFormattedEnd(dateFormat.format(festivalDTO.getEndDate()));
 		festivalDTO.setFormattedStart(dateFormat.format(festivalDTO.getStartDate()));
+		double avgRate = Math.round(festivalDTO.getAvgRate()*100)/100.0;
+		festivalDTO.setAvgRate(avgRate);
 		
 		
 		return festivalDTO;
@@ -484,6 +488,9 @@ public class AdminFestivalController {
 		
 		System.out.println("받아온 리스트 : " + list);
 		for (FestivalDTO festivalDTO1 : list) {
+			
+			double avgRate = Math.round(festivalDTO1.getAvgRate()*100)/100.0;
+			festivalDTO1.setAvgRate(avgRate);
 			
 			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 			
@@ -991,14 +998,14 @@ public class AdminFestivalController {
 					
 				}
 				
-				FestivalContentReviewNaverKeywordMapping keywordMapping1 = new FestivalContentReviewNaverKeywordMapping();
+				FestivalContentReviewNaverKeywordMapDTO keywordMapping1 = new FestivalContentReviewNaverKeywordMapDTO();
 				keywordMapping1.setFestivalId(festivalId);
 				keywordMapping1.setFestivalKeywordId(keyword.getFestivalKeywordId());
 				keywordMapping1.setSortCode("C");
 				
 //				System.out.println("keywordMapping1 : " + keywordMapping1);
 				
-				FestivalContentReviewNaverKeywordMapping keywordMapping = adminFestivalService.findKeywordMappingByKeywordMapping(keywordMapping1);
+				FestivalContentReviewNaverKeywordMapDTO keywordMapping = adminFestivalService.findKeywordMappingByKeywordMapping(keywordMapping1);
 				
 				if (keywordMapping == null){
 					adminFestivalService.insertKeywordMappingByKeywordMapping(keywordMapping1);

@@ -38,3 +38,8 @@ out/
 
 ### yml file ###
 *.yml
+
+### environment files ###
+.env
+application.yml
+src/main/resources/application.yml
