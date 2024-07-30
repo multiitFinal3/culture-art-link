@@ -2,6 +2,8 @@ package com.multi.culture_link.admin.culturalProperties.model.dto;
 
 import lombok.Data;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 @Data
@@ -42,6 +44,7 @@ public class CulturalPropertiesDTO extends PageDTO {
     private String categoryCode;
     private String managementNumber;
     private String cityCode;
+//    private String nation;
     private String categoryName;
     private String culturalPropertiesName;
     private String address;
@@ -56,7 +59,16 @@ public class CulturalPropertiesDTO extends PageDTO {
     private String classifyC;
     private String classifyD;
     private String content;
+//    private String imgUrl;
     private String mainImgUrl;
+//    private String imgDesc;
+//    private String videoUrl;
+//    private String narrationUrl;
+
+//    private String imgUrl;
+//    private String imgDesc;
+//    private String videoUrl;
+//    private String narrationUrl;
 
     private List<String> imgUrl;
     private List<String> imgDesc;
