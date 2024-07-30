@@ -160,7 +160,7 @@ public class AdminCulturalPropertiesController {
 //		return adminCulturalPropertiesService.searchCulturalProperties(pageDTO, category, name, region, dynasty);
 //
 ////		return adminCulturalPropertiesService.searchCulturalProperties(festivalDTO)
-//	}
+	}
 
 
 
