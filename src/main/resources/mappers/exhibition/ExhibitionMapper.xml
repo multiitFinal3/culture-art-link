@@ -20,8 +20,11 @@
         ORDER BY created_at DESC
     </select>
 
-    <select id="getExhibitionById" resultType="com.multi.culture_link.admin.exhibition.model.dto.api.ExhibitionApiDto">
-        SELECT * FROM exhibition WHERE id = #{id}
+    <select id="getExhibitionById" resultType="com.multi.culture_link.exhibition.model.dto.ExhibitionDto">
+        SELECT e.*, ei.state
+        FROM exhibition e
+                 LEFT JOIN exhibition_interested ei ON e.id = ei.exhibition_id AND ei.user_id = #{userId}
+        WHERE e.id = #{exhibitionId}
     </select>
 
     <!-- 관심 데이터가 없으면 생성, 있으면 업데이트 -->
@@ -40,12 +43,20 @@
 
 
 
-    <!-- 사용자의 모든 관심 전시회 조회 -->
-    <select id="getUserInterestedExhibitions" resultType="com.multi.culture_link.admin.exhibition.model.dto.api.ExhibitionApiDto">
+    <!-- 사용자의 모든 찜 전시회 조회 -->
+    <select id="getUserLikeExhibitions" resultType="com.multi.culture_link.admin.exhibition.model.dto.api.ExhibitionApiDto">
         SELECT e.*
         FROM exhibition e
                  INNER JOIN exhibition_interested ei ON e.id = ei.exhibition_id
         WHERE ei.user_id = #{userId} AND ei.state = 'interested'
+    </select>
+
+    <!--     사용자의 모든 관심없음 전시회 조회-->
+    <select id="getUserUnlikeExhibitions" resultType="com.multi.culture_link.admin.exhibition.model.dto.api.ExhibitionApiDto">
+        SELECT e.*
+        FROM exhibition e
+                 INNER JOIN exhibition_interested ei ON e.id = ei.exhibition_id
+        WHERE ei.user_id = #{userId} AND ei.state = 'not_interested'
     </select>
 
 
