@@ -417,6 +417,8 @@ public class AdminCulturalPropertiesService {
 	public void updateDBData(ArrayList<CulturalPropertiesDTO> data) {
 
 		adminCulturalPropertiesDAO.updateDBData(data);
+
+
 	}
 
 
