@@ -4,10 +4,7 @@ import com.multi.culture_link.admin.culturalProperties.model.dto.CulturalPropert
 import com.multi.culture_link.admin.culturalProperties.model.dto.StringListTypeHandler;
 import com.multi.culture_link.common.region.model.dto.RegionDTO;
 import com.multi.culture_link.common.time.model.dto.TimeDTO;
-import com.multi.culture_link.festival.model.dto.FestivalContentReviewNaverKeywordMapping;
-import com.multi.culture_link.festival.model.dto.FestivalDTO;
-import com.multi.culture_link.festival.model.dto.FestivalKeywordDTO;
-import com.multi.culture_link.festival.model.dto.PageDTO;
+import com.multi.culture_link.festival.model.dto.*;
 import com.multi.culture_link.users.model.dto.RoleDTO;
 import com.multi.culture_link.users.model.dto.UserDTO;
 import com.multi.culture_link.users.model.dto.VWUserRoleDTO;
@@ -63,7 +60,9 @@ public class MyBatisConfiguration {
 		configuration.getTypeAliasRegistry().registerAlias("regionDTO", RegionDTO.class);
 		configuration.getTypeAliasRegistry().registerAlias("timeDTO", TimeDTO.class);
 		configuration.getTypeAliasRegistry().registerAlias("festivalKeywordDTO", FestivalKeywordDTO.class);
-		configuration.getTypeAliasRegistry().registerAlias("festivalContentReviewNaverKeywordMapping", FestivalContentReviewNaverKeywordMapping.class);
+		configuration.getTypeAliasRegistry().registerAlias("festivalContentReviewNaverKeywordMapping", FestivalContentReviewNaverKeywordMapDTO.class);
+		configuration.getTypeAliasRegistry().registerAlias("userFestivalLoveHateDTO", UserFestivalLoveHateMapDTO.class);
+		configuration.getTypeAliasRegistry().registerAlias("vwUserReviewDTO", VWUserReviewDataDTO.class);
 		
 		configuration.getTypeAliasRegistry().registerAlias("culturalPropertiesDTO", CulturalPropertiesDTO.class);
 

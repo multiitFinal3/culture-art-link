@@ -29,6 +29,7 @@ public class FestivalDTO {
 	private Date endDate;
 	private String formattedStart;
 	private String formattedEnd;
+	private int reviewCount;
 	private double avgRate;
 	private String season;
 	private String imgUrl;

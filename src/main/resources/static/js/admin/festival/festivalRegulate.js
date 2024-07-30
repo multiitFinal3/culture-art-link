@@ -723,7 +723,6 @@ $(document).ready(
                                 <td class="place">${festival.place}</td>
                                 <td class="startDate">${festival.formattedStart}</td>
                                 <td class="endDate">${festival.formattedEnd}</td>
-                                <td class="avgRate">${festival.avgRate}</td>
                                 <td class="season">${festival.season}</td>
 
 
@@ -739,7 +738,6 @@ $(document).ready(
                                 <td class="place">${festival.place}</td>
                                 <td class="startDate">${festival.formattedStart}</td>
                                 <td class="endDate">${festival.formattedEnd}</td>
-                                <td class="avgRate">${festival.avgRate}</td>
                                 <td class="season">${festival.season}</td>
 
 
@@ -978,7 +976,6 @@ $(document).ready(
                                 <td class="place">${festival.place}</td>
                                 <td class="startDate">${festival.formattedStart}</td>
                                 <td class="endDate">${festival.formattedEnd}</td>
-                                <td class="avgRate">${festival.avgRate}</td>
                                 <td class="season">${festival.season}</td>
 
                             </tr>
