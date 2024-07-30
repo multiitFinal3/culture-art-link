@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
@@ -6,20 +5,26 @@
       layout:decorate="~{/common/layout/layoutAdminPage}">
 <head>
     <link rel="stylesheet" th:href="@{/css/culturalProperties/culturalPropertiesRegulate.css}">
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script th:src="@{/js/admin/culturalProperties/culturalPropertiesRegulate.js}"></script>
+    <!-- Bootstrap JavaScript -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
     <style>
-        #festivalRegulate {
+        #culturalPropertiesRegulate {
             display: flex;
             flex-flow: column;
             align-items: center;
             justify-content: center;
-            margin-top: 14%;
-            margin-left: 10%;
+            margin-left: 80px;
+            margin-top: 100px;
+            margin-right: 80px;
         }
 
         table {
             margin-bottom: 50px;
             border-collapse: collapse; /* 테이블 셀 경계를 합치도록 설정 */
-            width: 80%; /* 테이블 너비를 조정할 수 있습니다. */
+            width: 120%; /* 테이블 너비를 조정할 수 있습니다. */
             margin-top: 20px; /* 원하는 만큼 상단 여백을 추가할 수 있습니다. */
         }
 
@@ -40,26 +45,166 @@
         td {
             background-color: #E7EEF9;
         }
+
+
+        #culturalPropertiesAPI th {
+        text-align: center; /* 텍스트 가운데 정렬 */
+        padding: 15px; /* 셀 안의 패딩 */
+    }
+
+    /* 각 열의 너비 조정 */
+    #culturalPropertiesAPI th:nth-child(1) {
+        width: 5%; /* 첫 번째 열 너비 */
+    }
+
+    #culturalPropertiesAPI th:nth-child(2) {
+        width: 5%; /* 두 번째 열 너비 */
+    }
+
+    #culturalPropertiesAPI th:nth-child(3) {
+        width: 40%; /* 세 번째 열 너비 */
+    }
+
+    #culturalPropertiesAPI th:nth-child(4) {
+        width: 10%; /* 네 번째 열 너비 */
+    }
+
+    #culturalPropertiesAPI th:nth-child(5) {
+        width: 15%; /* 다섯 번째 열 너비 */
+    }
+
+    #culturalPropertiesAPI th:nth-child(6) {
+        width: 25%; /* 여섯 번째 열 너비 */
+    }
+
+
+    /* 툴팁 배경색을 회색으로 설정 */
+    .tooltip-inner {
+        background-color: #808080; /* 회색 배경색 */
+        color: #fff; /* 글자색을 흰색으로 설정 */
+        max-width: 400px; /* 원하는 최대 가로 크기 설정 */
+        width: auto; /* 내용에 맞게 자동으로 크기 조절 */
+    }
+
+
+        /* 버튼 스타일링 */
+    .search-btn btn-lg {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        font-size: 25px;
+        cursor: pointer;
+        border-radius: 5px;
+        transition: background-color 0.3s ease;
+    }
+
+    /* 버튼에 호버 효과 추가 */
+    .search-btn:hover {
+        background-color: #0056b3;
+    }
+
+    /* 검색 옵션 패널 스타일 */
+    .search-options {
+        display: none; /* 초기에는 숨김 */
+        background-color: #f8f9fa;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        margin-top: 10px;
+    }
+
+
     </style>
 </head>
 <body>
 <div layout:fragment="content2">
 
+    <h1 th:text="${totalPages}"></h1>
+
+    <div id="loadingIndicator" style="display: none; font-size: 35px; padding-left: 20px;">
+        <!-- 로딩 스피너 또는 메시지 -->
+        Loading...
+    </div>
+
     <div id="culturalPropertiesRegulate">
 
         문화재 관리자 페이지 입니다.
 
-        <h2>문화재 DB 현황</h2>
+
+
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col d-flex justify-content-start align-items-center">
+                    <button class="search-btn btn-lg" id="toggleOptionsBtn">🔍</button>
+
+                    <div class="search-options" id="searchOptions">
+                        <label>종목:</label>
+                        <select id="categoryFilter">
+<!--                            <option value="전체">전체</option>-->
+                            <option value="all">전체</option>
+                            <option value="국보">국보</option>
+                            <option value="보물">보물</option>
+                            <option value="사적">사적</option>
+                            <option value="사적및명승">사적및명승</option>
+                            <option value="명승">명승</option>
+                            <option value="천연기념물">천연기념물</option>
+                            <option value="국가무형유산">국가무형유산</option>
+                            <option value="국가민속문화유산">국가민속문화유산</option>
+                            <option value="시도유형문화유산">시도유형문화유산</option>
+                            <option value="시도무형유산">시도무형유산</option>
+                            <option value="시도기념물">시도기념물</option>
+                            <option value="시도민속문화유산">시도민속문화유산</option>
+                            <option value="시도등록유산">시도등록유산</option>
+                            <option value="문화유산자료">문화유산자료</option>
+                            <option value="국가등록유산">국가등록유산</option>
+                            <option value="이북5도 무형유산">이북5도 무형유산</option>
+                        </select>
+                        <input type="text" id="searchName" maxlength="20" placeholder="문화재 이름" />
+                        <input type="text" id="searchRegion" maxlength="10" placeholder="지역"/>
+                        <input type="text" id="searchDynasty" maxlength="10" placeholder="시대"/>
+
+                        <button id="searchDB" class="btn btn-outline-primary ml-3" >검색</button>
+                        <button id="reset" class="btn btn-outline-primary ml-3" >초기화</button>
+                    </div>
+
+                </div>
+                <div class="col d-flex justify-content-center align-items-center">
+                    <h2 class="text-center">문화재 DB 현황</h2>
+                    <button type="button" id="deleteDB" class="btn btn-outline-primary ml-3"> 삭제 </button>
+                </div>
+                <div class="col d-flex justify-content-end align-items-center">
+<!--                    <button type="button" class="btn btn-outline-primary"> 삭제 </button>-->
+                </div>
+            </div>
+        </div>
+
         <table class="table table-striped" id="culturalPropertiesDB">
 
             <thead class="table-light">
             <tr>
-                <th scope="col">#</th>
+                <th scope="col">
+                    <input type="checkbox" id="selectAllCheckDB"> <!-- 전체 선택 체크박스 -->
+                </th>
+                <th scope="col">No.</th>
                 <th scope="col">문화재 이름</th>
                 <th scope="col">종목</th>
                 <th scope="col">지역</th>
                 <th scope="col">시대</th>
+                <th scope="col">주소</th>
+                <th scope="col">지정일</th>
+                <th scope="col">분류1</th>
+                <th scope="col">분류2</th>
+                <th scope="col">분류3</th>
+                <th scope="col">분류4</th>
+                <th scope="col">대표이미지</th>
+                <th scope="col">설명</th>
+                <th scope="col">이미지URL</th>
+                <th scope="col">이미지설명</th>
+                <th scope="col">동영상URL</th>
+                <th scope="col">나레이션URL</th>
                 <th scope="col">DB관리</th>
+
             </tr>
             </thead>
             <tbody id="list1">
@@ -68,85 +213,114 @@
 
         </table>
 
-        <h2>전국 문화재 실시간</h2>
+        <div class="pagination" id="paginationSection1">
+
+        </div>
+        <br><br><br>
+
+
+<!--        <div class="d-flex justify-content-center align-items-center">-->
+<!--            <h2 class="mr-auto">전국 문화재 실시간</h2>-->
+<!--            <button type="button" id="addDB" class="btn btn-outline-primary ml-3">DB 추가</button>-->
+<!--        </div>-->
+
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col d-flex justify-content-start align-items-center">
+                    <button class="search-btn btn-lg" id="toggleOptionsBtn2">🔍</button>
+
+                    <div class="search-options" id="searchOptions2">
+                        <label>종목:</label>
+                        <select id="categoryFilter2">
+                            <option value="전체">전체</option>
+                            <option value="category1">국보</option>
+                            <option value="category2">보물</option>
+                            <option value="category3">사적</option>
+                            <option value="category4">사적및명승</option>
+                            <option value="category5">명승</option>
+                            <option value="category6">천연기념물</option>
+                            <option value="category7">국가무형유산</option>
+                            <option value="category8">국가민속문화유산</option>
+                            <option value="category9">시도유형문화유산</option>
+                            <option value="category10">시도무형유산</option>
+                            <option value="category11">시도기념물</option>
+                            <option value="category12">시도민속문화유산</option>
+                            <option value="category13">시도등록유산</option>
+                            <option value="category14">문화유산자료</option>
+                            <option value="category15">국가등록유산</option>
+                            <option value="category16">이북5도 무형유산</option>
+                        </select>
+                        <input type="text" id="searchName2" maxlength="20" placeholder="문화재 이름" />
+                        <input type="text" id="searchRegion2" maxlength="10" placeholder="지역"/>
+                        <input type="text" id="searchDynasty2" maxlength="10" placeholder="시대"/>
+
+                        <button id="searchDB2" class="btn btn-outline-primary ml-3" >검색</button>
+                        <button id="reset2" class="btn btn-outline-primary ml-3" >초기화</button>
+                    </div>
+
+                </div>
+                <div class="col d-flex justify-content-center align-items-center">
+                    <h2 class="text-center">전국 문화재 실시간</h2>
+                    <button type="button" id="addDB" class="btn btn-outline-primary ml-3">DB 추가</button>
+                </div>
+                <div class="col d-flex justify-content-end align-items-center">
+<!--                    <button type="button" id="addDB" class="btn btn-outline-primary ml-3">DB 추가</button>-->
+                </div>
+            </div>
+        </div>
+
+
         <table class="table table-striped" id="culturalPropertiesAPI">
 
             <thead class="table-light">
             <tr>
-                <th scope="col">#</th>
+                <th scope="col">
+                    <input type="checkbox" id="selectAllCheckAPI"> <!-- 전체 선택 체크박스 -->
+                </th>
+                <th scope="col">No.</th>
                 <th scope="col">문화재 이름</th>
                 <th scope="col">종목</th>
                 <th scope="col">지역</th>
                 <th scope="col">시대</th>
-                <th scope="col">DB관리</th>
             </tr>
             </thead>
-<!--            <tbody id="list2">-->
-<!--            &lt;!&ndash; culturalPropertiesList를 순회하며 데이터 표시 &ndash;&gt;-->
-<!--            <tr th:each="culturalProperty, rowStat : ${culturalPropertiesList}-->
-<!--                      ${#numbers.sequence(rowStat.index * 5, rowStat.index * 5 + 4)}">-->
-<!--                <td th:text="${rowStat.index + 1}"></td>-->
-<!--                <td th:text="${culturalProperty.culturalPropertiesName}"></td>-->
-<!--                <td th:text="${culturalProperty.categoryName}"></td>-->
-<!--                <td th:text="${culturalProperty.region}"></td>-->
-<!--                <td th:text="${culturalProperty.dynasty}"></td>-->
-<!--                <td>&lt;!&ndash; DB 관리 기능 추가 &ndash;&gt;</td>-->
-<!--            </tr>-->
-<!--            </tbody>-->
-            <script th:inline="javascript">
-                $(document).ready(function() {
-                    var page = 0; // 초기 페이지
-                    var pageSize = 5; // 한 번에 로드할 데이터 수
+            <tbody id="list2">
+            </tbody>
 
-                    loadCulturalProperties(page);
-
-                    function loadCulturalProperties(page) {
-                        $.ajax({
-                            url: /* 서버 측 URL */,
-                            type: 'GET',
-                            data: {
-                                page: page,
-                                size: pageSize
-                            },
-                            success: function(data) {
-                                $('#culturalPropertiesBody').empty();
-                                $.each(data, function(index, culturalProperty) {
-                                    var row = '<tr>' +
-                                                '<td>' + (index + 1) + '</td>' +
-                                                '<td>' + culturalProperty.culturalPropertiesName + '</td>' +
-                                                '<td>' + culturalProperty.categoryName + '</td>' +
-                                                '<td>' + culturalProperty.region + '</td>' +
-                                                '<td>' + culturalProperty.dynasty + '</td>' +
-                                                '<td><!-- DB 관리 기능 추가 --></td>' +
-                                              '</tr>';
-                                    $('#culturalPropertiesBody').append(row);
-                                });
-                            },
-                            error: function(xhr, status, error) {
-                                console.error('Error loading cultural properties: ' + error);
-                            }
-                        });
-                    }
-
-                    // 페이지네이션 또는 버튼 클릭 시 다음 페이지 로드
-                    $('#nextButton').click(function() {
-                        page++;
-                        loadCulturalProperties(page);
-                    });
-
-                    // 이전 페이지 로드
-                    $('#prevButton').click(function() {
-                        if (page > 0) {
-                            page--;
-                            loadCulturalProperties(page);
-                        }
-                    });
-                });
-            </script>
         </table>
+
+        <div class="pagination" id="paginationSection2">
+        </div>
+        <br><br><br>
 
     </div>
 
+    <script th:inline="javascript">
+<!--        검색-->
+        document.getElementById('toggleOptionsBtn').addEventListener('click', function() {
+            var optionsPanel = document.getElementById('searchOptions');
+            if (optionsPanel.style.display === 'none') {
+                optionsPanel.style.display = 'block';
+            } else {
+                optionsPanel.style.display = 'none';
+            }
+        });
+        <!--        검색-->
+        document.getElementById('toggleOptionsBtn2').addEventListener('click', function() {
+            var optionsPanel = document.getElementById('searchOptions2');
+            if (optionsPanel.style.display === 'none') {
+                optionsPanel.style.display = 'block';
+            } else {
+                optionsPanel.style.display = 'none';
+            }
+        });
+
+
+
+    </script>
 </div>
 </body>
 </html>
+
+
+

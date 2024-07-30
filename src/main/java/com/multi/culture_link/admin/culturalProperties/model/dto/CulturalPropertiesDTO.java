@@ -1,12 +1,13 @@
-package com.multi.culture_link.admin.culturalProperties.dto;
+package com.multi.culture_link.admin.culturalProperties.model.dto;
 
 import lombok.Data;
 
-import java.util.Date;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 @Data
-public class CulturalPropertiesDTO {
+public class CulturalPropertiesDTO extends PageDTO {
 
 
 //    private int id;
@@ -43,7 +44,7 @@ public class CulturalPropertiesDTO {
     private String categoryCode;
     private String managementNumber;
     private String cityCode;
-    private String nation;
+//    private String nation;
     private String categoryName;
     private String culturalPropertiesName;
     private String address;
@@ -64,21 +65,22 @@ public class CulturalPropertiesDTO {
 //    private String videoUrl;
 //    private String narrationUrl;
 
+//    private String imgUrl;
+//    private String imgDesc;
+//    private String videoUrl;
+//    private String narrationUrl;
+
     private List<String> imgUrl;
     private List<String> imgDesc;
     private List<String> videoUrl;
     private List<String> narrationUrl;
 
 
-//    private List<ImgInfo> imgInfos;
 
 
-
-//    public void setImgUrl(List<String> imgUrl) {
-//        this.imgUrl = imgUrl;
-//    }
-
-
+    private PageDTO pageDTO;
+    private int start;
+    private int end;
 
 
 
