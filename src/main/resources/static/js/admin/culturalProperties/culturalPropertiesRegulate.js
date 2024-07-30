@@ -597,11 +597,11 @@ $(document).ready(function() {
             classifyB: $row.find('td').eq(9).text(), // 아홉 번째 <td>에서 분류2 가져오기
             classifyC: $row.find('td').eq(10).text(), // 열 번째 <td>에서 분류3 가져오기
             classifyD: $row.find('td').eq(11).text(), // 열한 번째 <td>에서 분류4 가져오기
-            mainImgUrl: $row.find('td').eq(12).text(),
-            content: $row.find('td').eq(13).text(),
-            imgUrl: $row.find('td').eq(14).text(),
-            videoUrl: $row.find('td').eq(15).text(),
-            narrationUrl: $row.find('td').eq(16).text()
+//            mainImgUrl: $row.find('td').eq(12).text(),
+//            content: $row.find('td').eq(13).text(),
+//            imgUrl: $row.find('td').eq(14).text(),
+//            videoUrl: $row.find('td').eq(15).text(),
+//            narrationUrl: $row.find('td').eq(16).text()
         };
 
         // 수정 입력 필드 추가
@@ -617,12 +617,12 @@ $(document).ready(function() {
             '<input type="text" class="form-control edit-classifyB" value="' + rowData.classifyB + '" placeholder="분류2">' +
             '<input type="text" class="form-control edit-classifyC" value="' + rowData.classifyC + '" placeholder="분류3">' +
             '<input type="text" class="form-control edit-classifyD" value="' + rowData.classifyD + '" placeholder="분류4">' +
-            '<input type="text" class="form-control edit-mainImgUrl" value="' + $row.find('.mainImgUrl img').attr('src') + '" placeholder="대표 이미지 URL">' +
-            '<input type="text" class="form-control edit-content" value="' + $row.find('.content .content-tooltip').text() + '" placeholder="설명">' +
-            '<input type="text" class="form-control edit-imgUrl" value="' + $row.find('.imgUrl a').attr('href') + '" placeholder="이미지 URL">' +
-            '<input type="text" class="form-control edit-imgDesc" value="' + $row.find('.imgDesc').text() + '" placeholder="이미지 설명">' +
-            '<input type="text" class="form-control edit-videoUrl" value="' + $row.find('.videoUrl a').attr('href') + '" placeholder="동영상 URL">' +
-            '<input type="text" class="form-control edit-narrationUrl" value="' + $row.find('.narrationUrl a').attr('href') + '" placeholder="나레이션 URL">' +
+//            '<input type="text" class="form-control edit-mainImgUrl" value="' + $row.find('.mainImgUrl img').attr('src') + '" placeholder="대표 이미지 URL">' +
+//            '<input type="text" class="form-control edit-content" value="' + $row.find('.content .content-tooltip').text() + '" placeholder="설명">' +
+//            '<input type="text" class="form-control edit-imgUrl" value="' + $row.find('.imgUrl a').attr('href') + '" placeholder="이미지 URL">' +
+//            '<input type="text" class="form-control edit-imgDesc" value="' + $row.find('.imgDesc').text() + '" placeholder="이미지 설명">' +
+//            '<input type="text" class="form-control edit-videoUrl" value="' + $row.find('.videoUrl a').attr('href') + '" placeholder="동영상 URL">' +
+//            '<input type="text" class="form-control edit-narrationUrl" value="' + $row.find('.narrationUrl a').attr('href') + '" placeholder="나레이션 URL">' +
             '<button class="btn btn-primary" id="saveDB">저장</button>' +
             '<button class="btn btn-secondary" id="cancelDB">취소</button>' +
             '</td></tr>';
@@ -646,31 +646,31 @@ $(document).ready(function() {
         var classifyB = $editRow.find('.edit-classifyB').val();
         var classifyC = $editRow.find('.edit-classifyC').val();
         var classifyD = $editRow.find('.edit-classifyD').val();
-        var mainImgUrl = $editRow.find('.edit-mainImgUrl').val();
-        var content = $editRow.find('.edit-content').val();
-
-        // 리스트 데이터 수집
-            var imgUrl = [];
-            var imgDesc = [];
-            var videoUrl = [];
-            var narrationUrl = [];
-
-            // imgUrl, imgDesc 필드의 값을 가져오는 로직 (예시)
-            $editRow.find('.edit-imgUrl').each(function() {
-                imgUrl.push($(this).val());
-            });
-
-            $editRow.find('.edit-imgDesc').each(function() {
-                imgDesc.push($(this).val());
-            });
-
-            $editRow.find('.edit-videoUrl').each(function() {
-                videoUrl.push($(this).val());
-            });
-
-            $editRow.find('.edit-narrationUrl').each(function() {
-                narrationUrl.push($(this).val());
-            });
+//        var mainImgUrl = $editRow.find('.edit-mainImgUrl').val();
+//        var content = $editRow.find('.edit-content').val();
+//
+//        // 리스트 데이터 수집
+//            var imgUrl = [];
+//            var imgDesc = [];
+//            var videoUrl = [];
+//            var narrationUrl = [];
+//
+//            // imgUrl, imgDesc 필드의 값을 가져오는 로직 (예시)
+//            $editRow.find('.edit-imgUrl').each(function() {
+//                imgUrl.push($(this).val());
+//            });
+//
+//            $editRow.find('.edit-imgDesc').each(function() {
+//                imgDesc.push($(this).val());
+//            });
+//
+//            $editRow.find('.edit-videoUrl').each(function() {
+//                videoUrl.push($(this).val());
+//            });
+//
+//            $editRow.find('.edit-narrationUrl').each(function() {
+//                narrationUrl.push($(this).val());
+//            });
 
 //        var imgUrl = $editRow.find('.edit-imgUrl').val();
 //        var imgDesc = $editRow.find('.edit-imgDesc').val();
@@ -696,14 +696,15 @@ $(document).ready(function() {
                 classifyA: classifyA,
                 classifyB: classifyB,
                 classifyC: classifyC,
-                classifyD: classifyD,
-                mainImgUrl: mainImgUrl,
-                content: content,
-                imgUrl: imgUrl,
-                imgDesc: imgDesc,
-                videoUrl: videoUrl,
-                narrationUrl: narrationUrl
+                classifyD: classifyD
+//                mainImgUrl: mainImgUrl,
+//                content: content,
+//                imgUrl: imgUrl,
+//                imgDesc: imgDesc,
+//                videoUrl: videoUrl,
+//                narrationUrl: narrationUrl
             }]),
+
 //            success: function(response) {
 //                // 응답이 JavaScript 객체로 가정
 //                console.log('Success response:', response); // 성공 응답 로그
@@ -759,12 +760,12 @@ $(document).ready(function() {
                 $row.find('.classifyB').text(classifyB);
                 $row.find('.classifyC').text(classifyC);
                 $row.find('.classifyD').text(classifyD);
-                $row.find('.mainImgUrl img').attr('src', mainImgUrl); // 이미지 업데이트
-                $row.find('.content .content-tooltip').attr('title', content).text(content); // Tooltip 업데이트
-                $row.find('.imgUrl a').attr('href', imgUrl); // 이미지 URL 업데이트
-                $row.find('.imgDesc').text(imgDesc); // 이미지 설명 업데이트
-                $row.find('.videoUrl a').attr('href', videoUrl); // 비디오 URL 업데이트
-                $row.find('.narrationUrl a').attr('href', narrationUrl); // 나레이션 URL 업데이트
+//                $row.find('.mainImgUrl img').attr('src', mainImgUrl); // 이미지 업데이트
+//                $row.find('.content .content-tooltip').attr('title', content).text(content); // Tooltip 업데이트
+//                $row.find('.imgUrl a').attr('href', imgUrl); // 이미지 URL 업데이트
+//                $row.find('.imgDesc').text(imgDesc); // 이미지 설명 업데이트
+//                $row.find('.videoUrl a').attr('href', videoUrl); // 비디오 URL 업데이트
+//                $row.find('.narrationUrl a').attr('href', narrationUrl); // 나레이션 URL 업데이트
 
                 // 수정 행 삭제
                 $editRow.remove();

@@ -138,13 +138,13 @@
             classify_a = #{item.classifyA},
             classify_b = #{item.classifyB},
             classify_c = #{item.classifyC},
-            classify_d = #{item.classifyD},
-            main_img_url = #{item.mainImgUrl},
-            content = #{item.content},
-            img_url = #{item.imgUrl},
-            img_desc = #{item.imgDesc},
-            video_url = #{item.videoUrl},
-            narration_url = #{item.narrationUrl}
+            classify_d = #{item.classifyD}
+<!--            main_img_url = #{item.mainImgUrl},-->
+<!--            content = #{item.content},-->
+<!--            img_url = #{item.imgUrl},-->
+<!--            img_desc = #{item.imgDesc},-->
+<!--            video_url = #{item.videoUrl},-->
+<!--            narration_url = #{item.narrationUrl}-->
 
             WHERE id = #{item.id}
         </foreach>
