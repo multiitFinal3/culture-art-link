@@ -2,8 +2,6 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 layout:decorate="~{common/layout/layoutMenubar}">
-<!--      xmlns:layout="http://www.w3.org/1999/xhtml" layout:decorate="~{common/layout/layoutMenubar}">-->
-<!--    <html layout:decorate="~{common/layout/layoutMenubar}">-->
 
     <head>
         <meta charset="UTF-8">
@@ -15,6 +13,8 @@ layout:decorate="~{common/layout/layoutMenubar}">
         <script src="/js/culturalProperties/culturalProperties.js"></script>
         <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 
+        <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+
         <style>
 
         .hero-section {
@@ -23,106 +23,169 @@ layout:decorate="~{common/layout/layoutMenubar}">
 
         .search-bar {
             position: absolute; /* 절대 위치 지정 */
-            top: 650px; /* 이미지 상단에서의 거리 */
+            top: 630px; /* 이미지 상단에서의 거리 */
             left: 50%; /* 이미지의 가로 중앙으로 위치 */
             transform: translateX(-50%); /* 왼쪽으로 50% 이동하여 중앙 정렬 */
             width: 80%; /* 검색 바의 너비 */
             z-index: 10; /* 다른 요소보다 위에 배치 */
         }
 
-        /* 검색바 높이 늘리기 */
-        .search-bar input.form-control {
-            height: 100px; /* 입력 필드의 높이 */
+
+        .input-group select,
+        .input-group input {
+            height: 80px; /* 모든 입력 필드 및 선택 박스의 높이를 동일하게 설정 */
             font-size: 16px; /* 폰트 크기 */
         }
 
         .search-bar button {
-            height: 100px; /* 버튼의 높이 */
+            height: 50px; /* 버튼의 높이 */
+            width: 80px;
             font-size: 16px; /* 폰트 크기 */
         }
 
+        /* 검색 바 배경색 설정 */
+        .input-group {
+            background-color: white; /* 배경색을 흰색으로 설정 */
+            padding: 10px; /* 패딩 추가 */
+            border-radius: 5px; /* 모서리 둥글게 */
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* 약간의 그림자 추가 */
+            align-items: center; /* 수직 중앙 정렬 */
+        }
 
-            .hero-section img {
-<!--                height: 800px;-->
-<!--                object-fit: cover;-->
-max-height: 400px; /* 최대 높이를 설정하여 비율 줄이기 */
+
+        .hero-section img {
+<!--            height: 800px;-->
+            max-height: 400px; /* 최대 높이를 설정하여 비율 줄이기 */
             width: 100%; /* 너비를 100%로 설정 */
             object-fit: contain; /* 이미지 비율 유지하면서 전체 보이도록 */
-            }
+        }
 
-            .card-img-top {
-                height: 200px;
-                object-fit: cover;
-            }
+        .overlay {
+            position: absolute; /* 절대 위치 지정 */
+            top: 0; /* 상단에 배치 */
+            left: 0; /* 좌측에 배치 */
+            width: 100%; /* 너비를 100%로 설정 */
+            height: 100%; /* 높이를 100%로 설정 */
+            background-color: rgba(39, 111, 189, 0.4);
+            z-index: 1; /* 이미지 위에 표시되도록 z-index 설정 */
+        }
 
-            .badge {
-                font-size: 0.8rem;
-            }
+        .card-img-top {
+            height: 300px;
+            object-fit: cover;
+        }
 
 
         </style>
     </head>
     <body>
-    <header>
-        <!-- 네비게이션 바 코드 (이전에 제공한 코드 사용) -->
-<!--        <html layout:decorate="~{common/layout/layoutMenubar}">-->
-<!--        </html>-->
 
-    </header>
     <div layout:fragment="content">
 
     <main class="container mt-4">
         <section class="hero-section mb-4">
             <img th:src="@{/img/culturalProperties/mainimg.jpg}" alt="대표 문화재" class="img-fluid w-100">
-<!--            <img src="/static/img/culturalProperties/mainimg.jpg" alt="대표 문화재" class="img-fluid w-100">-->
+            <div class="overlay"></div>
+
             <div class="search-bar mt-3">
-                <form class="d-flex">
-                    <input class="form-control me-2" type="search" placeholder="검색어를 입력하세요" aria-label="Search">
-                    <button class="btn btn-outline-success" type="submit">검색</button>
+                <form class="d-flex" th:action="@{/cultural-properties/search}" method="get">
+                    <div class="input-group">
+                        <select name="category" class="form-select me-2">
+                            <option value="">종목 선택</option>
+                            <option value="all">전체</option>
+                            <option value="국보">국보</option>
+                            <option value="보물">보물</option>
+                            <option value="사적">사적</option>
+                            <option value="사적및명승">사적및명승</option>
+                            <option value="명승">명승</option>
+                            <option value="천연기념물">천연기념물</option>
+                            <option value="국가무형유산">국가무형유산</option>
+                            <option value="국가민속문화유산">국가민속문화유산</option>
+                            <option value="시도유형문화유산">시도유형문화유산</option>
+                            <option value="시도무형유산">시도무형유산</option>
+                            <option value="시도기념물">시도기념물</option>
+                            <option value="시도민속문화유산">시도민속문화유산</option>
+                            <option value="시도등록유산">시도등록유산</option>
+                            <option value="문화유산자료">문화유산자료</option>
+                            <option value="국가등록유산">국가등록유산</option>
+                            <option value="이북5도 무형유산">이북5도 무형유산</option>
+                            <option th:each="category : ${categories}" th:value="${categoryName}" th:text="${categoryName}"></option>
+                        </select>
+                        <input class="form-control me-2" type="text" name="culturalPropertiesName" placeholder="이름" aria-label="culturalPropertiesName">
+                        <input class="form-control me-2" type="text" name="region" placeholder="지역" aria-label="Region">
+                        <input class="form-control me-2" type="text" name="dynasty" placeholder="시대" aria-label="dynasty">
+                        <button class="btn btn-outline-success" type="submit">검색</button>
+                    </div>
                 </form>
             </div>
-        </section>
 
-        <section class="gallery-section">
-            <div class="row row-cols-1 row-cols-md-3 g-4">
-                <div class="col">
-                    <div class="card h-100">
-                        <img src="/images/cultural-property-1.jpg" class="card-img-top" alt="문화재 1">
-                        <div class="card-body">
-                            <h5 class="card-title">경복궁</h5>
-                            <p class="card-text">서울</p>
-                            <div class="d-flex justify-content-end">
-                                <span class="badge bg-primary me-1">♥</span>
-                                <span class="badge bg-secondary">☆</span>
-                            </div>
+        </section>
+        <br><br><br>
+
+        <section class="tab-section mb-4">
+            <ul class="nav nav-tabs justify-content-center" id="myTab" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="all-tab" data-bs-toggle="tab" data-bs-target="#all" type="button" role="tab" aria-controls="all" aria-selected="true">전체 목록</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="news-tab" data-bs-toggle="tab" data-bs-target="#news" type="button" role="tab" aria-controls="news" aria-selected="false">뉴스 & 소식</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="video-tab" data-bs-toggle="tab" data-bs-target="#video" type="button" role="tab" aria-controls="video" aria-selected="false">관련 영상</button>
+                </li>
+            </ul>
+
+            <div class="tab-content" id="myTabContent">
+                <div class="tab-pane fade show active" id="all" role="tabpanel" aria-labelledby="all-tab">
+                    <!-- 전체 문화재 내용 -->
+                    <br><br><br>
+
+                    <section class="gallery-section" id="gallery-section">
+                        <div class="row row-cols-1 row-cols-md-3 g-4">
+                            <!-- 문화재 카드가 동적으로 추가됨 -->
+
                         </div>
-                    </div>
+                    </section>
+
+                    <br><br><br>
+
+                    <nav aria-label="Page navigation">
+                        <ul class="pagination justify-content-center" id="pagination">
+                            <li class="page-item" id="prev-btn">
+                                <a class="page-link" href="#" aria-label="Previous">
+                                    <span aria-hidden="true">&laquo;</span>
+                                </a>
+                            </li>
+                            <!-- 페이지 버튼이 동적으로 추가됨 -->
+                            <li class="page-item" id="next-btn">
+                                <a class="page-link" href="#" aria-label="Next">
+                                    <span aria-hidden="true">&raquo;</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+
+                    <br><br>
+
+
                 </div>
-                <!-- 추가 문화재 카드들 반복 -->
+                <div class="tab-pane fade" id="news" role="tabpanel" aria-labelledby="news-tab">
+                    <!-- 뉴스 & 소식 내용 -->
+                </div>
+                <div class="tab-pane fade" id="video" role="tabpanel" aria-labelledby="video-tab">
+                    <!-- 관련 영상 내용 -->
+                </div>
+
             </div>
         </section>
 
-        <nav aria-label="Page navigation" class="mt-4">
-            <ul class="pagination justify-content-center">
-                <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                <li class="page-item"><a class="page-link" href="#">2</a></li>
-                <li class="page-item"><a class="page-link" href="#">3</a></li>
-                <li class="page-item">
-                    <a class="page-link" href="#" aria-label="Next">
-                        <span aria-hidden="true">&raquo;</span>
-                    </a>
-                </li>
-            </ul>
-        </nav>
     </main>
 
-    <footer class="bg-light text-center text-lg-start mt-4">
-        <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2);">
-<!--            © 2024 문화재-->
-        </div>
-    </footer>
+        <footer class="bg-light text-center text-lg-start mt-4">
+            <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2);">
+                <!-- © 2024 문화재 -->
+            </div>
+        </footer>
     </div>
-
     </body>
-
 </html>
