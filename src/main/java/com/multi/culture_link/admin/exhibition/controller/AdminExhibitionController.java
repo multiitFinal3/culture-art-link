@@ -22,9 +22,9 @@ public class AdminExhibitionController {
     @GetMapping("/exhibition")
     public List<ExhibitionApiResponseDto.Item> listExhibitions(Model model) {
         ExhibitionApiResponseDto responseData= exhibitionApiService.fetchJsonData();
-        System.out.println("getNumOfRows: " + responseData.getBody().getNumOfRows());
-        System.out.println("pageNo: " + responseData.getBody().getPageNo());
-        System.out.println("totalCount: " + responseData.getBody().getTotalCount());
+//        System.out.println("getNumOfRows: " + responseData.getBody().getNumOfRows());
+//        System.out.println("pageNo: " + responseData.getBody().getPageNo());
+//        System.out.println("totalCount: " + responseData.getBody().getTotalCount());
         // System.out.println(responseData.getBody().getItems().getItem().get(1));
         return responseData.getBody().getItems().getItem();
     }
