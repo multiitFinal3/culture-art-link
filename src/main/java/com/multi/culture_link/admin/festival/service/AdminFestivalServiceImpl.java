@@ -909,7 +909,7 @@ public class AdminFestivalServiceImpl implements AdminFestivalService {
 		
 		LinkedList<Map.Entry<String, Integer>> list = new LinkedList<>(map.entrySet());
 		list.sort(Map.Entry.comparingByValue(Comparator.reverseOrder()));
-		
+
 //		if (list.size() >= 5) {
 //
 //			list = list.stream().limit(5).collect(Collectors.toCollection(LinkedList::new));
@@ -923,7 +923,7 @@ public class AdminFestivalServiceImpl implements AdminFestivalService {
 			map.put(list.get(i).getKey(), list.get(i).getValue());
 			
 		}
-		
+
 //		System.out.println("keyword map top 5: " + map);
 		
 		
@@ -1001,7 +1001,7 @@ public class AdminFestivalServiceImpl implements AdminFestivalService {
 		System.out.println("ser impl findNaverArticleKeywordByFestivalId : " + festivalDTO);
 		
 		System.out.println(festivalDTO.getStartDate());
-		
+
 //		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-mm-DD");
 //		String formattedStart = simpleDateFormat.format(festivalDTO.getStartDate()).substring(0,4);
 		
@@ -1015,7 +1015,7 @@ public class AdminFestivalServiceImpl implements AdminFestivalService {
 		
 		ArrayList<HashMap<String, Integer>> list = new ArrayList<HashMap<String, Integer>>();
 		
-		for (int i=1; i<=naverArticleDTO.getDisplay(); i++){
+		for (int i = 1; i <= naverArticleDTO.getDisplay(); i++) {
 			
 			HashMap<String, Integer> map = new HashMap<>();
 			
@@ -1028,25 +1028,23 @@ public class AdminFestivalServiceImpl implements AdminFestivalService {
 			NaverArticleDTO naverArticleDTO2 = adminFestivalMapper.findFestivalNaverUrlByNaverArticle(naverArticleDTO);
 			
 			
-			
-			if (naverArticleDTO2==null){
-
+			if (naverArticleDTO2 == null) {
+				
 				this.insertFestivalNaverUrlMappingByNaverArticle(naverArticleDTO);
-
+				
 			}
-
+			
 			
 			// TF-ID
-			map = keywordExtractService.getKeywordByTFID(naverArticleDTO);
+			String allContent = naverArticleDTO.getTotalContent();
+			map = keywordExtractService.getKeywordByKomoran(allContent);
 			
 			System.out.println("TF-ID 결과 : " + map);
 			
 			list.add(map);
 			
-		
+			
 		}
-		
-		
 		
 		
 		return list;

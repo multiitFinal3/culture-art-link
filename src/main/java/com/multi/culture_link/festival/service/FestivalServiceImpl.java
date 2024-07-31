@@ -398,50 +398,61 @@ public class FestivalServiceImpl implements FestivalService {
 		int display = json.getAsJsonPrimitive("display").getAsInt();
 		JsonArray items = json.getAsJsonArray("items");
 		
-		JsonObject item = items.get(page - 1).getAsJsonObject();
+		NaverArticleDTO naverArticleDTO = null;
 		
-		String title = item.get("title").getAsString();
-		
-		
-		String originalLink = item.get("originallink").getAsString();
-		String description = item.get("description").getAsString();
-		String pubDate = item.get("pubDate").getAsString().substring(0, 16);
-		
-		System.out.println("origin link : " + originalLink);
-		
-		SimpleDateFormat formatter = new SimpleDateFormat("EEE, dd MMM yyyy", Locale.ENGLISH);
-		Date date = formatter.parse(pubDate);
-		
-		
-		System.out.println(description);
-		
-		title = title.replaceAll("</[a-z]*>", "").replaceAll("<[a-z]*>", "").replaceAll("/", "").replaceAll("▲", "");
-		description = description.replaceAll("</[a-z]*>", "").replaceAll("<[a-z]*>", "").replaceAll("/", "").replaceAll("▲", "");
-		
-		System.out.println("description : " + description);
-		
-		NaverArticleDTO naverArticleDTO = new NaverArticleDTO();
-		naverArticleDTO.setFestivalId(festivalDTO.getFestivalId());
-		naverArticleDTO.setDescription(description);
-		naverArticleDTO.setTitle(title);
-		naverArticleDTO.setPubDate(date);
-		naverArticleDTO.setOriginalLink(originalLink);
-		naverArticleDTO.setDisplay(display);
-		
-		//festival naver content + img
-		
-		Document document = Jsoup.connect(originalLink).get();
-		
-		Elements els = document.select("[itemprop=articleBody]");
-		Element el = null;
-		
-		if (els.isEmpty()) {
+		if (!items.isEmpty()){
 			
-			els = document.select("[id=articleBody]");
+			JsonObject item = items.get(page - 1).getAsJsonObject();
+			
+			String title = item.get("title").getAsString();
+			
+			
+			String originalLink = item.get("originallink").getAsString();
+			String description = item.get("description").getAsString();
+			String pubDate = item.get("pubDate").getAsString().substring(0, 16);
+			
+			System.out.println("origin link : " + originalLink);
+			
+			SimpleDateFormat formatter = new SimpleDateFormat("EEE, dd MMM yyyy", Locale.ENGLISH);
+			Date date = formatter.parse(pubDate);
+			
+			
+			System.out.println(description);
+			
+			title = title.replaceAll("</[a-z]*>", "").replaceAll("<[a-z]*>", "").replaceAll("/", "").replaceAll("▲", "");
+			description = description.replaceAll("</[a-z]*>", "").replaceAll("<[a-z]*>", "").replaceAll("/", "").replaceAll("▲", "");
+			
+			System.out.println("description : " + description);
+			
+			naverArticleDTO = new NaverArticleDTO();
+			naverArticleDTO.setFestivalId(festivalDTO.getFestivalId());
+			naverArticleDTO.setDescription(description);
+			naverArticleDTO.setTitle(title);
+			naverArticleDTO.setPubDate(date);
+			naverArticleDTO.setOriginalLink(originalLink);
+			naverArticleDTO.setDisplay(display);
+			
+			//festival naver content + img
+			
+			Document document = Jsoup.connect(originalLink).get();
+			
+			Elements els = document.select("[itemprop=articleBody]");
+			Element el = null;
 			
 			if (els.isEmpty()) {
 				
-				el = document.body();
+				els = document.select("[id=articleBody]");
+				
+				if (els.isEmpty()) {
+					
+					el = document.body();
+					
+				} else {
+					
+					el = els.get(0);
+					
+				}
+				
 				
 			} else {
 				
@@ -450,30 +461,27 @@ public class FestivalServiceImpl implements FestivalService {
 			}
 			
 			
-		} else {
+			String imgUrl = el.select("img").attr("src");
 			
-			el = els.get(0);
+			if (!imgUrl.equals("")) {
+				
+				naverArticleDTO.setImgUrl(imgUrl);
+				
+			}
+			
+			
+			String content = el.text();
+			content = content.replaceAll("</[a-z]*>", "").replaceAll("<[a-z]*>", "").replaceAll("/", "").replaceAll("▲", "");
+			
+			if (content != "") {
+				naverArticleDTO.setTotalContent(content);
+			}
+			
+			System.out.println("serviceIMpl : naverArticleDTO : " + naverArticleDTO);
 			
 		}
 		
 		
-		String imgUrl = el.select("img").attr("src");
-		
-		if (!imgUrl.equals("")) {
-			
-			naverArticleDTO.setImgUrl(imgUrl);
-			
-		}
-		
-		
-		String content = el.text();
-		content = content.replaceAll("</[a-z]*>", "").replaceAll("<[a-z]*>", "").replaceAll("/", "").replaceAll("▲", "");
-		
-		if (content != "") {
-			naverArticleDTO.setTotalContent(content);
-		}
-		
-		System.out.println("serviceIMpl : naverArticleDTO : " + naverArticleDTO);
 		
 		return naverArticleDTO;
 	}
