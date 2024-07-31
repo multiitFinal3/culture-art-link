@@ -567,15 +567,133 @@ CREATE VIEW vw_user_review_data AS
 ALTER TABLE festival_naver_url
 DROP CONSTRAINT PRIMARY;
 
-CREATE OR REPLACE VIEW vw_festival_review_manage_data AS
+
+
+
+
+CREATE OR REPLACE VIEW vw_festival_naver_keyword_tf_idf_data AS
+
+WITH all_words_count AS(
+
+	SELECT fc.festival_id , fc.sort_code , SUM(fc.freq) AS all_words_count
+
+	from festival_content_review_naver_keyword_mapping fc
+
+	GROUP BY fc.festival_id , fc.sort_code
+
+
+),
+
+all_docu_count AS(
+
+	SELECT fc.sort_code, COUNT(DISTINCT fc.festival_id) AS all_docu_count
+
+	from festival_content_review_naver_keyword_mapping fc
+
+	GROUP BY fc.sort_code
+
+),
+
+include_word_docu_count AS(
+
+	SELECT fc.sort_code, fc.festival_keyword_id, COUNT(DISTINCT fc.festival_id) AS include_word_docu_count
+
+	from festival_content_review_naver_keyword_mapping fc
+
+	GROUP BY fc.festival_keyword_id,
+			fc.sort_code
+
+
+)
+
 SELECT
-	f.*,
-		COUNT(fr.festival_review_id) review_count,
-	AVG(fr.festival_review_star) avg_rate
+
+	 fc.festival_id ,
+	 fc.sort_code,
+	 fc.festival_keyword_id,
+
+	 fc.freq,
+	 all_words_count.all_words_count,
+     all_docu_count.all_docu_count,
+     include_word_docu_count.include_word_docu_count,
+
+
+     (fc.freq)/(all_words_count.all_words_count) AS "tf",
+
+
+     LOG10((all_docu_count.all_docu_count/include_word_docu_count.include_word_docu_count))
+     AS "idf",
+
+     (fc.freq)/(all_words_count.all_words_count)*LOG10((all_docu_count.all_docu_count
+     /include_word_docu_count.include_word_docu_count))
+     AS "tf_idf"
 
 FROM
-	festival f
-LEFT JOIN
-	festival_review fr  ON f.festival_id = fr.festival_id
-GROUP BY
-	f.festival_id;
+	festival_content_review_naver_keyword_mapping fc
+
+LEFT JOIN all_words_count ON
+	fc.festival_id = all_words_count.festival_id
+		AND  fc.sort_code = all_words_count.sort_code
+
+LEFT JOIN all_docu_count ON
+		fc.sort_code = all_docu_count.sort_code
+
+LEFT JOIN include_word_docu_count ON
+	fc.festival_keyword_id = include_word_docu_count.festival_keyword_id
+	AND  fc.sort_code = include_word_docu_count.sort_code;
+
+
+
+
+
+
+SELECT fc.festival_id , fc.sort_code , SUM(fc.freq)
+
+from festival_content_review_naver_keyword_mapping fc
+
+GROUP BY fc.festival_id , fc.sort_code;
+
+
+SELECT SUM(fc.freq) from festival_content_review_naver_keyword_mapping fc;
+
+SELECT SUM(fc.freq) from festival_content_review_naver_keyword_mapping fc
+WHERE fc.festival_id =148;
+
+
+
+SELECT fc.sort_code, COUNT(DISTINCT fc.festival_id) from festival_content_review_naver_keyword_mapping fc
+GROUP BY fc.sort_code ;
+
+
+
+
+SELECT fc.sort_code, fc.festival_keyword_id, COUNT(DISTINCT fc.festival_id)
+
+FROM festival_content_review_naver_keyword_mapping fc
+
+GROUP BY fc.festival_keyword_id,
+		fc.sort_code;
+
+
+
+
+SELECT fc.festival_id , fc.sort_code , SUM(fc.freq)
+
+from festival_content_review_naver_keyword_mapping fc
+
+GROUP BY fc.festival_id , fc.sort_code;
+
+
+SELECT SUM(fc.freq) from festival_content_review_naver_keyword_mapping fc;
+
+SELECT SUM(fc.freq) from festival_content_review_naver_keyword_mapping fc
+WHERE fc.festival_id =148;
+
+SELECT COUNT(DISTINCT fc.festival_id) from festival_content_review_naver_keyword_mapping fc;
+
+
+SELECT fc.festival_keyword_id, COUNT(DISTINCT fc.festival_id)
+
+from festival_content_review_naver_keyword_mapping fc
+
+GROUP BY fc.festival_keyword_id;
