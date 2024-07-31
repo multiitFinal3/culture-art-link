@@ -4,6 +4,7 @@ import com.multi.culture_link.admin.culturalProperties.model.dao.AdminCulturalPr
 import com.multi.culture_link.admin.culturalProperties.model.dto.CulturalPropertiesDTO;
 import com.multi.culture_link.admin.culturalProperties.model.dto.PageDTO;
 import com.multi.culture_link.culturalProperties.model.dao.CulturalPropertiesDAO;
+import com.multi.culture_link.culturalProperties.model.dto.NewsArticle;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -41,6 +42,13 @@ public class CulturalPropertiesService {
 
     public CulturalPropertiesDTO getCulturalPropertyById(int id) {
         return culturalPropertiesDAO.getCulturalPropertyById(id);
+    }
+
+    public List<NewsArticle> getNewsArticles() {
+        // 크롤링 로직
+        List<NewsArticle> articles = new ArrayList<>();
+
+        return articles;
     }
 
 

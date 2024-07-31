@@ -13,7 +13,8 @@ layout:decorate="~{common/layout/layoutMenubar}">
         <script src="/js/culturalProperties/culturalProperties.js"></script>
         <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 
-        <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
 
         <style>
 
@@ -73,6 +74,19 @@ layout:decorate="~{common/layout/layoutMenubar}">
         .card-img-top {
             height: 300px;
             object-fit: cover;
+        }
+
+
+        .card {
+            height: 400px; /* 카드의 높이를 350px로 설정 */
+            margin-top: 20px; /* 카드의 위쪽 여백을 20px로 설정 */
+            margin-bottom: 30px; /* 카드의 아래쪽 여백을 20px로 설정 */
+        }
+
+        .card-body {
+            display: flex;
+            flex-direction: column; /* 카드 내용을 수직으로 정렬 */
+            justify-content: space-between; /* 카드 내용을 위쪽과 아래쪽으로 배치 */
         }
 
 
@@ -171,9 +185,37 @@ layout:decorate="~{common/layout/layoutMenubar}">
                 </div>
                 <div class="tab-pane fade" id="news" role="tabpanel" aria-labelledby="news-tab">
                     <!-- 뉴스 & 소식 내용 -->
+
+                    <br><br>
+
+                    <div class="news-articles">
+                        <h2>문화재 관련 뉴스</h2>
+                        <br><br>
+                        <ul id="news-list" class="list-group">
+                            <!-- 뉴스 기사가 여기에 추가됨 -->
+                        </ul>
+                    </div>
+                    <br><br>
+
                 </div>
                 <div class="tab-pane fade" id="video" role="tabpanel" aria-labelledby="video-tab">
                     <!-- 관련 영상 내용 -->
+                    <br>
+
+                    <div class="container mt-5">
+                        <h2>관련 영상</h2>
+
+                        <br><br>
+
+                        <div id="video-list" class="row">
+                            <!-- 비디오 리스트가 여기에 렌더링됨 -->
+                        </div>
+                    </div>
+
+
+                    <br><br>
+
+
                 </div>
 
             </div>

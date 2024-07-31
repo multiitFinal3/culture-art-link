@@ -187,5 +187,106 @@ $(document).ready(function() {
         });
     }
 
+
+    loadNewsArticles(); // 페이지가 로드될 때 뉴스 기사를 불러옴
+
+    function loadNewsArticles() {
+        $.ajax({
+            url: '/cultural-properties/news', // 뉴스 기사 요청 URL
+            method: 'GET',
+            success: function(data) {
+                console.log('뉴스 기사를 성공적으로 수신:', data);
+                renderNewsArticles(data); // 뉴스 기사 렌더링
+            },
+            error: function(xhr, status, error) {
+                console.error('AJAX 요청 실패:', status, error);
+            }
+        });
+    }
+
+
+    function renderNewsArticles(articles) {
+        const newsList = $('#news-list');
+        newsList.empty(); // 기존 내용을 비웁니다.
+
+        if (!Array.isArray(articles) || articles.length === 0) {
+            newsList.append('<li class="list-group-item">등록된 문화재 관련 뉴스가 없습니다.</li>');
+            return;
+        }
+
+        $.each(articles, function(index, article) {
+            const listItem = $('<li>').addClass('list-group-item');
+
+            // 이미지 추가
+            if (article.imgUrl) {
+                const image = $('<img>').attr('src', article.imgUrl).addClass('img-fluid mb-2'); // 이미지에 클래스 추가
+                listItem.append(image); // 이미지 리스트 항목에 추가
+            }
+//            console.log('뉴스 기사 이미지 URL:', article.imgUrl);
+
+            const title = $('<h5>').addClass('mb-1').text(article.title);
+            const content = $('<p>').addClass('mb-1').text(article.content);
+            const date = $('<small>').addClass('text-muted').text(article.date);
+            const link = $('<a>').attr('href', article.link).addClass('btn btn-primary btn-sm mt-2').text('자세히 보기');
+
+            listItem.append(title, content, date, link);
+            newsList.append(listItem);
+        });
+    }
+
+
+    loadVideos();
+
+    function loadVideos() {
+        const query = "국가유산"; // 이 부분에 원하는 검색어를 넣으세요.
+        $.ajax({
+            url: '/cultural-properties/videos?query=' + encodeURIComponent(query), // 서버에서 비디오 데이터를 가져오는 URL
+            type: 'POST',
+            contentType: 'application/x-www-form-urlencoded', // POST 요청 시 Content-Type 설정
+            success: function(videos) {
+                console.log('받은 비디오 데이터:', videos); // 응답 데이터 로그
+                renderVideos(videos); // 성공적으로 데이터를 가져온 경우
+            },
+            error: function(xhr, status, error) {
+                console.error('비디오 로드 실패:', status, error);
+            }
+        });
+    }
+
+
+    function renderVideos(videos) {
+        const videoList = $('#video-list');
+        videoList.empty(); // 기존 내용을 비웁니다.
+
+        if (!Array.isArray(videos) || videos.length === 0) {
+            videoList.append('<p>등록된 영상이 없습니다.</p>');
+            return;
+        }
+
+        // 비디오 리스트 렌더링
+        $.each(videos, function(index, video) {
+            const colDiv = $('<div>').addClass('col-md-4 mb-4');
+            const cardDiv = $('<div>').addClass('card');
+            const cardBody = $('<div>').addClass('card-body');
+
+            // 제목
+            const title = $('<h5>').addClass('card-title').html(video.title); // html() 메서드로 변경
+
+            // iframe 추가 (비디오 재생)
+            const videoId = video.link.split('v=')[1]; // 링크에서 videoId 추출
+            const iframe = $('<iframe>')
+                .attr('src', 'https://www.youtube.com/embed/' + videoId)
+                .attr('class', 'embed-responsive-item')
+                .attr('allowfullscreen', true)
+                .css('width', '100%')
+                .css('height', '250px');
+
+            cardBody.append(title, iframe); // 제목과 iframe을 카드 바디에 추가
+            cardDiv.append(cardBody);
+            colDiv.append(cardDiv);
+            videoList.append(colDiv); // 비디오 카드 추가
+        });
+    }
+
 });
 
