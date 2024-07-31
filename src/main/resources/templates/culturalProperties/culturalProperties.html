@@ -17,10 +17,37 @@ layout:decorate="~{common/layout/layoutMenubar}">
 
         <style>
 
+        .hero-section {
+            position: relative; /* 부모 요소에 상대 위치를 지정 */
+        }
+
+        .search-bar {
+            position: absolute; /* 절대 위치 지정 */
+            top: 600px; /* 이미지 상단에서의 거리 */
+            left: 50%; /* 이미지의 가로 중앙으로 위치 */
+            transform: translateX(-50%); /* 왼쪽으로 50% 이동하여 중앙 정렬 */
+            width: 80%; /* 검색 바의 너비 */
+            z-index: 10; /* 다른 요소보다 위에 배치 */
+        }
+
+        /* 검색바 높이 늘리기 */
+        .search-bar input.form-control {
+            height: 50px; /* 입력 필드의 높이 */
+            font-size: 16px; /* 폰트 크기 */
+        }
+
+        .search-bar button {
+            height: 50px; /* 버튼의 높이 */
+            font-size: 16px; /* 폰트 크기 */
+        }
+
 
             .hero-section img {
-                height: 300px;
-                object-fit: cover;
+<!--                height: 800px;-->
+<!--                object-fit: cover;-->
+max-height: 400px; /* 최대 높이를 설정하여 비율 줄이기 */
+            width: 100%; /* 너비를 100%로 설정 */
+            object-fit: contain; /* 이미지 비율 유지하면서 전체 보이도록 */
             }
 
             .card-img-top {
@@ -46,7 +73,8 @@ layout:decorate="~{common/layout/layoutMenubar}">
 
     <main class="container mt-4">
         <section class="hero-section mb-4">
-            <img src="/static/img/mainimg.jpg" alt="대표 문화재" class="img-fluid w-100">
+            <img th:src="@{/img/culturalProperties/mainimg.jpg}" alt="대표 문화재" class="img-fluid w-100">
+<!--            <img src="/static/img/culturalProperties/mainimg.jpg" alt="대표 문화재" class="img-fluid w-100">-->
             <div class="search-bar mt-3">
                 <form class="d-flex">
                     <input class="form-control me-2" type="search" placeholder="검색어를 입력하세요" aria-label="Search">
