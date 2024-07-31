@@ -40,19 +40,19 @@ public class PerformanceRankingService {
         return response;
     }
 
-    public List<PerformanceDTO> fetchGenreRanking(String genre, String date) {
+    public List<PerformanceDTO> fetchGenreRanking(String genre, String date,int limit) {
         String ststype = "day";
         String catecode = getCategoryCode(genre);
         if (catecode == null) {
             return new ArrayList<>();
         }
         String data = fetchPerformanceData(ststype, catecode, date);
-        List<PerformanceDTO> rankingData = parseRankingData(data);
+        List<PerformanceDTO> rankingData = parseRankingData(data, limit);
         System.out.println("Parsed Data: " + rankingData);
         return rankingData;
     }
 
-    private List<PerformanceDTO> parseRankingData(String data) {
+    private List<PerformanceDTO> parseRankingData(String data,int limit) {
         List<PerformanceDTO> rankingData = new ArrayList<>();
         try {
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -66,7 +66,7 @@ public class PerformanceRankingService {
             DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("yyyy.MM.dd");
             DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
-            for (int i = 0; i < Math.min(5, performanceList.getLength()); i++) { // 최대 5개의 항목만 추가
+            for (int i = 0; i < Math.min(limit, performanceList.getLength()); i++) { // 지정한 개수만큼 항목 추가
                 Node performance = performanceList.item(i);
                 PerformanceDTO dto = new PerformanceDTO();
                 dto.setTitle(getTagValue("prfnm", performance));
@@ -80,11 +80,21 @@ public class PerformanceRankingService {
 
                 dto.setImageMain("https://www.kopis.or.kr" + getTagValue("poster", performance));
                 dto.updateFormattedDate();
+                dto.setRank(getTagValue("rnum", performance)); // 순위 설정
                 rankingData.add(dto);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return rankingData;
+    }
+
+    public List<PerformanceDTO> fetchTopRankings(String date) {
+        String ststype = "day";
+        String catecode = ""; // 모든 카테고리
+        String data = fetchPerformanceData(ststype, catecode, date);
+        List<PerformanceDTO> rankingData = parseRankingData(data, 50); // 지정한 개수만큼 항목 추가
+        System.out.println("Parsed Data: " + rankingData);
         return rankingData;
     }
 

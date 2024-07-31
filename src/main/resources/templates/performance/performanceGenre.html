@@ -28,7 +28,23 @@
                     window.location.href = `/performance/performance-genre?genre=${encodeURIComponent(genre)}`;
                 });
             });
-        });
+
+             // 랭킹 클릭 이벤트 리스너 추가
+        const rankingItem = document.getElementById('ranking-item');
+        if (rankingItem) {
+            rankingItem.addEventListener('click', function() {
+                window.location.href = `/performance/performanceRanking`;
+            });
+        }
+
+        // 지역별 클릭 이벤트 리스너 추가
+        const regionItem = document.getElementById('region-item');
+        if (regionItem) {
+            regionItem.addEventListener('click', function() {
+                window.location.href = `/performance/performance-region`; // "지역별"의 URL을 필요에 따라 업데이트
+            });
+        }
+    });
     </script>
 </head>
 <body>
@@ -50,7 +66,7 @@
         </div>
         <!-- 추가 필터 -->
         <div class="extra-filter">
-            <div class="extra-item">
+            <div class="extra-item" id="ranking-item">
                 <img th:src="@{/img/performance/ranking.png}" alt="랭킹 아이콘" class="filter-icon">
                 랭킹
             </div>
