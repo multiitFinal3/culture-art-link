@@ -41,4 +41,6 @@ public interface AdminFestivalService {
 	FestivalContentReviewNaverKeywordMapDTO findKeywordMappingByKeywordMapping(FestivalContentReviewNaverKeywordMapDTO keywordMapping) throws Exception;
 	
 	void insertKeywordMappingByKeywordMapping(FestivalContentReviewNaverKeywordMapDTO keywordMapping) throws Exception;
+	
+	HashMap<String, Integer> findNaverArticleKeywordByFestivalId(int festivalId) throws Exception;
 }
