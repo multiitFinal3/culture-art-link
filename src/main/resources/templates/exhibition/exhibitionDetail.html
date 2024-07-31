@@ -81,15 +81,36 @@
 
 
     <section class="reviews-section">
-      <h2>리뷰</h2>
-      <div id="reviewsContainer">
+        <h2>후기</h2>
+        <div id="reviewsContainer">
 
-      </div>
+        </div>
+
+        <div class="display-flex">
+            <div style="float: left">
+                후기 작성하기
+            </div>
+            <div>
+                <div class="star-rating" data-rating="0">
+                    <span class="star" data-value="1"></span>
+                    <span class="star" data-value="2"></span>
+                    <span class="star" data-value="3"></span>
+                    <span class="star" data-value="4"></span>
+                    <span class="star" data-value="5"></span>
+                </div>
+                <textarea id="commentTextarea" placeholder="후기를 입력해주세요.">
+
+                </textarea>
+            </div>
+            <div>
+                <button id="saveCommentBtn" style="float:right">확인</button>
+            </div>
+        </div>
     </section>
     <footer>
-      <section class="related-exhibitions">
-        <h2>이 전시와 비슷한 전시</h2>
-        <div id="relatedExhibitionsContainer"></div>
+      <section class="artwork-analyze">
+        <h2>작품 개인 분석</h2>
+        <div id="artworkAnalzeContainer"></div>
       </section>
     </footer>
   </div>

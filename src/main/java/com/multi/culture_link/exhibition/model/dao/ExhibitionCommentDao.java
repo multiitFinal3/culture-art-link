@@ -12,7 +12,7 @@ import java.util.Map;
 public interface ExhibitionCommentDao {
 
     List<ExhibitionCommentDto> getComment(int exhibitionId);
-    void createComment(ExhibitionCommentDto comment);
+    void createComment(ExhibitionCommentDto data);
     void deleteComment(ExhibitionCommentDto data);
 
 }

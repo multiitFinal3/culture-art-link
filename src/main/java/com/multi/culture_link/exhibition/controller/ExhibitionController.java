@@ -1,9 +1,11 @@
 package com.multi.culture_link.exhibition.controller;
 
 import com.multi.culture_link.admin.exhibition.model.dto.api.ExhibitionApiDto;
+import com.multi.culture_link.exhibition.model.dto.ExhibitionAnalyzeDto;
 import com.multi.culture_link.exhibition.model.dto.ExhibitionCommentDto;
 import com.multi.culture_link.exhibition.model.dto.ExhibitionDto;
 import com.multi.culture_link.exhibition.model.dto.ExhibitionInterestDto;
+import com.multi.culture_link.exhibition.service.ExhibitionAnalyzeService;
 import com.multi.culture_link.exhibition.service.ExhibitionCommentService;
 import com.multi.culture_link.exhibition.service.ExhibitionService;
 import com.multi.culture_link.users.model.dto.UserDTO;
@@ -30,6 +32,8 @@ import java.util.Map;
 public class ExhibitionController {
     private final ExhibitionService exhibitionService;
     private final ExhibitionCommentService exhibitionCommentService;
+    private final ExhibitionAnalyzeService exhibitionAnalzeService;
+    
     
     // 상세 검색
     @GetMapping("/search-exhibition")
@@ -52,7 +56,7 @@ public class ExhibitionController {
             @AuthenticationPrincipal VWUserRoleDTO currentUser,
             @PathVariable int exhibitionId
     ){
-        System.out.println("exhibition: " + exhibitionService.getExhibitionById(currentUser.getUserId(), exhibitionId));
+//        System.out.println("exhibition: " + exhibitionService.getExhibitionById(currentUser.getUserId(), exhibitionId));
         return exhibitionService.getExhibitionById(currentUser.getUserId(), exhibitionId);
     }
 
@@ -104,13 +108,13 @@ public class ExhibitionController {
     // 댓글 작성
     @PostMapping("/exhibition/{exhibitionId}/comment")
     public void setComment(
-            @RequestBody ExhibitionCommentDto comment,
+            @RequestBody ExhibitionCommentDto data,
             @AuthenticationPrincipal VWUserRoleDTO currentUser,
             @PathVariable int exhibitionId
     ) {
-        comment.setExhibitionId(exhibitionId);
-        comment.setUserId(currentUser.getUserId());
-        exhibitionCommentService.createComment(comment);
+        data.setExhibitionId(exhibitionId);
+        data.setUserId(currentUser.getUserId());
+        exhibitionCommentService.createComment(data);
     }
 
     // 댓글 삭제
@@ -119,8 +123,54 @@ public class ExhibitionController {
             @AuthenticationPrincipal VWUserRoleDTO currentUser,
             @PathVariable int exhibitionId
     ) {
-        System.out.println("exhibition: " + exhibitionCommentService.getComment(exhibitionId));
+//        System.out.println("exhibition: " + exhibitionCommentService.getComment(exhibitionId));
         exhibitionCommentService.deleteComment(currentUser.getUserId(), exhibitionId);
     }
+
+
+
+    // 분석 목록 가져오기
+    @GetMapping("/exhibition/{exhibitionId}/analyze")
+    public List<ExhibitionAnalyzeDto> getAnalyze(
+            @PathVariable int exhibitionId
+    ) {
+        return exhibitionAnalzeService.getAnalyze(exhibitionId);
+    }
+
+    // 분석 작성
+    @PostMapping("/exhibition/{exhibitionId}/analyze")
+    public void setAnalyze(
+            @RequestBody ExhibitionAnalyzeDto data,
+            @AuthenticationPrincipal VWUserRoleDTO currentUser,
+            @PathVariable int exhibitionId
+    ) {
+        data.setExhibitionId(exhibitionId);
+        data.setUserId(currentUser.getUserId());
+        exhibitionAnalzeService.createAnalyze(data);
+    }
+
+    @PatchMapping("/exhibition/{exhibitionId}/analyze")
+    public void updateAnalyze(
+            @RequestBody ExhibitionAnalyzeDto data,
+            @AuthenticationPrincipal VWUserRoleDTO currentUser,
+            @PathVariable int exhibitionId
+    ) {
+        data.setExhibitionId(exhibitionId);
+        data.setUserId(currentUser.getUserId());
+        exhibitionAnalzeService.updateAnalyze(data);
+
+
+    }
+
+    // 분석 삭제
+    @DeleteMapping("/exhibition/{exhibitionId}/analyze")
+    public void deleteAnalyze(
+            @AuthenticationPrincipal VWUserRoleDTO currentUser,
+            @PathVariable int exhibitionId
+    ) {
+        exhibitionAnalzeService.deleteAnalyze(currentUser.getUserId(), exhibitionId);
+    }
+
+
 
 }

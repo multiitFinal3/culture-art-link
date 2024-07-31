@@ -50,7 +50,10 @@ public class MyBatisConfiguration {
 		
 		// 테이블 속성들 _로 되어있는 것들과 dto의 필드에 camelCase로 되어있는 것들을 자동 연결 ex: user_id // userId
 		org.apache.ibatis.session.Configuration configuration = new org.apache.ibatis.session.Configuration();
-		configuration.setLogImpl(StdOutImpl.class);
+
+		// 모든 mapper 관련된 log 출력됨
+//		configuration.setLogImpl(StdOutImpl.class);
+
 		configuration.setMapUnderscoreToCamelCase(true);
 		
 		// null 값 처리

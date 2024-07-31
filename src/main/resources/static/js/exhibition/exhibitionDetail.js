@@ -34,22 +34,80 @@ $(document).ready(function() {
 });
 
 function btnEvent() {
-    const favoriteBtn = document.getElementById('favoriteBtn');
-    const notInterestedBtn = document.getElementById('notInterestedBtn');
 
-    favoriteBtn.addEventListener('click', function() {
-        const exhibitionId = getExhibitionIdFromUrl()
-        console.log("exhibition-like btn : ",exhibitionId)
-        updateInterest(exhibitionId, 'interested');
-    });
 
-    notInterestedBtn.addEventListener('click', function() {
-        const exhibitionId = getExhibitionIdFromUrl()
-        console.log("exhibition-dislike btn : ",exhibitionId)
-        updateInterest(exhibitionId, 'not_interested');
+    document.addEventListener('DOMContentLoaded', function() {
+        const favoriteBtn = document.getElementById('favoriteBtn');
+        const notInterestedBtn = document.getElementById('notInterestedBtn');
+        let starContainer = document.querySelector('.star-rating');
+        const stars = starContainer.querySelectorAll('.star');
+
+        console.log("starcontainer: ", starContainer);
+        console.log("stars: ", stars);
+
+        stars.forEach(star => {
+            star.addEventListener('click', () => {
+                const value = star.getAttribute('data-value');
+
+                if(!starContainer) {
+                    console.log('not found start container');
+                    starContainer = document.querySelector('.star-rating');
+                }
+                starContainer.setAttribute('data-rating', value);
+                updateStars(starContainer, stars);
+            });
+        });
+
+        saveCommentBtn.addEventListener('click', function () {
+            const exhibitionId = getExhibitionIdFromUrl()
+            console.log("exhibition-like btn : ", exhibitionId)
+            saveComment(exhibitionId, 'interested');
+        });
+
+        favoriteBtn.addEventListener('click', function () {
+            const exhibitionId = getExhibitionIdFromUrl()
+            console.log("exhibition-like btn : ", exhibitionId)
+            updateInterest(exhibitionId, 'interested');
+        });
+
+        notInterestedBtn.addEventListener('click', function () {
+            const exhibitionId = getExhibitionIdFromUrl()
+            console.log("exhibition-dislike btn : ", exhibitionId)
+            updateInterest(exhibitionId, 'not_interested');
+        });
+    })
+}
+
+function updateStars(starContainer, stars) {
+    const rating = parseInt(starContainer.getAttribute('data-rating'));
+    stars.forEach(star => {
+        const starValue = parseInt(star.getAttribute('data-value'));
+        if (starValue <= rating) {
+            star.classList.add('filled');
+        } else {
+            star.classList.remove('filled');
+        }
     });
 }
 
+
+async function saveComment(exhibitionId) {
+    try {
+        const comment = document.getElementById('commentTextarea');
+        const star = starContainer.getAttribute('data-rating');
+        const data = {
+            star,
+            content:comment.value
+        }
+
+        console.log('save comment : ',data)
+        const response = await axios.post(`/exhibition/${exhibitionId}/comment`, data)
+
+        loadExhibitionReviews()
+    }catch(e) {
+        console.log('error : ',e)
+    }
+}
 
 async function updateInterest(exhibitionId, state) {
     console.log('update interest: ',exhibitionId, state)
@@ -92,13 +150,27 @@ function getExhibitionIdFromUrl() {
 
 async function loadExhibitionDetails(exhibitionId) {
     try {
+        const exhibitionId = getExhibitionIdFromUrl()
         const response = await fetch(`/exhibition/${exhibitionId}`);
         const data = await response.json();
         console.log(data);
 
         data.startDate =  data.startDate?.substring(0,10) || "미정";
         data.endDate =  data.endDate?.substring(0,10) || "미정";
+        await loadExhibitionReviews()
         renderExhibitionDetails(data);
+    } catch (error) {
+        console.error('Failed to load exhibition details:', error);
+    }
+}
+
+async function loadExhibitionReviews() {
+    try {
+        const response = await fetch(`/exhibition/${exhibitionId}/comment`);
+        const data = await response.json();
+        console.log(data);
+        exhibition.reviews = data
+        renderReviews(data)
     } catch (error) {
         console.error('Failed to load exhibition details:', error);
     }
@@ -179,11 +251,10 @@ function renderVideo(videoId) {
 function renderReviews(reviews) {
     const reviewsHtml = reviews.map(review => `
         <div class="review">
-            <img src="${review.reviewerImage}" alt="${review.reviewerName}" class="reviewer-image">
             <div class="review-content">
-                <h3>${review.reviewerName}</h3>
-                <p class="review-text">${review.text}</p>
-                <div class="review-rating">${'★'.repeat(review.rating)}${'☆'.repeat(5-review.rating)}</div>
+                <h3>${review.name}</h3>
+                <p class="review-text">${review.comment}</p>
+                <div class="review-rating">${'★'.repeat(review.rating)}${'☆'.repeat(5-review.star)}</div>
             </div>
         </div>
     `).join('');

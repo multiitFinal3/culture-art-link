@@ -22,8 +22,8 @@ public class ExhibitionCommentService {
         return ExhibitionCommentDao.getComment(exhibitionId);
     }
 
-    public void createComment(ExhibitionCommentDto comment) {
-        ExhibitionCommentDao.createComment(comment);
+    public void createComment(ExhibitionCommentDto data) {
+        ExhibitionCommentDao.createComment(data);
     }
 
     public void deleteComment(int userId, int exhibitionId) {
