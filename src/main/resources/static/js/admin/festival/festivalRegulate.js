@@ -123,7 +123,10 @@ $(document).ready(
                             <td class="imgUrl"></td>
                             <td class="buttonHead">
                                 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalLong" id="dbUpdateBtn" value="${festival.festivalId}">상세수정</button><br><hr>
-                                <button type="button" class="btn btn-primary contentKeywordInsertBtn" value="${festival.festivalId}">키워드추가</button>
+                                <button type="button" class="btn btn-primary contentKeywordInsertBtn" value="${festival.festivalId}">내용</button>
+                                <button type="button" class="btn btn-primary naverArticleKeywordInsertBtn" value="${festival.festivalId}">기사</button><br><br>
+                                <button type="button" class="btn btn-primary naverBlogKeywordInsertBtn" value="${festival.festivalId}">블로그</button>
+                                <button type="button" class="btn btn-primary reviewBlogKeywordInsertBtn" value="${festival.festivalId}">리뷰</button><br>
                             </td>
                             </tr>
                             `
@@ -134,7 +137,10 @@ $(document).ready(
                              <td class="imgUrl"><img src="${festival.imgUrl}" width="40px" alt="이미지 없음"></td>
                              <td class="buttonHead">
                                  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalLong" id="dbUpdateBtn" value="${festival.festivalId}">상세수정</button><br><hr>
-                                 <button type="button" class="btn btn-primary contentKeywordInsertBtn" value="${festival.festivalId}">키워드추가</button>
+                                 <button type="button" class="btn btn-primary contentKeywordInsertBtn" value="${festival.festivalId}">내용</button>
+                                 <button type="button" class="btn btn-primary naverArticleKeywordInsertBtn" value="${festival.festivalId}">기사</button><br><br>
+                                 <button type="button" class="btn btn-primary naverBlogKeywordInsertBtn" value="${festival.festivalId}">블로그</button>
+                                 <button type="button" class="btn btn-primary reviewBlogKeywordInsertBtn" value="${festival.festivalId}">리뷰</button><br>
                              </td>
                              </tr>
                             `
@@ -209,7 +215,9 @@ $(document).ready(
 
         })
 
-        /**
+
+
+       /**
        * 선택한 DB 축제 내용에 해당하는 키워드 추가 기능
        */
         $(document).on('click','.contentKeywordInsertBtn', function(){
@@ -223,7 +231,7 @@ $(document).ready(
                 contentType: 'application/json',
                 success: function(list){
 
-                    alert("키워드 : " + list + ". 키워드 삽입 성공!")
+                    alert("내용 키워드 : " + list + ". 키워드 삽입 성공!")
 
 
                 }
@@ -233,6 +241,97 @@ $(document).ready(
 
 
         })
+
+
+
+       /**
+       * 선택한 DB 축제 관련 네이버 기사에 해당하는 키워드 추가 기능
+       */
+        $(document).on('click','.naverArticleKeywordInsertBtn', function(){
+
+            var festivalId = $(this).val();
+
+            $.ajax({
+
+                url: '/admin/festival-regulate/insertNaverArticleKeywordByFestivalId?festivalId=' + festivalId,
+                method: 'POST',
+                contentType: 'application/json',
+                success: function(list){
+
+                    alert("네이버 기사 키워드 : " + list + ". 키워드 삽입 성공!")
+
+
+                }
+
+
+            })
+
+        })
+//
+//
+//
+//       /**
+//       * 선택한 DB 축제 관련 네이버 블로그에 해당하는 키워드 추가 기능
+//       */
+//        $(document).on('click','.naverBlogKeywordInsertBtn', function(){
+//
+//            var festivalId = $(this).val();
+//
+//            $.ajax({
+//
+//                url: '/admin/festival-regulate/insertNaverBlogKeywordByFestivalId?festivalId=' + festivalId,
+//                method: 'POST',
+//                contentType: 'application/json',
+//                success: function(list){
+//
+//                    alert("네이버 블로그 키워드 : " + list + ". 키워드 삽입 성공!")
+//
+//
+//                }
+//
+//
+//            })
+//
+//        })
+//
+//
+//
+//
+//       /**
+//       * 선택한 DB 축제 관련 컬쳐링크 사이트 리뷰에 해당하는 키워드 추가 기능
+//       */
+//        $(document).on('click','.reviewKeywordInsertBtn', function(){
+//
+//            var festivalId = $(this).val();
+//
+//            $.ajax({
+//
+//                url: '/admin/festival-regulate/insertReviewKeywordByFestivalId?festivalId=' + festivalId,
+//                method: 'POST',
+//                contentType: 'application/json',
+//                success: function(list){
+//
+//                    alert("리뷰 키워드 : " + list + ". 키워드 삽입 성공!")
+//
+//
+//                }
+//
+//
+//            })
+//
+//        })
+
+
+
+
+
+
+
+
+
+
+
+
 
 
         /**
@@ -530,7 +629,10 @@ $(document).ready(
 
                             <td class="buttonHead">
                                 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalLong" id="dbUpdateBtn" value="${festival.festivalId}">상세수정</button><br><hr>
-                                <button type="button" class="btn btn-primary contentKeywordInsertBtn" value="${festival.festivalId}">키워드추가</button>
+                                <button type="button" class="btn btn-primary contentKeywordInsertBtn" value="${festival.festivalId}">내용</button>
+                                <button type="button" class="btn btn-primary naverArticleKeywordInsertBtn" value="${festival.festivalId}">기사</button><br><br>
+                                <button type="button" class="btn btn-primary naverBlogKeywordInsertBtn" value="${festival.festivalId}">블로그</button>
+                                <button type="button" class="btn btn-primary reviewBlogKeywordInsertBtn" value="${festival.festivalId}">리뷰</button><br>
                             </td>
                             </tr>
                             `
@@ -542,7 +644,10 @@ $(document).ready(
 
                              <td class="buttonHead">
                                  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalLong" id="dbUpdateBtn" value="${festival.festivalId}">상세수정</button><br><hr>
-                                 <button type="button" class="btn btn-primary contentKeywordInsertBtn" value="${festival.festivalId}">키워드추가</button>
+                                 <button type="button" class="btn btn-primary contentKeywordInsertBtn" value="${festival.festivalId}">내용</button>
+                                 <button type="button" class="btn btn-primary naverArticleKeywordInsertBtn" value="${festival.festivalId}">기사</button><br><br>
+                                 <button type="button" class="btn btn-primary naverBlogKeywordInsertBtn" value="${festival.festivalId}">블로그</button>
+                                 <button type="button" class="btn btn-primary reviewBlogKeywordInsertBtn" value="${festival.festivalId}">리뷰</button><br>
                              </td>
                              </tr>
                             `
