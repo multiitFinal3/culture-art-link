@@ -571,7 +571,7 @@ DROP CONSTRAINT PRIMARY;
 
 
 
-CREATE OR REPLACE VIEW vw_festival_naver_keyword_tf_idf_data AS
+CREATE OR REPLACE VIEW vw_festival_keyword_tf_idf_data AS
 
 WITH all_words_count AS(
 
