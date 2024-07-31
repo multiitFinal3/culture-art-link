@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.multi.culture_link.exhibition.model.dao.ExhibitionCommentDao"><!-- 메퍼위치하고  동일하게 네임스페이스 작성-->
+
+
+    <select id="getComment" resultType="com.multi.culture_link.exhibition.model.dto.ExhibitionCommentDto">
+        SELECT * FROM exhibition_comment WHERE exhibition_id = #{exhibitionId}
+    </select>
+
+    <insert id="createComment" >
+        INSERT INTO exhibition_comment (exhibition_id, user_id, stars, content) " +
+            "VALUES (#{exhibitionId}, #{userId}, #{stars}, #{content})
+    </insert>
+
+    <delete id="deleteComment">
+        DELETE FROM exhibition_comment
+        WHERE user_id = #{userId} AND exhibition_id = #{exhibitionId}
+    </delete>
+
+
+
+
+
+
+</mapper>
