@@ -164,25 +164,81 @@ public class AdminCulturalPropertiesController {
 
 
 
+//	@PostMapping("/searchDB")
+//	@ResponseBody
+//	public List<CulturalPropertiesDTO> searchDBCulturalProperties(
+//			@RequestParam("page") int page,
+//			@RequestParam(value = "category", required = false) String category,
+//			@RequestParam(value = "name", required = false) String name,
+//			@RequestParam(value = "region", required = false) String region,
+//			@RequestParam(value = "dynasty", required = false) String dynasty
+////			@RequestParam(required = false) String category,
+////			@RequestParam(required = false) String name,
+////			@RequestParam(required = false) String region,
+////			@RequestParam(required = false) String dynasty
+//	) {
+//
+//		PageDTO pageDTO = new PageDTO();
+//		pageDTO.setPage(page);
+//		pageDTO.setStartEnd(pageDTO.getPage());
+//
+//		System.out.println("검색pageDTO : " + pageDTO);
+//		System.out.println("controller- category : " + category);
+//		System.out.println(name);
+//		System.out.println(region);
+//		System.out.println(dynasty);
+//		CulturalPropertiesDTO culturalPropertiesDTO = new CulturalPropertiesDTO();
+//		culturalPropertiesDTO.setCategoryName(category);
+//
+////		FestivalDTO festivalDTO = new FestivalDTO();
+////
+////		com.multi.culture_link.festival.model.dto.PageDTO pageDTO2 = new com.multi.culture_link.festival.model.dto.PageDTO();
+////		pageDTO2.setPage(page);
+////		pageDTO2.setStartEnd(pageDTO2.getPage());
+////
+////		festivalDTO.setPageDTO(pageDTO2);
+////
+//		category = category.trim();
+//		name= name.trim();
+////		region = region.trim().replace(",","");
+////		dynasty = dynasty.trim().replace(",","");
+//		region = region.trim();
+//		dynasty = dynasty.trim();
+//
+//
+////		int start = pageDTO.getStart();
+////		int end = pageDTO.getEnd();
+////
+////		System.out.println("start : " + start);
+////		System.out.println("end : " + end);
+////		System.out.println();
+////
+////		culturalPropertiesDTO.setPageDTO(pageDTO);
+////		culturalPropertiesDTO.setStart(start);
+////		culturalPropertiesDTO.setEnd(end);
+//
+//
+//		return adminCulturalPropertiesService.searchDBCulturalProperties(pageDTO, category, name, region, dynasty);
+//
+////		return adminCulturalPropertiesService.searchCulturalProperties(festivalDTO)
+//	}
+
+
 	@PostMapping("/searchDB")
 	@ResponseBody
 	public List<CulturalPropertiesDTO> searchDBCulturalProperties(
-			@RequestParam("page") int page,
+//			@RequestParam("page") int page,
 			@RequestParam(value = "category", required = false) String category,
 			@RequestParam(value = "name", required = false) String name,
 			@RequestParam(value = "region", required = false) String region,
 			@RequestParam(value = "dynasty", required = false) String dynasty
-//			@RequestParam(required = false) String category,
-//			@RequestParam(required = false) String name,
-//			@RequestParam(required = false) String region,
-//			@RequestParam(required = false) String dynasty
 	) {
 
-		PageDTO pageDTO = new PageDTO();
-		pageDTO.setPage(page);
-		pageDTO.setStartEnd(pageDTO.getPage());
+//		PageDTO pageDTO = new PageDTO();
+//		pageDTO.setPage(page);
+//		pageDTO.setStartEnd(pageDTO.getPage());
 
-		System.out.println("검색pageDTO : " + pageDTO);
+//		System.out.println("검색pageDTO : " + pageDTO);
 		System.out.println("controller- category : " + category);
 		System.out.println(name);
 		System.out.println(region);
@@ -190,37 +246,18 @@ public class AdminCulturalPropertiesController {
 		CulturalPropertiesDTO culturalPropertiesDTO = new CulturalPropertiesDTO();
 		culturalPropertiesDTO.setCategoryName(category);
 
-//		FestivalDTO festivalDTO = new FestivalDTO();
-//
-//		com.multi.culture_link.festival.model.dto.PageDTO pageDTO2 = new com.multi.culture_link.festival.model.dto.PageDTO();
-//		pageDTO2.setPage(page);
-//		pageDTO2.setStartEnd(pageDTO2.getPage());
-//
-//		festivalDTO.setPageDTO(pageDTO2);
-//
 		category = category.trim();
 		name= name.trim();
-//		region = region.trim().replace(",","");
-//		dynasty = dynasty.trim().replace(",","");
 		region = region.trim();
 		dynasty = dynasty.trim();
 
 
-//		int start = pageDTO.getStart();
-//		int end = pageDTO.getEnd();
-//
-//		System.out.println("start : " + start);
-//		System.out.println("end : " + end);
-//		System.out.println();
-//
-//		culturalPropertiesDTO.setPageDTO(pageDTO);
-//		culturalPropertiesDTO.setStart(start);
-//		culturalPropertiesDTO.setEnd(end);
+
+//		return adminCulturalPropertiesService.searchDBCulturalProperties(pageDTO, category, name, region, dynasty);
+
+		return adminCulturalPropertiesService.searchDBCulturalProperties(category, name, region, dynasty);
 
 
-		return adminCulturalPropertiesService.searchDBCulturalProperties(pageDTO, category, name, region, dynasty);
-
-//		return adminCulturalPropertiesService.searchCulturalProperties(festivalDTO)
 	}
 
 
