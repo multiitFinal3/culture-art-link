@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
+      layout:decorate="~{/common/layout/layoutMenubar}">
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>지역별 페이지</title>
+    <link rel="stylesheet" th:href="@{/css/performance/performanceLocation.css}">
+
+</head>
+<body>
+
+<div layout:fragment="content">
+
+  <div class="filter-container">
+    <!-- 장르 필터 -->
+    <div class="genre-filter">
+      <div class="genre-item">홈</div>
+      <div class="genre-item">연극</div>
+      <div class="genre-item">무용</div>
+      <div class="genre-item">대중무용</div>
+      <div class="genre-item">서양음악</div>
+      <div class="genre-item">한국음악</div>
+      <div class="genre-item">대중음악</div>
+      <div class="genre-item">복합</div>
+      <div class="genre-item">서커스/마술</div>
+      <div class="genre-item">뮤지컬</div>
+    </div>
+    <!-- 추가 필터 -->
+    <div class="extra-filter">
+      <div class="extra-item" id="ranking-item">
+        <img th:src="@{/img/performance/ranking.png}" alt="랭킹 아이콘" class="filter-icon">
+        랭킹
+      </div>
+      <div class="extra-item" id="region-item">
+        <img th:src="@{/img/performance/map.png}" alt="지역별 아이콘" class="filter-icon">
+        지역별
+      </div>
+    </div>
+  </div>
+
+  <div class="ranking">
+    <div class="ranking-title">장르별 랭킹</div>
+  </div>
+
+</div>
+
+
+</body>
+</html>

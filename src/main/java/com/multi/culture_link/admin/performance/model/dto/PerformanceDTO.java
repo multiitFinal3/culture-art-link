@@ -34,6 +34,8 @@ public class PerformanceDTO {
     private String updatedAt;
     private String formattedDate; // 포맷된 날짜 (시작일자 - 종료일자)
 
+    private String rank;
+
 
     // formattedDate 필드를 업데이트하는 메소드
     public void updateFormattedDate() {

@@ -1,5 +1,6 @@
 package com.multi.culture_link.common.keyword.service;
 
+import com.multi.culture_link.festival.model.dto.NaverArticleDTO;
 import kr.co.shineware.nlp.komoran.constant.DEFAULT_MODEL;
 import kr.co.shineware.nlp.komoran.core.Komoran;
 import kr.co.shineware.nlp.komoran.model.KomoranResult;
@@ -240,6 +241,106 @@ public class KeywordExtractService1 {
 	}
 	
 	
+	/**
+	 * TF-ID로 키워드 구하기
+	 * @param naverArticleDTO
+	 * @return
+	 * @throws Exception
+	 */
+	public HashMap<String, Integer> getKeywordByTFID(NaverArticleDTO naverArticleDTO) throws Exception {
+		
+		
+		String allContent = naverArticleDTO.getTitle() + naverArticleDTO.getTotalContent();
+		
+		System.out.println("allContent : " + allContent);
+		
+		Komoran komoran = new Komoran(DEFAULT_MODEL.FULL);
+		
+		KomoranResult analyzeResultList = komoran.analyze(allContent);
+
+		System.out.println("analyzeResultList.getPlainText() : " + analyzeResultList.getPlainText());
+		
+		List<Token> tokenList = analyzeResultList.getTokenList();
+		for (Token token : tokenList) {
+			System.out.println("token");
+			System.out.format("(%2d, %2d) %s/%s\n", token.getBeginIndex(), token.getEndIndex(), token.getMorph(), token.getPos());
+		}
+		
+		ArrayList<String> list = (ArrayList<String>) analyzeResultList.getNouns();
+		
+		ArrayList<String> stopWords = new ArrayList<String>();
+		
+		
+		Resource resource = resourceLoader.getResource("classpath:static/txt/festival/stop.txt");
+		
+		BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(new FileInputStream(resource.getFile())));
+		
+		String line = null;
+		
+		while ((line = bufferedReader.readLine()) != null) {
+			
+			if (line.trim().length() > 0) {
+				stopWords.add(line.trim());
+			}
+		}
+
+		System.out.println("stopWords : " + stopWords.toString());
+
+		ArrayList<String> list2 = new ArrayList<>();
+		
+		HashMap<String, Integer> map = new HashMap<String, Integer>();
+
+
+		for (String token : list) {
+
+			if ((!list2.contains(token)) && (!stopWords.contains(token))) {
+
+				list2.add(token);
+
+			}
+
+		}
+		
+		for (String token : list) {
+			
+			boolean isStop = false;
+			
+			for (String stop : stopWords) {
+				
+				
+				if ((stopWords.contains(token)) || (stop.contains(token))) {
+					System.out.println(token + " : " + stop);
+					isStop = true;
+					break;
+					
+				}
+				
+			}
+			
+			if (!isStop) {
+				
+				if (map.keySet().contains(token)) {
+					
+					int val = map.get(token);
+					map.put(token, val + 1);
+					
+				} else {
+					
+					map.put(token, 1);
+					
+				}
+				
+			}
+			
+		}
+		
+		System.out.println("Komoran before : " + list);
+		System.out.println("Komoran after : " + map);
+		
+		return map;
+		
+
+	}
 }
 	
 

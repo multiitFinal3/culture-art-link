@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.util.List;
 
 /**
- * 공연 정보를 처리하는 컨트롤러 클래스입니다.
+ * 공연 정보를 처리하는 컨트롤러 클래스
  *
  * @since : 7/25/24
  */
@@ -53,8 +53,8 @@ public class PerformanceController {
     public String performanceGenrePage(@AuthenticationPrincipal VWUserRoleDTO user,
                                        @RequestParam("genre") String genre,
                                        Model model) {
-        String date = "20240729"; // 일간 데이터 날짜
-        List<PerformanceDTO> rankingData = performanceRankingService.fetchGenreRanking(genre, date);
+        String date = "20240730"; // 일간 데이터 날짜
+        List<PerformanceDTO> rankingData = performanceRankingService.fetchGenreRanking(genre, date, 5);
         System.out.println("Fetched Data: " + rankingData); // 로그 추가
         model.addAttribute("user", user.getUser());
         model.addAttribute("genre", genre);
@@ -73,7 +73,7 @@ public class PerformanceController {
     }
 
     /**
-     * 공연 랭킹 데이터를 가져옵니다.
+     * 공연 랭킹 데이터
      *
      * @param ststype  the ststype
      * @param catecode the catecode
@@ -90,25 +90,51 @@ public class PerformanceController {
     }
 
     /**
-     * 공연 장르별 랭킹 데이터를 가져옵니다.
+     * 공연 장르별 랭킹 데이터
      *
      * @param genre the genre
-     * @param model the model
      * @return 공연 장르별 랭킹 페이지
      */
     @GetMapping("/genre-rankings")
-    public String getPerformanceGenreRankings(@RequestParam String genre, Model model) {
-        String date = "20240729"; // 일간 데이터 날짜
-        List<PerformanceDTO> rankingData = performanceRankingService.fetchGenreRanking(genre, date);
-        model.addAttribute("genre", genre);
-        model.addAttribute("rankingData", rankingData);
-        return "performance/performanceGenreRankings";
+    public ResponseEntity<List<PerformanceDTO>> getPerformanceGenreRankings(@RequestParam String genre) {
+        String date = "20240730"; // 일간 데이터 날짜
+        List<PerformanceDTO> rankingData;
+
+        if (genre.equals("전체")) {
+            rankingData = performanceRankingService.fetchTopRankings(date);
+        } else {
+            rankingData = performanceRankingService.fetchGenreRanking(genre, date, 50);
+        }
+
+        return ResponseEntity.ok(rankingData);
     }
 
 
-    @GetMapping("/performance-Ranking")
-    public String performanceRankingPage(@AuthenticationPrincipal VWUserRoleDTO user, Model model) {
+    /**
+     * Performance ranking page string.
+     *
+     * @param user  the user
+     * @param model the model
+     * @param genre the genre
+     * @return performanceRanking
+     */
+    @GetMapping("/performanceRanking")
+    public String performanceRankingPage(@AuthenticationPrincipal VWUserRoleDTO user, Model model,
+                                         @RequestParam(required = false) String genre) {
         model.addAttribute("user", user.getUser());
+        String date = "20240730"; // 일간 데이터 날짜
+        List<PerformanceDTO> rankingData;
+
+        if (genre == null || genre.isEmpty() || genre.equals("전체")) {
+            rankingData = performanceRankingService.fetchTopRankings(date); // 전체 랭킹 데이터
+        } else {
+            rankingData = performanceRankingService.fetchGenreRanking(genre, date, 50); //  장르 랭킹 데이터
+        }
+
+        model.addAttribute("rankingData", rankingData);
+        model.addAttribute("genre", genre);
         return "/performance/performanceRanking";
     }
+
+
 }

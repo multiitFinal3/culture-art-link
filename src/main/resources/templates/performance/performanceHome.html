@@ -13,10 +13,20 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const genreItems = document.querySelectorAll('.genre-item');
+            const genreItems2 = document.querySelectorAll('.genre-item2');
             const currentGenre = new URLSearchParams(window.location.search).get('genre') || '홈';
 
             genreItems.forEach(item => {
                 if (item.textContent.trim() === currentGenre) {
+                    item.classList.add('active');
+                } else {
+                    item.classList.remove('active');
+                }
+            });
+
+            genreItems2.forEach(item => {
+                const genre2 = new URLSearchParams(window.location.search).get('genre') || '전체';
+                if (item.textContent.trim() === genre2) {
                     item.classList.add('active');
                 } else {
                     item.classList.remove('active');
@@ -29,6 +39,29 @@
                     window.location.href = `/performance/performance-genre?genre=${encodeURIComponent(genre)}`;
                 });
             });
+
+            genreItems2.forEach(item => {
+                item.addEventListener('click', function() {
+                    const genre = this.textContent.trim();
+                    window.location.href = `/performance/performanceRanking?genre=${encodeURIComponent(genre)}`;
+                });
+            });
+
+            // 랭킹 클릭 이벤트 리스너 추가
+            const rankingItem = document.getElementById('ranking-item');
+            if (rankingItem) {
+                rankingItem.addEventListener('click', function() {
+                    window.location.href = `/performance/performanceRanking`;
+                });
+            }
+
+            // 지역별 클릭 이벤트 리스너 추가
+            const regionItem = document.getElementById('region-item');
+            if (regionItem) {
+                regionItem.addEventListener('click', function() {
+                    window.location.href = `/performance/performance-region`; // "지역별"의 URL을 필요에 따라 업데이트
+                });
+            }
         });
     </script>
 
