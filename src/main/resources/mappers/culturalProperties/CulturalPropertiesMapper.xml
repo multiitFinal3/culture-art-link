@@ -79,38 +79,74 @@
 <!--    </select>-->
 
 
+<!--    <select id="searchDBCulturalProperties" resultType="culturalPropertiesDTO" parameterType="culturalPropertiesDTO">-->
+
+<!--        SELECT * FROM (-->
+<!--            SELECT ROW_NUMBER()-->
+<!--                OVER(ORDER BY id DESC) AS rownum, c.*-->
+<!--            FROM ( SELECT * FROM cultural_properties-->
+
+
+<!--                <where>-->
+
+<!--                    <if test="categoryName != null and !categoryName.equals('all')">-->
+<!--                        AND category_name = #{categoryName}-->
+<!--                    </if>-->
+
+<!--                    <if test="culturalPropertiesName != null and culturalPropertiesName != ''">-->
+<!--                        AND cultural_properties_name LIKE CONCAT('%', #{culturalPropertiesName}, '%')-->
+<!--                    </if>-->
+
+<!--                    <if test="region!=null and !region.equals('')">-->
+<!--                        AND region LIKE CONCAT('%', #{region}, '%')-->
+<!--                    </if>-->
+
+
+
+<!--                    <if test="dynasty != null and dynasty != ''">-->
+<!--                        AND dynasty LIKE CONCAT('%', #{dynasty}, '%')-->
+<!--                    </if>-->
+<!--                </where>-->
+<!--                ) AS c-->
+<!--            ) AS c2-->
+
+<!--                WHERE c2.rownum BETWEEN #{start} AND #{end};-->
+
+<!--    </select>-->
+
+
     <select id="searchDBCulturalProperties" resultType="culturalPropertiesDTO" parameterType="culturalPropertiesDTO">
 
         SELECT * FROM (
-            SELECT ROW_NUMBER()
-                OVER(ORDER BY id DESC) AS rownum, c.*
-            FROM ( SELECT * FROM cultural_properties
+        SELECT ROW_NUMBER()
+        OVER(ORDER BY id DESC) AS rownum, c.*
+        FROM ( SELECT * FROM cultural_properties
 
 
-                <where>
+        <where>
 
-                    <if test="categoryName != null and !categoryName.equals('all')">
-                        AND category_name = #{categoryName}
-                    </if>
+            <if test="categoryName != null and !categoryName.equals('all')">
+                AND category_name = #{categoryName}
+            </if>
 
-                    <if test="culturalPropertiesName != null and culturalPropertiesName != ''">
-                        AND cultural_properties_name LIKE CONCAT('%', #{culturalPropertiesName}, '%')
-                    </if>
+            <if test="culturalPropertiesName != null and culturalPropertiesName != ''">
+                AND cultural_properties_name LIKE CONCAT('%', #{culturalPropertiesName}, '%')
+            </if>
 
-                    <if test="region!=null and !region.equals('')">
-                        AND region LIKE CONCAT('%', #{region}, '%')
-                    </if>
+            <if test="region!=null and !region.equals('')">
+                AND region LIKE CONCAT('%', #{region}, '%')
+            </if>
 
 
 
-                    <if test="dynasty != null and dynasty != ''">
-                        AND dynasty LIKE CONCAT('%', #{dynasty}, '%')
-                    </if>
-                </where>
-                ) AS c
-            ) AS c2
+            <if test="dynasty != null and dynasty != ''">
+                AND dynasty LIKE CONCAT('%', #{dynasty}, '%')
+            </if>
+        </where>
+        ) AS c
+        ) AS c2
 
-                WHERE c2.rownum BETWEEN #{start} AND #{end};
+<!--        WHERE c2.rownum BETWEEN #{start} AND #{end};-->
 
     </select>
 
@@ -138,14 +174,7 @@
             classify_a = #{item.classifyA},
             classify_b = #{item.classifyB},
             classify_c = #{item.classifyC},
-            classify_d = #{item.classifyD},
-            main_img_url = #{item.mainImgUrl},
-            content = #{item.content},
-            img_url = #{item.imgUrl},
-            img_desc = #{item.imgDesc},
-            video_url = #{item.videoUrl},
-            narration_url = #{item.narrationUrl}
-
+            classify_d = #{item.classifyD}
             WHERE id = #{item.id}
         </foreach>
     </update>

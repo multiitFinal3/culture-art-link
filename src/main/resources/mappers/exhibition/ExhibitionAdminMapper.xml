@@ -31,16 +31,16 @@
             UPDATE exhibition
             <set>
                 <if test="data.title != null and data.title != ''">title = #{data.title},</if>
-                <if test="data.artist != null and data.artist != ''">artist = #{data.artist},</if>
+                <if test="data.artist != null">artist = #{data.artist},</if>
                 <if test="data.museum != null and data.museum != ''">museum = #{data.museum},</if>
                 <if test="data.localId != null and data.localId != ''">local_id = #{data.localId},</if>
                 <if test="data.startDate != null">start_date = #{data.startDate},</if>
                 <if test="data.endDate != null">end_date = #{data.endDate},</if>
-                <if test="data.price != null and data.price != ''">price = #{data.price},</if>
-                <if test="data.image != null and data.image != ''">image = #{data.image},</if>
-                <if test="data.description != null and data.description != ''">description = #{data.description},</if>
-                <if test="data.subDescription != null and data.subDescription != ''">sub_description = #{data.subDescription},</if>
-                <if test="data.url != null and data.url != ''">url = #{data.url},</if>
+                <if test="data.price != null">price = #{data.price},</if>
+                <if test="data.image != null">image = #{data.image},</if>
+                <if test="data.description != null">description = #{data.description},</if>
+                <if test="data.subDescription != null">sub_description = #{data.subDescription},</if>
+                <if test="data.url != null">url = #{data.url},</if>
             </set>
             WHERE id = #{data.id}
         </foreach>

@@ -45,6 +45,8 @@
     display: flex;
     align-items: center;
     gap: 8px;
+
+    cursor: pointer;
 }
 
 /* 추가 필터 아이템 내 이미지 스타일 */
