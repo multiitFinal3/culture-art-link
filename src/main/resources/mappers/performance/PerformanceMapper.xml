@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.multi.culture_link.admin.performance.mapper.PerformanceMapper">
+
+    <select id="getAllPerformances" resultType="com.multi.culture_link.admin.performance.model.dto.PerformanceDTO">
+        SELECT *
+        FROM performance_info
+    </select>
+
+    <insert id="insertPerformance">
+        INSERT INTO performance_info (id, code, title, status, start_date, end_date, location, region_id, casting, runtime, age, organizer, producer, price, image_main, image_detail1, image_detail2, image_detail3, image_detail4, genre, ticketing, ticketing_url, avg, created_at, updated_at)
+        VALUES (#{id}, #{code}, #{title}, #{status}, #{startDate}, #{endDate}, #{location}, #{regionId}, #{casting}, #{runtime}, #{age}, #{organizer}, #{producer}, #{price}, #{imageMain}, #{imageDetail1}, #{imageDetail2}, #{imageDetail3}, #{imageDetail4}, #{genre}, #{ticketing}, #{ticketingUrl}, #{avg}, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
+    </insert>
+
+    <delete id="deletePerformances">
+        DELETE FROM performance_info
+        WHERE code IN
+        <foreach item="code" index="index" collection="list" open="(" separator="," close=")">
+            #{code}
+        </foreach>
+    </delete>
+
+    <select id="searchPerformances" resultType="com.multi.culture_link.admin.performance.model.dto.PerformanceDTO">
+        SELECT *
+        FROM performance_info
+        WHERE title LIKE CONCAT('%', #{keyword}, '%')
+        OR location LIKE CONCAT('%', #{keyword}, '%')
+    </select>
+
+</mapper>

@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
+      layout:decorate="~{/common/layout/layoutAdminPage}">
+<head>
+    <link rel="stylesheet" th:href="@{/css/festival/festivalRegulate.css}">
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script th:src="@{/js/admin/festival/festivalRegulate.js}"></script>
+
+</head>
+<body>
+<div layout:fragment="content2">
+
+
+
+    <div id="festivalRegulate">
+        <!-- Modal : db 상세 검색 -->
+        <div class="modal fade" id="searchModal1" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLongTitle1">검색 조건</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+
+                        <form id="searchForm1" name="searchForm1">
+
+                            지역 번호 : <select name="regionId" id="searchRegion1">
+                                        </select><br><br>
+                            시간대 : <select name="timeId" id="searchTime1">
+                                    </select><br><br>
+                            축제 이름 : <input name="festivalName" type="text"><br><br>
+                            내용 키워드<br><textarea name="festivalContent" cols="55" rows="10"></textarea><br><br>
+                            주체기관 : <input class="autoWidth" name="manageInstitution" type="text"><br><br>
+                            주관기관 : <input class="autoWidth" name="hostInstitution" type="text"><br><br>
+                            후원기관 : <input class="autoWidth" name="sponserInstitution" type="text"><br><br>
+                            전화번호 : <input name="tel" type="text"><br><br>
+                            장소 : <input name="place" type="text"><br><br>
+                            시작일 : <input name="formattedStart" type="date"><br><br>
+                            종료일 : <input name="formattedEnd" type="date"><br><br>
+                            최소 별점 : <input name="avgRate" type="number" step="0.1"><br><br>
+                            계절: <select name="season" id="searchSeason1">
+                                    <option value="">선택안함</option>
+                                    <option value="봄">봄</option>
+                                    <option value="여름">여름</option>
+                                    <option value="가을">가을</option>
+                                    <option value="겨울">겨울</option>
+                                 </select><br><br>
+
+                            <button type="button" id="searchBtn1">검색</button>
+
+                        </form>
+
+
+
+                    </div>
+                    <div class="modal-footer">
+                        <button id="close1" type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <h2>축제 DB 현황
+            <button id="search1" type="button" class="btn btn-primary" data-toggle="modal" data-target="#searchModal1">
+                <img src="https://play-lh.googleusercontent.com/jLQTklRid_7HfQ1a6hzrM8WO439CyZ6dWCVnI0eiaeW8k7W3Mn69j4oy7lYedZ2QqKM" style="width : 20px; height: 20px;">
+            </button>
+            <button id="dbDeleteBtn" class="btn btn-primary">삭제</button></h2>
+        <table class="table table-striped" id="festivalDB">
+
+            <thead class="table-light">
+            <tr>
+                <th scope="col" class="checkHead">체크</th>
+                <th scope="col">#</th>
+                <th scope="col">DB번호</th>
+                <th scope="col">지역</th>
+                <th scope="col">시간</th>
+                <th scope="col">이름</th>
+                <th scope="col">설명</th>
+                <th scope="col">주관</th>
+                <th scope="col">주체</th>
+                <th scope="col">후원</th>
+                <th scope="col">번호</th>
+                <th scope="col">홈페이지</th>
+                <th scope="col">주소</th>
+                <th scope="col">장소</th>
+                <th scope="col">시작</th>
+                <th scope="col">종료</th>
+                <th scope="col">별점평균</th>
+                <th scope="col">계절</th>
+                <th scope="col">이미지</th>
+                <th scope="col" class="buttonHead">버튼</th>
+
+            </tr>
+            </thead>
+            <tbody id="list1"></tbody>
+
+
+        </table>
+        <div id="pageNum1"></div>
+
+
+        <!-- Modal -->
+        <div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLongTitle">DB수정 상세 모달</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body" id="modalBody">
+                        ...
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <br><br><br><br><br><br>
+        <!-- 전국축제 api 실시간 검색 조건 Modal -->
+        <div class="modal fade" id="searchModal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLongTitle2">실시간 축제 검색조건</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="searchForm2" name="searchForm2">
+                            <h3>입력값 정확 일치</h3>
+                            축제 이름 : <input name="festivalName" type="text"><br><br>
+                            주체기관 : <input class="autoWidth" name="manageInstitution" type="text"><br><br>
+                            주관기관 : <input class="autoWidth" name="hostInstitution" type="text"><br><br>
+                            후원기관 : <input class="autoWidth" name="sponserInstitution" type="text"><br><br>
+                            전화번호 : <input name="tel" type="text"><br><br>
+                            장소 : <input name="place" type="text"><br><br>
+                            시작일 : <input name="formattedStart" type="date"><br><br>
+                            종료일 : <input name="formattedEnd" type="date"><br><br>
+
+                            <button type="button" id="searchBtn2">검색</button>
+
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button id="close2" type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <h2>전국 축제 실시간
+
+            <button id="search2" type="button" class="btn btn-primary" data-toggle="modal" data-target="#searchModal2">
+                <img src="https://play-lh.googleusercontent.com/jLQTklRid_7HfQ1a6hzrM8WO439CyZ6dWCVnI0eiaeW8k7W3Mn69j4oy7lYedZ2QqKM" style="width : 20px; height: 20px;">
+            </button>
+            <button id="apiInsertBtn" class="btn btn-primary">추가</button></h2>
+        <table class="table table-striped" id="festivalAPI">
+
+            <thead class="table-light">
+            <tr>
+                <th scope="col">체크</th>
+                <th scope="col">#</th>
+                <th scope="col">지역</th>
+                <th scope="col">시간</th>
+                <th scope="col">이름</th>
+                <th scope="col">설명</th>
+                <th scope="col">주관</th>
+                <th scope="col">주체</th>
+                <th scope="col">후원</th>
+                <th scope="col">번호</th>
+                <th scope="col">홈페이지</th>
+                <th scope="col">주소</th>
+                <th scope="col">장소</th>
+                <th scope="col">시작</th>
+                <th scope="col">종료</th>
+<!--                <th scope="col">별점평균</th>-->
+                <th scope="col">계절</th>
+                <!--<th scope="col">관련이미지</th>-->
+            </tr>
+            </thead>
+            <tbody id="list2"></tbody>
+
+
+        </table>
+        <div id="pageNum2"></div>
+
+
+    </div>
+
+
+
+
+
+</div>
+
+
+
+
+
+</body>
+</html>
