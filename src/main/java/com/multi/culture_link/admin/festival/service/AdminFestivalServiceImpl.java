@@ -1069,6 +1069,13 @@ public class AdminFestivalServiceImpl implements AdminFestivalService {
 		
 	}
 	
+	@Override
+	public void updateKeywordMappingByKeywordMapping(FestivalContentReviewNaverKeywordMapDTO keywordMapping1) throws Exception {
+		
+		adminFestivalMapper.updateKeywordMappingByKeywordMapping(keywordMapping1);
+		
+	}
+	
 	
 }
 

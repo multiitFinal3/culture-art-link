@@ -1124,6 +1124,11 @@ public class AdminFestivalController {
 					
 				} else {
 					System.out.println("키워드 네이버 기사 매핑 내역 존재");
+					int freq = keywordMapping.getFreq() + keywordMapping1.getFreq();
+					keywordMapping1.setFreq(freq);
+					adminFestivalService.updateKeywordMappingByKeywordMapping(keywordMapping1);
+					
+					
 				}
 				
 			} catch (Exception e) {

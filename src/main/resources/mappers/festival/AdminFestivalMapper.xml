@@ -315,7 +315,15 @@
 
     </insert>
 
+    <update id="updateKeywordMappingByKeywordMapping" parameterType="festivalContentReviewNaverKeywordMapping">
 
+        UPDATE festival_content_review_naver_keyword_mapping
+        SET freq = #{freq}
+        WHERE festival_id = #{festivalId} AND
+            sort_code = #{sortCode} AND
+            festival_keyword_id = #{festivalKeywordId};
+
+    </update>
 
 
 </mapper>
