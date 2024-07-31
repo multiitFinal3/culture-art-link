@@ -25,14 +25,14 @@ public interface AdminCulturalPropertiesDAO {
 //            @Param("dynasty") String dynasty,
 //            @Param("start")int start, @Param("end")int end);
 
+//    List<CulturalPropertiesDTO> searchDBCulturalProperties(
+//            CulturalPropertiesDTO culturalPropertiesDTO);
+
+
     List<CulturalPropertiesDTO> searchDBCulturalProperties(
             CulturalPropertiesDTO culturalPropertiesDTO);
 
-//    void deleteDBData(ArrayList<Integer> id);
-
     void deleteDBData(@Param("list") List<Integer> id);
-
-//    void updateDBData(ArrayList<CulturalPropertiesDTO> data);
 
     void updateDBData(@Param("list") List<CulturalPropertiesDTO> data);
 

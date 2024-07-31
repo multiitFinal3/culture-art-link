@@ -303,7 +303,18 @@ function registerEventListeners() {
   });
 
   document.getElementById("dbUpdateBtn").addEventListener("click", () => {
-    const checkedData = getCheckedData("list1");
+    const checkedData = getCheckedData("list1").map(
+        v=>
+        ({
+          ...v,
+          startDate : (v.startDate === '미정' ? null : v.startDate),
+          endDate : (v.endDate === '미정' ? null : v.endDate)
+        })
+    );
+
+    console.log('update checked data : ', checkedData)
+
+
     manageExhibitions("update", checkedData);
   });
 
