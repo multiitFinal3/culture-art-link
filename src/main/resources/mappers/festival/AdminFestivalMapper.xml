@@ -293,11 +293,27 @@
 
     <insert id="insertKeywordMappingByKeywordMapping" parameterType="festivalContentReviewNaverKeywordMapping">
 
-        INSERT INTO festival_content_review_naver_keyword_mapping(festival_id, sort_code, festival_keyword_id)
-        VALUES(#{festivalId}, #{sortCode}, #{festivalKeywordId});
+        INSERT INTO festival_content_review_naver_keyword_mapping(festival_id, sort_code, festival_keyword_id, freq)
+        VALUES(#{festivalId}, #{sortCode}, #{festivalKeywordId}, #{freq});
 
     </insert>
 
+    <select id="findFestivalNaverUrlByNaverArticle" parameterType="naverArticleDTO" resultType="naverArticleDTO">
+
+        SELECT * FROM festival_naver_url_mapping
+        WHERE festival_id = #{festivalId}
+        AND sort_code = "NA"
+        AND page_url=#{originalLink};
+
+    </select>
+
+
+    <insert id="insertFestivalNaverUrlMappingByNaverArticle" parameterType="naverArticleDTO">
+
+        INSERT INTO festival_naver_url_mapping(festival_id, sort_code, page_url)
+        VALUES(#{festivalId}, "NA", #{originalLink})
+
+    </insert>
 
 
 

@@ -48,7 +48,9 @@ public interface FestivalService {
 	
 	String findFestivalYoutube(int page, String formattedStart, String festivalName) throws Exception;
 	
-	NaverArticleDTO findFestivalNaverArticle(int page, String formattedStart, String festivalName) throws Exception;
+	NaverArticleDTO findFestivalNaverArticle( FestivalDTO festivalDTO) throws Exception;
 	
 	NaverBlogDTO findFestivalNaverBlog(int page, String formattedStart, String festivalName) throws Exception;
+	
+	
 }

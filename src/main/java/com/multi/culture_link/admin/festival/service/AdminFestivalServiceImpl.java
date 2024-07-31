@@ -17,7 +17,6 @@ import org.springframework.stereotype.Service;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.stream.Collectors;
 
 
 /**
@@ -911,11 +910,11 @@ public class AdminFestivalServiceImpl implements AdminFestivalService {
 		LinkedList<Map.Entry<String, Integer>> list = new LinkedList<>(map.entrySet());
 		list.sort(Map.Entry.comparingByValue(Comparator.reverseOrder()));
 		
-		if (list.size() >= 5) {
-			
-			list = list.stream().limit(5).collect(Collectors.toCollection(LinkedList::new));
-			
-		}
+//		if (list.size() >= 5) {
+//
+//			list = list.stream().limit(5).collect(Collectors.toCollection(LinkedList::new));
+//
+//		}
 		
 		map = new HashMap<String, Integer>();
 		
@@ -925,7 +924,7 @@ public class AdminFestivalServiceImpl implements AdminFestivalService {
 			
 		}
 		
-		System.out.println("keyword map top 5: " + map);
+//		System.out.println("keyword map top 5: " + map);
 		
 		
 		return map;
@@ -995,24 +994,78 @@ public class AdminFestivalServiceImpl implements AdminFestivalService {
 	 * @throws Exception
 	 */
 	@Override
-	public HashMap<String, Integer> findNaverArticleKeywordByFestivalId(int festivalId) throws Exception {
+	public ArrayList<HashMap<String, Integer>> findNaverArticleKeywordByFestivalId(int festivalId) throws Exception {
 		
 		
 		FestivalDTO festivalDTO = adminFestivalMapper.findDBFestivalByFestivalId(festivalId);
+		System.out.println("ser impl findNaverArticleKeywordByFestivalId : " + festivalDTO);
 		
-		String formattedStart = String.valueOf(festivalDTO.getStartDate().getYear());
+		System.out.println(festivalDTO.getStartDate());
+		
+//		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-mm-DD");
+//		String formattedStart = simpleDateFormat.format(festivalDTO.getStartDate()).substring(0,4);
+		
 		String festivalName = festivalDTO.getFestivalName();
 		
+		PageDTO pageDTO = new PageDTO();
+		pageDTO.setPage(1);
+		festivalDTO.setPageDTO(pageDTO);
 		
-		NaverArticleDTO naverArticleDTO = festivalService.findFestivalNaverArticle(1, formattedStart, festivalName);
+		NaverArticleDTO naverArticleDTO = festivalService.findFestivalNaverArticle(festivalDTO);
+		
+		ArrayList<HashMap<String, Integer>> list = new ArrayList<HashMap<String, Integer>>();
+		
+		for (int i=1; i<=naverArticleDTO.getDisplay(); i++){
+			
+			HashMap<String, Integer> map = new HashMap<>();
+			
+			pageDTO.setPage(i);
+			
+			festivalDTO.setPageDTO(pageDTO);
+			
+			naverArticleDTO = festivalService.findFestivalNaverArticle(festivalDTO);
+			
+			NaverArticleDTO naverArticleDTO2 = adminFestivalMapper.findFestivalNaverUrlByNaverArticle(naverArticleDTO);
+			
+			
+			
+			if (naverArticleDTO2==null){
+
+				this.insertFestivalNaverUrlMappingByNaverArticle(naverArticleDTO);
+
+			}
+
+			
+			// TF-ID
+			map = keywordExtractService.getKeywordByTFID(naverArticleDTO);
+			
+			System.out.println("TF-ID 결과 : " + map);
+			
+			list.add(map);
+			
+		
+		}
 		
 		
-		// TF-ID
-		HashMap<String, Integer> map = keywordExtractService.getKeywordByTFID(naverArticleDTO);
 		
-		System.out.println("TF-ID 결과 : " + map);
 		
-		return null;
+		return list;
+		
+	}
+	
+	@Override
+	public NaverArticleDTO findFestivalNaverUrlByNaverArticle(NaverArticleDTO naverArticleDTO) throws Exception {
+		NaverArticleDTO naverArticleDTO2 = adminFestivalMapper.findFestivalNaverUrlByNaverArticle(naverArticleDTO);
+		
+		return naverArticleDTO2;
+	}
+	
+	@Override
+	public void insertFestivalNaverUrlMappingByNaverArticle(NaverArticleDTO naverArticleDTO) throws Exception {
+		
+		adminFestivalMapper.insertFestivalNaverUrlMappingByNaverArticle(naverArticleDTO);
+		
+		return;
 		
 	}
 	

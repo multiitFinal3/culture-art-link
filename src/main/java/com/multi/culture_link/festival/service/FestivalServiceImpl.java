@@ -12,6 +12,7 @@ import okhttp3.Response;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -372,17 +373,16 @@ public class FestivalServiceImpl implements FestivalService {
 	/**
 	 * 네이버 기사 api로 해당 기사의 대략적인 정보와 나와있는 원본 링크를 이용해 자세한 내용을 dto에 저장
 	 *
-	 * @param page
-	 * @param formattedStart
-	 * @param festivalName
+	 * @param festivalDTO
 	 * @return
 	 * @throws Exception
 	 */
 	@Override
-	public NaverArticleDTO findFestivalNaverArticle(int page, String formattedStart, String festivalName) throws Exception {
+	public NaverArticleDTO findFestivalNaverArticle(FestivalDTO festivalDTO) throws Exception {
 		
+		int page = festivalDTO.getPageDTO().getPage();
 		
-		festivalName = formattedStart.substring(0, 4) + festivalName + " ";
+		String festivalName = /*festivalDTO.getFormattedStart().substring(0, 4) +*/ festivalDTO.getFestivalName()/* + " "*/;
 		
 		Request request = new Request.Builder()
 				.url("https://openapi.naver.com/v1/search/news.json?query=" + festivalName + "&display=10&sort=sim")
@@ -395,6 +395,7 @@ public class FestivalServiceImpl implements FestivalService {
 		Response response = client.newCall(request).execute();
 		String responseBody = response.body().string();
 		JsonObject json = gson.fromJson(responseBody, JsonObject.class);
+		int display = json.getAsJsonPrimitive("display").getAsInt();
 		JsonArray items = json.getAsJsonArray("items");
 		
 		JsonObject item = items.get(page - 1).getAsJsonObject();
@@ -420,16 +421,40 @@ public class FestivalServiceImpl implements FestivalService {
 		System.out.println("description : " + description);
 		
 		NaverArticleDTO naverArticleDTO = new NaverArticleDTO();
+		naverArticleDTO.setFestivalId(festivalDTO.getFestivalId());
 		naverArticleDTO.setDescription(description);
 		naverArticleDTO.setTitle(title);
 		naverArticleDTO.setPubDate(date);
 		naverArticleDTO.setOriginalLink(originalLink);
+		naverArticleDTO.setDisplay(display);
 		
 		//festival naver content + img
 		
 		Document document = Jsoup.connect(originalLink).get();
 		
-		Element el = document.select("[itemprop=articleBody]").get(0);
+		Elements els = document.select("[itemprop=articleBody]");
+		Element el = null;
+		
+		if (els.isEmpty()) {
+			
+			els = document.select("[id=articleBody]");
+			
+			if (els.isEmpty()) {
+				
+				el = document.body();
+				
+			} else {
+				
+				el = els.get(0);
+				
+			}
+			
+			
+		} else {
+			
+			el = els.get(0);
+			
+		}
 		
 		
 		String imgUrl = el.select("img").attr("src");
@@ -455,6 +480,7 @@ public class FestivalServiceImpl implements FestivalService {
 	
 	/**
 	 * 네이버 블로그 api로 해당 블로그의 대략적인 정보와 나와있는 원본 링크를 dto에 저장. 동적으로 열려 셀레니움 필요한 전체 내용과 이미지 크롤링은 실패함
+	 *
 	 * @param page
 	 * @param formattedStart
 	 * @param festivalName
@@ -504,11 +530,10 @@ public class FestivalServiceImpl implements FestivalService {
 		naverBlogDTO.setBloggerName(bloggerName);
 		naverBlogDTO.setLink(link);
 		naverBlogDTO.setPostDate(date);
-
 		
 		
 		//festival naver content + img : dynamic하게 로딩되어 셀레니움이 필요해 일단 api 정보로만 저장함
-		
+
 //		Document document = Jsoup.connect(link).get();
 //
 //		System.out.println("blog link : " + link);
@@ -535,10 +560,6 @@ public class FestivalServiceImpl implements FestivalService {
 		
 		return naverBlogDTO;
 	}
-	
-	
-	
-	
 	
 	
 }
