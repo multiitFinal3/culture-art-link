@@ -5,10 +5,8 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.multi.culture_link.admin.festival.model.mapper.AdminFestivalMapper;
 import com.multi.culture_link.common.keyword.service.KeywordExtractService1;
-import com.multi.culture_link.festival.model.dto.FestivalContentReviewNaverKeywordMapDTO;
-import com.multi.culture_link.festival.model.dto.FestivalDTO;
-import com.multi.culture_link.festival.model.dto.FestivalKeywordDTO;
-import com.multi.culture_link.festival.model.dto.PageDTO;
+import com.multi.culture_link.festival.model.dto.*;
+import com.multi.culture_link.festival.service.FestivalService;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -32,6 +30,7 @@ import java.util.stream.Collectors;
 public class AdminFestivalServiceImpl implements AdminFestivalService {
 	
 	private final AdminFestivalMapper adminFestivalMapper;
+	private final FestivalService festivalService;
 	private final OkHttpClient client;
 	private final Gson gson;
 	private final KeywordExtractService1 keywordExtractService;
@@ -48,10 +47,11 @@ public class AdminFestivalServiceImpl implements AdminFestivalService {
 	 * @param adminFestivalMapper   페스티벌 관리자 매퍼
 	 * @param keywordExtractService 키워드 추출 서비스
 	 */
-	public AdminFestivalServiceImpl(OkHttpClient client, Gson gson, OkHttpClient client1, AdminFestivalMapper adminFestivalMapper, KeywordExtractService1 keywordExtractService) {
+	public AdminFestivalServiceImpl(OkHttpClient client, Gson gson, OkHttpClient client1, AdminFestivalMapper adminFestivalMapper, FestivalService festivalService, KeywordExtractService1 keywordExtractService) {
 		this.client = client;
 		this.gson = gson;
 		this.adminFestivalMapper = adminFestivalMapper;
+		this.festivalService = festivalService;
 		this.keywordExtractService = keywordExtractService;
 	}
 	
@@ -238,7 +238,7 @@ public class AdminFestivalServiceImpl implements AdminFestivalService {
 				season = "가을";
 				
 			}
-
+			
 			festivalDTO.setSeason(season);
 			
 			ArrayList<Integer> days = new ArrayList<Integer>();
@@ -312,7 +312,7 @@ public class AdminFestivalServiceImpl implements AdminFestivalService {
 			festivalDTO.setLongtitude(longi);
 			
 			festivalDTO.setAvgRate(0);
-
+			
 			FestivalDTO festivalExist = adminFestivalMapper.findDBFestivalByFestival(festivalDTO);
 			
 			if (festivalExist != null) {
@@ -326,7 +326,7 @@ public class AdminFestivalServiceImpl implements AdminFestivalService {
 			list.add(festivalDTO);
 			
 		}
-
+		
 		this.list = list;
 		
 		ArrayList<FestivalDTO> list2 = new ArrayList<FestivalDTO>();
@@ -407,7 +407,7 @@ public class AdminFestivalServiceImpl implements AdminFestivalService {
 	public ArrayList<FestivalDTO> findDBFestivalList(PageDTO pageDTO) throws Exception {
 		
 		ArrayList<FestivalDTO> list = adminFestivalMapper.findDBFestivalList(pageDTO);
-
+		
 		return list;
 		
 	}
@@ -537,7 +537,7 @@ public class AdminFestivalServiceImpl implements AdminFestivalService {
 		
 		
 		String urlFinal = url1 + url2 + url3;
-
+		
 		Request request = new Request.Builder()
 				.url(urlFinal)
 				.addHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36")
@@ -716,7 +716,7 @@ public class AdminFestivalServiceImpl implements AdminFestivalService {
 				season = "가을";
 				
 			}
-
+			
 			festivalDTO2.setSeason(season);
 			
 			ArrayList<Integer> days = new ArrayList<Integer>();
@@ -849,7 +849,7 @@ public class AdminFestivalServiceImpl implements AdminFestivalService {
 	 * API 다중조건 검색 후 전체 갯수 반환
 	 *
 	 * @param festivalDTO
-	 * @param urls 요청파라미터 url
+	 * @param urls        요청파라미터 url
 	 * @return
 	 * @throws Exception
 	 */
@@ -933,6 +933,7 @@ public class AdminFestivalServiceImpl implements AdminFestivalService {
 	
 	/**
 	 * 키워드가 키워드 테이블에 이미 존재하는 지 확인
+	 *
 	 * @param keyword 키워드 DTO
 	 * @return 키워드 DTO
 	 * @throws Exception
@@ -940,13 +941,14 @@ public class AdminFestivalServiceImpl implements AdminFestivalService {
 	@Override
 	public FestivalKeywordDTO findKeywordByKeyword(FestivalKeywordDTO keyword) throws Exception {
 		
-		FestivalKeywordDTO festivalKeywordDTO =  adminFestivalMapper.findKeywordByKeyword(keyword);
+		FestivalKeywordDTO festivalKeywordDTO = adminFestivalMapper.findKeywordByKeyword(keyword);
 		
 		return festivalKeywordDTO;
 	}
 	
 	/**
 	 * 키워드를 키워드 테이블에 삽입
+	 *
 	 * @param keyword 키워드 DTO
 	 * @throws Exception
 	 */
@@ -958,6 +960,7 @@ public class AdminFestivalServiceImpl implements AdminFestivalService {
 	
 	/**
 	 * 해당 키워드의 매핑이 존재하는 지 확인
+	 *
 	 * @param keywordMapping1 키워드 DTO
 	 * @return 키워드 매핑 DTO
 	 * @throws Exception
@@ -972,6 +975,7 @@ public class AdminFestivalServiceImpl implements AdminFestivalService {
 	
 	/**
 	 * 축제 - 키워드 매핑을 인서트
+	 *
 	 * @param keywordMapping 키워드 매핑 DTO
 	 * @throws Exception
 	 */
@@ -979,6 +983,36 @@ public class AdminFestivalServiceImpl implements AdminFestivalService {
 	public void insertKeywordMappingByKeywordMapping(FestivalContentReviewNaverKeywordMapDTO keywordMapping) throws Exception {
 		
 		adminFestivalMapper.insertKeywordMappingByKeywordMapping(keywordMapping);
+		
+	}
+	
+	
+	/**
+	 * 네이버 기사 키워드를 찾기
+	 *
+	 * @param festivalId
+	 * @return
+	 * @throws Exception
+	 */
+	@Override
+	public HashMap<String, Integer> findNaverArticleKeywordByFestivalId(int festivalId) throws Exception {
+		
+		
+		FestivalDTO festivalDTO = adminFestivalMapper.findDBFestivalByFestivalId(festivalId);
+		
+		String formattedStart = String.valueOf(festivalDTO.getStartDate().getYear());
+		String festivalName = festivalDTO.getFestivalName();
+		
+		
+		NaverArticleDTO naverArticleDTO = festivalService.findFestivalNaverArticle(1, formattedStart, festivalName);
+		
+		
+		// TF-ID
+		HashMap<String, Integer> map = keywordExtractService.getKeywordByTFID(naverArticleDTO);
+		
+		System.out.println("TF-ID 결과 : " + map);
+		
+		return null;
 		
 	}
 	
