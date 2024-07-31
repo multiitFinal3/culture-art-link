@@ -292,6 +292,7 @@ public class KeywordExtractService1 {
 	
 	/**
 	 * 지피티 예시
+	 *
 	 * @param args
 	 */
 	public static void main(String[] args) {
@@ -327,7 +328,6 @@ public class KeywordExtractService1 {
 			s = s.trim();
 			list2.add(s);
 			
-			
 		}
 		
 		System.out.println(list2);
@@ -335,6 +335,11 @@ public class KeywordExtractService1 {
 		return;
 		
 	}
+	
+	
+	
+	
+	
 	
 }
 	

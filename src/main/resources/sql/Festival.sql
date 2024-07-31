@@ -621,11 +621,11 @@ SELECT
      (fc.freq)/(all_words_count.all_words_count) AS "tf",
 
 
-     LOG10((all_docu_count.all_docu_count/include_word_docu_count.include_word_docu_count))
+     LOG10((all_docu_count.all_docu_count/(include_word_docu_count.include_word_docu_count + 1)))
      AS "idf",
 
      (fc.freq)/(all_words_count.all_words_count)*LOG10((all_docu_count.all_docu_count
-     /include_word_docu_count.include_word_docu_count))
+     /(include_word_docu_count.include_word_docu_count + 1)))
      AS "tf_idf"
 
 FROM
