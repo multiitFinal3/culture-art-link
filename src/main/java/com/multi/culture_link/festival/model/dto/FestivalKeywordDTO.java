@@ -8,6 +8,7 @@ public class FestivalKeywordDTO {
 	
 	private String festivalKeywordId;
 	private int emotionStat;
+	private int freq;
 	
 	
 }

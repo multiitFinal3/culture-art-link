@@ -8,6 +8,7 @@ import java.util.Date;
 @Data
 public class NaverBlogDTO {
 	
+	private int festivalId;
 	private String title;
 	private String link;
 	private String description;
