@@ -1,9 +1,6 @@
 package com.multi.culture_link.admin.festival.service;
 
-import com.multi.culture_link.festival.model.dto.FestivalContentReviewNaverKeywordMapDTO;
-import com.multi.culture_link.festival.model.dto.FestivalDTO;
-import com.multi.culture_link.festival.model.dto.FestivalKeywordDTO;
-import com.multi.culture_link.festival.model.dto.PageDTO;
+import com.multi.culture_link.festival.model.dto.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -42,5 +39,11 @@ public interface AdminFestivalService {
 	
 	void insertKeywordMappingByKeywordMapping(FestivalContentReviewNaverKeywordMapDTO keywordMapping) throws Exception;
 	
-	HashMap<String, Integer> findNaverArticleKeywordByFestivalId(int festivalId) throws Exception;
+	ArrayList<HashMap<String, Integer>> findNaverArticleKeywordByFestivalId(int festivalId) throws Exception;
+	
+	NaverArticleDTO findFestivalNaverUrlByNaverArticle(NaverArticleDTO naverArticleDTO) throws Exception;
+	
+	void insertFestivalNaverUrlMappingByNaverArticle(NaverArticleDTO naverArticleDTO) throws Exception;
+	
+	void updateKeywordMappingByKeywordMapping(FestivalContentReviewNaverKeywordMapDTO keywordMapping1) throws Exception;
 }

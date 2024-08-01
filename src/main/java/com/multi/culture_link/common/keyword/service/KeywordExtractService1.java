@@ -1,6 +1,7 @@
 package com.multi.culture_link.common.keyword.service;
 
-import com.multi.culture_link.festival.model.dto.NaverArticleDTO;
+import dev.langchain4j.model.openai.OpenAiChatModel;
+import dev.langchain4j.service.AiServices;
 import kr.co.shineware.nlp.komoran.constant.DEFAULT_MODEL;
 import kr.co.shineware.nlp.komoran.core.Komoran;
 import kr.co.shineware.nlp.komoran.model.KomoranResult;
@@ -13,6 +14,7 @@ import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 import org.apache.lucene.analysis.tokenattributes.OffsetAttribute;
 import org.apache.lucene.analysis.tokenattributes.PositionIncrementAttribute;
 import org.apache.lucene.analysis.tokenattributes.TypeAttribute;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
@@ -35,6 +37,9 @@ public class KeywordExtractService1 {
 	
 	private ResourceLoader resourceLoader;
 	
+	@Value("${API-KEY.openAPIKey}")
+	private String openAPIKey;
+	
 	/**
 	 * 생성자 주입
 	 *
@@ -42,103 +47,6 @@ public class KeywordExtractService1 {
 	 */
 	public KeywordExtractService1(ResourceLoader resourceLoader) {
 		this.resourceLoader = resourceLoader;
-	}
-	
-	/**
-	 * 코모란으로 스트링에서 해당 키워드를 찾아 반환하며 뽑힌 명사는 나쁘지 않지만 너무 많고 최빈값도 적절하지 않음
-	 *
-	 * @param all 받는 스트링
-	 * @return 키워드 리스트
-	 * @throws Exception 예외를 앞단으로 던짐
-	 */
-	public HashMap<String, Integer> getKeywordByKomoran(String all) throws Exception {
-		
-		Komoran komoran = new Komoran(DEFAULT_MODEL.FULL);
-		
-		KomoranResult analyzeResultList = komoran.analyze(all);
-
-//		System.out.println("analyzeResultList.getPlainText() : " + analyzeResultList.getPlainText());
-		
-		List<Token> tokenList = analyzeResultList.getTokenList();
-		for (Token token : tokenList) {
-//			System.out.println("token");
-//			System.out.format("(%2d, %2d) %s/%s\n", token.getBeginIndex(), token.getEndIndex(), token.getMorph(), token.getPos());
-		}
-		
-		ArrayList<String> list = (ArrayList<String>) analyzeResultList.getNouns();
-		/*ArrayList<Token> list = (ArrayList<String>) analyzeResultList.getTokenList();*/
-		
-		ArrayList<String> stopWords = new ArrayList<String>();
-		
-		
-		Resource resource = resourceLoader.getResource("classpath:static/txt/festival/stop.txt");
-		
-		BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(new FileInputStream(resource.getFile())));
-		
-		String line = null;
-		
-		while ((line = bufferedReader.readLine()) != null) {
-			
-			if (line.trim().length() > 0) {
-				stopWords.add(line.trim());
-			}
-		}
-
-//		System.out.println("stopWords : " + stopWords.toString());
-
-//		ArrayList<String> list2 = new ArrayList<>();
-		
-		HashMap<String, Integer> map = new HashMap<String, Integer>();
-
-
-//		for (String token : list) {
-//
-//			if ((!list2.contains(token)) && (!stopWords.contains(token))) {
-//
-//				list2.add(token);
-//
-//			}
-//
-//		}
-		
-		for (String token : list) {
-			
-			boolean isStop = false;
-			
-			for (String stop : stopWords) {
-				
-				
-				if ((stopWords.contains(token)) || (stop.contains(token))) {
-					System.out.println(token + " : " + stop);
-					isStop = true;
-					break;
-					
-				}
-				
-			}
-			
-			if (!isStop) {
-				
-				if (map.keySet().contains(token)) {
-					
-					int val = map.get(token);
-					map.put(token, val + 1);
-					
-				} else {
-					
-					map.put(token, 1);
-					
-				}
-				
-			}
-			
-		}
-		
-		System.out.println("Komoran before : " + list);
-		System.out.println("Komoran after : " + map);
-		
-		return map;
-		
 	}
 	
 	
@@ -242,22 +150,21 @@ public class KeywordExtractService1 {
 	
 	
 	/**
-	 * TF-ID로 키워드 구하기
-	 * @param naverArticleDTO
+	 * 코모란으로 전체 명사 뽑기
+	 *
+	 * @param allContent
 	 * @return
 	 * @throws Exception
 	 */
-	public HashMap<String, Integer> getKeywordByTFID(NaverArticleDTO naverArticleDTO) throws Exception {
+	public HashMap<String, Integer> getKeywordByKomoran(String allContent) throws Exception {
 		
-		
-		String allContent = naverArticleDTO.getTitle() + naverArticleDTO.getTotalContent();
 		
 		System.out.println("allContent : " + allContent);
 		
 		Komoran komoran = new Komoran(DEFAULT_MODEL.FULL);
 		
 		KomoranResult analyzeResultList = komoran.analyze(allContent);
-
+		
 		System.out.println("analyzeResultList.getPlainText() : " + analyzeResultList.getPlainText());
 		
 		List<Token> tokenList = analyzeResultList.getTokenList();
@@ -283,22 +190,22 @@ public class KeywordExtractService1 {
 				stopWords.add(line.trim());
 			}
 		}
-
+		
 		System.out.println("stopWords : " + stopWords.toString());
-
+		
 		ArrayList<String> list2 = new ArrayList<>();
 		
 		HashMap<String, Integer> map = new HashMap<String, Integer>();
-
-
+		
+		
 		for (String token : list) {
-
+			
 			if ((!list2.contains(token)) && (!stopWords.contains(token))) {
-
+				
 				list2.add(token);
-
+				
 			}
-
+			
 		}
 		
 		for (String token : list) {
@@ -339,8 +246,101 @@ public class KeywordExtractService1 {
 		
 		return map;
 		
-
+		
 	}
+	
+	
+	/**
+	 * 지피티 키워드 5개 뽑기 기능
+	 *
+	 * @param allContent
+	 * @return
+	 * @throws Exception
+	 */
+	public ArrayList<String> getKeywordByGPT(String allContent) throws Exception {
+		
+		OpenAiChatModel model = OpenAiChatModel.builder()
+				.apiKey(openAPIKey)
+				.modelName("gpt-3.5-turbo")
+				.temperature(0.1)
+				.build();
+		
+		GPTAssistance assistance = AiServices.builder(GPTAssistance.class)
+				.chatLanguageModel(model)
+				.build();
+		
+		
+		String answer = assistance.chat(allContent);
+		System.out.println("GPT answer : " + answer);
+		
+		String[] list = answer.trim().split(",");
+		
+		ArrayList<String> list2 = new ArrayList<>();
+		
+		for (String s : list) {
+			
+			s = s.trim();
+			list2.add(s);
+			
+			
+		}
+		
+		
+		return list2;
+	}
+	
+	
+	/**
+	 * 지피티 예시
+	 *
+	 * @param args
+	 */
+	public static void main(String[] args) {
+		
+		
+		OpenAiChatModel model = OpenAiChatModel.builder()
+				.apiKey("직접 넣을 것")
+				.modelName("gpt-3.5-turbo")
+				.temperature(0.1)
+				.build();
+		
+		GPTAssistance assistance = AiServices.builder(GPTAssistance.class)
+				.chatLanguageModel(model)
+				.build();
+		
+		
+		String allContent = "(서울=연합뉴스) 곽민서 기자 = 윤석열 대통령은 27일 2024 파리 올림픽에서 활약하는 국가대표 선수들에게 축하를 보냈다.\n" +
+				"\n" +
+				"윤 대통령은 이날 페이스북 축전을 통해 \"한계를 뛰어넘는 국가대표 여러분의 도전은 계속될 것\"이라며 \"끝까지 국민과 함께 한마음으로 응원하겠다\"고 말했다.\n" +
+				"\n" +
+				"윤 대통령은 강호 독일을 상대로 승리한 여자 핸드볼 국가대표에 \"4골 차를 뒤집고 종료 22초 전 역전에 성공한 투지는 2004년 '우생순(우리 생애 최고의 순간)' 그 자체였다\"며 \"승리 후 모든 선수가 모여 보여준 강강술래 세리머니는 저와 대한민국 국민 모두에게 큰 감동을 줬다\"고 말했다.";
+		
+		
+		String answer = assistance.chat(allContent);
+		System.out.println("GPT answer : " + answer);
+		
+		String[] list = answer.trim().split(",");
+		
+		ArrayList<String> list2 = new ArrayList<>();
+		
+		for (String s : list) {
+			
+			s = s.trim();
+			list2.add(s);
+			
+		}
+		
+		System.out.println(list2);
+		
+		return;
+		
+	}
+	
+	
+	
+	
+	
+	
 }
 	
 

@@ -4,11 +4,15 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.ui.Model;
 
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/exhibition")
 public class ExhibitionViewController {
+    @Value("${API-KEY.naverClientId}")
+    private String naverClientId;
 
     @GetMapping
     public String searchExhibition() {
@@ -18,9 +22,8 @@ public class ExhibitionViewController {
     }
 
     @GetMapping("/detail/{exhibitionId}")
-    public String detailExhibition() {
-
-
+    public String detailExhibition(Model model) {
+        model.addAttribute("naverClientId", naverClientId);
         return "/exhibition/exhibitionDetail";
 
     }

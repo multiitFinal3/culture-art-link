@@ -8,6 +8,7 @@ public class FestivalContentReviewNaverKeywordMapDTO {
 	private int festivalId;
 	private String sortCode;
 	private String festivalKeywordId;
+	private int freq;
 	
 	
 }

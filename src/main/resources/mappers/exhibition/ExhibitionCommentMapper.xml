@@ -7,17 +7,22 @@
 
 
     <select id="getComment" resultType="com.multi.culture_link.exhibition.model.dto.ExhibitionCommentDto">
-        SELECT * FROM exhibition_comment WHERE exhibition_id = #{exhibitionId}
+        SELECT *, u.user_name AS name,
+               CASE
+                   WHEN u.user_id = #{userId} THEN true
+                   ELSE false
+                   END AS isAuth
+            FROM exhibition_comment ec left join user u on ec.user_id = u.user_id WHERE exhibition_id = #{exhibitionId}
     </select>
 
     <insert id="createComment" >
-        INSERT INTO exhibition_comment (exhibition_id, user_id, stars, content) " +
-            "VALUES (#{exhibitionId}, #{userId}, #{stars}, #{content})
+        INSERT INTO exhibition_comment (exhibition_id, user_id, stars, content)
+            VALUES (#{exhibitionId}, #{userId}, #{stars}, #{content})
     </insert>
 
     <delete id="deleteComment">
         DELETE FROM exhibition_comment
-        WHERE user_id = #{userId} AND exhibition_id = #{exhibitionId}
+        WHERE user_id = #{userId} AND exhibition_id = #{exhibitionId} AND id = #{id}
     </delete>
 
 

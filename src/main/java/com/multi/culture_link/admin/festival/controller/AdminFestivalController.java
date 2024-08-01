@@ -957,6 +957,9 @@ public class AdminFestivalController {
 		
 		try {
 			map = adminFestivalService.findContentKeywordByFestivalId(festivalId);
+			
+			System.out.println("admin contr findContentKeywordByFestivalId : " + map);
+			
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
@@ -968,6 +971,7 @@ public class AdminFestivalController {
 			
 			FestivalKeywordDTO festivalKeywordDTO = new FestivalKeywordDTO();
 			festivalKeywordDTO.setFestivalKeywordId(entry.getKey());
+			festivalKeywordDTO.setFreq(entry.getValue());
 			
 			DictionaryDTO dictionaryDTO = new DictionaryDTO();
 			
@@ -988,22 +992,27 @@ public class AdminFestivalController {
 		
 		for (FestivalKeywordDTO keyword : keywordList) {
 			
+			FestivalContentReviewNaverKeywordMapDTO keywordMapping1 = new FestivalContentReviewNaverKeywordMapDTO();
+			
 			try {
 				FestivalKeywordDTO festivalKeywordDTO = adminFestivalService.findKeywordByKeyword(keyword);
 				if (festivalKeywordDTO == null) {
+					
 					adminFestivalService.insertKeywordByKeyword(keyword);
+					
+					
 				} else {
 					
 					System.out.println("키워드 테이블에 존재");
 					
 				}
 				
-				FestivalContentReviewNaverKeywordMapDTO keywordMapping1 = new FestivalContentReviewNaverKeywordMapDTO();
 				keywordMapping1.setFestivalId(festivalId);
 				keywordMapping1.setFestivalKeywordId(keyword.getFestivalKeywordId());
 				keywordMapping1.setSortCode("C");
-
-//				System.out.println("keywordMapping1 : " + keywordMapping1);
+				keywordMapping1.setFreq(keyword.getFreq());
+				
+				System.out.println("keywordMapping1 : " + keywordMapping1);
 				
 				FestivalContentReviewNaverKeywordMapDTO keywordMapping = adminFestivalService.findKeywordMappingByKeywordMapping(keywordMapping1);
 				
@@ -1013,6 +1022,7 @@ public class AdminFestivalController {
 				} else {
 					System.out.println("키워드 컨텐트 매핑 내역 존재");
 				}
+				
 				
 			} catch (Exception e) {
 				throw new RuntimeException(e);
@@ -1030,6 +1040,8 @@ public class AdminFestivalController {
 			
 		}
 		
+		System.out.println("admin controller keys : " + keys);
+		
 		return keys;
 	}
 	
@@ -1044,36 +1056,44 @@ public class AdminFestivalController {
 	public ArrayList<String> insertNaverArticleKeywordByFestivalId(@RequestParam("festivalId") int festivalId) {
 		
 		
-		HashMap<String, Integer> map = new HashMap<String, Integer>();
+		ArrayList<HashMap<String, Integer>> list = new ArrayList<HashMap<String, Integer>>();
 		
 		try {
-			map = adminFestivalService.findNaverArticleKeywordByFestivalId(festivalId);
+			list = adminFestivalService.findNaverArticleKeywordByFestivalId(festivalId);
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
 		
+		System.out.println("insertNaverArticleKeywordByFestivalId list : " + list);
 		
 		ArrayList<FestivalKeywordDTO> keywordList = new ArrayList<FestivalKeywordDTO>();
+		ArrayList<String> keys = new ArrayList<String>();
 		
-		for (Map.Entry<String, Integer> entry : map.entrySet()) {
+		
+		for (HashMap<String, Integer> map : list) {
 			
-			FestivalKeywordDTO festivalKeywordDTO = new FestivalKeywordDTO();
-			festivalKeywordDTO.setFestivalKeywordId(entry.getKey());
-			
-			DictionaryDTO dictionaryDTO = new DictionaryDTO();
-			
-			Query query = new Query(new Criteria("word").is(entry.getKey()));
-			dictionaryDTO = mongoTemplate.findOne(query, DictionaryDTO.class, "dictionary");
-			if (dictionaryDTO != null) {
-				festivalKeywordDTO.setEmotionStat(dictionaryDTO.getPolarity());
-			} else {
-				festivalKeywordDTO.setEmotionStat(0);
+			for (Map.Entry<String, Integer> entry : map.entrySet()) {
+				
+				FestivalKeywordDTO festivalKeywordDTO = new FestivalKeywordDTO();
+				festivalKeywordDTO.setFestivalKeywordId(entry.getKey());
+				keys.add(entry.getKey());
+				festivalKeywordDTO.setFreq(entry.getValue());
+				
+				DictionaryDTO dictionaryDTO = new DictionaryDTO();
+				
+				Query query = new Query(new Criteria("word").is(entry.getKey()));
+				dictionaryDTO = mongoTemplate.findOne(query, DictionaryDTO.class, "dictionary");
+				if (dictionaryDTO != null) {
+					festivalKeywordDTO.setEmotionStat(dictionaryDTO.getPolarity());
+				} else {
+					festivalKeywordDTO.setEmotionStat(0);
+				}
+				
+				keywordList.add(festivalKeywordDTO);
+				
 			}
 			
-			keywordList.add(festivalKeywordDTO);
-			
 		}
-		
 		
 		System.out.println("keywordList : " + keywordList);
 		
@@ -1093,6 +1113,7 @@ public class AdminFestivalController {
 				keywordMapping1.setFestivalId(festivalId);
 				keywordMapping1.setFestivalKeywordId(keyword.getFestivalKeywordId());
 				keywordMapping1.setSortCode("NA");
+				keywordMapping1.setFreq(keyword.getFreq());
 
 //				System.out.println("keywordMapping1 : " + keywordMapping1);
 				
@@ -1102,7 +1123,12 @@ public class AdminFestivalController {
 					adminFestivalService.insertKeywordMappingByKeywordMapping(keywordMapping1);
 					
 				} else {
-					System.out.println("키워드 컨텐트 매핑 내역 존재");
+					System.out.println("키워드 네이버 기사 매핑 내역 존재");
+					int freq = keywordMapping.getFreq() + keywordMapping1.getFreq();
+					keywordMapping1.setFreq(freq);
+					adminFestivalService.updateKeywordMappingByKeywordMapping(keywordMapping1);
+					
+					
 				}
 				
 			} catch (Exception e) {
@@ -1113,17 +1139,7 @@ public class AdminFestivalController {
 		}
 		
 		
-		ArrayList<String> keys = new ArrayList<String>();
-		
-		for (String key : map.keySet()) {
-			
-			keys.add(key);
-			
-		}
-		
 		return keys;
-		
-		
 		
 		
 	}
