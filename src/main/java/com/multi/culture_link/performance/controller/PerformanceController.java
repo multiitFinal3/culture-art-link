@@ -1,6 +1,7 @@
 package com.multi.culture_link.performance.controller;
 
 import com.multi.culture_link.admin.performance.model.dto.PerformanceDTO;
+import com.multi.culture_link.performance.service.PerformanceLocationService;
 import com.multi.culture_link.performance.service.PerformanceRankingService;
 import com.multi.culture_link.users.model.dto.VWUserRoleDTO;
 import org.springframework.http.ResponseEntity;
@@ -23,9 +24,12 @@ import java.util.List;
 public class PerformanceController {
 
     private final PerformanceRankingService performanceRankingService;
+    private final PerformanceLocationService performanceLocationService;
 
-    public PerformanceController(PerformanceRankingService performanceRankingService) {
+    public PerformanceController(PerformanceRankingService performanceRankingService,
+                                 PerformanceLocationService performanceLocationService) {
         this.performanceRankingService = performanceRankingService;
+        this.performanceLocationService = performanceLocationService;
     }
 
     /**
@@ -135,6 +139,30 @@ public class PerformanceController {
         model.addAttribute("genre", genre);
         return "/performance/performanceRanking";
     }
+
+
+
+
+
+
+    @GetMapping("/performanceLocation")
+    public String performanceLocationPage(@AuthenticationPrincipal VWUserRoleDTO user,
+                                          @RequestParam(required = false) String locationCode,
+                                          Model model) {
+        String stdate = "20240730"; // 시작 날짜
+        String eddate = "20240830"; // 종료 날짜
+
+        System.out.println("Received locationCode: " + locationCode); // Debug line
+
+        List<PerformanceDTO> performances = performanceLocationService.fetchPerformancesByLocation(stdate, eddate, locationCode);
+
+        model.addAttribute("user", user.getUser());
+        model.addAttribute("performances", performances);
+
+        return "/performance/performanceLocation";
+    }
+
+
 
 
 }
