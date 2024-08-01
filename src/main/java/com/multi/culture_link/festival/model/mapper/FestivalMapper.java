@@ -49,4 +49,6 @@ public interface FestivalMapper {
 	ArrayList<FestivalDTO> findSameSeasonFestivalBySeason(FestivalDTO festivalDTO) throws Exception;
 	
 	ArrayList<FestivalDTO> findSameManageFestivalByManageInstitution(FestivalDTO festivalDTO) throws Exception;
+	
+	
 }
