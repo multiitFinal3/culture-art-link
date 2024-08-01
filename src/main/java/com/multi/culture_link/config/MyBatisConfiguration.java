@@ -9,6 +9,7 @@ import com.multi.culture_link.users.model.dto.RoleDTO;
 import com.multi.culture_link.users.model.dto.UserDTO;
 import com.multi.culture_link.users.model.dto.VWUserRoleDTO;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.logging.stdout.StdOutImpl;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.type.JdbcType;
 import org.mybatis.spring.SqlSessionFactoryBean;
@@ -47,7 +48,7 @@ public class MyBatisConfiguration {
 		org.apache.ibatis.session.Configuration configuration = new org.apache.ibatis.session.Configuration();
 
 		// 모든 mapper 관련된 log 출력됨
-//		configuration.setLogImpl(StdOutImpl.class);
+		configuration.setLogImpl(StdOutImpl.class);
 
 		configuration.setMapUnderscoreToCamelCase(true);
 		

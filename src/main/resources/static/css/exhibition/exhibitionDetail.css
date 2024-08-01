@@ -168,3 +168,22 @@ button {
 .delete-review:hover {
     background-color: #ff1a1a;
 }
+#videoContainer {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.video-item {
+    width: calc(50% - 10px);
+}
+
+.video-item img {
+    width: 100%;
+    height: auto;
+}
+
+.video-item p {
+    margin-top: 5px;
+    font-size: 14px;
+}

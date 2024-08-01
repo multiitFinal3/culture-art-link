@@ -15,7 +15,7 @@ public interface ExhibitionDao {
     // 찜, 관심없음 변동
     void setInterested(int userId, int exhibitionId, String state);
     // 전시 리스트 관심 연동하여 가져오기
-    List<ExhibitionDto> getExhibition();
+    List<ExhibitionDto> getExhibition(int userId);
     
     // 찜, 관심없음 리스트
     List<ExhibitionApiDto> getUserInterestedExhibitions(int id);

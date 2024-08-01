@@ -3,11 +3,16 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.multi.culture_link.exhibition.model.dao.ExhibitionCommentDao"><!-- 메퍼위치하고  동일하게 네임스페이스 작성-->
+<mapper namespace="com.multi.culture_link.exhibition.model.dao.ExhibitionAnalyzeDao"><!-- 메퍼위치하고  동일하게 네임스페이스 작성-->
 
 
-    <select id="getAnalyze" resultType="com.multi.culture_link.exhibition.model.dto.ExhibitionCommentDto">
-        SELECT * FROM exhibition_analyze WHERE exhibition_id = #{exhibitionId}
+    <select id="getAnalyze" resultType="com.multi.culture_link.exhibition.model.dto.ExhibitionAnalyzeDto">
+        SELECT *, u.user_name AS name,
+               CASE
+                   WHEN u.user_id = #{userId} THEN true
+                   ELSE false
+                   END AS isAuth
+        FROM exhibition_analyze ea left join user u on ea.user_id = u.user_id WHERE exhibition_id = #{exhibitionId}
     </select>
 
     <insert id="createAnalyze" >
@@ -15,17 +20,17 @@
             VALUES (#{exhibitionId}, #{userId}, #{image}, #{artwork}, #{content})
     </insert>
 
-    <update id="updateAnalyze" parameterType="com.multi.culture_link.exhibition.model.dto.ExhibitionCommentDto">
+    <update id="updateAnalyze" parameterType="com.multi.culture_link.exhibition.model.dto.ExhibitionAnalyzeDto">
         UPDATE  exhibition_analyze
         SET content = #{content}
-        WHERE user_id = #{userId} AND exhibition_id = #{exhibitionId}
+        WHERE user_id = #{userId} AND exhibition_id = #{exhibitionId} AND id=#{id}
 
 
     </update>
 
     <delete id="deleteAnalyze">
         DELETE FROM exhibition_analyze
-        WHERE user_id = #{userId} AND exhibition_id = #{exhibitionId}
+        WHERE user_id = #{userId} AND exhibition_id = #{exhibitionId} AND id=#{id}
     </delete>
 
 

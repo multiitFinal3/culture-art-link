@@ -15,8 +15,8 @@ import java.util.List;
 public class ExhibitionAnalyzeService {
     private final ExhibitionAnalyzeDao exhibitionAnalyzeDao;
 
-    public List<ExhibitionAnalyzeDto> getAnalyze(int exhibitionId) {
-        return exhibitionAnalyzeDao.getAnalyze(exhibitionId);
+    public List<ExhibitionAnalyzeDto> getAnalyze(ExhibitionAnalyzeDto data) {
+        return exhibitionAnalyzeDao.getAnalyze(data);
     }
 
     public void createAnalyze(ExhibitionAnalyzeDto data) {

@@ -110,10 +110,27 @@
         </div>
     </section>
     <footer>
-      <section class="artwork-analyze">
-        <h2>작품 개인 분석</h2>
-        <div id="artworkAnalzeContainer"></div>
-      </section>
+        <section class="artwork-analyze">
+            <h2>작품 개인 분석</h2>
+            <div id="artworkAnalyzeContainer">
+                <!-- 개별 분석들이 여기에 동적으로 삽입됩니다 -->
+            </div>
+
+            <div class="display-flex">
+                <div style="float: left">
+                    분석 작성하기
+                </div>
+                <div>
+                    <input id="artworkTextarea" placeholder="작품의 제목을 작성해 주세요.">
+                    <textarea id="analyzeTextarea" placeholder="작품에 대한 개인적인 분석을 입력해주세요."></textarea>
+                    <input type="file" id="imageInput" accept="image/*" style="display: none;">
+                    <button id="imageUploadBtn">이미지 첨부</button>
+                </div>
+                <div>
+                    <button id="saveAnalyzeBtn" style="float:right">확인</button>
+                </div>
+            </div>
+        </section>
     </footer>
   </div>
 </div>

@@ -67,6 +67,8 @@ dependencies {
 	implementation 'dev.langchain4j:langchain4j-open-ai:0.33.0'
 	implementation 'dev.langchain4j:langchain4j:0.33.0'
 
+	implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
+
 //	implementation 'org.springframework.boot:spring-boot-starter-web'
 
 //	implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect:3.0.12'

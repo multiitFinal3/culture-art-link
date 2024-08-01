@@ -36,7 +36,7 @@
 
     <!--  관심 연결된 전시 데이터 -->
     <select id="getExhibition" resultType="com.multi.culture_link.exhibition.model.dto.ExhibitionDto">
-        SELECT ex.*, ei.state FROM exhibition ex LEFT JOIN exhibition_interested ei ON ex.id = ei.exhibition_id ORDER BY ex.created_at DESC
+        SELECT ex.*, ei.state FROM exhibition ex LEFT JOIN exhibition_interested ei ON ex.id = ei.exhibition_id AND ei.user_id = #{userId} ORDER BY ex.created_at DESC
     </select>
 
 
