@@ -17,6 +17,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -32,8 +33,8 @@ import java.util.Map;
 public class ExhibitionController {
     private final ExhibitionService exhibitionService;
     private final ExhibitionCommentService exhibitionCommentService;
-    private final ExhibitionAnalyzeService exhibitionAnalzeService;
-    
+    private final ExhibitionAnalyzeService exhibitionAnalyzeService;
+
     
     // 상세 검색
     @GetMapping("/search-exhibition")
@@ -146,7 +147,7 @@ public class ExhibitionController {
         ExhibitionAnalyzeDto data = new ExhibitionAnalyzeDto();
         data.setUserId(currentUser.getUserId());
         data.setExhibitionId(exhibitionId);
-        return exhibitionAnalzeService.getAnalyze(exhibitionId);
+        return exhibitionAnalyzeService.getAnalyze(exhibitionId);
     }
 
     // 분석 작성
@@ -158,7 +159,7 @@ public class ExhibitionController {
     ) {
         data.setExhibitionId(exhibitionId);
         data.setUserId(currentUser.getUserId());
-        exhibitionAnalzeService.createAnalyze(data);
+        exhibitionAnalyzeService.createAnalyze(data);
     }
 
     // 분석 수정
@@ -170,7 +171,7 @@ public class ExhibitionController {
     ) {
         data.setExhibitionId(exhibitionId);
         data.setUserId(currentUser.getUserId());
-        exhibitionAnalzeService.updateAnalyze(data);
+        exhibitionAnalyzeService.updateAnalyze(data);
 
 
     }
@@ -185,6 +186,6 @@ public class ExhibitionController {
     ) {
         data.setExhibitionId(exhibitionId);
         data.setUserId(currentUser.getUserId());
-        exhibitionAnalzeService.deleteAnalyze(data);
+        exhibitionAnalyzeService.deleteAnalyze(data);
     }
 }
