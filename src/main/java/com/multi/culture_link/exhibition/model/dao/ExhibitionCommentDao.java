@@ -11,7 +11,7 @@ import java.util.Map;
 @Mapper
 public interface ExhibitionCommentDao {
 
-    List<ExhibitionCommentDto> getComment(int exhibitionId);
+    List<ExhibitionCommentDto> getComment(ExhibitionCommentDto data);
     void createComment(ExhibitionCommentDto data);
     void deleteComment(ExhibitionCommentDto data);
 

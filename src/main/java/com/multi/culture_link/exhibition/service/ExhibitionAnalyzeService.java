@@ -27,11 +27,8 @@ public class ExhibitionAnalyzeService {
         exhibitionAnalyzeDao.updateAnalyze(data);
     }
 
-    public void deleteAnalyze(int userId, int exhibitionId) {
-        ExhibitionAnalyzeDto data = new ExhibitionAnalyzeDto();
-        data.setUserId(userId);
-        data.setExhibitionId(exhibitionId);
-        exhibitionAnalyzeDao.deleteAnalyze(userId, exhibitionId);
+    public void deleteAnalyze(ExhibitionAnalyzeDto data) {
+        exhibitionAnalyzeDao.deleteAnalyze(data);
     }
 
 
