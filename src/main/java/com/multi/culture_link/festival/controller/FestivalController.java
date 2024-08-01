@@ -736,17 +736,21 @@ public class FestivalController {
 	/**
 	 * 관련된 페스티벌 이름으로 네이버 기사를 검색
 	 * @param page
-	 * @param festivalName
+	 * @param festivalDTO
 	 * @return
 	 */
 	@PostMapping("/findFestivalNaverArticle")
 	@ResponseBody
-	public NaverArticleDTO findFestivalNaverArticle(@RequestParam("page") int page, @RequestParam("formattedStart") String formattedStart, @RequestParam("festivalName") String festivalName) {
+	public NaverArticleDTO findFestivalNaverArticle(@RequestParam("page") int page, @RequestParam("festival") FestivalDTO festivalDTO) {
 		
 		NaverArticleDTO naverArticleDTO = new NaverArticleDTO();
 		
+		PageDTO pageDTO = new PageDTO();
+		pageDTO.setPage(page);
+		festivalDTO.setPageDTO(pageDTO);
+		
 		try {
-			naverArticleDTO = festivalService.findFestivalNaverArticle(page, formattedStart, festivalName);
+			naverArticleDTO = festivalService.findFestivalNaverArticle(festivalDTO);
 			System.out.println("findFestivalNaverArticle : " + naverArticleDTO);
 			
 		} catch (Exception e) {
