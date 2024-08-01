@@ -18,18 +18,15 @@ import java.util.Map;
 public class ExhibitionCommentService {
     private final ExhibitionCommentDao ExhibitionCommentDao;
 
-    public List<ExhibitionCommentDto> getComment(int exhibitionId) {
-        return ExhibitionCommentDao.getComment(exhibitionId);
+    public List<ExhibitionCommentDto> getComment(ExhibitionCommentDto data) {
+        return ExhibitionCommentDao.getComment(data);
     }
 
     public void createComment(ExhibitionCommentDto data) {
         ExhibitionCommentDao.createComment(data);
     }
 
-    public void deleteComment(int userId, int exhibitionId) {
-        ExhibitionCommentDto data = new ExhibitionCommentDto();
-        data.setUserId(userId);
-        data.setExhibitionId(exhibitionId);
+    public void deleteComment(ExhibitionCommentDto data) {
         ExhibitionCommentDao.deleteComment(data);
     }
 }

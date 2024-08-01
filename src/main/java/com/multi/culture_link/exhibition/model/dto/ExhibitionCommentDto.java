@@ -11,6 +11,7 @@ public class ExhibitionCommentDto {
     private int exhibitionId;
     private int userId;
     private double stars;
+    private boolean isAuth;
     private String content;
     private String name;
     private LocalDateTime createdAt;

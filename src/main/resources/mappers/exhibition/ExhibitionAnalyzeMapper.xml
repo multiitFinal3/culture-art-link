@@ -11,8 +11,8 @@
     </select>
 
     <insert id="createAnalyze" >
-        INSERT INTO exhibition_analyze (exhibition_id, user_id, image, artwork, content) " +
-            "VALUES (#{exhibitionId}, #{userId}, #{image}, #{artwork}, #{content})
+        INSERT INTO exhibition_analyze (exhibition_id, user_id, image, artwork, content)
+            VALUES (#{exhibitionId}, #{userId}, #{image}, #{artwork}, #{content})
     </insert>
 
     <update id="updateAnalyze" parameterType="com.multi.culture_link.exhibition.model.dto.ExhibitionCommentDto">
