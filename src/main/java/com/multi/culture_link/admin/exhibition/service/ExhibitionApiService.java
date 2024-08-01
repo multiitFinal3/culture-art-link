@@ -98,7 +98,7 @@ public class ExhibitionApiService {
             eachData.setUrl(responseDatum.getUrl());
             processedData.add(eachData);
         }
-        System.out.println("processedData: " + processedData);
+//        System.out.println("processedData: " + processedData);
         adminExhibitionDao.saveData(processedData);
     }
 

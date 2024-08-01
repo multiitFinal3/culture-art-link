@@ -6,8 +6,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>전시 상세 정보</title>
   <link rel="stylesheet" href="/css/exhibition/exhibitionDetail.css">
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY"></script>
+<!--    <script th:inline="javascript" th:src="'https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=' + ${naverClientId}"></script>-->
+    <script th:inline="javascript" th:src="'https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=' + ${naverClientId} + '&submodules=geocoder&callback=initNaverMap'"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="/js/exhibition/exhibitionDetail.js"></script>
 </head>
@@ -27,12 +29,14 @@
                     <button id="favoriteBtn" class="action-btn favorite-btn">찜</button>
                     <button id="notInterestedBtn" class="action-btn not-interested-btn">관심없음</button>
                 </div>
+            </div>
+            <div class="title-and-buttons">
                 <h1 id="exhibitionTitle"></h1>
             </div>
-          <div class="exhibition-info">
-            <p id="exhibitionMuseum"></p>
-            <p id="exhibitionDate"></p>
-          </div>
+            <div class="exhibition-info">
+                <p id="exhibitionMuseum"></p>
+                <p id="exhibitionDate"></p>
+            </div>
         </header>
         <div class="map-section">
           <div id="map"></div>
@@ -79,13 +83,36 @@
 
 
     <section class="reviews-section">
-      <h2>리뷰</h2>
-      <div id="reviewsContainer"></div>
+        <h2>후기</h2>
+        <div id="reviewsContainer">
+
+        </div>
+
+        <div class="display-flex">
+            <div style="float: left">
+                후기 작성하기
+            </div>
+            <div>
+                <div class="star-rating" data-rating="0">
+                    <span class="star" data-value="1"></span>
+                    <span class="star" data-value="2"></span>
+                    <span class="star" data-value="3"></span>
+                    <span class="star" data-value="4"></span>
+                    <span class="star" data-value="5"></span>
+                </div>
+                <textarea id="commentTextarea" placeholder="후기를 입력해주세요.">
+
+                </textarea>
+            </div>
+            <div>
+                <button id="saveCommentBtn" style="float:right">확인</button>
+            </div>
+        </div>
     </section>
     <footer>
-      <section class="related-exhibitions">
-        <h2>이 전시와 비슷한 전시</h2>
-        <div id="relatedExhibitionsContainer"></div>
+      <section class="artwork-analyze">
+        <h2>작품 개인 분석</h2>
+        <div id="artworkAnalzeContainer"></div>
       </section>
     </footer>
   </div>

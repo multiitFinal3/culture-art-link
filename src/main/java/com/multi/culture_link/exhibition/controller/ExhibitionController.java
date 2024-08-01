@@ -1,8 +1,12 @@
 package com.multi.culture_link.exhibition.controller;
 
 import com.multi.culture_link.admin.exhibition.model.dto.api.ExhibitionApiDto;
+import com.multi.culture_link.exhibition.model.dto.ExhibitionAnalyzeDto;
+import com.multi.culture_link.exhibition.model.dto.ExhibitionCommentDto;
 import com.multi.culture_link.exhibition.model.dto.ExhibitionDto;
 import com.multi.culture_link.exhibition.model.dto.ExhibitionInterestDto;
+import com.multi.culture_link.exhibition.service.ExhibitionAnalyzeService;
+import com.multi.culture_link.exhibition.service.ExhibitionCommentService;
 import com.multi.culture_link.exhibition.service.ExhibitionService;
 import com.multi.culture_link.users.model.dto.UserDTO;
 import com.multi.culture_link.users.model.dto.VWUserRoleDTO;
@@ -13,6 +17,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -27,6 +32,9 @@ import java.util.Map;
 @RequestMapping("/exhibition")
 public class ExhibitionController {
     private final ExhibitionService exhibitionService;
+    private final ExhibitionCommentService exhibitionCommentService;
+    private final ExhibitionAnalyzeService exhibitionAnalyzeService;
+
     
     // 상세 검색
     @GetMapping("/search-exhibition")
@@ -49,7 +57,7 @@ public class ExhibitionController {
             @AuthenticationPrincipal VWUserRoleDTO currentUser,
             @PathVariable int exhibitionId
     ){
-        System.out.println("exhibition: " + exhibitionService.getExhibitionById(currentUser.getUserId(), exhibitionId));
+//        System.out.println("exhibition: " + exhibitionService.getExhibitionById(currentUser.getUserId(), exhibitionId));
         return exhibitionService.getExhibitionById(currentUser.getUserId(), exhibitionId);
     }
 
@@ -90,4 +98,94 @@ public class ExhibitionController {
         return exhibitionService.getExhibition();
     }
 
+    // 댓글 목록 가져오기
+    @GetMapping("/exhibition/{exhibitionId}/comment")
+    public List<ExhibitionCommentDto> getComment(
+            @PathVariable int exhibitionId,
+            @AuthenticationPrincipal VWUserRoleDTO currentUser
+    ) {
+        ExhibitionCommentDto data = new ExhibitionCommentDto();
+        data.setUserId(currentUser.getUserId());
+        data.setExhibitionId(exhibitionId);
+        return exhibitionCommentService.getComment(data);
+    }
+
+    // 댓글 작성
+    @PostMapping("/exhibition/{exhibitionId}/comment")
+    public void setComment(
+            @RequestBody ExhibitionCommentDto data,
+            @AuthenticationPrincipal VWUserRoleDTO currentUser,
+            @PathVariable int exhibitionId
+    ) {
+        data.setExhibitionId(exhibitionId);
+        data.setUserId(currentUser.getUserId());
+
+        System.out.println("data : "+ data);
+        exhibitionCommentService.createComment(data);
+    }
+
+    // 댓글 삭제
+    @DeleteMapping("/exhibition/{exhibitionId}/comment")
+    public void deleteComment(
+            @AuthenticationPrincipal VWUserRoleDTO currentUser,
+            @PathVariable int exhibitionId,
+            @RequestBody ExhibitionCommentDto data
+
+            ) {
+        data.setExhibitionId(exhibitionId);
+        data.setUserId(currentUser.getUserId());
+        exhibitionCommentService.deleteComment(data);
+    }
+
+
+    // 분석 목록 가져오기
+    @GetMapping("/exhibition/{exhibitionId}/analyze")
+    public List<ExhibitionAnalyzeDto> getAnalyze(
+            @PathVariable int exhibitionId,
+            @AuthenticationPrincipal VWUserRoleDTO currentUser
+    ) {
+        ExhibitionAnalyzeDto data = new ExhibitionAnalyzeDto();
+        data.setUserId(currentUser.getUserId());
+        data.setExhibitionId(exhibitionId);
+        return exhibitionAnalyzeService.getAnalyze(exhibitionId);
+    }
+
+    // 분석 작성
+    @PostMapping("/exhibition/{exhibitionId}/analyze")
+    public void setAnalyze(
+            @RequestBody ExhibitionAnalyzeDto data,
+            @AuthenticationPrincipal VWUserRoleDTO currentUser,
+            @PathVariable int exhibitionId
+    ) {
+        data.setExhibitionId(exhibitionId);
+        data.setUserId(currentUser.getUserId());
+        exhibitionAnalyzeService.createAnalyze(data);
+    }
+
+    // 분석 수정
+    @PatchMapping("/exhibition/{exhibitionId}/analyze")
+    public void updateAnalyze(
+            @RequestBody ExhibitionAnalyzeDto data,
+            @AuthenticationPrincipal VWUserRoleDTO currentUser,
+            @PathVariable int exhibitionId
+    ) {
+        data.setExhibitionId(exhibitionId);
+        data.setUserId(currentUser.getUserId());
+        exhibitionAnalyzeService.updateAnalyze(data);
+
+
+    }
+
+
+    // 분석 삭제
+    @DeleteMapping("/exhibition/{exhibitionId}/analyze")
+    public void deleteAnalyze(
+            @AuthenticationPrincipal VWUserRoleDTO currentUser,
+            @PathVariable int exhibitionId,
+            @RequestBody ExhibitionAnalyzeDto data
+    ) {
+        data.setExhibitionId(exhibitionId);
+        data.setUserId(currentUser.getUserId());
+        exhibitionAnalyzeService.deleteAnalyze(data);
+    }
 }

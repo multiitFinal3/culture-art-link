@@ -1072,16 +1072,14 @@
             * @param {string} festivalName 축제 이름
             * @param {int} page 유튜브 페이지
             */
-            function findFestivalNaverArticle(page, formattedStart, festivalName){
+            function findFestivalNaverArticle(page, festival){
 
                 $.ajax({
 
                     url: '/festival/findFestivalNaverArticle',
                     method: 'POST',
                     data: {
-                        page: page,
-                        formattedStart: festival.formattedStart,
-                        festivalName: festival.festivalName
+                        festival: festival
                     },
                     success: function(article){
 

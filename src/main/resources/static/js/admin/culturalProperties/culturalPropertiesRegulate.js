@@ -8,6 +8,9 @@ $(document).ready(function() {
     var dbData = []; // DB 데이터를 저장할 배열
     var selectedCheckboxes = []; // 선택된 체크박스 인덱스를 저장할 배열
 
+
+    var itemsPerPage = 10; // 페이지당 항목 수
+
 //    var isSearchMode = false;
 
 
@@ -596,12 +599,8 @@ $(document).ready(function() {
             classifyA: $row.find('td').eq(8).text(), // 여덟 번째 <td>에서 분류1 가져오기
             classifyB: $row.find('td').eq(9).text(), // 아홉 번째 <td>에서 분류2 가져오기
             classifyC: $row.find('td').eq(10).text(), // 열 번째 <td>에서 분류3 가져오기
-            classifyD: $row.find('td').eq(11).text(), // 열한 번째 <td>에서 분류4 가져오기
-            mainImgUrl: $row.find('td').eq(12).text(),
-            content: $row.find('td').eq(13).text(),
-            imgUrl: $row.find('td').eq(14).text(),
-            videoUrl: $row.find('td').eq(15).text(),
-            narrationUrl: $row.find('td').eq(16).text()
+            classifyD: $row.find('td').eq(11).text() // 열한 번째 <td>에서 분류4 가져오기
+
         };
 
         // 수정 입력 필드 추가
@@ -617,12 +616,6 @@ $(document).ready(function() {
             '<input type="text" class="form-control edit-classifyB" value="' + rowData.classifyB + '" placeholder="분류2">' +
             '<input type="text" class="form-control edit-classifyC" value="' + rowData.classifyC + '" placeholder="분류3">' +
             '<input type="text" class="form-control edit-classifyD" value="' + rowData.classifyD + '" placeholder="분류4">' +
-            '<input type="text" class="form-control edit-mainImgUrl" value="' + $row.find('.mainImgUrl img').attr('src') + '" placeholder="대표 이미지 URL">' +
-            '<input type="text" class="form-control edit-content" value="' + $row.find('.content .content-tooltip').text() + '" placeholder="설명">' +
-            '<input type="text" class="form-control edit-imgUrl" value="' + $row.find('.imgUrl a').attr('href') + '" placeholder="이미지 URL">' +
-            '<input type="text" class="form-control edit-imgDesc" value="' + $row.find('.imgDesc').text() + '" placeholder="이미지 설명">' +
-            '<input type="text" class="form-control edit-videoUrl" value="' + $row.find('.videoUrl a').attr('href') + '" placeholder="동영상 URL">' +
-            '<input type="text" class="form-control edit-narrationUrl" value="' + $row.find('.narrationUrl a').attr('href') + '" placeholder="나레이션 URL">' +
             '<button class="btn btn-primary" id="saveDB">저장</button>' +
             '<button class="btn btn-secondary" id="cancelDB">취소</button>' +
             '</td></tr>';
@@ -646,37 +639,12 @@ $(document).ready(function() {
         var classifyB = $editRow.find('.edit-classifyB').val();
         var classifyC = $editRow.find('.edit-classifyC').val();
         var classifyD = $editRow.find('.edit-classifyD').val();
-        var mainImgUrl = $editRow.find('.edit-mainImgUrl').val();
-        var content = $editRow.find('.edit-content').val();
 
-        // 리스트 데이터 수집
-            var imgUrl = [];
-            var imgDesc = [];
-            var videoUrl = [];
-            var narrationUrl = [];
-
-            // imgUrl, imgDesc 필드의 값을 가져오는 로직 (예시)
-            $editRow.find('.edit-imgUrl').each(function() {
-                imgUrl.push($(this).val());
-            });
-
-            $editRow.find('.edit-imgDesc').each(function() {
-                imgDesc.push($(this).val());
-            });
-
-            $editRow.find('.edit-videoUrl').each(function() {
-                videoUrl.push($(this).val());
-            });
-
-            $editRow.find('.edit-narrationUrl').each(function() {
-                narrationUrl.push($(this).val());
-            });
-
-//        var imgUrl = $editRow.find('.edit-imgUrl').val();
-//        var imgDesc = $editRow.find('.edit-imgDesc').val();
-//        var videoUrl = $editRow.find('.edit-videoUrl').val();
-//        var narrationUrl = $editRow.find('.edit-narrationUrl').val();
-
+        // 수정 확인 알림창
+        var isConfirmed = confirm('수정 내용을 저장하시겠습니까?');
+        if (!isConfirmed) {
+            return; // 사용자가 취소를 선택한 경우 AJAX 요청을 하지 않음
+        }
 
 
         // AJAX 요청을 보내 DB를 업데이트하는 코드 추가
@@ -684,7 +652,6 @@ $(document).ready(function() {
             url: '/admin/cultural-properties-regulate/updateDBData', // 업데이트 URL
             method: 'POST',
             contentType: 'application/json',
-            dataType: 'json',
             data: JSON.stringify([{
                 id: id,
                 culturalPropertiesName: culturalPropertiesName,
@@ -696,52 +663,8 @@ $(document).ready(function() {
                 classifyA: classifyA,
                 classifyB: classifyB,
                 classifyC: classifyC,
-                classifyD: classifyD,
-                mainImgUrl: mainImgUrl,
-                content: content,
-                imgUrl: imgUrl,
-                imgDesc: imgDesc,
-                videoUrl: videoUrl,
-                narrationUrl: narrationUrl
+                classifyD: classifyD
             }]),
-//            success: function(response) {
-//                // 응답이 JavaScript 객체로 가정
-//                console.log('Success response:', response); // 성공 응답 로그
-//
-//                // 응답의 success 속성이 true인지 확인
-//                if (response.success) {
-//                    alert('수정이 완료되었습니다!');
-//
-//                    // 수정된 값을 테이블에 반영
-//                    var $row = $editRow.prev(); // 원래 행
-//                    $row.find('.culturalPropertiesName').text(response.culturalPropertiesName);
-//                    $row.find('.categoryName').text(response.categoryName);
-//                    $row.find('.region').text(response.region);
-//                    $row.find('.dynasty').text(response.dynasty);
-//                    $row.find('.address').text(response.address);
-//                    $row.find('.registrationDate').text(response.registrationDate);
-//                    $row.find('.classifyA').text(response.classifyA);
-//                    $row.find('.classifyB').text(response.classifyB);
-//                    $row.find('.classifyC').text(response.classifyC);
-//                    $row.find('.classifyD').text(response.classifyD);
-//                    $row.find('.mainImgUrl img').attr('src', response.mainImgUrl); // 이미지 업데이트
-//                    $row.find('.content .content-tooltip').attr('title', response.content).text(response.content); // Tooltip 업데이트
-//                    $row.find('.imgUrl a').attr('href', response.imgUrl); // 이미지 URL 업데이트
-//                    $row.find('.imgDesc').text(response.imgDesc); // 이미지 설명 업데이트
-//                    $row.find('.videoUrl a').attr('href', response.videoUrl); // 비디오 URL 업데이트
-//                    $row.find('.narrationUrl a').attr('href', response.narrationUrl); // 나레이션 URL 업데이트
-//
-//                    // 수정 행 삭제
-//                    $editRow.remove();
-//                } else {
-//                    alert('수정 실패: ' + response.message); // 실패 메시지 처리
-//                }
-//            },
-//            error: function(xhr, status, error) {
-//                console.error("수정 요청 실패:", error);
-//                console.log("응답 내용:", xhr.responseText); // 오류 응답 로그
-//            }
-
 
             success: function (response) {
                 console.log('Success response:', response); // 성공 응답 로그
@@ -759,12 +682,6 @@ $(document).ready(function() {
                 $row.find('.classifyB').text(classifyB);
                 $row.find('.classifyC').text(classifyC);
                 $row.find('.classifyD').text(classifyD);
-                $row.find('.mainImgUrl img').attr('src', mainImgUrl); // 이미지 업데이트
-                $row.find('.content .content-tooltip').attr('title', content).text(content); // Tooltip 업데이트
-                $row.find('.imgUrl a').attr('href', imgUrl); // 이미지 URL 업데이트
-                $row.find('.imgDesc').text(imgDesc); // 이미지 설명 업데이트
-                $row.find('.videoUrl a').attr('href', videoUrl); // 비디오 URL 업데이트
-                $row.find('.narrationUrl a').attr('href', narrationUrl); // 나레이션 URL 업데이트
 
                 // 수정 행 삭제
                 $editRow.remove();
@@ -784,22 +701,12 @@ $(document).ready(function() {
     });
 
 
-//    // 페이지 로드 시 데이터 가져오기
-//    $(document).ready(function() {
-//        getDBData(1); // 초기 페이지 데이터 로드
-//        handleUpdateButtonClick(); // 수정 버튼 클릭 이벤트 처리
-//    });
-
-
-
-
 
     // 초기 페이지 데이터 불러오기
     fetchApiData(currentPage2);
     getDBData(1); // 초기 DB 데이터 불러오기
     findListPage(1, 10);
 
-//    showEditRow(); // 수정 버튼 클릭 이벤트 처리
 
 
 //    $(document).ready(function() {
@@ -1579,9 +1486,120 @@ $(document).ready(function() {
 
 
 
+//-----------------------------------------------------
+
+//        $('#searchDB').on('click', function() {
+//            // 사용자가 입력한 값을 가져오기
+//            var category = $('#categoryFilter').val();
+//            var name = $('#searchName').val();
+//            var region = $('#searchRegion').val();
+//            var dynasty = $('#searchDynasty').val();
+//
+//            console.log(category);
+//            console.log(name);
+//            console.log(region);
+//            console.log(dynasty);
+//
+//    //                // 페이지 상태 업데이트
+//    //                currentPage = 1;
+//    //                isSearchMode = true;
+//    //
+//    //                // 검색 필터와 페이지 번호를 포함하여 검색 함수 호출
+//    //                searchDBCulturalProperties(category, name, region, dynasty, currentPage);
+//
+//            searchDBCulturalProperties(category, name, region, dynasty, 1);
+//        });
+//
+//        // 초기화 버튼 클릭 이벤트
+//        $('#reset').on('click', function() {
+//            // 검색 필터 초기화
+//            $('#categoryFilter').val('all');
+//            $('#searchName').val('');
+//            $('#searchRegion').val('');
+//            $('#searchDynasty').val('');
+//
+//            // 기본 데이터 로드
+//    //                isSearchMode = false;
+//            findListPage(currentPage, 10);
+//    //                        $('#paginationSection1').empty();
+//    //                        renderPagination1(page, totalPages); // 페이지네이션 렌더링 함수 호출
+////            // 전체 페이지 수 계산
+////            var totalPages = (int) Math.ceil((double) count / 10);
+////            var startPage = (Math.ceil(currentPage2 / 10) - 1) * 10 + 1;
+////                    var endPage = Math.min(startPage + 9, totalPages2);
+//
+//            renderPagination1(currentPage, totalPages);
+//            getDBData(1);
+//    //$('#list1').show();
+//
+//    //                // 기본 데이터 로드
+//    //                getDBData(1);
+//
+//        });
+//
+//        function searchDBCulturalProperties(category, name, region, dynasty, page) {
+//            if (category === 'all') {
+//                // 전체를 선택한 경우 초기 화면을 표시
+//    //                    displayInitialScreen();
+//    findListPage(currentPage, 10);
+//    renderPagination1(currentPage, totalPages);
+//
+//            getDBData(1);
+//
+//            } else {
+//                // AJAX를 사용하여 서버로 데이터 전송
+//                $.ajax({
+//                    url: '/admin/cultural-properties-regulate/searchDB?page=' + page + "&category=" + category + "&name=" + name +"&region=" + region +"&dynasty=" + dynasty,
+//                    method: 'POST',
+//                    success: function(response) {
+//                        // 서버로부터 응답을 받았을 때 실행되는 함수
+//                        console.log('검색 결과:', response);
+//
+////                        list = response;
+//
+//                        // DB 데이터를 통해 API 데이터와 비교하여 체크 박스 비활성화
+//                        disableCheckboxes();
+//
+//                        if (Array.isArray(response) && response.length > 0) {
+//                        searchDBTable(response);
+//
+//                        var count = response.length; // 서버에서 받은 총 개수로 수정할 수 있습니다.
+//                        var totalPages = Math.ceil(count / 10); // itemsPerPage를 정의합니다.
+//                        renderPagination1(currentPage, totalPages);
+//
+////                            // 페이지네이션 업데이트
+////    //                        findListPage();
+////                            currentPage = page;
+////                            findListPage(currentPage, 10);
+////    //                        $('#paginationSection1').empty();
+////    //                        renderPagination1(page, totalPages); // 페이지네이션 렌더링 함수 호출
+////                            renderPagination1(currentPage, totalPages);
+//
+//                        } else {
+//                            // 검색 결과가 없을 때 알림 표시
+//                             $('#list1').empty();
+//                             // 페이지네이션 업데이트
+//                             $('#paginationSection1').empty();
+//                             renderPagination1(page, totalPages);
+//                            alert('일치하는 데이터가 존재하지 않습니다.');
+//
+//                        }
+//
+//
+//
+//                    },
+//                        error: function(xhr, status, error) {
+//                            console.error('검색 오류:', error);
+//                        }
+//                    });
+//                }
+//            }
+
+//--------------------------------------------------------
 
 
-        $('#searchDB').on('click', function() {
+$('#searchDB').on('click', function() {
+            $('#list1').empty();
             // 사용자가 입력한 값을 가져오기
             var category = $('#categoryFilter').val();
             var name = $('#searchName').val();
@@ -1593,14 +1611,7 @@ $(document).ready(function() {
             console.log(region);
             console.log(dynasty);
 
-    //                // 페이지 상태 업데이트
-    //                currentPage = 1;
-    //                isSearchMode = true;
-    //
-    //                // 검색 필터와 페이지 번호를 포함하여 검색 함수 호출
-    //                searchDBCulturalProperties(category, name, region, dynasty, currentPage);
-
-            searchDBCulturalProperties(category, name, region, dynasty, 1);
+            searchDBCulturalProperties(category, name, region, dynasty);
         });
 
         // 초기화 버튼 클릭 이벤트
@@ -1612,37 +1623,25 @@ $(document).ready(function() {
             $('#searchDynasty').val('');
 
             // 기본 데이터 로드
-    //                isSearchMode = false;
             findListPage(currentPage, 10);
-    //                        $('#paginationSection1').empty();
-    //                        renderPagination1(page, totalPages); // 페이지네이션 렌더링 함수 호출
-//            // 전체 페이지 수 계산
-//            var totalPages = (int) Math.ceil((double) count / 10);
-//            var startPage = (Math.ceil(currentPage2 / 10) - 1) * 10 + 1;
-//                    var endPage = Math.min(startPage + 9, totalPages2);
 
             renderPagination1(currentPage, totalPages);
             getDBData(1);
-    //$('#list1').show();
 
-    //                // 기본 데이터 로드
-    //                getDBData(1);
 
         });
 
-        function searchDBCulturalProperties(category, name, region, dynasty, page) {
+        function searchDBCulturalProperties(category, name, region, dynasty) {
             if (category === 'all') {
-                // 전체를 선택한 경우 초기 화면을 표시
-    //                    displayInitialScreen();
-    findListPage(currentPage, 10);
-    renderPagination1(currentPage, totalPages);
+                findListPage(currentPage, 10);
+                renderPagination1(currentPage, totalPages);
 
-            getDBData(1);
+                getDBData(1);
 
             } else {
                 // AJAX를 사용하여 서버로 데이터 전송
                 $.ajax({
-                    url: '/admin/cultural-properties-regulate/searchDB?page=' + page + "&category=" + category + "&name=" + name +"&region=" + region +"&dynasty=" + dynasty,
+                    url: '/admin/cultural-properties-regulate/searchDB?category=' + category + "&name=" + name +"&region=" + region +"&dynasty=" + dynasty,
                     method: 'POST',
                     success: function(response) {
                         // 서버로부터 응답을 받았을 때 실행되는 함수
@@ -1653,6 +1652,7 @@ $(document).ready(function() {
                         // DB 데이터를 통해 API 데이터와 비교하여 체크 박스 비활성화
                         disableCheckboxes();
 
+
                         if (Array.isArray(response) && response.length > 0) {
                         searchDBTable(response);
 
@@ -1660,20 +1660,14 @@ $(document).ready(function() {
                         var totalPages = Math.ceil(count / 10); // itemsPerPage를 정의합니다.
                         renderPagination1(currentPage, totalPages);
 
-//                            // 페이지네이션 업데이트
-//    //                        findListPage();
-//                            currentPage = page;
-//                            findListPage(currentPage, 10);
-//    //                        $('#paginationSection1').empty();
-//    //                        renderPagination1(page, totalPages); // 페이지네이션 렌더링 함수 호출
-//                            renderPagination1(currentPage, totalPages);
+                        console.log(totalPages);
 
                         } else {
                             // 검색 결과가 없을 때 알림 표시
                              $('#list1').empty();
                              // 페이지네이션 업데이트
                              $('#paginationSection1').empty();
-                             renderPagination1(page, totalPages);
+                             renderPagination1(currentPage, totalPages);
                             alert('일치하는 데이터가 존재하지 않습니다.');
 
                         }
