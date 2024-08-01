@@ -40,4 +40,35 @@
     </select>
 
 
+<!--    &lt;!&ndash; 찜 추가 또는 관심없음 추가 &ndash;&gt;-->
+<!--    <insert id="addInterest" parameterType="CulturalPropertiesInterestDTO">-->
+<!--        INSERT INTO cultural_properties_interest (cultural_properties_id, user_id)-->
+<!--        VALUES (#{culturalPropertiesId}, #{userId});-->
+<!--    </insert>-->
+
+<!--    &lt;!&ndash; 찜 여부 확인 &ndash;&gt;-->
+<!--    <select id="isLiked" parameterType="CulturalPropertiesInterestDTO" resultType="boolean">-->
+<!--        SELECT COUNT(*) > 0 FROM cultural_properties_interest-->
+<!--        WHERE cultural_properties_id = #{culturalPropertiesId} AND user_id = #{userId};-->
+<!--    </select>-->
+
+<!--    &lt;!&ndash; 관심없음 여부 확인 &ndash;&gt;-->
+<!--    <select id="isDisliked" parameterType="CulturalPropertiesInterestDTO" resultType="boolean">-->
+<!--        SELECT COUNT(*) > 0 FROM cultural_properties_interest-->
+<!--        WHERE cultural_properties_id = #{culturalPropertiesId} AND user_id = #{userId};-->
+<!--    </select>-->
+
+<!--    &lt;!&ndash; 찜 또는 관심없음 삭제 &ndash;&gt;-->
+<!--    <delete id="removeInterest" parameterType="CulturalPropertiesInterestDTO">-->
+<!--        DELETE FROM cultural_properties_interest-->
+<!--        WHERE cultural_properties_id = #{culturalPropertiesId} AND user_id = #{userId};-->
+<!--    </delete>-->
+
+<!--    &lt;!&ndash; 사용자의 찜 목록 가져오기  &ndash;&gt;-->
+<!--    <select id="getInterestsByUser" parameterType="int" resultType="CulturalPropertiesInterestDTO">-->
+<!--        SELECT * FROM cultural_properties_interest-->
+<!--        WHERE user_id = #{userId};-->
+<!--    </select>-->
+
+
 </mapper>

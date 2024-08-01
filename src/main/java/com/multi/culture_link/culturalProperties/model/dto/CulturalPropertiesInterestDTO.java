@@ -1,5 +1,8 @@
 package com.multi.culture_link.culturalProperties.model.dto;
 
+import lombok.Data;
+
+@Data
 public class CulturalPropertiesInterestDTO {
 
     private int id;

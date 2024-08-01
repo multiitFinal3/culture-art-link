@@ -2,6 +2,7 @@ package com.multi.culture_link.culturalProperties.controller;
 
 
 import com.multi.culture_link.admin.culturalProperties.model.dto.CulturalPropertiesDTO;
+import com.multi.culture_link.culturalProperties.model.dto.CulturalPropertiesInterestDTO;
 import com.multi.culture_link.culturalProperties.model.dto.NewsArticle;
 import com.multi.culture_link.culturalProperties.model.dto.Video;
 import com.multi.culture_link.culturalProperties.model.dto.YoutubeConfig;
@@ -76,6 +77,55 @@ public class CulturalPropertiesController {
 
 		return ResponseEntity.ok(response);
 	}
+
+//	// 찜 추가 엔드포인트
+//	@PostMapping("/addLike")
+//	public ResponseEntity<Void> addLike(@RequestBody CulturalPropertiesInterestDTO interestDTO) {
+//		culturalPropertiesService.addLike(interestDTO.getCulturalPropertiesId(), interestDTO.getUserId());
+//		return ResponseEntity.ok().build();
+//	}
+//
+//	// 관심없음 추가 엔드포인트
+//	@PostMapping("/addDislike")
+//	public ResponseEntity<Void> addDislike(@RequestBody CulturalPropertiesInterestDTO interestDTO) {
+//		culturalPropertiesService.addDislike(interestDTO.getCulturalPropertiesId(), interestDTO.getUserId());
+//		return ResponseEntity.ok().build();
+//	}
+
+
+//	// 이걸로
+//	// 찜 추가
+//	@PostMapping("/addLike")
+//	public ResponseEntity<String> addLike(@RequestParam int culturalPropertiesId, @RequestParam int userId) {
+//		CulturalPropertiesInterestDTO interest = new CulturalPropertiesInterestDTO();
+//		interest.setCulturalPropertiesId(culturalPropertiesId);
+//		interest.setUserId(userId);
+//
+//		culturalPropertiesService.addLike(interest); // 찜 추가
+//		return ResponseEntity.ok("찜이 추가되었습니다.");
+//	}
+//
+//	// 관심없음 추가
+//	@PostMapping("/addDislike")
+//	public ResponseEntity<String> addDislike(@RequestParam int culturalPropertiesId, @RequestParam int userId) {
+//		CulturalPropertiesInterestDTO interest = new CulturalPropertiesInterestDTO();
+//		interest.setCulturalPropertiesId(culturalPropertiesId);
+//		interest.setUserId(userId);
+//
+//		culturalPropertiesService.addDislike(interest); // 관심없음 추가
+//		return ResponseEntity.ok("관심없음이 추가되었습니다.");
+//	}
+//
+//	// 찜 또는 관심없음 삭제
+//	@PostMapping("/removeInterest")
+//	public ResponseEntity<String> removeInterest(@RequestParam int culturalPropertiesId, @RequestParam int userId) {
+//		CulturalPropertiesInterestDTO interest = new CulturalPropertiesInterestDTO();
+//		interest.setCulturalPropertiesId(culturalPropertiesId);
+//		interest.setUserId(userId);
+//
+//		culturalPropertiesService.removeInterest(interest); // 찜 또는 관심없음 삭제
+//		return ResponseEntity.ok("관심이 제거되었습니다.");
+//	}
 
 	// 문화재 상세 페이지
 	@GetMapping("/detail/{id}")
