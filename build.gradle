@@ -66,6 +66,8 @@ dependencies {
 	implementation group: 'org.springframework.data', name: 'spring-data-mongodb', version: '4.2.0'
 	implementation 'dev.langchain4j:langchain4j-open-ai:0.33.0'
 	implementation 'dev.langchain4j:langchain4j:0.33.0'
+	implementation group: 'org.deeplearning4j', name: 'deeplearning4j-core', version: '1.0.0-M2.1'
+	implementation group: 'org.deeplearning4j', name: 'deeplearning4j-nlp', version: '1.0.0-M2.1'
 
 //	implementation 'org.springframework.boot:spring-boot-starter-web'
 
