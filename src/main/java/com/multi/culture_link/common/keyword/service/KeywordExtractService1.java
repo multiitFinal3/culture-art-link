@@ -23,11 +23,9 @@ import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.queryparser.classic.QueryParser;
 import org.apache.lucene.search.IndexSearcher;
-import org.apache.lucene.search.Query;
-import org.apache.lucene.search.ScoreDoc;
-import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.store.ByteBuffersDirectory;
 import org.apache.lucene.store.Directory;
+import org.deeplearning4j.bagofwords.vectorizer.TfidfVectorizer;
 import org.deeplearning4j.models.word2vec.Word2Vec;
 import org.deeplearning4j.text.sentenceiterator.CollectionSentenceIterator;
 import org.deeplearning4j.text.tokenization.tokenizer.DefaultTokenizer;
@@ -369,19 +367,19 @@ public class KeywordExtractService1 {
 	 */
 	public Map<Integer, ArrayList<String>> getKeywordByCombineVector(ArrayList<String> allContentList) throws Exception {
 		
-		// 1. 해당 카테고리(예시 : 축제)의 분류(예시 : 리뷰)에서 키워드를 뽑을 스트링을 모든 작품에 대해 순서대로 리스트에 담아 파라미터로 전달
+		// 해당 카테고리(예시 : 축제)의 분류(예시 : 리뷰)에서 키워드를 뽑을 스트링을 모든 작품에 대해 순서대로 리스트에 담아 파라미터로 전달
 		
-		// 2. 해당 작품의 인덱스, 키워드 리스트를 맵에 담아 반환할 예정
+		// 해당 작품의 인덱스, 키워드 리스트를 맵에 담아 반환할 예정
 		Map<Integer, ArrayList<String>> returnMap = new HashMap<Integer, ArrayList<String>>();
 		
-		// 3. 각각 개별의 컨텐트 별로 이터레이터로 돌릴 예정
+		// 각각 개별의 컨텐트 별로 이터레이터로 돌릴 예정
 		CollectionSentenceIterator collectionSentenceIterator = new CollectionSentenceIterator(allContentList);
 		
-		// 4. 코모란으로 명사만 추출해 키워드 중요도를 계산할 예정
+		// 코모란으로 명사만 추출해 키워드 중요도를 계산할 예정
 		TokenizerFactory komoranFactory = new TokenizerFactory() {
 			@Override
 			public Tokenizer create(String toTokenize) {
-
+				
 				Komoran komoran = new Komoran(DEFAULT_MODEL.FULL);
 				
 				// 명사만 추출
@@ -410,7 +408,7 @@ public class KeywordExtractService1 {
 		};
 		
 		
-		// 5. 특정 단어의 유사도 벡터를 만드는 Word2Vec 설정.
+		// 특정 단어의 유사도 벡터를 만드는 Word2Vec 설정.
 		Word2Vec word2Vec = new Word2Vec.Builder()
 				.minWordFrequency(1) // 최소 한번이라도 등장한 단어는 모두 학습
 				.layerSize(100) // 각 단어는 100차원의 벡터로 표현 [0,12, 0.1.....]
@@ -422,10 +420,22 @@ public class KeywordExtractService1 {
 		
 		word2Vec.fit(); // 학습
 		
+		// TfidfVectorizer
+		TfidfVectorizer tfidfVectorizer = new TfidfVectorizer.Builder()
+				.setMinWordFrequency(1)
+				.setIterator(collectionSentenceIterator)
+				.setTokenizerFactory(komoranFactory)
+				.build();
+		
+		tfidfVectorizer.fit();
+		
+		INDArray tfidfVector = tfidfVectorizer.transform(allContentList);
+		
+		
 		// 아파치루신의 그냥 분석기는 한글을 인식 못해 아파치 루신의 한국어 분석기 이용
 		KoreanAnalyzer koreanAnalyzer = new KoreanAnalyzer();
 		
-		
+		// 각각 스트링들을 램(휘발성 저장공간)에 저장해 빠르게 인덱스로 찾을 수 있게 함
 		Directory index = new ByteBuffersDirectory();
 		
 		IndexWriterConfig config = new IndexWriterConfig(koreanAnalyzer);
@@ -434,6 +444,7 @@ public class KeywordExtractService1 {
 		for (String content : allContentList) {
 			
 			Document document = new Document();
+			// 토큰화된 내용 뿐만 아니라 원본 내용도 저장됨
 			document.add(new TextField("content", content, Field.Store.YES));
 			writer.addDocument(document);
 			
@@ -446,60 +457,48 @@ public class KeywordExtractService1 {
 		IndexSearcher searcher = new IndexSearcher(reader);
 		
 		
-		// 각각 작품의 순서대로 키워드를 각각 추출
+		// 각각 작품의 순서대로 tf-id, word2vec, combined vec 각각 추출
 		for (int i = 0; i < allContentList.size(); i++) {
 			
 			// 해당 스트링을 추출
 			String content = allContentList.get(i);
 			
-			// tfid 점수를 담을 맵
-			HashMap<String, Double> tfidScores = new HashMap<>();
+			// 특수문자 제거 : ^ 반대의 경우, \\s : 공백 스페이스 탭 줄바꿈 등
+			content = content.replaceAll("[^a-zA-Z0-9가-힣\\s]", " ");
 			
-			QueryParser parser = new QueryParser("content", koreanAnalyzer);
-			
-			// 특수문자 제거
-			content = content.replaceAll("[^a-zA-Z0-9가-힣\\s]"," ");
-			
+			// + 같은 특수문자 한번 더 제거
 			String escapedString = QueryParser.escape(content);
-			Query query = parser.parse(escapedString);
 			
-			TopDocs results = searcher.search(parser.parse(content), 10);
-			
-			for (ScoreDoc scoreDoc : results.scoreDocs) {
-				
-				Document document = searcher.doc(scoreDoc.doc);
-				String content1 = document.get("content");
-				String[] terms = content1.split("\\s+");
-				
-				for (String term : terms) {
-					
-					double score = scoreDoc.score;
-					tfidScores.put(term, tfidScores.getOrDefault(term, 0.0) + score);
-					
-				}
-				
-			}
 			
 			// 두 벡터를 합한 결과인 결합 벡터 맵을 선언
 			Map<String, INDArray> combinedVectors = new HashMap<>();
-			for (String word : tfidScores.keySet()) {
+			
+			String[] terms = content.split("\\s+");
+			
+			// 각각 단어에 대한 값을 구함
+			for (int k = 0; k < terms.length; k++) {
 				
-				// 주 벡터가 모두 가지고 있는 키워드에 대해서만 연산함
-				if (word2Vec.hasWord(word)) {
+				String term = terms[k];
+				
+				
+				if (!word2Vec.hasWord(term)) {
 					
-					// word2vector
-					INDArray wordVector = word2Vec.getWordVectorMatrix(word);
-					
-					// word2vector의 차원에 맞게 tfidf의 벡터의 차원을 맞춤(tf-idf는 각 단어당 하나의 숫자값임). ex) [0.12, 0.12...]
-					INDArray tfidVector = Nd4j.valueArrayOf(wordVector.shape(), tfidScores.get(word));
-					
-					// 두 벡터를 합함(TF-IDF 기반 키워드 추출에서의 의미적 요소 반영을 위한 결합벡터 제안 논문 참고함)
-					INDArray combinedVector = wordVector.add(tfidVector);
-					
-					// 맵에 넣음
-					combinedVectors.put(word, combinedVector);
+					continue;
 					
 				}
+				
+				
+				// word2vector 구하기
+				INDArray wordVector = word2Vec.getWordVectorMatrix(term);
+				
+				// word2vector의 차원에 맞게 tfidf의 벡터의 차원을 맞춤(tf-idf는 각 단어당 하나의 숫자값임). ex) [0.12, 0.12...]
+				INDArray tfidVector = Nd4j.valueArrayOf(wordVector.shape(), tfidfVector.getDouble(k));
+				
+				// 두 벡터를 합함(TF-IDF 기반 키워드 추출에서의 의미적 요소 반영을 위한 결합벡터 제안 논문 참고함)
+				INDArray combinedVector = wordVector.add(tfidVector);
+				
+				// 맵에 넣음
+				combinedVectors.put(terms[k], combinedVector);
 				
 				
 			}
@@ -516,7 +515,7 @@ public class KeywordExtractService1 {
 				
 			}
 			
-			// 탑10만 반환
+			// 값 기준으로 탑 10만 반환
 			List<Map.Entry<String, Double>> sortedList = normScore.entrySet().stream()
 					.sorted(Map.Entry.<String, Double>comparingByValue().reversed())
 					.limit(10)
@@ -529,7 +528,8 @@ public class KeywordExtractService1 {
 			for (Map.Entry<String, Double> entry : sortedList) {
 				
 				System.out.println(entry.getKey() + " : " + entry.getValue());
-				list.add(entry.getKey().replace(".","").trim());;
+				list.add(entry.getKey().replace(".", "").trim());
+				;
 				
 			}
 			
@@ -560,49 +560,29 @@ public class KeywordExtractService1 {
 		ArrayList<String> allContentList = new ArrayList<>();
 		allContentList.add("박주언 문화복지위원장 “문화예술이 경쟁력”\n" +
 				"제12대 후반기 원구성 이후 첫 현지의정활동에 나선 경남도의회 문화복지위원회가 비회기 중에도 활발한 의정활동을 하고 있다.\n" +
-				"\n" +
-				"\n" +
-				"\n" +
 				"지난 26일 산청 성심원과 서울우유 거창공장을 방문한데 이어 제34회 거창국제연극제 개막식에 참석해 개막작 ‘우먼후드:메디아에 대한 오해’를 관람하고 지역자원을 연계한 공연예술제의 발전 방향을 모색했다고 29일 밝혔다.\n" +
-				"\n" +
 				"개막식에 참석한 박주언 위원장은 “아름다운 자연 속에서 열리는 거창국제연극제는 자연과 문화의 조화로운 만남을 선사하는 독특한 매력을 지닌 축제” 라면서 “문화예술이 곧 지역의 경쟁력이 된 현 시점에서 지역의 특색을 반영한 문화·예술공연을 발전시켜 지역의 고유한 브랜드 창출은 물론 지역이미지 향상과 경제 활성화에 이바지해야한다”고 강조했다.\n" +
-				"\n" +
-				"경남에서 공연예술제를 주제로 열리는 축제는 7월 통영을 시작으로 밀양, 거창에서 연달아 개최되고 있다. 경남도는 매년 도내 각 지역의 특성화된 공연예술분야(연극·뮤지컬, 무용, 음악, 전통예술, 예술일반) 대규모 지역대표공연예술제를 지원하고 있다. 올해는 총 사업비 37억 원을 투입해 10개 사업을 지원한다.\n" +
-				"\n" +
-				"특히 거창국제연극제는 수승대의 수려한 자연환경과 연계한 야외 연극축제를 관광 상품화하는 기획으로 우수성을 인정받아 지난해에 이어 도비 5억원을 지원받았다. 또한 지역민들이 참여하는 개막작, 작품성 높은 작품을 연출할 수 있는 극단 초청, 국내 연극제에서 수상한 우수작품을 선보이는 공연예술제로 자리매김하고 있다.\n" +
-				"\n" +
-				"한편, 지난 5월 나라살림연구소가 전국 지자체의 2024년 본예산 중 문화·예술 부분 예산 현황을 분석한 결과 경남도는 문화·예술 부문 예산 비중이 1.2%에 불과해 전국 최하위 수준으로 나타난바 있다.\n" +
-				"\n" +
-				"이에 박 위원원장은 “문화복지위원장으로서 후반기는 도내 문화예술인들이 자긍심을 갖고 창작활동을 할 수 있도록 문화예술의 저변을 확대하고, 도민의 문화향유권 신장을 위해 문화·예술 분야 예산확대에 주력하겠다”면서 향후 의정활동에 대한 의지를 밝혔다.\n" +
-				"김순철기자 ksc2@gnnews.co.kr\n" +
-				"\n" +
-				"출처 : 경남일보 - 우리나라 최초의 지역신문(http://www.gnnews.co.kr)");
+				"\n");
 		allContentList.add("거창=뉴시스] 서희원 기자 = 경남 거창군은 결혼·출산·육아에 대한 관심을 유도하고 가족 친화적인 사회 분위기를 조성하는 등 저출산 극복에 대한 사회적 공감대를 형성하기 위해 ‘2024년 제4회 거창군 가족사진 공모전’을 개최한다고 23일 밝혔다.\n" +
 				"\n" +
-				"이번 공모전의 주제는 ‘가족과 함께하는 모든 날, 모든 순간을 담아요’로, 공모대상은 ▲사랑스러운 아이의 출생, 성장 모습을 담은 사진 ▲다양한 형태의 행복한 가족의 사진 ▲다자녀, 다세대가 함께하는 행복한 가족사진 ▲거창의 명승지를 배경으로 찍은 가족사진 등이다.\n" +
-				"\n" +
-				"거창군민이면 누구나 참여할 수 있으며, 오는 24일부터 8월 9일까지 작품규격(사진 해상도 2,000픽셀 이상, JPG 파일 2MB 이상)에 맞는 사진 파일과 신청서를 이메일(ksk1205@korea.kr)로 제출하면 된다.\n" +
-				"\n" +
-				"작품들은 공정한 심사를 거쳐 최종 18점을 선정한다. 최우수(1명) 50만원, 우수(2명) 30만원, 장려(5명) 10만원, 입선(10명) 5만원의 상금을 현금 및 거창사랑상품권으로 지급할 계획이다.\n" +
-				"\n" +
-				"선정작은 8월 중 개별 통보 예정이며, 향후 거창군 인구정책 홍보자료, 각종 행사, 축제 등에 활용될 계획이다. 또 올해는 양성평등주간(9월1일~9월7일)에 가족사진 공모전 수상작을 특별전시해 많은 군민이 가족의 따뜻한 이야기가 담긴 사진을 감상할 수 있도록 할 예정이다.\n" +
-				"\n" +
-				"구인모 거창군수는 “가족의 의미와 소중함을 되새기고자 시작된 가족사진 공모전이 올해로 네 번째를 맞았다”며 “많은 가족들이 이번 공모전으로 행복한 기억을 공유하는 시간이 될 것이라 생각한다. 군민 여러분의 많은 관심과 참여를 부탁한다”고 당부했다.");
+				"이번 공모전의 주제는 ‘가족과 함께하는 모든 날, 모든 순간을 담아요’로, 공모대상은 ▲사랑스러운 아이의 출생, 성장 모습을 담은 사진 ▲다양한 형태의 행복한 가족의 사진 ▲다자녀, 다세대가 함께하는 행복한 가족사진 ▲거창의 명승지를 배경으로 찍은 가족사진 등이다.\n");
 		
-		// 1. 해당 카테고리(예시 : 축제)의 분류(예시 : 리뷰)에서 키워드를 뽑을 스트링을 모든 작품에 대해 순서대로 리스트에 담아 파라미터로 전달
+		// 해당 카테고리(예시 : 축제)의 분류(예시 : 리뷰)에서 키워드를 뽑을 스트링을 모든 작품에 대해 순서대로 리스트에 담아 파라미터로 전달
 		
-		// 2. 해당 작품의 인덱스, 키워드 리스트를 맵에 담아 반환할 예정
+		// 해당 작품의 인덱스, 키워드 리스트를 맵에 담아 반환할 예정
 		Map<Integer, ArrayList<String>> returnMap = new HashMap<Integer, ArrayList<String>>();
 		
-		// 3. 각각 개별의 컨텐트 별로 이터레이터로 돌릴 예정
+		// 각각 개별의 컨텐트 별로 이터레이터로 돌릴 예정
 		CollectionSentenceIterator collectionSentenceIterator = new CollectionSentenceIterator(allContentList);
 		
-		// 4. 코모란으로 명사만 추출해 키워드 중요도를 계산할 예정
+		// 코모란으로 명사만 추출해 키워드 중요도를 계산할 예정
 		TokenizerFactory komoranFactory = new TokenizerFactory() {
 			@Override
 			public Tokenizer create(String toTokenize) {
 				
 				Komoran komoran = new Komoran(DEFAULT_MODEL.FULL);
+				
+				// 명사만 추출
 				ArrayList<String> list = (ArrayList<String>) komoran.analyze(toTokenize).getNouns();
 				
 				DefaultTokenizer defaultTokenizer = new DefaultTokenizer(String.join(" ", list));
@@ -628,20 +608,42 @@ public class KeywordExtractService1 {
 		};
 		
 		
-		// 5. 특정 단어의 유사도 벡터를 만드는 Word2Vec 설정.
+		// 특정 단어의 유사도 벡터를 만드는 Word2Vec 설정.
 		Word2Vec word2Vec = new Word2Vec.Builder()
 				.minWordFrequency(1) // 최소 한번이라도 등장한 단어는 모두 학습
-				.layerSize(100) // 각 단어는 100차원의 벡터로 표현 [0,12, 0.1.....]
+				.layerSize(5) // 각 단어는 100차원의 벡터로 표현 [0,12, 0.1.....]
 				.seed(42) // 랜덤 시드 결정으로 랜덤하지 않고 결과가 재현됨을 의미
-				.windowSize(5)
+				.windowSize(5) // 컨텍스트 윈도우 크기로 좌우 5개의 단어를 고려해 관계를 학습함
 				.iterate(collectionSentenceIterator) // 하나의 작품당 이터레이트하며 학습
 				.tokenizerFactory(komoranFactory) // 코모란으로 명사만 분석
+				.build(); // 빌드
+		
+		word2Vec.fit();// 학습
+		
+		
+		
+		
+		
+		// TfidfVectorizer
+		TfidfVectorizer tfidfVectorizer = new TfidfVectorizer.Builder()
+				.setMinWordFrequency(1)
+				.setIterator(collectionSentenceIterator)
+				.setTokenizerFactory(komoranFactory)
 				.build();
 		
-		word2Vec.fit();
+		tfidfVectorizer.fit();
+		tfidfVectorizer.transform(allContentList);
 		
 		
+		System.out.println("tfidfVectorizer.getVocabCache() : " + tfidfVectorizer.getVocabCache().words().toString());
+		
+		INDArray tfidfScores = tfidfVectorizer.transform(allContentList);
+		System.out.println("tfidfScores" + tfidfScores);
+		
+		// 아파치루신의 그냥 분석기는 한글을 인식 못해 아파치 루신의 한국어 분석기 이용
 		KoreanAnalyzer koreanAnalyzer = new KoreanAnalyzer();
+		
+		// 각각 스트링들을 램(휘발성 저장공간)에 저장해 빠르게 인덱스로 찾을 수 있게 함
 		Directory index = new ByteBuffersDirectory();
 		
 		IndexWriterConfig config = new IndexWriterConfig(koreanAnalyzer);
@@ -650,6 +652,7 @@ public class KeywordExtractService1 {
 		for (String content : allContentList) {
 			
 			Document document = new Document();
+			// 토큰화된 내용 뿐만 아니라 원본 내용도 저장됨
 			document.add(new TextField("content", content, Field.Store.YES));
 			writer.addDocument(document);
 			
@@ -662,56 +665,56 @@ public class KeywordExtractService1 {
 		IndexSearcher searcher = new IndexSearcher(reader);
 		
 		
+		// 각각 작품의 순서대로 tf-id, word2vec, combined vec 각각 추출
 		for (int i = 0; i < allContentList.size(); i++) {
 			
+			System.out.println(i + "번째 컨텐트");
+			// 해당 스트링을 추출
 			String content = allContentList.get(i);
 			
-			HashMap<String, Double> tfidScores = new HashMap<>();
+			// 특수문자 제거 : ^ 반대의 경우, \\s : 공백 스페이스 탭 줄바꿈 등
+			content = content.replaceAll("[^a-zA-Z0-9가-힣\\s]", " ");
 			
-			QueryParser parser = new QueryParser("content", koreanAnalyzer);
-			
-			content = content.replaceAll("[^a-zA-Z0-9가-힣\\s]"," ");
-			
-			String escapedString = QueryParser.escape(content);
-			Query query = parser.parse(escapedString);
-			
-			TopDocs results = searcher.search(parser.parse(content), 10);
-			
-			for (ScoreDoc scoreDoc : results.scoreDocs) {
-				
-				Document document = searcher.doc(scoreDoc.doc);
-				String content1 = document.get("content");
-				String[] terms = content1.split("\\s+");
-				
-				for (String term : terms) {
-					
-					double score = scoreDoc.score;
-					tfidScores.put(term, tfidScores.getOrDefault(term, 0.0) + score);
-					
-					
-				}
-				
-				
-			}
-			
+			// 두 벡터를 합한 결과인 결합 벡터 맵을 선언
 			Map<String, INDArray> combinedVectors = new HashMap<>();
-			for (String word : tfidScores.keySet()) {
+
+
+			TokenizerFactory tf = komoranFactory;
+			ArrayList<String> list = (ArrayList<String>) tf.create(allContentList.get(i)).getTokens();
+			System.out.println(i + "번째 토큰 리스트 : " + list);
+	
+			// 각각 단어에 대한 값을 구함
+			for (String term : list) {
 				
-				if (word2Vec.hasWord(word)) {
-					
-					INDArray wordVector = word2Vec.getWordVectorMatrix(word);
-					
-					INDArray tfidVector = Nd4j.valueArrayOf(wordVector.shape(), tfidScores.get(word));
-					
-					INDArray combinedVector = wordVector.add(tfidVector);
-					
-					combinedVectors.put(word, combinedVector);
-					
+				System.out.println("term : " + term);
+				
+				int tfIndex = tfidfVectorizer.getVocabCache().indexOf(term);
+				
+				if (tfIndex < 0) {
+					continue;
 				}
 				
+				System.out.println("tfIndex : " + tfIndex);
+				
+				// word2vector 구하기
+				INDArray wordVector = word2Vec.getWordVectorMatrix(term);
+				System.out.println("wordVector : " + wordVector);
+				
+				// word2vector의 차원에 맞게 tfidf의 벡터의 차원을 맞춤(tf-idf는 각 단어당 하나의 숫자값임). ex) [0.12, 0.12...]
+				INDArray tfidVector = Nd4j.valueArrayOf(wordVector.shape(), tfidfScores.getDouble(tfIndex));
+				System.out.println("tfidVector : " + tfidVector);
+				
+				// 두 벡터를 합함(TF-IDF 기반 키워드 추출에서의 의미적 요소 반영을 위한 결합벡터 제안 논문 참고함)
+				INDArray combinedVector = wordVector.add(tfidVector);
+				
+				// 맵에 넣음
+				combinedVectors.put((String) term, combinedVector);
+				
+				System.out.println();
 				
 			}
 			
+			// 키워드와 점수 맵을 반환 :
 			Map<String, Double> normScore = new HashMap<>();
 			
 			for (Map.Entry<String, INDArray> entry : combinedVectors.entrySet()) {
@@ -723,29 +726,35 @@ public class KeywordExtractService1 {
 				
 			}
 			
+			// 값 기준으로 탑 10만 반환
 			List<Map.Entry<String, Double>> sortedList = normScore.entrySet().stream()
 					.sorted(Map.Entry.<String, Double>comparingByValue().reversed())
 					.limit(10)
 					.collect(Collectors.toList());
 			
-			ArrayList<String> list = new ArrayList<>();
+			ArrayList<String> list2 = new ArrayList<>();
 			
+			// 각각 순서별 키워드의 값과 점수를 콘솔에 표시
 			System.out.println("[content index " + i + "th keyword : combined value]");
 			for (Map.Entry<String, Double> entry : sortedList) {
 				
 				System.out.println(entry.getKey() + " : " + entry.getValue());
-				list.add(entry.getKey().replace(".","").trim());;
+				list2.add(entry.getKey().replace(".", "").trim());
+				
 				
 			}
+			
 			System.out.println();
 			
-			returnMap.put(i, list);
+			returnMap.put(i, list2);
 			
 		}
 		
+		// 리턴맵(<인덱스, 키워드 리스트>)을 반환함
 		System.out.println("returnMap : " + returnMap);
-		reader.close();
 		
+		// 인덱스 리더 닫기
+		reader.close();
 		
 		
 		return;
