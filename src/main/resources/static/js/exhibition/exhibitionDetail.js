@@ -37,19 +37,76 @@ function btnEvent() {
     const favoriteBtn = document.getElementById('favoriteBtn');
     const notInterestedBtn = document.getElementById('notInterestedBtn');
 
-    favoriteBtn.addEventListener('click', function() {
+    favoriteBtn.addEventListener('click', function () {
         const exhibitionId = getExhibitionIdFromUrl()
-        console.log("exhibition-like btn : ",exhibitionId)
+        console.log("exhibition-like btn : ", exhibitionId)
         updateInterest(exhibitionId, 'interested');
     });
 
-    notInterestedBtn.addEventListener('click', function() {
+    notInterestedBtn.addEventListener('click', function () {
         const exhibitionId = getExhibitionIdFromUrl()
-        console.log("exhibition-dislike btn : ",exhibitionId)
+        console.log("exhibition-dislike btn : ", exhibitionId)
         updateInterest(exhibitionId, 'not_interested');
+    });
+
+    let starContainer = document.querySelector('.star-rating');
+    const stars = starContainer.querySelectorAll('.star');
+
+    console.log("starcontainer: ", starContainer);
+    console.log("stars: ", stars);
+
+    stars.forEach(star => {
+        star.addEventListener('click', () => {
+            const value = star.getAttribute('data-value');
+            if(!starContainer) {
+                console.log('not found start container');
+                starContainer = document.querySelector('.star-rating');
+            }
+            starContainer.setAttribute('data-rating', value);
+            updateStars(starContainer, stars);
+        });
+    });
+
+    saveCommentBtn.addEventListener('click', function () {
+        const exhibitionId = getExhibitionIdFromUrl()
+        console.log("exhibition-like btn : ", exhibitionId)
+        saveComment(exhibitionId, 'interested');
+    });
+
+
+}
+
+function updateStars(starContainer, stars) {
+    const rating = parseInt(starContainer.getAttribute('data-rating'));
+    stars.forEach(star => {
+        const starValue = parseInt(star.getAttribute('data-value'));
+        if (starValue <= rating) {
+            star.classList.add('filled');
+        } else {
+            star.classList.remove('filled');
+        }
     });
 }
 
+
+async function saveComment(exhibitionId) {
+    try {
+        const comment = document.getElementById('commentTextarea');
+        const starContainer = document.querySelector('.star-rating');
+        const stars = starContainer.getAttribute('data-rating');
+        const data = {
+            stars,
+            content:comment.value
+        }
+
+        console.log('save comment : ',data)
+        const response = await axios.post(`/exhibition/exhibition/${exhibitionId}/comment`, data)
+
+        loadExhibitionReviews()
+    }catch(e) {
+        console.log('error : ',e)
+    }
+}
 
 async function updateInterest(exhibitionId, state) {
     console.log('update interest: ',exhibitionId, state)
@@ -76,7 +133,7 @@ function renderViewBackground(state) {
         if (contentDiv.classList.contains('background-gray')) {
             contentDiv.classList.remove('background-gray');
         }
-    }else {
+    }else if (state === 'not_interested') {
         contentDiv.classList.add('background-gray')
         if (contentDiv.classList.contains('background-pink')) {
             contentDiv.classList.remove('background-pink');
@@ -90,15 +147,46 @@ function getExhibitionIdFromUrl() {
     return urlParts[urlParts.length - 1];
 }
 
+// async function loadExhibitionDetails(exhibitionId) {
+//     try {
+//         const exhibitionId = getExhibitionIdFromUrl()
+//         const response = await fetch(`/exhibition/${exhibitionId}`);
+//         const data = await response.json();
+//         console.log(data);
+//
+//         data.startDate =  data.startDate?.substring(0,10) || "미정";
+//         data.endDate =  data.endDate?.substring(0,10) || "미정";
+//         await loadExhibitionReviews()
+//         renderExhibitionDetails(data);
+//
+//     } catch (error) {
+//         console.error('Failed to load exhibition details:', error);
+//     }
+// }
+
 async function loadExhibitionDetails(exhibitionId) {
     try {
         const response = await fetch(`/exhibition/${exhibitionId}`);
         const data = await response.json();
         console.log(data);
 
-        data.startDate =  data.startDate?.substring(0,10) || "미정";
-        data.endDate =  data.endDate?.substring(0,10) || "미정";
+        data.startDate = data.startDate?.substring(0,10) || "미정";
+        data.endDate = data.endDate?.substring(0,10) || "미정";
+        await loadExhibitionReviews();
+
         renderExhibitionDetails(data);
+    } catch (error) {
+        console.error('Failed to load exhibition details:', error);
+    }
+}
+
+async function loadExhibitionReviews() {
+    try {
+        const exhibitionId = getExhibitionIdFromUrl()
+        const response = await fetch(`/exhibition/exhibition/${exhibitionId}/comment`);
+        const data = await response.json();
+        console.log("loadExhibitionReviews : ",data);
+        renderReviews(data)
     } catch (error) {
         console.error('Failed to load exhibition details:', error);
     }
@@ -110,25 +198,95 @@ function renderExhibitionDetails(exhibition) {
     $('#exhibitionDate').text(`${exhibition.startDate} ~ ${exhibition.endDate}`);
     $('#exhibitionImage').attr('src', exhibition.image);
 
-    console.log('exhibition : ',exhibition)
-
-    initMap(exhibition.location);
+    initMap(exhibition.museum);
     renderInformation(exhibition)
     renderViewBackground(exhibition?.state)
     renderVideo(exhibition.videoId);
-    // renderReviews(exhibition.reviews);
 }
 
 
+
+// function initMap(location) {
+//     // const map = new google.maps.Map(document.getElementById("map"), {
+//     //     zoom: 15,
+//     //     center: location,
+//     // });
+//     // new google.maps.Marker({
+//     //     position: location,
+//     //     map: map,
+//     // });
+//     // var museum = [[${museum}]];
+//     // var address = festival.address; // 축제 주소를 저장하는 필드명으로 변경하세요
+//
+//     const map = new naver.maps.Map('map', {
+//         zoom: 15
+//     });
+//
+//     naver.maps.Service.geocode({
+//         query: location
+//     }, function(status, response) {
+//         if (status === naver.maps.Service.Status.ERROR) {
+//             return alert('Something wrong!');
+//         }
+//
+//         if (response.v2.meta.totalCount === 0) {
+//             return alert('No result.');
+//         }
+//
+//         var item = response.v2.addresses[0];
+//         var point = new naver.maps.Point(item.x, item.y);
+//
+//         map.setCenter(point);
+//
+//         var marker = new naver.maps.Marker({
+//             position: point,
+//             map: map
+//         });
+//     });
+//
+//     if (!location) {
+//         $('#mapDiv').html("");
+//     }
+// }
+
+function initNaverMap() {
+    console.log('Naver Maps API loaded');
+    // 여기서 지도 초기화나 다른 필요한 작업을 수행할 수 있습니다.
+    // 예를 들어, 전시회 상세 정보를 불러오는 함수를 호출할 수 있습니다.
+    const exhibitionId = getExhibitionIdFromUrl();
+    loadExhibitionDetails(exhibitionId);
+}
+
 function initMap(location) {
-    const map = new google.maps.Map(document.getElementById("map"), {
-        zoom: 15,
-        center: location,
+    const mapOptions = {
+        center: new naver.maps.LatLng(37.3595704, 127.105399),
+        zoom: 15
+    };
+    const map = new naver.maps.Map('map', mapOptions);
+
+    naver.maps.Service.geocode({
+        query: location
+    }, function(status, response) {
+        if (status !== naver.maps.Service.Status.OK) {
+            return alert('Geocoding error: ' + status);
+        }
+
+        var result = response.v2.addresses[0];
+        if (result) {
+            var point = new naver.maps.Point(result.x, result.y);
+            map.setCenter(point);
+            new naver.maps.Marker({
+                position: point,
+                map: map
+            });
+        } else {
+            alert('No results found');
+        }
     });
-    new google.maps.Marker({
-        position: location,
-        map: map,
-    });
+
+    if (!location) {
+        $('#mapDiv').html("");
+    }
 }
 
 function renderInformation(exhibition) {
@@ -176,16 +334,41 @@ function renderVideo(videoId) {
 }
 
 function renderReviews(reviews) {
-    const reviewsHtml = reviews.map(review => `
-        <div class="review">
-            <img src="${review.reviewerImage}" alt="${review.reviewerName}" class="reviewer-image">
+    const reviewsHtml = reviews?.map(review => `
+        <div class="review" data-id="${review.id}">
             <div class="review-content">
-                <h3>${review.reviewerName}</h3>
-                <p class="review-text">${review.text}</p>
-                <div class="review-rating">${'★'.repeat(review.rating)}${'☆'.repeat(5-review.rating)}</div>
+                <h3>${review.name}</h3>
+                <p class="review-text">${review.content}</p>
+                <div class="review-rating">${'★'.repeat(review.stars)}${'☆'.repeat(5-review.stars)}</div>
+                ${(review.auth) ? '<button class="delete-review" style="position: absolute; top: 5px; right: 5px;">삭제</button>' : ''}
             </div>
         </div>
     `).join('');
     $('#reviewsContainer').html(reviewsHtml);
+
+    $('.delete-review').on('click', function() {
+        const reviewId = $(this).closest('.review').data('id');
+        deleteReview(reviewId);
+    });
+}
+
+async function deleteReview(reviewId) {
+    try {
+        const exhibitionId = getExhibitionIdFromUrl();
+        const response = await axios.delete(`/exhibition/exhibition/${exhibitionId}/comment`,
+            {
+                data:{
+                    id: reviewId
+                }
+            });
+
+        if (response.status === 200) {
+            loadExhibitionReviews();
+        } else {
+            console.error('Failed to delete review');
+        }
+    } catch (error) {
+        console.error('Error deleting review:', error);
+    }
 }
 
