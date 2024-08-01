@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class YoutubeConfig {
 
-    @Value("${youtube.api-key}")
+    @Value("${API-KEY.youtubeKey}")
     private String apiKey;
 
     public String getApiKey() {
