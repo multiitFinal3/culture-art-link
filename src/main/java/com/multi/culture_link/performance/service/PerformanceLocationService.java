@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class PerformanceLocationService { 
+public class PerformanceLocationService {
 
     private static final String url = "http://www.kopis.or.kr/openApi/restful/pblprfr";
 
