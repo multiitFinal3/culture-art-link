@@ -244,43 +244,43 @@ body {
 /* 카드 스타일 */
 .performance-container {
     display: flex;
-    flex-wrap: wrap;
-    justify-content: space-around;
-    gap: 20px; /* 카드 간의 간격을 추가 */
-    padding: 20px 0; /* 상하 여백 추가 */
+    flex-wrap: wrap; /* 줄 바꿈을 허용 */
+    justify-content: center; /* 카드 간의 간격 조정 */
+    gap: 10px; /* 카드 사이 간격 */
+    padding: 0 5px; /* 카드 양옆에 패딩 추가 */
 }
 
 .location-card {
     width: 249px; /* 카드 너비 고정 */
-    height: 332px; /* 카드 높이 고정 */
     background: white;
     border: 1px solid #D9D9D9;
     border-radius: 8px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    position: relative;
-    margin:  10px; /* 카드 간의 간격 추가 */
+    margin: 0 10px; /* 카드 간의 간격 */
+    overflow: hidden; /* 카드 내용을 넘치지 않게 설정 */
 }
 
-/* 카드 이미지 스타일 */
-.location-image {
+.location-card .location-image {
     width: 100%; /* 이미지 너비를 카드 너비에 맞춤 */
-    height: 332px; /* 이미지 높이 고정 */
-    border-radius: 8px 8px 0 0; /* 이미지 경계선을 둥글게 */
+    height: 249px; /* 이미지 높이를 카드 높이에 맞춤 */
     object-fit: cover; /* 이미지 비율 유지하며 크기 조정 */
+    border-radius: 8px 8px 0 0; /* 이미지 경계선을 둥글게 */
 }
 
 /* 공연 정보 스타일 */
 .location-info {
-    padding: 10px; /* 정보 섹션에 패딩 추가 */
     text-align: center;
+    padding: 10px 5px; /* 정보 섹션에 패딩 추가 */
     word-wrap: break-word; /* 긴 단어가 줄을 넘어가도록 설정 */
     word-break: break-word; /* 단어가 길 때 줄바꿈 */
+    width: 100%; /* 정보 섹션 너비를 카드 너비에 맞춤 */
+    box-sizing: border-box; /* 패딩이 카드 너비에 포함되도록 설정 */
 }
 
 .location-title {
-    font-size: 18px;
+    font-size: 16px;
     font-weight: 600;
     color: #333;
     margin-bottom: 5px;
@@ -291,6 +291,11 @@ body {
     font-size: 14px;
     font-weight: 400;
     color: #757575;
-    white-space: normal; /* 긴 텍스트  줄바꿈 허용 */
+    white-space: normal; /* 긴 텍스트 줄바꿈 허용 */
+    margin: 2px 0; /* 위아래 간격 조정 */
 }
+
+
+
+
 
