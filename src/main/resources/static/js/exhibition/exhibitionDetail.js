@@ -147,18 +147,34 @@ function getExhibitionIdFromUrl() {
     return urlParts[urlParts.length - 1];
 }
 
+// async function loadExhibitionDetails(exhibitionId) {
+//     try {
+//         const exhibitionId = getExhibitionIdFromUrl()
+//         const response = await fetch(`/exhibition/${exhibitionId}`);
+//         const data = await response.json();
+//         console.log(data);
+//
+//         data.startDate =  data.startDate?.substring(0,10) || "미정";
+//         data.endDate =  data.endDate?.substring(0,10) || "미정";
+//         await loadExhibitionReviews()
+//         renderExhibitionDetails(data);
+//
+//     } catch (error) {
+//         console.error('Failed to load exhibition details:', error);
+//     }
+// }
+
 async function loadExhibitionDetails(exhibitionId) {
     try {
-        const exhibitionId = getExhibitionIdFromUrl()
         const response = await fetch(`/exhibition/${exhibitionId}`);
         const data = await response.json();
         console.log(data);
 
-        data.startDate =  data.startDate?.substring(0,10) || "미정";
-        data.endDate =  data.endDate?.substring(0,10) || "미정";
-        await loadExhibitionReviews()
-        renderExhibitionDetails(data);
+        data.startDate = data.startDate?.substring(0,10) || "미정";
+        data.endDate = data.endDate?.substring(0,10) || "미정";
+        await loadExhibitionReviews();
 
+        renderExhibitionDetails(data);
     } catch (error) {
         console.error('Failed to load exhibition details:', error);
     }
@@ -189,42 +205,83 @@ function renderExhibitionDetails(exhibition) {
 }
 
 
-function initMap(location) {
-    // const map = new google.maps.Map(document.getElementById("map"), {
-    //     zoom: 15,
-    //     center: location,
-    // });
-    // new google.maps.Marker({
-    //     position: location,
-    //     map: map,
-    // });
-    // var museum = [[${museum}]];
-    // var address = festival.address; // 축제 주소를 저장하는 필드명으로 변경하세요
 
-    const map = new naver.maps.Map('map', {
+// function initMap(location) {
+//     // const map = new google.maps.Map(document.getElementById("map"), {
+//     //     zoom: 15,
+//     //     center: location,
+//     // });
+//     // new google.maps.Marker({
+//     //     position: location,
+//     //     map: map,
+//     // });
+//     // var museum = [[${museum}]];
+//     // var address = festival.address; // 축제 주소를 저장하는 필드명으로 변경하세요
+//
+//     const map = new naver.maps.Map('map', {
+//         zoom: 15
+//     });
+//
+//     naver.maps.Service.geocode({
+//         query: location
+//     }, function(status, response) {
+//         if (status === naver.maps.Service.Status.ERROR) {
+//             return alert('Something wrong!');
+//         }
+//
+//         if (response.v2.meta.totalCount === 0) {
+//             return alert('No result.');
+//         }
+//
+//         var item = response.v2.addresses[0];
+//         var point = new naver.maps.Point(item.x, item.y);
+//
+//         map.setCenter(point);
+//
+//         var marker = new naver.maps.Marker({
+//             position: point,
+//             map: map
+//         });
+//     });
+//
+//     if (!location) {
+//         $('#mapDiv').html("");
+//     }
+// }
+
+function initNaverMap() {
+    console.log('Naver Maps API loaded');
+    // 여기서 지도 초기화나 다른 필요한 작업을 수행할 수 있습니다.
+    // 예를 들어, 전시회 상세 정보를 불러오는 함수를 호출할 수 있습니다.
+    const exhibitionId = getExhibitionIdFromUrl();
+    loadExhibitionDetails(exhibitionId);
+}
+
+function initMap(location) {
+    const mapOptions = {
+        center: new naver.maps.LatLng(37.3595704, 127.105399),
         zoom: 15
-    });
+    };
+    const map = new naver.maps.Map('map', mapOptions);
 
     naver.maps.Service.geocode({
         query: location
     }, function(status, response) {
-        if (status === naver.maps.Service.Status.ERROR) {
-            return alert('Something wrong!');
+        if (status !== naver.maps.Service.Status.OK) {
+            return alert('Geocoding error: ' + status);
         }
 
-        if (response.v2.meta.totalCount === 0) {
-            return alert('No result.');
+        var result = response.v2.addresses[0];
+        if (result) {
+            var point = new naver.maps.Point(result.x, result.y);
+            map.setCenter(point);
+            new naver.maps.Marker({
+                position: point,
+                map: map
+            });
+        } else {
+            alert('No results found');
         }
-
-        var item = response.v2.addresses[0];
-        var point = new naver.maps.Point(item.x, item.y);
-
-        map.setCenter(point);
-
-        var marker = new naver.maps.Marker({
-            position: point,
-            map: map
-        });
     });
 
     if (!location) {
