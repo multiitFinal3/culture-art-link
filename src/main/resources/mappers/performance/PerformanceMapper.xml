@@ -30,4 +30,11 @@
         OR location LIKE CONCAT('%', #{keyword}, '%')
     </select>
 
+
+
+
+    <select id="getPerformancesByGenre" parameterType="String" resultType="com.multi.culture_link.admin.performance.model.dto.PerformanceDTO">
+        SELECT * FROM performance_info WHERE genre = #{genre}
+    </select>
+
 </mapper>

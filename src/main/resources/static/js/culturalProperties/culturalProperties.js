@@ -14,6 +14,15 @@ $(document).ready(function() {
                 console.log('데이터 수신 성공:', data);
                 renderCulturalProperties(data.culturalProperties); // 문화재 목록 렌더링
                 updatePagination(data.totalPages, page); // 페이지 버튼 업데이트
+
+                // 찜 정보를 사용자 ID로 불러오기
+                getUserId().then(userId => {
+                    loadUserInterest(userId); // 찜 상태 로드
+                }).catch(error => {
+                    console.error('사용자 ID 요청 중 오류 발생:', error);
+                });
+
+
             },
             error: function(xhr, status, error) {
                 console.error('AJAX 요청 실패:', status, error);
@@ -35,7 +44,7 @@ $(document).ready(function() {
             const colDiv = $('<div>').addClass('col');
             const cardDiv = $('<div>').addClass('card h-100').css('cursor', 'pointer').click(function() {
                 window.location.href = `/cultural-properties/detail/${property.id}`; // ID에 따라 URL 수정
-            });
+             }).attr('data-cultural-properties-id', property.id); // ID를 data 속성에 추가
 
             const img = $('<img>').addClass('card-img-top')
                 .attr('src', property.mainImgUrl)
@@ -49,37 +58,136 @@ $(document).ready(function() {
 
             // 배지 추가
             const badgeDiv = $('<div>').addClass('d-flex justify-content-end position-absolute bottom-0 end-0 p-2');
+
+
+            // 찜(하트) 배지
             const likeBadge = $('<span>')
                 .addClass('badge bg-primary me-1')
                 .text('♥')
                 .css('cursor', 'pointer')
-                .data('clicked', false) // 클릭 상태 초기화
+                .data('liked', false) // 찜 상태 초기화
+                .data('likeClicked', false) // 찜 클릭 상태
                 .click(function(e) {
                     e.stopPropagation(); // 클릭 이벤트 전파 방지
-                    const isClicked = $(this).data('clicked'); // 클릭 상태 가져오기
-                    if (isClicked) {
-                        cardDiv.css('background-color', 'white'); // 다시 클릭 시 흰색으로 변경
-                    } else {
-                        cardDiv.css('background-color', '#ffe5ea'); // 첫 클릭 시 핑크색으로 변경
+                    const culturalPropertiesId = cardDiv.data('cultural-properties-id'); // ID 가져오기
+                    const isLiked = $(this).data('liked'); // 찜 상태 가져오기
+
+                    if (starBadge.data('disliked')) {
+                        // 별이 클릭되어 있으면 클릭 해제
+                        starBadge.data('disliked', false); // 관심없음 상태 초기화
+                        starBadge.data('starClicked', false); // 클릭 상태 초기화
+                        cardDiv.css('background-color', 'white'); // 색상 초기화
                     }
-                    $(this).data('clicked', !isClicked); // 클릭 상태 토글
+
+                    if (!isLiked) {
+                        // 찜 상태 추가
+                        addLike(culturalPropertiesId);
+                        $(this).data('liked', true); // 찜 상태 업데이트
+                        $(this).data('likeClicked', true); // 찜 클릭 상태 업데이트
+                        cardDiv.css('background-color', '#ffe5ea'); // 핑크색으로 변경
+                    } else {
+                        // 찜 상태 제거
+                        removeInterest(culturalPropertiesId, 'LIKE');
+                        $(this).data('liked', false); // 찜 상태 업데이트
+                        $(this).data('likeClicked', false); // 클릭 상태 초기화
+                        cardDiv.css('background-color', 'white'); // 흰색으로 변경
+                    }
                 });
 
+            // 관심없음(별) 배지
             const starBadge = $('<span>')
                 .addClass('badge bg-secondary')
                 .text('☆')
                 .css('cursor', 'pointer')
-                .data('clicked', false) // 클릭 상태 초기화
+                .data('disliked', false) // 관심없음 상태 초기화
+                .data('starClicked', false) // 관심없음 클릭 상태
                 .click(function(e) {
                     e.stopPropagation(); // 클릭 이벤트 전파 방지
-                    const isClicked = $(this).data('clicked'); // 클릭 상태 가져오기
-                    if (isClicked) {
-                        cardDiv.css('background-color', 'white'); // 다시 클릭 시 흰색으로 변경
-                    } else {
-                        cardDiv.css('background-color', '#dfdfdf'); // 첫 클릭 시 회색으로 변경
+                    const culturalPropertiesId = cardDiv.data('cultural-properties-id'); // ID 가져오기
+                    const isDisliked = $(this).data('disliked'); // 관심없음 상태 가져오기
+
+                    if (likeBadge.data('liked')) {
+                        // 하트가 클릭되어 있으면 클릭 해제
+                        likeBadge.data('liked', false); // 찜 상태 초기화
+                        likeBadge.data('likeClicked', false); // 클릭 상태 초기화
+                        cardDiv.css('background-color', 'white'); // 색상 초기화
                     }
-                    $(this).data('clicked', !isClicked); // 클릭 상태 토글
+
+                    if (!isDisliked) {
+                        // 관심없음 상태 추가
+                        addDislike(culturalPropertiesId);
+                        $(this).data('disliked', true); // 상태 업데이트
+                        $(this).data('starClicked', true); // 관심없음 클릭 상태 업데이트
+                        cardDiv.css('background-color', '#dfdfdf'); // 회색으로 변경
+                    } else {
+                        // 관심없음 상태 제거
+                        removeInterest(culturalPropertiesId, 'DISLIKE');
+                        $(this).data('disliked', false); // 상태 업데이트
+                        $(this).data('starClicked', false); // 클릭 상태 초기화
+                        cardDiv.css('background-color', 'white'); // 흰색으로 변경
+                    }
                 });
+
+
+            // 찜 추가
+            function addLike(culturalPropertiesId) {
+                $.ajax({
+                    url: '/cultural-properties/addLike',
+                    type: 'POST',
+                    data: { culturalPropertiesId: culturalPropertiesId },
+                    success: function(response) {
+                        console.log('찜 추가 성공:', response);
+                        alert(response);
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('찜 추가 실패:', status, error);
+                        alert('찜 추가 실패: ' + error);
+                    }
+                });
+            }
+
+
+            // 관심없음 추가
+            function addDislike(culturalPropertiesId) {
+                $.ajax({
+                    url: '/cultural-properties/addDislike',
+                    type: 'POST',
+                    data: { culturalPropertiesId: culturalPropertiesId },
+                    success: function(response) {
+                        console.log('관심없음 추가 성공:', response);
+                        alert(response);
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('관심없음 추가 실패:', status, error);
+                        alert('관심없음 추가 실패: ' + error);
+                    }
+                });
+            }
+
+
+            // 찜, 관심없음 삭제
+            function removeInterest(culturalPropertiesId, interestType) {
+                $.ajax({
+                    url: '/cultural-properties/removeInterest',
+                    type: 'POST',
+                    data: { culturalPropertiesId: culturalPropertiesId, interestType: interestType },
+                    success: function(response) {
+                        console.log('찜이 제거되었습니다:', response);
+
+                        // interestType에 따라 다른 알림 메시지 표시
+                        if (interestType === 'LIKE') {
+                            alert('찜이 취소되었습니다');
+                        } else if (interestType === 'DISLIKE') {
+                            alert('관심없음이 취소되었습니다');
+                        }
+
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('찜 제거 실패:', status, error);
+                        alert('찜 제거 실패: ' + error);
+                    }
+                });
+            }
 
 
             // 배지 구성
@@ -93,6 +201,7 @@ $(document).ready(function() {
             colDiv.append(cardDiv);
             gallerySection.append(colDiv);
         });
+
     }
 
 
@@ -186,6 +295,90 @@ $(document).ready(function() {
             }
         });
     }
+
+
+    // 사용자 ID 요청 함수
+    function getUserId() {
+        return new Promise((resolve, reject) => {
+            $.ajax({
+                url: '/cultural-properties/getUserId', // API 요청 URL
+                type: 'GET',
+                success: function(response) {
+                    const userId = response.userId; // 사용자 ID 추출
+                    console.log('User ID:', userId);
+                    resolve(userId); // ID를 반환
+                },
+                error: function(xhr, status, error) {
+                    console.error('사용자 ID 로드 실패:', status, error);
+                    console.error('서버 응답:', xhr.responseText);
+                    reject(error); // 에러 발생 시 reject
+                }
+            });
+        });
+    }
+
+    // 찜 상태를 로드하는 함수
+    function loadUserInterest(userId) {
+        $.ajax({
+            url: '/cultural-properties/getInterest',
+            type: 'GET',
+            data: { userId: userId },
+            success: function(data) {
+//                console.warn('찜 정보:', data); // 전체 데이터 확인
+                const interestList = $('#interest-list-ul');
+                interestList.empty(); // 기존 목록 초기화
+
+                if (data.length === 0) {
+                    interestList.append('<li>찜한 문화재가 없습니다.</li>');
+                    return;
+                }
+
+                data.forEach(function(item) {
+                    const culturalPropertiesId = item.culturalPropertiesId;
+
+                    // ID가 0인 경우 처리
+                    if (culturalPropertiesId === 0) {
+//                        console.warn(`유효하지 않은 ID: ${culturalPropertiesId}`);
+                        return; // 다음 항목으로 넘어감
+                    }
+
+                    const card = $(`.card[data-cultural-properties-id="${culturalPropertiesId}"]`);
+//                    console.warn(`culturalPropertiesId: ${culturalPropertiesId}`);
+
+                    // 찜 목록에 추가
+                    const listItem = $('<li>').text(`ID: ${culturalPropertiesId}, 상태: ${item.interestType}`);
+                    interestList.append(listItem);
+
+                    // ID가 유효한지 확인
+                    if (card.length) {
+                        // interest_type에 따라 배경색 설정
+                        if (item.interestType === 'LIKE') {
+                            card.css('background-color', '#ffe5ea'); // 핑크색
+                            card.find('.badge.bg-primary').data('liked', true); // 찜 상태 업데이트
+                        } else if (item.interestType === 'DISLIKE') {
+                            card.css('background-color', '#dfdfdf'); // 회색
+                            card.find('.badge.bg-secondary').data('disliked', true); // 관심없음 상태 업데이트
+                        }
+                    } else {
+//                        console.warn(`ID가 ${culturalPropertiesId}인 카드를 찾을 수 없습니다.`);
+                    }
+                });
+            },
+            error: function(xhr, status, error) {
+                console.error('찜 정보 로드 실패:', status, error);
+            }
+        });
+    }
+
+
+    // 페이지가 로드될 때 사용자 ID 요청 및 찜 상태 로드
+    $(document).ready(function() {
+        getUserId().then(userId => {
+            loadUserInterest(userId); // 사용자 ID를 이용해 찜 상태 로드
+        }).catch(error => {
+            console.error('사용자 ID 요청 중 오류 발생:', error);
+        });
+    });
 
 
     loadNewsArticles(); // 페이지가 로드될 때 뉴스 기사를 불러옴

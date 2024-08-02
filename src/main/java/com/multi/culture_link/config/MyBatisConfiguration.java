@@ -4,6 +4,7 @@ import com.multi.culture_link.admin.culturalProperties.model.dto.CulturalPropert
 import com.multi.culture_link.admin.culturalProperties.model.dto.StringListTypeHandler;
 import com.multi.culture_link.common.region.model.dto.RegionDTO;
 import com.multi.culture_link.common.time.model.dto.TimeDTO;
+import com.multi.culture_link.culturalProperties.model.dto.CulturalPropertiesInterestDTO;
 import com.multi.culture_link.festival.model.dto.*;
 import com.multi.culture_link.users.model.dto.RoleDTO;
 import com.multi.culture_link.users.model.dto.UserDTO;
@@ -71,6 +72,7 @@ public class MyBatisConfiguration {
 		configuration.getTypeAliasRegistry().registerAlias("naverArticleDTO",NaverArticleDTO.class);
 		
 		configuration.getTypeAliasRegistry().registerAlias("culturalPropertiesDTO", CulturalPropertiesDTO.class);
+		configuration.getTypeAliasRegistry().registerAlias("CulturalPropertiesInterestDTO", CulturalPropertiesInterestDTO.class);
 
 
 		// TypeHandler 등록
