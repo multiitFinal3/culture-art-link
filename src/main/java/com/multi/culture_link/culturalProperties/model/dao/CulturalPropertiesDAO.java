@@ -18,24 +18,12 @@ public interface CulturalPropertiesDAO {
 
     CulturalPropertiesDTO getCulturalPropertyById(int id);
 
-//    void addLike(CulturalPropertiesInterestDTO interest);
-//    void addDislike(CulturalPropertiesInterestDTO interest);
-//    List<CulturalPropertiesInterestDTO> getInterestsByUser(int userId);
+    void addInterest(CulturalPropertiesInterestDTO interest);
+    void removeInterest(CulturalPropertiesInterestDTO interest);
 
 
-//    //이걸로
-//    // 찜 추가 또는 관심없음 추가
-//    void addInterest(CulturalPropertiesInterestDTO interest);
-//
-//    // 찜 여부 확인
-//    boolean isLiked(CulturalPropertiesInterestDTO interest);
-//
-//    // 관심없음 여부 확인
-//    boolean isDisliked(CulturalPropertiesInterestDTO interest);
-//
-//    // 찜 또는 관심없음 삭제
-//    void removeInterest(CulturalPropertiesInterestDTO interest);
-//
-//    // 사용자의 찜 목록 가져오기
-//    List<CulturalPropertiesInterestDTO> getInterestsByUser(int userId);
+    // 사용자 찜 정보 가져오기
+    List<CulturalPropertiesInterestDTO> getInterest(@Param("userId") int userId);
+
+
 }
