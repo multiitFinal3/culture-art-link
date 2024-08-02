@@ -174,7 +174,7 @@ async function updateInterest(exhibitionId, state) {
             if (contentDiv.classList.contains('background-gray')) {
                 contentDiv.classList.remove('background-gray');
             }
-        }else {
+        }else if(state ==='not_interested') {
             contentDiv.classList.add('background-gray')
             if (contentDiv.classList.contains('background-pink')) {
                 contentDiv.classList.remove('background-pink');

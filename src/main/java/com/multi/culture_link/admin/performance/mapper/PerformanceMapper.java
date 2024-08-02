@@ -14,4 +14,6 @@ public interface PerformanceMapper {
     int deletePerformances(List<String> selectedIds);
 
     List<PerformanceDTO> searchPerformances(String keyword);
+
+    List<PerformanceDTO> getPerformancesByGenre(String genre);
 }

@@ -24,10 +24,4 @@
         DELETE FROM exhibition_comment
         WHERE user_id = #{userId} AND exhibition_id = #{exhibitionId} AND id = #{id}
     </delete>
-
-
-
-
-
-
 </mapper>

@@ -155,4 +155,29 @@ public class PerformanceDBService { // 상세데이터, 외부 API로부터 공�
         }
         return null;
     }
+
+
+
+
+
+
+
+    // 장르 이름을 매핑하는 메서드
+    private String mapGenreName(String genre) {
+        switch (genre) {
+            case "서양음악":
+                return "서양음악(클래식)";
+            case "한국음악":
+                return "한국음악(국악)";
+            default:
+                return genre;
+        }
+    }
+
+    // 장르에 따른 공연 목록을 가져오는 메서드
+    public List<PerformanceDTO> getPerformancesByGenre(String genre) {
+        String mappedGenre = mapGenreName(genre);
+        return performanceMapper.getPerformancesByGenre(mappedGenre);
+    }
+
 }

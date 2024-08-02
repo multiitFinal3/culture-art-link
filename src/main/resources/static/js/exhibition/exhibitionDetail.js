@@ -69,8 +69,14 @@ function btnEvent() {
 
     saveCommentBtn.addEventListener('click', function () {
         const exhibitionId = getExhibitionIdFromUrl()
-        console.log("exhibition-like btn : ", exhibitionId)
-        saveComment(exhibitionId, 'interested');
+        console.log("comment: ", exhibitionId)
+        saveComment(exhibitionId);
+    });
+
+    saveAnalyzeBtn.addEventListener('click', function () {
+        const exhibitionId = getExhibitionIdFromUrl()
+        console.log("analyze : ", exhibitionId)
+        saveAnalyze(exhibitionId);
     });
 
 
@@ -87,7 +93,6 @@ function updateStars(starContainer, stars) {
         }
     });
 }
-
 
 async function saveComment(exhibitionId) {
     try {
@@ -106,6 +111,63 @@ async function saveComment(exhibitionId) {
     }catch(e) {
         console.log('error : ',e)
     }
+}
+
+// 이미지 업로드 버튼 이벤트 리스너
+$('#imageUploadBtn').on('click', function() {
+    $('#imageInput').click();
+});
+
+// 파일 선택 시 이벤트
+$('#imageInput').on('change', function(event) {
+    const file = event.target.files[0];
+    if (file) {
+        // 파일 선택됨을 사용자에게 알림
+        $('#imageUploadBtn').text('이미지 선택됨');
+    }
+});
+
+async function saveAnalyze(exhibitionId) {
+    try {
+        const artwork = document.getElementById('artworkTextarea');
+        const analyze = document.getElementById('analyzeTextarea');
+        const imageFile = document.getElementById('imageInput').files[0];
+
+        let imagePath = null;
+        if (imageFile) {
+            const timestamp = new Date().getTime();
+            imagePath = `/exhibition/${exhibitionId}/analyze/${timestamp}.png`;
+            await uploadImageToBucket(imageFile, imagePath);
+        }
+
+
+        const data = {
+            artwork:artwork.value,
+            content:analyze.value,
+            image: imagePath
+        }
+
+        console.log('save analyze : ',data)
+        const response = await axios.post(`/exhibition/exhibition/${exhibitionId}/analyze`, data)
+
+        loadExhibitionAnalyze()
+    }catch(e) {
+        console.log('error : ',e)
+    }
+}
+
+async function uploadImageToBucket(file, path) {
+    // 여기에 네이버 Bucket Management API를 사용하여 이미지를 업로드하는 코드를 구현해야 합니다.
+    // 이는 서버 측에서 처리하는 것이 보안상 좋습니다.
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('path', path);
+
+    await axios.post('/api/upload-to-bucket', formData, {
+        headers: {
+            'Content-Type': 'multipart/form-data'
+        }
+    });
 }
 
 async function updateInterest(exhibitionId, state) {
@@ -141,31 +203,14 @@ function renderViewBackground(state) {
     }
 }
 
-
 function getExhibitionIdFromUrl() {
     const urlParts = window.location.pathname.split('/');
     return urlParts[urlParts.length - 1];
 }
 
-// async function loadExhibitionDetails(exhibitionId) {
-//     try {
-//         const exhibitionId = getExhibitionIdFromUrl()
-//         const response = await fetch(`/exhibition/${exhibitionId}`);
-//         const data = await response.json();
-//         console.log(data);
-//
-//         data.startDate =  data.startDate?.substring(0,10) || "미정";
-//         data.endDate =  data.endDate?.substring(0,10) || "미정";
-//         await loadExhibitionReviews()
-//         renderExhibitionDetails(data);
-//
-//     } catch (error) {
-//         console.error('Failed to load exhibition details:', error);
-//     }
-// }
-
 async function loadExhibitionDetails(exhibitionId) {
     try {
+//      const exhibitionId = getExhibitionIdFromUrl()
         const response = await fetch(`/exhibition/${exhibitionId}`);
         const data = await response.json();
         console.log(data);
@@ -173,6 +218,7 @@ async function loadExhibitionDetails(exhibitionId) {
         data.startDate = data.startDate?.substring(0,10) || "미정";
         data.endDate = data.endDate?.substring(0,10) || "미정";
         await loadExhibitionReviews();
+        await loadExhibitionAnalyze();
 
         renderExhibitionDetails(data);
     } catch (error) {
@@ -201,92 +247,83 @@ function renderExhibitionDetails(exhibition) {
     initMap(exhibition.museum);
     renderInformation(exhibition)
     renderViewBackground(exhibition?.state)
-    renderVideo(exhibition.videoId);
+    // searchYoutubeVideos(exhibition.title, exhibition.museum);
+    searchYoutubeVideos(exhibition.title);
 }
 
-
-
-// function initMap(location) {
-//     // const map = new google.maps.Map(document.getElementById("map"), {
-//     //     zoom: 15,
-//     //     center: location,
-//     // });
-//     // new google.maps.Marker({
-//     //     position: location,
-//     //     map: map,
-//     // });
-//     // var museum = [[${museum}]];
-//     // var address = festival.address; // 축제 주소를 저장하는 필드명으로 변경하세요
-//
-//     const map = new naver.maps.Map('map', {
-//         zoom: 15
-//     });
-//
-//     naver.maps.Service.geocode({
-//         query: location
-//     }, function(status, response) {
-//         if (status === naver.maps.Service.Status.ERROR) {
-//             return alert('Something wrong!');
-//         }
-//
-//         if (response.v2.meta.totalCount === 0) {
-//             return alert('No result.');
-//         }
-//
-//         var item = response.v2.addresses[0];
-//         var point = new naver.maps.Point(item.x, item.y);
-//
-//         map.setCenter(point);
-//
-//         var marker = new naver.maps.Marker({
-//             position: point,
-//             map: map
+// async function searchYoutubeVideos(title, museum) {
+//     try {
+//         const response = await axios.post('/exhibition/videos', null, {
+//             params: { title, museum }
 //         });
-//     });
-//
-//     if (!location) {
-//         $('#mapDiv').html("");
+//         const videos = response.data;
+//         renderVideos(videos);
+//     } catch (error) {
+//         console.error('Failed to search YouTube videos:', error);
 //     }
 // }
 
-function initNaverMap() {
-    console.log('Naver Maps API loaded');
-    // 여기서 지도 초기화나 다른 필요한 작업을 수행할 수 있습니다.
-    // 예를 들어, 전시회 상세 정보를 불러오는 함수를 호출할 수 있습니다.
-    const exhibitionId = getExhibitionIdFromUrl();
-    loadExhibitionDetails(exhibitionId);
+async function searchYoutubeVideos(query) {
+    try {
+        const response = await axios.post('/exhibition/videos', null, {
+            params: { query }
+        });
+        const videos = response.data;
+        renderVideos(videos);
+    } catch (error) {
+        console.error('Failed to search YouTube videos:', error);
+    }
 }
 
-function initMap(location) {
+function renderVideos(videos) {
+    const videosHtml = videos.map(video => `
+    <div class="video-item">
+      <a href="${video.link}" target="_blank">
+        <img src="${video.thumbnailUrl}" alt="${video.title}">
+        <p>${video.title}</p>
+      </a>
+    </div>
+  `).join('');
+    $('#videoContainer').html(videosHtml);
+}
+
+
+
+async function initMap(location) {
+    console.log('Location:', location); // 위치 정보 로깅
+
     const mapOptions = {
         center: new naver.maps.LatLng(37.3595704, 127.105399),
         zoom: 15
     };
     const map = new naver.maps.Map('map', mapOptions);
 
-    naver.maps.Service.geocode({
-        query: location
-    }, function(status, response) {
-        if (status !== naver.maps.Service.Status.OK) {
-            return alert('Geocoding error: ' + status);
-        }
-
-        var result = response.v2.addresses[0];
-        if (result) {
-            var point = new naver.maps.Point(result.x, result.y);
-            map.setCenter(point);
-            new naver.maps.Marker({
-                position: point,
-                map: map
-            });
-        } else {
-            alert('No results found');
-        }
-    });
-
     if (!location) {
-        $('#mapDiv').html("");
+        console.log('No location provided');
+        $('#mapDiv').html("위치 정보가 없습니다.");
+        return;
     }
+    
+    // 위치 정보 가져오기 
+    const response = await axios.get(`/map/naver?query=${location}`);
+    const locationInfo = response?.data?.items[0]
+
+    if(!locationInfo) {
+        console.error('No results found for location:', location);
+        $('#mapDiv').html("해당 위치를 찾을 수 없습니다.");
+        return;
+    }
+
+    // 좌표 설정
+    const point = new naver.maps.LatLng(locationInfo.mapy / 10000000, locationInfo.mapx / 10000000);
+
+    // 좌표로 이동
+    map.setCenter(point);
+    // 해당 좌표에 마크 설정
+    new naver.maps.Marker({
+        position: point,
+        map: map
+    });
 }
 
 function renderInformation(exhibition) {
@@ -294,35 +331,6 @@ function renderInformation(exhibition) {
     $('#subDescription').text(exhibition.subDescription);
     $('#url').text(exhibition.url);
     $('#url').attr('href', exhibition.url);
-    // const url = exhibition.url;
-    // if (url) {
-    //     $('#detailFrame').attr('src', url);
-    // }
-    // const url = exhibition.url;
-    // if (url) {
-    //     $('#detailFrame').attr('data', url);
-    // }
-    // URL 정보를 데이터 속성으로 저장
-    // $('#exhibitionInformation').data('url', exhibition.url);
-    // loadDetailUrl();
-    // $('#news').text(exhibition.title);
-}
-
-function loadDetailUrl() {
-    const url = $('#exhibitionInformation').data('url');
-    if (url) {
-        $.ajax({
-            url: '/exhibition/detail-url', // Spring Boot 서버 주소로 변경
-            data: { url: url },
-            success: function(response) {
-                console.log(response);
-                $('#detailContent').html(response);
-            },
-            error: function() {
-                $('#detailContent').html('페이지를 불러오는 데 실패했습니다.');
-            }
-        });
-    }
 }
 
 function renderVideo(videoId) {
@@ -372,3 +380,101 @@ async function deleteReview(reviewId) {
     }
 }
 
+async function loadExhibitionAnalyze() {
+    try {
+        const exhibitionId = getExhibitionIdFromUrl()
+        const response = await fetch(`/exhibition/exhibition/${exhibitionId}/analyze`,);
+        const data = await response.json();
+        console.log("loadExhibitionAnalyze : ",data);
+        renderAnalyze(data)
+    } catch (error) {
+        console.error('Failed to load exhibition details:', error);
+    }
+}
+
+function renderAnalyze(analyze) {
+    const analyzeHtml = analyze?.map(analyze => `
+        <div class="analyze" data-id="${analyze.id}">
+            <div class="analyze-content">
+                <h3>${analyze.artwork}</h3>
+                <p class="analyze-text">${analyze.content}</p>
+                ${analyze.image ? `<img src="${analyze.image}" alt="분석 이미지" style="max-width: 100%;">` : ''}
+                ${(analyze.auth) ? '<button class="update-analyze">수정</button>' : ''}
+                ${(analyze.auth) ? '<button class="delete-analyze">삭제</button>' : ''}
+            </div>
+            <div class="analyze-edit" style="display:none;">
+                <input class="edit-artwork" value="${analyze.artwork}">
+                <textarea class="edit-content">${analyze.content}</textarea>
+                <input type="file" class="edit-image" accept="image/*">
+                <button class="save-edit">수정 완료</button>
+                <button class="cancel-edit">취소</button>
+            </div>
+        </div>
+    `).join('');
+    $('#artworkAnalyzeContainer').html(analyzeHtml);
+
+    $('.update-analyze').on('click', function() {
+        const analyzeDiv = $(this).closest('.analyze');
+        analyzeDiv.find('.analyze-content').hide();
+        analyzeDiv.find('.analyze-edit').show();
+    });
+
+    $('.cancel-edit').on('click', function() {
+        const analyzeDiv = $(this).closest('.analyze');
+        analyzeDiv.find('.analyze-edit').hide();
+        analyzeDiv.find('.analyze-content').show();
+    });
+
+    $('.save-edit').on('click', function() {
+        const analyzeDiv = $(this).closest('.analyze');
+        const analyzeId = analyzeDiv.data('id');
+        const newArtwork = analyzeDiv.find('.edit-artwork').val();
+        const newContent = analyzeDiv.find('.edit-content').val();
+        updateAnalyze(analyzeId, newArtwork, newContent);
+    });
+
+    $('.delete-analyze').on('click', function() {
+        const analyzeId = $(this).closest('.analyze').data('id');
+        deleteAnalyze(analyzeId);
+    });
+}
+
+async function updateAnalyze(analyzeId, artwork, content, image) {
+    try {
+        const exhibitionId = getExhibitionIdFromUrl();
+        const response = await axios.patch(`/exhibition/exhibition/${exhibitionId}/analyze`, {
+            id: analyzeId,
+            artwork: artwork,
+            content: content,
+            image: image
+        });
+
+        if (response.status === 200) {
+            loadExhibitionAnalyze();
+        } else {
+            console.error('Failed to update analyze');
+        }
+    } catch (error) {
+        console.error('Error updating analyze:', error);
+    }
+}
+
+async function deleteAnalyze(analyzeId) {
+    try {
+        const exhibitionId = getExhibitionIdFromUrl();
+        const response = await axios.delete(`/exhibition/exhibition/${exhibitionId}/analyze`,
+            {
+                data:{
+                    id: analyzeId
+                }
+            });
+
+        if (response.status === 200) {
+            loadExhibitionAnalyze();
+        } else {
+            console.error('Failed to delete review');
+        }
+    } catch (error) {
+        console.error('Error deleting review:', error);
+    }
+}
