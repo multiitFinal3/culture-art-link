@@ -43,10 +43,19 @@
               switch(location) {
                   case '전체': locationCode = ''; break;
                   case '서울': locationCode = '11'; break;
-                  case '경기/인천': locationCode = '41,28'; break;
-                  case '대전/충청/강원': locationCode = '30,43,44,51'; break;
-                  case '부산/대구/울산/경상': locationCode = '26,27,31,47,48'; break;
-                  case '광주/전라': locationCode = '29,45,46'; break;
+
+                  case '경기': locationCode = '41'; break;
+                  case '인천': locationCode = '28'; break;
+                  case '대전': locationCode = '30'; break;
+                  case '충청': locationCode = '43|44'; break;
+                  case '강원': locationCode = '51'; break;
+                  case '부산': locationCode = '26'; break;
+                  case '대구': locationCode = '27'; break;
+                  case '울산': locationCode = '31'; break;
+                  case '경상': locationCode = '47|48'; break;
+                  case '광주': locationCode = '29'; break;
+                  case '전라': locationCode = '45|46'; break;
+
                   case '제주': locationCode = '50'; break;
               }
               console.log("선택한 지역: " + location + ", 코드: " + locationCode); // 디버그 라인
@@ -127,20 +136,29 @@
   <div class="location-filter">
     <div class="location-item">전체</div>
     <div class="location-item">서울</div>
-    <div class="location-item">경기/인천</div>
-    <div class="location-item">대전/충청/강원</div>
-    <div class="location-item">부산/대구/울산/경상</div>
-    <div class="location-item">광주/전라</div>
+    <div class="location-item">경기</div>
+    <div class="location-item">인천</div>
+    <div class="location-item">강원</div>
+    <div class="location-item">대전</div>
+    <div class="location-item">충청</div>
+    <div class="location-item">부산</div>
+    <div class="location-item">대구</div>
+    <div class="location-item">울산</div>
+    <div class="location-item">경상</div>
+    <div class="location-item">광주</div>
+    <div class="location-item">전라</div>
     <div class="location-item">제주</div>
+
   </div>
 
   <div class="performance-container">
-    <div class="performance-card" th:each="performance : ${performances}">
-      <img class="performance-image" th:src="${performance.imageMain}" alt="공연 이미지"/>
-      <div class="performance-info">
-        <div class="performance-title" th:text="${performance.title}">공연 타이틀</div>
-        <div class="performance-location" th:text="${performance.location}">공연 장소</div>
-        <div class="performance-date" th:text="${performance.formattedDate}">공연 기간</div>
+    <div class="location-card" th:each="performance : ${performances}">
+      <img class="location-image" th:src="${performance.imageMain}" alt="공연 이미지"/>
+      <div class="location-info">
+        <div class="location-title" th:text="${performance.title}">공연 타이틀</div>
+        <div class="location-location" th:text="${performance.location}">공연 장소</div>
+        <div class="location-date" th:text="${performance.formattedDate}">공연 기간</div>
+
       </div>
     </div>
   </div>

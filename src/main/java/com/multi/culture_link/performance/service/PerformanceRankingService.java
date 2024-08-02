@@ -1,6 +1,8 @@
 package com.multi.culture_link.performance.service;
 
+import com.multi.culture_link.admin.performance.mapper.PerformanceMapper;
 import com.multi.culture_link.admin.performance.model.dto.PerformanceDTO;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -21,6 +23,9 @@ import java.util.List;
 
 @Service
 public class PerformanceRankingService {
+
+    @Autowired
+    private PerformanceMapper performanceMapper;
 
     private static final String url = "http://www.kopis.or.kr/openApi/restful/boxoffice";
 
@@ -127,5 +132,13 @@ public class PerformanceRankingService {
             default:
                 throw new IllegalArgumentException("Unexpected value: " + genre);
         }
+    }
+
+    public PerformanceDTO getPerformanceDetail(int performanceId) {
+        return null;
+    }
+
+    public List<PerformanceDTO> getAllPerformances() {
+        return performanceMapper.getAllPerformances();
     }
 }
