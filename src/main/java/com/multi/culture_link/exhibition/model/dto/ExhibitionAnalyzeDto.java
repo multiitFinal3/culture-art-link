@@ -13,6 +13,7 @@ public class ExhibitionAnalyzeDto {
     private String image;
     private String artwork;
     private String content;
+    private boolean isAuth;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 }
