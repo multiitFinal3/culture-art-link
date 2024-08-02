@@ -8,6 +8,8 @@
     <meta charset="UTF-8">
     <title>공연정보</title>
     <link rel="stylesheet" th:href="@{/css/performance/performanceHome.css}">
+    <link rel="stylesheet" th:href="@{/css/performance/performanceAllList.css}">
+
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -138,14 +140,14 @@
         <div class="all-performances-title">전체 공연 목록</div>
         <div class="all-performances-items" th:if="${allPerformances != null}">
             <div th:each="performance : ${allPerformances}">
-                <div class="card" th:data-performance-id="${performance.id}">
+                <div class="all-card" th:data-performance-id="${performance.id}">
                     <img th:src="${performance.imageMain}" alt="공연 이미지">
-                    <div class="performance-info">
-                        <div class="performance-title" th:text="${performance.title}">공연명</div>
-                        <div class="performance-location" th:text="${performance.location}">공연장소</div>
-                        <div class="performance-date" th:text="${performance.formattedDate}">공연날짜</div>
-                    </div>
                 </div>
+                    <div class="all-performance-info">
+                        <div class="all-title" th:text="${performance.title}">공연명</div>
+                        <div class="all-location" th:text="${performance.location}">공연장소</div>
+                        <div class="all-date" th:text="${performance.formattedDate}">공연날짜</div>
+                    </div>
             </div>
         </div>
         <div th:if="${allPerformances == null}">
