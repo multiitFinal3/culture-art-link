@@ -8,5 +8,6 @@ public class CulturalPropertiesInterestDTO {
     private int id;
     private int culturalPropertiesId;
     private int userId;
+    private String interestType;
 
 }
