@@ -4,10 +4,7 @@ import com.multi.culture_link.admin.culturalProperties.model.dto.CulturalPropert
 import com.multi.culture_link.admin.culturalProperties.model.dto.StringListTypeHandler;
 import com.multi.culture_link.common.region.model.dto.RegionDTO;
 import com.multi.culture_link.common.time.model.dto.TimeDTO;
-import com.multi.culture_link.festival.model.dto.FestivalContentReviewNaverKeywordMapping;
-import com.multi.culture_link.festival.model.dto.FestivalDTO;
-import com.multi.culture_link.festival.model.dto.FestivalKeywordDTO;
-import com.multi.culture_link.festival.model.dto.PageDTO;
+import com.multi.culture_link.culturalProperties.model.dto.CulturalPropertiesInterestDTO;
 import com.multi.culture_link.festival.model.dto.*;
 import com.multi.culture_link.users.model.dto.RoleDTO;
 import com.multi.culture_link.users.model.dto.UserDTO;
@@ -52,7 +49,7 @@ public class MyBatisConfiguration {
 		org.apache.ibatis.session.Configuration configuration = new org.apache.ibatis.session.Configuration();
 
 		// 모든 mapper 관련된 log 출력됨
-//		configuration.setLogImpl(StdOutImpl.class);
+		configuration.setLogImpl(StdOutImpl.class);
 
 		configuration.setMapUnderscoreToCamelCase(true);
 		
@@ -72,8 +69,10 @@ public class MyBatisConfiguration {
 		configuration.getTypeAliasRegistry().registerAlias("festivalContentReviewNaverKeywordMapping", FestivalContentReviewNaverKeywordMapDTO.class);
 		configuration.getTypeAliasRegistry().registerAlias("userFestivalLoveHateDTO", UserFestivalLoveHateMapDTO.class);
 		configuration.getTypeAliasRegistry().registerAlias("vwUserReviewDTO", VWUserReviewDataDTO.class);
+		configuration.getTypeAliasRegistry().registerAlias("naverArticleDTO",NaverArticleDTO.class);
 		
 		configuration.getTypeAliasRegistry().registerAlias("culturalPropertiesDTO", CulturalPropertiesDTO.class);
+		configuration.getTypeAliasRegistry().registerAlias("CulturalPropertiesInterestDTO", CulturalPropertiesInterestDTO.class);
 
 
 		// TypeHandler 등록

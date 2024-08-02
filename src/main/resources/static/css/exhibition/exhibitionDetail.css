@@ -121,10 +121,11 @@ button {
 
 .display-flex{
     display: flex;
+    flex-direction: column;
 }
 
 .display-flex > div {
-    flex: 1;
+    width: 100%;
 }
 
 #commentTextarea {
@@ -145,4 +146,44 @@ button {
 }
 .star.filled:before {
     content: '★';
+}
+.review {
+    position: relative;
+    margin-bottom: 20px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+.delete-review {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background-color: #ff4d4d;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 3px;
+    cursor: pointer;
+}
+.delete-review:hover {
+    background-color: #ff1a1a;
+}
+#videoContainer {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.video-item {
+    width: calc(50% - 10px);
+}
+
+.video-item img {
+    width: 100%;
+    height: auto;
+}
+
+.video-item p {
+    margin-top: 5px;
+    font-size: 14px;
 }

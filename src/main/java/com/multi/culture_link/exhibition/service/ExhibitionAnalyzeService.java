@@ -15,8 +15,8 @@ import java.util.List;
 public class ExhibitionAnalyzeService {
     private final ExhibitionAnalyzeDao exhibitionAnalyzeDao;
 
-    public List<ExhibitionAnalyzeDto> getAnalyze(int exhibitionId) {
-        return exhibitionAnalyzeDao.getAnalyze(exhibitionId);
+    public List<ExhibitionAnalyzeDto> getAnalyze(ExhibitionAnalyzeDto data) {
+        return exhibitionAnalyzeDao.getAnalyze(data);
     }
 
     public void createAnalyze(ExhibitionAnalyzeDto data) {
@@ -27,11 +27,8 @@ public class ExhibitionAnalyzeService {
         exhibitionAnalyzeDao.updateAnalyze(data);
     }
 
-    public void deleteAnalyze(int userId, int exhibitionId) {
-        ExhibitionAnalyzeDto data = new ExhibitionAnalyzeDto();
-        data.setUserId(userId);
-        data.setExhibitionId(exhibitionId);
-        exhibitionAnalyzeDao.deleteAnalyze(userId, exhibitionId);
+    public void deleteAnalyze(ExhibitionAnalyzeDto data) {
+        exhibitionAnalyzeDao.deleteAnalyze(data);
     }
 
 

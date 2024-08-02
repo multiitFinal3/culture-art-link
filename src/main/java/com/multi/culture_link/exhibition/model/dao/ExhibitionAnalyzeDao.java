@@ -9,10 +9,10 @@ import java.util.List;
 @Mapper
 public interface ExhibitionAnalyzeDao {
 
-    List<ExhibitionAnalyzeDto> getAnalyze(int exhibitionId);
+    List<ExhibitionAnalyzeDto> getAnalyze(ExhibitionAnalyzeDto data);
     void createAnalyze(ExhibitionAnalyzeDto data);
     void updateAnalyze(ExhibitionAnalyzeDto data);
-    void deleteAnalyze(int userId, int exhibitionId);
+    void deleteAnalyze(ExhibitionAnalyzeDto data);
 
 }
 

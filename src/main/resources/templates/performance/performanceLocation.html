@@ -6,9 +6,96 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <title>지역별 페이지</title>
-    <link rel="stylesheet" th:href="@{/css/performance/performanceLocation.css}">
+  <meta charset="UTF-8">
+  <title>지역별 페이지</title>
+  <link rel="stylesheet" th:href="@{/css/performance/performanceRanking.css}">
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const genreItems = document.querySelectorAll('.genre-item');
+      const genreItems2 = document.querySelectorAll('.genre-item2');
+      const locationItems = document.querySelectorAll('.location-item');
+      const currentGenre = new URLSearchParams(window.location.search).get('genre') || '홈';
+
+      // 장르 아이템의 활성화 상태 설정
+      genreItems.forEach(item => {
+          if (item.textContent.trim() === currentGenre) {
+              item.classList.add('active');
+          } else {
+              item.classList.remove('active');
+          }
+      });
+
+      genreItems2.forEach(item => {
+          const genre2 = new URLSearchParams(window.location.search).get('genre') || '전체';
+          if (item.textContent.trim() === genre2) {
+              item.classList.add('active');
+          } else {
+              item.classList.remove('active');
+          }
+      });
+
+      // 지역 아이템 클릭 시 동작 설정
+      locationItems.forEach(item => {
+          item.addEventListener('click', function() {
+              const location = this.textContent.trim();
+              let locationCode = '';
+              switch(location) {
+                  case '전체': locationCode = ''; break;
+                  case '서울': locationCode = '11'; break;
+
+                  case '경기': locationCode = '41'; break;
+                  case '인천': locationCode = '28'; break;
+                  case '대전': locationCode = '30'; break;
+                  case '충청': locationCode = '43|44'; break;
+                  case '강원': locationCode = '51'; break;
+                  case '부산': locationCode = '26'; break;
+                  case '대구': locationCode = '27'; break;
+                  case '울산': locationCode = '31'; break;
+                  case '경상': locationCode = '47|48'; break;
+                  case '광주': locationCode = '29'; break;
+                  case '전라': locationCode = '45|46'; break;
+
+                  case '제주': locationCode = '50'; break;
+              }
+              console.log("선택한 지역: " + location + ", 코드: " + locationCode); // 디버그 라인
+              window.location.href = `/performance/performanceLocation?locationCode=${encodeURIComponent(locationCode)}`;
+          });
+      });
+
+      // 장르 아이템 클릭 시 동작 설정
+      genreItems.forEach(item => {
+          item.addEventListener('click', function() {
+              const genre = this.textContent.trim();
+              window.location.href = `/performance/performance-genre?genre=${encodeURIComponent(genre)}`;
+          });
+      });
+
+      genreItems2.forEach(item => {
+          item.addEventListener('click', function() {
+              const genre = this.textContent.trim();
+              window.location.href = `/performance/performanceRanking?genre=${encodeURIComponent(genre)}`;
+          });
+      });
+
+      // 랭킹 클릭 이벤트 리스너 추가
+      const rankingItem = document.getElementById('ranking-item');
+      if (rankingItem) {
+          rankingItem.addEventListener('click', function() {
+              window.location.href = `/performance/performanceRanking`;
+          });
+      }
+
+      // 지역별 클릭 이벤트 리스너 추가
+      const regionItem = document.getElementById('region-item');
+      if (regionItem) {
+          regionItem.addEventListener('click', function() {
+              window.location.href = `/performance/performanceLocation`;
+          });
+      }
+    });
+  </script>
+
 
 </head>
 <body>
@@ -43,11 +130,40 @@
   </div>
 
   <div class="ranking">
-    <div class="ranking-title">장르별 랭킹</div>
+    <div class="ranking-title">지역별 공연</div>
+  </div>
+
+  <div class="location-filter">
+    <div class="location-item">전체</div>
+    <div class="location-item">서울</div>
+    <div class="location-item">경기</div>
+    <div class="location-item">인천</div>
+    <div class="location-item">강원</div>
+    <div class="location-item">대전</div>
+    <div class="location-item">충청</div>
+    <div class="location-item">부산</div>
+    <div class="location-item">대구</div>
+    <div class="location-item">울산</div>
+    <div class="location-item">경상</div>
+    <div class="location-item">광주</div>
+    <div class="location-item">전라</div>
+    <div class="location-item">제주</div>
+
+  </div>
+
+  <div class="performance-container">
+    <div class="location-card" th:each="performance : ${performances}">
+      <img class="location-image" th:src="${performance.imageMain}" alt="공연 이미지"/>
+      <div class="location-info">
+        <div class="location-title" th:text="${performance.title}">공연 타이틀</div>
+        <div class="location-location" th:text="${performance.location}">공연 장소</div>
+        <div class="location-date" th:text="${performance.formattedDate}">공연 기간</div>
+
+      </div>
+    </div>
   </div>
 
 </div>
-
 
 </body>
 </html>

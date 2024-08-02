@@ -1,6 +1,8 @@
 package com.multi.culture_link.performance.controller;
 
 import com.multi.culture_link.admin.performance.model.dto.PerformanceDTO;
+import com.multi.culture_link.admin.performance.service.PerformanceDBService;
+import com.multi.culture_link.performance.service.PerformanceLocationService;
 import com.multi.culture_link.performance.service.PerformanceRankingService;
 import com.multi.culture_link.users.model.dto.VWUserRoleDTO;
 import org.springframework.http.ResponseEntity;
@@ -23,9 +25,21 @@ import java.util.List;
 public class PerformanceController {
 
     private final PerformanceRankingService performanceRankingService;
+    private final PerformanceLocationService performanceLocationService;
 
-    public PerformanceController(PerformanceRankingService performanceRankingService) {
+
+    private final PerformanceDBService performanceDBService;
+
+
+    public PerformanceController(PerformanceRankingService performanceRankingService,
+                                 PerformanceLocationService performanceLocationService,
+                                 PerformanceDBService performanceDBService) {
         this.performanceRankingService = performanceRankingService;
+        this.performanceLocationService = performanceLocationService;
+        this.performanceDBService = performanceDBService;
+
+
+   
     }
 
     /**
@@ -56,9 +70,16 @@ public class PerformanceController {
         String date = "20240730"; // 일간 데이터 날짜
         List<PerformanceDTO> rankingData = performanceRankingService.fetchGenreRanking(genre, date, 5);
         System.out.println("Fetched Data: " + rankingData); // 로그 추가
+
+        // 장르에 따른 전체 공연 목록 추가
+        List<PerformanceDTO> allPerformances = performanceDBService.getPerformancesByGenre(genre);
+        System.out.println("All Performances: " + allPerformances); // 디버깅 로그 추가
+
         model.addAttribute("user", user.getUser());
         model.addAttribute("genre", genre);
         model.addAttribute("rankingData", rankingData);
+        model.addAttribute("allPerformances", allPerformances); // 전체 공연 목록 모델에 추가
+
         return "/performance/performanceGenre";
     }
 
@@ -118,6 +139,8 @@ public class PerformanceController {
      * @param genre the genre
      * @return performanceRanking
      */
+    // PerformanceController.java
+
     @GetMapping("/performanceRanking")
     public String performanceRankingPage(@AuthenticationPrincipal VWUserRoleDTO user, Model model,
                                          @RequestParam(required = false) String genre) {
@@ -135,6 +158,50 @@ public class PerformanceController {
         model.addAttribute("genre", genre);
         return "/performance/performanceRanking";
     }
+
+
+
+
+
+
+
+
+
+
+
+
+    @GetMapping("/performanceLocation")
+    public String performanceLocationPage(@AuthenticationPrincipal VWUserRoleDTO user,
+                                          @RequestParam(required = false) String locationCode,
+                                          Model model) {
+        String stdate = "20240730"; // 시작 날짜
+        String eddate = "20240830"; // 종료 날짜
+
+        System.out.println("Received locationCode: " + locationCode); // Debug line
+
+        List<PerformanceDTO> performances = performanceLocationService.fetchPerformancesByLocation(stdate, eddate, locationCode);
+
+        model.addAttribute("user", user.getUser());
+        model.addAttribute("performances", performances);
+
+        return "/performance/performanceLocation";
+    }
+
+
+
+
+
+    @GetMapping("/performanceDetail")
+    public String performanceDetailPage(@AuthenticationPrincipal VWUserRoleDTO user,
+                                        @RequestParam("performanceId") int performanceId,
+                                        Model model) {
+        PerformanceDTO performance = performanceRankingService.getPerformanceDetail(performanceId);
+        model.addAttribute("user", user.getUser());
+        model.addAttribute("performance", performance);
+        return "/performance/performanceDetail";
+    }
+
+
 
 
 }

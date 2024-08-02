@@ -58,9 +58,19 @@
             const regionItem = document.getElementById('region-item');
             if (regionItem) {
                 regionItem.addEventListener('click', function() {
-                    window.location.href = `/performance/performance-region`; // "지역별"의 URL을 필요에 따라 업데이트
+                    window.location.href = `/performance/performanceLocation`;
                 });
             }
+
+
+            // 공연 카드 클릭 이벤트 추가
+            const performanceCards = document.querySelectorAll('.card');
+            performanceCards.forEach(card => {
+                card.addEventListener('click', function() {
+                    const performanceId = this.getAttribute('data-performance-id');
+                    window.location.href = `/performance/performanceDetail?performanceId=${encodeURIComponent(performanceId)}`;
+                });
+            });
         });
     </script>
 </head>
@@ -99,8 +109,8 @@
         <div class="ranking-items" th:if="${rankingData != null}">
             <!-- 카드 반복 -->
             <div th:each="ranking, iterStat : ${rankingData}">
-                <div class="card">
-                    <!-- 카드 번호 -->
+                <div class="card" th:data-performance-id="${ranking.id}">
+                <!-- 카드 번호 -->
                     <div class="card-number" th:text="${iterStat.index + 1}">1</div>
                     <!-- 공연 이미지 -->
                     <img th:src="${ranking.imageMain}" alt="공연 이미지">
@@ -116,6 +126,30 @@
         <!-- 공연 정보가 없을 때 -->
         <div th:if="${rankingData == null}">
             <p>공연 정보가 없습니다.</p>
+        </div>
+    </div>
+
+
+
+
+
+    <!-- 전체 공연 목록 -->
+    <div class="all-performances">
+        <div class="all-performances-title">전체 공연 목록</div>
+        <div class="all-performances-items" th:if="${allPerformances != null}">
+            <div th:each="performance : ${allPerformances}">
+                <div class="card" th:data-performance-id="${performance.id}">
+                    <img th:src="${performance.imageMain}" alt="공연 이미지">
+                    <div class="performance-info">
+                        <div class="performance-title" th:text="${performance.title}">공연명</div>
+                        <div class="performance-location" th:text="${performance.location}">공연장소</div>
+                        <div class="performance-date" th:text="${performance.formattedDate}">공연날짜</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div th:if="${allPerformances == null}">
+            <p>전체 공연 정보가 없습니다.</p>
         </div>
     </div>
 </div>
