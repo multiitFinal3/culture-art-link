@@ -14,5 +14,6 @@ public interface ExhibitionCommentDao {
     List<ExhibitionCommentDto> getComment(ExhibitionCommentDto data);
     void createComment(ExhibitionCommentDto data);
     void deleteComment(ExhibitionCommentDto data);
+    double getAverageRating(int exhibitionId);
 
 }

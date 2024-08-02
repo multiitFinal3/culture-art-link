@@ -29,4 +29,7 @@ public class ExhibitionCommentService {
     public void deleteComment(ExhibitionCommentDto data) {
         ExhibitionCommentDao.deleteComment(data);
     }
+    public double getAverageRating(int exhibitionId){
+        return ExhibitionCommentDao.getAverageRating(exhibitionId);
+    };
 }

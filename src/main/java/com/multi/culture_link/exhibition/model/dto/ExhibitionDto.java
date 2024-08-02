@@ -7,4 +7,5 @@ import lombok.Data;
 @Data
 public class ExhibitionDto extends ExhibitionApiDto {
     public String state;
+    public int starsAVG;
 }

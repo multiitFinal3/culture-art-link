@@ -40,7 +40,7 @@ public class ExhibitionController {
     private final ExhibitionService exhibitionService;
     private final ExhibitionCommentService exhibitionCommentService;
     private final ExhibitionAnalyzeService exhibitionAnalyzeService;
-    private final YoutubeConfig youtubeConfig;
+
 
     
     // 상세 검색
@@ -199,58 +199,20 @@ public class ExhibitionController {
     }
 
 
-
-//    @PostMapping("/exhibitionYoutube")
-//    public String findFestivalYoutube(
-//            @RequestParam("title") String title
-//    ) {
-//        String youtubeId = null;
-//
-//        try {
-//            youtubeId = ExhibitionService.findExhibitionYoutube(title);
-//            System.out.println("유튜브 아이디 : " + youtubeId);
-//
-//        } catch (Exception e) {
-//            throw new RuntimeException(e);
-//        }
-//        return youtubeId;
-//    }
-
     @PostMapping("/videos")
     public List<Video> getVideos(@RequestParam String query) {
 //        String query = title + " " + museum;
-        List<Video> videos = crawlYouTubeVideos(query);
+        List<Video> videos = exhibitionService.crawlYouTubeVideos(query);
         return videos.subList(0, Math.min(videos.size(), 2)); // 최대 2개의 비디오만 반환
     }
 
-    private List<Video> crawlYouTubeVideos(String query) {
-        List<Video> videos = new ArrayList<>();
-        try {
-            String apiKey = youtubeConfig.getApiKey();
-            String url = "https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=2&order=relevance&q=" + query + "&type=video&key=" + apiKey;
+    @PostMapping("/exhibition/{exhibitionId}/rating")
+    public double getAverageRating(
+            @PathVariable int exhibitionId
+     ) {
+        return exhibitionCommentService.getAverageRating(exhibitionId);
+    };
 
 
-            RestTemplate restTemplate = new RestTemplate();
-            String response = restTemplate.getForObject(url, String.class);
-
-            JSONObject jsonObject = new JSONObject(response);
-            JSONArray items = jsonObject.getJSONArray("items");
-
-            for (int i = 0; i < items.length(); i++) {
-                JSONObject item = items.getJSONObject(i);
-                JSONObject snippet = item.getJSONObject("snippet");
-
-                String title = snippet.getString("title");
-                String videoId = item.getJSONObject("id").getString("videoId");
-                String link = "https://www.youtube.com/watch?v=" + videoId;
-                String thumbnailUrl = snippet.getJSONObject("thumbnails").getJSONObject("medium").getString("url");
-
-                videos.add(new Video(title, link, thumbnailUrl));
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return videos;
-    }
 
 }

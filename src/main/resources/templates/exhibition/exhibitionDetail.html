@@ -36,6 +36,8 @@
             <div class="exhibition-info">
                 <p id="exhibitionMuseum"></p>
                 <p id="exhibitionDate"></p>
+                <p id="exhibitionRating">★ <span id="averageRating"></span></p>
+
             </div>
         </header>
         <div class="map-section">
@@ -87,7 +89,7 @@
         <div id="reviewsContainer">
 
         </div>
-
+        <div id="reviewPagination" class="pagination"></div>
         <div class="display-flex">
             <div style="float: left">
                 후기 작성하기
@@ -100,9 +102,7 @@
                     <span class="star" data-value="4"></span>
                     <span class="star" data-value="5"></span>
                 </div>
-                <textarea id="commentTextarea" placeholder="후기를 입력해주세요.">
-
-                </textarea>
+                <textarea id="commentTextarea" placeholder="후기를 입력해주세요."></textarea>
             </div>
             <div>
                 <button id="saveCommentBtn" style="float:right">확인</button>
@@ -115,16 +115,20 @@
             <div id="artworkAnalyzeContainer">
                 <!-- 개별 분석들이 여기에 동적으로 삽입됩니다 -->
             </div>
-
+            <div id="analyzePagination" class="pagination"></div>
             <div class="display-flex">
                 <div style="float: left">
                     분석 작성하기
                 </div>
                 <div>
-                    <input id="artworkTextarea" placeholder="작품의 제목을 작성해 주세요.">
+                    <input id="artworkTextarea" placeholder="작품명">
                     <textarea id="analyzeTextarea" placeholder="작품에 대한 개인적인 분석을 입력해주세요."></textarea>
                     <input type="file" id="imageInput" accept="image/*" style="display: none;">
                     <button id="imageUploadBtn">이미지 첨부</button>
+                    <div id="imagePreview" style="display: none; margin-top: 10px;">
+                        <img id="previewImage" src="" alt="이미지 미리보기" style="max-width: 200px; max-height: 200px;">
+                        <button id="removeImageBtn">이미지 제거</button>
+                    </div>
                 </div>
                 <div>
                     <button id="saveAnalyzeBtn" style="float:right">확인</button>
