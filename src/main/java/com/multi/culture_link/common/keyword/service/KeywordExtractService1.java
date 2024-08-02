@@ -21,11 +21,9 @@ import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
-import org.apache.lucene.queryparser.classic.QueryParser;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.store.ByteBuffersDirectory;
 import org.apache.lucene.store.Directory;
-import org.deeplearning4j.bagofwords.vectorizer.TfidfVectorizer;
 import org.deeplearning4j.models.word2vec.Word2Vec;
 import org.deeplearning4j.text.sentenceiterator.CollectionSentenceIterator;
 import org.deeplearning4j.text.tokenization.tokenizer.DefaultTokenizer;
@@ -411,26 +409,17 @@ public class KeywordExtractService1 {
 		// 특정 단어의 유사도 벡터를 만드는 Word2Vec 설정.
 		Word2Vec word2Vec = new Word2Vec.Builder()
 				.minWordFrequency(1) // 최소 한번이라도 등장한 단어는 모두 학습
-				.layerSize(100) // 각 단어는 100차원의 벡터로 표현 [0,12, 0.1.....]
+				.layerSize(5) // 각 단어는 100차원의 벡터로 표현 [0,12, 0.1.....]
 				.seed(42) // 랜덤 시드 결정으로 랜덤하지 않고 결과가 재현됨을 의미
 				.windowSize(5) // 컨텍스트 윈도우 크기로 좌우 5개의 단어를 고려해 관계를 학습함
 				.iterate(collectionSentenceIterator) // 하나의 작품당 이터레이트하며 학습
 				.tokenizerFactory(komoranFactory) // 코모란으로 명사만 분석
 				.build(); // 빌드
 		
-		word2Vec.fit(); // 학습
+		word2Vec.fit();// 학습
+		
 		
 		// TfidfVectorizer
-		TfidfVectorizer tfidfVectorizer = new TfidfVectorizer.Builder()
-				.setMinWordFrequency(1)
-				.setIterator(collectionSentenceIterator)
-				.setTokenizerFactory(komoranFactory)
-				.build();
-		
-		tfidfVectorizer.fit();
-		
-		INDArray tfidfVector = tfidfVectorizer.transform(allContentList);
-		
 		
 		// 아파치루신의 그냥 분석기는 한글을 인식 못해 아파치 루신의 한국어 분석기 이용
 		KoreanAnalyzer koreanAnalyzer = new KoreanAnalyzer();
@@ -460,50 +449,80 @@ public class KeywordExtractService1 {
 		// 각각 작품의 순서대로 tf-id, word2vec, combined vec 각각 추출
 		for (int i = 0; i < allContentList.size(); i++) {
 			
+			System.out.println(i + "번째 컨텐트");
 			// 해당 스트링을 추출
 			String content = allContentList.get(i);
 			
 			// 특수문자 제거 : ^ 반대의 경우, \\s : 공백 스페이스 탭 줄바꿈 등
 			content = content.replaceAll("[^a-zA-Z0-9가-힣\\s]", " ");
 			
-			// + 같은 특수문자 한번 더 제거
-			String escapedString = QueryParser.escape(content);
-			
-			
 			// 두 벡터를 합한 결과인 결합 벡터 맵을 선언
 			Map<String, INDArray> combinedVectors = new HashMap<>();
 			
-			String[] terms = content.split("\\s+");
+			
+			TokenizerFactory tf = komoranFactory;
+			ArrayList<String> list = (ArrayList<String>) tf.create(allContentList.get(i)).getTokens();
+			System.out.println(i + "번째 토큰 리스트 : " + list);
+			
+			
+			// tf-id 구하기
+			
+			int allWordsCount = list.size();
+			int allDocuCount = allContentList.size();
+			
+			
+			Map<String, Integer> map = new HashMap<String, Integer>();
 			
 			// 각각 단어에 대한 값을 구함
-			for (int k = 0; k < terms.length; k++) {
+			for (String term : list) {
 				
-				String term = terms[k];
-				
-				
-				if (!word2Vec.hasWord(term)) {
-					
-					continue;
-					
-				}
-				
-				
-				// word2vector 구하기
-				INDArray wordVector = word2Vec.getWordVectorMatrix(term);
-				
-				// word2vector의 차원에 맞게 tfidf의 벡터의 차원을 맞춤(tf-idf는 각 단어당 하나의 숫자값임). ex) [0.12, 0.12...]
-				INDArray tfidVector = Nd4j.valueArrayOf(wordVector.shape(), tfidfVector.getDouble(k));
-				
-				// 두 벡터를 합함(TF-IDF 기반 키워드 추출에서의 의미적 요소 반영을 위한 결합벡터 제안 논문 참고함)
-				INDArray combinedVector = wordVector.add(tfidVector);
-				
-				// 맵에 넣음
-				combinedVectors.put(terms[k], combinedVector);
-				
+				map.put(term, map.getOrDefault(term, 0) + 1);
 				
 			}
 			
-			// 키워드와 점수 맵을 반환 :
+			
+			// 각각 단어에 대한 값을 구함
+			for (String term : map.keySet()) {
+				
+				System.out.println("term : " + term);
+				
+				// word2vector 구하기
+				INDArray wordVector = word2Vec.getWordVectorMatrix(term);
+				System.out.println("wordVector : " + wordVector);
+				
+				// word2vector의 차원에 맞게 tfidf의 벡터의 차원을 맞춤(tf-idf는 각 단어당 하나의 숫자값임). ex) [0.12, 0.12...]
+				int freq = 0;
+				freq = map.get(term);
+				
+				int includeWordDocuCount = 0;
+				
+				for (String content2 : allContentList) {
+					
+					if (content2.contains(term)) {
+						includeWordDocuCount++;
+					}
+				}
+				
+				System.out.println("term : " + term + " freq : " + freq + " allWordsCount : " + allWordsCount + " allDocuCount : " + allDocuCount + " includeWordDocuCount : " + includeWordDocuCount);
+				
+				double tfIdf = ((double) freq / allWordsCount) * Math.log10((double) (allDocuCount / (includeWordDocuCount)));
+				System.out.println("tfIdf는 : " + tfIdf);
+				
+				INDArray tfidVector = Nd4j.valueArrayOf(wordVector.shape(), tfIdf);
+				System.out.println("tfidVector : " + tfidVector);
+				
+				// 두 벡터를 합함(TF-IDF 기반 키워드 추출에서의 의미적 요소 반영을 위한 결합벡터 제안 논문 참고함)
+				INDArray combinedVector = wordVector.mul(tfidVector);
+				
+				// 맵에 넣음
+				combinedVectors.put((String) term, combinedVector);
+				
+				System.out.println();
+				
+			}
+			
+			
+			// 키워드와 점수 맵을 반환 : 각 벡터의 원소를 제곱해서 더하고 루트를 한 값을 반환
 			Map<String, Double> normScore = new HashMap<>();
 			
 			for (Map.Entry<String, INDArray> entry : combinedVectors.entrySet()) {
@@ -521,21 +540,21 @@ public class KeywordExtractService1 {
 					.limit(10)
 					.collect(Collectors.toList());
 			
-			ArrayList<String> list = new ArrayList<>();
+			ArrayList<String> list2 = new ArrayList<>();
 			
 			// 각각 순서별 키워드의 값과 점수를 콘솔에 표시
 			System.out.println("[content index " + i + "th keyword : combined value]");
 			for (Map.Entry<String, Double> entry : sortedList) {
 				
 				System.out.println(entry.getKey() + " : " + entry.getValue());
-				list.add(entry.getKey().replace(".", "").trim());
-				;
+				list2.add(entry.getKey().replace(".", "").trim());
+				
 				
 			}
 			
 			System.out.println();
 			
-			returnMap.put(i, list);
+			returnMap.put(i, list2);
 			
 		}
 		
@@ -621,24 +640,7 @@ public class KeywordExtractService1 {
 		word2Vec.fit();// 학습
 		
 		
-		
-		
-		
 		// TfidfVectorizer
-		TfidfVectorizer tfidfVectorizer = new TfidfVectorizer.Builder()
-				.setMinWordFrequency(1)
-				.setIterator(collectionSentenceIterator)
-				.setTokenizerFactory(komoranFactory)
-				.build();
-		
-		tfidfVectorizer.fit();
-		tfidfVectorizer.transform(allContentList);
-		
-		
-		System.out.println("tfidfVectorizer.getVocabCache() : " + tfidfVectorizer.getVocabCache().words().toString());
-		
-		INDArray tfidfScores = tfidfVectorizer.transform(allContentList);
-		System.out.println("tfidfScores" + tfidfScores);
 		
 		// 아파치루신의 그냥 분석기는 한글을 인식 못해 아파치 루신의 한국어 분석기 이용
 		KoreanAnalyzer koreanAnalyzer = new KoreanAnalyzer();
@@ -677,35 +679,61 @@ public class KeywordExtractService1 {
 			
 			// 두 벡터를 합한 결과인 결합 벡터 맵을 선언
 			Map<String, INDArray> combinedVectors = new HashMap<>();
-
-
+			
+			
 			TokenizerFactory tf = komoranFactory;
 			ArrayList<String> list = (ArrayList<String>) tf.create(allContentList.get(i)).getTokens();
 			System.out.println(i + "번째 토큰 리스트 : " + list);
-	
+			
+			
+			// tf-id 구하기
+			
+			int allWordsCount = list.size();
+			int allDocuCount = allContentList.size();
+			
+			
+			Map<String, Integer> map = new HashMap<String, Integer>();
+			
 			// 각각 단어에 대한 값을 구함
 			for (String term : list) {
 				
+				map.put(term, map.getOrDefault(term, 0) + 1);
+				
+			}
+			
+			
+			// 각각 단어에 대한 값을 구함
+			for (String term : map.keySet()) {
+				
 				System.out.println("term : " + term);
-				
-				int tfIndex = tfidfVectorizer.getVocabCache().indexOf(term);
-				
-				if (tfIndex < 0) {
-					continue;
-				}
-				
-				System.out.println("tfIndex : " + tfIndex);
 				
 				// word2vector 구하기
 				INDArray wordVector = word2Vec.getWordVectorMatrix(term);
 				System.out.println("wordVector : " + wordVector);
 				
 				// word2vector의 차원에 맞게 tfidf의 벡터의 차원을 맞춤(tf-idf는 각 단어당 하나의 숫자값임). ex) [0.12, 0.12...]
-				INDArray tfidVector = Nd4j.valueArrayOf(wordVector.shape(), tfidfScores.getDouble(tfIndex));
+				int freq = 0;
+				freq = map.get(term);
+				
+				int includeWordDocuCount = 0;
+				
+				for (String content2 : allContentList) {
+					
+					if (content2.contains(term)) {
+						includeWordDocuCount++;
+					}
+				}
+				
+				System.out.println("term : " + term + " freq : " + freq + " allWordsCount : " + allWordsCount + " allDocuCount : " + allDocuCount + " includeWordDocuCount : " + includeWordDocuCount);
+				
+				double tfIdf = ((double) freq / allWordsCount) * Math.log10((double) (allDocuCount / (includeWordDocuCount)));
+				System.out.println("tfIdf는 : " + tfIdf);
+				
+				INDArray tfidVector = Nd4j.valueArrayOf(wordVector.shape(), tfIdf);
 				System.out.println("tfidVector : " + tfidVector);
 				
 				// 두 벡터를 합함(TF-IDF 기반 키워드 추출에서의 의미적 요소 반영을 위한 결합벡터 제안 논문 참고함)
-				INDArray combinedVector = wordVector.add(tfidVector);
+				INDArray combinedVector = wordVector.mul(tfidVector);
 				
 				// 맵에 넣음
 				combinedVectors.put((String) term, combinedVector);
@@ -714,7 +742,8 @@ public class KeywordExtractService1 {
 				
 			}
 			
-			// 키워드와 점수 맵을 반환 :
+			
+			// 키워드와 점수 맵을 반환 : 각 벡터의 원소를 제곱해서 더하고 루트를 한 값을 반환
 			Map<String, Double> normScore = new HashMap<>();
 			
 			for (Map.Entry<String, INDArray> entry : combinedVectors.entrySet()) {
