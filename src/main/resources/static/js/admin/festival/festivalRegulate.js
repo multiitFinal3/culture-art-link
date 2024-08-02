@@ -267,34 +267,32 @@ $(document).ready(
             })
 
         })
-//
-//
-//
-//       /**
-//       * 선택한 DB 축제 관련 네이버 블로그에 해당하는 키워드 추가 기능
-//       */
-//        $(document).on('click','.naverBlogKeywordInsertBtn', function(){
-//
-//            var festivalId = $(this).val();
-//
-//            $.ajax({
-//
-//                url: '/admin/festival-regulate/insertNaverBlogKeywordByFestivalId?festivalId=' + festivalId,
-//                method: 'POST',
-//                contentType: 'application/json',
-//                success: function(list){
-//
-//                    alert("네이버 블로그 키워드 : " + list + ". 키워드 삽입 성공!")
-//
-//
-//                }
-//
-//
-//            })
-//
-//        })
-//
-//
+
+       /**
+       * 선택한 DB 축제 관련 네이버 블로그에 해당하는 키워드 추가 기능
+       */
+        $(document).on('click','.naverBlogKeywordInsertBtn', function(){
+
+            var festivalId = $(this).val();
+
+            $.ajax({
+
+                url: '/admin/festival-regulate/insertNaverBlogKeywordByFestivalId?festivalId=' + festivalId,
+                method: 'POST',
+                contentType: 'application/json',
+                success: function(list){
+
+                    alert("네이버 블로그 키워드 : " + list + ". 키워드 삽입 성공!")
+
+
+                }
+
+
+            })
+
+        })
+
+
 //
 //
 //       /**

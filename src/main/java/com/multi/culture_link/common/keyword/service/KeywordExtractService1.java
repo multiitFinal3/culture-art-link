@@ -733,7 +733,18 @@ public class KeywordExtractService1 {
 				System.out.println("tfidVector : " + tfidVector);
 				
 				// 두 벡터를 합함(TF-IDF 기반 키워드 추출에서의 의미적 요소 반영을 위한 결합벡터 제안 논문 참고함)
-				INDArray combinedVector = wordVector.mul(tfidVector);
+				
+				INDArray combinedVector = null;
+				
+				if (tfIdf <= 0) {
+					
+					combinedVector = wordVector;
+					
+				} else {
+					
+					combinedVector = wordVector.mul(tfidVector);
+				}
+				
 				
 				// 맵에 넣음
 				combinedVectors.put((String) term, combinedVector);

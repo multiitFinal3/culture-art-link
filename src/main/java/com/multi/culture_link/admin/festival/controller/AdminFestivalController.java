@@ -1143,4 +1143,20 @@ public class AdminFestivalController {
 		
 		
 	}
+	
+	
+	@PostMapping
+	@ResponseBody
+	public ArrayList<String> insertNaverBlogKeywordByFestivalId(){
+		
+		
+		
+		return null;
+	}
+	
+	
+	
+	
+	
+	
 }
