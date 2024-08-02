@@ -227,7 +227,9 @@ public class ExhibitionController {
         List<Video> videos = new ArrayList<>();
         try {
             String apiKey = youtubeConfig.getApiKey();
-            String url = "https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=2&q=" + query + "&type=video&key=" + apiKey;
+            String url = "https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=2&order=relevance&q=" + query + "&type=video&key=" + apiKey;
+
+
             RestTemplate restTemplate = new RestTemplate();
             String response = restTemplate.getForObject(url, String.class);
 
