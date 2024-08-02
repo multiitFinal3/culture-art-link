@@ -27,6 +27,7 @@ public class PerformanceController {
     private final PerformanceRankingService performanceRankingService;
     private final PerformanceLocationService performanceLocationService;
 
+
     private final PerformanceDBService performanceDBService;
 
 
@@ -37,6 +38,8 @@ public class PerformanceController {
         this.performanceLocationService = performanceLocationService;
         this.performanceDBService = performanceDBService;
 
+
+   
     }
 
     /**
@@ -165,6 +168,8 @@ public class PerformanceController {
 
 
 
+
+
     @GetMapping("/performanceLocation")
     public String performanceLocationPage(@AuthenticationPrincipal VWUserRoleDTO user,
                                           @RequestParam(required = false) String locationCode,
@@ -181,6 +186,7 @@ public class PerformanceController {
 
         return "/performance/performanceLocation";
     }
+
 
 
 

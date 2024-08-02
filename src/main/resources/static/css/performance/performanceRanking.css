@@ -248,10 +248,13 @@ body {
     justify-content: center; /* 카드 간의 간격 조정 */
     gap: 10px; /* 카드 사이 간격 */
     padding: 0 5px; /* 카드 양옆에 패딩 추가 */
+
 }
 
 .location-card {
     width: 249px; /* 카드 너비 고정 */
+    height: 332px; /* 카드 높이 고정 */
+
     background: white;
     border: 1px solid #D9D9D9;
     border-radius: 8px;
@@ -267,6 +270,16 @@ body {
     height: 249px; /* 이미지 높이를 카드 높이에 맞춤 */
     object-fit: cover; /* 이미지 비율 유지하며 크기 조정 */
     border-radius: 8px 8px 0 0; /* 이미지 경계선을 둥글게 */
+    position: relative;
+    margin:  10px; /* 카드 간의 간격 추가 */
+}
+
+/* 카드 이미지 스타일 */
+.location-image {
+    width: 100%; /* 이미지 너비를 카드 너비에 맞춤 */
+    height: 332px; /* 이미지 높이 고정 */
+    border-radius: 8px 8px 0 0; /* 이미지 경계선을 둥글게 */
+    object-fit: cover; /* 이미지 비율 유지하며 크기 조정 */
 }
 
 /* 공연 정보 스타일 */
