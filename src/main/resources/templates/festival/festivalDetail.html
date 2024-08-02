@@ -1069,17 +1069,18 @@
 
             /**
             * 해당 축제의 이름과 관련된 네이버 기사를 페이지 번호에 따라 가져오기
-            * @param {string} festivalName 축제 이름
+            * @param {string} festival 축제
             * @param {int} page 유튜브 페이지
             */
-            function findFestivalNaverArticle(page, festival){
+            function findFestivalNaverArticle(page, festivalId){
 
                 $.ajax({
 
                     url: '/festival/findFestivalNaverArticle',
                     method: 'POST',
                     data: {
-                        festival: festival
+                        festivalId: festivalId,
+                        page: page
                     },
                     success: function(article){
 
@@ -1127,7 +1128,7 @@
                 })
             }
 
-            findFestivalNaverArticle(1, formattedStart, festivalName);
+            findFestivalNaverArticle(1, festivalId);
 
             /**
             * 기사 페이지 버튼 추가
@@ -1154,7 +1155,7 @@
             $(document).on('click','.articleBtn', function(){
 
                 var page = $(this).text();
-                findFestivalNaverArticle(page, formattedStart, festivalName);
+                findFestivalNaverArticle(page, festivalId);
 
             })
 
