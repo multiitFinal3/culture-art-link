@@ -208,7 +208,7 @@ public class FestivalController {
 			festivalService.deleteUserLoveFestival(userMap1);
 			
 			// 뷰 생성으로 인해 키워드 처리는 전부 뷰에서 자동으로 생성 및 차감 됨
-			
+
 //			ArrayList<FestivalKeywordDTO> keyList = festivalService.findFestivalKeywordByFestivalId(festivalId);
 //
 //			ArrayList<FestivalKeywordDTO> list = new ArrayList<FestivalKeywordDTO>();
@@ -266,14 +266,14 @@ public class FestivalController {
 		map1.setUserId(userId);
 		map1.setSortCode(sortCode);
 		map1.setFestivalId(festivalId);
-		
+
 //		ArrayList<FestivalKeywordDTO> keywordList = null;
 		
 		try {
 			
 			festivalService.insertUserHateFestival(map1);
-			
-			
+
+
 //			keywordList = festivalService.findFestivalKeywordByFestivalId(festivalId);
 //
 //			ArrayList<FestivalKeywordDTO> list = new ArrayList<FestivalKeywordDTO>();
@@ -370,7 +370,7 @@ public class FestivalController {
 			userMap1.setFestivalId(festivalId);
 			userMap1.setSortCode(sortCode);
 			festivalService.deleteUserLoveFestival(userMap1);
-			
+
 //			ArrayList<FestivalKeywordDTO> keyList = festivalService.findFestivalKeywordByFestivalId(festivalId);
 //
 //			ArrayList<FestivalKeywordDTO> list = new ArrayList<FestivalKeywordDTO>();
@@ -742,11 +742,9 @@ public class FestivalController {
 	}
 	
 	
-	
-	
-	
 	/**
 	 * 관련된 페스티벌 이름으로 유튜브 영상을 검색
+	 *
 	 * @param page
 	 * @param festivalName
 	 * @return
@@ -769,10 +767,9 @@ public class FestivalController {
 	}
 	
 	
-	
-	
 	/**
 	 * 관련된 페스티벌 이름으로 네이버 기사를 검색
+	 *
 	 * @param page
 	 * @param festivalId
 	 * @return
@@ -806,9 +803,9 @@ public class FestivalController {
 	}
 	
 	
-	
 	/**
 	 * 관련된 페스티벌 이름으로 네이버 블로그를 검색
+	 *
 	 * @param page
 	 * @param festivalName
 	 * @return
@@ -839,6 +836,7 @@ public class FestivalController {
 	
 	/**
 	 * 축제의 리뷰 키워드를 반환
+	 *
 	 * @param festivalId
 	 * @return
 	 */
@@ -863,6 +861,7 @@ public class FestivalController {
 	
 	/**
 	 * 축제의 네이버 기사 키워드를 반환
+	 *
 	 * @param festivalId
 	 * @return
 	 */
@@ -887,6 +886,7 @@ public class FestivalController {
 	
 	/**
 	 * 축제의 네이버 블로그 키워드를 반환
+	 *
 	 * @param festivalId
 	 * @return
 	 */
@@ -908,9 +908,34 @@ public class FestivalController {
 		
 	}
 	
-	
-	
-	
+	/**
+	 * vw_festival_keyword_tf_idf 테이블에서 tf_idf가 높은 순서대로 반환
+	 *
+	 * @param page
+	 * @return
+	 */
+	@PostMapping("/findPopularFestivalKeyword")
+	@ResponseBody
+	public ArrayList<FestivalContentReviewNaverKeywordMapDTO> findPopularFestivalKeyword(@RequestParam("page") int page) {
+		
+		System.out.println("들어롬");
+		ArrayList<FestivalContentReviewNaverKeywordMapDTO> list = null;
+		PageDTO pageDTO = new PageDTO();
+		pageDTO.setStartEnd(page);
+		pageDTO.setStart(1);
+		FestivalContentReviewNaverKeywordMapDTO mapDTO = new FestivalContentReviewNaverKeywordMapDTO();
+		mapDTO.setPageDTO(pageDTO);
+		try {
+			list = festivalService.findPopularFestivalKeyword(mapDTO);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+		
+		System.out.println("findPopularFestivalKeyword : " + list);
+		
+		return list;
+		
+	}
 	
 	
 }

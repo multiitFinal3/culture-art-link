@@ -34,7 +34,6 @@
                             $('#regionId').html("");
 
                             $.each(list, function(index, region){
-                                console.log(region);
                                 var htmlContent = `<option value="${region.regionId}">${region.regionName}</option>`;
                                 $('#regionId').append(htmlContent);
 
@@ -49,12 +48,61 @@
                 findAllRegion();
 
 
+                //#endregion
+
+
+                //#region 선호도 입력 부분
+
+
+                 /**
+                 * 축제 키워드를 tf_idf가 높은 순으로 5개씩 가져옴
+                 *
+                 */
+                function findPopularFestivalKeyword(page){
+
+                    $.ajax({
+
+                        url: '/festival/findPopularFestivalKeyword?page='+page,
+                        method: 'POST',
+                        contentType: 'application/json',
+                        success: function(list){
+                            console.log("findPopularFestivalKeyword")
+                            console.log(list);
+                            $('#festivalKeywordBtns').html("");
+
+                            $.each(list, function(index, keyword){
+
+                                var htmlContent = `<button value="${keyword.festivalKeywordId}">${keyword.festivalKeywordId}</button>`;
+
+                                $('#festivalKeywordBtns').append(htmlContent);
+
+                            })
+
+                        }
+
+                    })
+
+                }
+
+                findPopularFestivalKeyword(1);
 
 
 
+                /**
+                * 축제 키워드 추가 버튼
+                *
+                */
+                $(document).on('click','#addFestivalKeyword', function(){
+                    event.preventDefault();
+                    var page = parseInt($(this).val());
+                    page = page + 1;
+                    $(this).val(page);
+                    findPopularFestivalKeyword(page);
+
+                })
 
 
-
+                //#endregion
 
 
             }
@@ -96,6 +144,23 @@
                     <option value="여">여</option>
                 </select>
                 지역 <select name="regionId" id="regionId" class="rounded" style="width:100px;"></select><br>
+
+                <div id="festivalKeywordZone">
+
+                    <input type="hidden" id="festivalSelectKeyword" name="festivalSelectKeyword" value="0">
+
+                    <div id="festivalKeywordBtns">
+
+                    </div>
+
+                    <button id="addFestivalKeyword" value="1">축제 키워드 추가</button>
+
+
+                </div>
+
+
+
+
 
 
 

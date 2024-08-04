@@ -647,7 +647,7 @@ public class FestivalServiceImpl implements FestivalService {
 			for (FestivalContentReviewNaverKeywordMapDTO map : festivalIdList1) {
 				
 				int festivalId = map.getFestivalId();
-				if (!(festivalIdList.contains(festivalId)) && (festivalId!=mapDTO.getFestivalId())) {
+				if (!(festivalIdList.contains(festivalId)) && (festivalId != mapDTO.getFestivalId())) {
 					festivalIdList.add(festivalId);
 				}
 				
@@ -658,7 +658,7 @@ public class FestivalServiceImpl implements FestivalService {
 		
 		ArrayList<FestivalDTO> list = new ArrayList<>();
 		
-		for (int i : festivalIdList){
+		for (int i : festivalIdList) {
 			
 			FestivalDTO festivalDTO = adminFestivalMapper.findDBFestivalByFestivalId(i);
 			list.add(festivalDTO);
@@ -669,9 +669,11 @@ public class FestivalServiceImpl implements FestivalService {
 		
 	}
 	
-	
-	
-	
+	@Override
+	public ArrayList<FestivalContentReviewNaverKeywordMapDTO> findPopularFestivalKeyword(FestivalContentReviewNaverKeywordMapDTO mapDTO) throws Exception {
+		ArrayList<FestivalContentReviewNaverKeywordMapDTO> list = festivalMapper.findPopularFestivalKeyword(mapDTO);
+		return list;
+	}
 	
 	
 }

@@ -53,4 +53,6 @@ public interface FestivalService {
 	NaverBlogDTO findFestivalNaverBlog(FestivalDTO festivalDTO) throws Exception;
 	
 	ArrayList<FestivalDTO> findSameKeywordFestivalByfestivalId(FestivalContentReviewNaverKeywordMapDTO mapDTO) throws Exception;
+	
+	ArrayList<FestivalContentReviewNaverKeywordMapDTO> findPopularFestivalKeyword(FestivalContentReviewNaverKeywordMapDTO mapDTO) throws Exception;
 }

@@ -39,8 +39,8 @@
         UPDATE user_festival_love_hate_keyword_mapping
         SET festival_count = #{festivalCount}
         WHERE user_id = #{userId} AND
-              sort_code = #{sortCode} AND
-              festival_keyword_id = #{festivalKeywordId};
+        sort_code = #{sortCode} AND
+        festival_keyword_id = #{festivalKeywordId};
 
     </update>
 
@@ -91,23 +91,23 @@
 
         <where>
 
-        <if test="festivalId !=null and festivalId!=0">
+            <if test="festivalId !=null and festivalId!=0">
 
-            AND festival_id = #{festivalId}
+                AND festival_id = #{festivalId}
 
-        </if>
+            </if>
 
-        <if test="sortCode !=null and !sortCode.equals('')">
+            <if test="sortCode !=null and !sortCode.equals('')">
 
-            AND sort_code = #{sortCode}
+                AND sort_code = #{sortCode}
 
-        </if>
+            </if>
 
-        <if test="festivalKeywordId !=null and !festivalKeywordId.equals('')">
+            <if test="festivalKeywordId !=null and !festivalKeywordId.equals('')">
 
-            AND festival_keyword_id = #{festivalKeywordId}
+                AND festival_keyword_id = #{festivalKeywordId}
 
-        </if>
+            </if>
 
         </where>
 
@@ -118,8 +118,8 @@
 
         SELECT * FROM time t
         WHERE t.time_id = (
-            SELECT f.time_id FROM festival f
-            WHERE f.festival_id = #{festivalId}
+        SELECT f.time_id FROM festival f
+        WHERE f.festival_id = #{festivalId}
         );
 
     </select>
@@ -128,9 +128,9 @@
 
         SELECT * FROM (
 
-            SELECT ROW_NUMBER() OVER (ORDER BY festival_review_id DESC) AS rownum, urd.*
-            FROM vw_festival_user_review_data urd
-        
+        SELECT ROW_NUMBER() OVER (ORDER BY festival_review_id DESC) AS rownum, urd.*
+        FROM vw_festival_user_review_data urd
+
         ) f1
 
         WHERE f1.festival_id = #{festivalId}
@@ -165,7 +165,7 @@
 
         UPDATE festival_review
         SET festival_review_star = #{festivalReviewStar},
-            festival_review_content = #{festivalReviewContent}
+        festival_review_content = #{festivalReviewContent}
         WHERE festival_review_id = #{festivalReviewId};
 
     </update>
@@ -191,6 +191,19 @@
         SELECT * FROM festival
         WHERE manage_institution = #{manageInstitution}
         AND festival_id != #{festivalId};
+
+    </select>
+
+    <select id="findPopularFestivalKeyword" parameterType="festivalContentReviewNaverKeywordMapping">
+
+        SELECT * FROM (
+
+        SELECT ROW_NUMBER() OVER (ORDER BY tf_idf DESC) AS rownum, topten.*
+        FROM vw_festival_keyword_tf_idf_top10_data topten
+
+        ) f1
+
+        WHERE f1.rownum BETWEEN #{pageDTO.start} AND #{pageDTO.end};
 
     </select>
 

@@ -40,7 +40,17 @@
 
     button, input, optgroup, select, textarea {
         margin: 1%;
+        min-width: 100px;
         font-family: inherit;
         font-size: inherit;
         line-height: inherit;
+    }
+
+    #festivalKeywordBtns{
+        font-size: 20px;
+        overflow-x: scroll;
+        margin: 3%;
+        text-align: center;
+        display: flex;
+
     }
