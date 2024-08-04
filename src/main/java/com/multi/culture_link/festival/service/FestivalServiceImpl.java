@@ -675,5 +675,12 @@ public class FestivalServiceImpl implements FestivalService {
 		return list;
 	}
 	
+	@Override
+	public void insertUserSelectKeyword(UserFestivalLoveHateMapDTO mapDTO) throws Exception {
+		
+		festivalMapper.insertUserSelectKeyword(mapDTO);
+		
+	}
+	
 	
 }

@@ -3,6 +3,8 @@ package com.multi.culture_link.users.controller;
 
 import com.multi.culture_link.common.region.model.dto.RegionDTO;
 import com.multi.culture_link.common.region.service.RegionService;
+import com.multi.culture_link.festival.model.dto.UserFestivalLoveHateMapDTO;
+import com.multi.culture_link.festival.service.FestivalService;
 import com.multi.culture_link.users.model.dto.UserDTO;
 import com.multi.culture_link.users.service.UserService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -25,11 +27,13 @@ public class UserController {
 	
 	
 	private final UserService userService;
+	private final FestivalService festivalService;
 	private final RegionService regionService;
 	private final BCryptPasswordEncoder bCryptPasswordEncoder;
 	
-	public UserController(UserService userService, RegionService regionService, BCryptPasswordEncoder bCryptPasswordEncoder) {
+	public UserController(UserService userService, FestivalService festivalService, RegionService regionService, BCryptPasswordEncoder bCryptPasswordEncoder) {
 		this.userService = userService;
+		this.festivalService = festivalService;
 		this.regionService = regionService;
 		this.bCryptPasswordEncoder = bCryptPasswordEncoder;
 	}
@@ -41,7 +45,7 @@ public class UserController {
 	}
 	
 	@PostMapping("/signUp")
-	public void signUpPost(@RequestParam("uploadFile") MultipartFile uploadFile, @RequestParam("userId") int userId, @RequestParam("email") String email, @RequestParam("password") String password, @RequestParam("userName") String userName, @RequestParam("tel") String tel, @RequestParam("userAge") int userAge, @RequestParam("gender") String gender, @RequestParam("regionId") int regionId) {
+	public void signUpPost(@RequestParam("uploadFile") MultipartFile uploadFile, @RequestParam("userId") int userId, @RequestParam("email") String email, @RequestParam("password") String password, @RequestParam("userName") String userName, @RequestParam("tel") String tel, @RequestParam("userAge") int userAge, @RequestParam("gender") String gender, @RequestParam("regionId") int regionId, @RequestParam("festivalSelectKeyword") String festivalSelectKeyword) {
 		
 		// 회원 users/ admin 넣는 것도 추가할 것 = > 매핑 테이블에도 조인으로 추가하기
 		int result = 0;
@@ -91,9 +95,21 @@ public class UserController {
 			
 			String encoded_pw = bCryptPasswordEncoder.encode(userDTO.getPassword());
 			userDTO.setPassword(encoded_pw);
-			
-			
 			userService.signUp(userDTO);
+			
+			String[] list = festivalSelectKeyword.trim().split(" ");
+			for (String s : list) {
+				
+				UserFestivalLoveHateMapDTO mapDTO = new UserFestivalLoveHateMapDTO();
+				mapDTO.setFestivalKeywordId(s);
+				mapDTO.setSortCode("L");
+				mapDTO.setUserId(userId);
+				mapDTO.setFestivalCount(15);
+				festivalService.insertUserSelectKeyword(mapDTO);
+				
+			}
+			
+			
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}

@@ -68,11 +68,11 @@
                         success: function(list){
                             console.log("findPopularFestivalKeyword")
                             console.log(list);
-                            $('#festivalKeywordBtns').html("");
+<!--                            $('#festivalKeywordBtns').html("");-->
 
                             $.each(list, function(index, keyword){
 
-                                var htmlContent = `<button value="${keyword.festivalKeywordId}">${keyword.festivalKeywordId}</button>`;
+                                var htmlContent = `<button value="${keyword.festivalKeywordId}" class="festivalKeywordBtn">${keyword.festivalKeywordId}</button>`;
 
                                 $('#festivalKeywordBtns').append(htmlContent);
 
@@ -98,6 +98,41 @@
                     page = page + 1;
                     $(this).val(page);
                     findPopularFestivalKeyword(page);
+
+                })
+
+
+                /**
+                * 축제 키워드 선택 시 색 변화 버튼
+                *
+                */
+                $(document).on('click','.festivalKeywordBtn', function(){
+
+                    event.preventDefault();
+
+                    if($(this).hasClass('hasLove')){
+
+                        $(this).removeClass('hasLove');
+
+                    }else{
+
+                        $(this).addClass('hasLove');
+
+                    }
+
+                    var btns = document.querySelectorAll('button.hasLove');
+
+                    var concat = '';
+
+                    btns.forEach(function(btn){
+
+                        concat += (btn.value+" ");
+
+                    })
+
+                    $('#festivalSelectKeyword').val(concat.trim());
+
+
 
                 })
 
@@ -147,7 +182,7 @@
 
                 <div id="festivalKeywordZone">
 
-                    <input type="hidden" id="festivalSelectKeyword" name="festivalSelectKeyword" value="0">
+                    <input type="hidden" id="festivalSelectKeyword" name="festivalSelectKeyword" value="">
 
                     <div id="festivalKeywordBtns">
 

@@ -208,4 +208,12 @@
     </select>
 
 
+    <insert id="insertUserSelectKeyword" parameterType="userFestivalLoveHateDTO">
+
+        INSERT INTO festival_user_love_hate_select_keyword_mapping(user_id, sort_code, festival_keyword_id, festival_count)
+        VALUES(#{userId}, #{sortCode}, #{festivalKeywordId}, #{festivalCount});
+
+    </insert>
+
+
 </mapper>

@@ -922,7 +922,7 @@ public class FestivalController {
 		ArrayList<FestivalContentReviewNaverKeywordMapDTO> list = null;
 		PageDTO pageDTO = new PageDTO();
 		pageDTO.setStartEnd(page);
-		pageDTO.setStart(1);
+//		pageDTO.setStart(1);
 		FestivalContentReviewNaverKeywordMapDTO mapDTO = new FestivalContentReviewNaverKeywordMapDTO();
 		mapDTO.setPageDTO(pageDTO);
 		try {
