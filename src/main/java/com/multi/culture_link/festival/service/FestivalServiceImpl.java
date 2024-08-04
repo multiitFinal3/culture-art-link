@@ -342,8 +342,9 @@ public class FestivalServiceImpl implements FestivalService {
 	@Override
 	public String findFestivalYoutube(int page, String formattedStart, String festivalName) throws Exception {
 		
-		
-		festivalName = formattedStart.substring(0, 4) + festivalName + " ";
+		System.out.println("findFestivalYoutube : " + festivalName);
+	
+//		festivalName = formattedStart.substring(0, 4) + festivalName + " ";
 		
 		Request request = new Request.Builder()
 				.url("https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=10&order=relevance&q=" + festivalName + "&regionCode=KR&videoDuration=any&type=video&videoEmbeddable=true" + "&key=" + youtubeKey)
@@ -356,7 +357,17 @@ public class FestivalServiceImpl implements FestivalService {
 		Response response = client.newCall(request).execute();
 		String responseBody = response.body().string();
 		JsonObject json = gson.fromJson(responseBody, JsonObject.class);
+		
+		System.out.println("json: " + json.toString());
+		
 		JsonArray items = json.getAsJsonArray("items");
+		
+		if(items==null){
+			
+			System.out.println("items is null");
+			return "noId";
+			
+		}
 		
 		JsonObject item = items.get(page - 1).getAsJsonObject();
 		

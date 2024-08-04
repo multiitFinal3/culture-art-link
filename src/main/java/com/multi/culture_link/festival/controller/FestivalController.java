@@ -81,7 +81,7 @@ public class FestivalController {
 			throw new RuntimeException(e);
 		}
 		
-		return "/festival/festivalDetail";
+		return "/festival/festivalDetailPage";
 		
 	}
 	
@@ -722,7 +722,7 @@ public class FestivalController {
 		
 		try {
 			youtubeId = festivalService.findFestivalYoutube(page, formattedStart, festivalName);
-			System.out.println("findFestivalYoutube : " + youtubeId);
+			System.out.println("findFestivalYoutube id : " + youtubeId);
 			
 		} catch (Exception e) {
 			throw new RuntimeException(e);
