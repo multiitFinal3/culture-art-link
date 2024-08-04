@@ -713,6 +713,39 @@ public class FestivalController {
 	
 	
 	/**
+	 * 같은 키워드의 축제를 추천리스트로 가져가며 본인은 제외함
+	 *
+	 * @param festivalId
+	 * @return
+	 */
+	@PostMapping("/findSameKeywordFestivalByfestivalId")
+	@ResponseBody
+	public ArrayList<FestivalDTO> findSameKeywordFestivalByfestivalId(@RequestParam("festivalId") int festivalId) {
+		
+		
+		ArrayList<FestivalDTO> list = null;
+		try {
+			
+			FestivalContentReviewNaverKeywordMapDTO mapDTO = new FestivalContentReviewNaverKeywordMapDTO();
+			mapDTO.setFestivalId(festivalId);
+			
+			list = festivalService.findSameKeywordFestivalByfestivalId(mapDTO);
+			System.out.println("findSameKeywordFestivalByfestivalId list : " + list);
+			
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+		
+		System.out.println("findSameKeywordFestivalByfestivalId : " + list);
+		
+		return list;
+	}
+	
+	
+	
+	
+	
+	/**
 	 * 관련된 페스티벌 이름으로 유튜브 영상을 검색
 	 * @param page
 	 * @param festivalName

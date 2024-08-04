@@ -3,6 +3,7 @@ package com.multi.culture_link.festival.service;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.multi.culture_link.admin.festival.model.mapper.AdminFestivalMapper;
 import com.multi.culture_link.common.time.model.dto.TimeDTO;
 import com.multi.culture_link.festival.model.dto.*;
 import com.multi.culture_link.festival.model.mapper.FestivalMapper;
@@ -25,6 +26,7 @@ import java.util.Locale;
 public class FestivalServiceImpl implements FestivalService {
 	
 	private final FestivalMapper festivalMapper;
+	private final AdminFestivalMapper adminFestivalMapper;
 	private final OkHttpClient client;
 	private final Gson gson;
 	
@@ -38,7 +40,8 @@ public class FestivalServiceImpl implements FestivalService {
 	private String XNaverClientSecret;
 	
 	
-	public FestivalServiceImpl(FestivalMapper festivalMapper, OkHttpClient client, Gson gson) {
+	public FestivalServiceImpl(FestivalMapper festivalMapper, AdminFestivalMapper adminFestivalMapper, OkHttpClient client, Gson gson) {
+		this.adminFestivalMapper = adminFestivalMapper;
 		this.festivalMapper = festivalMapper;
 		this.client = client;
 		this.gson = gson;
@@ -618,7 +621,53 @@ public class FestivalServiceImpl implements FestivalService {
 		return naverBlogDTO;
 	}
 	
-	
+	/**
+	 * 본인을 제외한 같은 키워드의 축제를 추천함
+	 *
+	 * @param mapDTO
+	 * @return
+	 * @throws Exception
+	 */
+	@Override
+	public ArrayList<FestivalDTO> findSameKeywordFestivalByfestivalId(FestivalContentReviewNaverKeywordMapDTO mapDTO) throws Exception {
+		
+		ArrayList<FestivalContentReviewNaverKeywordMapDTO> mapDTOS = festivalMapper.findKeywordListByFestivalId(mapDTO);
+		
+		ArrayList<Integer> festivalIdList = new ArrayList<>();
+		
+		for (FestivalContentReviewNaverKeywordMapDTO mapDTO1 : mapDTOS) {
+			
+			String festivalKeywordId = mapDTO1.getFestivalKeywordId();
+			System.out.println("findSameKeywordFestivalByfestivalId의 키워드 : " + festivalKeywordId);
+			FestivalContentReviewNaverKeywordMapDTO mapDTO2 = new FestivalContentReviewNaverKeywordMapDTO();
+			mapDTO2.setFestivalKeywordId(festivalKeywordId);
+			
+			ArrayList<FestivalContentReviewNaverKeywordMapDTO> festivalIdList1 = festivalMapper.findKeywordListByFestivalId(mapDTO2);
+			
+			for (FestivalContentReviewNaverKeywordMapDTO map : festivalIdList1) {
+				
+				int festivalId = map.getFestivalId();
+				if (!(festivalIdList.contains(festivalId)) && (festivalId!=mapDTO.getFestivalId())) {
+					festivalIdList.add(festivalId);
+				}
+				
+			}
+			
+			
+		}
+		
+		ArrayList<FestivalDTO> list = new ArrayList<>();
+		
+		for (int i : festivalIdList){
+			
+			FestivalDTO festivalDTO = adminFestivalMapper.findDBFestivalByFestivalId(i);
+			list.add(festivalDTO);
+			
+		}
+		
+		return list;
+		
+	}
 	
 	
 }

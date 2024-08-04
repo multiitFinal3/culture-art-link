@@ -1129,6 +1129,135 @@
 
                 })
 
+
+
+                /**
+                * 해당 축제를 제외한 같은 키워드의 축제 리스트 가져오기
+                * @param {int} festivalId 축제아이디
+                */
+                function findSameKeywordFestivalByfestivalId(festivalId){
+
+                    $.ajax({
+
+                        url: '/festival/findSameKeywordFestivalByfestivalId',
+                        method: 'POST',
+                        data: {
+                            festivalId: festivalId
+                        },
+                        success: function(list){
+
+                            $('#recommendCardList').html("");
+
+                            $.each(list, function(index, festival){
+
+                                var content = festival.festivalContent.length > 30?
+                                festival.festivalContent.substring(0,30) + "..."
+                                : festival.festivalContent;
+
+                                var inst1 = festival.manageInstitution.length > 15?
+                                festival.manageInstitution.substring(0,15) + "..."
+                                : festival.manageInstitution;
+
+                                var inst2 = festival.hostInstitution.length > 15?
+                                festival.hostInstitution.substring(0,15) + "..."
+                                : festival.hostInstitution;
+
+                                var inst3 = festival.sponserInstitution.length > 15?
+                                festival.sponserInstitution.substring(0,15) + "..."
+                                : festival.sponserInstitution;
+
+                                var start = festival.startDate.length >0?
+                                festival.startDate.substring(0,10):
+                                "없음";
+
+                                var end = festival.endDate.length >0?
+                                festival.endDate.substring(0,10):
+                                "없음";
+
+                                var firstHtml= ``;
+
+                                if(! festival.imgUrl || festival.imgUrl == "null"){
+
+                                    firstHtml = `
+                                        <div class="card recommendCard" style="width: 18rem;" id="${festival.festivalId}" value="${festival.festivalId}">
+                                            <img class="card-img-top" src="/img/festival/noPhoto.png" alt="Card image cap" style="min-width: 380px; min-height: 400px;">
+
+                                    `;
+
+                                }else{
+
+                                    firstHtml = `
+                                        <div class="card recommendCard" style="width: 18rem;" id="${festival.festivalId}" value="${festival.festivalId}">
+                                            <img class="card-img-top" src="${festival.imgUrl}" alt="Card image cap" style="min-width: 380px; min-height: 400px;">
+
+                                    `;
+
+                                }
+
+
+                                var secondHtml = `
+                                    <div class="card-body">
+                                          <h5 class="card-title">${festival.festivalName}</h5>
+                                          <p class="card-text">${content}</p>
+                                          <div>
+                                              <a href="/festival/festival-detail?festivalId=${festival.festivalId}" class="btn btn-primary">자세히</a>
+                                              <button class="btn btn-primary heart" type="button" style="margin:0px" value="${festival.festivalId}">
+                                                  <img src="/img/festival/heart.png"
+                                                       style="width : 20px; height: 20px;">
+                                              </button>
+                                              <button class="btn btn-primary hate" type="button" style="margin:0px" value="${festival.festivalId}">
+                                                    <img src="/img/festival/trash.png"
+                                                         style="width : 20px; height: 20px;">
+                                              </button>
+                                          </div>
+                                    </div>
+
+                                </div>
+                                `;
+
+
+                                var finalHtml = firstHtml + secondHtml;
+
+                                $('#recommendCardList').append(finalHtml);
+
+                                findLoveList();
+                                findHateList();
+
+
+
+                            })
+
+                        }
+
+                    })
+
+                }
+
+
+
+
+                /**
+                * 같은 키워드 추천 리스트 버튼 클릭 이벤트 함수
+                *
+                */
+                $(document).on('click','#keywordRecommend', function(){
+
+                    var festivalId = $(this).val();
+                    findSameKeywordFestivalByfestivalId(festivalId);
+
+                })
+
+
+
+
+
+
+
+
+
+
+
+
                 //#endregion
 
 
@@ -1731,8 +1860,6 @@
                         </div>
 
                         <div id="mapDiv" class="hide" style="width: 100%">
-
-                            <h3>찾아오는 길</h3>
 
                             <div id="map" style="width:100%;height:800px;"></div>
                             <script th:inline="javascript">

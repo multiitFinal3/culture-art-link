@@ -88,8 +88,28 @@
     <select id="findKeywordListByFestivalId" resultType="festivalContentReviewNaverKeywordMapping">
 
         SELECT * FROM vw_festival_keyword_tf_idf_top10_data
-        WHERE festival_id = #{festivalId}
-        AND sort_code = #{sortCode};
+
+        <where>
+
+        <if test="festivalId !=null and festivalId!=0">
+
+            AND festival_id = #{festivalId}
+
+        </if>
+
+        <if test="sortCode !=null and !sortCode.equals('')">
+
+            AND sort_code = #{sortCode}
+
+        </if>
+
+        <if test="festivalKeywordId !=null and !festivalKeywordId.equals('')">
+
+            AND festival_keyword_id = #{festivalKeywordId}
+
+        </if>
+
+        </where>
 
     </select>
 
@@ -109,7 +129,7 @@
         SELECT * FROM (
 
             SELECT ROW_NUMBER() OVER (ORDER BY festival_review_id DESC) AS rownum, urd.*
-            FROM vw_user_review_data urd
+            FROM vw_festival_user_review_data urd
         
         ) f1
 
@@ -121,7 +141,7 @@
 
     <select id="findFestivalReviewCountByVWUserReviewDTO">
 
-        SELECT COUNT(*) FROM vw_user_review_data
+        SELECT COUNT(*) FROM vw_festival_user_review_data
         WHERE festival_id = #{festivalId};
 
     </select>
