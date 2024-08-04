@@ -108,45 +108,44 @@ public class FestivalController {
 		try {
 			
 			festivalService.insertUserLoveFestival(map1);
-			
-			
-			keywordList = festivalService.findFestivalKeywordByFestivalId(festivalId);
-			
-			ArrayList<FestivalKeywordDTO> list = new ArrayList<FestivalKeywordDTO>();
-			
-			for (FestivalKeywordDTO keywordDTO : keywordList) {
-				
-				if (!list.contains(keywordDTO)) {
-					list.add(keywordDTO);
-				}
-				
-			}
-			
-			for (FestivalKeywordDTO keywordDTO : list) {
-				
-				UserFestivalLoveHateMapDTO userMap = new UserFestivalLoveHateMapDTO();
-				userMap.setUserId(userId);
-				userMap.setSortCode(sortCode);
-				userMap.setFestivalKeywordId(keywordDTO.getFestivalKeywordId());
-				
-				UserFestivalLoveHateMapDTO userMap2 = festivalService.findUserMapByUserMap(userMap);
-				
-				if (userMap2 == null) {
-					
-					userMap.setFestivalCount(1);
-					festivalService.insertUserKeywordMap(userMap);
-					
-				} else {
-					
-					int count = userMap2.getFestivalCount() + 1;
-					System.out.println("count : " + count);
-					userMap2.setFestivalCount(count);
-					System.out.println("update : " + userMap2);
-					festivalService.updateUserKeywordMap(userMap2);
-					
-				}
-				
-			}
+			// 뷰에 키워드 매핑이 자동으로 생성된다
+//			keywordList = festivalService.findFestivalKeywordByFestivalId(festivalId);
+//
+//			ArrayList<FestivalKeywordDTO> list = new ArrayList<FestivalKeywordDTO>();
+//
+//			for (FestivalKeywordDTO keywordDTO : keywordList) {
+//
+//				if (!list.contains(keywordDTO)) {
+//					list.add(keywordDTO);
+//				}
+//
+//			}
+//
+//			for (FestivalKeywordDTO keywordDTO : list) {
+//
+//				UserFestivalLoveHateMapDTO userMap = new UserFestivalLoveHateMapDTO();
+//				userMap.setUserId(userId);
+//				userMap.setSortCode(sortCode);
+//				userMap.setFestivalKeywordId(keywordDTO.getFestivalKeywordId());
+//
+//				UserFestivalLoveHateMapDTO userMap2 = festivalService.findUserMapByUserMap(userMap);
+//
+//				if (userMap2 == null) {
+//
+//					userMap.setFestivalCount(1);
+//					festivalService.insertUserKeywordMap(userMap);
+//
+//				} else {
+//
+//					int count = userMap2.getFestivalCount() + 1;
+//					System.out.println("count : " + count);
+//					userMap2.setFestivalCount(count);
+//					System.out.println("update : " + userMap2);
+//					festivalService.updateUserKeywordMap(userMap2);
+//
+//				}
+//
+//			}
 			
 			return "찜하기 및 관련 키워드 추가 성공";
 			
@@ -187,7 +186,7 @@ public class FestivalController {
 	
 	
 	/**
-	 * 찜한 목록을 삭제하고 그와 연관된 키워드도 전부 삭제
+	 * 찜한 목록을 삭제하고 그와 연관된 키워드는 뷰에서 자동으로 차감됨
 	 *
 	 * @param festivalId
 	 * @param user
@@ -208,36 +207,38 @@ public class FestivalController {
 			userMap1.setSortCode(sortCode);
 			festivalService.deleteUserLoveFestival(userMap1);
 			
-			ArrayList<FestivalKeywordDTO> keyList = festivalService.findFestivalKeywordByFestivalId(festivalId);
+			// 뷰 생성으로 인해 키워드 처리는 전부 뷰에서 자동으로 생성 및 차감 됨
 			
-			ArrayList<FestivalKeywordDTO> list = new ArrayList<FestivalKeywordDTO>();
-			
-			for (FestivalKeywordDTO keywordDTO : keyList) {
-				
-				if (!list.contains(keywordDTO)) {
-					list.add(keywordDTO);
-				}
-				
-			}
-			
-			for (FestivalKeywordDTO keywordDTO : list) {
-				
-				UserFestivalLoveHateMapDTO userMap = new UserFestivalLoveHateMapDTO();
-				userMap.setUserId(userId);
-				userMap.setSortCode(sortCode);
-				userMap.setFestivalKeywordId(keywordDTO.getFestivalKeywordId());
-				
-				UserFestivalLoveHateMapDTO userMap2 = festivalService.findUserMapByUserMap(userMap);
-				
-				if (userMap2 != null) {
-					
-					festivalService.deleteUserKeywordMap(userMap2);
-					
-				}
-				
-			}
-			
-			
+//			ArrayList<FestivalKeywordDTO> keyList = festivalService.findFestivalKeywordByFestivalId(festivalId);
+//
+//			ArrayList<FestivalKeywordDTO> list = new ArrayList<FestivalKeywordDTO>();
+//
+//			for (FestivalKeywordDTO keywordDTO : keyList) {
+//
+//				if (!list.contains(keywordDTO)) {
+//					list.add(keywordDTO);
+//				}
+//
+//			}
+//
+//			for (FestivalKeywordDTO keywordDTO : list) {
+//
+//				UserFestivalLoveHateMapDTO userMap = new UserFestivalLoveHateMapDTO();
+//				userMap.setUserId(userId);
+//				userMap.setSortCode(sortCode);
+//				userMap.setFestivalKeywordId(keywordDTO.getFestivalKeywordId());
+//
+//				UserFestivalLoveHateMapDTO userMap2 = festivalService.findUserMapByUserMap(userMap);
+//
+//				if (userMap2 != null) {
+//
+//					festivalService.deleteUserKeywordMap(userMap2);
+//
+//				}
+//
+//			}
+		
+		
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
@@ -266,49 +267,49 @@ public class FestivalController {
 		map1.setSortCode(sortCode);
 		map1.setFestivalId(festivalId);
 		
-		ArrayList<FestivalKeywordDTO> keywordList = null;
+//		ArrayList<FestivalKeywordDTO> keywordList = null;
 		
 		try {
 			
 			festivalService.insertUserHateFestival(map1);
 			
 			
-			keywordList = festivalService.findFestivalKeywordByFestivalId(festivalId);
-			
-			ArrayList<FestivalKeywordDTO> list = new ArrayList<FestivalKeywordDTO>();
-			
-			for (FestivalKeywordDTO keywordDTO : keywordList) {
-				
-				if (!list.contains(keywordDTO)) {
-					list.add(keywordDTO);
-				}
-				
-			}
-			
-			for (FestivalKeywordDTO keywordDTO : list) {
-				
-				UserFestivalLoveHateMapDTO userMap = new UserFestivalLoveHateMapDTO();
-				userMap.setUserId(userId);
-				userMap.setSortCode(sortCode);
-				userMap.setFestivalKeywordId(keywordDTO.getFestivalKeywordId());
-				
-				UserFestivalLoveHateMapDTO userMap2 = festivalService.findUserMapByUserMap(userMap);
-				
-				if (userMap2 == null) {
-					
-					userMap.setFestivalCount(1);
-					festivalService.insertUserKeywordMap(userMap);
-					
-				} else {
-					
-					int count = userMap2.getFestivalCount() + 1;
-					userMap2.setFestivalCount(count);
-					System.out.println("update : " + userMap2);
-					festivalService.updateUserKeywordMap(userMap2);
-					
-				}
-				
-			}
+//			keywordList = festivalService.findFestivalKeywordByFestivalId(festivalId);
+//
+//			ArrayList<FestivalKeywordDTO> list = new ArrayList<FestivalKeywordDTO>();
+//
+//			for (FestivalKeywordDTO keywordDTO : keywordList) {
+//
+//				if (!list.contains(keywordDTO)) {
+//					list.add(keywordDTO);
+//				}
+//
+//			}
+//
+//			for (FestivalKeywordDTO keywordDTO : list) {
+//
+//				UserFestivalLoveHateMapDTO userMap = new UserFestivalLoveHateMapDTO();
+//				userMap.setUserId(userId);
+//				userMap.setSortCode(sortCode);
+//				userMap.setFestivalKeywordId(keywordDTO.getFestivalKeywordId());
+//
+//				UserFestivalLoveHateMapDTO userMap2 = festivalService.findUserMapByUserMap(userMap);
+//
+//				if (userMap2 == null) {
+//
+//					userMap.setFestivalCount(1);
+//					festivalService.insertUserKeywordMap(userMap);
+//
+//				} else {
+//
+//					int count = userMap2.getFestivalCount() + 1;
+//					userMap2.setFestivalCount(count);
+//					System.out.println("update : " + userMap2);
+//					festivalService.updateUserKeywordMap(userMap2);
+//
+//				}
+//
+//			}
 			
 			return "관심없음 및 관련 관심없음 키워드 추가 성공";
 			
@@ -349,7 +350,7 @@ public class FestivalController {
 	
 	
 	/**
-	 * 관심없음한 목록을 삭제하고 그와 연관된 키워드도 전부 삭제
+	 * 관심없음한 목록을 삭제하고 그와 연관된 키워드는 뷰에서 차감 또는 삭제 됨
 	 *
 	 * @param festivalId
 	 * @param user
@@ -370,34 +371,34 @@ public class FestivalController {
 			userMap1.setSortCode(sortCode);
 			festivalService.deleteUserLoveFestival(userMap1);
 			
-			ArrayList<FestivalKeywordDTO> keyList = festivalService.findFestivalKeywordByFestivalId(festivalId);
-			
-			ArrayList<FestivalKeywordDTO> list = new ArrayList<FestivalKeywordDTO>();
-			
-			for (FestivalKeywordDTO keywordDTO : keyList) {
-				
-				if (!list.contains(keywordDTO)) {
-					list.add(keywordDTO);
-				}
-				
-			}
-			
-			for (FestivalKeywordDTO keywordDTO : list) {
-				
-				UserFestivalLoveHateMapDTO userMap = new UserFestivalLoveHateMapDTO();
-				userMap.setUserId(userId);
-				userMap.setSortCode(sortCode);
-				userMap.setFestivalKeywordId(keywordDTO.getFestivalKeywordId());
-				
-				UserFestivalLoveHateMapDTO userMap2 = festivalService.findUserMapByUserMap(userMap);
-				
-				if (userMap2 != null) {
-					
-					festivalService.deleteUserKeywordMap(userMap2);
-					
-				}
-				
-			}
+//			ArrayList<FestivalKeywordDTO> keyList = festivalService.findFestivalKeywordByFestivalId(festivalId);
+//
+//			ArrayList<FestivalKeywordDTO> list = new ArrayList<FestivalKeywordDTO>();
+//
+//			for (FestivalKeywordDTO keywordDTO : keyList) {
+//
+//				if (!list.contains(keywordDTO)) {
+//					list.add(keywordDTO);
+//				}
+//
+//			}
+//
+//			for (FestivalKeywordDTO keywordDTO : list) {
+//
+//				UserFestivalLoveHateMapDTO userMap = new UserFestivalLoveHateMapDTO();
+//				userMap.setUserId(userId);
+//				userMap.setSortCode(sortCode);
+//				userMap.setFestivalKeywordId(keywordDTO.getFestivalKeywordId());
+//
+//				UserFestivalLoveHateMapDTO userMap2 = festivalService.findUserMapByUserMap(userMap);
+//
+//				if (userMap2 != null) {
+//
+//					festivalService.deleteUserKeywordMap(userMap2);
+//
+//				}
+//
+//			}
 			
 			
 		} catch (Exception e) {

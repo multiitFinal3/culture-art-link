@@ -697,3 +697,22 @@ SELECT fc.festival_keyword_id, COUNT(DISTINCT fc.festival_id)
 from festival_content_review_naver_keyword_mapping fc
 
 GROUP BY fc.festival_keyword_id;
+
+
+CREATE OR REPLACE VIEW vw_festival_user_love_hate_keyword_mapping_data AS
+SELECT
+	uf.user_id,
+	uf.sort_code,
+	fc.festival_keyword_id,
+	COUNT(fc.festival_keyword_id) AS festival_keyword_count
+
+
+FROM
+	user_festival_love_hate_festival_mapping uf
+LEFT JOIN
+	festival_content_review_naver_keyword_mapping fc ON
+		uf.festival_id = fc.festival_id
+GROUP BY
+	uf.user_id,
+	uf.sort_code,
+	fc.festival_keyword_id;
