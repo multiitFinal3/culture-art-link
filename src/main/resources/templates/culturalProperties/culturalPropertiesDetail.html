@@ -1,41 +1,302 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-layout:decorate="~{common/layout/layoutMenubar}">
-<!--      xmlns:layout="http://www.w3.org/1999/xhtml" layout:decorate="~{common/layout/layoutMenubar}">-->
-<!--    <html layout:decorate="~{common/layout/layoutMenubar}">-->
+      layout:decorate="~{common/layout/layoutMenubar}">
 
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<!--        <title>문화재</title>-->
-        <title th:text="${property.culturalPropertiesName}">문화재 상세 정보</title>
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-        <link rel="stylesheet" href="/css/culturalProperties/culturalProperties.css">
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-        <script src="/js/culturalProperties/culturalProperties.js"></script>
-        <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${property.culturalPropertiesName}">문화재 상세 정보</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/culturalProperties/culturalProperties.css">
 
-        <style>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+
+<!--    <script src="/js/culturalProperties/culturalPropertiesDetail.js"></script>-->
+    <script src="/js/culturalProperties/culturalProperties.js"></script>
+
+<!--    <script src="path/to/culturalPropertiesDetail.js"></script>-->
+<!--    <script src="path/to/culturalProperties.js"></script>-->
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+<!--    <script src="/js/culturalProperties/culturalPropertiesDetail.js"></script>-->
 
 
-        </style>
-    </head>
-    <body>
-     <div layout:fragment="content">
 
-         <div class="container mt-4">
-             <h1 th:text="${property.culturalPropertiesName}">문화재 이름</h1>
-             <img th:src="${property.mainImgUrl}" alt="대표 문화재" class="img-fluid">
-             <p th:text="${property.description}">상세 설명</p>
-             <p th:text="${(property.region != null and property.district != null) ? property.region + ' ' + property.district : '위치정보가 없습니다'}">위치</p>
-             <a href="/cultural-properties" class="btn btn-primary">목록으로 돌아가기</a>
-         </div>
-        <footer class="bg-light text-center text-lg-start mt-4">
-            <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2);">
-                <!-- © 2024 문화재 -->
+
+    <style>
+        .btn-group {
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+<div layout:fragment="content">
+
+
+    <div id="contentArea" class="container mt-4">
+        <div class="row">
+            <div class="col-md-6">
+                <img id="mainImgUrl" alt="대표 문화재" class="img-fluid main-image">
             </div>
-        </footer>
+            <div class="col-md-6">
+
+<!--&lt;!&ndash;                <h1 th:text="${property.culturalPropertiesName}">문화재 이름</h1>&ndash;&gt;-->
+<!--&lt;!&ndash;                <p th:text="${property.content}">상세 설명</p>&ndash;&gt;-->
+<!--&lt;!&ndash;                <p th:text="${property.region} + ' ' + ${property.district}">주소</p>&ndash;&gt;-->
+<!--&lt;!&ndash;                <p th:text="${property.dynasty != null ? property.dynasty : '시대 정보 없음'}">시대</p>&ndash;&gt;-->
+<!--&lt;!&ndash;                <p th:text="${property.imgUrl != null && property.imgUrl.size() > 0 ? '이미지 있음' : '이미지 없음'}">이미지 유무</p>&ndash;&gt;-->
+<!--&lt;!&ndash;                <p th:text="${property.videoUrl != null && property.videoUrl.size() > 0 ? '동영상 있음' : '동영상 없음'}">동영상 유무</p>&ndash;&gt;-->
+<!--&lt;!&ndash;                <p th:text="${property.narrationUrl != null && property.narrationUrl.size() > 0 ? '나레이션 있음' : '나레이션 없음'}">나레이션 유무</p>&ndash;&gt;-->
+
+<!--&lt;!&ndash;                <button th:onclick="'showImage(\'' + ${property.imgUrl} + '\')'" class="btn btn-info">이미지 보기</button>&ndash;&gt;-->
+<!--&lt;!&ndash;                <button th:onclick="'showVideo(\'' + (${property.videoUrl.size() > 0 ? property.videoUrl[0] : ''}) + '\')'" class="btn btn-warning">동영상 보기</button>&ndash;&gt;-->
+<!--&lt;!&ndash;                <button th:onclick="'showNarration(\'' + (${property.narrationUrl.size() > 0 ? property.narrationUrl[0] : ''}) + '\')'" class="btn btn-success">나레이션 듣기</button>&ndash;&gt;-->
+
+                <h1 id="culturalPropertiesName">문화재 이름</h1>
+                <p id="content">상세 설명</p>
+                <p id="address">위치</p>
+                <p id="dynasty">시대</p>
+                <p id="imgUrl">이미지 유무</p>
+                <p id="videoUrl">동영상 유무</p>
+                <p id="narrationUrl">나레이션 유무</p>
+
+                <button id="imageButton" class="btn btn-info" onclick="showImage('이미지_URL_여기')">이미지 보기</button>
+                <button id="videoButton" class="btn btn-warning" onclick="showVideo('동영상_URL_여기')">동영상 보기</button>
+                <button id="narrationButton" class="btn btn-success" onclick="showNarration('나레이션_URL_여기')">나레이션 듣기</button>
+
+                <a href="/cultural-properties" class="btn btn-primary">목록으로 돌아가기</a>
+            </div>
+        </div>
     </div>
-    </body>
+
+    <footer class="bg-light text-center text-lg-start mt-4">
+        <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2);">
+            <!-- © 2024 문화재 -->
+        </div>
+    </footer>
+
+    <!-- 모달 추가 -->
+    <div class="modal fade" id="imageModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">이미지 보기</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <img id="modalImage" src="" class="img-fluid" alt="상세 이미지">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="videoModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">동영상 보기</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <iframe id="modalVideo" width="100%" height="315" frameborder="0" allowfullscreen></iframe>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="audioModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">나레이션 듣기</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <audio id="modalAudio" controls>
+                        <source src="" type="audio/mpeg">
+                        Your browser does not support the audio element.
+                    </audio>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+<!--    <div class="container">-->
+<!--        <h1 id="property-title"></h1>-->
+<!--        <img id="property-image" src="" alt="문화재 이미지" class="img-fluid">-->
+<!--        <p id="property-location"></p>-->
+<!--        <p id="property-description"></p>-->
+<!--        <button id="back-button" class="btn btn-secondary">뒤로가기</button>-->
+<!--    </div>-->
+
+    <!--1-->
+<!--    <div class="container mt-4">-->
+<!--        <h1 id="culturalPropertiesName">문화재 이름</h1>-->
+<!--        <img id="mainImgUrl" alt="대표 문화재" class="img-fluid">-->
+<!--        <p id="content">상세 설명</p>-->
+<!--        <p id="address">위치</p>-->
+<!--        <p id="dynasty">시대</p>-->
+<!--        <p id="imgUrl">이미지 유무</p>-->
+<!--        <p id="videoUrl">동영상 유무</p>-->
+<!--        <p id="narrationUrl">나레이션 유무</p>-->
+
+<!--        <button id="imageButton" class="btn btn-info">이미지 보기</button>-->
+<!--        <button id="videoButton" class="btn btn-info">동영상 보기</button>-->
+<!--        <button id="narrationButton" class="btn btn-info">나레이션 듣기</button>-->
+
+<!--        <a href="/cultural-properties" class="btn btn-primary">목록으로 돌아가기</a>-->
+<!--    </div>-->
+<!--    <footer class="bg-light text-center text-lg-start mt-4">-->
+<!--        <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2);">-->
+<!--            &lt;!&ndash; © 2024 문화재 &ndash;&gt;-->
+<!--        </div>-->
+<!--    </footer>-->
+
+
+
+
+<!--2-->
+<!--    <div class="container mt-4">-->
+<!--        <h1 th:text="${property.culturalPropertiesName}">문화재 이름</h1>-->
+<!--        <img th:src="${property.mainImgUrl}" alt="대표 문화재" class="img-fluid">-->
+
+<!--        <p th:text="${property.description}">상세 설명</p>-->
+<!--        <p th:text="${(property.region != null and property.district != null) ? property.region + ' ' + property.district : '위치정보가 없습니다'}">위치</p>-->
+
+<!--        <p th:text="'시대: ' + ${property.period}">시대</p> &lt;!&ndash; 시대 정보 추가 &ndash;&gt;-->
+
+<!--        &lt;!&ndash; 버튼 그룹 &ndash;&gt;-->
+<!--        <div class="btn-group" role="group" aria-label="정보 버튼 그룹">-->
+<!--            <button type="button" class="btn btn-info" th:if="${property.hasImage}" onclick="showImage()">이미지</button>-->
+<!--            <button type="button" class="btn btn-warning" th:if="${property.hasVideo}" onclick="showVideo()">동영상</button>-->
+<!--            <button type="button" class="btn btn-success" th:if="${property.hasNarration}" onclick="showNarration()">나레이션</button>-->
+<!--        </div>-->
+
+<!--        <a href="/cultural-properties" class="btn btn-primary">목록으로 돌아가기</a>-->
+<!--    </div>-->
+<!--    <footer class="bg-light text-center text-lg-start mt-4">-->
+<!--        <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2);">-->
+<!--            &lt;!&ndash; © 2024 문화재 &ndash;&gt;-->
+<!--        </div>-->
+<!--    </footer>-->
+</div>
+
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script src="/js/culturalProperties/culturalPropertiesDetail.js"></script>
+
+<script>
+    function showImage(imageUrl) {
+        $('#modalImage').attr('src', imageUrl);
+        $('#imageModal').modal('show');
+    }
+
+    function showVideo(videoUrl) {
+        $('#modalVideo').attr('src', videoUrl);
+        $('#videoModal').modal('show');
+    }
+
+    function showNarration(narrationUrl) {
+        $('#modalAudio').find('source').attr('src', narrationUrl);
+        $('#modalAudio')[0].load(); // 새로 로드
+        $('#audioModal').modal('show');
+
+    }
+
+
+<!--$(document).ready(function() {-->
+<!--            const urlParams = new URLSearchParams(window.location.search);-->
+<!--            const propertyId = urlParams.get('id'); // 쿼리 매개변수에서 ID 가져오기-->
+
+<!--            if (propertyId) {-->
+<!--                loadCulturalPropertyDetail(propertyId); // 상세정보 로드-->
+<!--            }-->
+
+<!--            $('#back-button').click(function() {-->
+<!--                window.history.back(); // 이전 페이지로 돌아가기-->
+<!--            });-->
+<!--        });-->
+
+<!--        function loadCulturalPropertyDetail(propertyId) {-->
+<!--            $.ajax({-->
+<!--                url: `/cultural-properties/detail/${propertyId}`, // API URL-->
+<!--                type: 'GET',-->
+<!--                success: function(property) {-->
+<!--                    $('#property-title').text(property.culturalPropertiesName);-->
+<!--                    $('#property-image').attr('src', property.mainImgUrl);-->
+<!--                    $('#property-location').text(`${property.region} ${property.district}`);-->
+<!--                    $('#property-description').text(property.description || '설명이 없습니다.'); // 설명이 없을 경우 기본 메시지-->
+<!--                },-->
+<!--                error: function(xhr, status, error) {-->
+<!--                    console.error('상세정보 로드 실패:', status, error);-->
+<!--                    alert('상세정보 로드 실패: ' + error);-->
+<!--                }-->
+<!--            });-->
+<!--        }-->
+
+
+
+<!--    $(document).ready(function() {-->
+<!--            // ID를 URL에서 가져옵니다.-->
+<!--            const urlParts = window.location.pathname.split('/');-->
+<!--            const id = urlParts[urlParts.length - 1];-->
+
+<!--            // AJAX를 통해 데이터를 가져옵니다.-->
+<!--            $.ajax({-->
+<!--                url: `/cultural-properties/detail/${id}`,-->
+<!--                method: 'GET',-->
+<!--                success: function(data) {-->
+<!--                console.log(data);-->
+<!--                    // 데이터 로딩 후 화면 업데이트-->
+<!--                    $('#culturalPropertiesName').text(data.culturalPropertiesName);-->
+<!--                    $('#content').text(data.content);-->
+<!--                    $('#address').text(data.address);-->
+<!--                    $('#dynasty').text(data.dynasty);-->
+<!--                    $('#mainImgUrl').attr('src', data.imageUrl);-->
+
+<!--                    // 버튼 URL 업데이트-->
+<!--                    $('#imageButton').attr('onclick', `showImage('${data.imgUrl}')`);-->
+<!--                    $('#videoButton').attr('onclick', `showVideo('${data.videoUrl}')`);-->
+<!--                    $('#narrationButton').attr('onclick', `showNarration('${data.narrationUrl}')`);-->
+<!--                },-->
+<!--                error: function() {-->
+<!--                    alert('문화재 정보를 불러오는 데 실패했습니다.');-->
+<!--                }-->
+<!--            });-->
+<!--        });-->
+
+
+<!--    function showImage() {-->
+<!--        // 이미지 모달을 표시하는 로직을 구현하세요-->
+<!--        alert("이미지 보기 기능 구현 필요");-->
+<!--    }-->
+
+<!--    function showVideo() {-->
+<!--        // 동영상 모달을 표시하는 로직을 구현하세요-->
+<!--        alert("동영상 보기 기능 구현 필요");-->
+<!--    }-->
+
+<!--    function showNarration() {-->
+<!--        // 나레이션 재생 로직을 구현하세요-->
+<!--        alert("나레이션 듣기 기능 구현 필요");-->
+<!--    }-->
+</script>
+</body>
 </html>

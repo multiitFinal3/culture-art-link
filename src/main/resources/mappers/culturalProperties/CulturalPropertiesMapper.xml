@@ -35,6 +35,7 @@
         SELECT COUNT(*) FROM cultural_properties
     </select>
 
+
     <select id="getCulturalPropertyById" resultType="CulturalPropertiesDTO">
         SELECT * FROM cultural_properties WHERE id = #{id}
     </select>
@@ -60,6 +61,65 @@
         WHERE c2.user_id = #{userId}
         ORDER BY c1.created_at DESC
     </select>
+
+
+    <select id="searchCulturalProperties" resultType="CulturalPropertiesDTO">
+        SELECT * FROM cultural_properties
+        <where>
+            <if test="category != null and category != ''">
+                AND category_name = #{category}
+            </if>
+            <if test="culturalPropertiesName != null and culturalPropertiesName != ''">
+                AND cultural_properties_name LIKE CONCAT('%', #{culturalPropertiesName}, '%')
+            </if>
+            <if test="region != null and region != ''">
+                AND (region LIKE CONCAT('%', #{region}, '%')
+                OR district LIKE CONCAT('%', #{region}, '%')) <!-- region 또는 district에서 검색 -->
+            </if>
+            <if test="dynasty != null and dynasty != ''">
+                AND dynasty LIKE CONCAT('%', #{dynasty}, '%')
+            </if>
+        </where>
+        LIMIT #{offset}, #{pageSize}
+    </select>
+
+    <select id="countCulturalProperties" resultType="long">
+        SELECT COUNT(*) FROM cultural_properties
+        <where>
+            <if test="category != null and category != ''">
+                AND category_name = #{category}
+            </if>
+            <if test="culturalPropertiesName != null and culturalPropertiesName != ''">
+                AND cultural_properties_name LIKE CONCAT('%', #{culturalPropertiesName}, '%')
+            </if>
+            <if test="region != null and region != ''">
+                AND (region LIKE CONCAT('%', #{region}, '%')
+                OR district LIKE CONCAT('%', #{region}, '%')) <!-- region 또는 district에서 검색 -->
+            </if>
+            <if test="dynasty != null and dynasty != ''">
+                AND dynasty LIKE CONCAT('%', #{dynasty}, '%')
+            </if>
+        </where>
+    </select>
+
+    <select id="getAllCategories" resultType="string">
+        SELECT DISTINCT category_name FROM cultural_properties
+    </select>
+
+
+
+<!--    <select id="getCulturalPropertyById" resultType="CulturalPropertiesDTO">-->
+<!--        SELECT * FROM cultural_properties WHERE id = #{id}-->
+<!--    </select>-->
+
+<!--    <select id="getCulturalPropertyById" resultType="CulturalPropertiesDTO">-->
+<!--        SELECT id, cultural_properties_name, main_img_url,-->
+<!--        content, region, district, address, dynasty, imgUrl, imgDesc,-->
+<!--        videoUrl, narrationUrl-->
+<!--        FROM cultural_properties-->
+<!--        WHERE id = #{id}-->
+<!--    </select>-->
+
 
 
 </mapper>

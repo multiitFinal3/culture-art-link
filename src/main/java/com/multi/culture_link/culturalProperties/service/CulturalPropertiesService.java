@@ -6,6 +6,7 @@ import com.multi.culture_link.admin.culturalProperties.model.dto.PageDTO;
 import com.multi.culture_link.culturalProperties.model.dao.CulturalPropertiesDAO;
 import com.multi.culture_link.culturalProperties.model.dto.CulturalPropertiesInterestDTO;
 import com.multi.culture_link.culturalProperties.model.dto.NewsArticle;
+import com.multi.culture_link.exhibition.model.dto.ExhibitionDto;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -42,8 +43,11 @@ public class CulturalPropertiesService {
     }
 
     public CulturalPropertiesDTO getCulturalPropertyById(int id) {
+
+        System.out.println("디테일 아이디 서비스 "+ id);
         return culturalPropertiesDAO.getCulturalPropertyById(id);
     }
+
 
     public void addLike(CulturalPropertiesInterestDTO interest) {
         interest.setInterestType("LIKE"); // LIKE 유형 설정
@@ -66,6 +70,19 @@ public class CulturalPropertiesService {
     }
 
 
+    public Page<CulturalPropertiesDTO> searchCulturalProperties(int page, int pageSize, String category, String culturalPropertiesName, String region, String dynasty) {
+        int offset = (page - 1) * pageSize;
+        List<CulturalPropertiesDTO> properties = culturalPropertiesDAO.searchCulturalProperties(category, culturalPropertiesName, region, dynasty, offset, pageSize);
+        long total = culturalPropertiesDAO.countCulturalProperties(category, culturalPropertiesName, region, dynasty);
+
+        return new PageImpl<>(properties, PageRequest.of(page - 1, pageSize), total);
+    }
+
+    public List<String> getAllCategories() {
+        return culturalPropertiesDAO.getAllCategories();
+    }
+
+
 
 
     public List<NewsArticle> getNewsArticles() {
@@ -74,6 +91,15 @@ public class CulturalPropertiesService {
 
         return articles;
     }
+
+//    public CulturalPropertiesDTO getCulturalPropertiesById(int id) {
+//        return culturalPropertiesDAO.getCulturalPropertyById(id);
+//    }
+
+
+//    public CulturalPropertiesDTO getCulturalPropertyById(int userId, int id){
+//        return culturalPropertiesDAO.getCulturalPropertyById(userId, id);
+//    }
 
 
 }

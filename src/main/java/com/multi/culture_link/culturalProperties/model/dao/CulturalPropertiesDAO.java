@@ -3,6 +3,7 @@ package com.multi.culture_link.culturalProperties.model.dao;
 import com.multi.culture_link.admin.culturalProperties.model.dto.CulturalPropertiesDTO;
 import com.multi.culture_link.culturalProperties.model.dto.CulturalPropertiesInterestDTO;
 import com.multi.culture_link.culturalProperties.model.dto.PageDTO;
+import com.multi.culture_link.exhibition.model.dto.ExhibitionDto;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -24,6 +25,31 @@ public interface CulturalPropertiesDAO {
 
     // 사용자 찜 정보 가져오기
     List<CulturalPropertiesInterestDTO> getInterest(@Param("userId") int userId);
+
+
+    List<CulturalPropertiesDTO> searchCulturalProperties(@Param("category") String category,
+                                                    @Param("culturalPropertiesName") String culturalPropertiesName,
+                                                    @Param("region") String region,
+                                                    @Param("dynasty") String dynasty,
+                                                    @Param("offset") int offset,
+                                                    @Param("pageSize") int pageSize);
+
+    long countCulturalProperties(@Param("category") String category,
+                                 @Param("culturalPropertiesName") String culturalPropertiesName,
+                                 @Param("region") String region,
+                                 @Param("dynasty") String dynasty);
+
+    List<String> getAllCategories();
+
+
+
+
+//    CulturalPropertiesDTO getCulturalPropertyById(int id);
+
+    // 특정 문화재 ID로 조회
+//    CulturalPropertiesDTO getCulturalPropertyById(@Param("id") int id);
+
+//    CulturalPropertiesDTO getCulturalPropertyById(int userId, int id);
 
 
 }
