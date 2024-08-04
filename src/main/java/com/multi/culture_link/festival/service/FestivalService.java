@@ -50,7 +50,7 @@ public interface FestivalService {
 	
 	NaverArticleDTO findFestivalNaverArticle( FestivalDTO festivalDTO) throws Exception;
 	
-	NaverBlogDTO findFestivalNaverBlog(int page, String formattedStart, String festivalName) throws Exception;
+	NaverBlogDTO findFestivalNaverBlog(FestivalDTO festivalDTO) throws Exception;
 	
 	
 }

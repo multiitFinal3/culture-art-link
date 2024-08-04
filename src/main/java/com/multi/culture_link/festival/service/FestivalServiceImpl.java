@@ -400,7 +400,7 @@ public class FestivalServiceImpl implements FestivalService {
 		
 		NaverArticleDTO naverArticleDTO = null;
 		
-		if (!items.isEmpty()){
+		if (!items.isEmpty()) {
 			
 			JsonObject item = items.get(page - 1).getAsJsonObject();
 			
@@ -419,8 +419,8 @@ public class FestivalServiceImpl implements FestivalService {
 			
 			System.out.println(description);
 			
-			title = title.replaceAll("</[a-z]*>", "").replaceAll("<[a-z]*>", "").replaceAll("/", "").replaceAll("▲", "");
-			description = description.replaceAll("</[a-z]*>", "").replaceAll("<[a-z]*>", "").replaceAll("/", "").replaceAll("▲", "");
+			title = title.replaceAll("</[a-z]*>", "").replaceAll("<[a-z]*>", "").replaceAll("/", "").replaceAll("[^a-zA-Z0-9가-힣\\s]", " ");
+			description = description.replaceAll("</[a-z]*>", "").replaceAll("<[a-z]*>", "").replaceAll("[^a-zA-Z0-9가-힣\\s]", " ");
 			
 			System.out.println("description : " + description);
 			
@@ -471,7 +471,7 @@ public class FestivalServiceImpl implements FestivalService {
 			
 			
 			String content = el.text();
-			content = content.replaceAll("</[a-z]*>", "").replaceAll("<[a-z]*>", "").replaceAll("/", "").replaceAll("▲", "");
+			content = content.replaceAll("</[a-z]*>", "").replaceAll("<[a-z]*>", "").replaceAll("[^a-zA-Z0-9가-힣\\s]", " ");
 			
 			if (content != "") {
 				naverArticleDTO.setTotalContent(content);
@@ -482,63 +482,18 @@ public class FestivalServiceImpl implements FestivalService {
 		}
 		
 		
-		
 		return naverArticleDTO;
 	}
 	
 	/**
 	 * 네이버 블로그 api로 해당 블로그의 대략적인 정보와 나와있는 원본 링크를 dto에 저장. 동적으로 열려 셀레니움 필요한 전체 내용과 이미지 크롤링은 실패함
 	 *
-	 * @param page
-	 * @param formattedStart
-	 * @param festivalName
+	 * @param festivalDTO
 	 * @return
 	 * @throws Exception
 	 */
 	@Override
-	public NaverBlogDTO findFestivalNaverBlog(int page, String formattedStart, String festivalName) throws Exception {
-		festivalName = formattedStart.substring(0, 4) + festivalName + " ";
-		
-		Request request = new Request.Builder()
-				.url("https://openapi.naver.com/v1/search/blog.json?query=" + festivalName + "&display=10&sort=sim")
-				.addHeader("X-Naver-Client-Id", XNaverClientId)
-				.addHeader("X-Naver-Client-Secret", XNaverClientSecret)
-				.get()
-				.build();
-		
-		
-		Response response = client.newCall(request).execute();
-		String responseBody = response.body().string();
-		JsonObject json = gson.fromJson(responseBody, JsonObject.class);
-		JsonArray items = json.getAsJsonArray("items");
-		
-		JsonObject item = items.get(page - 1).getAsJsonObject();
-		
-		String title = item.get("title").getAsString();
-		String link = item.get("link").getAsString();
-		String description = item.get("description").getAsString();
-		String bloggerName = item.get("bloggername").getAsString();
-		String postDate = item.get("postdate").getAsString();
-		
-		SimpleDateFormat formatter = new SimpleDateFormat("yyyymmdd");
-		Date date = formatter.parse(postDate);
-		
-		
-		System.out.println(description);
-		
-		title = title.replaceAll("</[a-z]*>", "").replaceAll("<[a-z]*>", "").replaceAll("/", "").replaceAll("▲", "");
-		description = description.replaceAll("</[a-z]*>", "").replaceAll("<[a-z]*>", "").replaceAll("/", "").replaceAll("▲", "");
-		
-		System.out.println("description : " + description);
-		
-		
-		NaverBlogDTO naverBlogDTO = new NaverBlogDTO();
-		naverBlogDTO.setTitle(title);
-		naverBlogDTO.setDescription(description);
-		naverBlogDTO.setBloggerName(bloggerName);
-		naverBlogDTO.setLink(link);
-		naverBlogDTO.setPostDate(date);
-		
+	public NaverBlogDTO findFestivalNaverBlog(FestivalDTO festivalDTO) throws Exception {
 		
 		//festival naver content + img : dynamic하게 로딩되어 셀레니움이 필요해 일단 api 정보로만 저장함
 
@@ -564,7 +519,90 @@ public class FestivalServiceImpl implements FestivalService {
 //			naverBlogDTO.setTotalContent(content);
 //		}
 //
-		System.out.println("serviceIMpl : naverBlogDTO : " + naverBlogDTO);
+		
+		int page = festivalDTO.getPageDTO().getPage();
+		
+		String festivalName = /*festivalDTO.getFormattedStart().substring(0, 4) +*/ festivalDTO.getFestivalName()/* + " "*/;
+		
+		Request request = new Request.Builder()
+				.url("https://openapi.naver.com/v1/search/blog.json?query=" + festivalName + "&display=10&sort=sim")
+				.addHeader("X-Naver-Client-Id", XNaverClientId)
+				.addHeader("X-Naver-Client-Secret", XNaverClientSecret)
+				.get()
+				.build();
+		
+		
+		Response response = client.newCall(request).execute();
+		String responseBody = response.body().string();
+		JsonObject json = gson.fromJson(responseBody, JsonObject.class);
+		int display = json.getAsJsonPrimitive("display").getAsInt();
+		JsonArray items = json.getAsJsonArray("items");
+		
+		NaverBlogDTO naverBlogDTO = new NaverBlogDTO();
+		
+		if (!items.isEmpty()) {
+			
+			JsonObject item = items.get(page - 1).getAsJsonObject();
+			String title = item.get("title").getAsString();
+			String link = item.get("link").getAsString();
+			String description = item.get("description").getAsString();
+			String postdate = item.get("postdate").getAsString();
+			
+			SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd");
+			Date date = formatter.parse(postdate);
+			
+			
+			System.out.println(description);
+			
+			title = title.replaceAll("</[a-z]*>", "").replaceAll("<[a-z]*>", "").replace("&lt","").replace("&gt","").replaceAll("[^a-zA-Z0-9가-힣\\s]", " ");
+			description = description.replaceAll("</[a-z]*>", "").replaceAll("<[a-z]*>", "").replace("&lt","").replace("&gt","").replaceAll("[^a-zA-Z0-9가-힣\\s]", " ");
+			
+			System.out.println("description : " + description);
+			
+			naverBlogDTO.setFestivalId(festivalDTO.getFestivalId());
+			naverBlogDTO.setDescription(description);
+			naverBlogDTO.setTitle(title);
+			naverBlogDTO.setPostDate(date);
+			naverBlogDTO.setLink(link);
+			naverBlogDTO.setDisplay(display);
+			
+			//festival naver blog content + img : 동적으로 열려서 셀레니움 필요함
+			
+//			Document document = Jsoup.connect(link).get();
+//			Elements els = document.select("[itemprop=articleBody]");
+//			Element el = null;
+//
+//			if (els.isEmpty()) {
+//				els = document.select("[id=articleBody]");
+//				if (els.isEmpty()) {
+//					el = document.body();
+//				} else {
+//					el = els.get(0);
+//				}
+//
+//			} else {
+//				el = els.get(0);
+//			}
+//
+//
+//			String imgUrl = el.select("img").attr("src");
+//
+//			if (!imgUrl.equals("")) {
+//				naverBlogDTO.setImgUrl(imgUrl);
+//			}
+//
+//
+//			String content = el.text();
+//			content = content.replaceAll("</[a-z]*>", "").replaceAll("<[a-z]*>", "").replaceAll("/", "").replaceAll("▲", "");
+//
+//			if (content != "") {
+//				naverBlogDTO.setTotalContent(content);
+//			}
+//
+//			System.out.println("serviceIMpl : naverBlogDTO : " + naverBlogDTO);
+			
+		}
+		
 		
 		return naverBlogDTO;
 	}

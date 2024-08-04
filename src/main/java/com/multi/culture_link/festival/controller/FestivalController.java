@@ -780,9 +780,15 @@ public class FestivalController {
 	public NaverBlogDTO findFestivalNaverBlog(@RequestParam("page") int page, @RequestParam("formattedStart") String formattedStart, @RequestParam("festivalName") String festivalName) {
 		
 		NaverBlogDTO naverBlogDTO = new NaverBlogDTO();
+		FestivalDTO festivalDTO = new FestivalDTO();
+		festivalDTO.setFormattedStart(formattedStart);
+		festivalDTO.setFestivalName(festivalName);
+		PageDTO pageDTO = new PageDTO();
+		pageDTO.setPage(page);
+		festivalDTO.setPageDTO(pageDTO);
 		
 		try {
-			naverBlogDTO = festivalService.findFestivalNaverBlog(page, formattedStart, festivalName);
+			naverBlogDTO = festivalService.findFestivalNaverBlog(festivalDTO);
 			System.out.println("findFestivalNaverBlog : " + naverBlogDTO);
 			
 		} catch (Exception e) {

@@ -325,5 +325,22 @@
 
     </update>
 
+    <select id="findFestivalNaverUrlByNaverBlog" parameterType="naverBlogDTO" resultType="naverBlogDTO">
+
+        SELECT * FROM festival_naver_url_mapping
+        WHERE festival_id = #{festivalId}
+        AND sort_code = "NB"
+        AND page_url=#{link};
+
+    </select>
+
+
+    <insert id="insertFestivalNaverUrlMappingByNaverBlog" parameterType="naverBlogDTO">
+
+        INSERT INTO festival_naver_url_mapping(festival_id, sort_code, page_url)
+        VALUES(#{festivalId}, "NB", #{link})
+
+    </insert>
+
 
 </mapper>

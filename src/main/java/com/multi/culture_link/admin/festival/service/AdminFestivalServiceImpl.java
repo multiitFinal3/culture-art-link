@@ -1035,7 +1035,7 @@ public class AdminFestivalServiceImpl implements AdminFestivalService {
 			}
 			
 			
-			// TF-ID
+			// 모든 명사를 전부 추출 해 삽입하면 뷰로 자동 계산 됨
 			String allContent = naverArticleDTO.getTotalContent();
 			map = keywordExtractService.getKeywordByKomoran(allContent);
 			
@@ -1051,6 +1051,13 @@ public class AdminFestivalServiceImpl implements AdminFestivalService {
 		
 	}
 	
+	/**
+	 * 이미 사용된 네이버 url인지 확인
+	 *
+	 * @param naverArticleDTO
+	 * @return
+	 * @throws Exception
+	 */
 	@Override
 	public NaverArticleDTO findFestivalNaverUrlByNaverArticle(NaverArticleDTO naverArticleDTO) throws Exception {
 		NaverArticleDTO naverArticleDTO2 = adminFestivalMapper.findFestivalNaverUrlByNaverArticle(naverArticleDTO);
@@ -1058,6 +1065,12 @@ public class AdminFestivalServiceImpl implements AdminFestivalService {
 		return naverArticleDTO2;
 	}
 	
+	/**
+	 * 네이버 기사의 url을 축제 네이버 url 매핑 테이블에 삽입
+	 *
+	 * @param naverArticleDTO
+	 * @throws Exception
+	 */
 	@Override
 	public void insertFestivalNaverUrlMappingByNaverArticle(NaverArticleDTO naverArticleDTO) throws Exception {
 		
@@ -1067,12 +1080,93 @@ public class AdminFestivalServiceImpl implements AdminFestivalService {
 		
 	}
 	
+	/**
+	 * 키워드가 이미 존재할 시 빈도수를 더함
+	 *
+	 * @param keywordMapping1
+	 * @throws Exception
+	 */
 	@Override
 	public void updateKeywordMappingByKeywordMapping(FestivalContentReviewNaverKeywordMapDTO keywordMapping1) throws Exception {
 		
 		adminFestivalMapper.updateKeywordMappingByKeywordMapping(keywordMapping1);
 		
 	}
+	
+	/**
+	 * 특정 축제에 대한 네이버 블로그 키워드를 추출
+	 *
+	 * @param festivalId
+	 * @return
+	 * @throws Exception
+	 */
+	@Override
+	public ArrayList<HashMap<String, Integer>> findNaverBlogKeywordByFestivalId(int festivalId) throws Exception {
+		
+		FestivalDTO festivalDTO = adminFestivalMapper.findDBFestivalByFestivalId(festivalId);
+		System.out.println("ser impl findNaverBlogKeywordByFestivalId : " + festivalDTO);
+
+//		System.out.println(festivalDTO.getStartDate());
+
+//		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-mm-DD");
+//		String formattedStart = simpleDateFormat.format(festivalDTO.getStartDate()).substring(0,4);
+		
+		String festivalName = festivalDTO.getFestivalName();
+		
+		PageDTO pageDTO = new PageDTO();
+		pageDTO.setPage(1);
+		festivalDTO.setPageDTO(pageDTO);
+		
+		NaverBlogDTO naverBlogDTO = festivalService.findFestivalNaverBlog(festivalDTO);
+		
+		ArrayList<HashMap<String, Integer>> list = new ArrayList<HashMap<String, Integer>>();
+		
+		for (int i = 1; i <= naverBlogDTO.getDisplay(); i++) {
+			
+			HashMap<String, Integer> map = new HashMap<>();
+			
+			pageDTO.setPage(i);
+			
+			festivalDTO.setPageDTO(pageDTO);
+			
+			naverBlogDTO = festivalService.findFestivalNaverBlog(festivalDTO);
+			
+			NaverBlogDTO naverBlogDTO2 = adminFestivalMapper.findFestivalNaverUrlByNaverBlog(naverBlogDTO);
+			
+			
+			if (naverBlogDTO2 == null) {
+				
+				this.insertFestivalNaverUrlMappingByNaverBlog(naverBlogDTO);
+				
+			}
+			
+			
+			// 모든 명사를 전부 추출 해 삽입하면 뷰로 자동 계산 됨
+			String allContent = naverBlogDTO.getTitle() + " " + naverBlogDTO.getDescription();
+			map = keywordExtractService.getKeywordByKomoran(allContent);
+			
+			System.out.println("TF-ID 결과 : " + map);
+			
+			list.add(map);
+			
+			
+		}
+		
+		
+		return list;
+		
+		
+	}
+	
+	@Override
+	public void insertFestivalNaverUrlMappingByNaverBlog(NaverBlogDTO naverBlogDTO) throws Exception {
+		
+		adminFestivalMapper.insertFestivalNaverUrlMappingByNaverBlog(naverBlogDTO);
+		
+		return;
+		
+	}
+	
 	
 	
 }

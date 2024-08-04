@@ -43,4 +43,8 @@ public interface AdminFestivalMapper {
 	void insertFestivalNaverUrlMappingByNaverArticle(NaverArticleDTO naverArticleDTO) throws Exception;
 	
 	void updateKeywordMappingByKeywordMapping(FestivalContentReviewNaverKeywordMapDTO keywordMapping1) throws Exception;
+	
+	NaverBlogDTO findFestivalNaverUrlByNaverBlog(NaverBlogDTO naverBlogDTO) throws Exception;
+	
+	void insertFestivalNaverUrlMappingByNaverBlog(NaverBlogDTO naverBlogDTO) throws Exception;
 }
