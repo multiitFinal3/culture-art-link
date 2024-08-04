@@ -183,14 +183,14 @@ public class FestivalServiceImpl implements FestivalService {
 	/**
 	 * 해당 축제의 컨텐트 키워드를 반환
 	 *
-	 * @param festivalId
+	 * @param mapDTO
 	 * @return
 	 * @throws Exception
 	 */
 	@Override
-	public ArrayList<FestivalContentReviewNaverKeywordMapDTO> findContentKeywordListByFestivalId(int festivalId) throws Exception {
+	public ArrayList<FestivalContentReviewNaverKeywordMapDTO> findKeywordListByFestivalId(FestivalContentReviewNaverKeywordMapDTO mapDTO) throws Exception {
 		
-		ArrayList<FestivalContentReviewNaverKeywordMapDTO> list = festivalMapper.findContentKeywordListByFestivalId(festivalId);
+		ArrayList<FestivalContentReviewNaverKeywordMapDTO> list = festivalMapper.findKeywordListByFestivalId(mapDTO);
 		
 		return list;
 		
@@ -343,7 +343,7 @@ public class FestivalServiceImpl implements FestivalService {
 	public String findFestivalYoutube(int page, String formattedStart, String festivalName) throws Exception {
 		
 		System.out.println("findFestivalYoutube : " + festivalName);
-	
+
 //		festivalName = formattedStart.substring(0, 4) + festivalName + " ";
 		
 		Request request = new Request.Builder()
@@ -362,7 +362,7 @@ public class FestivalServiceImpl implements FestivalService {
 		
 		JsonArray items = json.getAsJsonArray("items");
 		
-		if(items==null){
+		if (items == null) {
 			
 			System.out.println("items is null");
 			return "noId";
@@ -565,8 +565,8 @@ public class FestivalServiceImpl implements FestivalService {
 			
 			System.out.println(description);
 			
-			title = title.replaceAll("</[a-z]*>", "").replaceAll("<[a-z]*>", "").replace("&lt","").replace("&gt","").replaceAll("[^a-zA-Z0-9가-힣\\s]", " ");
-			description = description.replaceAll("</[a-z]*>", "").replaceAll("<[a-z]*>", "").replace("&lt","").replace("&gt","").replaceAll("[^a-zA-Z0-9가-힣\\s]", " ");
+			title = title.replaceAll("</[a-z]*>", "").replaceAll("<[a-z]*>", "").replace("&lt", "").replace("&gt", "").replaceAll("[^a-zA-Z0-9가-힣\\s]", " ");
+			description = description.replaceAll("</[a-z]*>", "").replaceAll("<[a-z]*>", "").replace("&lt", "").replace("&gt", "").replaceAll("[^a-zA-Z0-9가-힣\\s]", " ");
 			
 			System.out.println("description : " + description);
 			
@@ -578,7 +578,7 @@ public class FestivalServiceImpl implements FestivalService {
 			naverBlogDTO.setDisplay(display);
 			
 			//festival naver blog content + img : 동적으로 열려서 셀레니움 필요함
-			
+
 //			Document document = Jsoup.connect(link).get();
 //			Elements els = document.select("[itemprop=articleBody]");
 //			Element el = null;
@@ -617,6 +617,8 @@ public class FestivalServiceImpl implements FestivalService {
 		
 		return naverBlogDTO;
 	}
+	
+	
 	
 	
 }

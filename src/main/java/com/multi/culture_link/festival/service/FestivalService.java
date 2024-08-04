@@ -26,7 +26,7 @@ public interface FestivalService {
 	
 	ArrayList<Integer> findHateList(int userId) throws Exception;
 	
-	ArrayList<FestivalContentReviewNaverKeywordMapDTO> findContentKeywordListByFestivalId(int festivalId) throws Exception;
+	ArrayList<FestivalContentReviewNaverKeywordMapDTO> findKeywordListByFestivalId(FestivalContentReviewNaverKeywordMapDTO mapDTO) throws Exception;
 	
 	TimeDTO findTimeIdByFestivalId(int festivalId) throws Exception;
 	
@@ -51,6 +51,5 @@ public interface FestivalService {
 	NaverArticleDTO findFestivalNaverArticle( FestivalDTO festivalDTO) throws Exception;
 	
 	NaverBlogDTO findFestivalNaverBlog(FestivalDTO festivalDTO) throws Exception;
-	
 	
 }

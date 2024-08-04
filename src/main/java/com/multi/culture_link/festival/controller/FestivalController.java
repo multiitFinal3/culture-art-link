@@ -412,7 +412,7 @@ public class FestivalController {
 	
 	
 	/**
-	 * 해당 축제의 컨텐트 키워드를 반환
+	 * 해당 축제의 키워드를 반환
 	 *
 	 * @param festivalId
 	 * @return
@@ -423,7 +423,11 @@ public class FestivalController {
 		
 		ArrayList<FestivalContentReviewNaverKeywordMapDTO> list = null;
 		try {
-			list = festivalService.findContentKeywordListByFestivalId(festivalId);
+			
+			FestivalContentReviewNaverKeywordMapDTO mapDTO = new FestivalContentReviewNaverKeywordMapDTO();
+			mapDTO.setFestivalId(festivalId);
+			mapDTO.setSortCode("C");
+			list = festivalService.findKeywordListByFestivalId(mapDTO);
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
@@ -800,7 +804,76 @@ public class FestivalController {
 	}
 	
 	
+	/**
+	 * 축제의 리뷰 키워드를 반환
+	 * @param festivalId
+	 * @return
+	 */
+	@PostMapping("/findReviewKeywordListByFestivalId")
+	@ResponseBody
+	public ArrayList<FestivalContentReviewNaverKeywordMapDTO> findReviewKeywordListByFestivalId(@RequestParam("festivalId") int festivalId) {
+		
+		ArrayList<FestivalContentReviewNaverKeywordMapDTO> list = null;
+		try {
+			FestivalContentReviewNaverKeywordMapDTO mapDTO = new FestivalContentReviewNaverKeywordMapDTO();
+			mapDTO.setFestivalId(festivalId);
+			mapDTO.setSortCode("R");
+			list = festivalService.findKeywordListByFestivalId(mapDTO);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+		
+		return list;
+		
+	}
 	
+	
+	/**
+	 * 축제의 네이버 기사 키워드를 반환
+	 * @param festivalId
+	 * @return
+	 */
+	@PostMapping("/findNaverArticleKeywordListByFestivalId")
+	@ResponseBody
+	public ArrayList<FestivalContentReviewNaverKeywordMapDTO> findNaverArticleKeywordListByFestivalId(@RequestParam("festivalId") int festivalId) {
+		
+		ArrayList<FestivalContentReviewNaverKeywordMapDTO> list = null;
+		try {
+			FestivalContentReviewNaverKeywordMapDTO mapDTO = new FestivalContentReviewNaverKeywordMapDTO();
+			mapDTO.setFestivalId(festivalId);
+			mapDTO.setSortCode("NA");
+			list = festivalService.findKeywordListByFestivalId(mapDTO);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+		
+		return list;
+		
+	}
+	
+	
+	/**
+	 * 축제의 네이버 블로그 키워드를 반환
+	 * @param festivalId
+	 * @return
+	 */
+	@PostMapping("/findNaverBlogKeywordListByFestivalId")
+	@ResponseBody
+	public ArrayList<FestivalContentReviewNaverKeywordMapDTO> findNaverBlogKeywordListByFestivalId(@RequestParam("festivalId") int festivalId) {
+		
+		ArrayList<FestivalContentReviewNaverKeywordMapDTO> list = null;
+		try {
+			FestivalContentReviewNaverKeywordMapDTO mapDTO = new FestivalContentReviewNaverKeywordMapDTO();
+			mapDTO.setFestivalId(festivalId);
+			mapDTO.setSortCode("NB");
+			list = festivalService.findKeywordListByFestivalId(mapDTO);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+		
+		return list;
+		
+	}
 	
 	
 	

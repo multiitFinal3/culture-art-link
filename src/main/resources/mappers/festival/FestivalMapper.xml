@@ -85,11 +85,11 @@
 
     </select>
 
-    <select id="findContentKeywordListByFestivalId" resultType="festivalContentReviewNaverKeywordMapping">
+    <select id="findKeywordListByFestivalId" resultType="festivalContentReviewNaverKeywordMapping">
 
-        SELECT * FROM festival_content_review_naver_keyword_mapping
+        SELECT * FROM vw_festival_keyword_tf_idf_top10_data
         WHERE festival_id = #{festivalId}
-        AND sort_code = "C";
+        AND sort_code = #{sortCode};
 
     </select>
 
@@ -166,7 +166,6 @@
 
     </select>
 
-
     <select id="findSameManageFestivalByManageInstitution" parameterType="festivalDTO" resultType="festivalDTO">
 
         SELECT * FROM festival
@@ -174,8 +173,6 @@
         AND festival_id != #{festivalId};
 
     </select>
-
-
 
 
 </mapper>

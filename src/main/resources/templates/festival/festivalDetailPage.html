@@ -753,7 +753,7 @@
 
                 }
 
-                findContentKeywordList(festivalId);
+                findReviewKeywordList(festivalId);
 
 
 
@@ -1314,6 +1314,42 @@
                 })
 
 
+                /**
+                * 네이버 기사 키워드 가져와서 넣어주기
+                * @param {int} festivalId 축제 아이디
+                *
+                */
+                function findNaverArticleKeywordList(festivalId){
+
+                    $.ajax({
+
+                        url: '/festival/findNaverArticleKeywordListByFestivalId?festivalId=' + festivalId,
+                        method: 'POST',
+                        contentType: 'application/json',
+                        success: function(list){
+
+                            $('div#naverArticleKeyword').html("");
+
+                            $.each(list, function(index, keyword){
+
+                                var keywordHtml = `<button class="keyword naverArticleKeyword">${keyword.festivalKeywordId}</button>`;
+                                $('#naverArticleKeyword').append(keywordHtml);
+
+                            })
+
+                        }
+
+                    })
+
+                }
+
+                findNaverArticleKeywordList(festivalId);
+
+
+
+
+
+
                 //#endregion
 
 
@@ -1415,6 +1451,40 @@
                     findFestivalNaverBlog(page, formattedStart, festivalName);
 
                 })
+
+
+
+                /**
+                * 네이버 블로그 키워드 가져와서 넣어주기
+                * @param {int} festivalId 축제 아이디
+                *
+                */
+                function findNaverBlogKeywordList(festivalId){
+
+                    $.ajax({
+
+                        url: '/festival/findNaverBlogKeywordListByFestivalId?festivalId=' + festivalId,
+                        method: 'POST',
+                        contentType: 'application/json',
+                        success: function(list){
+
+                            $('div#naverBlogKeyword').html("");
+
+                            $.each(list, function(index, keyword){
+
+                                var keywordHtml = `<button class="keyword naverBlogKeyword">${keyword.festivalKeywordId}</button>`;
+                                $('#naverBlogKeyword').append(keywordHtml);
+
+                            })
+
+                        }
+
+                    })
+
+                }
+
+                findNaverBlogKeywordList(festivalId);
+
 
 
                 //#endregion
