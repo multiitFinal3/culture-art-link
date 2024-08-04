@@ -182,6 +182,8 @@ public class KeywordExtractService1 {
 		
 		
 		System.out.println("allContent : " + allContent);
+
+		allContent = allContent.trim().replaceAll("\\s+"," ");
 		
 		Komoran komoran = new Komoran(DEFAULT_MODEL.FULL);
 		

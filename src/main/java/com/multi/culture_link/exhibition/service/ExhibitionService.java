@@ -3,7 +3,9 @@ package com.multi.culture_link.exhibition.service;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.multi.culture_link.admin.exhibition.model.dao.ExhibitionKeywordDao;
 import com.multi.culture_link.admin.exhibition.model.dto.api.ExhibitionApiDto;
+import com.multi.culture_link.admin.exhibition.model.dto.api.ExhibitionKeywordDto;
 import com.multi.culture_link.culturalProperties.model.dto.Video;
 import com.multi.culture_link.culturalProperties.model.dto.YoutubeConfig;
 import com.multi.culture_link.exhibition.model.dao.ExhibitionDao;
@@ -22,6 +24,7 @@ import org.springframework.web.client.RestTemplate;
 
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -30,6 +33,7 @@ import java.util.Map;
 @Service
 public class ExhibitionService {
     private final ExhibitionDao ExhibitionDao;
+    private final ExhibitionKeywordDao exhibitionKeywordDao;
     private final OkHttpClient client;
     private final Gson gson;
     private final YoutubeConfig youtubeConfig;
@@ -88,7 +92,17 @@ public class ExhibitionService {
     }
 
 
+    public HashMap<String, List<ExhibitionKeywordDto>> getKeyword(int exhibitionId) {
 
+        HashMap<String, List<ExhibitionKeywordDto>> result = new HashMap<String, List<ExhibitionKeywordDto>>();
 
+        List<ExhibitionKeywordDto> exhibitionKeyword = exhibitionKeywordDao.getExhibtionKeyword(exhibitionId);
+        List<ExhibitionKeywordDto> exhibitionCommentKeyword = exhibitionKeywordDao.getExhibtionCommentKeyword(exhibitionId);
+
+        result.put("keyword", exhibitionKeyword);
+        result.put("keywordComment", exhibitionCommentKeyword);
+
+        return result;
+    }
 
 }

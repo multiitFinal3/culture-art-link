@@ -30,4 +30,13 @@
     </select>
 
 
+    <select id="getCommentAll" resultType="com.multi.culture_link.exhibition.model.dto.ExhibitionCommentDto">
+        SELECT *
+        FROM exhibition_comment ec
+    </select>
+
+
+
+
+
 </mapper>

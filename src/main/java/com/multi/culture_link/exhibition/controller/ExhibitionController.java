@@ -1,6 +1,7 @@
 package com.multi.culture_link.exhibition.controller;
 
 import com.multi.culture_link.admin.exhibition.model.dto.api.ExhibitionApiDto;
+import com.multi.culture_link.admin.exhibition.model.dto.api.ExhibitionKeywordDto;
 import com.multi.culture_link.culturalProperties.model.dto.Video;
 import com.multi.culture_link.culturalProperties.model.dto.YoutubeConfig;
 import com.multi.culture_link.exhibition.model.dto.ExhibitionAnalyzeDto;
@@ -23,6 +24,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
@@ -32,6 +34,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 @RestController
 @RequiredArgsConstructor
@@ -213,6 +218,14 @@ public class ExhibitionController {
         return exhibitionCommentService.getAverageRating(exhibitionId);
     };
 
+
+
+    @GetMapping("/exhibition/{exhibitionId}/keyword")
+    public HashMap<String, List<ExhibitionKeywordDto>> getKeyword(
+            @PathVariable int exhibitionId
+    ) {
+        return exhibitionService.getKeyword(exhibitionId);
+    };
 
 
 }

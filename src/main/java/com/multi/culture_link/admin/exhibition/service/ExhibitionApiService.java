@@ -4,8 +4,13 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.multi.culture_link.admin.exhibition.model.dao.AdminExhibitionDao;
+import com.multi.culture_link.admin.exhibition.model.dao.ExhibitionKeywordDao;
 import com.multi.culture_link.admin.exhibition.model.dto.api.ExhibitionApiDto;
 import com.multi.culture_link.admin.exhibition.model.dto.api.ExhibitionApiResponseDto;
+import com.multi.culture_link.common.keyword.service.KeywordExtractService1;
+import com.multi.culture_link.exhibition.model.dao.ExhibitionCommentDao;
+import com.multi.culture_link.exhibition.model.dto.ExhibitionCommentDto;
+import com.multi.culture_link.exhibition.model.dto.ExhibitionDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -17,7 +22,9 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 @Slf4j
@@ -29,6 +36,13 @@ public class ExhibitionApiService {
 
     private final RestTemplate restTemplate;
     private final AdminExhibitionDao adminExhibitionDao;
+    private final ExhibitionKeywordDao exhibitionKeywordDao;
+    private final ExhibitionCommentDao exhibitionCommentDao;
+
+
+
+    private final KeywordExtractService1 keywordExtractService1;
+
 
 
     // xml 불러오기
@@ -113,6 +127,87 @@ public class ExhibitionApiService {
 
     public List<ExhibitionApiDto> getExhibition() {
         return adminExhibitionDao.getData();
+    }
+
+
+
+    public void saveKeyword() throws Exception {
+        this.saveExhibitionCommentKeyword();
+        this.saveExhibitionKeyword();
+    }
+
+
+    public void saveExhibitionKeyword() throws Exception {
+        List<ExhibitionApiDto> exhibitions = this.getExhibition();
+
+        for (ExhibitionApiDto exhibition : exhibitions) {
+            StringBuilder content = new StringBuilder();
+
+            if (exhibition.getTitle() != null) {
+                content.append(exhibition.getTitle()).append(" ");
+            }
+            if (exhibition.getDescription() != null) {
+                content.append(exhibition.getDescription());
+            }
+
+            String combinedContent = content.toString().trim();
+
+            if (!combinedContent.isEmpty()) {
+                HashMap<String, Integer> keyWordsMap = keywordExtractService1.getKeywordByKomoran(combinedContent);
+
+                System.out.println("Exhibition ID: " + exhibition.getId());
+                System.out.println("Combined content: " + combinedContent);
+                System.out.println("Key word map: " + keyWordsMap);
+
+                saveExhibitionKeywordDB(exhibition.getId(), keyWordsMap);
+            }
+        }
+
+    }
+
+    private void saveExhibitionKeywordDB(int exhibitionId, HashMap<String, Integer> keyWordsMap) {
+        for (Map.Entry<String, Integer> entry : keyWordsMap.entrySet()) {
+            String keyword = entry.getKey();
+            int frequency = entry.getValue();
+            exhibitionKeywordDao.saveExhibitionKeyword(exhibitionId, keyword, frequency);
+        }
+    }
+
+
+
+
+    public void saveExhibitionCommentKeyword() throws Exception {
+        List<ExhibitionCommentDto> comments = exhibitionCommentDao.getCommentAll();
+        Map<Integer, StringBuilder> exhibitionContents = new HashMap<>();
+
+        // 같은 exhibitionId를 가진 코멘트들의 내용을 모음
+        for (ExhibitionCommentDto comment : comments) {
+            int exhibitionId = comment.getExhibitionId();
+            exhibitionContents.computeIfAbsent(exhibitionId, k -> new StringBuilder());
+
+            if (comment.getContent() != null) {
+                exhibitionContents.get(exhibitionId).append(comment.getContent()).append(" ");
+            }
+        }
+
+        // 각 전시회별로 모아진 코멘트 내용에 대해 키워드를 추출하고 저장
+        for (Map.Entry<Integer, StringBuilder> entry : exhibitionContents.entrySet()) {
+            int exhibitionId = entry.getKey();
+            String combinedContent = entry.getValue().toString().trim();
+
+            if (!combinedContent.isEmpty()) {
+                HashMap<String, Integer> keyWordsMap = keywordExtractService1.getKeywordByKomoran(combinedContent);
+                saveExhibitionCommentKeywordDB(exhibitionId, keyWordsMap);
+            }
+        }
+    }
+
+    private void saveExhibitionCommentKeywordDB(int exhibitionId, HashMap<String, Integer> keyWordsMap) {
+        for (Map.Entry<String, Integer> entry : keyWordsMap.entrySet()) {
+            String keyword = entry.getKey();
+            int frequency = entry.getValue();
+            exhibitionKeywordDao.saveExhibitionCommentKeyword(exhibitionId, keyword, frequency);
+        }
     }
 
 }

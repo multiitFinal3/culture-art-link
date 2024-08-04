@@ -38,6 +38,14 @@ $(document).ready(function() {
     });
 });
 
+function renderReviewPagination(totalItems, currentPage) {
+    renderPagination(totalItems, currentPage, 'reviewPagination', loadReviewPage, reviewsPerPage);
+}
+
+function renderAnalyzePagination(totalItems, currentPage) {
+    renderPagination(totalItems, currentPage, 'analyzePagination', loadAnalyzePage, analysesPerPage);
+}
+
 function btnEvent() {
     const favoriteBtn = document.getElementById('favoriteBtn');
     const notInterestedBtn = document.getElementById('notInterestedBtn');
@@ -240,6 +248,8 @@ async function loadExhibitionDetails(exhibitionId) {
         await loadExhibitionReviews();
         await loadExhibitionAnalyze();
 
+        await loadExhibitionKeyword()
+
         // const ratingResponse = await fetch(`/exhibition/${exhibitionId}/rating`);
         // const ratingData = await ratingResponse.json();
         $('#averageRating').text(Number(data?.starsAVG).toFixed(1));
@@ -263,12 +273,12 @@ function renderPagination(totalItems, currentPage, containerId, loadPageFunction
     }
 
     for (let i = startPage; i <= endPage; i++) {
-        paginationHtml += `<button class="page-btn ${i === currentPage ? 'active' : ''}" data-page="${i}">${i}</button>`;
+        paginationHtml += `<button class="page-btn ${containerId}-btn ${i === currentPage ? 'active' : ''}" data-page="${i}">${i}</button>`;
     }
 
     $(`#${containerId}`).html(paginationHtml);
 
-    $(`.page-btn`).on('click', function() {
+    $(`.${containerId}-btn`).on('click', function() {
         const page = $(this).data('page');
         loadPageFunction(page);
     });
@@ -416,7 +426,7 @@ function renderReviews(reviews) {
     `).join('');
 
     $('#reviewsContainer').html(reviewsHtml);
-    renderPagination(reviews.length, currentReviewPage, 'reviewPagination', loadReviewPage, reviewsPerPage);
+    renderReviewPagination(reviews.length, currentReviewPage);
 
 
     $('.delete-review').on('click', function() {
@@ -444,6 +454,32 @@ async function deleteReview(reviewId) {
         console.error('Error deleting review:', error);
     }
 }
+
+async function loadExhibitionKeyword() {
+    try {
+        const exhibitionId = getExhibitionIdFromUrl()
+        const response = await fetch(`/exhibition/exhibition/${exhibitionId}/keyword`);
+        const data = await response.json();
+        console.log("loadExhibitionKeyword : ",data);
+        renderkeyword(data)
+    } catch (error) {
+        console.error('Failed to load exhibition details:', error);
+    }
+}
+
+
+function renderkeyword(keyword) {
+
+    for(const key of Object.keys(keyword)) {
+        const keywordHtml = keyword[key].slice(0, 3).map(data => `
+        <a href="#" class="keyword">${data.keyword}</a>
+    `).join('');
+
+        const id = key === "keyword" ? "#exhibitionKeyword" : "#exhibitionCommentKeyword";
+        $(id).html(keywordHtml);
+    }
+}
+
 
 async function loadExhibitionAnalyze() {
     try {
@@ -487,7 +523,7 @@ function renderAnalyze(analyze) {
         </div>
     `).join('');
     $('#artworkAnalyzeContainer').html(analyzeHtml);
-    renderPagination(analyze.length, currentAnalyzePage, 'analyzePagination', loadAnalyzePage, analysesPerPage);
+    renderAnalyzePagination(analyze.length, currentAnalyzePage);
 
 
     $('.update-analyze').on('click', function() {
