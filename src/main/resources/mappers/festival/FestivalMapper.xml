@@ -215,5 +215,22 @@
 
     </insert>
 
+    <select id="findUserLoveKeywordList">
+
+        SELECT * FROM vw_festival_user_love_hate_keyword_mapping_total_data
+        WHERE user_id = #{userId}
+        AND festival_keyword_total_count >= 10;
+
+    </select>
+
+    <select id="findSameKeywordFestivalByKeywordId" resultType="festivalDTO">
+
+        SELECT f.*
+        FROM vw_festival_keyword_tf_idf_top10_data vw
+        INNER JOIN festival f
+        ON vw.festival_id = f.festival_id
+        WHERE vw.festival_keyword_id = #{festivalKeywordId};
+
+    </select>
 
 </mapper>

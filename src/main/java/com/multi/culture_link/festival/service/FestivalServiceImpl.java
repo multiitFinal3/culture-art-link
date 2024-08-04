@@ -669,17 +669,56 @@ public class FestivalServiceImpl implements FestivalService {
 		
 	}
 	
+	/**
+	 * tf_idf가 높은 키워드 순으로 추천 키워드로 추가됨
+	 * @param mapDTO
+	 * @return
+	 * @throws Exception
+	 */
 	@Override
 	public ArrayList<FestivalContentReviewNaverKeywordMapDTO> findPopularFestivalKeyword(FestivalContentReviewNaverKeywordMapDTO mapDTO) throws Exception {
 		ArrayList<FestivalContentReviewNaverKeywordMapDTO> list = festivalMapper.findPopularFestivalKeyword(mapDTO);
 		return list;
 	}
 	
+	/**
+	 * 유저가 회원가입 시 선택한 키워드를 테이블에 삽입
+	 * @param mapDTO
+	 * @throws Exception
+	 */
 	@Override
 	public void insertUserSelectKeyword(UserFestivalLoveHateMapDTO mapDTO) throws Exception {
 		
 		festivalMapper.insertUserSelectKeyword(mapDTO);
 		
+	}
+	
+	/**
+	 * 유저의 선택과 찜에 의한 선호도 모두를 반영하는 뷰에서 카운트 총 합이 10개 이상인 키워드만 반환
+	 * @param userId
+	 * @return
+	 * @throws Exception
+	 */
+	@Override
+	public ArrayList<FestivalContentReviewNaverKeywordMapDTO> findUserLoveKeywordList(int userId) throws Exception {
+		
+		ArrayList<FestivalContentReviewNaverKeywordMapDTO> list = festivalMapper.findUserLoveKeywordList(userId);
+		
+		return list;
+	}
+	
+	/**
+	 * 같은 키워드를 가지는 축제 리스트를 반환
+	 * @param festivalKeywordId
+	 * @return
+	 * @throws Exception
+	 */
+	@Override
+	public ArrayList<FestivalDTO> findSameKeywordFestivalByKeywordId(String festivalKeywordId) throws Exception {
+		
+		ArrayList<FestivalDTO> list = festivalMapper.findSameKeywordFestivalByKeywordId(festivalKeywordId);
+		
+		return list;
 	}
 	
 	

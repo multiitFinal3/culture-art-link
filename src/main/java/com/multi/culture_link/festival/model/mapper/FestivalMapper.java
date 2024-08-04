@@ -57,4 +57,8 @@ public interface FestivalMapper {
 	ArrayList<FestivalContentReviewNaverKeywordMapDTO> findPopularFestivalKeyword(FestivalContentReviewNaverKeywordMapDTO mapDTO) throws Exception;
 	
 	void insertUserSelectKeyword(UserFestivalLoveHateMapDTO mapDTO) throws Exception;
+	
+	ArrayList<FestivalContentReviewNaverKeywordMapDTO> findUserLoveKeywordList(int userId) throws Exception;
+	
+	ArrayList<FestivalDTO> findSameKeywordFestivalByKeywordId(String festivalKeywordId) throws Exception;
 }

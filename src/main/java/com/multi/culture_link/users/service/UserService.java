@@ -18,4 +18,12 @@ public class UserService {
 		userMapper.insertUser(userDTO);
 	
 	}
+	
+	public UserDTO findUserByEmail(String email) throws Exception{
+		
+		UserDTO user = userMapper.findUserByEmail(email);
+		
+		return user;
+		
+	}
 }

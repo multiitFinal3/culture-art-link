@@ -937,5 +937,52 @@ public class FestivalController {
 		
 	}
 	
+	/**
+	 * 같은 키워드 추천 작품 리스트를 반환(찜 포함)
+	 * @param user
+	 * @return
+	 */
+	@PostMapping("/findKeywordRecommendFestivalList")
+	@ResponseBody
+	public ArrayList<FestivalDTO> findKeywordRecommendFestivalList(@AuthenticationPrincipal VWUserRoleDTO user) {
+		
+		int userId = user.getUserId();
+		ArrayList<FestivalContentReviewNaverKeywordMapDTO> mapDTOS = null;
+		try {
+			mapDTOS = festivalService.findUserLoveKeywordList(userId);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+		
+		ArrayList<FestivalDTO> list = new ArrayList<>();
+		
+		for (FestivalContentReviewNaverKeywordMapDTO mapDTO : mapDTOS) {
+			
+			String festivalKeywordId = mapDTO.getFestivalKeywordId();
+			ArrayList<FestivalDTO> allList = null;
+			try {
+				allList = festivalService.findSameKeywordFestivalByKeywordId(festivalKeywordId);
+			} catch (Exception e) {
+				throw new RuntimeException(e);
+			}
+			
+			for (FestivalDTO festivalDTO : allList) {
+				
+				if (!list.contains(festivalDTO)) {
+					
+					list.add(festivalDTO);
+					
+				}
+				
+			}
+			
+			
+		}
+		
+		System.out.println("findKeywordRecommendFestivalList : " + list);
+		return list;
+		
+	}
+	
 	
 }
