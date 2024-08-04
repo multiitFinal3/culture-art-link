@@ -180,7 +180,7 @@ public class KeywordExtractService1 {
 		
 		System.out.println("allContent : " + allContent);
 		
-		allContent = allContent.trim().replaceAll("\\s+"," ");
+		allContent = allContent.replaceAll("[^a-zA-Z0-9가-힣\\s]", " ").trim().replaceAll("\\s+"," ");
 		
 		Komoran komoran = new Komoran(DEFAULT_MODEL.FULL);
 		

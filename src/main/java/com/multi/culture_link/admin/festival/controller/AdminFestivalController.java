@@ -1144,7 +1144,11 @@ public class AdminFestivalController {
 		
 	}
 	
-	
+	/**
+	 * 네이버 블로그 키워드를 삽입
+	 * @param festivalId
+	 * @return
+	 */
 	@PostMapping("/insertNaverBlogKeywordByFestivalId")
 	@ResponseBody
 	public ArrayList<String> insertNaverBlogKeywordByFestivalId(@RequestParam("festivalId") int festivalId){
@@ -1236,6 +1240,102 @@ public class AdminFestivalController {
 		
 	}
 	
+	
+	/**
+	 * 사이트 리뷰 키워드를 삽입
+	 * @param festivalId
+	 * @return
+	 */
+	@PostMapping("/insertReviewKeywordByFestivalId")
+	@ResponseBody
+	public ArrayList<String> insertReviewKeywordByFestivalId(@RequestParam("festivalId") int festivalId){
+		
+		ArrayList<HashMap<String, Integer>> list = new ArrayList<HashMap<String, Integer>>();
+		
+		try {
+			list = adminFestivalService.findReviewKeywordByFestivalId(festivalId);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+		
+		System.out.println("insertReviewKeywordByFestivalId list : " + list);
+		
+		ArrayList<FestivalKeywordDTO> keywordList = new ArrayList<FestivalKeywordDTO>();
+		ArrayList<String> keys = new ArrayList<String>();
+		
+		
+		for (HashMap<String, Integer> map : list) {
+			
+			for (Map.Entry<String, Integer> entry : map.entrySet()) {
+				
+				FestivalKeywordDTO festivalKeywordDTO = new FestivalKeywordDTO();
+				festivalKeywordDTO.setFestivalKeywordId(entry.getKey());
+				keys.add(entry.getKey());
+				festivalKeywordDTO.setFreq(entry.getValue());
+				
+				DictionaryDTO dictionaryDTO = new DictionaryDTO();
+				
+				Query query = new Query(new Criteria("word").is(entry.getKey()));
+				dictionaryDTO = mongoTemplate.findOne(query, DictionaryDTO.class, "dictionary");
+				if (dictionaryDTO != null) {
+					festivalKeywordDTO.setEmotionStat(dictionaryDTO.getPolarity());
+				} else {
+					festivalKeywordDTO.setEmotionStat(0);
+				}
+				
+				keywordList.add(festivalKeywordDTO);
+				
+			}
+			
+		}
+		
+		System.out.println("keywordList : " + keywordList);
+		
+		for (FestivalKeywordDTO keyword : keywordList) {
+			
+			try {
+				FestivalKeywordDTO festivalKeywordDTO = adminFestivalService.findKeywordByKeyword(keyword);
+				if (festivalKeywordDTO == null) {
+					adminFestivalService.insertKeywordByKeyword(keyword);
+				} else {
+					
+					System.out.println("키워드 테이블에 존재");
+					
+				}
+				
+				FestivalContentReviewNaverKeywordMapDTO keywordMapping1 = new FestivalContentReviewNaverKeywordMapDTO();
+				keywordMapping1.setFestivalId(festivalId);
+				keywordMapping1.setFestivalKeywordId(keyword.getFestivalKeywordId());
+				keywordMapping1.setSortCode("R");
+				keywordMapping1.setFreq(keyword.getFreq());
+
+//				System.out.println("keywordMapping1 : " + keywordMapping1);
+				
+				FestivalContentReviewNaverKeywordMapDTO keywordMapping = adminFestivalService.findKeywordMappingByKeywordMapping(keywordMapping1);
+				
+				if (keywordMapping == null) {
+					adminFestivalService.insertKeywordMappingByKeywordMapping(keywordMapping1);
+					
+				} else {
+					System.out.println("키워드 리뷰 매핑 내역 존재");
+					int freq = keywordMapping.getFreq() + keywordMapping1.getFreq();
+					keywordMapping1.setFreq(freq);
+					adminFestivalService.updateKeywordMappingByKeywordMapping(keywordMapping1);
+					
+					
+				}
+				
+			} catch (Exception e) {
+				throw new RuntimeException(e);
+			}
+			
+			
+		}
+		
+		
+		return keys;
+		
+	}
 	
 	
 	

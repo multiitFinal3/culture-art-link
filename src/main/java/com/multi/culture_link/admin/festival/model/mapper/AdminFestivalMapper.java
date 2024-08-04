@@ -47,4 +47,10 @@ public interface AdminFestivalMapper {
 	NaverBlogDTO findFestivalNaverUrlByNaverBlog(NaverBlogDTO naverBlogDTO) throws Exception;
 	
 	void insertFestivalNaverUrlMappingByNaverBlog(NaverBlogDTO naverBlogDTO) throws Exception;
+	
+	ArrayList<String> findAllFestivalReviewContentByFestivalId(int festivalId) throws Exception;
+	
+	void deleteAllReviewKeywordByFestivalId(int festivalId) throws Exception;
+	
+	ArrayList<FestivalContentReviewNaverKeywordMapDTO> findExistingFestivalContentReviewNaverKeywordMapList(FestivalContentReviewNaverKeywordMapDTO mapDTO) throws Exception;
 }

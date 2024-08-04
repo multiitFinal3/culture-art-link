@@ -126,7 +126,7 @@ $(document).ready(
                                 <button type="button" class="btn btn-primary contentKeywordInsertBtn" value="${festival.festivalId}">내용</button>
                                 <button type="button" class="btn btn-primary naverArticleKeywordInsertBtn" value="${festival.festivalId}">기사</button><br><br>
                                 <button type="button" class="btn btn-primary naverBlogKeywordInsertBtn" value="${festival.festivalId}">블로그</button>
-                                <button type="button" class="btn btn-primary reviewBlogKeywordInsertBtn" value="${festival.festivalId}">리뷰</button><br>
+                                <button type="button" class="btn btn-primary reviewKeywordInsertBtn" value="${festival.festivalId}">리뷰</button><br>
                             </td>
                             </tr>
                             `
@@ -140,7 +140,7 @@ $(document).ready(
                                  <button type="button" class="btn btn-primary contentKeywordInsertBtn" value="${festival.festivalId}">내용</button>
                                  <button type="button" class="btn btn-primary naverArticleKeywordInsertBtn" value="${festival.festivalId}">기사</button><br><br>
                                  <button type="button" class="btn btn-primary naverBlogKeywordInsertBtn" value="${festival.festivalId}">블로그</button>
-                                 <button type="button" class="btn btn-primary reviewBlogKeywordInsertBtn" value="${festival.festivalId}">리뷰</button><br>
+                                 <button type="button" class="btn btn-primary reviewKeywordInsertBtn" value="${festival.festivalId}">리뷰</button><br>
                              </td>
                              </tr>
                             `
@@ -293,36 +293,32 @@ $(document).ready(
         })
 
 
-//
-//
-//       /**
-//       * 선택한 DB 축제 관련 컬쳐링크 사이트 리뷰에 해당하는 키워드 추가 기능
-//       */
-//        $(document).on('click','.reviewKeywordInsertBtn', function(){
-//
-//            var festivalId = $(this).val();
-//
-//            $.ajax({
-//
-//                url: '/admin/festival-regulate/insertReviewKeywordByFestivalId?festivalId=' + festivalId,
-//                method: 'POST',
-//                contentType: 'application/json',
-//                success: function(list){
-//
-//                    alert("리뷰 키워드 : " + list + ". 키워드 삽입 성공!")
-//
-//
-//                }
-//
-//
-//            })
-//
-//        })
 
 
+       /**
+       * 선택한 DB 축제 관련 컬쳐링크 사이트 리뷰에 해당하는 키워드 추가 기능
+       */
+        $(document).on('click','.reviewKeywordInsertBtn', function(){
+
+            var festivalId = $(this).val();
+            alert("reviewKeywordInsertBtn")
+
+            $.ajax({
+
+                url: '/admin/festival-regulate/insertReviewKeywordByFestivalId?festivalId=' + festivalId,
+                method: 'POST',
+                contentType: 'application/json',
+                success: function(list){
+
+                    alert("리뷰 키워드 : " + list + ". 키워드 삽입 성공!")
 
 
+                }
 
+
+            })
+
+        })
 
 
         /**
@@ -623,7 +619,7 @@ $(document).ready(
                                 <button type="button" class="btn btn-primary contentKeywordInsertBtn" value="${festival.festivalId}">내용</button>
                                 <button type="button" class="btn btn-primary naverArticleKeywordInsertBtn" value="${festival.festivalId}">기사</button><br><br>
                                 <button type="button" class="btn btn-primary naverBlogKeywordInsertBtn" value="${festival.festivalId}">블로그</button>
-                                <button type="button" class="btn btn-primary reviewBlogKeywordInsertBtn" value="${festival.festivalId}">리뷰</button><br>
+                                <button type="button" class="btn btn-primary reviewKeywordInsertBtn" value="${festival.festivalId}">리뷰</button><br>
                             </td>
                             </tr>
                             `
@@ -638,7 +634,7 @@ $(document).ready(
                                  <button type="button" class="btn btn-primary contentKeywordInsertBtn" value="${festival.festivalId}">내용</button>
                                  <button type="button" class="btn btn-primary naverArticleKeywordInsertBtn" value="${festival.festivalId}">기사</button><br><br>
                                  <button type="button" class="btn btn-primary naverBlogKeywordInsertBtn" value="${festival.festivalId}">블로그</button>
-                                 <button type="button" class="btn btn-primary reviewBlogKeywordInsertBtn" value="${festival.festivalId}">리뷰</button><br>
+                                 <button type="button" class="btn btn-primary reviewKeywordInsertBtn" value="${festival.festivalId}">리뷰</button><br>
                              </td>
                              </tr>
                             `

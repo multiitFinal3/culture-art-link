@@ -50,4 +50,12 @@ public interface AdminFestivalService {
 	ArrayList<HashMap<String, Integer>> findNaverBlogKeywordByFestivalId(int festivalId) throws Exception;
 	
 	void insertFestivalNaverUrlMappingByNaverBlog(NaverBlogDTO naverBlogDTO) throws Exception;
+	
+	ArrayList<HashMap<String, Integer>> findReviewKeywordByFestivalId(int festivalId) throws Exception;
+	
+	ArrayList<String> findAllFestivalReviewContentByFestivalId(int festivalId) throws Exception;
+	
+	void deleteAllReviewKeywordByFestivalId(int festivalId) throws Exception;
+	
+	ArrayList<FestivalContentReviewNaverKeywordMapDTO> findExistingFestivalContentReviewNaverKeywordMapList(FestivalContentReviewNaverKeywordMapDTO mapDTO) throws Exception;
 }

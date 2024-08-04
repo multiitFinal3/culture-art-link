@@ -10,5 +10,4 @@ public class FestivalContentReviewNaverKeywordMapDTO {
 	private String festivalKeywordId;
 	private int freq;
 	
-	
 }
