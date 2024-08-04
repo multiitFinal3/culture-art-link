@@ -1,3 +1,8 @@
+const reviewsPerPage = 5;
+const analysesPerPage = 3;
+let currentReviewPage = 1;
+let currentAnalyzePage = 1;
+
 $(document).ready(function() {
     const exhibitionId = getExhibitionIdFromUrl();
     loadExhibitionDetails(exhibitionId);
@@ -32,6 +37,14 @@ $(document).ready(function() {
         });
     });
 });
+
+function renderReviewPagination(totalItems, currentPage) {
+    renderPagination(totalItems, currentPage, 'reviewPagination', loadReviewPage, reviewsPerPage);
+}
+
+function renderAnalyzePagination(totalItems, currentPage) {
+    renderPagination(totalItems, currentPage, 'analyzePagination', loadAnalyzePage, analysesPerPage);
+}
 
 function btnEvent() {
     const favoriteBtn = document.getElementById('favoriteBtn');
@@ -79,6 +92,33 @@ function btnEvent() {
         saveAnalyze(exhibitionId);
     });
 
+    $('#imageUploadBtn').on('click', function() {
+        $('#imageInput').click();
+    });
+
+// 파일 선택 시 이벤트
+    $('#imageInput').on('change', function(event) {
+        const file = event.target.files[0];
+        if (file) {
+            // 파일 선택됨을 사용자에게 알림
+            $('#imageUploadBtn').text('이미지 선택됨');
+
+            // 이미지 미리보기
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                $('#previewImage').attr('src', e.target.result);
+                $('#imagePreview').show();
+            }
+            reader.readAsDataURL(file);
+        }
+    });
+
+// 이미지 제거 버튼 이벤트 리스너
+    $('#removeImageBtn').on('click', function() {
+        $('#imageInput').val('');
+        $('#imagePreview').hide();
+        $('#imageUploadBtn').text('이미지 첨부');
+    });
 
 }
 
@@ -113,19 +153,6 @@ async function saveComment(exhibitionId) {
     }
 }
 
-// 이미지 업로드 버튼 이벤트 리스너
-$('#imageUploadBtn').on('click', function() {
-    $('#imageInput').click();
-});
-
-// 파일 선택 시 이벤트
-$('#imageInput').on('change', function(event) {
-    const file = event.target.files[0];
-    if (file) {
-        // 파일 선택됨을 사용자에게 알림
-        $('#imageUploadBtn').text('이미지 선택됨');
-    }
-});
 
 async function saveAnalyze(exhibitionId) {
     try {
@@ -134,6 +161,8 @@ async function saveAnalyze(exhibitionId) {
         const imageFile = document.getElementById('imageInput').files[0];
 
         let imagePath = null;
+
+        console.log('imageFile, imagePath : ',imageFile, imagePath)
         if (imageFile) {
             const timestamp = new Date().getTime();
             imagePath = `/exhibition/${exhibitionId}/analyze/${timestamp}.png`;
@@ -157,13 +186,12 @@ async function saveAnalyze(exhibitionId) {
 }
 
 async function uploadImageToBucket(file, path) {
-    // 여기에 네이버 Bucket Management API를 사용하여 이미지를 업로드하는 코드를 구현해야 합니다.
-    // 이는 서버 측에서 처리하는 것이 보안상 좋습니다.
+    // 데이터 규칙
     const formData = new FormData();
     formData.append('file', file);
     formData.append('path', path);
 
-    await axios.post('/api/upload-to-bucket', formData, {
+    await axios.post('/file/upload', formData, {
         headers: {
             'Content-Type': 'multipart/form-data'
         }
@@ -220,10 +248,50 @@ async function loadExhibitionDetails(exhibitionId) {
         await loadExhibitionReviews();
         await loadExhibitionAnalyze();
 
+        await loadExhibitionKeyword()
+
+        // const ratingResponse = await fetch(`/exhibition/${exhibitionId}/rating`);
+        // const ratingData = await ratingResponse.json();
+        $('#averageRating').text(Number(data?.starsAVG).toFixed(1));
+
         renderExhibitionDetails(data);
     } catch (error) {
         console.error('Failed to load exhibition details:', error);
     }
+}
+
+function renderPagination(totalItems, currentPage, containerId, loadPageFunction, itemsPerPage) {
+    const totalPages = Math.ceil(totalItems / itemsPerPage);
+    let paginationHtml = '';
+
+    const maxButtons = 5;
+    let startPage = Math.max(1, currentPage - Math.floor(maxButtons / 2));
+    let endPage = Math.min(totalPages, startPage + maxButtons - 1);
+
+    if (endPage - startPage + 1 < maxButtons) {
+        startPage = Math.max(1, endPage - maxButtons + 1);
+    }
+
+    for (let i = startPage; i <= endPage; i++) {
+        paginationHtml += `<button class="page-btn ${containerId}-btn ${i === currentPage ? 'active' : ''}" data-page="${i}">${i}</button>`;
+    }
+
+    $(`#${containerId}`).html(paginationHtml);
+
+    $(`.${containerId}-btn`).on('click', function() {
+        const page = $(this).data('page');
+        loadPageFunction(page);
+    });
+}
+
+function loadReviewPage(page) {
+    currentReviewPage = page;
+    loadExhibitionReviews();
+}
+
+function loadAnalyzePage(page) {
+    currentAnalyzePage = page;
+    loadExhibitionAnalyze();
 }
 
 async function loadExhibitionReviews() {
@@ -342,7 +410,11 @@ function renderVideo(videoId) {
 }
 
 function renderReviews(reviews) {
-    const reviewsHtml = reviews?.map(review => `
+    const startIndex = (currentReviewPage - 1) * reviewsPerPage;
+    const endIndex = startIndex + reviewsPerPage;
+    const pageReviews = reviews.slice(startIndex, endIndex);
+
+    const reviewsHtml = pageReviews.map(review => `
         <div class="review" data-id="${review.id}">
             <div class="review-content">
                 <h3>${review.name}</h3>
@@ -352,7 +424,10 @@ function renderReviews(reviews) {
             </div>
         </div>
     `).join('');
+
     $('#reviewsContainer').html(reviewsHtml);
+    renderReviewPagination(reviews.length, currentReviewPage);
+
 
     $('.delete-review').on('click', function() {
         const reviewId = $(this).closest('.review').data('id');
@@ -380,10 +455,36 @@ async function deleteReview(reviewId) {
     }
 }
 
+async function loadExhibitionKeyword() {
+    try {
+        const exhibitionId = getExhibitionIdFromUrl()
+        const response = await fetch(`/exhibition/exhibition/${exhibitionId}/keyword`);
+        const data = await response.json();
+        console.log("loadExhibitionKeyword : ",data);
+        renderkeyword(data)
+    } catch (error) {
+        console.error('Failed to load exhibition details:', error);
+    }
+}
+
+
+function renderkeyword(keyword) {
+
+    for(const key of Object.keys(keyword)) {
+        const keywordHtml = keyword[key].slice(0, 3).map(data => `
+        <a href="#" class="keyword">${data.keyword}</a>
+    `).join('');
+
+        const id = key === "keyword" ? "#exhibitionKeyword" : "#exhibitionCommentKeyword";
+        $(id).html(keywordHtml);
+    }
+}
+
+
 async function loadExhibitionAnalyze() {
     try {
         const exhibitionId = getExhibitionIdFromUrl()
-        const response = await fetch(`/exhibition/exhibition/${exhibitionId}/analyze`,);
+        const response = await fetch(`/exhibition/exhibition/${exhibitionId}/analyze`);
         const data = await response.json();
         console.log("loadExhibitionAnalyze : ",data);
         renderAnalyze(data)
@@ -393,25 +494,37 @@ async function loadExhibitionAnalyze() {
 }
 
 function renderAnalyze(analyze) {
-    const analyzeHtml = analyze?.map(analyze => `
+    const startIndex = (currentAnalyzePage - 1) * analysesPerPage;
+    const endIndex = startIndex + analysesPerPage;
+    const pageAnalyze = analyze.slice(startIndex, endIndex);
+
+
+    const analyzeHtml = pageAnalyze.map(analyze => `
         <div class="analyze" data-id="${analyze.id}">
             <div class="analyze-content">
-                <h3>${analyze.artwork}</h3>
-                <p class="analyze-text">${analyze.content}</p>
-                ${analyze.image ? `<img src="${analyze.image}" alt="분석 이미지" style="max-width: 100%;">` : ''}
-                ${(analyze.auth) ? '<button class="update-analyze">수정</button>' : ''}
-                ${(analyze.auth) ? '<button class="delete-analyze">삭제</button>' : ''}
+                <div class="analyze-text-content">
+                    <h3>${analyze.artwork}</h3>
+                    <p class="analyze-text">${analyze.content}</p>
+                    ${(analyze.auth) ? '<button class="update-analyze">수정</button>' : ''}
+                    ${(analyze.auth) ? '<button class="delete-analyze">삭제</button>' : ''}
+                </div>
+                ${analyze.image ? `
+                    <div class="analyze-image">
+                        <img src="https://kr.object.ncloudstorage.com/team3${analyze.image}" alt="분석 이미지">
+                    </div>
+                ` : ''}
             </div>
             <div class="analyze-edit" style="display:none;">
-                <input class="edit-artwork" value="${analyze.artwork}">
+                <h3>${analyze.artwork}</h3>
                 <textarea class="edit-content">${analyze.content}</textarea>
-                <input type="file" class="edit-image" accept="image/*">
                 <button class="save-edit">수정 완료</button>
                 <button class="cancel-edit">취소</button>
             </div>
         </div>
     `).join('');
     $('#artworkAnalyzeContainer').html(analyzeHtml);
+    renderAnalyzePagination(analyze.length, currentAnalyzePage);
+
 
     $('.update-analyze').on('click', function() {
         const analyzeDiv = $(this).closest('.analyze');

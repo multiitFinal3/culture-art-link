@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.multi.culture_link.admin.exhibition.model.dao.ExhibitionKeywordDao"><!-- 메퍼위치하고  동일하게 네임스페이스 작성-->
+
+    <insert id="saveExhibitionKeyword">
+        INSERT INTO exhibition_keyword (exhibition_id, keyword, frequency)
+        VALUES (#{exhibitionId}, #{keyword}, #{frequency})
+            ON DUPLICATE KEY UPDATE
+                                 frequency = VALUES(frequency)
+    </insert>
+
+
+    <insert id="saveExhibitionCommentKeyword">
+        INSERT INTO exhibition_comment_keyword (exhibition_id, keyword, frequency)
+        VALUES (#{exhibitionId}, #{keyword}, #{frequency})
+            ON DUPLICATE KEY UPDATE
+                                 frequency = VALUES(frequency)
+    </insert>
+
+
+
+    <select id="getExhibtionKeyword" resultType="com.multi.culture_link.admin.exhibition.model.dto.api.ExhibitionKeywordDto">
+        SELECT * FROM exhibition_keyword
+        WHERE exhibition_id = #{exhibitionId}
+        ORDER BY frequency DESC
+    </select>
+
+    <select id="getExhibtionCommentKeyword" resultType="com.multi.culture_link.admin.exhibition.model.dto.api.ExhibitionKeywordDto">
+        SELECT * FROM exhibition_comment_keyword
+        WHERE exhibition_id = #{exhibitionId}
+        ORDER BY frequency DESC
+    </select>
+
+
+</mapper>
