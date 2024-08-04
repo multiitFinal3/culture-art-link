@@ -699,20 +699,52 @@ from festival_content_review_naver_keyword_mapping fc
 GROUP BY fc.festival_keyword_id;
 
 
+
+
+CREATE OR REPLACE VIEW vw_festival_keyword_tf_idf_top10_data AS
+
+WITH ranked_tf_id_data AS(
+
+	SELECT
+		vf.*,
+		ROW_NUMBER()
+		OVER (PARTITION BY vf.festival_id, vf.sort_code ORDER BY vf.tf_idf DESC) AS tf_idf_rank
+	FROM
+		vw_festival_keyword_tf_idf_data vf
+)
+
+SELECT
+	rd.festival_id,
+	rd.sort_code,
+	rd.festival_keyword_id,
+	rd.freq,
+	rd.all_words_count,
+	rd.all_docu_count,
+	rd.include_word_docu_count,
+	rd.tf,
+	rd.idf,
+	rd.tf_idf
+
+FROM ranked_tf_id_data rd
+
+WHERE rd.tf_idf_rank<=10;
+
+
+
 CREATE OR REPLACE VIEW vw_festival_user_love_hate_keyword_mapping_data AS
 SELECT
 	uf.user_id,
 	uf.sort_code,
-	fc.festival_keyword_id,
-	COUNT(fc.festival_keyword_id) AS festival_keyword_count
+	vf.festival_keyword_id,
+	COUNT(vf.festival_keyword_id) AS festival_keyword_count
 
 
 FROM
 	user_festival_love_hate_festival_mapping uf
 LEFT JOIN
-	festival_content_review_naver_keyword_mapping fc ON
-		uf.festival_id = fc.festival_id
+	vw_festival_keyword_tf_idf_top10_data vf ON
+		uf.festival_id = vf.festival_id
 GROUP BY
 	uf.user_id,
 	uf.sort_code,
-	fc.festival_keyword_id;
+	vf.festival_keyword_id;
