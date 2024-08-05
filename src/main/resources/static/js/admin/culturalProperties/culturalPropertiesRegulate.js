@@ -555,730 +555,12 @@ $(document).ready(function() {
 
     // 초기 페이지 데이터 불러오기
     fetchApiData(currentPage2);
-//    fetchApiData(1);
     getDBData(1); // 초기 DB 데이터 불러오기
     findListPage(1, 10);
 
 
-//    $('#searchDB2').click(function() { // 검색 버튼 클릭 시 이벤트 처리
-//            var formData = {
-//                categoryName: $('#categoryFilter2').val(),
-//                searchName: $('#searchName2').val(),
-//                searchRegion: $('#searchRegion2').val(),
-//                searchDynasty: $('#searchDynasty2').val()
-//                // 필요한 경우 추가 검색 조건을 여기에 추가
-//            };
-//
-//            $.ajax({
-//                type: 'POST',
-//                url: '/admin/culturalProperties-regulate/searchAPI',
-//                contentType: 'application/json',
-//                data: JSON.stringify(formData),
-//                success: function(data) {
-//                    // 서버에서 받은 검색 결과 처리
-//                    console.log(data); // 콘솔에 결과 출력 예시
-//                    $('#list2').html(""); // 검색 결과를 표시할 테이블 초기화
-//
-//                    $.each(data, function(index, culturalProperties) {
-//                        var index1 = index + 1;
-//
-//                        var htmlCheck = '<tr><td><input class="check2" type="checkbox" name="index" value="' + index + '"/></td>';
-//                        var htmlContent =
-//                            '<td class="culturalPropertieId">' + index1 + '</td>' +
-//                            '<td class="culturalPropertiesName">' + culturalProperties.culturalPropertiesName + '</td>' +
-//                            '<td class="categoryName">' + culturalProperties.categoryName + '</td>' +
-//                            '<td class="region">' + culturalProperties.region + '</td>' +
-//                            '<td class="dynasty">' + culturalProperties.dynasty + '</td></tr>';
-//
-//                        var finalHtml = htmlCheck + htmlContent;
-//                        $('#list2').append(finalHtml);
-//                    });
-//                },
-//                error: function(xhr, status, error) {
-//                    console.error('API 호출 오류:', error);
-//                }
-//            });
-//        });
 
-//----------------------------------------------------------
-//
-//$('#searchDB2').click(function() {
-//    var categoryName = $('#categoryFilter2').val();
-//    var searchName = $('#searchName2').val();
-//    var searchRegion = $('#searchRegion2').val();
-//    var searchDynasty = $('#searchDynasty2').val();
-//
-//    // URL에 직접 데이터를 추가하여 요청
-//    $.ajax({
-//        type: 'POST',
-//        url: '/admin/culturalProperties-regulate/searchAPI?categoryName=' + categoryName
-//             + '&searchName=' + searchName
-//             + '&searchRegion=' + searchRegion
-//             + '&searchDynasty=' + searchDynasty,
-////        contentType: 'application/json',
-//        success: function(data) {
-//            // 서버에서 받은 검색 결과 처리
-//            console.log(data); // 콘솔에 결과 출력 예시
-//            $('#list2').html(""); // 검색 결과를 표시할 테이블 초기화
-//
-//            $.each(data, function(index, culturalProperties) {
-//                var index1 = index + 1;
-//
-//                var htmlCheck = '<tr><td><input class="check2" type="checkbox" name="index" value="' + index + '"/></td>';
-//                var htmlContent =
-//                    '<td class="culturalPropertieId">' + index1 + '</td>' +
-//                    '<td class="culturalPropertiesName">' + culturalProperties.culturalPropertiesName + '</td>' +
-//                    '<td class="categoryName">' + culturalProperties.categoryName + '</td>' +
-//                    '<td class="region">' + culturalProperties.region + '</td>' +
-//                    '<td class="dynasty">' + culturalProperties.dynasty + '</td></tr>';
-//
-//                var finalHtml = htmlCheck + htmlContent;
-//                $('#list2').append(finalHtml);
-//            });
-//        },
-//        error: function(xhr, status, error) {
-//            console.error('API 호출 오류:', error);
-//        }
-//    });
-//});
-//
-//
-//        $('#reset2').click(function() { // 초기화 버튼 클릭 시 이벤트 처리
-//            // 각 입력 필드를 초기화하거나, 초기 상태로 복원하는 로직 추가
-//            $('#categoryFilter2').val('전체');
-//            $('#searchName2').val('');
-//            $('#searchRegion2').val('');
-//            $('#searchDynasty2').val('');
-//        });
-
-//-------------------------------------------------------
-//
-//$('#searchDB2').on('click', function() {
-//    $('#list1').empty();
-//
-//    var category = $('#categoryFilter2').val();
-//    var name = $('#searchName2').val();
-//    var region = $('#searchRegion2').val();
-//    var dynasty = $('#searchDynasty2').val();
-//
-//    // 검색 요청
-//    $.ajax({
-//        url: '/admin/cultural-properties-regulate/searchAPI',
-//        method: 'POST',
-//        contentType: 'application/json',
-//        data: JSON.stringify({
-//            categoryName: category,
-//            searchName: name,
-//            searchRegion: region,
-//            searchDynasty: dynasty
-//        }),
-//        success: function(response) {
-//            console.log('검색 결과:', response);
-//            // 검색 결과를 처리하는 함수 호출 (예: 테이블에 데이터 채우기)
-//        },
-//        error: function(xhr, status, error) {
-//            console.error('검색 오류:', error);
-//        }
-//    });
-//});
-//
-//// 초기화 버튼 클릭 이벤트
-//$('#reset2').on('click', function() {
-//    // 검색 필터 초기화
-//    $('#categoryFilter2').val('전체');
-//    $('#searchName2').val('');
-//    $('#searchRegion2').val('');
-//    $('#searchDynasty2').val('');
-//
-//    // 기본 데이터 로드 등의 필요한 동작 수행
-//});
-
-
-
-//
-
-
-
-
-//// 검색 버튼 클릭 이벤트
-//    $('#searchDB2').on('click', function() {
-//        $('#list2').empty(); // 검색 결과 초기화
-//
-//        var category = $('#categoryFilter2').val();
-//        var name = $('#searchName2').val();
-//        var region = $('#searchRegion2').val();
-//        var dynasty = $('#searchDynasty2').val();
-//
-//
-//        // 검색 결과의 총 개수 조회
-//        $.ajax({
-//            url: '/admin/cultural-properties-regulate/searchAPI',
-//            method: 'POST',
-//            data: {
-//                category: category,
-//                name: name,
-//                region: region,
-//                dynasty: dynasty
-//            },
-//            success: function(totalCount) {
-//                console.log('총 검색 결과 개수:', totalCount);
-//                // 첫 번째 페이지 로드
-//                searcAPICulturalProperties(category, name, region, dynasty, 1, totalCount);
-//            },
-//            error: function(xhr, status, error) {
-//                console.error('검색 결과 개수 조회 오류:', error);
-//            }
-//        });
-//    });
-
-//--------------------------
-//// 검색 버튼 클릭 이벤트 핸들러
-//$('#searchDB2').on('click', function() {
-//    performSearch();
-//});
-//
-//// 초기화 버튼 클릭 이벤트 핸들러
-//$('#reset2').on('click', function() {
-//    // 검색 필터 초기화
-//    $('#categoryFilter2').val('전체');
-//    $('#searchName2').val('');
-//    $('#searchRegion2').val('');
-//    $('#searchDynasty2').val('');
-//
-//    // 첫 페이지 로드
-//    performSearch();
-//});
-//
-//// 검색 수행 함수
-//function performSearch() {
-//    var category = $('#categoryFilter2').val();
-//    var name = $('#searchName2').val();
-//    var region = $('#searchRegion2').val();
-//    var dynasty = $('#searchDynasty2').val();
-//
-//    var searchForm = {
-//        categoryName: category,
-//        culturalPropertiesName: name,
-//        region: region,
-//        dynasty: dynasty
-//    };
-//
-//    $.ajax({
-//        url: '/admin/cultural-properties-regulate/searchAPI',
-//        method: 'POST',
-//        contentType: 'application/json',
-//        data: JSON.stringify(searchForm),
-//        success: function(response) {
-//            console.log('검색 결과:', response);
-//            // 검색 결과를 처리하는 로직 추가
-//            if (response && response.length > 0) {
-//                searchAPITable(response); // 검색 결과 테이블 업데이트
-//                var totalPages = Math.ceil(totalCount / 10); // 한 페이지에 10개씩 표시
-//                renderSearchAPIPagination(page, totalPages, category, name, region, dynasty, totalCount); // 페이지네이션 업데이트
-//            } else {
-//                $('#list2').empty();
-//                $('#paginationSection2').empty();
-//                alert('일치하는 데이터가 존재하지 않습니다.');
-//            }
-//        },
-//        error: function(xhr, status, error) {
-//            console.error('검색 요청 실패:', error);
-//        }
-//    });
-//}
-//
-//// 페이지네이션 업데이트 함수
-//function renderSearchAPIPagination(currentPage, totalPages, category, name, region, dynasty, totalCount) {
-//    const paginationContainer = $('#paginationSection1');
-//    paginationContainer.empty();
-//
-//    // 이전 버튼
-//    if (currentPage > 1) {
-//        paginationContainer.append(`
-//            <li class="page-item" id="prev-btn">
-//                <a class="page-link" href="#" aria-label="Previous">
-//                    <span aria-hidden="true">&laquo;</span>
-//                </a>
-//            </li>
-//        `);
-//    }
-//
-//    // 페이지 버튼 생성
-//    for (let i = 1; i <= totalPages; i++) {
-//        const pageButton = $('<li>')
-//            .addClass('page-item')
-//            .append($('<a>').addClass('page-link').text(i).attr('href', '#').data('page', i));
-//
-//        if (i === currentPage) {
-//            pageButton.addClass('active');
-//        }
-//
-//        paginationContainer.append(pageButton);
-//    }
-//
-//    // 다음 버튼
-//    if (currentPage < totalPages) {
-//        paginationContainer.append(`
-//            <li class="page-item" id="next-btn">
-//                <a class="page-link" href="#" aria-label="Next">
-//                    <span aria-hidden="true">&raquo;</span>
-//                </a>
-//            </li>
-//        `);
-//    }
-//
-//    // 페이지 버튼 클릭 이벤트 등록
-//    paginationContainer.find('.page-link').on('click', function(e) {
-//        e.preventDefault();
-//        const page = $(this).data('page');
-//        if (page) {
-//            performSearch(); // 페이지네이션 클릭 시 검색 함수 호출
-//        }
-//    });
-//
-//    // 이전 버튼 클릭 이벤트 등록
-//    $('#prev-btn').on('click', function(e) {
-//        e.preventDefault();
-//        if (currentPage > 1) {
-//            const prevPage = currentPage - 1;
-//            performSearch(); // 이전 버튼 클릭 시 검색 함수 호출
-//        }
-//    });
-//
-//    // 다음 버튼 클릭 이벤트 등록
-//    $('#next-btn').on('click', function(e) {
-//        e.preventDefault();
-//        if (currentPage < totalPages) {
-//            const nextPage = currentPage + 1;
-//            performSearch(); // 다음 버튼 클릭 시 검색 함수 호출
-//        }
-//    });
-//}
-
-//-------------------------------------
-
-
-
-//    // 초기화 버튼 클릭 이벤트
-//    $('#reset2').on('click', function() {
-//        // 검색 필터 초기화
-//        $('#categoryFilter2').val('전체');
-//        $('#searchName2').val('');
-//        $('#searchRegion2').val('');
-//        $('#searchDynasty2').val('');
-//
-//        // 첫 페이지 로드
-//        $('#searchDB2').click(); // 검색 버튼 클릭과 동일한 로직을 재사용
-//    });
-//
-//
-//$('#searchDB2').on('click', function() {
-//                var category = $('#categoryFilter2').val();
-//                var name = $('#searchName2').val();
-//                var region = $('#searchRegion2').val();
-//                var dynasty = $('#searchDynasty2').val();
-//
-//                var searchForm = {
-//                    categoryName: category,
-//                    culturalPropertiesName: name,
-//                    region: region,
-//                    dynasty: dynasty
-//                };
-//                });
-//
-//    function searcAPICulturalProperties(category, name, region, dynasty, page, totalCount) {
-//                $.ajax({
-//                    url: '/admin/cultural-properties-regulate/searchAPI',
-//                    method: 'POST',
-//                    contentType: 'application/json',
-//                    data: JSON.stringify(searchForm),
-//                    success: function(response) {
-//                        console.log('검색 결과:', response);
-//                        // 검색 결과를 처리하는 로직 추가
-//                    },
-//                    error: function(xhr, status, error) {
-//                        console.error('검색 요청 실패:', error);
-//                    }
-//                });
-//
-//            }
-//
-////        $.ajax({
-////            url: '/admin/cultural-properties-regulate/searchDB',
-////            method: 'POST',
-////            data: {
-////                category: category,
-////                name: name,
-////                region: region,
-////                dynasty: dynasty,
-////                page: page
-////            },
-////            success: function(response) {
-////                console.log('검색 결과:', response);
-////
-////                if (response && response.length > 0) {
-////                    searchAPITable(response); // 검색 결과 테이블 업데이트
-////
-////                    var totalPages = Math.ceil(totalCount / 10); // 한 페이지에 10개씩 표시
-////
-////                    renderSearchAPIPagination(page, totalPages, category, name, region, dynasty, totalCount); // 페이지네이션 업데이트
-////
-////                } else {
-////                    $('#list2').empty();
-////                    $('#paginationSection2').empty();
-////                    alert('일치하는 데이터가 존재하지 않습니다.');
-////                }
-////            },
-////            error: function(xhr, status, error) {
-////                console.error('검색 오류:', error);
-////            }
-////        });
-////    }
-//
-//    // 페이지네이션 업데이트 함수
-//    function renderSearchAPIPagination(currentPage, totalPages, category, name, region, dynasty, totalCount) {
-//        const paginationContainer = $('#paginationSection1');
-//        paginationContainer.empty();
-//
-//        // 이전 버튼
-//        if (currentPage > 1) {
-//            paginationContainer.append(`
-//                <li class="page-item" id="prev-btn">
-//                    <a class="page-link" href="#" aria-label="Previous">
-//                        <span aria-hidden="true">&laquo;</span>
-//                    </a>
-//                </li>
-//            `);
-//        }
-//
-//        // 페이지 버튼 생성
-//        for (let i = 1; i <= totalPages; i++) {
-//            const pageButton = $('<li>')
-//                .addClass('page-item')
-//                .append($('<a>').addClass('page-link').text(i).attr('href', '#').data('page', i));
-//
-//            if (i === currentPage) {
-//                pageButton.addClass('active');
-//            }
-//
-//            paginationContainer.append(pageButton);
-//        }
-//
-//        // 다음 버튼
-//        if (currentPage < totalPages) {
-//            paginationContainer.append(`
-//                <li class="page-item" id="next-btn">
-//                    <a class="page-link" href="#" aria-label="Next">
-//                        <span aria-hidden="true">&raquo;</span>
-//                    </a>
-//                </li>
-//            `);
-//        }
-//
-//        // 페이지 버튼 클릭 이벤트 등록
-//        paginationContainer.find('.page-link').on('click', function(e) {
-//            e.preventDefault();
-//            const page = $(this).data('page');
-//            if (page) {
-//                searcAPICulturalProperties(category, name, region, dynasty, page, totalCount);
-//            }
-//        });
-//
-//        // 이전 버튼 클릭 이벤트 등록
-//        $('#prev-btn').on('click', function(e) {
-//            e.preventDefault();
-//            if (currentPage > 1) {
-//                const prevPage = currentPage - 1;
-//                searcAPICulturalProperties(category, name, region, dynasty, prevPage, totalCount);
-//            }
-//        });
-//
-//        // 다음 버튼 클릭 이벤트 등록
-//        $('#next-btn').on('click', function(e) {
-//            e.preventDefault();
-//            if (currentPage < totalPages) {
-//                const nextPage = currentPage + 1;
-//                searcAPICulturalProperties(category, name, region, dynasty, nextPage, totalCount);
-//            }
-//        });
-//    }
-//------------------------------------------------
-//
-//    $('#searchDB2').click(function() {
-//        var category = $('#categoryFilter2').val();
-//        var name = $('#searchName2').val();
-//        var region = $('#searchRegion2').val();
-//        var dynasty = $('#searchDynasty2').val();
-//
-//        var searchData = {
-//            categoryName: category,
-//            culturalPropertiesName: name,
-//            region: region,
-//            dynasty: dynasty
-//        };
-//
-//        searchAPICulturalProperties(searchData);
-////        searchAPITable(searchResult);
-//    });
-//
-//    $('#reset2').click(function() {
-//        // 필터 초기화 작업 추가
-//        $('#categoryFilter2').val('');
-//        $('#searchName2').val('');
-//        $('#searchRegion2').val('');
-//        $('#searchDynasty2').val('');
-//
-//        // 전체 데이터 다시 불러오기
-//        searchAPICulturalProperties({});
-//    });
-//
-//    function searchAPICulturalProperties(searchData) {
-//        $('#list2').html(""); // 테이블 내용 초기화
-//        $('#loadingIndicator').show(); // 로딩 표시
-//
-//        $.ajax({
-//            url: '/api/cultural-properties/searchAPI',
-//            method: 'GET',
-//            data: searchData,
-//            beforeSend: function() {
-//                $('#loadingIndicator').show(); // Ajax 요청 전에 로딩 표시 보이기
-//            },
-//            success: function(data) {
-//                // 검색 결과를 테이블에 추가하는 함수 호출
-////                renderSearchAPIResults(data);
-//                searchAPITable(data);
-//            },
-//            error: function(xhr, status, error) {
-//                console.error('API 호출 오류:', error);
-//            },
-//            complete: function() {
-//                $('#loadingIndicator').hide(); // 데이터 로딩 후 로딩 인디케이터 숨기기
-//            }
-//        });
-//    }
-//
-////    function renderSearchAPIResults(data) {
-////        $.each(data, function(index, culturalProperty) {
-////            var index1 = index + 1; // 페이지에 따라서 조정이 필요할 수 있습니다
-////
-////            var htmlCheck = '<tr><td><input class="check2" type="checkbox" name="index" value="' + index + '"/></td>';
-////            var htmlContent =
-////                '<td class="culturalPropertieId">' + index1 + '</td>' +
-////                '<td class="culturalPropertiesName">' + culturalProperty.culturalPropertiesName + '</td>' +
-////                '<td class="categoryName">' + culturalProperty.categoryName + '</td>' +
-////                '<td class="region">' + culturalProperty.region + '</td>' +
-////                '<td class="dynasty">' + culturalProperty.dynasty + '</td></tr>';
-////
-////            var finalHtml = htmlCheck + htmlContent;
-////            $('#list2').append(finalHtml);
-////        });
-////
-////        // 페이지네이션 다시 그리기 등의 작업 추가 가능
-////    }
-//
-//
-//// Ajax를 통해 API 데이터 불러오기
-//    function searchAPITable(data) {
-//        $('#list2').html(""); // 테이블 내용 초기화
-//        $('#loadingIndicator').show(); // 로딩 표시
-//
-//        $.each(data, function(index, culturalProperties) {
-//            var index1 = (pageIndex - 1) * itemsPerPage2 + index + 1;
-//
-//            var htmlCheck = '<tr><td><input class="check2" type="checkbox" name="index" value="' + index + '"/></td>';
-//            var htmlContent =
-//                '<td class="culturalPropertieId">' + index1 + '</td>' +
-//                '<td class="culturalPropertiesName">' + culturalProperties.culturalPropertiesName + '</td>' +
-//                '<td class="categoryName">' + culturalProperties.categoryName + '</td>' +
-//                '<td class="region">' + culturalProperties.region + '</td>' +
-//                '<td class="dynasty">' + culturalProperties.dynasty + '</td></tr>';
-//
-//            var finalHtml = htmlCheck + htmlContent;
-//            $('#list2').append(finalHtml);
-//        });
-////
-////                // 페이지네이션 다시 그리기
-////                renderPagination2();
-//
-//
-//        // 데이터를 모두 표시한 후 로딩 인디케이터 숨기기
-//        setTimeout(function() {
-//            $('#loadingIndicator').hide();
-//        });
-//
-//    }
-
-//-------------------------------------------
-//
-//var currentPage = 0; // 현재 페이지 초기화
-//    var pageSize = 10; // 페이지당 표시할 아이템 수
-//    var totalPages = 0; // 전체 페이지 수
-//
-//    $('#searchDB2').click(function() {
-//        var category = $('#categoryFilter2').val();
-//        var name = $('#searchName2').val();
-//        var region = $('#searchRegion2').val();
-//        var dynasty = $('#searchDynasty2').val();
-//
-//        var searchData = {
-//            categoryName: category,
-//            culturalPropertiesName: name,
-//            region: region,
-//            dynasty: dynasty,
-//            pageIndex: currentPage,
-//            pageSize: pageSize
-//        };
-//
-//        searchAPICulturalProperties(searchData);
-//    });
-//
-//    $('#reset2').click(function() {
-//        // 필터 초기화 작업 추가
-//        $('#categoryFilter2').val('');
-//        $('#searchName2').val('');
-//        $('#searchRegion2').val('');
-//        $('#searchDynasty2').val('');
-//
-//        currentPage = 0; // 페이지 초기화
-//        searchAPICulturalProperties({}); // 전체 데이터 다시 불러오기
-//    });
-//
-//    function searchAPICulturalProperties(searchData) {
-//        $('#list2').html(""); // 테이블 내용 초기화
-//        $('#loadingIndicator').show(); // 로딩 표시
-//
-//        $.ajax({
-//            url: '/api/cultural-properties/searchAPI',
-//            method: 'GET',
-//            data: searchData,
-//            beforeSend: function() {
-//                $('#loadingIndicator').show(); // Ajax 요청 전에 로딩 표시 보이기
-//            },
-//            success: function(data, status, xhr) {
-//                totalPages = xhr.getResponseHeader('Total-Pages'); // 전체 페이지 수 설정
-//                currentPage = xhr.getResponseHeader('Current-Page'); // 현재 페이지 설정
-//
-//                // 검색 결과를 테이블에 추가하는 함수 호출
-//                searchAPITable(data);
-//            },
-//            error: function(xhr, status, error) {
-//                console.error('API 호출 오류:', error);
-//            },
-//            complete: function() {
-//                $('#loadingIndicator').hide(); // 데이터 로딩 후 로딩 인디케이터 숨기기
-//            }
-//        });
-//    }
-//
-//    function searchAPITable(data) {
-//        $('#list2').html(""); // 테이블 내용 초기화
-//        $('#loadingIndicator').show(); // 로딩 표시
-//
-//        $.each(data.content, function(index, culturalProperties) {
-//            var index1 = currentPage * pageSize + index + 1;
-//
-//            var htmlCheck = '<tr><td><input class="check2" type="checkbox" name="index" value="' + index + '"/></td>';
-//            var htmlContent =
-//                '<td class="culturalPropertieId">' + index1 + '</td>' +
-//                '<td class="culturalPropertiesName">' + culturalProperties.culturalPropertiesName + '</td>' +
-//                '<td class="categoryName">' + culturalProperties.categoryName + '</td>' +
-//                '<td class="region">' + culturalProperties.region + '</td>' +
-//                '<td class="dynasty">' + culturalProperties.dynasty + '</td></tr>';
-//
-//            var finalHtml = htmlCheck + htmlContent;
-//            $('#list2').append(finalHtml);
-//        });
-//
-//        // 페이지네이션 다시 그리기
-//        renderSearchAPIPagination();
-//    }
-//
-//    function renderSearchAPIPagination() {
-//        $('#pagination').html(""); // 페이지네이션 영역 초기화
-//
-//        for (var i = 0; i < totalPages; i++) {
-//            var pageNumber = i + 1;
-//            var pageLink = '<a href="#" onclick="changePage(' + i + ')">' + pageNumber + '</a>';
-//            $('#pagination2').append(pageLink);
-//        }
-//    }
-//
-//    function changePage(pageIndex) {
-//        currentPage = pageIndex;
-//        var category = $('#categoryFilter2').val();
-//        var name = $('#searchName2').val();
-//        var region = $('#searchRegion2').val();
-//        var dynasty = $('#searchDynasty2').val();
-//
-//        var searchData = {
-//            categoryName: category,
-//            culturalPropertiesName: name,
-//            region: region,
-//            dynasty: dynasty,
-//            pageIndex: currentPage,
-//            pageSize: pageSize
-//        };
-//
-//        searchAPICulturalProperties(searchData);
-//    }
-
-
-//-------------------------------------
-
-//$('#searchDB2').click(function() {
-//    var category = $('#categoryFilter2').val();
-//    var name = $('#searchName2').val();
-//    var region = $('#searchRegion2').val();
-//    var dynasty = $('#searchDynasty2').val();
-//    var pageIndex = 0; // 초기 페이지
-//
-//    var searchData = {
-//        categoryName: category,
-//        culturalPropertiesName: name,
-//        region: region,
-//        dynasty: dynasty,
-//        pageIndex: pageIndex,
-//        pageSize: 10
-//    };
-//
-//    searchAPICulturalProperties(searchData);
-//});
-//
-//function searchAPICulturalProperties(searchData) {
-//    $('#list2').html(""); // 테이블 내용 초기화
-//    $('#loadingIndicator').show(); // 로딩 표시
-//
-//    $.ajax({
-//        url: '/admin/cultural-properties-regulate/searchAPI',
-//        method: 'GET',
-//        data: searchData,
-//        beforeSend: function() {
-//            $('#loadingIndicator').show(); // Ajax 요청 전에 로딩 표시 보이기
-//        },
-//        success: function(data) {
-//            searchAPITable(data.content); // Page 객체에서 content를 추출하여 테이블에 추가
-//        },
-//        error: function(xhr, status, error) {
-//            console.error('API 호출 오류:', error);
-//        },
-//        complete: function() {
-//            $('#loadingIndicator').hide(); // 데이터 로딩 후 로딩 인디케이터 숨기기
-//        }
-//    });
-//}
-//----------------------------
-
-//// 검색 버튼 클릭 이벤트
-//$('#searchDB2').on('click', function() {
-//    var pageIndex = parseInt($('#searchPage2').val()) || 1; // 입력된 페이지 번호 가져오기 (기본값 1)
-//
-//    // 페이지 번호를 업데이트하고 API 호출
-//    currentPage2 = pageIndex; // 현재 페이지 업데이트
-//    fetchApiData(currentPage2); // API 호출
-//});
-
-
-// 페이지 검색 기능 추가
+    // 페이지 검색 기능 추가
     $('#searchPage2').on('keypress', function(event) {
         if (event.key === 'Enter') {
             const pageIndex = parseInt($(this).val());
@@ -1290,21 +572,12 @@ $(document).ready(function() {
         }
     });
 
-//    // 검색 버튼 클릭 시 페이지 이동
-//    $('#searchDB2').on('click', function() {
-//        const pageIndex = parseInt($('#searchPage2').val());
-//        if (!isNaN(pageIndex) && pageIndex > 0) {
-//            fetchApiData(pageIndex);
-//        } else {
-//            alert('유효한 페이지 번호를 입력하세요.');
-//        }
-//    });
 
-// 검색 버튼 클릭 시 페이지 이동
+
+    // 검색 버튼 클릭 시 페이지 이동
     $('#searchPageBtn').on('click', function() {
         var pageIndex = parseInt($('#searchPage2').val()) || 1; // 입력된 페이지 번호 가져오기 (기본값 1)
         if (!isNaN(pageIndex) && pageIndex > 0) {
-//            fetchApiData(pageIndex);
             currentPage2 = pageIndex; // 현재 페이지 업데이트
             fetchApiData(currentPage2); // API 호출
         } else {
@@ -1312,433 +585,92 @@ $(document).ready(function() {
         }
     });
 
-//    // 초기화 버튼 클릭 시 필드 초기화
-//    $('#reset2').on('click', function() {
-//        $('#searchName2').val('');
-//        $('#searchRegion2').val('');
-//        $('#searchDynasty2').val('');
-//        $('#searchPage2').val('1'); // 페이지 검색 초기화
-//        $('#categoryFilter2').val('전체'); // 카테고리 필터 초기화
-//    });
 
-$('#reset2').on('click', function() {
-    // 페이지를 1로 초기화
-    currentPage2 = 1;
+    $('#reset2').on('click', function() {
+        // 페이지를 1로 초기화
+        currentPage2 = 1;
 
-    // 텍스트 박스 초기화
-    $('#searchName2').val('');
-    $('#searchRegion2').val('');
-    $('#searchDynasty2').val('');
-    $('#searchPage2').val('');
+        // 텍스트 박스 초기화
+        $('#searchName2').val('');
+        $('#searchRegion2').val('');
+        $('#searchDynasty2').val('');
+        $('#searchPage2').val('');
 
-    // 초기 페이지 데이터 요청
-    fetchApiData(currentPage2); // API 호출
-});
+        // 초기 페이지 데이터 요청
+        fetchApiData(currentPage2); // API 호출
+    });
 
-//----------------------
 
-//$(document).ready(function() {
-//    // 검색 버튼 클릭 이벤트
+//----------------------관리자 api 검색 보류
+
+
+//
 //    $('#searchDB2').on('click', function() {
-//        var pageIndex = 1; // 검색 시 첫 페이지로 초기화
-//        fetchApiDataWithFilters(pageIndex);
-//    });
+//            var pageIndex = 1; // 검색 시 첫 페이지로 초기화
+//            searchAPIDataFilter(pageIndex);
+//        });
 //
-//    // 초기화 버튼 클릭 이벤트
-//    $('#reset2').on('click', function() {
-//        // 입력 필드 초기화
-//        $('#categoryFilter2').val('전체');
-//        $('#searchName2').val('');
-//        $('#searchRegion2').val('');
-//        $('#searchDynasty2').val('');
-//        $('#searchPage2').val('1'); // 페이지 입력 필드 초기화
 //
-//        // 첫 페이지로 초기화
-//        fetchApiDataWithFilters(1);
-//    });
-//});
-
-$('#searchDB2').on('click', function() {
-        var pageIndex = 1; // 검색 시 첫 페이지로 초기화
-        searchAPIDataFilter(pageIndex);
-    });
-
-
-function searchAPIDataFilter(pageIndex) {
-    $('#list2').html(""); // 테이블 내용 초기화
-    $('#loadingIndicator').show(); // 로딩 표시
-
-    // 검색 필드 값 가져오기
-    var categoryName = $('#categoryFilter2').val(); // 종목
-    var culturalPropertiesName = $('#searchName2').val(); // 문화재 이름
-    var region = $('#searchRegion2').val(); // 지역
-    var dynasty = $('#searchDynasty2').val(); // 시대
-
-
-    $.ajax({
-        url: '/admin/cultural-properties-regulate/searchAPI?pageIndex=' + pageIndex,
-        method: 'POST',
-        contentType: 'application/json',
-        data: JSON.stringify({
-            categoryName: categoryName,
-            culturalPropertiesName: culturalPropertiesName,
-            region: region,
-            dynasty: dynasty
-        }),
-        beforeSend: function() {
-            $('#loadingIndicator').show(); // Ajax 요청 전에 로딩 표시 보이기
-        },
-        success: function(list) {
-            $.each(list, function(index, culturalProperties) {
-                var index1 = (pageIndex - 1) * itemsPerPage2 + index + 1;
-
-                var htmlCheck = '<tr><td><input class="check2" type="checkbox" name="index" value="' + index + '"/></td>';
-                var htmlContent =
-                    '<td class="culturalPropertieId">' + index1 + '</td>' +
-                    '<td class="culturalPropertiesName">' + culturalProperties.culturalPropertiesName + '</td>' +
-                    '<td class="categoryName">' + culturalProperties.categoryName + '</td>' +
-                    '<td class="region">' + culturalProperties.region + '</td>' +
-                    '<td class="dynasty">' + culturalProperties.dynasty + '</td></tr>';
-
-                var finalHtml = htmlCheck + htmlContent;
-                $('#list2').append(finalHtml);
-            });
-
-            // 페이지네이션 다시 그리기
-            renderSearchAPIPagination(pageIndex, list.length); // 페이지네이션 그리기
-
-            // 데이터를 모두 표시한 후 로딩 인디케이터 숨기기
-            setTimeout(function() {
-                $('#loadingIndicator').hide();
-            });
-        },
-        error: function(xhr, status, error) {
-            console.error('API 호출 오류:', error);
-        }
-    });
-}
-
-// 페이지 버튼 생성 함수
-function renderSearchAPIPagination(pageIndex, totalItems) {
-    $('#paginationSection2').empty(); // 기존 버튼 제거
-
-    // 페이지 수 계산 (가정: 10개씩 표시)
-    var itemsPerPage = 10;
-    var totalPages = Math.ceil(totalItems / itemsPerPage);
-
-    // 이전 버튼
-    var prevHtml = '<li class="page-item ' + (pageIndex == 1 ? 'disabled' : '') + '">' +
-        '<a class="page-link prev-link" href="#" data-page="' + (pageIndex - 1) + '">이전</a>' +
-        '</li>';
-    $('#paginationSection2').append(prevHtml);
-
-    // 페이지 번호 버튼
-    var startPage = (Math.ceil(pageIndex / 10) - 1) * 10 + 1;
-    var endPage = Math.min(startPage + 9, totalPages);
-
-    for (var pageNum = startPage; pageNum <= endPage; pageNum++) {
-        var pageHtml = '<li class="page-item ' + (pageNum == pageIndex ? 'active' : '') + '">' +
-            '<a class="page-link page-num" href="#" data-page="' + pageNum + '">' + pageNum + '</a>' +
-            '</li>';
-        $('#paginationSection2').append(pageHtml);
-    }
-
-    // 다음 버튼
-    var nextHtml = '<li class="page-item ' + (pageIndex >= totalPages ? 'disabled' : '') + '">' +
-        '<a class="page-link next-link" href="#" data-page="' + (pageIndex + 1) + '">다음</a>' +
-        '</li>';
-    $('#paginationSection2').append(nextHtml);
-
-    // 페이지 번호 버튼 클릭 이벤트
-    $('.page-num').on('click', function() {
-        var selectedPage = $(this).data('page');
-        searchAPIDataFilter(selectedPage);
-    });
-
-    // 이전 버튼 클릭 이벤트
-    $('.prev-link').on('click', function(e) {
-        e.preventDefault();
-        if (pageIndex > 1) {
-            searchAPIDataFilter(pageIndex - 1);
-        }
-    });
-
-    // 다음 버튼 클릭 이벤트
-    $('.next-link').on('click', function(e) {
-        e.preventDefault();
-        if (pageIndex < totalPages) {
-            searchAPIDataFilter(pageIndex + 1);
-        }
-    });
-}
-
-
-
-//------------------------------검색안됨 / 이거 수정중
-//// 검색 버튼 클릭 이벤트
-//    $('#searchDB2').click(function() {
-//        loadPage(0); // 페이지 인덱스를 0으로 초기화하여 첫 페이지를 로드
-//    });
+//    function searchAPIDataFilter(pageIndex) {
+//        $('#list2').html(""); // 테이블 내용 초기화
+//        $('#loadingIndicator').show(); // 로딩 표시
 //
-//    // 페이지 로드 함수
-//    function loadPage(pageIndex) {
-//        // 드롭다운에서 카테고리 값 가져오기
-//        var category = $('#categoryFilter2').val(); // 카테고리 선택 값
-//        var name = $('#searchName2').val(); // 문화재 이름
-//        var region = $('#searchRegion2').val(); // 지역 값
-//        var dynasty = $('#searchDynasty2').val(); // 왕조 값
+//        // 검색 필드 값 가져오기
+//        var categoryName = $('#categoryFilter2').val(); // 종목
+//        var culturalPropertiesName = $('#searchName2').val(); // 문화재 이름
+//        var region = $('#searchRegion2').val(); // 지역
+//        var dynasty = $('#searchDynasty2').val(); // 시대
 //
-//        var searchData = {
-//            categoryName: category === "전체" ? null : category, // '전체'일 경우 null로 설정
-//            culturalPropertiesName: name,
-//            region: region,
-//            dynasty: dynasty,
-//            pageIndex: pageIndex, // 현재 페이지 인덱스
-//            pageSize: 10 // 한 페이지에 표시할 데이터 수
-//        };
-//
-//        console.log(searchData); // 디버깅을 위해 로그 추가
 //
 //        $.ajax({
-//            url: '/admin/cultural-properties-regulate/searchAPI',
-//            method: 'GET',
-//            data: searchData,
-//            beforeSend: function() {
-//                $('#loadingIndicator').show(); // Ajax 요청 전에 로딩 표시
-//            },
-//            success: function(data) {
-//            console.log("API 응답 데이터:", data); // 응답 데이터 로그
-//                searchAPITable(data.content); // 페이지에 담긴 데이터로 테이블 업데이트
-//                renderSearchAPIPagination(data); // 페이지네이션 업데이트
-//            },
-//            error: function(xhr, status, error) {
-//                console.error('API 호출 오류:', error);
-//            },
-//            complete: function() {
-//                $('#loadingIndicator').hide(); // 데이터 로딩 후 로딩 인디케이터 숨기기
-//            }
-//        });
-//    }
+//    //        url: '/admin/cultural-properties-regulate/searchAPI?pageIndex=' + pageIndex,
+//    //        method: 'POST',
+//    //        contentType: 'application/json',
+//    //        data: JSON.stringify({
+//    //            categoryName: categoryName,
+//    //            culturalPropertiesName: culturalPropertiesName,
+//    //            region: region,
+//    //            dynasty: dynasty
+//    //        }),
+//    // url: '/admin/cultural-properties-regulate/searchAPI?pageIndex=' + pageIndex +
+//    //             '&categoryName=' + categoryName +
+//    //             '&culturalPropertiesName=' + culturalPropertiesName +
+//    //             '&region=' + region +
+//    //             '&dynasty=' + dynasty,
 //
-//    // 검색 결과 테이블 생성 함수
-//    function searchAPITable(data) {
-//        $('#list2').html(""); // 테이블 내용 초기화
-//
-//        $.each(data, function(index, culturalProperties) {
-//            var index1 = index + 1; // 인덱스 조정
-//
-//            var htmlCheck = '<tr><td><input class="check2" type="checkbox" name="index" value="' + index + '"/></td>';
-//            var htmlContent =
-//                '<td class="culturalPropertieId">' + index1 + '</td>' +
-//                '<td class="culturalPropertiesName">' + culturalProperties.culturalPropertiesName + '</td>' +
-//                '<td class="categoryName">' + culturalProperties.categoryName + '</td>' +
-//                '<td class="region">' + culturalProperties.region + '</td>' +
-//                '<td class="dynasty">' + culturalProperties.dynasty + '</td></tr>';
-//
-//            var finalHtml = htmlCheck + htmlContent;
-//            $('#list2').append(finalHtml);
-//        });
-//    }
-//
-//    // 페이지네이션 렌더링 함수
-//    function renderSearchAPIPagination(data) {
-//        var paginationHtml = '';
-//        for (var i = 0; i < data.totalPages; i++) {
-//            paginationHtml += '<button onclick="loadPage(' + i + ')">' + (i + 1) + '</button>';
-//        }
-//        $('#pagination2').html(paginationHtml);
-//    }
-
-//------------------------서비스 함수재사용
-
-//$('#searchDB2').click(function() {
-//    var pageIndex = 1; // 검색 시 페이지 인덱스를 초기화
-//    var categoryName = $('#categoryFilter2').val();
-//    var culturalPropertiesName = $('#searchName2').val();
-//    var region = $('#searchRegion2').val();
-//    var dynasty = $('#searchDynasty2').val();
-//
-//    fetchApiData(pageIndex, categoryName, culturalPropertiesName, region, dynasty);
-//});
-//
-//function fetchApiData(pageIndex, categoryName, culturalPropertiesName, region, dynasty) {
-//    $('#list2').html(""); // 테이블 내용 초기화
-//    $('#loadingIndicator').show(); // 로딩 표시
-//
-//    $.ajax({
-//        url: '/admin/cultural-properties-regulate/searchAPI?pageIndex=' + pageIndex +
+//    url: '/admin/cultural-properties-regulate/searchAPI?pageIndex=' + pageIndex +
 //             '&categoryName=' + encodeURIComponent(categoryName) +
 //             '&culturalPropertiesName=' + encodeURIComponent(culturalPropertiesName) +
 //             '&region=' + encodeURIComponent(region) +
 //             '&dynasty=' + encodeURIComponent(dynasty),
-//        method: 'POST',
-//        contentType: 'application/json',
-//        beforeSend: function() {
-//            $('#loadingIndicator').show(); // Ajax 요청 전에 로딩 표시 보이기
-//        },
-//        success: function(list) {
-//            $.each(list, function(index, culturalProperties) {
-//                var index1 = (pageIndex - 1) * itemsPerPage2 + index + 1;
-//
-//                var htmlCheck = '<tr><td><input class="check2" type="checkbox" name="index" value="' + index + '"/></td>';
-//                var htmlContent =
-//                    '<td class="culturalPropertieId">' + index1 + '</td>' +
-//                    '<td class="culturalPropertiesName">' + culturalProperties.culturalPropertiesName + '</td>' +
-//                    '<td class="categoryName">' + culturalProperties.categoryName + '</td>' +
-//                    '<td class="region">' + culturalProperties.region + '</td>' +
-//                    '<td class="dynasty">' + culturalProperties.dynasty + '</td></tr>';
-//
-//                var finalHtml = htmlCheck + htmlContent;
-//                $('#list2').append(finalHtml);
-//            });
-//
-//            // 페이지네이션 다시 그리기
-////            renderPagination2();
-//
-//            // 데이터를 모두 표시한 후 로딩 인디케이터 숨기기
-//            setTimeout(function() {
-//                $('#loadingIndicator').hide();
-//            });
-//        },
-//        error: function(xhr, status, error) {
-//            console.error('API 호출 오류:', error);
-//        }
-//    });
-//}
-
-    //------------------
-
-//function searchAPITable(data) {
-//    $('#list2').html(""); // 테이블 내용 초기화
-//
-//    $.each(data, function(index, culturalProperties) {
-//        var index1 = index + 1; // 인덱스 조정
-//
-//        var htmlCheck = '<tr><td><input class="check2" type="checkbox" name="index" value="' + index + '"/></td>';
-//        var htmlContent =
-//            '<td class="culturalPropertieId">' + index1 + '</td>' +
-//            '<td class="culturalPropertiesName">' + culturalProperties.culturalPropertiesName + '</td>' +
-//            '<td class="categoryName">' + culturalProperties.categoryName + '</td>' +
-//            '<td class="region">' + culturalProperties.region + '</td>' +
-//            '<td class="dynasty">' + culturalProperties.dynasty + '</td></tr>';
-//
-//        var finalHtml = htmlCheck + htmlContent;
-//        $('#list2').append(finalHtml);
-//    });
-//}
-//
-//function renderSearchAPIPagination(data) {
-//    // 페이지네이션 렌더링
-//    var paginationHtml = '';
-//    for (var i = 0; i < data.totalPages; i++) {
-//        paginationHtml += '<button onclick="loadPage(' + i + ')">' + (i + 1) + '</button>';
-//    }
-//    $('#pagination').html(paginationHtml);
-//}
-
-//----------------------------------------
-
-//    // Ajax를 통해 API 데이터 불러오기
-//    function searchAPITable(list) {
-//        $('#list2').html(""); // 테이블 내용 초기화
-//        $('#loadingIndicator').show(); // 로딩 표시
-//
-//        $.each(list, function(index, culturalProperties) {
-//            var index1 = (pageIndex - 1) * itemsPerPage2 + index + 1;
-//
-//            var htmlCheck = '<tr><td><input class="check2" type="checkbox" name="index" value="' + index + '"/></td>';
-//            var htmlContent =
-//                '<td class="culturalPropertieId">' + index1 + '</td>' +
-//                '<td class="culturalPropertiesName">' + culturalProperties.culturalPropertiesName + '</td>' +
-//                '<td class="categoryName">' + culturalProperties.categoryName + '</td>' +
-//                '<td class="region">' + culturalProperties.region + '</td>' +
-//                '<td class="dynasty">' + culturalProperties.dynasty + '</td></tr>';
-//
-//            var finalHtml = htmlCheck + htmlContent;
-//            $('#list2').append(finalHtml);
-//        });
-////
-////                // 페이지네이션 다시 그리기
-////                renderPagination2();
-//
-//
-//        // 데이터를 모두 표시한 후 로딩 인디케이터 숨기기
-//        setTimeout(function() {
-//            $('#loadingIndicator').hide();
-//        });
-//
-//    }
-
-//---------------------------------------------------------
-
-//        $('#searchForm').submit(function(event) {
-//            event.preventDefault(); // 폼 제출 기본 동작 방지
-//
-//            var formData = {
-//                searchName: $('#searchName').val(),
-//                categoryName: $('#categoryFilter').val(), // 예시로 카테고리 필터 값을 추가
-//                searchRegion: $('#searchRegion').val(),
-//                searchDynasty: $('#searchDynasty').val()
-//                // 필요한 검색 조건을 여기에 추가
-//            };
-//
-//            $.ajax({
-//                type: 'POST',
-//                contentType: 'application/json',
-//                url: '/admin/culturalProperties-regulate/searchAPI',
-//                data: JSON.stringify(formData),
-//                success: function(data) {
-//                    $('#list2').html(""); // 검색 결과를 표시할 테이블 초기화
-//
-//                    $.each(data, function(index, culturalProperties) {
-//                        var index1 = index + 1;
-//
-//                        var htmlCheck = '<tr><td><input class="check2" type="checkbox" name="index" value="' + index + '"/></td>';
-//                        var htmlContent =
-//                            '<td class="culturalPropertieId">' + index1 + '</td>' +
-//                            '<td class="culturalPropertiesName">' + culturalProperties.culturalPropertiesName + '</td>' +
-//                            '<td class="categoryName">' + culturalProperties.categoryName + '</td>' +
-//                            '<td class="region">' + culturalProperties.region + '</td>' +
-//                            '<td class="dynasty">' + culturalProperties.dynasty + '</td></tr>';
-//
-//                        var finalHtml = htmlCheck + htmlContent;
-//                        $('#list2').append(finalHtml);
-//                    });
-//                },
-//                error: function(xhr, status, error) {
-//                    console.error('API 호출 오류:', error);
-//                }
-//            });
-//        });
-
-
-
-
-//    // 검색 버튼 클릭 시
-//    $('#searchDB2').click(function() {
-//        applyFilters();
-//    });
-//
-//    // 초기화 버튼 클릭 시
-//    $('#reset2').click(function() {
-//        resetFilters();
-//    });
-//
-//    function applyFilters() {
-//        var category = $('#categoryFilter2').val();
-//        var name = $('#searchName2').val().toLowerCase();
-//        var region = $('#searchRegion2').val().toLowerCase();
-//        var dynasty = $('#searchDynasty2').val().toLowerCase();
-//
-//        // 여기서 AJAX로 데이터를 불러와야 하며, 받아온 데이터를 필터링합니다.
-//        // 예시로 간단히 데이터를 필터링하고 결과를 표시하는 부분을 작성합니다.
-//        $.ajax({
-//            url: '/admin/cultural-properties-regulate/fetchApiData',
 //            method: 'POST',
 //            contentType: 'application/json',
-//            data: JSON.stringify({ category: category, name: name, region: region, dynasty: dynasty }),
+//            beforeSend: function() {
+//                $('#loadingIndicator').show(); // Ajax 요청 전에 로딩 표시 보이기
+//            },
 //            success: function(list) {
-//                displayFilteredResults(list);
+//                $.each(list, function(index, culturalProperties) {
+//                    var index1 = (pageIndex - 1) * itemsPerPage2 + index + 1;
+//
+//                    var htmlCheck = '<tr><td><input class="check2" type="checkbox" name="index" value="' + index + '"/></td>';
+//                    var htmlContent =
+//                        '<td class="culturalPropertieId">' + index1 + '</td>' +
+//                        '<td class="culturalPropertiesName">' + culturalProperties.culturalPropertiesName + '</td>' +
+//                        '<td class="categoryName">' + culturalProperties.categoryName + '</td>' +
+//                        '<td class="region">' + culturalProperties.region + '</td>' +
+//                        '<td class="dynasty">' + culturalProperties.dynasty + '</td></tr>';
+//
+//                    var finalHtml = htmlCheck + htmlContent;
+//                    $('#list2').append(finalHtml);
+//                });
+//
+//                // 페이지네이션 다시 그리기
+//                renderSearchAPIPagination(pageIndex, list.length); // 페이지네이션 그리기
+//
+//                // 데이터를 모두 표시한 후 로딩 인디케이터 숨기기
+//                setTimeout(function() {
+//                    $('#loadingIndicator').hide();
+//                });
 //            },
 //            error: function(xhr, status, error) {
 //                console.error('API 호출 오류:', error);
@@ -1746,40 +678,59 @@ function renderSearchAPIPagination(pageIndex, totalItems) {
 //        });
 //    }
 //
-//    function displayFilteredResults(list) {
-//        $('#list2').html(""); // 테이블 내용 초기화
+//    // 페이지 버튼 생성 함수
+//    function renderSearchAPIPagination(pageIndex, totalItems) {
+//        $('#paginationSection2').empty(); // 기존 버튼 제거
 //
-//        $.each(list, function(index, culturalProperties) {
-//            var index1 = (pageIndex - 1) * itemsPerPage2 + index + 1;
+//        // 페이지 수 계산 (가정: 10개씩 표시)
+//        var itemsPerPage = 10;
+//        var totalPages = Math.ceil(totalItems / itemsPerPage);
 //
-//            var htmlCheck = '<tr><td><input class="check2" type="checkbox" name="index" value="' + index + '"/></td>';
-//            var htmlContent =
-//                '<td class="culturalPropertieId">' + index1 + '</td>' +
-//                '<td class="culturalPropertiesName">' + culturalProperties.culturalPropertiesName + '</td>' +
-//                '<td class="categoryName">' + culturalProperties.categoryName + '</td>' +
-//                '<td class="region">' + culturalProperties.region + '</td>' +
-//                '<td class="dynasty">' + culturalProperties.dynasty + '</td></tr>';
+//        // 이전 버튼
+//        var prevHtml = '<li class="page-item ' + (pageIndex == 1 ? 'disabled' : '') + '">' +
+//            '<a class="page-link prev-link" href="#" data-page="' + (pageIndex - 1) + '">이전</a>' +
+//            '</li>';
+//        $('#paginationSection2').append(prevHtml);
 //
-//            var finalHtml = htmlCheck + htmlContent;
-//            $('#list2').append(finalHtml);
+//        // 페이지 번호 버튼
+//        var startPage = (Math.ceil(pageIndex / 10) - 1) * 10 + 1;
+//        var endPage = Math.min(startPage + 9, totalPages);
+//
+//        for (var pageNum = startPage; pageNum <= endPage; pageNum++) {
+//            var pageHtml = '<li class="page-item ' + (pageNum == pageIndex ? 'active' : '') + '">' +
+//                '<a class="page-link page-num" href="#" data-page="' + pageNum + '">' + pageNum + '</a>' +
+//                '</li>';
+//            $('#paginationSection2').append(pageHtml);
+//        }
+//
+//        // 다음 버튼
+//        var nextHtml = '<li class="page-item ' + (pageIndex >= totalPages ? 'disabled' : '') + '">' +
+//            '<a class="page-link next-link" href="#" data-page="' + (pageIndex + 1) + '">다음</a>' +
+//            '</li>';
+//        $('#paginationSection2').append(nextHtml);
+//
+//        // 페이지 번호 버튼 클릭 이벤트
+//        $('.page-num').on('click', function() {
+//            var selectedPage = $(this).data('page');
+//            searchAPIDataFilter(selectedPage);
 //        });
 //
-//        // 페이지네이션 다시 그리기
-//        renderPagination2();
-//    }
+//        // 이전 버튼 클릭 이벤트
+//        $('.prev-link').on('click', function(e) {
+//            e.preventDefault();
+//            if (pageIndex > 1) {
+//                searchAPIDataFilter(pageIndex - 1);
+//            }
+//        });
 //
-//    function resetFilters() {
-//        $('#categoryFilter2').val('전체');
-//        $('#searchName2').val('');
-//        $('#searchRegion2').val('');
-//        $('#searchDynasty2').val('');
-//
-//        // AJAX를 통해 초기 데이터를 다시 불러올 수 있도록 호출합니다.
-//        fetchApiData(1); // 예시로 1페이지를 불러옴
+//        // 다음 버튼 클릭 이벤트
+//        $('.next-link').on('click', function(e) {
+//            e.preventDefault();
+//            if (pageIndex < totalPages) {
+//                searchAPIDataFilter(pageIndex + 1);
+//            }
+//        });
 //    }
-
-
-
 
 
 //------------------------------------------

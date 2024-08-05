@@ -42,46 +42,6 @@
         select count(*) from cultural_properties
     </select>
 
-<!--///////////////////-->
-<!--    <select id="searchAPI" parameterType="culturalPropertiesDTO" resultType="culturalPropertiesDTO">-->
-<!--        SELECT *-->
-<!--        FROM cultural_properties-->
-<!--        WHERE 1=1-->
-<!--        <if test="searchForm.categoryName != null and searchForm.categoryName != ''">-->
-<!--            AND category_name = #{searchForm.categoryName}-->
-<!--        </if>-->
-<!--        <if test="searchForm.region != null and searchForm.region != ''">-->
-<!--            AND region = #{searchForm.region}-->
-<!--        </if>-->
-<!--        <if test="searchForm.dynasty != null and searchForm.dynasty != ''">-->
-<!--            AND dynasty = #{searchForm.dynasty}-->
-<!--        </if>-->
-<!--        <if test="searchForm.culturalPropertiesName != null and searchForm.culturalPropertiesName != ''">-->
-<!--            AND cultural_properties_name = #{searchForm.culturalPropertiesName}-->
-<!--        </if>-->
-<!--    </select>-->
-
-<!--    <select id="searchAPI" parameterType="culturalPropertiesDTO" resultType="culturalPropertiesDTO">-->
-<!--        SELECT *-->
-<!--        FROM cultural_properties-->
-<!--        WHERE 1=1-->
-<!--        <if test="searchForm.categoryName != null and searchForm.categoryName != ''">-->
-<!--            AND category_name = #{searchForm.categoryName}-->
-<!--        </if>-->
-<!--        <if test="searchForm.culturalPropertiesName != null and searchForm.culturalPropertiesName != ''">-->
-<!--            AND cultural_properties_name LIKE CONCAT('%', #{searchForm.culturalPropertiesName}, '%')-->
-<!--        </if>-->
-<!--        <if test="searchForm.region != null and searchForm.region != ''">-->
-<!--            AND region LIKE CONCAT('%', #{searchForm.region}, '%')-->
-<!--        </if>-->
-<!--        <if test="searchForm.dynasty != null and searchForm.dynasty != ''">-->
-<!--            AND dynasty LIKE CONCAT('%', #{searchForm.dynasty}, '%')-->
-<!--        </if>-->
-<!--    </select>-->
-
-
-
-    <!--////////////////////////-->
 
 
     <!-- 문화재 db검색 -->

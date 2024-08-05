@@ -129,67 +129,6 @@ public class AdminCulturalPropertiesController {
 
 
 
-//	@PostMapping("/searchAPI")
-//	public String searchAPI(Model model,
-//										   @ModelAttribute("searchForm") CulturalPropertiesDTO searchForm) {
-//
-//		// CulturalPropertiesDTO를 통해 다중 검색 수행
-//		List<CulturalPropertiesDTO> culturalPropertiesList = adminCulturalPropertiesService.searchAPI(searchForm);
-//
-//		// 검색 결과를 모델에 추가
-//		model.addAttribute("culturalPropertiesList", culturalPropertiesList);
-//
-//		return "/admin/culturalProperties/list";
-//	}
-
-//	// 검색 기능을 처리하는 핸들러 메소드
-//	@PostMapping("/searchAPI")
-//	@ResponseBody
-//	public List<CulturalPropertiesDTO> searchAPI(@ModelAttribute("searchForm") CulturalPropertiesDTO searchForm) {
-//		// CulturalPropertiesDTO를 통해 다중 검색 수행
-//		List<CulturalPropertiesDTO> culturalPropertiesList = adminCulturalPropertiesService.searchAPI(searchForm);
-//
-//		return culturalPropertiesList; // JSON 형식으로 검색 결과 반환
-//	}
-
-//---------------
-//	@PostMapping("/searchAPI")
-//	@ResponseBody
-//	public List<CulturalPropertiesDTO> searchAPI(
-//			@RequestParam(value = "categoryName", required = false) String categoryName,
-//			@RequestParam(value = "searchName", required = false) String searchName,
-//			@RequestParam(value = "searchRegion", required = false) String searchRegion,
-//			@RequestParam(value = "searchDynasty", required = false) String searchDynasty) {
-//
-//		CulturalPropertiesDTO searchForm = new CulturalPropertiesDTO();
-//		searchForm.setCategoryName(categoryName);
-//		searchForm.setCulturalPropertiesName(searchName);
-//		searchForm.setRegion(searchRegion);
-//		searchForm.setDynasty(searchDynasty);
-//
-//		System.out.println("searchForm- category : " + categoryName);
-//		System.out.println(searchName);
-//		System.out.println(searchRegion);
-//		System.out.println(searchDynasty);
-//
-//		List<CulturalPropertiesDTO> culturalPropertiesList = adminCulturalPropertiesService.searchAPI(searchForm);
-//
-//		return culturalPropertiesList; // JSON 형식으로 검색 결과 반환
-//	}
-
-
-	//-----------------
-
-//	@PostMapping("/searchAPI")
-//	@ResponseBody
-//	public List<CulturalPropertiesDTO> searchAPI(@RequestBody CulturalPropertiesDTO searchForm) {
-//		List<CulturalPropertiesDTO> culturalPropertiesList = adminCulturalPropertiesService.searchAPI(searchForm);
-//		return culturalPropertiesList;
-//	}
-
-
-
-
 
 	@PostMapping("/searchDB")
 	@ResponseBody
@@ -236,98 +175,29 @@ public class AdminCulturalPropertiesController {
 	}
 
 
-//	@GetMapping("/searchAPI")
-//	public List<CulturalPropertiesDTO> searchAPICulturalProperties(
-//			@RequestParam(required = false) String categoryName,
-//			@RequestParam(required = false) String culturalPropertiesName,
-//			@RequestParam(required = false) String region,
-//			@RequestParam(required = false) String dynasty) {
-//
-//		// 서비스를 통해 검색 기준에 맞는 CulturalPropertiesDTO 목록을 가져온다
-//		List<CulturalPropertiesDTO> searchResult = adminCulturalPropertiesService.searchAPICulturalProperties(
-//				categoryName, culturalPropertiesName, region, dynasty);
-//
-//		return searchResult;
-//	}
 
-	//----------------------- 수정중
-
-
-//	@GetMapping("/searchAPI")
-//	public ResponseEntity<Page<CulturalPropertiesDTO>> searchAPICulturalProperties(
-//			@RequestParam(required = false) String categoryName,
-//			@RequestParam(required = false) String culturalPropertiesName,
-//			@RequestParam(required = false) String region,
-//			@RequestParam(required = false) String dynasty,
-//			@RequestParam(defaultValue = "0") int pageIndex,
-//			@RequestParam(defaultValue = "10") int pageSize) {
-//
-//		System.out.println("API 호출됨: categoryName=" + categoryName + ", culturalPropertiesName=" + culturalPropertiesName
-//				+ ", region=" + region + ", dynasty=" + dynasty + ", pageIndex=" + pageIndex + ", pageSize=" + pageSize);
-//
-//		try {
-//			// 서비스 호출
-//			Page<CulturalPropertiesDTO> searchResult = adminCulturalPropertiesService.searchAPICulturalProperties(
-//					categoryName, culturalPropertiesName, region, dynasty, PageRequest.of(pageIndex, pageSize));
-//			return ResponseEntity.ok().body(searchResult);
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//			System.out.println("API 응답 처리 중 오류 발생: " + e.getMessage());
-//			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-//		}
-//	}
-
-	//////------------------------
-
-	@PostMapping("/searchAPI")
-	@ResponseBody
-	public List<CulturalPropertiesDTO> searchAPIDataFilter(
-			@RequestParam int pageIndex,
-			@RequestParam(required = false) String categoryName,
-			@RequestParam(required = false) String culturalPropertiesName,
-			@RequestParam(required = false) String region,
-			@RequestParam(required = false) String dynasty) {
-
-		// API 호출 및 필터링 처리
-		List<CulturalPropertiesDTO> filteredList = adminCulturalPropertiesService.searchAPIDataFilter(pageIndex, categoryName, culturalPropertiesName, region, dynasty);
-		return filteredList;
-	}
-
-
-//	@GetMapping("/searchAPI")
-//	public ResponseEntity<Page<CulturalPropertiesDTO>> searchAPICulturalProperties(
-//			@RequestParam(required = false) String categoryName,
-//			@RequestParam(required = false) String culturalPropertiesName,
-//			@RequestParam(defaultValue = "0") int pageIndex,
-//			@RequestParam(defaultValue = "10") int pageSize) {
-//
-//		try {
-//			// 서비스를 통해 검색 기준에 맞는 CulturalPropertiesDTO 페이지를 가져온다
-//			Page<CulturalPropertiesDTO> searchResult = adminCulturalPropertiesService.searchAPICulturalProperties(
-//					categoryName, culturalPropertiesName, PageRequest.of(pageIndex, pageSize));
-//
-//			return ResponseEntity.ok().body(searchResult);
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-//		}
-//	}
-
+	//////------------------------api 검색 보류
 
 //	@PostMapping("/searchAPI")
-//	public ResponseEntity<List<CulturalPropertiesDTO>> searchAPI(
+//	@ResponseBody
+//	public List<CulturalPropertiesDTO> searchAPIDataFilter(
 //			@RequestParam int pageIndex,
 //			@RequestParam(required = false) String categoryName,
 //			@RequestParam(required = false) String culturalPropertiesName,
 //			@RequestParam(required = false) String region,
 //			@RequestParam(required = false) String dynasty) {
 //
-//		List<CulturalPropertiesDTO> resultList = adminCulturalPropertiesService.searchAPIData(pageIndex, categoryName, culturalPropertiesName, region, dynasty);
-//		return ResponseEntity.ok(resultList);
+//
+//		System.out.println("검색pageIndex: " + pageIndex);
+//		System.out.println("검색categoryName: " + categoryName);
+//		System.out.println("검색culturalPropertiesName: " + culturalPropertiesName);
+//		System.out.println("검색region: " + region);
+//		System.out.println("검색dynasty: " + dynasty);
+//
+//		// API 호출 및 필터링 처리
+//		List<CulturalPropertiesDTO> filteredList = adminCulturalPropertiesService.searchAPIDataFilter(pageIndex, categoryName, culturalPropertiesName, region, dynasty);
+//		return filteredList;
 //	}
-
-
-
 
 
 }
