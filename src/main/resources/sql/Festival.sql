@@ -814,3 +814,143 @@ GROUP BY
 	COALESCE(vw.user_id,ft.user_id),
 	COALESCE(vw.sort_code,ft.sort_code),
 	COALESCE(vw.festival_keyword_id,ft.festival_keyword_id);
+
+
+
+CREATE OR REPLACE VIEW vw_exhibition_comment_keyword_tf_idf_data AS
+
+WITH all_words_count AS(
+
+	SELECT ec.exhibition_id , SUM(ec.frequency) AS all_words_count
+
+	from exhibition_comment_keyword ec
+
+	GROUP BY ec.exhibition_id
+
+),
+
+all_docu_count AS(
+
+	SELECT COUNT(DISTINCT ec.exhibition_id) AS all_docu_count
+
+	from exhibition_comment_keyword ec
+
+),
+
+include_word_docu_count AS(
+
+	SELECT ec.keyword, COUNT(DISTINCT ec.exhibition_id) AS include_word_docu_count
+
+	from exhibition_comment_keyword ec
+
+	GROUP BY ec.keyword
+
+)
+
+SELECT
+
+	 ec.exhibition_id ,
+	 ec.keyword,
+	 ec.frequency,
+	 all_words_count.all_words_count,
+     all_docu_count.all_docu_count,
+     include_word_docu_count.include_word_docu_count,
+
+
+     (ec.frequency)/(all_words_count.all_words_count) AS "tf",
+
+
+     LOG10((all_docu_count.all_docu_count/(include_word_docu_count.include_word_docu_count + 1)))
+     AS "idf",
+
+     (ec.frequency)/(all_words_count.all_words_count)*LOG10((all_docu_count.all_docu_count
+     /(include_word_docu_count.include_word_docu_count + 1)))
+     AS "tf_idf"
+
+FROM
+	exhibition_comment_keyword ec
+
+LEFT JOIN all_docu_count ON
+		1=1
+
+LEFT JOIN all_words_count ON
+	ec.exhibition_id = all_words_count.exhibition_id
+
+LEFT JOIN include_word_docu_count ON
+	ec.keyword = include_word_docu_count.keyword;
+
+
+CREATE OR REPLACE VIEW vw_exhibition_keyword_tf_idf_data AS
+
+WITH all_words_count AS(
+
+	SELECT ek.exhibition_id , SUM(ek.frequency) AS all_words_count
+
+	from exhibition_keyword ek
+
+	GROUP BY ek.exhibition_id
+
+),
+
+all_docu_count AS(
+
+	SELECT COUNT(DISTINCT ek.exhibition_id) AS all_docu_count
+
+	from exhibition_keyword ek
+
+),
+
+include_word_docu_count AS(
+
+	SELECT ek.keyword, COUNT(DISTINCT ek.exhibition_id) AS include_word_docu_count
+
+	from exhibition_keyword ek
+
+	GROUP BY ek.keyword
+
+)
+
+SELECT
+
+	 ek.exhibition_id ,
+	 ek.keyword,
+	 ek.frequency,
+	 all_words_count.all_words_count,
+     all_docu_count.all_docu_count,
+     include_word_docu_count.include_word_docu_count,
+
+
+     (ek.frequency)/(all_words_count.all_words_count) AS "tf",
+
+
+     LOG10((all_docu_count.all_docu_count/(include_word_docu_count.include_word_docu_count + 1)))
+     AS "idf",
+
+     (ek.frequency)/(all_words_count.all_words_count)*LOG10((all_docu_count.all_docu_count
+     /(include_word_docu_count.include_word_docu_count + 1)))
+     AS "tf_idf"
+
+FROM exhibition_keyword ek
+
+LEFT JOIN all_docu_count ON
+		1=1
+
+LEFT JOIN all_words_count ON
+	ek.exhibition_id = all_words_count.exhibition_id
+
+LEFT JOIN include_word_docu_count ON
+	ek.keyword = include_word_docu_count.keyword;
+
+
+
+CREATE VIEW vw_festival_love_hate_keyword_count_sum_data AS
+	SELECT
+		vf.user_id,
+		vf.festival_keyword_id,
+		SUM(CASE
+			WHEN vf.sort_code="L" THEN vf.festival_keyword_total_count
+			ELSE -vf.festival_keyword_total_count END) AS love_hate_sum
+
+	FROM vw_festival_user_love_hate_keyword_mapping_total_data vf
+
+	GROUP BY vf.user_id, vf.festival_keyword_id;

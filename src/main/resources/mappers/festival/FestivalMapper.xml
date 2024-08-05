@@ -217,9 +217,9 @@
 
     <select id="findUserLoveKeywordList">
 
-        SELECT * FROM vw_festival_user_love_hate_keyword_mapping_total_data
+        SELECT * FROM vw_festival_love_hate_keyword_count_sum_data
         WHERE user_id = #{userId}
-        AND festival_keyword_total_count >= 10;
+        AND love_hate_sum >= 10;
 
     </select>
 
