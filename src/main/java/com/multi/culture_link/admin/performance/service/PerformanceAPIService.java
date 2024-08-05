@@ -43,7 +43,7 @@ public class PerformanceAPIService { //외부 API로부터 공연 데이터를 �
     public Page<PerformanceDTO> fetchData(int page, int size) throws IOException {
         List<PerformanceDTO> performances = new ArrayList<>();
         CloseableHttpClient httpClient = HttpClients.createDefault();
-        HttpGet httpGet = new HttpGet(String.format("%s?service=%s&stdate=20240802&eddate=20241001&rows=100000&cpage=1", url, key));
+        HttpGet httpGet = new HttpGet(String.format("%s?service=%s&stdate=20240803&eddate=20241001&rows=100000&cpage=1", url, key));
         CloseableHttpResponse httpResponse = httpClient.execute(httpGet);
         System.out.println(httpResponse.getStatusLine().getStatusCode());
 

@@ -16,6 +16,7 @@ public class NaverBlogDTO {
 	private String bloggerName;
 	private String totalContent;
 	private Date postDate;
+	private int display;
 	
 	
 }

@@ -1,38 +1,219 @@
-<!doctype html>
-<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.w3.org/1999/xhtml">
+<html layout:decorate="~{common/layout/layoutMenubar}">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
+    <link rel="stylesheet" th:href="@{/css/user/signUp.css}">
+    <script>
+
+        $(document).ready(
+            function(){
+
+                //#region 기본정보 입력
+
+                /**
+                 * 전체 지역 정보를 가져옴
+                 *
+                 */
+                function findAllRegion(){
+
+                    $.ajax({
+
+                        url: '/user/signUp/findAllRegion',
+                        method: 'POST',
+                        contentType: 'application/json',
+                        success: function(list){
+
+
+
+                            $('#regionId').html("");
+
+                            $.each(list, function(index, region){
+                                var htmlContent = `<option value="${region.regionId}">${region.regionName}</option>`;
+                                $('#regionId').append(htmlContent);
+
+                            })
+
+                        }
+
+                    })
+
+                }
+
+                findAllRegion();
+
+
+                //#endregion
+
+
+                //#region 선호도 입력 부분
+
+
+                 /**
+                 * 축제 키워드를 tf_idf가 높은 순으로 5개씩 가져옴
+                 *
+                 */
+                function findPopularFestivalKeyword(page){
+
+                    $.ajax({
+
+                        url: '/festival/findPopularFestivalKeyword?page='+page,
+                        method: 'POST',
+                        contentType: 'application/json',
+                        success: function(list){
+                            console.log("findPopularFestivalKeyword")
+                            console.log(list);
+<!--                            $('#festivalKeywordBtns').html("");-->
+
+                            $.each(list, function(index, keyword){
+
+                                var htmlContent = `<button value="${keyword.festivalKeywordId}" class="festivalKeywordBtn">${keyword.festivalKeywordId}</button>`;
+
+                                $('#festivalKeywordBtns').append(htmlContent);
+
+                            })
+
+                        }
+
+                    })
+
+                }
+
+                findPopularFestivalKeyword(1);
+
+
+
+                /**
+                * 축제 키워드 추가 버튼
+                *
+                */
+                $(document).on('click','#addFestivalKeyword', function(){
+                    event.preventDefault();
+                    var page = parseInt($(this).val());
+                    page = page + 1;
+                    $(this).val(page);
+                    findPopularFestivalKeyword(page);
+
+                })
+
+
+                /**
+                * 축제 키워드 선택 시 색 변화 버튼
+                *
+                */
+                $(document).on('click','.festivalKeywordBtn', function(){
+
+                    event.preventDefault();
+
+                    if($(this).hasClass('hasLove')){
+
+                        $(this).removeClass('hasLove');
+
+                    }else{
+
+                        $(this).addClass('hasLove');
+
+                    }
+
+                    var btns = document.querySelectorAll('button.hasLove');
+
+                    var concat = '';
+
+                    btns.forEach(function(btn){
+
+                        concat += (btn.value+" ");
+
+                    })
+
+                    $('#festivalSelectKeyword').val(concat.trim());
+
+
+
+                })
+
+
+                //#endregion
+
+
+            }
+        )
+
+
+
+    </script>
 </head>
 <body>
 
-    <div id="signUp">
+<div layout:fragment="content">
 
-        <form th:action="@{/user/signUp}" method="post">
+    <div id="realContent">
 
-            아이디 : <input name="userId">
-            이메일 :  <input name="email">
-            비밀번호 :  <input name="password">
-            이름 :  <input name="userName">
-            번호 :  <input name="tel">
-            번호 :  <input name="gender">
-            지역번호 :  <input name="regionId">
+        <div id="welcome">
+
+            <img src="/img/user/welcome.png">
+
+        </div>
 
 
-            <button type="submit">제출</button>
+        <div id="signUp">
+
+            <h1 style="font-size: 5rem;">계정을 등록하세요</h1><br>
+
+            <form th:action="@{/user/signUp}" method="post" style="font-size: 28px;" encType="multipart/form-data">
+
+                프로필 사진 <input name="uploadFile" class="rounded" id="uploadFile" type="file" accept="image/*"><br>
+<!--                아이디  <input name="userId" class="rounded" placeholder="아이디 입력">-->
+                이메일  <input name="email" class="rounded" placeholder="dkswldus@gmail.com">
+                비밀번호  <input name="password" class="rounded" type="password" placeholder="*****"><br>
+                이름  <input name="userName" class="rounded" placeholder="안지연" style="width:100px;">
+                전화번호  <input name="tel" class="rounded" placeholder="010-0000-1234" type="tel">
+                나이 <input name="userAge" class="rounded" placeholder="12" type="number" style="width:80px;">
+                성별
+                <select name="gender" class="rounded" style="width:80px;">
+                    <option value="남">남</option>
+                    <option value="여">여</option>
+                </select>
+                지역 <select name="regionId" id="regionId" class="rounded" style="width:100px;"></select><br>
+
+                <div id="festivalKeywordZone">
+
+                    <input type="hidden" id="festivalSelectKeyword" name="festivalSelectKeyword" value="">
+
+                    <div id="festivalKeywordBtns">
+
+                    </div>
+
+                    <button id="addFestivalKeyword" value="1">축제 키워드 추가</button>
+
+
+                </div>
 
 
 
-        </form>
 
 
 
+
+
+
+
+
+                <button type="submit">제출</button>
+
+            </form>
+
+        </div>
 
 
     </div>
+
+
+</div>
 
 
 </body>

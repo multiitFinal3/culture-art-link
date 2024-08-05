@@ -134,6 +134,54 @@ button {
     border-color: gray;
 }
 
+#analyzeTextarea {
+    width: 100%;
+    height: 200px;
+    border-color: gray;
+}
+
+.analyze {
+    position: relative;
+    margin-bottom: 20px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    overflow: hidden; /* 내부 요소가 넘치지 않도록 */
+}
+
+.analyze-content {
+    display: flex;
+    align-items: flex-start;
+}
+
+.analyze-text-content {
+    flex: 1;
+}
+
+.analyze-image {
+    width: 15%;
+    margin-left: 10px; /* 텍스트와 이미지 사이 간격 */
+    float: right; /* 이미지를 오른쪽으로 정렬 */
+}
+
+.analyze-image img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+}
+
+.update-analyze,
+.delete-analyze {
+    margin-top: 10px;
+}
+
+.edit-content{
+    width: 100%;
+    height: 200px;
+    border-color: gray;
+}
+
+
 .star-rating {
     font-size: 0;
 }
@@ -185,5 +233,42 @@ button {
 
 .video-item p {
     margin-top: 5px;
+    font-size: 20px;
+}
+
+.pagination {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.page-btn {
+    margin: 0 5px;
+    padding: 5px 10px;
+    border: 1px solid #ddd;
+    background-color: #f8f8f8;
+    cursor: pointer;
+}
+
+.page-btn.active {
+    background-color: #007bff;
+    color: white;
+}
+
+.keyword-container {
+    display: flex;
+    justify-content: left;
+    gap: 10px;
+    margin-top: 20px;
+}
+.keyword {
+    background-color: #f0f0f0;
+    color: #333;
+    padding: 8px 15px;
+    border-radius: 20px;
     font-size: 14px;
+    font-weight: bold;
+    text-decoration: none;
+}
+.keyword:hover {
+    background-color: #e0e0e0;
 }

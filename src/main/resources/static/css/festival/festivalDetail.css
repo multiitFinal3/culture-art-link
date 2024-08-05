@@ -5,45 +5,28 @@
         flex-flow: column;
         align-items: center;
         justify-content: center;
-        margin-right: 5%;
 
     }
 
     #upperZone{
         width: 100%;
         display: flex;
-        flex-flow: row;
-        align-items: start;
-        justify-content: space-between;
-        margin-top: 3%;
-        margin-right: 5%;
+        flex-flow: column;
+        align-items: center;
+        justify-content: center;
+        margin: 5%;
+        margin-bottom: 0;
 
     }
 
 
     #detailCardZone{
 
-        margin-left: 5%;
-        width: 50%;
-
-    }
-
-    #rightZone{
-
-        width: 50%;
+        width: 80%;
         display: flex;
-        margin-left: 4%;
         flex-flow: column;
-        height: 100%;
         align-items: center;
-        justify-content: start;
-
-    }
-
-    #rightZone > div{
-
-        margin: 5%;
-
+        justify-content: center;
 
     }
 
@@ -60,8 +43,8 @@
 
         margin: 1%;
         min-width: 1200px;
-        max-width: 1200px;
-        min-height: 2500px;
+        max-width: 100%;
+        min-height: 1000px;
         display : flex;
         align-items: center;
         justify-content: center;
@@ -88,12 +71,53 @@
 
     }
 
+    #detailDescripZone{
+
+        width: 100%;
+
+    }
+
     .card-title{
 
         text-align: center;
         width: 100%;
 
     }
+
+    #reviewTextArea{
+
+        width: 100%;
+
+    }
+
+
+    #reviewListHead {
+
+        font-size: 20px;
+
+    }
+
+
+    #players{
+
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+
+    }
+
+    #youtubePages{
+
+        font-size: 20px;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+    }
+
 
     #recommendCardZone{
 
@@ -142,13 +166,24 @@
 
    }
 
-   button{
-
-      margin: 0.5%;
+   #contentBtnZone{
+        width: 100%;
+        display : flex;
+        flex-flow: row;
+        align-items: center;
+        justify-content: center;
+        margin: 1%;
 
    }
 
-   #contentKeyword{
+   #contentBtnZone button{
+
+      margin: 0.5%;
+      font-size: 20px;
+
+   }
+
+   #contentKeyword, #reviewKeyword, #naverArticleKeyword, #naverBlogKeyword{
 
         display : flex;
         flex-flow: row;
@@ -171,9 +206,10 @@
 
    button.keyword{
 
-        width: 200px;
+        width: 150px;
         height: 50px;
         font-size: 18px;
+        margin: 1%;
 
    }
 
@@ -218,5 +254,11 @@
     span{
 
         margin: 1%;
+
+    }
+
+    .hide{
+
+        display: none;
 
     }

@@ -6,10 +6,14 @@ import com.multi.culture_link.admin.exhibition.model.dto.api.ExhibitionApiRespon
 import com.multi.culture_link.admin.exhibition.service.ExhibitionApiService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 @RestController
 @RequiredArgsConstructor
@@ -62,4 +66,18 @@ public class AdminExhibitionController {
     ) {
         exhibitionApiService.deleteExhibition(id);
     }
+
+    // 서버가 켜져있다면 정각에 키워드 뽑기
+    @Scheduled(cron = "0 0 0 * * ?")
+    public void runDaily() throws Exception {
+        exhibitionApiService.saveKeyword();
+
+    }
+
+//    // for test
+//    @Scheduled(fixedRate = 160000) // 60000 밀리초 = 1분
+//    public void runEveryMinute() throws Exception {
+//        exhibitionApiService.saveKeyword();
+//    }
+
 }

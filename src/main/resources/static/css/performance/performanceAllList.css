@@ -1,0 +1,78 @@
+/* 전체 공연 목록 컨테이너 스타일 */
+.all-performances {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.all-performances-title {
+    width: 100%;
+    text-align: center;
+    font-size: 22px;
+    font-weight: 600;
+    margin-bottom: 20px;
+}
+
+/* 전체 공연 목록 아이템 컨테이너 */
+.all-performances-items {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between; /* 양 끝 공간 확보 */
+    gap: 10px; /* 카드 간의 간격 */
+    width: calc(5 * 249px + 4 * 10px); /* 카드 5개와 간격을 고려한 너비 */
+}
+
+/* 각 공연 아이템 */
+.all-performance-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 249px; /* 고정 너비 */
+    margin-bottom: 20px;
+}
+
+.all-card {
+    width: 249px;
+    height: 332px;
+    background: white;
+    border: 1px solid #D9D9D9;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    transition: transform 0.2s;
+}
+
+.all-card:hover {
+    transform: scale(1.05);
+}
+
+.all-card img {
+    width: 249px;
+    height: 332px;
+    object-fit: cover;
+    object-position: center;
+}
+
+.all-performance-info {
+    padding: 10px;
+    text-align: center;
+    background-color: #fff;
+    width: 249px; /* 카드 너비에 맞춤 */
+}
+
+.all-title {
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 5px;
+    white-space: normal; /* 긴 텍스트 줄바꿈 허용 */
+    overflow-wrap: break-word; /* 긴 단어가 있을 때 줄바꿈 */
+}
+
+.all-location,
+.all-date {
+    font-size: 14px;
+    color: #555;
+    white-space: normal; /* 긴 텍스트 줄바꿈 허용 */
+    overflow-wrap: break-word; /* 긴 단어가 있을 때 줄바꿈 */
+}

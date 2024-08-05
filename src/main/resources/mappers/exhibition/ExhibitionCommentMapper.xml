@@ -24,4 +24,19 @@
         DELETE FROM exhibition_comment
         WHERE user_id = #{userId} AND exhibition_id = #{exhibitionId} AND id = #{id}
     </delete>
+
+    <select id="getAverageRating" resultType="double">
+        SELECT AVG(stars) FROM exhibition_comment WHERE exhibition_id = #{exhibitionId}
+    </select>
+
+
+    <select id="getCommentAll" resultType="com.multi.culture_link.exhibition.model.dto.ExhibitionCommentDto">
+        SELECT *
+        FROM exhibition_comment ec
+    </select>
+
+
+
+
+
 </mapper>

@@ -487,8 +487,8 @@ CREATE VIEW vw_user_role_data AS
 		r.role_content
 
 	FROM user u
-		JOIN user_role_mapping urm ON u.user_id=urm.user_id
-		JOIN role r ON urm.role_id=r.role_id;
+		LEFT JOIN user_role_mapping urm ON u.user_id=urm.user_id
+		LEFT JOIN role r ON urm.role_id=r.role_id;
 
 
 
@@ -697,3 +697,120 @@ SELECT fc.festival_keyword_id, COUNT(DISTINCT fc.festival_id)
 from festival_content_review_naver_keyword_mapping fc
 
 GROUP BY fc.festival_keyword_id;
+
+
+
+
+CREATE OR REPLACE VIEW vw_festival_keyword_tf_idf_top10_data AS
+
+WITH ranked_tf_id_data AS(
+
+	SELECT
+		vf.*,
+		ROW_NUMBER()
+		OVER (PARTITION BY vf.festival_id, vf.sort_code ORDER BY vf.tf_idf DESC) AS tf_idf_rank
+	FROM
+		vw_festival_keyword_tf_idf_data vf
+)
+
+SELECT
+	rd.festival_id,
+	rd.sort_code,
+	rd.festival_keyword_id,
+	rd.freq,
+	rd.all_words_count,
+	rd.all_docu_count,
+	rd.include_word_docu_count,
+	rd.tf,
+	rd.idf,
+	rd.tf_idf
+
+FROM ranked_tf_id_data rd
+
+WHERE rd.tf_idf_rank<=10;
+
+
+
+CREATE OR REPLACE VIEW vw_festival_user_love_hate_keyword_mapping_data AS
+SELECT
+	uf.user_id,
+	uf.sort_code,
+	vf.festival_keyword_id,
+	COUNT(vf.festival_keyword_id) AS festival_keyword_count
+
+
+FROM
+	user_festival_love_hate_festival_mapping uf
+LEFT JOIN
+	vw_festival_keyword_tf_idf_top10_data vf ON
+		uf.festival_id = vf.festival_id
+GROUP BY
+	uf.user_id,
+	uf.sort_code,
+	vf.festival_keyword_id;
+
+
+
+CREATE TABLE `festival_user_love_hate_select_keyword_mapping` (
+  `user_id` int NOT NULL,
+  `sort_code` varchar(100) NOT NULL,
+  `festival_keyword_id` varchar(100) NOT NULL,
+  `festival_count` int DEFAULT NULL,
+  `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`user_id`,`sort_code`,`festival_keyword_id`),
+  KEY `festival_user_love_hate_select_keyword_mapping_sort_FK` (`sort_code`),
+  KEY `festival_user_love_hate_select__FK` (`festival_keyword_id`),
+  CONSTRAINT `festival_user_love_hate_select__FK` FOREIGN KEY (`festival_keyword_id`) REFERENCES `festival_keyword` (`festival_keyword_id`),
+  CONSTRAINT `festival_user_love_hate_select_keyword_mapping_sort_FK` FOREIGN KEY (`sort_code`) REFERENCES `sort` (`sort_code`),
+  CONSTRAINT `festival_user_love_hate_select_keyword_mapping_user_FK` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`)
+)
+
+
+CREATE OR REPLACE VIEW vw_festival_user_love_hate_keyword_mapping_total_data AS
+SELECT
+	COALESCE(vw.user_id,ft.user_id) AS user_id,
+	COALESCE(vw.sort_code,ft.sort_code) AS sort_code,
+	COALESCE(vw.festival_keyword_id,ft.festival_keyword_id) AS festival_keyword_id,
+	COALESCE(vw.festival_keyword_count,0)
+	+ COALESCE(ft.festival_count,0)
+	AS festival_keyword_total_count
+
+
+FROM
+	vw_festival_user_love_hate_keyword_mapping_data vw
+LEFT JOIN
+	festival_user_love_hate_select_keyword_mapping ft ON
+		vw.user_id = ft.user_id
+		AND
+		vw.sort_code = ft.sort_code
+		AND
+		vw.festival_keyword_id = ft.festival_keyword_id
+
+
+
+UNION
+
+SELECT
+	COALESCE(vw.user_id,ft.user_id) AS user_id,
+	COALESCE(vw.sort_code,ft.sort_code) AS sort_code,
+	COALESCE(vw.festival_keyword_id,ft.festival_keyword_id) AS festival_keyword_id,
+	COALESCE(vw.festival_keyword_count,0)
+	+ COALESCE(ft.festival_count,0)
+	AS festival_keyword_total_count
+
+
+FROM
+	vw_festival_user_love_hate_keyword_mapping_data vw
+RIGHT JOIN
+	festival_user_love_hate_select_keyword_mapping ft ON
+		vw.user_id = ft.user_id
+		AND
+		vw.sort_code = ft.sort_code
+		AND
+		vw.festival_keyword_id = ft.festival_keyword_id
+
+GROUP BY
+	COALESCE(vw.user_id,ft.user_id),
+	COALESCE(vw.sort_code,ft.sort_code),
+	COALESCE(vw.festival_keyword_id,ft.festival_keyword_id);
