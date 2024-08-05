@@ -121,6 +121,13 @@
     margin-bottom: 16px;
 }
 
+.info-ticketbutton a {
+    text-decoration: none;
+    color: blue;
+    font-weight: 600;
+}
+
+
 .book-button {
     height: 71px;
 }

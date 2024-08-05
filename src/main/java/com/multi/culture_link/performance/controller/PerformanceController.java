@@ -26,8 +26,6 @@ public class PerformanceController {
 
     private final PerformanceRankingService performanceRankingService;
     private final PerformanceLocationService performanceLocationService;
-
-
     private final PerformanceDBService performanceDBService;
 
 
@@ -197,15 +195,49 @@ public class PerformanceController {
 
 
 
+//    @GetMapping("/performanceDetail")
+//    public String performanceDetailPage(@AuthenticationPrincipal VWUserRoleDTO user,
+//                                        @RequestParam("performanceId") int performanceId,
+//                                        Model model) {
+//        PerformanceDTO performance = performanceRankingService.getPerformanceDetail(performanceId);
+//        model.addAttribute("user", user.getUser());
+//        model.addAttribute("performance", performance);
+//        return "/performance/performanceDetail";
+//    }
+
     @GetMapping("/performanceDetail")
     public String performanceDetailPage(@AuthenticationPrincipal VWUserRoleDTO user,
                                         @RequestParam("performanceId") int performanceId,
+                                        @RequestParam(value = "source", required = false, defaultValue = "db") String source,
                                         Model model) {
-        PerformanceDTO performance = performanceRankingService.getPerformanceDetail(performanceId);
-        model.addAttribute("user", user.getUser());
-        model.addAttribute("performance", performance);
+        PerformanceDTO performance = null;
+
+        if ("db".equals(source)) {
+            // DB에서 공연 정보 가져오기
+            performance = performanceDBService.getPerformanceById(performanceId);
+        } else if ("api".equals(source)) {
+            // API에서 공연 정보 가져오기
+            try {
+                performance = performanceRankingService.getPerformanceDetailFromAPI(performanceId);
+            } catch (Exception e) {
+                model.addAttribute("error", "공연 정보를 가져오는 중 오류가 발생했습니다.");
+                e.printStackTrace();
+            }
+        }
+
+        if (performance != null) {
+            performance.updateFormattedDate(); // 날짜 포맷 업데이트
+            model.addAttribute("user", user.getUser());
+            model.addAttribute("performance", performance);
+        } else {
+            // 공연 정보를 가져오지 못했을 때의 처리
+            model.addAttribute("error", "공연 정보를 가져오지 못했습니다.");
+        }
+
         return "/performance/performanceDetail";
     }
+
+
 
 
 

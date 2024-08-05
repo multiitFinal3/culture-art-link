@@ -141,4 +141,68 @@ public class PerformanceRankingService {
     public List<PerformanceDTO> getAllPerformances() {
         return performanceMapper.getAllPerformances();
     }
+
+
+
+
+
+    public PerformanceDTO getPerformanceDetailFromAPI(int performanceId) {
+        String url = String.format("http://www.kopis.or.kr/openApi/restful/pblprfr/%d?service=%s&newsql=Y", performanceId, apiKey);
+        String response = restTemplate.getForObject(url, String.class);
+
+        if (response == null || response.isEmpty()) {
+            throw new RuntimeException("API 응답이 없습니다.");
+        }
+
+        return parsePerformanceDetail(response);
+    }
+
+    private PerformanceDTO parsePerformanceDetail(String data) {
+        PerformanceDTO performance = new PerformanceDTO();
+
+        try {
+            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder builder = factory.newDocumentBuilder();
+            Document document = builder.parse(new InputSource(new StringReader(data)));
+
+            NodeList nodeList = document.getElementsByTagName("api");
+
+            if (nodeList.getLength() > 0) {
+                Node node = nodeList.item(0);
+
+                performance.setCode(getTagValue("mt20id", node));
+                performance.setTitle(getTagValue("prfnm", node));
+                performance.setStartDate(formatDate(getTagValue("prfpdfrom", node)));
+                performance.setEndDate(formatDate(getTagValue("prfpdto", node)));
+                performance.setLocation(getTagValue("fcltynm", node));
+                performance.setCasting(getTagValue("prfcast", node));
+                performance.setRuntime(getTagValue("prfruntime", node));
+                performance.setAge(getTagValue("prfage", node));
+                performance.setProducer(getTagValue("entrpsnmH", node));
+                performance.setPrice(getTagValue("pcseguidance", node));
+                performance.setImageMain(getTagValue("poster", node));
+                performance.setGenre(getTagValue("genrenm", node));
+
+                NodeList relateList = ((Element) node).getElementsByTagName("relate");
+                if (relateList.getLength() > 0) {
+                    Node relateNode = relateList.item(0);
+                    performance.setTicketing(getTagValue("relatenm", relateNode));
+                    performance.setTicketingUrl(getTagValue("relateurl", relateNode));
+                }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return performance;
+    }
+
+
+    private String formatDate(String date) {
+        DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+        DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        return LocalDate.parse(date.trim(), inputFormatter).atStartOfDay().format(outputFormatter);
+    }
+
 }

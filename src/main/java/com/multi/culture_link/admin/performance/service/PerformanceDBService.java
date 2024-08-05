@@ -180,4 +180,12 @@ public class PerformanceDBService { // 상세데이터, 외부 API로부터 공�
         return performanceMapper.getPerformancesByGenre(mappedGenre);
     }
 
+    // 특정 공연 ID에 해당하는 공연 정보를 반환하는 메소드
+    public PerformanceDTO getPerformanceById(int performanceId) {
+        PerformanceDTO performance = performanceMapper.getPerformanceById(performanceId);
+        if (performance != null) {
+            performance.updateFormattedDate(); // 날짜 포맷 업데이트
+        }
+        return performance;
+    }
 }

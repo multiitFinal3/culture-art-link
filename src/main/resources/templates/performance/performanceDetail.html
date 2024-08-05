@@ -50,18 +50,20 @@
     <div class="container">
     <div class="top-section">
         <div class="detail-card">
-            <img class="thumbnail" src="https://via.placeholder.com/300x400" />
+            <img class="thumbnail" th:src="${performance.imageMain}" alt="공연 이미지" />
             <div class="star-icon">★</div>
         </div>
         <div class="info-section">
-            <div class="title">공연명</div>
+            <div class="title" th:text="${performance.title}">공연명</div>
             <div class="info-section-content">
-                <div class="info-location">공연장소</div>
-                <div class="info-date">공연기간</div>
-                <div class="info-runtime">관람시간</div>
-                <div class="info-age">관람등급</div>
-                <div class="info-genre">장르</div>
-                <div class="info-ticketbutton">예매하기</div>
+                <div class="info-location" th:text="${performance.location}">공연장소</div>
+                <div class="info-date" th:text="${performance.formattedDate}">공연기간</div>
+                <div class="info-runtime" th:text="${performance.runtime}">관람시간</div>
+                <div class="info-age" th:text="${performance.age}">관람등급</div>
+                <div class="info-genre" th:text="${performance.genre}">장르</div>
+                <div class="info-ticketbutton">
+                    <a th:href="${performance.ticketingUrl}" target="_blank">예매하기</a>
+                </div>
             </div>
         </div>
     </div>
