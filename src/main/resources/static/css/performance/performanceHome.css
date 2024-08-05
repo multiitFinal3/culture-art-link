@@ -63,7 +63,7 @@
 
 /* 랭킹 제목 스타일 */
 .ranking-title {
-    font-size: 24px;
+    font-size: 16px;
     font-weight: 600;
     color: black;
     margin-bottom: 20px;
@@ -89,6 +89,10 @@
     align-items: center;
     position: relative;
     margin: 0 10px; /* 카드 간의 간격 */
+}
+
+.card:hover {
+    transform: scale(1.05);
 }
 
 /* 카드 이미지 스타일 */
