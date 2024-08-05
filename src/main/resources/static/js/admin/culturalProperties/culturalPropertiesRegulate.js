@@ -1366,7 +1366,7 @@ $('#searchDB2').on('click', function() {
 
 function searchAPIDataFilter(pageIndex) {
     $('#list2').html(""); // 테이블 내용 초기화
-    $('#loadingIndicator').show(); // 로딩 표시
+//    $('#loadingIndicator').show(); // 로딩 표시
 
     // 검색 필드 값 가져오기
     var categoryName = $('#categoryFilter2').val(); // 종목
@@ -1374,6 +1374,7 @@ function searchAPIDataFilter(pageIndex) {
     var region = $('#searchRegion2').val(); // 지역
     var dynasty = $('#searchDynasty2').val(); // 시대
 
+    console.log("pageIndex : " + pageIndex)
     console.log("categoryName : " + categoryName)
     console.log("culturalPropertiesName : " + culturalPropertiesName)
     console.log("region : " + region)
@@ -1381,20 +1382,22 @@ function searchAPIDataFilter(pageIndex) {
 
 
     $.ajax({
-        url: '/admin/cultural-properties-regulate/searchAPI',
+        url: '/admin/cultural-properties-regulate/searchAPI?pageIndex='+pageIndex+'&categoryName='+categoryName+'&culturalPropertiesName='+culturalPropertiesName+'&region='+region+'&dynasty='+dynasty,
         method: 'POST',
         contentType: 'application/json',
-        data: {
-            pageIndex : pageIndex,
-            categoryName: categoryName,
-            culturalPropertiesName: culturalPropertiesName,
-            region: region,
-            dynasty: dynasty
-        },
-        beforeSend: function() {
-            $('#loadingIndicator').show(); // Ajax 요청 전에 로딩 표시 보이기
-        },
+//        data: {
+//            pageIndex : pageIndex,
+//            categoryName: categoryName,
+//            culturalPropertiesName: culturalPropertiesName,
+//            region: region,
+//            dynasty: dynasty
+//        },
+//        beforeSend: function() {
+//            $('#loadingIndicator').show(); // Ajax 요청 전에 로딩 표시 보이기
+//        },
         success: function(list) {
+
+            console.log("성공??");
             $.each(list, function(index, culturalProperties) {
                 var index1 = (pageIndex - 1) * itemsPerPage2 + index + 1;
 

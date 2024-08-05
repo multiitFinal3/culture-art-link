@@ -2,22 +2,16 @@ package com.multi.culture_link.admin.culturalProperties.service;
 
 import com.multi.culture_link.admin.culturalProperties.model.dao.AdminCulturalPropertiesDAO;
 import com.multi.culture_link.admin.culturalProperties.model.dto.CulturalPropertiesDTO;
-import lombok.extern.slf4j.Slf4j;
 import com.multi.culture_link.admin.culturalProperties.model.dto.PageDTO;
+import lombok.extern.slf4j.Slf4j;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.XML;
-import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -657,7 +651,19 @@ public class AdminCulturalPropertiesService {
 
 	public List<CulturalPropertiesDTO> searchAPIDataFilter(int pageIndex, String categoryName, String culturalPropertiesName, String region, String dynasty) {
 		List<CulturalPropertiesDTO> culturalPropertiesList = fetchApiData(pageIndex); // 기존 API 호출
-
+		
+		System.out.println("cultu list " + culturalPropertiesList);
+		
+		List<Object> list1 = culturalPropertiesList.stream()
+				.filter(dto -> (categoryName == null || categoryName.equals("전체") || dto.getCategoryName().equals(categoryName))
+//				&&  (culturalPropertiesName == null || culturalPropertiesName.equals("") || dto.getCulturalPropertiesName().contains(culturalPropertiesName))
+//				&& (region == null || region.equals("") || dto.getRegion().contains(region))
+//				&& (dynasty == null || dynasty.equals("")|| dto.getDynasty().contains(dynasty)))
+				).collect(Collectors.toList());
+		
+		System.out.println("list1 : " + list1);
+		
+		
 		// 필터링 로직 추가
 		return culturalPropertiesList.stream()
 				.filter(dto -> (categoryName == null || categoryName.equals("전체") || dto.getCategoryName().equals(categoryName)))

@@ -274,13 +274,18 @@ public class AdminCulturalPropertiesController {
 	@PostMapping("/searchAPI")
 	@ResponseBody
 	public List<CulturalPropertiesDTO> searchAPIDataFilter(
-			@RequestParam int pageIndex,
-			@RequestParam(name = "categoryName", required = false ) String categoryName,
-			@RequestParam(name = "culturalPropertiesName", required = false) String culturalPropertiesName,
-			@RequestParam(name = "region", required = false) String region,
-			@RequestParam(name = "dynasty", required = false) String dynasty) {
+			@RequestParam("pageIndex") int pageIndex,
+			@RequestParam("categoryName") String categoryName,
+			@RequestParam("culturalPropertiesName") String culturalPropertiesName,
+			@RequestParam("region") String region,
+			@RequestParam("dynasty") String dynasty) {
 		
 		System.out.println("들어옴...");
+		System.out.println(pageIndex);
+		System.out.println(categoryName);
+		System.out.println(culturalPropertiesName);
+		System.out.println(region);
+		System.out.println(dynasty);
 		
 		// API 호출 및 필터링 처리
 		List<CulturalPropertiesDTO> filteredList = adminCulturalPropertiesService.searchAPIDataFilter(pageIndex, categoryName, culturalPropertiesName, region, dynasty);
