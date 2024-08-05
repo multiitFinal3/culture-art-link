@@ -109,6 +109,52 @@
 
                 renderImg(user.userProfilePic);
 
+
+
+                /**
+                 * 사용자 프로필 사진 변경 시 이미지 바꾸는 이벤트
+                 *
+                 */
+                $("input:file").change(function(){
+
+                    var file = this.files[0];
+
+                    if(file){
+
+                        var reader = new FileReader();
+
+                        reader.onload = function(e){
+
+                            var changeSrc = e.target.result;
+
+                            var htmlContent = ``;
+
+                            htmlContent = `
+                                <img class="profileImg" src="${changeSrc}" alt="이미지가 없습니다" style="width:100%;">
+                            `;
+
+                            $('#profileImg').html(htmlContent);
+
+
+                        }
+
+                        reader.readAsDataURL(file);
+
+                    }
+                })
+
+
+
+
+
+
+
+
+
+
+
+
+
                 //#endregion
 
 
@@ -742,9 +788,14 @@
 
 
 
-                //# endregion
+                //#endregion
 
 
+
+
+                //#region 공연 찜 관심없음 리뷰
+
+                //#endregion
 
 
 
