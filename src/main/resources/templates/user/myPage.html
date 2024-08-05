@@ -563,7 +563,7 @@
 
                                  reviewHtml = `
 
-                                    <tr class="reviewRow" id="review.festivalReviewId">
+                                    <tr class="reviewRow" id="reviewRow">
 
                                         <td class="index1">
                                             ${index1}
@@ -673,6 +673,69 @@
                     findUserReviewCount();
 
                 })
+
+
+
+
+
+                /**
+                * 리뷰 삭제
+                *
+                */
+                $(document).on('click','.deleteBtn', function(){
+
+                    var festivalReviewId = $(this).val();
+
+                    $.ajax({
+
+                        url: '/festival/deleteFestivalReviewByReviewId?festivalReviewId=' + festivalReviewId,
+                        method: 'POST',
+                        contentType: 'application/json',
+                        success: function(res){
+
+                            alert(res);
+                            findFestivalReviewListByPage(1);
+
+
+                        }
+                    })
+                })
+
+
+
+
+                /**
+                * 리뷰 수정
+                *
+                */
+                $(document).on('click','.updateBtn', function(){
+
+                    var festivalReviewId = $(this).val();
+                    var button = $(this);
+
+                    var reviewText =  button.closest('.reviewRow').find('.reviewText').val();
+                    var reviewStar =  button.closest('.reviewRow').find('.reviewStar').val();
+
+                    $.ajax({
+
+                        url: '/festival/updateFestivalReview',
+                        method: 'POST',
+                        data: {
+
+                            festivalReviewId: festivalReviewId,
+                            reviewText: reviewText,
+                            reviewStar: reviewStar
+
+                        },
+                        success: function(res){
+
+                            alert(res);
+                            findFestivalReviewListByPage(1);
+
+                        }
+                    })
+                })
+
 
 
 
