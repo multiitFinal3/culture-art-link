@@ -12,6 +12,17 @@
   <script th:src="@{/js/performance/performance.js}"></script>
 
 
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const cards = document.querySelectorAll('.card, .all-card');
+        cards.forEach(card => {
+            card.addEventListener('click', function() {
+                const performanceId = this.getAttribute('data-performance-id');
+                window.location.href = `/performance/performanceDetail?performanceId=${performanceId}`;
+            });
+        });
+    });
+  </script>
 
 
 

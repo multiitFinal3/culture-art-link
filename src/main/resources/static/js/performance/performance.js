@@ -61,7 +61,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
             // 공연목록에서 상세페이지로 이동
             // 공연 카드 클릭 이벤트 추가
-            const performanceCards = document.querySelectorAll('.card');
+            const performanceCards = document.querySelectorAll('.card, .all-card, .ranking-card, .location-card');
             performanceCards.forEach(card => {
                 card.addEventListener('click', function() {
                     const performanceId = this.getAttribute('data-performance-id');
