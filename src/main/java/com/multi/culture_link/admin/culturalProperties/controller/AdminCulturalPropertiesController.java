@@ -4,20 +4,12 @@ package com.multi.culture_link.admin.culturalProperties.controller;
 import com.multi.culture_link.admin.culturalProperties.model.dto.CulturalPropertiesDTO;
 import com.multi.culture_link.admin.culturalProperties.model.dto.PageDTO;
 import com.multi.culture_link.admin.culturalProperties.service.AdminCulturalPropertiesService;
-import com.multi.culture_link.admin.exhibition.model.dto.api.ExhibitionApiDto;
-import com.multi.culture_link.festival.model.dto.FestivalDTO;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 
@@ -173,6 +165,36 @@ public class AdminCulturalPropertiesController {
 		adminCulturalPropertiesService.updateDBData(data);
 
 	}
+
+
+
+	//////------------------------api 검색 보류 //2222//
+
+
+	// @PostMapping("/searchAPI")
+	// @ResponseBody
+	// public List<CulturalPropertiesDTO> searchAPIDataFilter(
+	// 		@RequestParam("pageIndex") int pageIndex,
+	// 		@RequestParam("categoryName") String categoryName,
+	// 		@RequestParam("culturalPropertiesName") String culturalPropertiesName,
+	// 		@RequestParam("region") String region,
+	// 		@RequestParam("dynasty") String dynasty) {
+		
+	// 	System.out.println("들어옴...");
+	// 	System.out.println(pageIndex);
+	// 	System.out.println(categoryName);
+	// 	System.out.println(culturalPropertiesName);
+	// 	System.out.println(region);
+	// 	System.out.println(dynasty);
+		
+	// 	// API 호출 및 필터링 처리
+	// 	List<CulturalPropertiesDTO> filteredList = adminCulturalPropertiesService.searchAPIDataFilter(pageIndex, categoryName, culturalPropertiesName, region, dynasty);
+		
+	// 	System.out.println("controller searchAPIDataFilter : " + filteredList);
+		
+		
+	// 	return filteredList;
+	// }
 
 
 
