@@ -13,12 +13,24 @@ public class UserService {
 		this.userMapper = userMapper;
 	}
 	
+	/**
+	 * 회원의 정보를 삽입
+	 * @param userDTO
+	 * @throws Exception
+	 */
 	public void signUp(UserDTO userDTO) throws Exception{
 		
 		userMapper.insertUser(userDTO);
 	
 	}
 	
+	
+	/**
+	 * 이메일로 회원을 식별
+	 * @param email
+	 * @return
+	 * @throws Exception
+	 */
 	public UserDTO findUserByEmail(String email) throws Exception{
 		
 		UserDTO user = userMapper.findUserByEmail(email);

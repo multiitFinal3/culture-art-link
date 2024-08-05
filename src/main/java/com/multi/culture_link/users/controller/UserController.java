@@ -6,9 +6,12 @@ import com.multi.culture_link.common.region.service.RegionService;
 import com.multi.culture_link.festival.model.dto.UserFestivalLoveHateMapDTO;
 import com.multi.culture_link.festival.service.FestivalService;
 import com.multi.culture_link.users.model.dto.UserDTO;
+import com.multi.culture_link.users.model.dto.VWUserRoleDTO;
 import com.multi.culture_link.users.service.UserService;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -38,12 +41,31 @@ public class UserController {
 		this.bCryptPasswordEncoder = bCryptPasswordEncoder;
 	}
 	
+	/**
+	 * 회원가입 페이지로 이동
+	 *
+	 * @return
+	 */
 	@GetMapping("/signUp")
 	public String signUp() {
 		
 		return "/user/signUp";
 	}
 	
+	
+	/**
+	 * 회원가입 및 회원 선택 선호 키워드를 표시
+	 *
+	 * @param uploadFile
+	 * @param email
+	 * @param password
+	 * @param userName
+	 * @param tel
+	 * @param userAge
+	 * @param gender
+	 * @param regionId
+	 * @param festivalSelectKeyword
+	 */
 	@PostMapping("/signUp")
 	public void signUpPost(@RequestParam("uploadFile") MultipartFile uploadFile, /*@RequestParam("userId") int userId,*/ @RequestParam("email") String email, @RequestParam("password") String password, @RequestParam("userName") String userName, @RequestParam("tel") String tel, @RequestParam("userAge") int userAge, @RequestParam("gender") String gender, @RequestParam("regionId") int regionId, @RequestParam("festivalSelectKeyword") String festivalSelectKeyword) {
 		
@@ -77,8 +99,8 @@ public class UserController {
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
-		
-		
+
+
 //		userDTO.setUserId(userId);
 		userDTO.setEmail(email);
 		userDTO.setPassword(password);
@@ -98,7 +120,6 @@ public class UserController {
 			String encoded_pw = bCryptPasswordEncoder.encode(userDTO.getPassword());
 			userDTO.setPassword(encoded_pw);
 			userService.signUp(userDTO);
-			
 			
 			
 			String[] list = festivalSelectKeyword.trim().split(" ");
@@ -125,6 +146,12 @@ public class UserController {
 		
 	}
 	
+	
+	/**
+	 * 로그인 후 홈페이지로 이동
+	 *
+	 * @return
+	 */
 	@PostMapping("/login2")
 	public String login2() {
 		
@@ -132,14 +159,33 @@ public class UserController {
 		
 	}
 	
-	
+	/**
+	 * 마이페이지로 이동
+	 *
+	 * @return
+	 */
 	@GetMapping("/myPage")
-	public String myPage() {
+	public String myPage(@AuthenticationPrincipal VWUserRoleDTO user, Model model) {
+		
+		UserDTO userDTO = user.getUserDTO();
+		System.out.println("userdto" + userDTO);
+		System.out.println("pr : " + user.getUserProfilePic());
+		
+		model.addAttribute("user", userDTO);
+/*		model.addAttribute("gender", user.getGender());
+		model.addAttribute("regionId", user.getRegionId());
+		model.addAttribute("img", user.getUserProfilePic());*/
+		
 		
 		return "/user/myPage";
 		
 	}
 	
+	/**
+	 * 회원가입 페이지의 지역정보를 가져옴
+	 *
+	 * @return
+	 */
 	@PostMapping("/signUp/findAllRegion")
 	@ResponseBody
 	public ArrayList<RegionDTO> findAllRegion() {

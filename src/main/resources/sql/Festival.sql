@@ -479,16 +479,18 @@ CREATE VIEW vw_user_role_data AS
 		u.user_id,
 		u.email,
 		u.password,
+		u.user_age,
 		u.user_name,
 		u.tel,
 		u.gender,
 		u.region_id,
+		u.user_profile_pic,
 		r.role_id,
 		r.role_content
 
 	FROM user u
-		LEFT JOIN user_role_mapping urm ON u.user_id=urm.user_id
-		LEFT JOIN role r ON urm.role_id=r.role_id;
+		JOIN user_role_mapping urm ON u.user_id=urm.user_id
+		JOIN role r ON urm.role_id=r.role_id;
 
 
 

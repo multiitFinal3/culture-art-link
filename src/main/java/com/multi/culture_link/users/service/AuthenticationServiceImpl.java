@@ -23,10 +23,15 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 	@Autowired
 	public AuthenticationServiceImpl(UserMapper userMapper, BCryptPasswordEncoder bCryptPasswordEncoder) {
 		this.userMapper = userMapper;
-		this.bCryptPasswordEncoder=bCryptPasswordEncoder;
+		this.bCryptPasswordEncoder = bCryptPasswordEncoder;
 	}
 	
-	
+	/**
+	 * 스프링 시큐리티로 회원 권한을 확인
+	 * @param username the username identifying the user whose data is required.
+	 * @return
+	 * @throws UsernameNotFoundException
+	 */
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 //		System.out.println("email : " + username);
@@ -34,43 +39,29 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 		try {
 			UserDTO userDTO = userMapper.findUserByEmail(username);
 			
-			if (userDTO==null){
+			if (userDTO == null) {
 				
 				return null;
 				
 			}
-
 			
 			List<GrantedAuthority> authorities = new ArrayList<>();
 			
-			
 			authorities.add(new SimpleGrantedAuthority(userDTO.getRoleId()));
-		
-			
-			
 			
 			/*System.out.println("loadUserByUsername : " + authorities.toString());*/
-			
-			
-			
 			/*String encodedPassword = "{noop}" + userDTO.getPassword();*/
-			
 			/*System.out.println(userDTO.toString());
-			
-			
 			System.out.println("encodedPassword : " + bCryptPasswordEncoder.encode(userDTO.getPassword()));*/
 			
-			VWUserRoleDTO result =  new VWUserRoleDTO(userDTO);
-			
+			VWUserRoleDTO result = new VWUserRoleDTO(userDTO);
 			/*System.out.println("VWUserRoleDTO : " + result.toString());*/
 			
 			return result;
 			
-			
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
-		
 		
 	}
 }

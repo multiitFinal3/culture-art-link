@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.w3.org/1999/xhtml">
+<html layout:decorate="~{common/layout/layoutMenubar}">
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" th:href="@{/css/user/myPage.css}">
+    <script th:inline="javascript">
+
+        $(document).ready(
+            function(){
+
+                var user = [[${user}]];
+
+                //#region 기본정보 입력
+
+                /**
+                 * 전체 지역 정보를 가져옴
+                 *
+                 */
+                function findAllRegion(){
+
+                    $.ajax({
+
+                        url: '/user/signUp/findAllRegion',
+                        method: 'POST',
+                        contentType: 'application/json',
+                        success: function(list){
+
+                            $('#regionId').html("");
+
+                            $.each(list, function(index, region){
+
+                                var htmlContent = ``;
+
+                                if(user.regionId==region.regionId){
+
+                                    htmlContent = `<option value="${region.regionId}" selected>${region.regionName}</option>`;
+
+                                }else{
+
+                                    htmlContent = `<option value="${region.regionId}">${region.regionName}</option>`;
+
+                                }
+
+                                $('#regionId').append(htmlContent);
+
+                            })
+
+                        }
+
+                    })
+
+                }
+
+                findAllRegion();
+
+
+                /**
+                 * 성별 표시
+                 *
+                 */
+                 function presentGender(gender){
+
+                    $('#gender').html("");
+                    var htmlContent = ``;
+                    var 남 = "남";
+                    var 여 = "여";
+
+                    if(user.gender=="남"){
+                        htmlContent = `<option value="남" selected>남</option><option value="여">여</option>`;
+                    }else{
+                        htmlContent = `<option value="남">남</option><option value="여" selected>여</option>`;
+                    }
+
+                    $('#gender').html(htmlContent);
+
+                 }
+
+                 presentGender(gender);
+
+
+
+                /**
+                 * 이미지 표시
+                 * @param {string} img
+                 */
+                 function renderImg(img){
+
+                    var htmlContent = ``;
+
+                    if(!img || img == "null" || img==""){
+                        htmlContent = `
+                            <img class="profileImg" src="/img/festival/noPhoto.png" alt="이미지가 없습니다" style="width:100%;">
+                        `;
+                    }else{
+                        htmlContent = `
+                            <img class="profileImg" src="${user.userProfilePic}" alt="이미지가 없습니다" style="width:100%;">
+                        `;
+                    }
+
+                    $('#profileImg').html(htmlContent);
+
+                 }
+
+                renderImg(user.userProfilePic);
+
+                //#endregion
+
+
+
+
+
+
+                //# region 축제의 카테고리별 찜 / 관심없음 / 리뷰 내역
+
+
+                /**
+                * 카테고리 드롭다운 클릭 시 텍스트를 가져옴
+                *
+                */
+                $(document).on('click','.category', function(){
+
+                    var categoryText = $(this).text();
+                    $('#category').text(categoryText);
+
+                    if(categoryText="축제"){
+
+                        findLoveFestivalList();
+
+                    }
+
+
+                })
+
+
+                /**
+                 * 축제 찜한 내역을 가져옴
+                 *
+                 */
+                function findLoveFestivalList(){
+
+                    $.ajax({
+
+                        url: '/festival/findLoveFestivalList',
+                        method: 'POST',
+                        contentType: 'application/json',
+                        success: function(list){
+                            $('#upper').html("");
+                            $('#upper').removeClass("page")
+                            $('#upper').addClass("scroll")
+
+                            $.each(list, function(index, festival){
+
+                                var content = festival.festivalContent.length > 10?
+                                festival.festivalContent.substring(0,10) + "..."
+                                : festival.festivalContent;
+
+                                var firstHtml= ``;
+
+                                if(! festival.imgUrl || festival.imgUrl == "null"){
+
+                                    firstHtml = `
+                                        <div class="card" id="${festival.festivalId}">
+                                            <img class="card-img-top" src="/img/festival/noPhoto.png" alt="Card image cap">
+
+                                    `;
+
+                                }else{
+
+                                    firstHtml = `
+                                        <div class="card" id="${festival.festivalId}">
+                                            <img class="card-img-top" src="${festival.imgUrl}" alt="Card image cap">
+
+                                    `;
+
+                                }
+
+                                var secondHtml = `
+                                    <div class="card-body">
+                                          <h5 class="card-title">${festival.festivalName}</h5>
+                                          <p class="card-text">${content}</p>
+                                          <a href="/festival/festival-detail?festivalId=${festival.festivalId}" class="btn btn-primary">자세히</a>
+                                           <button class="btn btn-primary heart" type="button" style="margin:0px" value="${festival.festivalId}">
+                                              <img src="/img/festival/heart.png"
+                                                   style="width : 20px; height: 20px;">
+                                          </button>
+                                          <button class="btn btn-primary hate" type="button" style="margin:0px" value="${festival.festivalId}">
+                                                <img src="/img/festival/trash.png"
+                                                     style="width : 20px; height: 20px;">
+                                          </button>
+                                    </div>
+
+                                </div>
+                                `;
+
+                                var finalHtml = firstHtml + secondHtml;
+
+                                $('#upper').append(finalHtml);
+
+                                findLoveList();
+                                findHateList();
+
+
+                            })
+                        }
+
+                    })
+
+                }
+
+                findLoveFestivalList();
+
+
+
+                /**
+                 * 축제 관심없음한 내역을 가져옴
+                 *
+                 */
+                function findHateFestivalList(){
+
+                    $.ajax({
+
+                        url: '/festival/findHateFestivalList',
+                        method: 'POST',
+                        contentType: 'application/json',
+                        success: function(list){
+
+                            $('#upper').html("");
+                            $('#upper').removeClass("page")
+                            $('#upper').addClass("scroll")
+
+                            $.each(list, function(index, festival){
+
+                                var content = festival.festivalContent.length > 10?
+                                festival.festivalContent.substring(0,10) + "..."
+                                : festival.festivalContent;
+
+                                var firstHtml= ``;
+
+                                if(! festival.imgUrl || festival.imgUrl == "null"){
+
+                                    firstHtml = `
+                                        <div class="card" id="${festival.festivalId}">
+                                            <img class="card-img-top" src="/img/festival/noPhoto.png" alt="Card image cap">
+
+                                    `;
+
+                                }else{
+
+                                    firstHtml = `
+                                        <div class="card" id="${festival.festivalId}">
+                                            <img class="card-img-top" src="${festival.imgUrl}" alt="Card image cap">
+
+                                    `;
+
+                                }
+
+                                var secondHtml = `
+                                    <div class="card-body">
+                                          <h5 class="card-title">${festival.festivalName}</h5>
+                                          <p class="card-text">${content}</p>
+                                          <a href="/festival/festival-detail?festivalId=${festival.festivalId}" class="btn btn-primary">자세히</a>
+                                           <button class="btn btn-primary heart" type="button" style="margin:0px" value="${festival.festivalId}">
+                                              <img src="/img/festival/heart.png"
+                                                   style="width : 20px; height: 20px;">
+                                          </button>
+                                          <button class="btn btn-primary hate" type="button" style="margin:0px" value="${festival.festivalId}">
+                                                <img src="/img/festival/trash.png"
+                                                     style="width : 20px; height: 20px;">
+                                          </button>
+                                    </div>
+
+                                </div>
+                                `;
+
+                                var finalHtml = firstHtml + secondHtml;
+
+                                $('#upper').append(finalHtml);
+
+                                findLoveList();
+                                findHateList();
+
+
+                            })
+                        }
+
+                    })
+
+                }
+
+
+                /**
+                * 찜하기 / 찜 취소하기 버튼
+                *
+                */
+                $(document).on('click','.heart', function(){
+
+                    var button = $(this);
+                    var festivalId = $(this).val();
+
+                    if(button.closest(".card").hasClass("hasLove")){
+
+                        $.ajax({
+
+                            url: '/festival/deleteUserLoveFestival?festivalId=' + festivalId,
+                            method: 'POST',
+                            contentType: 'application/json',
+                            success: function(res){
+                                alert(res);
+                                button.closest('.card').removeClass("hasLove");
+                                findLoveFestivalList();
+                            },
+                            error: function(xhr, status, error){
+
+                                alert('error : ',error);
+
+                            }
+                        })
+
+                    }else{
+
+                        if(button.closest(".card").hasClass("hasHate")){
+                            button.closest(".card").find(".hate").click();
+                        }
+
+
+                        $.ajax({
+
+                            url: '/festival/insertUserLoveFestival?festivalId=' + festivalId,
+                            method: 'POST',
+                            contentType: 'application/json',
+                            success: function(res){
+
+                                alert(res);
+                                button.closest(".card").addClass("hasLove");
+                                findLoveFestivalList();
+
+
+                            },
+                            error: function(xhr, status, error){
+
+                             alert('error : ',error);
+
+                            }
+
+                        })
+
+
+                    }
+
+                })
+
+
+                /**
+                * 찜 리스트 찾아서 색 바꾸기
+                *
+                */
+                function findLoveList(){
+
+                    var cardList = document.querySelectorAll(".card");
+
+                    $.ajax({
+
+                        url: '/festival/findLoveList',
+                        method: 'POST',
+                        contentType: 'application/json',
+                        success: function(list){
+
+                            $.each(cardList, function(index, card){
+
+                                var cardString = card.getAttribute('id');
+                                var cardInt = parseInt(cardString, 10);
+
+                                if(list.includes(cardInt)){
+
+                                    $(card).addClass("hasLove");
+
+                                }
+                            })
+                        }
+                    })
+
+                }
+
+
+
+
+               /**
+                * 관심없음 하기 / 관심없음 취소하기 버튼
+                *
+                */
+                $(document).on('click','.hate', function(){
+
+                    var button = $(this);
+                    var festivalId = $(this).val();
+
+                    if(button.closest(".card").hasClass("hasHate")){
+
+                        $.ajax({
+
+                            url: '/festival/deleteUserHateFestival?festivalId=' + festivalId,
+                            method: 'POST',
+                            contentType: 'application/json',
+                            success: function(res){
+                                alert(res);
+                                button.closest('.card').removeClass("hasHate");
+                            },
+                            error: function(xhr, status, error){
+
+                                alert('error : ',error);
+
+                            }
+                        })
+
+                    }else{
+
+                        if(button.closest(".card").hasClass("hasLove")){
+                            button.closest(".card").find(".heart").click();
+                        }
+
+                        $.ajax({
+
+                            url: '/festival/insertUserHateFestival?festivalId=' + festivalId,
+                            method: 'POST',
+                            contentType: 'application/json',
+                            success: function(res){
+
+                                alert(res);
+                                button.closest(".card").addClass("hasHate");
+                                findHateFestivalList();
+
+
+                            },
+                            error: function(xhr, status, error){
+
+                             alert('error : ',error);
+
+                            }
+                        })
+                    }
+
+                })
+
+
+                /**
+                * 관심없음 리스트 찾아서 색 바꾸기
+                *
+                */
+                function findHateList(){
+
+                    var cardList = document.querySelectorAll(".card");
+
+                    $.ajax({
+
+                        url: '/festival/findHateList',
+                        method: 'POST',
+                        contentType: 'application/json',
+                        success: function(list){
+
+                            $.each(cardList, function(index, card){
+
+                                var cardString = card.getAttribute('id');
+                                var cardInt = parseInt(cardString, 10);
+
+                                if(list.includes(cardInt)){
+
+                                    $(card).addClass("hasHate");
+
+                                }
+                            })
+                        }
+                    })
+
+                }
+
+                /**
+                 * 전체 축제 리뷰 내역을 가져옴(페이지 별)
+                 *
+                 */
+                function findFestivalReviewList(page){
+
+                    $.ajax({
+
+                        url: '/festival/findFestivalReviewListByUserId?page='+page,
+                        method: 'POST',
+                        contentType: 'application/json',
+                        success: function(list){
+                            $('#upper').html("");
+                            $('#upper').removeClass("scroll")
+                            $('#upper').addClass("page")
+
+                            console.log("리뷰" + list)
+
+                            var reviewHeader = `
+
+                                <table class="table table-striped" id="reviewTable" style="text-align: center;">
+
+                                    <thead class="table-light">
+                                    <tr style="text-align: center;">
+                                        <th scope="col">#</th>
+                                        <th scope="col">프로필</th>
+                                        <th scope="col">이름</th>
+                                        <th scope="col">별점</th>
+                                        <th scope="col">내용</th>
+                                        <th scope="col">첨부파일</th>
+                                        <th scope="col">수정</th>
+                                        <th scope="col">삭제</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody id="reviewList">
+
+                            `;
+
+                            $('#upper').html(reviewHeader);
+
+                            $.each(list, function(index, review){
+
+                                var index1 = (page-1)*5 + index+1;
+                                var reviewHtml = ``;
+                                var profilePic = ``;
+                                var attachment = ``;
+                                var reviewUserId = review.userId;
+
+                                if((review.userProfilePic == null) || (review.userProfilePic == "")){
+
+                                     profilePic = `
+                                     <td class="userProfilePic">
+                                        <img src="/img/festival/noPhoto.png" style="width: 100%;height:100%;display: block;">
+                                     </td>
+                                    `
+
+                                }else{
+
+                                    profilePic = `
+                                    <td class="userProfilePic">
+                                        <img src="${review.userProfilePic}" style="width:100%;height:100%;display: block;">
+                                    </td>
+                                    `
+                                }
+
+                                if((review.attachment == null) || (review.attachment == "")){
+
+                                    attachment = `
+                                    <td>
+                                        <img src="/img/festival/noPhoto.png" style="width:100%;display: block;">
+                                    </td>
+                                    `
+
+                                }else{
+
+                                    attachment = `
+                                    <td>
+                                        <img src="${review.attachment}" alt="사진 없음" style="width:100%;height:100%;display: block;">
+                                    </td>
+                                    `
+
+                                }
+
+                                 reviewHtml = `
+
+                                    <tr class="reviewRow" id="review.festivalReviewId">
+
+                                        <td class="index1">
+                                            ${index1}
+                                        </td>` +
+
+                                        profilePic
+
+                                        +
+
+                                        `<td class="reviewUserName">
+                                            ${review.userName}
+                                        </td>
+
+                                        <td>
+                                            <img src="/img/festival/star.png" style="width:30%;height:auto;display: block;">&nbsp;<input class="reviewStar" type="number" step="0.5" value="${review.festivalReviewStar}" max="5" min="0" text-align: center; width:40%">
+                                        </td>
+
+                                        <td>
+                                        <textarea class="reviewText" style="text-align: center; height: 100%;">${review.festivalReviewContent}</textarea>
+                                        </td>`
+
+                                        +
+
+                                        attachment
+
+                                        +
+
+                                        `<td>
+                                            <button class="updateBtn" value="${review.festivalReviewId}">수정</button>
+                                        </td>
+
+                                        <td>
+                                            <button class="deleteBtn" value="${review.festivalReviewId}">삭제</button>
+                                        </td>
+
+                                    </tr>
+                                 `;
+
+                                $('#upper').append(reviewHtml);
+
+                            })
+
+                            var reviewFooter =  `</tbody></table>`;
+                            $('#upper').append(reviewFooter);
+
+                        }
+                    })
+                }
+
+                //# endregion
+
+
+
+
+
+
+                // #region 상단바 하단바 클릭 이벤트
+
+
+
+                /**
+                * 찜한내역 클릭 시 카테고리에 따라 다른 내용이 채워짐
+                *
+                */
+                $(document).on('click','#love', function(){
+
+                    var category = $('#category').text();
+
+                    if(category=="축제"){
+
+                        findLoveFestivalList();
+
+                    }else{
+
+
+
+                    }
+
+                })
+
+
+
+
+                /**
+                * 관심없음 내역 클릭 시 카테고리에 따라 다른 내용이 채워짐
+                *
+                */
+                $(document).on('click','#hate', function(){
+
+                    var category = $('#category').text();
+
+                    if(category=="축제"){
+
+                        findHateFestivalList();
+
+                    }else{
+
+
+
+                    }
+
+                })
+
+
+
+
+                /**
+                * 내가 쓴 리뷰 클릭 시 카테고리에 따라 다른 내용이 채워짐
+                *
+                */
+                $(document).on('click','#review', function(){
+
+                    var category = $('#category').text();
+
+                    if(category=="축제"){
+
+                        findFestivalReviewList(1);
+
+                    }else{
+
+
+
+                    }
+
+                })
+
+
+
+
+
+
+
+
+
+                //# endregion
+
+
+
+            }
+        )
+
+
+    </script>
+</head>
+<body>
+
+<div layout:fragment="content">
+
+    <div id="realContent">
+
+        <div id="leftZone">
+
+            <form th:action="@{/user/updateUserBasicInfo}" method="post" encType="multipart/form-data" id="basicForm" style="font-size: 28px;margin: 10%;">
+
+                <div id="profileImg" style="width: 100%;">
+
+<!--                    <img th:src="@{${user.userProfilePic}}" alt="이미지가 없습니다.">-->
+
+                </div><br>
+                프로필 사진 <input name="uploadFile" class="rounded" id="uploadFile" type="file" accept="image/*"><br>
+                이메일  <input name="email" class="rounded" readonly th:placeholder="${user.email}"><br>
+                비밀번호  <input name="password" class="rounded" type="password" placeholder="******"><br>
+                이름  <input name="userName" class="rounded" style="width:100px;" th:placeholder="${user.userName}">
+                전화번호  <input name="tel" class="rounded" type="tel" style="width:200px;" th:placeholder="${user.tel}"><br>
+                나이 <input name="userAge" class="rounded" type="number" style="width:80px;" th:placeholder="${user.userAge}">
+                성별
+                <select name="gender" class="rounded" style="width:80px;" id="gender">
+                </select>
+                지역 <select name="regionId" id="regionId" class="rounded" style="width:100px;"></select><br>
+
+                <button type="submit">회원정보 수정</button>
+                <button type="button" id="deleteAccount">회원탈퇴</button>
+
+            </form>
+
+        </div>
+
+
+        <div id="rightZone">
+
+            <div id="upperZone">
+
+                <ul>
+                    <li class="dropdown">
+                        <a href="javascript:void(0)" class="dropbtn" id="category">축제</a>
+                        <div class="dropdown-content">
+                            <a id="performance" class="category">공연</a>
+                            <a id="exhibition" class="category">전시</a>
+                            <a id="festival" class="category">축제</a>
+                            <a id="culturalPro" class="category">문화제</a>
+                        </div>
+                    </li>
+                    <li><a id="love">찜한 내역</a></li>
+                    <li><a id="hate">관심없음 내역</a></li>
+                    <li><a id="review">내가 쓴 리뷰</a></li>
+
+                </ul>
+                <div id="upper">
+
+                    아아
+
+                </div>
+
+
+
+
+            </div>
+
+            <div id="downZone">
+
+                <ul>
+
+                    <li><a id="loveKeywordList">찜 키워드</a></li>
+                    <li><a id="hateKeywordList">관심없음 키워드</a></li>
+
+                </ul>
+
+                <div id="down">
+
+                    dldldl
+
+                </div>
+
+            </div>
+
+
+
+        </div>
+
+
+    </div>
+
+
+</div>
+
+
+</body>
+</html>
