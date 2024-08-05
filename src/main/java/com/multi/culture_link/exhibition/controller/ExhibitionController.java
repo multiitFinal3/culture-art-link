@@ -1,6 +1,7 @@
 package com.multi.culture_link.exhibition.controller;
 
 import com.multi.culture_link.admin.exhibition.model.dto.api.ExhibitionApiDto;
+import com.multi.culture_link.admin.exhibition.model.dto.api.ExhibitionKeywordDto;
 import com.multi.culture_link.culturalProperties.model.dto.Video;
 import com.multi.culture_link.culturalProperties.model.dto.YoutubeConfig;
 import com.multi.culture_link.exhibition.model.dto.ExhibitionAnalyzeDto;
@@ -23,6 +24,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
@@ -32,6 +34,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 @RestController
 @RequiredArgsConstructor
@@ -40,7 +45,7 @@ public class ExhibitionController {
     private final ExhibitionService exhibitionService;
     private final ExhibitionCommentService exhibitionCommentService;
     private final ExhibitionAnalyzeService exhibitionAnalyzeService;
-    private final YoutubeConfig youtubeConfig;
+
 
     
     // 상세 검색
@@ -199,56 +204,28 @@ public class ExhibitionController {
     }
 
 
-
-//    @PostMapping("/exhibitionYoutube")
-//    public String findFestivalYoutube(
-//            @RequestParam("title") String title
-//    ) {
-//        String youtubeId = null;
-//
-//        try {
-//            youtubeId = ExhibitionService.findExhibitionYoutube(title);
-//            System.out.println("유튜브 아이디 : " + youtubeId);
-//
-//        } catch (Exception e) {
-//            throw new RuntimeException(e);
-//        }
-//        return youtubeId;
-//    }
-
     @PostMapping("/videos")
     public List<Video> getVideos(@RequestParam String query) {
 //        String query = title + " " + museum;
-        List<Video> videos = crawlYouTubeVideos(query);
+        List<Video> videos = exhibitionService.crawlYouTubeVideos(query);
         return videos.subList(0, Math.min(videos.size(), 2)); // 최대 2개의 비디오만 반환
     }
 
-    private List<Video> crawlYouTubeVideos(String query) {
-        List<Video> videos = new ArrayList<>();
-        try {
-            String apiKey = youtubeConfig.getApiKey();
-            String url = "https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=2&q=" + query + "&type=video&key=" + apiKey;
-            RestTemplate restTemplate = new RestTemplate();
-            String response = restTemplate.getForObject(url, String.class);
+    @PostMapping("/exhibition/{exhibitionId}/rating")
+    public double getAverageRating(
+            @PathVariable int exhibitionId
+     ) {
+        return exhibitionCommentService.getAverageRating(exhibitionId);
+    };
 
-            JSONObject jsonObject = new JSONObject(response);
-            JSONArray items = jsonObject.getJSONArray("items");
 
-            for (int i = 0; i < items.length(); i++) {
-                JSONObject item = items.getJSONObject(i);
-                JSONObject snippet = item.getJSONObject("snippet");
 
-                String title = snippet.getString("title");
-                String videoId = item.getJSONObject("id").getString("videoId");
-                String link = "https://www.youtube.com/watch?v=" + videoId;
-                String thumbnailUrl = snippet.getJSONObject("thumbnails").getJSONObject("medium").getString("url");
+    @GetMapping("/exhibition/{exhibitionId}/keyword")
+    public HashMap<String, List<ExhibitionKeywordDto>> getKeyword(
+            @PathVariable int exhibitionId
+    ) {
+        return exhibitionService.getKeyword(exhibitionId);
+    };
 
-                videos.add(new Video(title, link, thumbnailUrl));
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return videos;
-    }
 
 }

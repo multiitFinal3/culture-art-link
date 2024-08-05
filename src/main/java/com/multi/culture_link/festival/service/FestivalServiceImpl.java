@@ -3,6 +3,7 @@ package com.multi.culture_link.festival.service;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.multi.culture_link.admin.festival.model.mapper.AdminFestivalMapper;
 import com.multi.culture_link.common.time.model.dto.TimeDTO;
 import com.multi.culture_link.festival.model.dto.*;
 import com.multi.culture_link.festival.model.mapper.FestivalMapper;
@@ -25,6 +26,7 @@ import java.util.Locale;
 public class FestivalServiceImpl implements FestivalService {
 	
 	private final FestivalMapper festivalMapper;
+	private final AdminFestivalMapper adminFestivalMapper;
 	private final OkHttpClient client;
 	private final Gson gson;
 	
@@ -38,7 +40,8 @@ public class FestivalServiceImpl implements FestivalService {
 	private String XNaverClientSecret;
 	
 	
-	public FestivalServiceImpl(FestivalMapper festivalMapper, OkHttpClient client, Gson gson) {
+	public FestivalServiceImpl(FestivalMapper festivalMapper, AdminFestivalMapper adminFestivalMapper, OkHttpClient client, Gson gson) {
+		this.adminFestivalMapper = adminFestivalMapper;
 		this.festivalMapper = festivalMapper;
 		this.client = client;
 		this.gson = gson;
@@ -183,14 +186,14 @@ public class FestivalServiceImpl implements FestivalService {
 	/**
 	 * 해당 축제의 컨텐트 키워드를 반환
 	 *
-	 * @param festivalId
+	 * @param mapDTO
 	 * @return
 	 * @throws Exception
 	 */
 	@Override
-	public ArrayList<FestivalContentReviewNaverKeywordMapDTO> findContentKeywordListByFestivalId(int festivalId) throws Exception {
+	public ArrayList<FestivalContentReviewNaverKeywordMapDTO> findKeywordListByFestivalId(FestivalContentReviewNaverKeywordMapDTO mapDTO) throws Exception {
 		
-		ArrayList<FestivalContentReviewNaverKeywordMapDTO> list = festivalMapper.findContentKeywordListByFestivalId(festivalId);
+		ArrayList<FestivalContentReviewNaverKeywordMapDTO> list = festivalMapper.findKeywordListByFestivalId(mapDTO);
 		
 		return list;
 		
@@ -342,8 +345,9 @@ public class FestivalServiceImpl implements FestivalService {
 	@Override
 	public String findFestivalYoutube(int page, String formattedStart, String festivalName) throws Exception {
 		
-		
-		festivalName = formattedStart.substring(0, 4) + festivalName + " ";
+		System.out.println("findFestivalYoutube : " + festivalName);
+
+//		festivalName = formattedStart.substring(0, 4) + festivalName + " ";
 		
 		Request request = new Request.Builder()
 				.url("https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=10&order=relevance&q=" + festivalName + "&regionCode=KR&videoDuration=any&type=video&videoEmbeddable=true" + "&key=" + youtubeKey)
@@ -356,7 +360,17 @@ public class FestivalServiceImpl implements FestivalService {
 		Response response = client.newCall(request).execute();
 		String responseBody = response.body().string();
 		JsonObject json = gson.fromJson(responseBody, JsonObject.class);
+		
+		System.out.println("json: " + json.toString());
+		
 		JsonArray items = json.getAsJsonArray("items");
+		
+		if (items == null) {
+			
+			System.out.println("items is null");
+			return "noId";
+			
+		}
 		
 		JsonObject item = items.get(page - 1).getAsJsonObject();
 		
@@ -400,7 +414,7 @@ public class FestivalServiceImpl implements FestivalService {
 		
 		NaverArticleDTO naverArticleDTO = null;
 		
-		if (!items.isEmpty()){
+		if (!items.isEmpty()) {
 			
 			JsonObject item = items.get(page - 1).getAsJsonObject();
 			
@@ -419,8 +433,8 @@ public class FestivalServiceImpl implements FestivalService {
 			
 			System.out.println(description);
 			
-			title = title.replaceAll("</[a-z]*>", "").replaceAll("<[a-z]*>", "").replaceAll("/", "").replaceAll("▲", "");
-			description = description.replaceAll("</[a-z]*>", "").replaceAll("<[a-z]*>", "").replaceAll("/", "").replaceAll("▲", "");
+			title = title.replaceAll("</[a-z]*>", "").replaceAll("<[a-z]*>", "").replaceAll("/", "").replaceAll("[^a-zA-Z0-9가-힣\\s]", " ");
+			description = description.replaceAll("</[a-z]*>", "").replaceAll("<[a-z]*>", "").replaceAll("[^a-zA-Z0-9가-힣\\s]", " ");
 			
 			System.out.println("description : " + description);
 			
@@ -471,7 +485,7 @@ public class FestivalServiceImpl implements FestivalService {
 			
 			
 			String content = el.text();
-			content = content.replaceAll("</[a-z]*>", "").replaceAll("<[a-z]*>", "").replaceAll("/", "").replaceAll("▲", "");
+			content = content.replaceAll("</[a-z]*>", "").replaceAll("<[a-z]*>", "").replaceAll("[^a-zA-Z0-9가-힣\\s]", " ");
 			
 			if (content != "") {
 				naverArticleDTO.setTotalContent(content);
@@ -482,63 +496,18 @@ public class FestivalServiceImpl implements FestivalService {
 		}
 		
 		
-		
 		return naverArticleDTO;
 	}
 	
 	/**
 	 * 네이버 블로그 api로 해당 블로그의 대략적인 정보와 나와있는 원본 링크를 dto에 저장. 동적으로 열려 셀레니움 필요한 전체 내용과 이미지 크롤링은 실패함
 	 *
-	 * @param page
-	 * @param formattedStart
-	 * @param festivalName
+	 * @param festivalDTO
 	 * @return
 	 * @throws Exception
 	 */
 	@Override
-	public NaverBlogDTO findFestivalNaverBlog(int page, String formattedStart, String festivalName) throws Exception {
-		festivalName = formattedStart.substring(0, 4) + festivalName + " ";
-		
-		Request request = new Request.Builder()
-				.url("https://openapi.naver.com/v1/search/blog.json?query=" + festivalName + "&display=10&sort=sim")
-				.addHeader("X-Naver-Client-Id", XNaverClientId)
-				.addHeader("X-Naver-Client-Secret", XNaverClientSecret)
-				.get()
-				.build();
-		
-		
-		Response response = client.newCall(request).execute();
-		String responseBody = response.body().string();
-		JsonObject json = gson.fromJson(responseBody, JsonObject.class);
-		JsonArray items = json.getAsJsonArray("items");
-		
-		JsonObject item = items.get(page - 1).getAsJsonObject();
-		
-		String title = item.get("title").getAsString();
-		String link = item.get("link").getAsString();
-		String description = item.get("description").getAsString();
-		String bloggerName = item.get("bloggername").getAsString();
-		String postDate = item.get("postdate").getAsString();
-		
-		SimpleDateFormat formatter = new SimpleDateFormat("yyyymmdd");
-		Date date = formatter.parse(postDate);
-		
-		
-		System.out.println(description);
-		
-		title = title.replaceAll("</[a-z]*>", "").replaceAll("<[a-z]*>", "").replaceAll("/", "").replaceAll("▲", "");
-		description = description.replaceAll("</[a-z]*>", "").replaceAll("<[a-z]*>", "").replaceAll("/", "").replaceAll("▲", "");
-		
-		System.out.println("description : " + description);
-		
-		
-		NaverBlogDTO naverBlogDTO = new NaverBlogDTO();
-		naverBlogDTO.setTitle(title);
-		naverBlogDTO.setDescription(description);
-		naverBlogDTO.setBloggerName(bloggerName);
-		naverBlogDTO.setLink(link);
-		naverBlogDTO.setPostDate(date);
-		
+	public NaverBlogDTO findFestivalNaverBlog(FestivalDTO festivalDTO) throws Exception {
 		
 		//festival naver content + img : dynamic하게 로딩되어 셀레니움이 필요해 일단 api 정보로만 저장함
 
@@ -564,9 +533,192 @@ public class FestivalServiceImpl implements FestivalService {
 //			naverBlogDTO.setTotalContent(content);
 //		}
 //
-		System.out.println("serviceIMpl : naverBlogDTO : " + naverBlogDTO);
+		
+		int page = festivalDTO.getPageDTO().getPage();
+		
+		String festivalName = /*festivalDTO.getFormattedStart().substring(0, 4) +*/ festivalDTO.getFestivalName()/* + " "*/;
+		
+		Request request = new Request.Builder()
+				.url("https://openapi.naver.com/v1/search/blog.json?query=" + festivalName + "&display=10&sort=sim")
+				.addHeader("X-Naver-Client-Id", XNaverClientId)
+				.addHeader("X-Naver-Client-Secret", XNaverClientSecret)
+				.get()
+				.build();
+		
+		
+		Response response = client.newCall(request).execute();
+		String responseBody = response.body().string();
+		JsonObject json = gson.fromJson(responseBody, JsonObject.class);
+		int display = json.getAsJsonPrimitive("display").getAsInt();
+		JsonArray items = json.getAsJsonArray("items");
+		
+		NaverBlogDTO naverBlogDTO = new NaverBlogDTO();
+		
+		if (!items.isEmpty()) {
+			
+			JsonObject item = items.get(page - 1).getAsJsonObject();
+			String title = item.get("title").getAsString();
+			String link = item.get("link").getAsString();
+			String description = item.get("description").getAsString();
+			String postdate = item.get("postdate").getAsString();
+			
+			SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd");
+			Date date = formatter.parse(postdate);
+			
+			
+			System.out.println(description);
+			
+			title = title.replaceAll("</[a-z]*>", "").replaceAll("<[a-z]*>", "").replace("&lt", "").replace("&gt", "").replaceAll("[^a-zA-Z0-9가-힣\\s]", " ");
+			description = description.replaceAll("</[a-z]*>", "").replaceAll("<[a-z]*>", "").replace("&lt", "").replace("&gt", "").replaceAll("[^a-zA-Z0-9가-힣\\s]", " ");
+			
+			System.out.println("description : " + description);
+			
+			naverBlogDTO.setFestivalId(festivalDTO.getFestivalId());
+			naverBlogDTO.setDescription(description);
+			naverBlogDTO.setTitle(title);
+			naverBlogDTO.setPostDate(date);
+			naverBlogDTO.setLink(link);
+			naverBlogDTO.setDisplay(display);
+			
+			//festival naver blog content + img : 동적으로 열려서 셀레니움 필요함
+
+//			Document document = Jsoup.connect(link).get();
+//			Elements els = document.select("[itemprop=articleBody]");
+//			Element el = null;
+//
+//			if (els.isEmpty()) {
+//				els = document.select("[id=articleBody]");
+//				if (els.isEmpty()) {
+//					el = document.body();
+//				} else {
+//					el = els.get(0);
+//				}
+//
+//			} else {
+//				el = els.get(0);
+//			}
+//
+//
+//			String imgUrl = el.select("img").attr("src");
+//
+//			if (!imgUrl.equals("")) {
+//				naverBlogDTO.setImgUrl(imgUrl);
+//			}
+//
+//
+//			String content = el.text();
+//			content = content.replaceAll("</[a-z]*>", "").replaceAll("<[a-z]*>", "").replaceAll("/", "").replaceAll("▲", "");
+//
+//			if (content != "") {
+//				naverBlogDTO.setTotalContent(content);
+//			}
+//
+//			System.out.println("serviceIMpl : naverBlogDTO : " + naverBlogDTO);
+			
+		}
+		
 		
 		return naverBlogDTO;
+	}
+	
+	/**
+	 * 본인을 제외한 같은 키워드의 축제를 추천함
+	 *
+	 * @param mapDTO
+	 * @return
+	 * @throws Exception
+	 */
+	@Override
+	public ArrayList<FestivalDTO> findSameKeywordFestivalByfestivalId(FestivalContentReviewNaverKeywordMapDTO mapDTO) throws Exception {
+		
+		ArrayList<FestivalContentReviewNaverKeywordMapDTO> mapDTOS = festivalMapper.findKeywordListByFestivalId(mapDTO);
+		
+		ArrayList<Integer> festivalIdList = new ArrayList<>();
+		
+		for (FestivalContentReviewNaverKeywordMapDTO mapDTO1 : mapDTOS) {
+			
+			String festivalKeywordId = mapDTO1.getFestivalKeywordId();
+			System.out.println("findSameKeywordFestivalByfestivalId의 키워드 : " + festivalKeywordId);
+			FestivalContentReviewNaverKeywordMapDTO mapDTO2 = new FestivalContentReviewNaverKeywordMapDTO();
+			mapDTO2.setFestivalKeywordId(festivalKeywordId);
+			
+			ArrayList<FestivalContentReviewNaverKeywordMapDTO> festivalIdList1 = festivalMapper.findKeywordListByFestivalId(mapDTO2);
+			
+			for (FestivalContentReviewNaverKeywordMapDTO map : festivalIdList1) {
+				
+				int festivalId = map.getFestivalId();
+				if (!(festivalIdList.contains(festivalId)) && (festivalId != mapDTO.getFestivalId())) {
+					festivalIdList.add(festivalId);
+				}
+				
+			}
+			
+			
+		}
+		
+		ArrayList<FestivalDTO> list = new ArrayList<>();
+		
+		for (int i : festivalIdList) {
+			
+			FestivalDTO festivalDTO = adminFestivalMapper.findDBFestivalByFestivalId(i);
+			list.add(festivalDTO);
+			
+		}
+		
+		return list;
+		
+	}
+	
+	/**
+	 * tf_idf가 높은 키워드 순으로 추천 키워드로 추가됨
+	 * @param mapDTO
+	 * @return
+	 * @throws Exception
+	 */
+	@Override
+	public ArrayList<FestivalContentReviewNaverKeywordMapDTO> findPopularFestivalKeyword(FestivalContentReviewNaverKeywordMapDTO mapDTO) throws Exception {
+		ArrayList<FestivalContentReviewNaverKeywordMapDTO> list = festivalMapper.findPopularFestivalKeyword(mapDTO);
+		return list;
+	}
+	
+	/**
+	 * 유저가 회원가입 시 선택한 키워드를 테이블에 삽입
+	 * @param mapDTO
+	 * @throws Exception
+	 */
+	@Override
+	public void insertUserSelectKeyword(UserFestivalLoveHateMapDTO mapDTO) throws Exception {
+		
+		festivalMapper.insertUserSelectKeyword(mapDTO);
+		
+	}
+	
+	/**
+	 * 유저의 선택과 찜에 의한 선호도 모두를 반영하는 뷰에서 카운트 총 합이 10개 이상인 키워드만 반환
+	 * @param userId
+	 * @return
+	 * @throws Exception
+	 */
+	@Override
+	public ArrayList<FestivalContentReviewNaverKeywordMapDTO> findUserLoveKeywordList(int userId) throws Exception {
+		
+		ArrayList<FestivalContentReviewNaverKeywordMapDTO> list = festivalMapper.findUserLoveKeywordList(userId);
+		
+		return list;
+	}
+	
+	/**
+	 * 같은 키워드를 가지는 축제 리스트를 반환
+	 * @param festivalKeywordId
+	 * @return
+	 * @throws Exception
+	 */
+	@Override
+	public ArrayList<FestivalDTO> findSameKeywordFestivalByKeywordId(String festivalKeywordId) throws Exception {
+		
+		ArrayList<FestivalDTO> list = festivalMapper.findSameKeywordFestivalByKeywordId(festivalKeywordId);
+		
+		return list;
 	}
 	
 	
