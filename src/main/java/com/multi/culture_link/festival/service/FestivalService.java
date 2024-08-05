@@ -65,4 +65,6 @@ public interface FestivalService {
 	ArrayList<FestivalDTO> findLoveHateFestivalList(UserFestivalLoveHateMapDTO mapDTO) throws Exception;
 	
 	ArrayList<VWUserReviewDataDTO> findFestivalReviewListByUserId(VWUserReviewDataDTO vwUserReviewDataDTO) throws Exception;
+	
+	int findUserReviewCountByUserReviewDataDTO(VWUserReviewDataDTO vwUserReviewDataDTO) throws Exception;
 }

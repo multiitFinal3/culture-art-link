@@ -479,10 +479,10 @@
                 }
 
                 /**
-                 * 전체 축제 리뷰 내역을 가져옴(페이지 별)
+                 * 전체 축제 리뷰 내역을 가져옴(페이지 별로)
                  *
                  */
-                function findFestivalReviewList(page){
+                function findFestivalReviewListByPage(page){
 
                     $.ajax({
 
@@ -608,10 +608,76 @@
 
                             var reviewFooter =  `</tbody></table>`;
                             $('#upper').append(reviewFooter);
+                            findUserReviewCount();
 
                         }
                     })
                 }
+
+
+
+
+                /**
+                * 유저별 전체 리뷰 페이지 버튼 만들기
+                *
+                *
+                */
+                function findUserReviewCount(){
+
+                    $.ajax({
+
+                        url: '/festival/findUserReviewCount',
+                        method: 'POST',
+                        contentType: 'application/json',
+                        success: function(count){
+
+                            $('#reviewPages').html("");
+
+                            var reviewPagesHtml = `
+
+                                <div id="reviewPages"><div>
+
+                            `;
+
+                            $('#upper').append(reviewPagesHtml);
+
+                            var pages = 0;
+
+                            if(count % 5 == 0){
+                                pages = count / 5;
+                            }else{
+                                pages = count / 5 + 1;
+                            }
+
+                            for(var p=1; p<=pages; p++){
+
+                                $('#reviewPages').append(`<button class="pageBtn1" style="font-size: 20px; margin: 0.5%">${p}</button>`)
+
+                            }
+
+
+                        }
+
+                    })
+                }
+
+
+               /**
+                * 리뷰 페이지 이벤트 버튼
+                *
+                */
+                $(document).on('click','.pageBtn1', function(){
+
+                    var page = $(this).text();
+                    findFestivalReviewListByPage(page);
+                    findUserReviewCount();
+
+                })
+
+
+
+
+
 
                 //# endregion
 
@@ -680,7 +746,7 @@
 
                     if(category=="축제"){
 
-                        findFestivalReviewList(1);
+                        findFestivalReviewListByPage(1);
 
                     }else{
 
@@ -688,7 +754,7 @@
 
                     }
 
-                })
+                });
 
 
 

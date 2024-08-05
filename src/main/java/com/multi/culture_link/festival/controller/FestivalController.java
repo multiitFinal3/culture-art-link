@@ -1083,4 +1083,35 @@ public class FestivalController {
 	}
 	
 	
+	/**
+	 * 특정 유저의 축제의 리뷰 전부를 리뷰 페이지 번호에 맞게 가져오기
+	 *
+	 * @param user
+	 *
+	 * @return
+	 */
+	@PostMapping("/findUserReviewCount")
+	@ResponseBody
+	public int findUserReviewCountByUserId(@AuthenticationPrincipal VWUserRoleDTO user) {
+		
+		VWUserReviewDataDTO vwUserReviewDataDTO = new VWUserReviewDataDTO();
+		vwUserReviewDataDTO.setUserId(user.getUserId());
+		
+		System.out.println("보내는 : " + vwUserReviewDataDTO);
+		
+		int count = 0;
+		
+		try {
+			count = festivalService.findUserReviewCountByUserReviewDataDTO(vwUserReviewDataDTO);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+		
+		System.out.println("findUserReviewCountByUserReviewDataDTO : " + count);
+		
+		return count;
+		
+	}
+	
+	
 }

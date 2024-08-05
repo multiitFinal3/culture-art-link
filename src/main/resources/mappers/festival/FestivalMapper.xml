@@ -261,5 +261,13 @@
     </select>
 
 
+    <select id="findUserReviewCountByUserReviewDataDTO">
+
+        SELECT COUNT(*) FROM vw_festival_user_review_data urd
+        WHERE urd.user_id = #{userId};
+
+    </select>
+
+
 
 </mapper>

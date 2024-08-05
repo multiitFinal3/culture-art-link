@@ -759,4 +759,19 @@ public class FestivalServiceImpl implements FestivalService {
 	}
 	
 	
+	/**
+	 * 특정 유저가 작성한 리뷰 전부의 수를 반환
+	 * @param vwUserReviewDataDTO
+	 * @return
+	 * @throws Exception
+	 */
+	@Override
+	public int findUserReviewCountByUserReviewDataDTO(VWUserReviewDataDTO vwUserReviewDataDTO) throws Exception {
+		
+		int count = festivalMapper.findUserReviewCountByUserReviewDataDTO(vwUserReviewDataDTO);
+		return count;
+		
+	}
+	
+	
 }
