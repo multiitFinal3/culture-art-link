@@ -1374,17 +1374,23 @@ function searchAPIDataFilter(pageIndex) {
     var region = $('#searchRegion2').val(); // 지역
     var dynasty = $('#searchDynasty2').val(); // 시대
 
+    console.log("categoryName : " + categoryName)
+    console.log("culturalPropertiesName : " + culturalPropertiesName)
+    console.log("region : " + region)
+    console.log("dynasty : " + dynasty)
+
 
     $.ajax({
-        url: '/admin/cultural-properties-regulate/searchAPI?pageIndex=' + pageIndex,
+        url: '/admin/cultural-properties-regulate/searchAPI',
         method: 'POST',
         contentType: 'application/json',
-        data: JSON.stringify({
+        data: {
+            pageIndex : pageIndex,
             categoryName: categoryName,
             culturalPropertiesName: culturalPropertiesName,
             region: region,
             dynasty: dynasty
-        }),
+        },
         beforeSend: function() {
             $('#loadingIndicator').show(); // Ajax 요청 전에 로딩 표시 보이기
         },
@@ -1413,7 +1419,7 @@ function searchAPIDataFilter(pageIndex) {
             });
         },
         error: function(xhr, status, error) {
-            console.error('API 호출 오류:', error);
+            console.error('API 호출 오류:' + error);
         }
     });
 }
