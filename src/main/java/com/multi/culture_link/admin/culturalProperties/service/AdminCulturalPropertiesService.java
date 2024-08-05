@@ -9,6 +9,9 @@ import org.json.JSONObject;
 import org.json.XML;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -16,6 +19,7 @@ import org.springframework.web.client.RestTemplate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Slf4j
@@ -321,10 +325,12 @@ public class AdminCulturalPropertiesService {
 		return adminCulturalPropertiesDAO.selectCount();
 	}
 
-	public List<CulturalPropertiesDTO> searchAPI(CulturalPropertiesDTO searchForm) {
-		// culturalPropertiesMapper를 통해 매퍼 다오로부터 검색 메소드 호출
-		return adminCulturalPropertiesDAO.searchAPI(searchForm);
-	}
+//	public List<CulturalPropertiesDTO> searchAPI(CulturalPropertiesDTO searchForm) {
+//		// culturalPropertiesMapper를 통해 매퍼 다오로부터 검색 메소드 호출
+//		return adminCulturalPropertiesDAO.searchAPI(searchForm);
+//	}
+
+
 
 
 
@@ -369,6 +375,365 @@ public class AdminCulturalPropertiesService {
 
 
 	}
+
+
+//	public List<CulturalPropertiesDTO> searchAPICulturalProperties(String categoryName, String culturalPropertiesName, String region, String dynasty) {
+//		List<CulturalPropertiesDTO> culturalPropertiesList = new ArrayList<>();
+//
+//		try {
+//			// 예시로 1부터 10까지의 페이지를 반복하여 데이터를 가져오는 것으로 가정
+//			for (int pageIndex = 1; pageIndex <= 10; pageIndex++) {
+//				String listFullUrl = listApiUrl + "?pageIndex=" + pageIndex;
+//				String listXmlResponse = restTemplate.getForObject(listFullUrl, String.class);
+//				// XML 데이터를 JSON으로 변환
+//				JSONObject listJsonObject = XML.toJSONObject(listXmlResponse);
+//
+//				JSONObject listResultObject = listJsonObject.getJSONObject("result");
+//				JSONArray listItemArray = listResultObject.getJSONArray("item");
+//
+//				for (int i = 0; i < listItemArray.length(); i++) {
+//					JSONObject listItemObject = listItemArray.getJSONObject(i);
+//					String ccmaName = listItemObject.optString("ccmaName");
+//					String ccbaMnm1 = listItemObject.optString("ccbaMnm1");
+//					String ccbaCtcdNm = listItemObject.optString("ccbaCtcdNm");
+//					String ccceName = listItemObject.optString("ccceName");
+//
+//					// 필터링 조건 검사
+//					if ((categoryName == null || ccmaName.equals(categoryName)) &&
+//							(culturalPropertiesName == null || ccbaMnm1.equals(culturalPropertiesName)) &&
+//							(region == null || ccbaCtcdNm.equals(region)) &&
+//							(dynasty == null || ccceName.equals(dynasty))) {
+//						// 필터링 조건에 맞는 경우 DTO 생성 및 리스트에 추가
+//						CulturalPropertiesDTO dto = new CulturalPropertiesDTO();
+//						dto.setCategoryName(ccmaName);
+//						dto.setCulturalPropertiesName(ccbaMnm1);
+//						dto.setRegion(ccbaCtcdNm);
+//						dto.setDynasty(ccceName);
+//						culturalPropertiesList.add(dto);
+//					}
+//				}
+//			}
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//			System.out.println("API 응답 처리 중 오류 발생: " + e.getMessage());
+//		}
+//
+//		return culturalPropertiesList;
+//	}
+
+
+//// 종목검색 제대로 인식못함
+//	public Page<CulturalPropertiesDTO> searchAPICulturalProperties(String categoryName, String culturalPropertiesName, String region, String dynasty, Pageable pageable) {
+//		System.out.println("서비스 호출됨: categoryName=" + categoryName + ", culturalPropertiesName=" + culturalPropertiesName
+//				+ ", region=" + region + ", dynasty=" + dynasty + ", pageable=" + pageable);
+//
+//		List<CulturalPropertiesDTO> culturalPropertiesList = new ArrayList<>();
+//		int totalItems = 0;
+//
+//		try {
+//			// 페이지 인덱스에 맞는 API 호출
+//			int pageIndex = pageable.getPageNumber() + 1; // 페이지 번호는 1부터 시작하므로 +1
+//			String listFullUrl = String.format("%s?pageIndex=%d&pageSize=%d", listApiUrl, pageIndex, pageable.getPageSize());
+//
+//			System.out.println("API URL 호출됨: " + listFullUrl);
+//			String listXmlResponse = restTemplate.getForObject(listFullUrl, String.class);
+//			JSONObject listJsonObject = XML.toJSONObject(listXmlResponse);
+//
+//			JSONObject listResultObject = listJsonObject.getJSONObject("result");
+//			JSONArray listItemArray = listResultObject.getJSONArray("item");
+//
+//			totalItems = listItemArray.length(); // 총 아이템 수
+//
+//			// 필요한 데이터만 추출
+//			for (int i = 0; i < totalItems; i++) {
+//				JSONObject listItemObject = listItemArray.getJSONObject(i);
+//				String ccmaName = listItemObject.optString("ccmaName");
+//				String ccbaMnm1 = listItemObject.optString("ccbaMnm1");
+//
+//				// DTO 생성 및 리스트에 추가
+//				CulturalPropertiesDTO dto = new CulturalPropertiesDTO();
+//				dto.setCategoryName(ccmaName); // ccmaName을 카테고리 이름으로 사용
+//				dto.setCulturalPropertiesName(ccbaMnm1); // ccbaMnm1을 문화재 이름으로 사용
+//				culturalPropertiesList.add(dto);
+//				System.out.println("Filtered dto: " + dto);
+//			}
+//
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//			System.out.println("API 응답 처리 중 오류 발생: " + e.getMessage());
+//		}
+//
+//		System.out.println("Filtered result: " + culturalPropertiesList);
+//
+//		// 페이지 처리
+//		int start = (int) pageable.getOffset();
+//		int end = Math.min(start + pageable.getPageSize(), culturalPropertiesList.size());
+//		List<CulturalPropertiesDTO> pageContent = culturalPropertiesList.subList(start, end);
+//		return new PageImpl<>(pageContent, pageable, totalItems);
+//	}
+
+//	//---------------위에 메서드 수정
+//
+//	public Page<CulturalPropertiesDTO> searchAPICulturalProperties(String categoryName, String culturalPropertiesName,
+//																   String region, String dynasty, Pageable pageable) {
+//		System.out.println("서비스 호출됨: categoryName=" + categoryName + ", culturalPropertiesName=" + culturalPropertiesName
+//				+ ", region=" + region + ", dynasty=" + dynasty + ", pageable=" + pageable);
+//
+//		List<CulturalPropertiesDTO> culturalPropertiesList = new ArrayList<>();
+//		int totalItems = 0;
+//
+//		try {
+//			// 페이지 인덱스에 맞는 API 호출
+//			int pageIndex = pageable.getPageNumber() + 1; // 페이지 번호는 1부터 시작하므로 +1
+////			String listFullUrl = String.format("%s?pageIndex=%d&pageSize=%d", listApiUrl, pageIndex, pageable.getPageSize());
+//			String listFullUrl = String.format("%s?pageIndex=%d&pageSize=%d&categoryName=%s&culturalPropertiesName=%s&region=%s&dynasty=%s",
+//					listApiUrl, pageIndex, pageable.getPageSize(),
+//					categoryName, culturalPropertiesName, region, dynasty);
+//
+//
+//
+//			System.out.println("API URL 호출됨: " + listFullUrl);
+//			String listXmlResponse = restTemplate.getForObject(listFullUrl, String.class);
+//			JSONObject listJsonObject = XML.toJSONObject(listXmlResponse);
+//
+//			JSONObject listResultObject = listJsonObject.getJSONObject("result");
+//			JSONArray listItemArray = listResultObject.getJSONArray("item");
+//
+//			totalItems = listItemArray.length(); // 총 아이템 수
+//
+//			// 필요한 데이터만 추출
+//			for (int i = 0; i < totalItems; i++) {
+//				JSONObject listItemObject = listItemArray.getJSONObject(i);
+//				String ccmaName = listItemObject.optString("ccmaName");
+//				String ccbaMnm1 = listItemObject.optString("ccbaMnm1");
+//				String regionName = listItemObject.optString("region"); // 지역
+//				String dynastyName = listItemObject.optString("dynasty"); // 시대
+//
+//				// DTO 생성 및 리스트에 추가
+//				CulturalPropertiesDTO dto = new CulturalPropertiesDTO();
+//				dto.setCategoryName(ccmaName); // ccmaName을 카테고리 이름으로 사용
+//				dto.setCulturalPropertiesName(ccbaMnm1); // ccbaMnm1을 문화재 이름으로 사용
+//				dto.setRegion(regionName); // 지역 설정
+//				dto.setDynasty(dynastyName); // 시대 설정
+//				culturalPropertiesList.add(dto);
+//				System.out.println("Filtered dto: " + dto);
+//			}
+//			System.out.println("Before filtering: " + culturalPropertiesList.size());
+//			// 필터링 로직
+//			if (categoryName != null && !categoryName.isEmpty() && !categoryName.equals("전체")) {
+//				culturalPropertiesList = culturalPropertiesList.stream()
+//						.filter(dto -> dto.getCategoryName().contains(categoryName))
+//						.collect(Collectors.toList());
+//			}
+//
+//			if (culturalPropertiesName != null && !culturalPropertiesName.isEmpty()) {
+//				culturalPropertiesList = culturalPropertiesList.stream()
+//						.filter(dto -> dto.getCulturalPropertiesName().contains(culturalPropertiesName))
+//						.collect(Collectors.toList());
+//			}
+//
+//			if (region != null && !region.isEmpty()) {
+//				culturalPropertiesList = culturalPropertiesList.stream()
+//						.filter(dto -> dto.getRegion().contains(region))
+//						.collect(Collectors.toList());
+//			}
+//
+//			if (dynasty != null && !dynasty.isEmpty()) {
+//				culturalPropertiesList = culturalPropertiesList.stream()
+//						.filter(dto -> dto.getDynasty().contains(dynasty))
+//						.collect(Collectors.toList());
+//			}
+//
+//
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//			System.out.println("API 응답 처리 중 오류 발생: " + e.getMessage());
+//		}
+//		System.out.println("After filtering: " + culturalPropertiesList.size());
+//		System.out.println("Filtered result: " + culturalPropertiesList);
+//
+//		// 페이지 처리
+//		int start = (int) pageable.getOffset();
+//		int end = Math.min(start + pageable.getPageSize(), culturalPropertiesList.size());
+//		List<CulturalPropertiesDTO> pageContent = culturalPropertiesList.subList(start, end);
+//		return new PageImpl<>(pageContent, pageable, totalItems);
+//	}
+//
+//	//----------------위에 메서드 수정 / 하는중
+
+//	public Page<CulturalPropertiesDTO> searchAPICulturalProperties(
+//			String categoryName, String culturalPropertiesName, String region, String dynasty, Pageable pageable) {
+//		System.out.println("서비스 호출됨: categoryName=" + categoryName + ", culturalPropertiesName=" + culturalPropertiesName
+//				+ ", region=" + region + ", dynasty=" + dynasty + ", pageable=" + pageable);
+//
+//		List<CulturalPropertiesDTO> culturalPropertiesList = new ArrayList<>();
+//		List<CulturalPropertiesDTO> filteredList = new ArrayList<>();
+//		int totalItems = 0;
+//
+//		try {
+//			// 페이지 인덱스에 맞는 API 호출
+//			int pageIndex = pageable.getPageNumber() + 1; // 페이지 번호는 1부터 시작하므로 +1
+//			String listFullUrl = String.format("%s?pageIndex=%d&pageSize=%d", listApiUrl, pageIndex, pageable.getPageSize());
+//
+//			System.out.println("API URL 호출됨: " + listFullUrl);
+//			String listXmlResponse = restTemplate.getForObject(listFullUrl, String.class);
+//			JSONObject listJsonObject = XML.toJSONObject(listXmlResponse);
+//
+//			JSONObject listResultObject = listJsonObject.getJSONObject("result");
+//			JSONArray listItemArray = listResultObject.getJSONArray("item");
+//
+//			totalItems = listItemArray.length(); // 총 아이템 수
+//
+//			// 필요한 데이터만 추출
+//			for (int i = 0; i < totalItems; i++) {
+//				JSONObject listItemObject = listItemArray.getJSONObject(i);
+//				String ccmaName = listItemObject.optString("ccmaName");
+//				String ccbaMnm1 = listItemObject.optString("ccbaMnm1");
+//				String regionValue = listItemObject.optString("region"); // 지역 값
+//				String dynastyValue = listItemObject.optString("dynasty"); // 왕조 값
+//
+//				// DTO 생성 및 리스트에 추가
+//				CulturalPropertiesDTO dto = new CulturalPropertiesDTO();
+//				dto.setCategoryName(ccmaName); // ccmaName을 카테고리 이름으로 사용
+//				dto.setCulturalPropertiesName(ccbaMnm1); // ccbaMnm1을 문화재 이름으로 사용
+//				dto.setRegion(regionValue); // 지역 설정
+//				dto.setDynasty(dynastyValue); // 왕조 설정
+//				culturalPropertiesList.add(dto);
+//				System.out.println("Fetched DTO: " + dto);
+//			}
+//
+//			System.out.println("Before filtering: " + culturalPropertiesList.size());
+//
+//			// 필터링 로직
+//			for (CulturalPropertiesDTO dto : culturalPropertiesList) {
+//				boolean matches = true;
+//
+//				// 카테고리 이름 필터링
+//				if (categoryName != null && !categoryName.isEmpty() &&
+//						(dto.getCategoryName() == null || !dto.getCategoryName().equalsIgnoreCase(categoryName))) {
+//					matches = false;
+//				}
+//
+//				// 문화재 이름 필터링
+//				if (culturalPropertiesName != null && !culturalPropertiesName.isEmpty() &&
+//						(dto.getCulturalPropertiesName() == null || !dto.getCulturalPropertiesName().equalsIgnoreCase(culturalPropertiesName))) {
+//					matches = false;
+//				}
+//
+//				// 지역 필터링
+//				if (region != null && !region.isEmpty() &&
+//						(dto.getRegion() == null || !dto.getRegion().equalsIgnoreCase(region))) {
+//					matches = false;
+//				}
+//
+//				// 왕조 필터링
+//				if (dynasty != null && !dynasty.isEmpty() &&
+//						(dto.getDynasty() == null || !dto.getDynasty().equalsIgnoreCase(dynasty))) {
+//					matches = false;
+//				}
+//
+//				if (matches) {
+//					filteredList.add(dto);
+//				}
+//			}
+//
+//
+//			System.out.println("After filtering: " + filteredList.size());
+//
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//			System.out.println("API 응답 처리 중 오류 발생: " + e.getMessage());
+//		}
+//
+//		// 페이지 처리
+//		int start = (int) pageable.getOffset();
+//		int end = Math.min(start + pageable.getPageSize(), filteredList.size());
+//		List<CulturalPropertiesDTO> pageContent = filteredList.subList(start, end);
+//		return new PageImpl<>(pageContent, pageable, filteredList.size());
+//	}
+
+
+	//----------------
+
+	public List<CulturalPropertiesDTO> searchAPIDataFilter(int pageIndex, String categoryName, String culturalPropertiesName, String region, String dynasty) {
+		List<CulturalPropertiesDTO> culturalPropertiesList = fetchApiData(pageIndex); // 기존 API 호출
+
+		// 필터링 로직 추가
+		return culturalPropertiesList.stream()
+				.filter(dto -> (categoryName == null || categoryName.equals("전체") || dto.getCategoryName().equals(categoryName)))
+				.filter(dto -> (culturalPropertiesName == null || culturalPropertiesName.isEmpty() || dto.getCulturalPropertiesName().contains(culturalPropertiesName)))
+				.filter(dto -> (region == null || region.isEmpty() || dto.getRegion().contains(region)))
+				.filter(dto -> (dynasty == null || dynasty.isEmpty() || dto.getDynasty().contains(dynasty)))
+				.collect(Collectors.toList());
+	}
+
+
+
+
+
+//	public Page<CulturalPropertiesDTO> searchAPICulturalProperties(String categoryName, String culturalPropertiesName, Pageable pageable) {
+//		List<CulturalPropertiesDTO> culturalPropertiesList = new ArrayList<>();
+//		int totalItems = 0;
+//
+//		try {
+//			int pageIndex = pageable.getPageNumber() + 1; // API의 페이지 인덱스는 1부터 시작
+//			String listFullUrl = String.format("%s?pageIndex=%d&pageSize=%d", listApiUrl, pageIndex, pageable.getPageSize());
+//
+//			// API 호출
+//			String listXmlResponse = restTemplate.getForObject(listFullUrl, String.class);
+//			JSONObject listJsonObject = XML.toJSONObject(listXmlResponse);
+//			JSONObject listResultObject = listJsonObject.getJSONObject("result");
+//			JSONArray listItemArray = listResultObject.getJSONArray("item");
+//
+//			totalItems = listItemArray.length();
+//
+//			// 필요한 데이터만 추출
+//			for (int i = 0; i < totalItems; i++) {
+//				JSONObject listItemObject = listItemArray.getJSONObject(i);
+//				String ccmaName = listItemObject.optString("ccmaName");
+//				String ccbaMnm1 = listItemObject.optString("ccbaMnm1");
+//
+//				// 필터링 조건 적용
+//				if ((categoryName == null || ccmaName.equals(categoryName)) &&
+//						(culturalPropertiesName == null || ccbaMnm1.equals(culturalPropertiesName))) {
+//
+//					CulturalPropertiesDTO dto = new CulturalPropertiesDTO();
+//					dto.setCategoryName(ccmaName);
+//					dto.setCulturalPropertiesName(ccbaMnm1);
+//					culturalPropertiesList.add(dto);
+//				}
+//			}
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//			// 오류 처리
+//		}
+//
+//		// 페이지 처리
+//		int start = (int) pageable.getOffset();
+//		int end = Math.min(start + pageable.getPageSize(), culturalPropertiesList.size());
+//		List<CulturalPropertiesDTO> pageContent = culturalPropertiesList.subList(start, end);
+//
+//		return new PageImpl<>(pageContent, pageable, culturalPropertiesList.size());
+//	}
+
+
+
+//	public List<CulturalPropertiesDTO> searchAPIData(int pageIndex, String categoryName, String culturalPropertiesName, String region, String dynasty) {
+//		// 기존 fetchApiData 메서드를 호출하여 API 데이터 가져오기
+//		List<CulturalPropertiesDTO> culturalPropertiesList = searchAPIList(pageIndex); // API 데이터 가져오기
+//
+//		// 데이터 출력 확인
+//		System.out.println("Fetched data size: " + culturalPropertiesList.size());
+//
+//		// 검색 조건에 따라 필터링
+//		return culturalPropertiesList.stream()
+//				.filter(dto -> (categoryName == null || categoryName.equals("전체") || dto.getCategoryName().equals(categoryName)) &&
+//						(culturalPropertiesName == null || culturalPropertiesName.isEmpty() || dto.getCulturalPropertiesName().contains(culturalPropertiesName)) &&
+//						(region == null || region.isEmpty() || dto.getRegion().contains(region)) &&
+//						(dynasty == null || dynasty.isEmpty() || dto.getDynasty().contains(dynasty)))
+//				.collect(Collectors.toList());
+//	}
+
 
 
 

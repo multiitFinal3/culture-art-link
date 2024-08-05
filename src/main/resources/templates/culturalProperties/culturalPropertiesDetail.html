@@ -41,25 +41,25 @@
             </div>
             <div class="col-md-6">
 
-<!--&lt;!&ndash;                <h1 th:text="${property.culturalPropertiesName}">문화재 이름</h1>&ndash;&gt;-->
-<!--&lt;!&ndash;                <p th:text="${property.content}">상세 설명</p>&ndash;&gt;-->
-<!--&lt;!&ndash;                <p th:text="${property.region} + ' ' + ${property.district}">주소</p>&ndash;&gt;-->
-<!--&lt;!&ndash;                <p th:text="${property.dynasty != null ? property.dynasty : '시대 정보 없음'}">시대</p>&ndash;&gt;-->
-<!--&lt;!&ndash;                <p th:text="${property.imgUrl != null && property.imgUrl.size() > 0 ? '이미지 있음' : '이미지 없음'}">이미지 유무</p>&ndash;&gt;-->
-<!--&lt;!&ndash;                <p th:text="${property.videoUrl != null && property.videoUrl.size() > 0 ? '동영상 있음' : '동영상 없음'}">동영상 유무</p>&ndash;&gt;-->
-<!--&lt;!&ndash;                <p th:text="${property.narrationUrl != null && property.narrationUrl.size() > 0 ? '나레이션 있음' : '나레이션 없음'}">나레이션 유무</p>&ndash;&gt;-->
+                <h1 th:text="${property.culturalPropertiesName}">문화재 이름</h1>
+                <p th:text="${property.content}">상세 설명</p>
+                <p th:text="${property.region} + ' ' + ${property.district}">주소</p>
+                <p th:text="${property.dynasty != null ? property.dynasty : '시대 정보 없음'}">시대</p>
+                <p th:text="${property.imgUrl != null && property.imgUrl.size() > 0 ? '이미지 있음' : '이미지 없음'}">이미지 유무</p>
+                <p th:text="${property.videoUrl != null && property.videoUrl.size() > 0 ? '동영상 있음' : '동영상 없음'}">동영상 유무</p>
+                <p th:text="${property.narrationUrl != null && property.narrationUrl.size() > 0 ? '나레이션 있음' : '나레이션 없음'}">나레이션 유무</p>
 
-<!--&lt;!&ndash;                <button th:onclick="'showImage(\'' + ${property.imgUrl} + '\')'" class="btn btn-info">이미지 보기</button>&ndash;&gt;-->
-<!--&lt;!&ndash;                <button th:onclick="'showVideo(\'' + (${property.videoUrl.size() > 0 ? property.videoUrl[0] : ''}) + '\')'" class="btn btn-warning">동영상 보기</button>&ndash;&gt;-->
-<!--&lt;!&ndash;                <button th:onclick="'showNarration(\'' + (${property.narrationUrl.size() > 0 ? property.narrationUrl[0] : ''}) + '\')'" class="btn btn-success">나레이션 듣기</button>&ndash;&gt;-->
+<!--                <button th:onclick="'showImage(\'' + ${property.imgUrl} + '\')'" class="btn btn-info">이미지 보기</button>-->
+<!--                <button th:onclick="'showVideo(\'' + (${property.videoUrl.size() > 0 ? property.videoUrl[0] : ''}) + '\')'" class="btn btn-warning">동영상 보기</button>-->
+<!--                <button th:onclick="'showNarration(\'' + (${property.narrationUrl.size() > 0 ? property.narrationUrl[0] : ''}) + '\')'" class="btn btn-success">나레이션 듣기</button>-->
 
-                <h1 id="culturalPropertiesName">문화재 이름</h1>
-                <p id="content">상세 설명</p>
-                <p id="address">위치</p>
-                <p id="dynasty">시대</p>
-                <p id="imgUrl">이미지 유무</p>
-                <p id="videoUrl">동영상 유무</p>
-                <p id="narrationUrl">나레이션 유무</p>
+<!--                <h1 id="culturalPropertiesName">문화재 이름</h1>-->
+<!--                <p id="content">상세 설명</p>-->
+<!--                <p id="address">위치</p>-->
+<!--                <p id="dynasty">시대</p>-->
+<!--                <p id="imgUrl">이미지 유무</p>-->
+<!--                <p id="videoUrl">동영상 유무</p>-->
+<!--                <p id="narrationUrl">나레이션 유무</p>-->
 
                 <button id="imageButton" class="btn btn-info" onclick="showImage('이미지_URL_여기')">이미지 보기</button>
                 <button id="videoButton" class="btn btn-warning" onclick="showVideo('동영상_URL_여기')">동영상 보기</button>

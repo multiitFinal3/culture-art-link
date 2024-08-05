@@ -228,7 +228,7 @@ public class CulturalPropertiesController {
 
 	// 문화재 상세 페이지
 	@GetMapping("/detail/{id}")
-	@ResponseBody
+//	@ResponseBody
 	//	@ResponseBody
 	public String getCulturalPropertyDetail(@PathVariable int id, Model model) {
 		CulturalPropertiesDTO property = culturalPropertiesService.getCulturalPropertyById(id);

@@ -19,7 +19,7 @@ public interface AdminCulturalPropertiesDAO {
     int selectCount();
 
 
-    List<CulturalPropertiesDTO> searchAPI(@Param("searchForm") CulturalPropertiesDTO searchForm);
+//    List<CulturalPropertiesDTO> searchAPI(@Param("searchForm") CulturalPropertiesDTO searchForm);
 
 
     List<CulturalPropertiesDTO> searchDBCulturalProperties(String category, String name, String region, String dynasty, int start, int end);
