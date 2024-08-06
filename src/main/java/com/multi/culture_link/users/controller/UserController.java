@@ -298,11 +298,16 @@ public class UserController {
 		userDTO.setUserProfilePic(attachment);
 		userDTO.setEmail(email);
 		
-		if (password != user.getPassword()) {
-			
-			String encoded_pw = bCryptPasswordEncoder.encode(password);
-			userDTO.setPassword(encoded_pw);
-			
+		System.out.println("입력된 비밀번호 : " + password);
+		System.out.println("원래 비밀번호 : " + user.getPassword());
+		
+		if (!password.equals(user.getPassword())) {
+			System.out.println("비밀번호 다름");
+			String encryptedPassword = bCryptPasswordEncoder.encode(password);
+			System.out.println("암호화 된 비밀번호 : " + encryptedPassword);
+			userDTO.setPassword(encryptedPassword);
+		}else {
+			userDTO.setPassword(password);
 		}
 		
 		
