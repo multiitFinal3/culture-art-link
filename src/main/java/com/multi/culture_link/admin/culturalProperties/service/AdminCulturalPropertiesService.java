@@ -387,6 +387,32 @@ public class AdminCulturalPropertiesService {
 //	}
 
 
+//----------------api 검색 보류 //2222//
+
+//	public List<CulturalPropertiesDTO> searchAPIDataFilter(int pageIndex, String categoryName, String culturalPropertiesName, String region, String dynasty) {
+//		List<CulturalPropertiesDTO> culturalPropertiesList = fetchApiData(pageIndex); // 기존 API 호출
+//
+//		System.out.println("cultu list " + culturalPropertiesList);
+//
+//		List<Object> list1 = culturalPropertiesList.stream()
+//				.filter(dto -> (categoryName == null || categoryName.equals("전체") || dto.getCategoryName().equals(categoryName))
+////				&&  (culturalPropertiesName == null || culturalPropertiesName.equals("") || dto.getCulturalPropertiesName().contains(culturalPropertiesName))
+////				&& (region == null || region.equals("") || dto.getRegion().contains(region))
+////				&& (dynasty == null || dynasty.equals("")|| dto.getDynasty().contains(dynasty)))
+//				).collect(Collectors.toList());
+//
+//		System.out.println("list1 : " + list1);
+//
+//
+//		// 필터링 로직 추가
+//		return culturalPropertiesList.stream()
+//				.filter(dto -> (categoryName == null || categoryName.equals("전체") || dto.getCategoryName().equals(categoryName)))
+//				.filter(dto -> (culturalPropertiesName == null || culturalPropertiesName.isEmpty() || dto.getCulturalPropertiesName().contains(culturalPropertiesName)))
+//				.filter(dto -> (region == null || region.isEmpty() || dto.getRegion().contains(region)))
+//				.filter(dto -> (dynasty == null || dynasty.isEmpty() || dto.getDynasty().contains(dynasty)))
+//				.collect(Collectors.toList());
+//	}
+
 
 
 

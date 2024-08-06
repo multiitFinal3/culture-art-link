@@ -52,4 +52,27 @@ public interface CulturalPropertiesDAO {
 //    CulturalPropertiesDTO getCulturalPropertyById(int userId, int id);
 
 
+    List<CulturalPropertiesDTO> getNearbyPlace(@Param("region") String region, @Param("district") String district, @Param("id") int id);
+
+    List<CulturalPropertiesDTO> getRandomPlace(@Param("region") String region, @Param("id") int id);
+
+
+//    void likeAttraction(int id);
+//    void dislikeAttraction(int id);
+
+//    void insertInterest(@Param("userId") int userId,
+//                     @Param("id") int id,
+//                     @Param("interestType") String interestType);
+//
+//    void deleteInterest(@Param("userId") int userId,
+//                        @Param("id") int id);
+//
+//    boolean isLiked(@Param("userId") int userId,
+//                    @Param("id") int id);
+//
+//    boolean isDisliked(@Param("userId") int userId,
+//                       @Param("id") int id);
+
+
+
 }

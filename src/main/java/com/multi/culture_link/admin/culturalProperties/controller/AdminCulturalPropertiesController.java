@@ -168,34 +168,6 @@ public class AdminCulturalPropertiesController {
 
 
 
-	//////------------------------api 검색 보류 //2222//
-
-
-	// @PostMapping("/searchAPI")
-	// @ResponseBody
-	// public List<CulturalPropertiesDTO> searchAPIDataFilter(
-	// 		@RequestParam("pageIndex") int pageIndex,
-	// 		@RequestParam("categoryName") String categoryName,
-	// 		@RequestParam("culturalPropertiesName") String culturalPropertiesName,
-	// 		@RequestParam("region") String region,
-	// 		@RequestParam("dynasty") String dynasty) {
-		
-	// 	System.out.println("들어옴...");
-	// 	System.out.println(pageIndex);
-	// 	System.out.println(categoryName);
-	// 	System.out.println(culturalPropertiesName);
-	// 	System.out.println(region);
-	// 	System.out.println(dynasty);
-		
-	// 	// API 호출 및 필터링 처리
-	// 	List<CulturalPropertiesDTO> filteredList = adminCulturalPropertiesService.searchAPIDataFilter(pageIndex, categoryName, culturalPropertiesName, region, dynasty);
-		
-	// 	System.out.println("controller searchAPIDataFilter : " + filteredList);
-		
-		
-	// 	return filteredList;
-	// }
-
 
 
 	//////------------------------api 검색 보류
@@ -220,6 +192,37 @@ public class AdminCulturalPropertiesController {
 //		List<CulturalPropertiesDTO> filteredList = adminCulturalPropertiesService.searchAPIDataFilter(pageIndex, categoryName, culturalPropertiesName, region, dynasty);
 //		return filteredList;
 //	}
+
+
+	//////------------------------api 검색 보류 //2222//
+
+
+	// @PostMapping("/searchAPI")
+	// @ResponseBody
+	// public List<CulturalPropertiesDTO> searchAPIDataFilter(
+	// 		@RequestParam("pageIndex") int pageIndex,
+	// 		@RequestParam("categoryName") String categoryName,
+	// 		@RequestParam("culturalPropertiesName") String culturalPropertiesName,
+	// 		@RequestParam("region") String region,
+	// 		@RequestParam("dynasty") String dynasty) {
+
+	// 	System.out.println("들어옴...");
+	// 	System.out.println(pageIndex);
+	// 	System.out.println(categoryName);
+	// 	System.out.println(culturalPropertiesName);
+	// 	System.out.println(region);
+	// 	System.out.println(dynasty);
+
+	// 	// API 호출 및 필터링 처리
+	// 	List<CulturalPropertiesDTO> filteredList = adminCulturalPropertiesService.searchAPIDataFilter(pageIndex, categoryName, culturalPropertiesName, region, dynasty);
+
+	// 	System.out.println("controller searchAPIDataFilter : " + filteredList);
+
+
+	// 	return filteredList;
+	// }
+
+
 
 
 }

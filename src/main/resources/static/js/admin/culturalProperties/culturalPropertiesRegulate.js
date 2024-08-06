@@ -732,7 +732,131 @@ $(document).ready(function() {
 //        });
 //    }
 
+//---------------------------------관리자 api 검색 보류 //22//
 
+//
+//$('#searchDB2').on('click', function() {
+//        var pageIndex = 1; // 검색 시 첫 페이지로 초기화
+//        searchAPIDataFilter(pageIndex);
+//    });
+//
+//
+//function searchAPIDataFilter(pageIndex) {
+//    $('#list2').html(""); // 테이블 내용 초기화
+////    $('#loadingIndicator').show(); // 로딩 표시
+//
+//    // 검색 필드 값 가져오기
+//    var categoryName = $('#categoryFilter2').val(); // 종목
+//    var culturalPropertiesName = $('#searchName2').val(); // 문화재 이름
+//    var region = $('#searchRegion2').val(); // 지역
+//    var dynasty = $('#searchDynasty2').val(); // 시대
+//
+//    console.log("pageIndex : " + pageIndex)
+//    console.log("categoryName : " + categoryName)
+//    console.log("culturalPropertiesName : " + culturalPropertiesName)
+//    console.log("region : " + region)
+//    console.log("dynasty : " + dynasty)
+//
+//
+//    $.ajax({
+//        url: '/admin/cultural-properties-regulate/searchAPI?pageIndex='+pageIndex+'&categoryName='+categoryName+'&culturalPropertiesName='+culturalPropertiesName+'&region='+region+'&dynasty='+dynasty,
+//        method: 'POST',
+//        contentType: 'application/json',
+////        data: {
+////            pageIndex : pageIndex,
+////            categoryName: categoryName,
+////            culturalPropertiesName: culturalPropertiesName,
+////            region: region,
+////            dynasty: dynasty
+////        },
+////        beforeSend: function() {
+////            $('#loadingIndicator').show(); // Ajax 요청 전에 로딩 표시 보이기
+////        },
+//        success: function(list) {
+//
+//            console.log("성공??");
+//            $.each(list, function(index, culturalProperties) {
+//                var index1 = (pageIndex - 1) * itemsPerPage2 + index + 1;
+//
+//                var htmlCheck = '<tr><td><input class="check2" type="checkbox" name="index" value="' + index + '"/></td>';
+//                var htmlContent =
+//                    '<td class="culturalPropertieId">' + index1 + '</td>' +
+//                    '<td class="culturalPropertiesName">' + culturalProperties.culturalPropertiesName + '</td>' +
+//                    '<td class="categoryName">' + culturalProperties.categoryName + '</td>' +
+//                    '<td class="region">' + culturalProperties.region + '</td>' +
+//                    '<td class="dynasty">' + culturalProperties.dynasty + '</td></tr>';
+//
+//                var finalHtml = htmlCheck + htmlContent;
+//                $('#list2').append(finalHtml);
+//            });
+//
+//            // 페이지네이션 다시 그리기
+//            renderSearchAPIPagination(pageIndex, list.length); // 페이지네이션 그리기
+//
+//            // 데이터를 모두 표시한 후 로딩 인디케이터 숨기기
+//            setTimeout(function() {
+//                $('#loadingIndicator').hide();
+//            });
+//        },
+//        error: function(xhr, status, error) {
+//            console.error('API 호출 오류:' + error);
+//        }
+//    });
+//}
+//
+//// 페이지 버튼 생성 함수
+//function renderSearchAPIPagination(pageIndex, totalItems) {
+//    $('#paginationSection2').empty(); // 기존 버튼 제거
+//
+//    // 페이지 수 계산 (가정: 10개씩 표시)
+//    var itemsPerPage = 10;
+//    var totalPages = Math.ceil(totalItems / itemsPerPage);
+//
+//    // 이전 버튼
+//    var prevHtml = '<li class="page-item ' + (pageIndex == 1 ? 'disabled' : '') + '">' +
+//        '<a class="page-link prev-link" href="#" data-page="' + (pageIndex - 1) + '">이전</a>' +
+//        '</li>';
+//    $('#paginationSection2').append(prevHtml);
+//
+//    // 페이지 번호 버튼
+//    var startPage = (Math.ceil(pageIndex / 10) - 1) * 10 + 1;
+//    var endPage = Math.min(startPage + 9, totalPages);
+//
+//    for (var pageNum = startPage; pageNum <= endPage; pageNum++) {
+//        var pageHtml = '<li class="page-item ' + (pageNum == pageIndex ? 'active' : '') + '">' +
+//            '<a class="page-link page-num" href="#" data-page="' + pageNum + '">' + pageNum + '</a>' +
+//            '</li>';
+//        $('#paginationSection2').append(pageHtml);
+//    }
+//
+//    // 다음 버튼
+//    var nextHtml = '<li class="page-item ' + (pageIndex >= totalPages ? 'disabled' : '') + '">' +
+//        '<a class="page-link next-link" href="#" data-page="' + (pageIndex + 1) + '">다음</a>' +
+//        '</li>';
+//    $('#paginationSection2').append(nextHtml);
+//
+//    // 페이지 번호 버튼 클릭 이벤트
+//    $('.page-num').on('click', function() {
+//        var selectedPage = $(this).data('page');
+//        searchAPIDataFilter(selectedPage);
+//    });
+//
+//    // 이전 버튼 클릭 이벤트
+//    $('.prev-link').on('click', function(e) {
+//        e.preventDefault();
+//        if (pageIndex > 1) {
+//            searchAPIDataFilter(pageIndex - 1);
+//        }
+//    });
+//
+//    // 다음 버튼 클릭 이벤트
+//    $('.next-link').on('click', function(e) {
+//        e.preventDefault();
+//        if (pageIndex < totalPages) {
+//            searchAPIDataFilter(pageIndex + 1);
+//        }
+//    });
+//}
 //------------------------------------------
 
     $('#searchDB').on('click', function() {

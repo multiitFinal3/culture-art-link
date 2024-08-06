@@ -25,6 +25,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -235,6 +236,10 @@ public class CulturalPropertiesController {
 
 		System.out.println("디테일 아이디 "+ id);
 		model.addAttribute("property", property);
+		model.addAttribute("getNearbyPlace", culturalPropertiesService.getNearbyPlace(property.getRegion(), property.getDistrict(), id));
+
+//		System.out.println("근처 문화재 수: " + nearbyPlaces.size());
+
 		return "/culturalProperties/culturalPropertiesDetail";
 	}
 
@@ -438,6 +443,70 @@ public class CulturalPropertiesController {
 //		model.addAttribute("culturalProperties", property);
 //		return "culturalProperties/culturalPropertiesDetail"; // Thymeleaf 템플릿 경로를 반환
 //	}
+
+
+//네모버튼
+//	@PostMapping("/like")
+//	@ResponseBody
+//	public String likeAttraction(@RequestParam int id) {
+//		culturalPropertiesService.likeAttraction(id);
+//		return "success";
+//	}
+//
+//	@PostMapping("/dislike")
+//	@ResponseBody
+//	public String dislikeAttraction(@RequestParam int id) {
+//		culturalPropertiesService.dislikeAttraction(id);
+//		return "success";
+//	}
+
+
+//	@GetMapping("/detail/{id}")
+//	public String getCulturalPropertyDetail(@PathVariable int id, Model model, @AuthenticationPrincipal UserDetails userDetails) {
+//		CulturalPropertiesDTO property = culturalPropertiesService.getCulturalPropertyById(id);
+//		int userId = userDetails.getId(); // 현재 로그인한 사용자 ID 가져오기
+//
+//		// 사용자의 찜 상태를 확인
+//		boolean isLiked = culturalPropertiesService.isPropertyLikedByUser(id, userId);
+//		boolean isDisliked = culturalPropertiesService.isPropertyDislikedByUser(id, userId);
+//
+//		model.addAttribute("property", property);
+//		model.addAttribute("isLiked", isLiked);
+//		model.addAttribute("isDisliked", isDisliked);
+//
+//		return "/culturalProperties/culturalPropertiesDetail";
+//	}
+
+
+
+//	@PostMapping("/detail/{id}")
+//	public String addInterest(@AuthenticationPrincipal VWUserRoleDTO user,
+//								 @PathVariable int id,
+//								 String action) {
+//		int userId = user.getUserId();
+//
+//		if ("like".equals(action)) {
+//			culturalPropertiesService.addInterest(userId, id, "LIKE");
+//		} else if ("dislike".equals(action)) {
+//			culturalPropertiesService.addInterest(userId, id, "DISLIKE");
+//		}
+//
+//		// 적절한 페이지로 리다이렉트
+//		return "/culturalProperties/culturalPropertiesDetail";
+//	}
+
+
+	// 리뷰 상세 페이지
+	@GetMapping("/detail/{id}/review/detail")
+	public String culturalPropertiesReviewDetail(@PathVariable int id, Model model) {
+		CulturalPropertiesDTO property = culturalPropertiesService.getCulturalPropertyById(id);
+
+		System.out.println("리뷰디테일 아이디 "+ id);
+		model.addAttribute("property", property);
+
+		return "/culturalProperties/culturalPropertiesReviewDetail";
+	}
+
 
 }
 
