@@ -146,6 +146,30 @@
 
 
 
+                /**
+                * 회원정보 삭제
+                *
+                */
+                $(document).on('click','#deleteAccount', function(){
+
+                    $.ajax({
+
+                        url: '/festival/deleteUserAccount',
+                        method: 'POST',
+                        contentType: 'application/json',
+                        success: function(res){
+
+                            alert(res);
+
+
+
+                        }
+                    })
+                })
+
+
+
+
 
 
 
@@ -914,8 +938,8 @@
                 </select>
                 지역 <select name="regionId" id="regionId" class="rounded" style="width:100px;"></select><br>
 
-                <button type="submit">회원정보 수정</button>
-                <button type="button" id="deleteAccount">회원탈퇴</button>
+                <button type="submit" th:value="${user.userId}">회원정보 수정</button>
+                <button type="button" id="deleteAccount" th:value="${user.userId}">회원탈퇴</button>
 
             </form>
 
