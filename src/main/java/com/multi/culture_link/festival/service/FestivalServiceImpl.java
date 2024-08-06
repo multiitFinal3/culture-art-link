@@ -804,4 +804,17 @@ public class FestivalServiceImpl implements FestivalService {
 		
 	}
 	
+	
+	/**
+	 * 특정 유저의 특정 분류(찜 / 관심없음) 선택 키워드를 전부 삭제함
+	 * @param mapDTO
+	 * @throws Exception
+	 */
+	@Override
+	public void deleteAllUserSelectFestivalKeyword(UserFestivalLoveHateMapDTO mapDTO) throws Exception {
+		
+		festivalMapper.deleteAllUserSelectFestivalKeyword(mapDTO);
+		
+	}
+	
 }

@@ -296,6 +296,15 @@
 
     </select>
 
+    <delete id="deleteAllUserSelectFestivalKeyword" parameterType="userFestivalLoveHateDTO">
+
+        DELETE FROM festival_user_love_hate_select_keyword_mapping
+        WHERE user_id = #{userId}
+        AND sort_code = #{sortCode};
+
+    </delete>
+
+
 
 
 </mapper>

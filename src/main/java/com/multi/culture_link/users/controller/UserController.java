@@ -104,7 +104,7 @@ public class UserController {
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
-
+		
 		
 		userDTO.setEmail(email);
 		userDTO.setPassword(password);
@@ -115,8 +115,6 @@ public class UserController {
 		userDTO.setRegionId(regionId);
 		
 		System.out.println("userdto : " + userDTO);
-		
-		
 		
 		
 		try {
@@ -306,7 +304,7 @@ public class UserController {
 			String encryptedPassword = bCryptPasswordEncoder.encode(password);
 			System.out.println("암호화 된 비밀번호 : " + encryptedPassword);
 			userDTO.setPassword(encryptedPassword);
-		}else {
+		} else {
 			userDTO.setPassword(password);
 		}
 		
@@ -340,6 +338,62 @@ public class UserController {
 		}
 		
 		
+	}
+	
+	
+	/**
+	 * 찜 관심없음 선택 키워드를 삽입
+	 * @param user
+	 * @param performanceKeyword
+	 * @param exhibitionKeyword
+	 * @param festivalKeyword
+	 * @param culturalPropertiesKeyword
+	 * @param loveOrHate
+	 * @return
+	 */
+	@PostMapping("/insertUserBigLoveHateKeyword")
+	public String insertUserBigLoveHateKeyword(@AuthenticationPrincipal VWUserRoleDTO user, @RequestParam(name = "performanceKeyword", required = false) String performanceKeyword, @RequestParam(name = "exhibitionKeyword", required = false) String exhibitionKeyword, @RequestParam(name = "festivalKeyword", required = false) String festivalKeyword, @RequestParam(name = "culturalPropertiesKeyword", required = false) String culturalPropertiesKeyword, @RequestParam(name = "loveOrHate", required = false) String loveOrHate) {
+		
+		System.out.println("lh : " + loveOrHate);
+		System.out.println("fk : " + festivalKeyword);
+		
+		if (loveOrHate.equals("L")) {
+			
+			UserFestivalLoveHateMapDTO mapDTO = new UserFestivalLoveHateMapDTO();
+			mapDTO.setUserId(user.getUserId());
+			mapDTO.setSortCode("L");
+			
+			try {
+				festivalService.deleteAllUserSelectFestivalKeyword(mapDTO);
+				if ((!festivalKeyword.trim().equals("")) && (!festivalKeyword.isEmpty()) && (festivalKeyword!=null)){
+					
+					String[] festivalList = null;
+					festivalList = festivalKeyword.trim().split(" ");
+					
+					for(String s : festivalList){
+						
+						mapDTO.setFestivalKeywordId(s);
+						mapDTO.setFestivalCount(15);
+						festivalService.insertUserSelectKeyword(mapDTO);
+						
+					}
+					
+					
+				}
+			} catch (Exception e) {
+				throw new RuntimeException(e);
+			}
+			
+			
+			
+			
+			
+		} else if (loveOrHate.equals("H")) {
+		
+		
+		}
+		
+		return "redirect:/user/myPage";
 	}
 	
 	
