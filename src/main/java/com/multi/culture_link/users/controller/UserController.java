@@ -343,6 +343,7 @@ public class UserController {
 	
 	/**
 	 * 찜 관심없음 선택 키워드를 삽입
+	 *
 	 * @param user
 	 * @param performanceKeyword
 	 * @param exhibitionKeyword
@@ -365,12 +366,12 @@ public class UserController {
 			
 			try {
 				festivalService.deleteAllUserSelectFestivalKeyword(mapDTO);
-				if ((!festivalKeyword.trim().equals("")) && (!festivalKeyword.isEmpty()) && (festivalKeyword!=null)){
+				if ((!festivalKeyword.trim().equals("")) && (!festivalKeyword.isEmpty()) && (festivalKeyword != null)) {
 					
 					String[] festivalList = null;
 					festivalList = festivalKeyword.trim().split(" ");
 					
-					for(String s : festivalList){
+					for (String s : festivalList) {
 						
 						mapDTO.setFestivalKeywordId(s);
 						mapDTO.setFestivalCount(15);
@@ -385,12 +386,34 @@ public class UserController {
 			}
 			
 			
-			
-			
-			
 		} else if (loveOrHate.equals("H")) {
-		
-		
+			
+			UserFestivalLoveHateMapDTO mapDTO = new UserFestivalLoveHateMapDTO();
+			mapDTO.setUserId(user.getUserId());
+			mapDTO.setSortCode("H");
+			
+			try {
+				festivalService.deleteAllUserSelectFestivalKeyword(mapDTO);
+				if ((!festivalKeyword.trim().equals("")) && (!festivalKeyword.isEmpty()) && (festivalKeyword != null)) {
+					
+					String[] festivalList = null;
+					festivalList = festivalKeyword.trim().split(" ");
+					
+					for (String s : festivalList) {
+						
+						mapDTO.setFestivalKeywordId(s);
+						mapDTO.setFestivalCount(15);
+						festivalService.insertUserSelectKeyword(mapDTO);
+						
+					}
+					
+					
+				}
+			} catch (Exception e) {
+				throw new RuntimeException(e);
+			}
+			
+			
 		}
 		
 		return "redirect:/user/myPage";
