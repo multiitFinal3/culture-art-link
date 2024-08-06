@@ -12,6 +12,4 @@ public interface AdminExhibitionDao {
     void deleteData(List<Integer> id);
     void updateData(List<ExhibitionApiDto> list);
     List<ExhibitionApiDto> getData();
-
-
 }

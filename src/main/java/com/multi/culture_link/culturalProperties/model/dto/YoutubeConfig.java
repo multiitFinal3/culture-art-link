@@ -9,7 +9,15 @@ public class YoutubeConfig {
     @Value("${API-KEY.youtubeKey}")
     private String apiKey;
 
+    @Value("${API-KEY.HS.youtubeKey}")
+    private String apiKeyByHS;
+
     public String getApiKey() {
         return apiKey;
     }
+
+    public String getApiKeyByHS() {
+        return apiKeyByHS;
+    }
+
 }

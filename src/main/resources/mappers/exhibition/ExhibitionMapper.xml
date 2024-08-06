@@ -6,7 +6,9 @@
 <mapper namespace="com.multi.culture_link.exhibition.model.dao.ExhibitionDao"><!-- 메퍼위치하고  동일하게 네임스페이스 작성-->
 <!--    다중 검색-->
     <select id="searchExhibition" parameterType="map" resultType="com.multi.culture_link.admin.exhibition.model.dto.api.ExhibitionApiDto">
-        SELECT * FROM exhibition
+        SELECT *,
+        (SELECT AVG(stars) FROM exhibition_comment WHERE exhibition_id = ex.id) AS starsAVG
+        FROM exhibition ex
         WHERE 1=1
         <if test="title != null and title != ''">
             AND title LIKE CONCAT('%', #{title}, '%')
@@ -21,7 +23,8 @@
     </select>
 
     <select id="getExhibitionById" resultType="com.multi.culture_link.exhibition.model.dto.ExhibitionDto">
-        SELECT e.*, ei.state
+        SELECT e.*, ei.state,
+               (SELECT AVG(stars) FROM exhibition_comment WHERE exhibition_id = e.id) AS starsAVG
         FROM exhibition e
                  LEFT JOIN exhibition_interested ei ON e.id = ei.exhibition_id AND ei.user_id = #{userId}
         WHERE e.id = #{exhibitionId}
@@ -36,7 +39,9 @@
 
     <!--  관심 연결된 전시 데이터 -->
     <select id="getExhibition" resultType="com.multi.culture_link.exhibition.model.dto.ExhibitionDto">
-        SELECT ex.*, ei.state FROM exhibition ex LEFT JOIN exhibition_interested ei ON ex.id = ei.exhibition_id AND ei.user_id = #{userId} ORDER BY ex.created_at DESC
+        SELECT ex.*, ei.state,
+               (SELECT AVG(stars) FROM exhibition_comment WHERE exhibition_id = ex.id) AS starsAVG
+        FROM exhibition ex LEFT JOIN exhibition_interested ei ON ex.id = ei.exhibition_id AND ei.user_id = #{userId} ORDER BY ex.created_at DESC
     </select>
 
 

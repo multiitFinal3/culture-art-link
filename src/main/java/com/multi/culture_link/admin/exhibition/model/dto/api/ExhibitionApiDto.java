@@ -17,5 +17,6 @@ public class ExhibitionApiDto {
     public String image;
     public String description;
     public String subDescription;
+
     public String url;
 }

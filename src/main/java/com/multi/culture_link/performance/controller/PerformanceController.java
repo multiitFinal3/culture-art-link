@@ -26,8 +26,6 @@ public class PerformanceController {
 
     private final PerformanceRankingService performanceRankingService;
     private final PerformanceLocationService performanceLocationService;
-
-
     private final PerformanceDBService performanceDBService;
 
 
@@ -67,13 +65,18 @@ public class PerformanceController {
     public String performanceGenrePage(@AuthenticationPrincipal VWUserRoleDTO user,
                                        @RequestParam("genre") String genre,
                                        Model model) {
-        String date = "20240730"; // 일간 데이터 날짜
+        String date = "20240802"; // 일간 데이터 날짜
         List<PerformanceDTO> rankingData = performanceRankingService.fetchGenreRanking(genre, date, 5);
         System.out.println("Fetched Data: " + rankingData); // 로그 추가
+
+
 
         // 장르에 따른 전체 공연 목록 추가
         List<PerformanceDTO> allPerformances = performanceDBService.getPerformancesByGenre(genre);
         System.out.println("All Performances: " + allPerformances); // 디버깅 로그 추가
+
+        // 날짜 포맷 업데이트
+        allPerformances.forEach(PerformanceDTO::updateFormattedDate);
 
         model.addAttribute("user", user.getUser());
         model.addAttribute("genre", genre);
@@ -82,6 +85,7 @@ public class PerformanceController {
 
         return "/performance/performanceGenre";
     }
+
 
     /**
      * 기본 페이지로 리디렉션
@@ -118,7 +122,7 @@ public class PerformanceController {
      */
     @GetMapping("/genre-rankings")
     public ResponseEntity<List<PerformanceDTO>> getPerformanceGenreRankings(@RequestParam String genre) {
-        String date = "20240730"; // 일간 데이터 날짜
+        String date = "20240802"; // 일간 데이터 날짜
         List<PerformanceDTO> rankingData;
 
         if (genre.equals("전체")) {
@@ -145,7 +149,7 @@ public class PerformanceController {
     public String performanceRankingPage(@AuthenticationPrincipal VWUserRoleDTO user, Model model,
                                          @RequestParam(required = false) String genre) {
         model.addAttribute("user", user.getUser());
-        String date = "20240730"; // 일간 데이터 날짜
+        String date = "20240802"; // 일간 데이터 날짜
         List<PerformanceDTO> rankingData;
 
         if (genre == null || genre.isEmpty() || genre.equals("전체")) {
@@ -174,8 +178,8 @@ public class PerformanceController {
     public String performanceLocationPage(@AuthenticationPrincipal VWUserRoleDTO user,
                                           @RequestParam(required = false) String locationCode,
                                           Model model) {
-        String stdate = "20240730"; // 시작 날짜
-        String eddate = "20240830"; // 종료 날짜
+        String stdate = "20240803"; // 시작 날짜
+        String eddate = "20240903"; // 종료 날짜
 
         System.out.println("Received locationCode: " + locationCode); // Debug line
 
@@ -191,15 +195,54 @@ public class PerformanceController {
 
 
 
+//    @GetMapping("/performanceDetail")
+//    public String performanceDetailPage(@AuthenticationPrincipal VWUserRoleDTO user,
+//                                        @RequestParam("performanceId") int performanceId,
+//                                        Model model) {
+//        PerformanceDTO performance = performanceRankingService.getPerformanceDetail(performanceId);
+//        model.addAttribute("user", user.getUser());
+//        model.addAttribute("performance", performance);
+//        return "/performance/performanceDetail";
+//    }
+
     @GetMapping("/performanceDetail")
     public String performanceDetailPage(@AuthenticationPrincipal VWUserRoleDTO user,
                                         @RequestParam("performanceId") int performanceId,
+                                        @RequestParam(value = "source", required = false, defaultValue = "db") String source,
                                         Model model) {
-        PerformanceDTO performance = performanceRankingService.getPerformanceDetail(performanceId);
-        model.addAttribute("user", user.getUser());
-        model.addAttribute("performance", performance);
+        PerformanceDTO performance = null;
+        System.out.println("Requested performanceId: " + performanceId);
+        System.out.println("Data source: " + source);
+
+        if ("db".equals(source)) {
+            // DB에서 공연 정보 가져오기
+            performance = performanceDBService.getPerformanceById(performanceId);
+            System.out.println("Fetched from DB: " + performance);
+        } else if ("api".equals(source)) {
+            // API에서 공연 정보 가져오기
+            try {
+                performance = performanceRankingService.getPerformanceDetailFromAPI(performanceId);
+                System.out.println("Fetched from API: " + performance);
+            } catch (Exception e) {
+                model.addAttribute("error", "공연 정보를 가져오는 중 오류가 발생했습니다.");
+                e.printStackTrace();
+            }
+        }
+
+        if (performance != null) {
+            performance.updateFormattedDate(); // 날짜 포맷 업데이트
+            model.addAttribute("user", user.getUser());
+            model.addAttribute("performance", performance);
+        } else {
+            // 공연 정보를 가져오지 못했을 때의 처리
+            model.addAttribute("error", "공연 정보를 가져오지 못했습니다.");
+        }
+
         return "/performance/performanceDetail";
     }
+
+
+
 
 
 
