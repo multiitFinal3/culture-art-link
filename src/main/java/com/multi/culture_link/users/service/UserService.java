@@ -51,4 +51,10 @@ public class UserService {
 		userMapper.updateUserAccount(userDTO);
 		
 	}
+	
+	public void insertRoleId(UserDTO userDTO) throws Exception{
+	
+		userMapper.insertRoleId(userDTO);
+	
+	}
 }

@@ -105,8 +105,7 @@ public class UserController {
 			throw new RuntimeException(e);
 		}
 
-
-//		userDTO.setUserId(userId);
+		
 		userDTO.setEmail(email);
 		userDTO.setPassword(password);
 		userDTO.setUserName(userName);
@@ -117,7 +116,7 @@ public class UserController {
 		
 		System.out.println("userdto : " + userDTO);
 		
-		/*userDTO.setRoleId(2);*/
+		
 		
 		
 		try {
@@ -125,13 +124,31 @@ public class UserController {
 			String encoded_pw = bCryptPasswordEncoder.encode(userDTO.getPassword());
 			userDTO.setPassword(encoded_pw);
 			userService.signUp(userDTO);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+		
+		UserDTO user = null;
+		try {
+			user = userService.findUserByEmail(email);
+			user.setRoleId("ROLE_ADMIN");
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+		
+		int userId = user.getUserId();
+		
+		try {
+			userService.insertRoleId(user);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+		
+		
+		String[] list = festivalSelectKeyword.trim().split(" ");
+		for (String s : list) {
 			
-			
-			String[] list = festivalSelectKeyword.trim().split(" ");
-			for (String s : list) {
-				
-				UserDTO user = userService.findUserByEmail(email);
-				int userId = user.getUserId();
+			try {
 				
 				UserFestivalLoveHateMapDTO mapDTO = new UserFestivalLoveHateMapDTO();
 				mapDTO.setFestivalKeywordId(s);
@@ -139,13 +156,13 @@ public class UserController {
 				mapDTO.setUserId(userId);
 				mapDTO.setFestivalCount(15);
 				festivalService.insertUserSelectKeyword(mapDTO);
-				
+			} catch (Exception e) {
+				throw new RuntimeException(e);
 			}
 			
 			
-		} catch (Exception e) {
-			throw new RuntimeException(e);
 		}
+		
 		
 		System.out.println("회원가입 성공");
 		
@@ -281,7 +298,7 @@ public class UserController {
 		userDTO.setUserProfilePic(attachment);
 		userDTO.setEmail(email);
 		
-		if (password!=user.getPassword()){
+		if (password != user.getPassword()) {
 			
 			String encoded_pw = bCryptPasswordEncoder.encode(password);
 			userDTO.setPassword(encoded_pw);
@@ -297,7 +314,7 @@ public class UserController {
 		
 		
 		System.out.println("받아온 정보 : " + userDTO);
-
+		
 		try {
 			userService.updateUserAccount(userDTO);
 		} catch (Exception e) {

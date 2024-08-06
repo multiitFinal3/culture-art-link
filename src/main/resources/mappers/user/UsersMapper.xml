@@ -47,5 +47,12 @@
 
     </update>
 
+    <insert id="insertRoleId">
+
+        INSERT INTO user_role_mapping(user_id, role_id)
+        VALUES(#{userId}, #{roleId});
+
+    </insert>
+
 
 </mapper>
