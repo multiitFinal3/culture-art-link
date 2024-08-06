@@ -103,7 +103,7 @@
     gap: 8px;
 }
 
-.info-location, .info-date, .info-runtime, .info-age, .info-genre{
+.info-location, .info-date, .info-runtime, .info-age, .info-genre, .info-organizer, .info-producer, .info-price{
     font-size: 20px;
     font-weight: 300;
     color: black;

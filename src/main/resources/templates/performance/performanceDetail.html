@@ -11,12 +11,48 @@
     <link rel="stylesheet" th:href="@{/css/performance/performanceDetail.css}">
     <link rel="stylesheet" th:href="@{/css/performance/performanceHome.css}">
     <script th:src="@{/js/performance/performance.js}"></script>
+    <!--<script th:src="'https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=' + ${naverClientId} + '&submodules=geocoder'"></script>-->
+    <script th:inline="javascript" th:src="'https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=' + ${naverClientId}"></script>
 
 
+
+    <script th:inline="javascript">
+        var naverClientId = /*[[${naverClientId}]]*/ 'YOUR_CLIENT_ID';
+
+        function initMap() {
+            var lat = /*[[${performance.latitude}]]*/ 'default_latitude';
+            var lng = /*[[${performance.longitude}]]*/ 'default_longitude';
+
+            if (document.getElementById('map')) {
+                var map = new naver.maps.Map('map', {
+                    center: new naver.maps.LatLng(lat, lng),
+                    zoom: 15
+                });
+
+                var marker = new naver.maps.Marker({
+                    position: new naver.maps.LatLng(lat, lng),
+                    map: map
+                });
+            } else {
+                console.error("Container map not found.");
+            }
+        }
+
+        function showMap() {
+            var largeCard = document.querySelector('.large-card .related-info .content');
+            largeCard.innerHTML = '<div id="map" style="width: 100%; height: 400px;"></div>';
+            initMap();
+        }
+
+        document.addEventListener("DOMContentLoaded", function() {
+            document.getElementById("showMapBtn").addEventListener("click", function() {
+                showMap();
+            });
+        });
+    </script>
 
 </head>
 <body>
-
 <div layout:fragment="content">
     <div class="filter-container">
         <!-- 장르 필터 -->
@@ -45,53 +81,43 @@
         </div>
     </div>
 
-
-
     <div class="container">
-    <div class="top-section">
-        <div class="detail-card">
-            <img class="thumbnail" th:src="${performance.imageMain}" alt="공연 이미지" />
-            <div class="star-icon">★</div>
+        <div class="top-section">
+            <div class="detail-card">
+                <img class="thumbnail" th:src="${performance.imageMain}" alt="공연 이미지" />
+                <div class="star-icon">★</div>
+            </div>
+            <div class="info-section">
+                <div class="title" th:text="${performance.title}">공연명</div>
+                <div class="info-section-content">
+                    <div class="info-location" th:text="${performance.location}">공연장소</div>
+                    <div class="info-date" th:text="${performance.formattedDate}">공연기간</div>
+                    <div class="info-runtime" th:text="${performance.runtime}">관람시간</div>
+                    <div class="info-age" th:text="${performance.age}">관람등급</div>
+                    <div class="info-genre" th:text="${performance.genre}">장르</div>
+                    <div class="info-organizer" th:text="${performance.organizer}">기관</div>
+                    <div class="info-producer" th:text="${performance.producer}">주체</div>
+                    <div class="info-price" th:text="${performance.price}">가격</div>
+                    <div class="info-ticketbutton">
+                        <a th:href="${performance.ticketingUrl}" target="_blank">예매하기</a>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="info-section">
-            <div class="title" th:text="${performance.title}">공연명</div>
-            <div class="info-section-content">
-                <div class="info-location" th:text="${performance.location}">공연장소</div>
-                <div class="info-date" th:text="${performance.formattedDate}">공연기간</div>
-                <div class="info-runtime" th:text="${performance.runtime}">관람시간</div>
-                <div class="info-age" th:text="${performance.age}">관람등급</div>
-                <div class="info-genre" th:text="${performance.genre}">장르</div>
-                <div class="info-ticketbutton">
-                    <a th:href="${performance.ticketingUrl}" target="_blank">예매하기</a>
+        <div class="performance-container">
+            <div class="button-box">공연상세</div>
+            <div class="button-box" id="showMapBtn">공연장소</div>
+            <div class="button-box">공연후기</div>
+        </div>
+        <div class="large-card">
+            <div class="related-info">
+                <div class="title">관련정보</div>
+                <div class="content">
+                    <img class="detailImage" th:src="${performance.imageDetail1}" alt="공연 상세 이미지" />
                 </div>
             </div>
         </div>
     </div>
-    <div class="performance-container">
-        <div class="button-box">공연상세</div>
-        <div class="button-box">공연장소</div>
-        <div class="button-box">공연후기</div>
-    </div>
-    <div class="large-card">
-        <div class="related-info">
-            <div class="title">관련정보</div>
-            <div class="content">
-                공연이름<br>
-                공연날짜<br>
-                공연장소<br>
-                출연진<br>
-                런타임<br>
-                제작사<br>
-                가격<br>
-                장르<br>
-                공연상태<br>
-                공연 관람 연령<br>
-                예매처
-            </div>
-        </div>
-    </div>
-    </div>
 </div>
-
 </body>
 </html>

@@ -211,14 +211,18 @@ public class PerformanceController {
                                         @RequestParam(value = "source", required = false, defaultValue = "db") String source,
                                         Model model) {
         PerformanceDTO performance = null;
+        System.out.println("Requested performanceId: " + performanceId);
+        System.out.println("Data source: " + source);
 
         if ("db".equals(source)) {
             // DB에서 공연 정보 가져오기
             performance = performanceDBService.getPerformanceById(performanceId);
+            System.out.println("Fetched from DB: " + performance);
         } else if ("api".equals(source)) {
             // API에서 공연 정보 가져오기
             try {
                 performance = performanceRankingService.getPerformanceDetailFromAPI(performanceId);
+                System.out.println("Fetched from API: " + performance);
             } catch (Exception e) {
                 model.addAttribute("error", "공연 정보를 가져오는 중 오류가 발생했습니다.");
                 e.printStackTrace();
@@ -236,6 +240,7 @@ public class PerformanceController {
 
         return "/performance/performanceDetail";
     }
+
 
 
 

@@ -148,14 +148,19 @@ public class PerformanceRankingService {
 
     public PerformanceDTO getPerformanceDetailFromAPI(int performanceId) {
         String url = String.format("http://www.kopis.or.kr/openApi/restful/pblprfr/%d?service=%s&newsql=Y", performanceId, apiKey);
+        System.out.println("Fetching performance by ID from API: " + url);
         String response = restTemplate.getForObject(url, String.class);
+        System.out.println("API Response: " + response);
 
         if (response == null || response.isEmpty()) {
             throw new RuntimeException("API 응답이 없습니다.");
         }
 
-        return parsePerformanceDetail(response);
+        PerformanceDTO performance = parsePerformanceDetail(response);
+        System.out.println("Parsed Performance: " + performance);
+        return performance;
     }
+
 
     private PerformanceDTO parsePerformanceDetail(String data) {
         PerformanceDTO performance = new PerformanceDTO();
