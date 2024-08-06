@@ -1,41 +1,616 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-layout:decorate="~{common/layout/layoutMenubar}">
-<!--      xmlns:layout="http://www.w3.org/1999/xhtml" layout:decorate="~{common/layout/layoutMenubar}">-->
-<!--    <html layout:decorate="~{common/layout/layoutMenubar}">-->
+      layout:decorate="~{common/layout/layoutMenubar}">
 
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<!--        <title>문화재</title>-->
-        <title th:text="${property.culturalPropertiesName}">문화재 상세 정보</title>
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-        <link rel="stylesheet" href="/css/culturalProperties/culturalProperties.css">
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-        <script src="/js/culturalProperties/culturalProperties.js"></script>
-        <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${property.culturalPropertiesName}">문화재 상세 정보</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/culturalProperties/culturalProperties.css">
 
-        <style>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+
+    <script src="/js/culturalProperties/culturalPropertiesDetail.js"></script>
+<!--    <script src="/js/culturalProperties/culturalProperties.js"></script>-->
+
+<!--    <script src="path/to/culturalPropertiesDetail.js"></script>-->
+<!--    <script src="path/to/culturalProperties.js"></script>-->
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+<!--    <script src="/js/culturalProperties/culturalPropertiesDetail.js"></script>-->
 
 
-        </style>
-    </head>
-    <body>
-     <div layout:fragment="content">
 
-         <div class="container mt-4">
-             <h1 th:text="${property.culturalPropertiesName}">문화재 이름</h1>
-             <img th:src="${property.mainImgUrl}" alt="대표 문화재" class="img-fluid">
-             <p th:text="${property.description}">상세 설명</p>
-             <p th:text="${(property.region != null and property.district != null) ? property.region + ' ' + property.district : '위치정보가 없습니다'}">위치</p>
-             <a href="/cultural-properties" class="btn btn-primary">목록으로 돌아가기</a>
-         </div>
-        <footer class="bg-light text-center text-lg-start mt-4">
-            <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2);">
-                <!-- © 2024 문화재 -->
+
+    <style>
+        .btn-group {
+            margin: 10px 0;
+        }
+
+        .like-button {
+        width: 50px; /* 버튼 너비 */
+        height: 50px; /* 버튼 높이 */
+        border-radius: 50%; /* 버튼을 원형으로 */
+        background-color: white; /* 버튼 배경색 */
+        border: 2px solid black; /* 테두리 색상 */
+        display: flex; /* 중앙 정렬을 위해 flex 사용 */
+        justify-content: center; /* 가로 중앙 정렬 */
+        align-items: center; /* 세로 중앙 정렬 */
+        margin: 0 10px; /* 버튼 간격 */
+        transition: background-color 0.3s; /* 호버 시 배경색 변화 효과 */
+    }
+
+    .like-button:hover {
+        background-color: #f0f0f0; /* 호버 시 배경색 */
+    }
+
+    /* 별 버튼의 기본 스타일 유지 */
+    .dislike-button {
+         width: 50px; /* 버튼 너비 */
+        height: 50px; /* 버튼 높이 */
+        border-radius: 50%; /* 버튼을 원형으로 */
+        background-color: white; /* 버튼 배경색 */
+        border: 2px solid black; /* 테두리 색상 */
+        display: flex; /* 중앙 정렬을 위해 flex 사용 */
+        justify-content: center; /* 가로 중앙 정렬 */
+        align-items: center; /* 세로 중앙 정렬 */
+        margin: 0 10px; /* 버튼 간격 */
+        transition: background-color 0.3s; /* 호버 시 배경색 변화 효과 */
+    }
+
+        .dislike-button:hover {
+        background-color: #f0f0f0; /* 호버 시 배경색 */
+    }
+
+
+<!--//네모버튼-->
+<!--.attraction-actions {-->
+<!--    display: flex;-->
+<!--    justify-content: space-between;-->
+<!--    margin-top: 10px;-->
+<!--}-->
+
+<!--.action-btn {-->
+<!--    display: flex;-->
+<!--    align-items: center;-->
+<!--    padding: 5px 10px;-->
+<!--    border: none;-->
+<!--    background-color: #f0f0f0;-->
+<!--    cursor: pointer;-->
+<!--    transition: background-color 0.3s;-->
+<!--}-->
+
+<!--.heart-icon {-->
+<!--    margin-right: 5px;-->
+<!--}-->
+
+<!--.like-btn.active {-->
+<!--    background-color: #ffe5ea;-->
+<!--}-->
+
+<!--.dislike-btn.active {-->
+<!--    background-color: #dfdfdf;-->
+<!--}-->
+
+
+
+<!--//네모하트-->
+<!--.heart-icon {-->
+<!--    font-size: 24px; /* 하트 아이콘 크기 조절 */-->
+<!--    color: gray; /* 기본 하트 색상 */-->
+<!--}-->
+
+<!--.liked-heart {-->
+<!--    color: #ff6b81; /* 찜 상태일 때 하트 색상 */-->
+<!--}-->
+
+<!--.disliked-heart {-->
+<!--    color: #dfdfdf; /* 관심없음 상태일 때 하트 색상 */-->
+<!--}-->
+
+
+
+
+
+
+        .card {
+        margin-bottom: 20px; /* 카드 간의 여백 */
+        max-width: 300px; /* 카드 최대 너비 */
+    }
+
+
+
+
+        .attractions {
+    display: flex;
+    overflow-x: auto;
+    padding: 1rem;
+}
+
+.attraction-item {
+    flex: 0 0 auto;
+    margin-right: 1rem;
+}
+
+.attraction-item img {
+    width: 200px;
+    height: 150px;
+    object-fit: cover;
+}
+
+<!--.navigation {-->
+<!--    text-align: center;-->
+<!--    margin: 1rem 0;-->
+<!--}-->
+
+<!--.reviews {-->
+<!--    padding: 1rem;-->
+<!--}-->
+
+<!--.review {-->
+<!--    display: flex;-->
+<!--    margin-bottom: 1rem;-->
+<!--}-->
+
+<!--.review img {-->
+<!--    width: 50px;-->
+<!--    height: 50px;-->
+<!--    border-radius: 50%;-->
+<!--    margin-right: 1rem;-->
+<!--}-->
+
+.map {
+    height: 300px;
+    margin: 1rem 0;
+}
+
+#map {
+    width: 100%;
+    height: 100%;
+}
+
+.word-cloud {
+    text-align: center;
+    margin: 1rem 0;
+}
+
+.word-cloud img {
+    max-width: 100%;
+    height: auto;
+}
+
+
+
+#nearby-properties {
+    margin: 20px 10%; /* 위 아래 20px, 왼쪽 오른쪽 10% 여백 추가 */
+}
+
+.nearby-properties-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center; /* 이미지 중앙 정렬 */
+    gap: 20px; /* 이미지 간격 설정 */
+}
+
+.nearby-property {
+    flex: 0 0 calc(20% - 20px); /* 최대 5개 열로 분할 */
+    margin-bottom: 20px; /* 아래쪽 여백 추가 */
+    text-align: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* 약간의 그림자 효과 추가 */
+    border-radius: 5px; /* 모서리 둥글게 처리 */
+    overflow: hidden; /* 경계 밖으로 나가지 않게 처리 */
+    background-color: white; /* 배경색 설정 */
+    position: relative; /* 자식 요소의 절대 위치 지정 */
+    height: 400px; /* 고정된 높이 설정 (여기서 높이를 조정) */
+}
+
+/* 이미지 비율을 같게 설정 */
+.image-container {
+    position: relative; /* 자식 요소의 절대 위치 지정 */
+    width: 100%; /* 부모 요소의 너비를 100%로 설정 */
+    height: 100%; /* 부모 요소의 높이에 맞춤 */
+    overflow: hidden; /* 경계 밖으로 나가지 않게 처리 */
+}
+
+.image-container img {
+    position: absolute; /* 절대 위치 지정 */
+    top: 50%; /* 중앙 정렬을 위해 */
+    left: 50%; /* 중앙 정렬을 위해 */
+    width: 100%; /* 너비를 100%로 설정 */
+    height: 100%; /* 높이를 100%로 설정 */
+    object-fit: cover; /* 이미지 비율 유지 및 잘리도록 설정 */
+    transform: translate(-50%, -50%); /* 이미지 중앙 정렬 */
+    border-radius: 8px; /* 이미지 모서리 둥글게 */
+}
+
+.property-name {
+    position: absolute; /* 절대 위치 지정 */
+    top: 10px; /* 위쪽에서 10px 떨어진 위치 */
+    left: 10px; /* 왼쪽에서 10px 떨어진 위치 */
+    color: white; /* 흰색 텍스트 */
+    font-weight: bold; /* 글자 두껍게 */
+    background-color: rgba(0, 0, 0, 0.5); /* 반투명 배경 */
+    padding: 5px; /* 패딩 추가 */
+    border-radius: 5px; /* 모서리 둥글게 */
+}
+
+.property-location {
+    position: absolute; /* 절대 위치 지정 */
+    bottom: 10px; /* 아래쪽에서 10px 떨어진 위치 */
+    right: 10px; /* 오른쪽에서 10px 떨어진 위치 */
+    color: white; /* 흰색 텍스트 */
+    background-color: rgba(0, 0, 0, 0.5); /* 반투명 배경 */
+    padding: 5px; /* 패딩 추가 */
+    border-radius: 5px; /* 모서리 둥글게 */
+}
+
+.navigation {
+    display: flex;
+    justify-content: center; /* 버튼 중앙 정렬 */
+    gap: 10px; /* 버튼 간격 */
+    margin-top: 20px; /* 버튼 위쪽 여백 */
+}
+
+
+        /* 리뷰 섹션 */
+.reviews {
+    margin-bottom: 40px;
+}
+
+.reviews h2 {
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+#reviewsList {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+}
+
+.review {
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    padding: 15px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.review h3 {
+    font-size: 18px;
+    margin-bottom: 10px;
+    color: #444;
+}
+
+.review p {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 10px;
+}
+
+.review .rating {
+    color: #ffd700;
+    font-size: 16px;
+}
+
+#moreReviews {
+    display: block;
+    width: 200px;
+    margin: 20px auto 0;
+    padding: 10px 15px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+#moreReviews:hover {
+    background-color: #45a049;
+}
+
+
+
+
+    </style>
+</head>
+<body>
+<div layout:fragment="content">
+
+
+    <div id="contentArea" class="container mt-4">
+        <div class="d-flex">
+            <div class="col-md-6 pe-5">
+                <img th:src="${property.mainImgUrl}" alt="대표 문화재" class="img-fluid main-image">
             </div>
-        </footer>
+            <div class="col-md-6 ms-5">
+
+                <p th:text="${property.categoryName}">종목</p>
+
+                <h1 th:text="${property.culturalPropertiesName}">문화재 이름</h1>
+                <br>
+
+                <!-- 버튼을 일렬로 배치하기 위한 div -->
+                <div class="d-flex justify-content-start mt-2">
+
+                    <!-- 이미지 보기 버튼 -->
+                    <div th:if="${property.imgUrl != null && property.imgUrl.size() > 0}">
+                        <button id="imageButton" class="btn btn-info me-2" onclick="showImage('${property.imgUrl}')">이미지 보기</button>
+                    </div>
+
+                    <!-- 동영상 보기 버튼 -->
+                    <div th:if="${property.videoUrl != null && property.videoUrl.size() > 0 && property.videoUrl[0] != 'http://116.67.83.213/webdata/file_data/media_data/videos/'}">
+                        <button id="videoButton" class="btn btn-warning me-2" onclick="showVideo('${property.videoUrl[0]}')">동영상 보기</button>
+                    </div>
+
+                    <!-- 나레이션 듣기 버튼 -->
+                    <div th:if="${property.narrationUrl != null && property.narrationUrl.size() > 0}">
+                        <button id="narrationButton" class="btn btn-success" onclick="showNarration('${property.narrationUrl[0]}')">나레이션 듣기</button>
+                    </div>
+                </div>
+                <br>
+
+
+                <p th:text="${property.region} + ' ' + ${property.district}">주소</p>
+                <p th:text="${property.dynasty != null ? property.dynasty : '시대 정보 없음'}">시대</p>
+                <p th:text="${property.content}">상세 설명</p>
+
+
+                <br>
+                <a href="/cultural-properties" class="btn btn-primary">목록으로 돌아가기</a>
+
+
+            </div>
+        </div>
     </div>
-    </body>
+
+    <br><br><br><br>
+
+<!--    <div class="d-flex justify-content-center align-items-center mt-3">-->
+<!--        <button class="heart-button me-2" id="likeButton" onclick="likeToggle()">-->
+<!--            <span id="likeIcon">&#9829;</span> &lt;!&ndash; 찜 하트 아이콘 &ndash;&gt;-->
+<!--        </button>-->
+<!--        <button class="heart-button" id="dislikeButton" onclick="dislikeToggle()">-->
+<!--            <span id="dislikeIcon">&#10084;</span> &lt;!&ndash; 관심 없음 하트 아이콘 &ndash;&gt;-->
+<!--        </button>-->
+<!--    </div>-->
+
+
+<!--//네모버튼-->
+<!--    <div class="attraction-actions">-->
+<!--        <button class="action-btn like-btn" data-action="like">-->
+<!--            <span class="heart-icon">♥</span> 찜-->
+<!--        </button>-->
+<!--        <button class="action-btn dislike-btn" data-action="dislike">-->
+<!--            <span class="heart-icon">♥</span> 관심없음-->
+<!--        </button>-->
+<!--    </div>-->
+
+
+<!--    <div class="attraction-actions">-->
+<!--        <button class="action-btn like-btn" data-action="like" th:classappend="${isLiked ? 'like' : ''}">-->
+<!--            <span class="heart-icon" th:classappend="${isLiked ? 'like-heart' : ''}">♥</span> 찜-->
+<!--        </button>-->
+<!--        <button class="action-btn dislike-btn" data-action="dislike" th:classappend="${isDisliked ? 'dislike' : ''}">-->
+<!--            <span class="heart-icon" th:classappend="${isDisliked ? 'dislike-heart' : ''}">♥</span> 관심없음-->
+<!--        </button>-->
+<!--    </div>-->
+
+
+
+
+
+
+        <div class="d-flex justify-content-center align-items-center mt-3">
+        <!-- 찜(하트) 버튼 (원형) -->
+        <button class="btn like-button" id="likeButton" data-liked="false">
+            <span class="text-danger" style="font-size: 24px;">♡</span> <!-- 흰색 하트 아이콘 -->
+        </button>
+
+        <!-- 관심없음(별) 버튼 -->
+        <button class="btn dislike-button" id="dislikeButton" data-disliked="false">
+            <span class="text-secondary" style="font-size: 24px;">☆</span> <!-- 흰색 별 아이콘 -->
+        </button>
+    </div>
+
+
+    <br><br><br><br>
+
+    <section id="nearby-properties">
+        <h1 style="text-align: center; margin-bottom: 20px; font-size: 40px; color: #333;">주변 추천 볼거리</h1>
+        <br>
+        <div th:if="${#lists.isEmpty(getNearbyPlace)}">
+            <p>근처 문화재가 없습니다.</p>
+        </div>
+        <div class="nearby-properties-container">
+            <div class="nearby-property" th:each="property : ${getNearbyPlace}">
+                <a th:href="@{'/cultural-properties/detail/' + ${property.id}}" class="property-link">
+                    <div class="image-container">
+                        <img th:src="${property.mainImgUrl}" alt="${property.culturalPropertiesName}">
+                        <div class="property-name" th:text="${property.culturalPropertiesName}"></div>
+                        <div class="property-location" th:text="${property.region} + ' ' + ${property.district}"></div>
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div class="navigation" th:if="${#lists.size(getNearbyPlace) > 5}">
+            <button class="btn btn-primary prev"> &lt; </button>
+            <button class="btn btn-primary next"> &gt; </button>
+        </div>
+    </section>
+
+
+
+<!--    <section class="reviews">-->
+<!--        &lt;!&ndash; 리뷰 섹션 &ndash;&gt;-->
+<!--        <div class="review" th:each="review : ${reviews}">-->
+<!--            <img th:src="${review.userImage}" th:alt="${review.userName}">-->
+<!--            <div class="review-content">-->
+<!--                <h3 th:text="${review.userName}"></h3>-->
+<!--                <div class="rating" th:text="${review.rating}"></div>-->
+<!--                <p th:text="${review.comment}"></p>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </section>-->
+
+<!--    <section class="reviews">-->
+<!--        <h2>리뷰</h2>-->
+<!--        <div id="reviewsList">-->
+<!--            &lt;!&ndash; 리뷰가 여기에 동적으로 추가됩니다 &ndash;&gt;-->
+<!--        </div>-->
+<!--        <button id="moreReviews">리뷰 더보기</button>-->
+<!--    </section>-->
+
+    <section class="reviews">
+        <h2>리뷰</h2>
+        <div id="reviewsList">
+            <!-- 최대 3개의 리뷰가 여기에 동적으로 추가됩니다 -->
+        </div>
+<!--        <a href="/reviews/property/{propertyId}" class="more-reviews-btn">리뷰 더보기</a>-->
+<!--        <a href="/cultural-properties/detail/{property.id}/review/detail" class="more-reviews-btn">리뷰 더보기</a>-->
+        <a th:href="@{/cultural-properties/detail/{id}/review/detail(id=${property.id})}" class="more-reviews-btn">리뷰 더보기</a>
+
+    </section>
+
+    <section class="map">
+        <!-- 지도 섹션 -->
+        <div id="map"></div>
+    </section>
+
+<!--    <section class="word-cloud">-->
+<!--        &lt;!&ndash; 워드 클라우드 섹션 &ndash;&gt;-->
+<!--        <img src="/images/word-cloud.png" alt="Word Cloud">-->
+<!--    </section>-->
+
+    <br><br><br><br><br><br>
+
+    <footer class="bg-light text-center text-lg-start mt-4">
+        <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2);">
+            <!-- © 2024 문화재 -->
+        </div>
+    </footer>
+
+
+    <!-- 이미지 모달 -->
+    <div class="modal fade" id="imageModal" tabindex="-1" role="dialog" aria-labelledby="imageModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="imageModalLabel">이미지 보기</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <img id="modalImage" src="" alt="모달 이미지" class="img-fluid">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 동영상 모달 -->
+    <div class="modal fade" id="videoModal" tabindex="-1" role="dialog" aria-labelledby="videoModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="videoModalLabel">동영상 보기</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <video id="modalVideo" class="w-100" controls>
+                        <source src="" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 나레이션 모달 -->
+    <div class="modal fade" id="audioModal" tabindex="-1" role="dialog" aria-labelledby="audioModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="audioModalLabel">나레이션 듣기</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <audio id="modalAudio" controls>
+                        <source src="" type="audio/mpeg">
+                        Your browser does not support the audio tag.
+                    </audio>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script src="/js/culturalProperties/culturalPropertiesDetail.js"></script>
+
+<script>
+<!--    function showImage(imageUrl) {-->
+<!--        $('#modalImage').attr('src', imageUrl);-->
+<!--        $('#imageModal').modal('show');-->
+<!--    }-->
+
+<!--    function showVideo(videoUrl) {-->
+<!--        $('#modalVideo').attr('src', videoUrl);-->
+<!--        $('#videoModal').modal('show');-->
+<!--    }-->
+
+<!--    function showNarration(narrationUrl) {-->
+<!--        $('#modalAudio').find('source').attr('src', narrationUrl);-->
+<!--        $('#modalAudio')[0].load(); // 새로 로드-->
+<!--        $('#audioModal').modal('show');-->
+
+<!--    }-->
+
+$(document).ready(function() {
+        $('#prevButton').on('click', function() {
+            $('#recommendedCarousel').carousel('prev');
+        });
+
+        $('#nextButton').on('click', function() {
+            $('#recommendedCarousel').carousel('next');
+        });
+    });
+
+
+
+document.addEventListener("DOMContentLoaded", function() {
+    // showImage 함수 정의
+    window.showImage = function(imageUrl) {
+        $('#modalImage').attr('src', imageUrl);
+        $('#imageModal').modal('show');
+    }
+
+    // showVideo 함수 정의
+    window.showVideo = function(videoUrl) {
+        $('#modalVideo').attr('src', videoUrl);
+        $('#videoModal').modal('show');
+    }
+
+    // showNarration 함수 정의
+    window.showNarration = function(narrationUrl) {
+        $('#modalAudio').find('source').attr('src', narrationUrl);
+        $('#modalAudio')[0].load(); // 새로 로드
+        $('#audioModal').modal('show');
+    }
+});
+
+
+
+</script>
+</body>
 </html>

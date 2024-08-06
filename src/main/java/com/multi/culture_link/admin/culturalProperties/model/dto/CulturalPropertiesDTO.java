@@ -44,7 +44,6 @@ public class CulturalPropertiesDTO extends PageDTO {
     private String categoryCode;
     private String managementNumber;
     private String cityCode;
-//    private String nation;
     private String categoryName;
     private String culturalPropertiesName;
     private String address;
@@ -59,11 +58,7 @@ public class CulturalPropertiesDTO extends PageDTO {
     private String classifyC;
     private String classifyD;
     private String content;
-//    private String imgUrl;
     private String mainImgUrl;
-//    private String imgDesc;
-//    private String videoUrl;
-//    private String narrationUrl;
 
 //    private String imgUrl;
 //    private String imgDesc;

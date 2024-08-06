@@ -18,29 +18,19 @@ public interface AdminCulturalPropertiesDAO {
 
     int selectCount();
 
-//    List<CulturalPropertiesDTO> searchCulturalProperties(
-//            @Param("categoryName") String categoryName,
-//            @Param("culturalPropertiesName") String culturalPropertiesName,
-//            @Param("region") String region,
-//            @Param("dynasty") String dynasty,
-//            @Param("start")int start, @Param("end")int end);
 
-//    List<CulturalPropertiesDTO> searchDBCulturalProperties(
-//            CulturalPropertiesDTO culturalPropertiesDTO);
+//    List<CulturalPropertiesDTO> searchAPI(@Param("searchForm") CulturalPropertiesDTO searchForm);
 
 
-    List<CulturalPropertiesDTO> searchDBCulturalProperties(
-            CulturalPropertiesDTO culturalPropertiesDTO);
+    List<CulturalPropertiesDTO> searchDBCulturalProperties(String category, String name, String region, String dynasty, int start, int end);
+
+    int searchCountCulturalProperties(String category, String name, String region, String dynasty);
+
+
 
     void deleteDBData(@Param("list") List<Integer> id);
 
     void updateDBData(@Param("list") List<CulturalPropertiesDTO> data);
 
-
-//    List<CulturalPropertiesDTO> searchDBCulturalProperties(
-//            PageDTO pageDto, CulturalPropertiesDTO culturalPropertiesDTO);
-
-//    List<CulturalPropertiesDTO> searchDBCulturalProperties(
-//            PageDTO pageDTO);
 
 }
