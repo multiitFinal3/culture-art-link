@@ -74,7 +74,7 @@ public class AdminExhibitionController {
 
     }
 
-//    // for test
+    // for test
 //    @Scheduled(fixedRate = 160000) // 60000 밀리초 = 1분
 //    public void runEveryMinute() throws Exception {
 //        exhibitionApiService.saveKeyword();

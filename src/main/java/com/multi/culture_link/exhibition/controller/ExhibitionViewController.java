@@ -11,6 +11,7 @@ import org.springframework.ui.Model;
 @RequiredArgsConstructor
 @RequestMapping("/exhibition")
 public class ExhibitionViewController {
+    // 지도
     @Value("${API-KEY.naverClientId}")
     private String naverClientId;
 

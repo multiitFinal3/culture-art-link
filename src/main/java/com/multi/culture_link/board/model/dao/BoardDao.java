@@ -1,15 +1,18 @@
-//package com.multi.culture_link.board.model.dao;
+package com.multi.culture_link.board.model.dao;
+
+import com.multi.culture_link.board.model.dto.BoardDto;
+import com.multi.culture_link.users.model.dto.VWUserRoleDTO;
+import org.apache.ibatis.annotations.Mapper;
+
+import java.util.List;
+
+
 //
-//import com.multi.culture_link.admin.exhibition.model.dto.api.ExhibitionApiDto;
-//import com.multi.culture_link.exhibition.model.dto.ExhibitionDto;
-//import org.apache.ibatis.annotations.Mapper;
-//
-//import java.util.List;
-//import java.util.Map;
-//
-//@Mapper
-//public interface BoardDao {
-//
-//    List<ExhibitionApiDto> searchExhibition(Map<String, String> searchParams);
-//
-//}
+@Mapper
+public interface BoardDao {
+    void setBoard(BoardDto data, int userId);
+    List<BoardDto> getBoardList(String genre, String query);
+    void deleteBoard(BoardDto data, VWUserRoleDTO currentUser);
+    void updateBoard(BoardDto data, VWUserRoleDTO currentUser);
+    BoardDto getBoardDetail(BoardDto data, VWUserRoleDTO currentUser);
+}

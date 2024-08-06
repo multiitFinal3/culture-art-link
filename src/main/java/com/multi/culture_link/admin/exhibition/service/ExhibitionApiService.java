@@ -37,6 +37,7 @@ public class ExhibitionApiService {
     private final AdminExhibitionDao adminExhibitionDao;
     private final ExhibitionKeywordDao exhibitionKeywordDao;
     private final ExhibitionCommentDao exhibitionCommentDao;
+    String path = "classpath:static/txt/exhibition/stop.txt";
 
 
 
@@ -152,9 +153,7 @@ public class ExhibitionApiService {
             String combinedContent = content.toString().trim();
 
             if (!combinedContent.isEmpty()) {
-                
-                String path = "classpath:static/txt/festival/stop.txt";
-                
+            
                 HashMap<String, Integer> keyWordsMap = keywordExtractService.getKeywordByKomoran(combinedContent, path);
 
                 System.out.println("Exhibition ID: " + exhibition.getId());
