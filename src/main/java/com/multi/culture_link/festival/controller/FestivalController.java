@@ -1177,4 +1177,74 @@ public class FestivalController {
 	}
 	
 	
+	
+	
+	
+	/**
+	 * 특정 유저의 카운트 10 이상의 관심없음(H) 키워드를 가져오기
+	 *
+	 * @return
+	 */
+	@PostMapping("/findFestivalBigHateKeyword")
+	@ResponseBody
+	public ArrayList<FestivalContentReviewNaverKeywordMapDTO> findFestivalBigHateKeyword(@AuthenticationPrincipal VWUserRoleDTO user) {
+		
+		
+		UserFestivalLoveHateMapDTO mapDTO = new UserFestivalLoveHateMapDTO();
+		int userId = user.getUserId();
+		mapDTO.setUserId(userId);
+		mapDTO.setSortCode("H");
+		
+		ArrayList<FestivalContentReviewNaverKeywordMapDTO> list = null;
+		try {
+			list = festivalService.findFestivalBigLoveHateKeyword(mapDTO);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+		
+		System.out.println("findFestivalBigHateKeyword : " + list);
+		
+		return list;
+		
+	}
+	
+	
+	
+	
+	/**
+	 * 특정 유저의 카운트 10 미만의 관심없음(H) 키워드를 가져오기
+	 *
+	 * @return
+	 */
+	@PostMapping("/findFestivalSmallHateKeyword")
+	@ResponseBody
+	public ArrayList<FestivalContentReviewNaverKeywordMapDTO> findFestivalSmallHateKeyword(@AuthenticationPrincipal VWUserRoleDTO user,@RequestParam("page") int page) {
+		
+		UserFestivalLoveHateMapDTO mapDTO = new UserFestivalLoveHateMapDTO();
+		int userId = user.getUserId();
+		PageDTO pageDTO = new PageDTO();
+		pageDTO.setPage(page);
+		pageDTO.setStartEnd(page);
+		mapDTO.setPageDTO(pageDTO);
+		mapDTO.setUserId(userId);
+		mapDTO.setSortCode("H");
+		
+		ArrayList<FestivalContentReviewNaverKeywordMapDTO> list = null;
+		try {
+			list = festivalService.findFestivalSmallLoveHateKeyword(mapDTO);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+		
+		System.out.println("findFestivalSmallLoveKeyword : " + list);
+		
+		return list;
+		
+	}
+	
+	
+	
+	
+	
+	
 }

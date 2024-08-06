@@ -259,7 +259,10 @@
    }
 
 
-   #performanceZone, #exhibitionZone, #festivalZone, #culturalPropertiesZone{
+   #performanceZone,
+   #exhibitionZone,
+   #festivalZone,
+   #culturalPropertiesZone{
 
        margin: 0.1%;
        text-align: center;
@@ -273,7 +276,10 @@
 
 
 
-    #performanceKeywordList, #exhibitionKeywordList, #festivalKeywordList, #culturalPropertiesKeywordList{
+    #performanceKeywordList,
+    #exhibitionKeywordList,
+    #festivalKeywordList,
+    #culturalPropertiesKeywordList{
 
         font-size: 20px;
         overflow-x: scroll;
@@ -284,7 +290,10 @@
     }
 
 
-    #addPerformanceKeyword, #addExhibitionKeyword, #addFestivalKeyword, #addCulturalPropertiesKeyword{
+    #addPerformanceLoveKeyword,
+    #addExhibitionLoveKeyword,
+    #addFestivalLoveKeyword,
+    #addCulturalPropertiesLoveKeyword{
 
         width: 160px;
         height: 45px;
@@ -294,13 +303,38 @@
 
    .bigLove{
 
-        background-color: #98D6F0;
+        background-color: #ffe5ea;
 
    }
 
-    .festivalKeywordBtn {
+   .bigHate{
+
+        background-color: #dfdfdf;
+
+   }
+
+    .festivalLoveKeywordBtn,
+    .festivalHateKeywordBtn{
 
        min-width: 150px;
        max-height: 35px;
+
+    }
+
+
+    #updateBtnZone{
+
+        display: flex;
+        flex-flow: row;
+        align-items: center;
+        justify-content: center;
+
+    }
+
+    #keywordCountUpdate{
+
+        width: 500px;
+        height: 100px;
+        font-size: 40px;
 
     }

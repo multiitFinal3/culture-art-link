@@ -328,9 +328,8 @@ public class UserController {
 		
 		
 		try {
-			UserDTO newUser = userService.findUserByEmail(email);
-			VWUserRoleDTO newVWUser = new VWUserRoleDTO(newUser);
-			
+//			UserDTO newUser = userService.findUserByEmail(email);
+			VWUserRoleDTO newVWUser = new VWUserRoleDTO(userDTO);
 			
 			UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(newVWUser, null, user.getAuthorities());
 			SecurityContextHolder.getContext().setAuthentication(authenticationToken);
