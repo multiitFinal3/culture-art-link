@@ -258,3 +258,49 @@
 
    }
 
+
+   #performanceZone, #exhibitionZone, #festivalZone, #culturalPropertiesZone{
+
+       margin: 0.1%;
+       text-align: center;
+       display: flex;
+       flex-flow: row;
+       align-items: center;
+       justify-content: center;
+
+   }
+
+
+
+
+    #performanceKeywordList, #exhibitionKeywordList, #festivalKeywordList, #culturalPropertiesKeywordList{
+
+        font-size: 20px;
+        overflow-x: scroll;
+        margin: 3%;
+        text-align: center;
+        display: flex;
+        width: 80%;
+    }
+
+
+    #addPerformanceKeyword, #addExhibitionKeyword, #addFestivalKeyword, #addCulturalPropertiesKeyword{
+
+        width: 160px;
+        height: 45px;
+
+    }
+
+
+   .bigLove{
+
+        background-color: #98D6F0;
+
+   }
+
+    .festivalKeywordBtn {
+
+       min-width: 150px;
+       max-height: 35px;
+
+    }

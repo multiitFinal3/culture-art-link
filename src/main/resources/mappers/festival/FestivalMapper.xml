@@ -260,11 +260,39 @@
 
     </select>
 
-
     <select id="findUserReviewCountByUserReviewDataDTO">
 
         SELECT COUNT(*) FROM vw_festival_user_review_data urd
         WHERE urd.user_id = #{userId};
+
+    </select>
+
+    <select id="findFestivalBigLoveHateKeyword" parameterType="userFestivalLoveHateDTO">
+
+        SELECT * FROM vw_festival_user_love_hate_keyword_mapping_total_data
+        WHERE user_id = #{userId}
+        AND sort_code = #{sortCode}
+        AND festival_keyword_total_count >= 10
+        ORDER BY festival_keyword_total_count DESC;
+
+    </select>
+
+
+    <select id="findFestivalSmallLoveHateKeyword" parameterType="userFestivalLoveHateDTO">
+
+        SELECT * FROM (
+
+            SELECT ROW_NUMBER() OVER ( PARTITION BY user_id, sort_code
+                ORDER BY festival_keyword_total_count DESC)
+            AS rownum, f2.*
+            FROM vw_festival_user_love_hate_keyword_mapping_total_data f2
+            WHERE f2.user_id = #{userId}
+                AND f2.sort_code = #{sortCode}
+                AND <![CDATA[ festival_keyword_total_count < 10 ]]>
+
+        ) f1
+
+        WHERE f1.rownum BETWEEN #{pageDTO.start} AND #{pageDTO.end};
 
     </select>
 

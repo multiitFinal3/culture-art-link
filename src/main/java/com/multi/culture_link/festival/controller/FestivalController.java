@@ -909,7 +909,7 @@ public class FestivalController {
 	}
 	
 	/**
-	 * vw_festival_keyword_tf_idf 테이블에서 tf_idf가 높은 순서대로 반환
+	 * vw_festival_keyword_tf_idf_top10_data 테이블에서 tf_idf가 높은 순서대로 반환
 	 *
 	 * @param page
 	 * @return
@@ -1110,6 +1110,69 @@ public class FestivalController {
 		System.out.println("findUserReviewCountByUserReviewDataDTO : " + count);
 		
 		return count;
+		
+	}
+	
+	
+	
+	/**
+	 * 특정 유저의 카운트 10 이상의 찜(L) 키워드를 가져오기
+	 *
+	 * @return
+	 */
+	@PostMapping("/findFestivalBigLoveKeyword")
+	@ResponseBody
+	public ArrayList<FestivalContentReviewNaverKeywordMapDTO> findFestivalBigLoveKeyword(@AuthenticationPrincipal VWUserRoleDTO user) {
+		
+		
+		UserFestivalLoveHateMapDTO mapDTO = new UserFestivalLoveHateMapDTO();
+		int userId = user.getUserId();
+		mapDTO.setUserId(userId);
+		mapDTO.setSortCode("L");
+		
+		ArrayList<FestivalContentReviewNaverKeywordMapDTO> list = null;
+		try {
+			list = festivalService.findFestivalBigLoveHateKeyword(mapDTO);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+		
+		System.out.println("findFestivalBigLoveKeyword : " + list);
+		
+		return list;
+		
+	}
+	
+	
+	
+	/**
+	 * 특정 유저의 카운트 10 미만의 찜(L) 키워드를 가져오기
+	 *
+	 * @return
+	 */
+	@PostMapping("/findFestivalSmallLoveKeyword")
+	@ResponseBody
+	public ArrayList<FestivalContentReviewNaverKeywordMapDTO> findFestivalSmallLoveKeyword(@AuthenticationPrincipal VWUserRoleDTO user,@RequestParam("page") int page) {
+		
+		UserFestivalLoveHateMapDTO mapDTO = new UserFestivalLoveHateMapDTO();
+		int userId = user.getUserId();
+		PageDTO pageDTO = new PageDTO();
+		pageDTO.setPage(page);
+		pageDTO.setStartEnd(page);
+		mapDTO.setPageDTO(pageDTO);
+		mapDTO.setUserId(userId);
+		mapDTO.setSortCode("L");
+		
+		ArrayList<FestivalContentReviewNaverKeywordMapDTO> list = null;
+		try {
+			list = festivalService.findFestivalSmallLoveHateKeyword(mapDTO);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+		
+		System.out.println("findFestivalSmallLoveKeyword : " + list);
+		
+		return list;
 		
 	}
 	

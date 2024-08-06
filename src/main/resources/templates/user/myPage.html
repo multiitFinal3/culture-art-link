@@ -224,18 +224,6 @@
                     })
                 })
 
-
-
-
-
-
-
-
-
-
-
-
-
                 //#endregion
 
 
@@ -243,7 +231,7 @@
 
 
 
-                //# region 축제의 카테고리별 찜 / 관심없음 / 리뷰 내역
+                //# region 상단바 : 축제 카테고리별 찜 / 관심없음 / 리뷰 내역
 
 
                 /**
@@ -874,7 +862,149 @@
 
 
 
-                //#region 공연 찜 관심없음 리뷰
+                //#region 상단바 : 공연
+
+                //#endregion
+
+
+                //#region 상단바 : 전시
+
+                //#endregion
+
+
+                //#region 상단바 : 문화제
+
+                //#endregion
+
+
+                //#region 하단바 : 축제의 찜키워드 , 관심없음 키워드
+
+
+                  /**
+                 * 축제 찜 키워드 중 카운트가 10개 이상인 것을 가져옴
+                 *
+                 */
+                function findFestivalBigLoveKeyword(){
+
+                    $.ajax({
+
+                        url: '/festival/findFestivalBigLoveKeyword',
+                        method: 'POST',
+                        contentType: 'application/json',
+                        success: function(list){
+                            console.log("findFestivalBigLoveKeyword")
+                            console.log(list);
+                            $('#festivalKeywordList').html("");
+                            $.each(list, function(index, keyword){
+
+                                var htmlContent = `<button value="${keyword.festivalKeywordId}" class="festivalKeywordBtn bigLove">${keyword.festivalKeywordId}</button>`;
+
+                                $('#festivalKeywordList').append(htmlContent);
+
+                            })
+
+                        }
+
+                    })
+
+                }
+
+                findFestivalBigLoveKeyword();
+
+
+
+
+                  /**
+                 * 축제 찜 키워드 중 카운트가 10개 미만인 것을 5개씩 가져옴
+                 *
+                 */
+                function findFestivalSmallLoveKeyword(page){
+
+                    $.ajax({
+
+                        url: '/festival/findFestivalSmallLoveKeyword?page='+page,
+                        method: 'POST',
+                        contentType: 'application/json',
+                        success: function(list){
+                            console.log("findFestivalSmallLoveKeyword")
+                            console.log(list);
+                            $.each(list, function(index, keyword){
+
+                                var htmlContent = `<button value="${keyword.festivalKeywordId}" class="festivalKeywordBtn smallLove">${keyword.festivalKeywordId}</button>`;
+
+                                $('#festivalKeywordList').append(htmlContent);
+
+                            })
+
+                        }
+
+                    })
+
+                }
+
+
+                /**
+                * 축제 키워드 추가 버튼
+                *
+                */
+                $(document).on('click','#addFestivalKeyword', function(){
+                    event.preventDefault();
+                    var page = parseInt($(this).val());
+                    findFestivalSmallLoveKeyword(page);
+                    page = page + 1;
+                    $(this).val(page);
+
+                })
+
+                $('#addFestivalKeyword').click();
+
+
+                /**
+                * 축제 키워드 선택 시 색 변화 버튼
+                *
+                */
+                $(document).on('click','.festivalKeywordBtn', function(){
+
+                    event.preventDefault();
+
+                    if($(this).hasClass('hasLove')){
+
+                        $(this).removeClass('hasLove');
+
+                    }else{
+
+                        $(this).addClass('hasLove');
+
+                    }
+
+                    var btns = document.querySelectorAll('button.hasLove');
+
+                    var concat = '';
+
+                    btns.forEach(function(btn){
+
+                        concat += (btn.value+" ");
+
+                    })
+
+                    $('#festivalSelectKeyword').val(concat.trim());
+
+
+
+                })
+
+
+                //#endregion
+
+
+
+
+
+
+
+
+
+
 
                 //#endregion
 
@@ -904,6 +1034,7 @@
                     }
 
                 })
+
 
 
 
@@ -950,12 +1081,6 @@
                     }
 
                 });
-
-
-
-
-
-
 
 
 
@@ -1043,8 +1168,39 @@
                 </ul>
 
                 <div id="down">
+                    <div id="performanceZone">
+                        <div id="performanceKeywordList">
 
-                    dldldl
+
+
+                        </div>
+                        <button id="addPerformanceKeyword" value="1">공연 키워드 추가</button>
+                    </div>
+                    <div id="exhibitionZone">
+                        <div id="exhibitionKeywordList">
+
+
+
+                        </div>
+                        <button id="addExhibitionKeyword" value="1">전시 키워드 추가</button>
+                    </div>
+                    <div id="festivalZone">
+                        <div id="festivalKeywordList">
+
+
+
+                        </div>
+                        <button id="addFestivalKeyword" value="1">축제 키워드 추가</button>
+                    </div>
+                    <div id="culturalPropertiesZone">
+                        <div id="culturalPropertiesKeywordList">
+
+
+
+                        </div>
+                        <button id="addCulturalPropertiesKeyword" value="1">문화재 키워드 추가</button>
+                    </div>
+
 
                 </div>
 

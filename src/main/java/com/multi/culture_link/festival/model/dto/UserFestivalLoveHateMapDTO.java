@@ -10,6 +10,7 @@ public class UserFestivalLoveHateMapDTO {
 	private int festivalId;
 	private String festivalKeywordId;
 	private int festivalCount;
+	private PageDTO pageDTO;
 	
 
 }
