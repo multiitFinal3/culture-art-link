@@ -36,6 +36,9 @@ public class PerformanceDTO {
 
     private String rank;
 
+    private double latitude; // 위도
+    private double longitude; // 경도
+
 
     // formattedDate 필드를 업데이트하는 메소드
     public void updateFormattedDate() {

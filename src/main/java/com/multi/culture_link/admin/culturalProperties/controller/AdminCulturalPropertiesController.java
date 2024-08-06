@@ -4,17 +4,12 @@ package com.multi.culture_link.admin.culturalProperties.controller;
 import com.multi.culture_link.admin.culturalProperties.model.dto.CulturalPropertiesDTO;
 import com.multi.culture_link.admin.culturalProperties.model.dto.PageDTO;
 import com.multi.culture_link.admin.culturalProperties.service.AdminCulturalPropertiesService;
-import com.multi.culture_link.admin.exhibition.model.dto.api.ExhibitionApiDto;
-import com.multi.culture_link.festival.model.dto.FestivalDTO;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 
@@ -122,210 +117,31 @@ public class AdminCulturalPropertiesController {
 		count = adminCulturalPropertiesService.selectCount();
 
 		return count;
-
-//	@PostMapping("/search")
-//	@ResponseBody
-//	public List<CulturalPropertiesDTO> searchCulturalProperties(
-//			@RequestParam("page") int page,
-//			@RequestParam(value = "category", required = false) String category,
-//			@RequestParam(value = "name", required = false) String name,
-//			@RequestParam(value = "region", required = false) String region,
-//			@RequestParam(value = "dynasty", required = false) String dynasty
-////			@RequestParam(required = false) String category,
-////			@RequestParam(required = false) String name,
-////			@RequestParam(required = false) String region,
-////			@RequestParam(required = false) String dynasty
-//	) {
-//
-//		PageDTO pageDTO = new PageDTO();
-//		pageDTO.setPage(page);
-//		pageDTO.setStartEnd(pageDTO.getPage());
-//
-//		System.out.println("검색pageDTO : " + pageDTO);
-//
-//
-//		CulturalPropertiesDTO culturalPropertiesDTO = new CulturalPropertiesDTO();
-//		culturalPropertiesDTO.setCategoryName(category);
-//
-////		FestivalDTO festivalDTO = new FestivalDTO();
-////
-////		com.multi.culture_link.festival.model.dto.PageDTO pageDTO2 = new com.multi.culture_link.festival.model.dto.PageDTO();
-////		pageDTO2.setPage(page);
-////		pageDTO2.setStartEnd(pageDTO2.getPage());
-////
-////		festivalDTO.setPageDTO(pageDTO2);
-////
-//
-//
-//		return adminCulturalPropertiesService.searchCulturalProperties(pageDTO, category, name, region, dynasty);
-//
-////		return adminCulturalPropertiesService.searchCulturalProperties(festivalDTO)
 	}
 
 
-
-//	@PostMapping("/searchDB")
-//	@ResponseBody
-//	public List<CulturalPropertiesDTO> searchDBCulturalProperties(
-//			@RequestParam("page") int page,
-//			@RequestParam(value = "category", required = false) String category,
-//			@RequestParam(value = "name", required = false) String name,
-//			@RequestParam(value = "region", required = false) String region,
-//			@RequestParam(value = "dynasty", required = false) String dynasty
-////			@RequestParam(required = false) String category,
-////			@RequestParam(required = false) String name,
-////			@RequestParam(required = false) String region,
-////			@RequestParam(required = false) String dynasty
-//	) {
-//
-//		PageDTO pageDTO = new PageDTO();
-//		pageDTO.setPage(page);
-//		pageDTO.setStartEnd(pageDTO.getPage());
-//
-//		System.out.println("검색pageDTO : " + pageDTO);
-//		System.out.println("controller- category : " + category);
-//		System.out.println(name);
-//		System.out.println(region);
-//		System.out.println(dynasty);
-//		CulturalPropertiesDTO culturalPropertiesDTO = new CulturalPropertiesDTO();
-//		culturalPropertiesDTO.setCategoryName(category);
-//
-////		FestivalDTO festivalDTO = new FestivalDTO();
-////
-////		com.multi.culture_link.festival.model.dto.PageDTO pageDTO2 = new com.multi.culture_link.festival.model.dto.PageDTO();
-////		pageDTO2.setPage(page);
-////		pageDTO2.setStartEnd(pageDTO2.getPage());
-////
-////		festivalDTO.setPageDTO(pageDTO2);
-////
-//		category = category.trim();
-//		name= name.trim();
-////		region = region.trim().replace(",","");
-////		dynasty = dynasty.trim().replace(",","");
-//		region = region.trim();
-//		dynasty = dynasty.trim();
-//
-//
-////		int start = pageDTO.getStart();
-////		int end = pageDTO.getEnd();
-////
-////		System.out.println("start : " + start);
-////		System.out.println("end : " + end);
-////		System.out.println();
-////
-////		culturalPropertiesDTO.setPageDTO(pageDTO);
-////		culturalPropertiesDTO.setStart(start);
-////		culturalPropertiesDTO.setEnd(end);
-//
-//
-//		return adminCulturalPropertiesService.searchDBCulturalProperties(pageDTO, category, name, region, dynasty);
-//
-////		return adminCulturalPropertiesService.searchCulturalProperties(festivalDTO)
-//	}
 
 
 	@PostMapping("/searchDB")
 	@ResponseBody
 	public List<CulturalPropertiesDTO> searchDBCulturalProperties(
-//			@RequestParam("page") int page,
 			@RequestParam(value = "category", required = false) String category,
 			@RequestParam(value = "name", required = false) String name,
 			@RequestParam(value = "region", required = false) String region,
-			@RequestParam(value = "dynasty", required = false) String dynasty
-	) {
-
-//		PageDTO pageDTO = new PageDTO();
-//		pageDTO.setPage(page);
-//		pageDTO.setStartEnd(pageDTO.getPage());
-
-//		System.out.println("검색pageDTO : " + pageDTO);
-		System.out.println("controller- category : " + category);
-		System.out.println(name);
-		System.out.println(region);
-		System.out.println(dynasty);
-		CulturalPropertiesDTO culturalPropertiesDTO = new CulturalPropertiesDTO();
-		culturalPropertiesDTO.setCategoryName(category);
-
-		category = category.trim();
-		name= name.trim();
-		region = region.trim();
-		dynasty = dynasty.trim();
-
-
-
-//		return adminCulturalPropertiesService.searchDBCulturalProperties(pageDTO, category, name, region, dynasty);
-
-		return adminCulturalPropertiesService.searchDBCulturalProperties(category, name, region, dynasty);
-
-
+			@RequestParam(value = "dynasty", required = false) String dynasty,
+			@RequestParam("page") int page) {
+		return adminCulturalPropertiesService.searchDBCulturalProperties(category, name, region, dynasty, page);
 	}
 
-
-//    // 페이지안뜸
-//	@PostMapping("/searchDB")
-//	@ResponseBody
-//	public List<CulturalPropertiesDTO> searchDBCulturalProperties(
-//			@RequestParam("page") int page,
-//			@RequestParam(value = "category", required = false) String categoryName,
-//			@RequestParam(value = "name", required = false) String culturalPropertiesName,
-//			@RequestParam(value = "region", required = false) String region,
-//			@RequestParam(value = "dynasty", required = false) String dynasty
-//	) {
-//
-//		PageDTO pageDTO = new PageDTO();
-//		pageDTO.setPage(page);
-//		pageDTO.setStartEnd(pageDTO.getPage());
-//		int start = pageDTO.getStart();
-//		int end = pageDTO.getEnd();
-//
-//
-//
-//
-//
-//
-//
-//		CulturalPropertiesDTO culturalPropertiesDTO = new CulturalPropertiesDTO();
-//		culturalPropertiesDTO.setCategoryName(categoryName);
-//		culturalPropertiesDTO.setCulturalPropertiesName(culturalPropertiesName);
-//		culturalPropertiesDTO.setRegion(region);
-//		culturalPropertiesDTO.setDynasty(dynasty);
-//		culturalPropertiesDTO.setPageDTO(pageDTO);
-//		culturalPropertiesDTO.setStart(start);
-//		culturalPropertiesDTO.setEnd(end);
-//
-//
-//
-//		System.out.println("service-categoryName : " + categoryName);
-//		System.out.println("culturalPropertiesName : " + culturalPropertiesName);
-//		System.out.println("region : " + region);
-//		System.out.println("dynasty : " + dynasty);
-//		System.out.println("start : " + start);
-//		System.out.println("end : " + end);
-//		System.out.println();
-//
-//
-////		categoryName = categoryName.trim();
-////		culturalPropertiesName= culturalPropertiesName.trim();
-//////		region = region.trim().replace(",","");
-//////		dynasty = dynasty.trim().replace(",","");
-////		region = region.trim();
-////		dynasty = dynasty.trim();
-//
-//
-//		System.out.println("dto : " + culturalPropertiesDTO);
-//
-//
-//		List<CulturalPropertiesDTO> list = adminCulturalPropertiesService.searchDBCulturalProperties(culturalPropertiesDTO);
-//
-//		// 리스트의 개수 가져오기
-//		int count = list.size();
-//		System.out.println("컨트롤러 리스트의 개수: " + count);
-//
-//
-//		return list;
-//	}
-
-
+	@GetMapping("/searchCount")
+	@ResponseBody
+	public int searchCountCulturalProperties(
+			@RequestParam(value = "category", required = false) String category,
+			@RequestParam(value = "name", required = false) String name,
+			@RequestParam(value = "region", required = false) String region,
+			@RequestParam(value = "dynasty", required = false) String dynasty) {
+		return adminCulturalPropertiesService.searchCountCulturalProperties(category, name, region, dynasty);
+	}
 
 
 
@@ -349,6 +165,62 @@ public class AdminCulturalPropertiesController {
 		adminCulturalPropertiesService.updateDBData(data);
 
 	}
+
+
+
+
+
+	//////------------------------api 검색 보류
+
+//	@PostMapping("/searchAPI")
+//	@ResponseBody
+//	public List<CulturalPropertiesDTO> searchAPIDataFilter(
+//			@RequestParam int pageIndex,
+//			@RequestParam(required = false) String categoryName,
+//			@RequestParam(required = false) String culturalPropertiesName,
+//			@RequestParam(required = false) String region,
+//			@RequestParam(required = false) String dynasty) {
+//
+//
+//		System.out.println("검색pageIndex: " + pageIndex);
+//		System.out.println("검색categoryName: " + categoryName);
+//		System.out.println("검색culturalPropertiesName: " + culturalPropertiesName);
+//		System.out.println("검색region: " + region);
+//		System.out.println("검색dynasty: " + dynasty);
+//
+//		// API 호출 및 필터링 처리
+//		List<CulturalPropertiesDTO> filteredList = adminCulturalPropertiesService.searchAPIDataFilter(pageIndex, categoryName, culturalPropertiesName, region, dynasty);
+//		return filteredList;
+//	}
+
+
+	//////------------------------api 검색 보류 //2222//
+
+
+	// @PostMapping("/searchAPI")
+	// @ResponseBody
+	// public List<CulturalPropertiesDTO> searchAPIDataFilter(
+	// 		@RequestParam("pageIndex") int pageIndex,
+	// 		@RequestParam("categoryName") String categoryName,
+	// 		@RequestParam("culturalPropertiesName") String culturalPropertiesName,
+	// 		@RequestParam("region") String region,
+	// 		@RequestParam("dynasty") String dynasty) {
+
+	// 	System.out.println("들어옴...");
+	// 	System.out.println(pageIndex);
+	// 	System.out.println(categoryName);
+	// 	System.out.println(culturalPropertiesName);
+	// 	System.out.println(region);
+	// 	System.out.println(dynasty);
+
+	// 	// API 호출 및 필터링 처리
+	// 	List<CulturalPropertiesDTO> filteredList = adminCulturalPropertiesService.searchAPIDataFilter(pageIndex, categoryName, culturalPropertiesName, region, dynasty);
+
+	// 	System.out.println("controller searchAPIDataFilter : " + filteredList);
+
+
+	// 	return filteredList;
+	// }
 
 
 

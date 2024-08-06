@@ -16,4 +16,6 @@ public interface PerformanceMapper {
     List<PerformanceDTO> searchPerformances(String keyword);
 
     List<PerformanceDTO> getPerformancesByGenre(String genre);
+
+    PerformanceDTO getPerformanceById(int performanceId);
 }

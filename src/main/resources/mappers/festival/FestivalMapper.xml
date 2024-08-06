@@ -217,9 +217,9 @@
 
     <select id="findUserLoveKeywordList">
 
-        SELECT * FROM vw_festival_user_love_hate_keyword_mapping_total_data
+        SELECT * FROM vw_festival_love_hate_keyword_count_sum_data
         WHERE user_id = #{userId}
-        AND festival_keyword_total_count >= 10;
+        AND love_hate_sum >= 10;
 
     </select>
 
@@ -232,5 +232,42 @@
         WHERE vw.festival_keyword_id = #{festivalKeywordId};
 
     </select>
+
+    <select id="findLoveHateFestivalList">
+
+        SELECT f.*
+        FROM user_festival_love_hate_festival_mapping m
+
+        JOIN festival f
+        ON m.festival_id = f.festival_id
+
+        WHERE user_id = #{userId}
+        AND sort_code = #{sortCode};
+
+    </select>
+
+    <select id="findFestivalReviewListByUserId" resultType="vwUserReviewDTO" parameterType="vwUserReviewDTO">
+
+        SELECT * FROM (
+
+        SELECT ROW_NUMBER() OVER (ORDER BY festival_review_id DESC) AS rownum, urd.*
+        FROM vw_festival_user_review_data urd
+
+        ) f1
+
+        WHERE f1.user_id = #{userId}
+        AND f1.rownum BETWEEN #{pageDTO.start} AND #{pageDTO.end};
+
+    </select>
+
+
+    <select id="findUserReviewCountByUserReviewDataDTO">
+
+        SELECT COUNT(*) FROM vw_festival_user_review_data urd
+        WHERE urd.user_id = #{userId};
+
+    </select>
+
+
 
 </mapper>

@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.multi.culture_link.admin.festival.model.mapper.AdminFestivalMapper;
-import com.multi.culture_link.common.keyword.service.KeywordExtractService1;
+import com.multi.culture_link.common.keyword.service.KeywordExtractService;
 import com.multi.culture_link.festival.model.dto.*;
 import com.multi.culture_link.festival.service.FestivalService;
 import okhttp3.OkHttpClient;
@@ -32,7 +32,7 @@ public class AdminFestivalServiceImpl implements AdminFestivalService {
 	private final FestivalService festivalService;
 	private final OkHttpClient client;
 	private final Gson gson;
-	private final KeywordExtractService1 keywordExtractService;
+	private final KeywordExtractService keywordExtractService;
 	
 	
 	ArrayList<FestivalDTO> list = new ArrayList<>();
@@ -46,7 +46,7 @@ public class AdminFestivalServiceImpl implements AdminFestivalService {
 	 * @param adminFestivalMapper   페스티벌 관리자 매퍼
 	 * @param keywordExtractService 키워드 추출 서비스
 	 */
-	public AdminFestivalServiceImpl(OkHttpClient client, Gson gson, OkHttpClient client1, AdminFestivalMapper adminFestivalMapper, FestivalService festivalService, KeywordExtractService1 keywordExtractService) {
+	public AdminFestivalServiceImpl(OkHttpClient client, Gson gson, OkHttpClient client1, AdminFestivalMapper adminFestivalMapper, FestivalService festivalService, KeywordExtractService keywordExtractService) {
 		this.client = client;
 		this.gson = gson;
 		this.adminFestivalMapper = adminFestivalMapper;
@@ -904,7 +904,8 @@ public class AdminFestivalServiceImpl implements AdminFestivalService {
 		String all = content + " " + title;
 		
 		// 코모란으로 결정
-		HashMap<String, Integer> map = keywordExtractService.getKeywordByKomoran(all);
+		String path = "classpath:static/txt/festival/stop.txt";
+		HashMap<String, Integer> map = keywordExtractService.getKeywordByKomoran(all, path);
 //		ArrayList<String> list = keywordExtractService.getKeywordByApacheLucene(all);
 		
 		LinkedList<Map.Entry<String, Integer>> list = new LinkedList<>(map.entrySet());
@@ -1037,7 +1038,8 @@ public class AdminFestivalServiceImpl implements AdminFestivalService {
 			
 			// 모든 명사를 전부 추출 해 삽입하면 뷰로 자동 계산 됨
 			String allContent = naverArticleDTO.getTotalContent();
-			map = keywordExtractService.getKeywordByKomoran(allContent);
+			String path = "classpath:static/txt/festival/stop.txt";
+			map = keywordExtractService.getKeywordByKomoran(allContent, path);
 			
 			System.out.println("TF-ID 결과 : " + map);
 			
@@ -1143,7 +1145,8 @@ public class AdminFestivalServiceImpl implements AdminFestivalService {
 			
 			// 모든 명사를 전부 추출 해 삽입하면 뷰로 자동 계산 됨
 			String allContent = naverBlogDTO.getTitle() + " " + naverBlogDTO.getDescription();
-			map = keywordExtractService.getKeywordByKomoran(allContent);
+			String path = "classpath:static/txt/festival/stop.txt";
+			map = keywordExtractService.getKeywordByKomoran(allContent, path);
 			
 			System.out.println("TF-ID 결과 : " + map);
 			
@@ -1202,9 +1205,9 @@ public class AdminFestivalServiceImpl implements AdminFestivalService {
 		for (String allContent : reviewContentList) {
 			
 			HashMap<String, Integer> map = new HashMap<>();
-			
+			String path = "classpath:static/txt/festival/stop.txt";
 			// 모든 명사를 전부 추출 해 삽입하면 뷰로 자동 계산 됨
-			map = keywordExtractService.getKeywordByKomoran(allContent);
+			map = keywordExtractService.getKeywordByKomoran(allContent, path);
 			
 			System.out.println("코모란 전체 명사 분석 결과 : " + map);
 			

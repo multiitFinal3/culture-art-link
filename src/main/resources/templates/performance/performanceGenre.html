@@ -46,20 +46,21 @@
     <div class="ranking">
         <div class="ranking-title">장르별 랭킹</div>
         <div class="ranking-items" th:if="${rankingData != null}">
-            <!-- 카드 반복 -->
             <div th:each="ranking, iterStat : ${rankingData}">
-                <div class="card" th:data-performance-id="${ranking.id}">
-                <!-- 카드 번호 -->
-                    <div class="card-number" th:text="${iterStat.index + 1}">1</div>
-                    <!-- 공연 이미지 -->
-                    <img th:src="${ranking.imageMain}" alt="공연 이미지">
-                </div>
-                <!-- 공연 정보 -->
-                <div class="performance-info">
-                    <div class="performance-title" th:text="${ranking.title}">공연명</div>
-                    <div class="performance-location" th:text="${ranking.location}">공연장소</div>
-                    <div class="performance-date" th:text="${ranking.formattedDate}">공연날짜</div>
-                </div>
+                <a th:href="@{'/performance/performanceDetail?performanceId=' + ${ranking.id} + '&source=api'}">
+                    <div class="card" th:data-performance-id="${ranking.id}">
+                        <!-- 카드 번호 -->
+                        <div class="card-number" th:text="${iterStat.index + 1}">1</div>
+                        <!-- 공연 이미지 -->
+                        <img th:src="${ranking.imageMain}" alt="공연 이미지">
+                    </div>
+                    <!-- 공연 정보 -->
+                    <div class="performance-info">
+                        <div class="performance-title" th:text="${ranking.title}">공연명</div>
+                        <div class="performance-location" th:text="${ranking.location}">공연장소</div>
+                        <div class="performance-date" th:text="${ranking.formattedDate}">공연날짜</div>
+                    </div>
+                </a>
             </div>
         </div>
         <!-- 공연 정보가 없을 때 -->
@@ -75,18 +76,22 @@
     <!-- 전체 공연 목록 -->
     <div class="all-performances">
         <div class="all-performances-title">전체 공연 목록</div>
+
         <div class="all-performances-items" th:if="${allPerformances != null}">
             <div th:each="performance : ${allPerformances}">
-                <div class="all-card" th:data-performance-id="${performance.id}">
-                    <img th:src="${performance.imageMain}" alt="공연 이미지">
-                </div>
+                <a th:href="@{'/performance/performanceDetail?performanceId=' + ${performance.id} + '&source=db'}">
+                    <div class="all-card" th:data-performance-id="${performance.id}">
+                        <img th:src="${performance.imageMain}" alt="공연 이미지">
+                    </div>
                     <div class="all-performance-info">
                         <div class="all-title" th:text="${performance.title}">공연명</div>
                         <div class="all-location" th:text="${performance.location}">공연장소</div>
                         <div class="all-date" th:text="${performance.formattedDate}">공연날짜</div>
                     </div>
+                </a>
             </div>
         </div>
+
         <div th:if="${allPerformances == null}">
             <p>전체 공연 정보가 없습니다.</p>
         </div>

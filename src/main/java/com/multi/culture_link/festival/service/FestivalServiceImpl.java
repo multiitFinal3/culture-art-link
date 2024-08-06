@@ -671,6 +671,7 @@ public class FestivalServiceImpl implements FestivalService {
 	
 	/**
 	 * tf_idf가 높은 키워드 순으로 추천 키워드로 추가됨
+	 *
 	 * @param mapDTO
 	 * @return
 	 * @throws Exception
@@ -683,6 +684,7 @@ public class FestivalServiceImpl implements FestivalService {
 	
 	/**
 	 * 유저가 회원가입 시 선택한 키워드를 테이블에 삽입
+	 *
 	 * @param mapDTO
 	 * @throws Exception
 	 */
@@ -695,6 +697,7 @@ public class FestivalServiceImpl implements FestivalService {
 	
 	/**
 	 * 유저의 선택과 찜에 의한 선호도 모두를 반영하는 뷰에서 카운트 총 합이 10개 이상인 키워드만 반환
+	 *
 	 * @param userId
 	 * @return
 	 * @throws Exception
@@ -709,6 +712,7 @@ public class FestivalServiceImpl implements FestivalService {
 	
 	/**
 	 * 같은 키워드를 가지는 축제 리스트를 반환
+	 *
 	 * @param festivalKeywordId
 	 * @return
 	 * @throws Exception
@@ -719,6 +723,54 @@ public class FestivalServiceImpl implements FestivalService {
 		ArrayList<FestivalDTO> list = festivalMapper.findSameKeywordFestivalByKeywordId(festivalKeywordId);
 		
 		return list;
+	}
+	
+	/**
+	 * 유저가 찜 관심없음 처리한 축제 리스트를 반환
+	 *
+	 * @param mapDTO
+	 * @return
+	 * @throws Exception
+	 */
+	@Override
+	public ArrayList<FestivalDTO> findLoveHateFestivalList(UserFestivalLoveHateMapDTO mapDTO) throws Exception {
+		
+		System.out.println("findLoveHateFestivalList serimpl ");
+		ArrayList<FestivalDTO> list = festivalMapper.findLoveHateFestivalList(mapDTO);
+		System.out.println("ser impl : " + list);
+		return list;
+		
+	}
+	
+	/**
+	 * 특정 유저의 전체 리뷰 내역을 반환
+	 *
+	 * @param vwUserReviewDataDTO
+	 * @return
+	 * @throws Exception
+	 */
+	@Override
+	public ArrayList<VWUserReviewDataDTO> findFestivalReviewListByUserId(VWUserReviewDataDTO vwUserReviewDataDTO) throws Exception {
+		
+		ArrayList<VWUserReviewDataDTO> list = new ArrayList<>();
+		list = festivalMapper.findFestivalReviewListByUserId(vwUserReviewDataDTO);
+		return list;
+		
+	}
+	
+	
+	/**
+	 * 특정 유저가 작성한 리뷰 전부의 수를 반환
+	 * @param vwUserReviewDataDTO
+	 * @return
+	 * @throws Exception
+	 */
+	@Override
+	public int findUserReviewCountByUserReviewDataDTO(VWUserReviewDataDTO vwUserReviewDataDTO) throws Exception {
+		
+		int count = festivalMapper.findUserReviewCountByUserReviewDataDTO(vwUserReviewDataDTO);
+		return count;
+		
 	}
 	
 	

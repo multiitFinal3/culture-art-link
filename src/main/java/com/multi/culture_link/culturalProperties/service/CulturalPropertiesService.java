@@ -6,6 +6,8 @@ import com.multi.culture_link.admin.culturalProperties.model.dto.PageDTO;
 import com.multi.culture_link.culturalProperties.model.dao.CulturalPropertiesDAO;
 import com.multi.culture_link.culturalProperties.model.dto.CulturalPropertiesInterestDTO;
 import com.multi.culture_link.culturalProperties.model.dto.NewsArticle;
+import com.multi.culture_link.exhibition.model.dto.ExhibitionDto;
+import com.multi.culture_link.users.model.dto.VWUserRoleDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -14,6 +16,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -42,8 +46,11 @@ public class CulturalPropertiesService {
     }
 
     public CulturalPropertiesDTO getCulturalPropertyById(int id) {
+
+        System.out.println("디테일 아이디 서비스 "+ id);
         return culturalPropertiesDAO.getCulturalPropertyById(id);
     }
+
 
     public void addLike(CulturalPropertiesInterestDTO interest) {
         interest.setInterestType("LIKE"); // LIKE 유형 설정
@@ -66,6 +73,19 @@ public class CulturalPropertiesService {
     }
 
 
+    public Page<CulturalPropertiesDTO> searchCulturalProperties(int page, int pageSize, String category, String culturalPropertiesName, String region, String dynasty) {
+        int offset = (page - 1) * pageSize;
+        List<CulturalPropertiesDTO> properties = culturalPropertiesDAO.searchCulturalProperties(category, culturalPropertiesName, region, dynasty, offset, pageSize);
+        long total = culturalPropertiesDAO.countCulturalProperties(category, culturalPropertiesName, region, dynasty);
+
+        return new PageImpl<>(properties, PageRequest.of(page - 1, pageSize), total);
+    }
+
+    public List<String> getAllCategories() {
+        return culturalPropertiesDAO.getAllCategories();
+    }
+
+
 
 
     public List<NewsArticle> getNewsArticles() {
@@ -74,6 +94,88 @@ public class CulturalPropertiesService {
 
         return articles;
     }
+
+//    public CulturalPropertiesDTO getCulturalPropertiesById(int id) {
+//        return culturalPropertiesDAO.getCulturalPropertyById(id);
+//    }
+
+
+//    public CulturalPropertiesDTO getCulturalPropertyById(int userId, int id){
+//        return culturalPropertiesDAO.getCulturalPropertyById(userId, id);
+//    }
+
+
+//    public List<CulturalPropertiesDTO> getNearbyPlace(String region, String district, int id) {
+//        return culturalPropertiesDAO.getNearbyPlace(region, district, id);
+//
+//
+//    }
+
+
+//    public List<CulturalPropertiesDTO> getNearbyPlace(String region, String district, int id) {
+//        // 1. 근처 문화재를 조회
+//        List<CulturalPropertiesDTO> nearbyPlaces = culturalPropertiesDAO.getNearbyPlace(region, district, id);
+//
+//        // 2. 근처 문화재가 없으면 해당 지역에서 랜덤으로 10개 데이터 가져오기
+//        if (nearbyPlaces.isEmpty()) {
+//            nearbyPlaces = culturalPropertiesDAO.getRandomPlace(region);
+//        }
+//
+//        return nearbyPlaces;
+//    }
+
+    public List<CulturalPropertiesDTO> getNearbyPlace(String region, String district, int id) {
+        List<CulturalPropertiesDTO> nearbyPlaces = culturalPropertiesDAO.getNearbyPlace(region, district, id);
+
+        // 근처 문화재가 없는 경우 랜덤 데이터 가져오기
+        if (nearbyPlaces.isEmpty()) {
+            nearbyPlaces = culturalPropertiesDAO.getRandomPlace(region, id);
+        }
+
+        return nearbyPlaces;
+    }
+
+////네모버튼
+//    public void likeAttraction(int id) {
+//        culturalPropertiesDAO.likeAttraction(id);
+//    }
+//
+//    public void dislikeAttraction(int id) {
+//        culturalPropertiesDAO.dislikeAttraction(id);
+//    }
+//}
+
+
+
+
+//    public boolean isPropertyLikedByUser(int propertyId, int userId) {
+//        // DB에서 해당 사용자의 찜 여부를 체크하는 로직
+//    }
+//
+//    public boolean isPropertyDislikedByUser(int propertyId, int userId) {
+//        // DB에서 해당 사용자의 관심 없음 여부를 체크하는 로직
+//    }
+
+
+
+//    public void addInterest(int userId, int id, String interestType) {
+//        culturalPropertiesDAO.insertInterest(userId, id, interestType);
+//    }
+//
+//    public void deleteInterest(int userId, int id) {
+//        culturalPropertiesDAO.deleteInterest(userId, id);
+//    }
+//
+//    public boolean isLiked(int userId, int id) {
+//        return culturalPropertiesDAO.isLiked(userId, id);
+//    }
+//
+//    public boolean isDisliked(int userId, int id) {
+//        return culturalPropertiesDAO.isDisliked(userId, id);
+//    }
+
+
+
 
 
 }

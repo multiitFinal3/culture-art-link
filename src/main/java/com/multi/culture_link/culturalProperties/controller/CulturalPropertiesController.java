@@ -7,6 +7,8 @@ import com.multi.culture_link.culturalProperties.model.dto.NewsArticle;
 import com.multi.culture_link.culturalProperties.model.dto.Video;
 import com.multi.culture_link.culturalProperties.model.dto.YoutubeConfig;
 import com.multi.culture_link.culturalProperties.service.CulturalPropertiesService;
+import com.multi.culture_link.exhibition.model.dto.ExhibitionDto;
+import com.multi.culture_link.festival.model.dto.FestivalDTO;
 import com.multi.culture_link.users.model.dto.VWUserRoleDTO;
 import jakarta.servlet.http.HttpSession;
 import org.json.JSONArray;
@@ -16,12 +18,14 @@ import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 import org.jsoup.nodes.Element;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -34,7 +38,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-
+//@RestController
 @Controller
 @RequestMapping("/cultural-properties")
 public class CulturalPropertiesController {
@@ -51,7 +55,10 @@ public class CulturalPropertiesController {
 	}
 
 	@Autowired
-	private HttpSession httpSession; // 세션을 주입받습니다.
+	private HttpSession httpSession; // 세션을 주입받음
+
+	@Value("${API-KEY.naverClientId}")
+	private String naverClientId;
 
 
 	@GetMapping
@@ -126,7 +133,7 @@ public class CulturalPropertiesController {
 			return ResponseEntity.ok("찜이 추가되었습니다.");
 		}
 
-		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("로그인이 필요합니다."); // 로그인 필요 메시지
+		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("로그인이 필요합니다.");
 	}
 
 
@@ -148,7 +155,7 @@ public class CulturalPropertiesController {
 			return ResponseEntity.ok("관심없음이 추가되었습니다.");
 		}
 
-		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("로그인이 필요합니다."); // 로그인 필요 메시지
+		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("로그인이 필요합니다.");
 	}
 
 
@@ -171,14 +178,14 @@ public class CulturalPropertiesController {
 			try {
 				// 찜 또는 관심없음 삭제
 				culturalPropertiesService.removeInterest(interest);
-				return ResponseEntity.ok("관심이 제거되었습니다."); // 성공 메시지
+				return ResponseEntity.ok("관심이 제거되었습니다.");
 			} catch (Exception e) {
 				// 오류 처리
 				return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("관심 제거 실패: " + e.getMessage());
 			}
 		}
 
-		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("로그인이 필요합니다."); // 로그인 필요 메시지
+		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("로그인이 필요합니다.");
 	}
 
 
@@ -193,14 +200,52 @@ public class CulturalPropertiesController {
 
 
 
+	@GetMapping("/searchMain")
+	public ResponseEntity<?> searchCulturalProperties(
+			@RequestParam(defaultValue = "1") int page,
+			@RequestParam(required = false) String category,
+			@RequestParam(required = false) String culturalPropertiesName,
+			@RequestParam(required = false) String region,
+			@RequestParam(required = false) String dynasty) {
+
+		int pageSize = 6;
+		Page<CulturalPropertiesDTO> propertyPage = culturalPropertiesService.searchCulturalProperties(page, pageSize, category, culturalPropertiesName, region, dynasty);
+
+		return ResponseEntity.ok(propertyPage); // 검색 결과를 ResponseEntity로 반환
+	}
+
+
+
+
+
+//	// 문화재 상세 페이지
+//	@GetMapping("/detail/{id}")
+////	@ResponseBody
+//	public String getCulturalPropertyDetail(@PathVariable int id, Model model) {
+//		CulturalPropertiesDTO property = culturalPropertiesService.getCulturalPropertyById(id);
+//		model.addAttribute("property", property);
+//		return "/culturalProperties/culturalPropertiesDetail";
+//	}
+
 	// 문화재 상세 페이지
 	@GetMapping("/detail/{id}")
-	@ResponseBody
+//	@ResponseBody
+	//	@ResponseBody
 	public String getCulturalPropertyDetail(@PathVariable int id, Model model) {
 		CulturalPropertiesDTO property = culturalPropertiesService.getCulturalPropertyById(id);
+
+		System.out.println("디테일 아이디 "+ id);
 		model.addAttribute("property", property);
-		return "culturalProperties/detail"; // detail.html로 변경
+		model.addAttribute("getNearbyPlace", culturalPropertiesService.getNearbyPlace(property.getRegion(), property.getDistrict(), id));
+
+//		System.out.println("근처 문화재 수: " + nearbyPlaces.size());
+
+		return "/culturalProperties/culturalPropertiesDetail";
 	}
+
+
+
+
 
 	@GetMapping("/news")
 	@ResponseBody
@@ -272,6 +317,194 @@ public class CulturalPropertiesController {
 			e.printStackTrace();
 		}
 		return videos;
+	}
+
+
+//	// 문화재 상세 페이지
+//	@GetMapping("/detail/{id}")
+//	@ResponseBody
+//	public String getCulturalPropertyDetail(@PathVariable int id, Model model) {
+//		CulturalPropertiesDTO property = culturalPropertiesService.getCulturalPropertiesById(id);
+//		model.addAttribute("property", property);
+//		return "culturalProperties/culturalPropertiesDetail"; // detail.html로 변경
+//	}
+
+
+//	@GetMapping("/cultural-properties-detail/{id}")
+//	public CulturalPropertiesDTO getCulturalPropertyDetail(@PathVariable int id) {
+//		return culturalPropertiesService.getCulturalPropertiesById(id);
+//	}
+
+
+//	@GetMapping("/detail/{id}")
+////	@ResponseBody
+//	public String getCulturalPropertyDetail(@PathVariable int id, Model model) {
+//		CulturalPropertiesDTO property = culturalPropertiesService.getCulturalPropertiesById(id);
+//
+//		// 데이터 확인을 위한 로그 추가
+//		if (property == null) {
+//			System.out.println("Property is null for ID: " + id);
+//		} else {
+//			System.out.println("Property details: " + property);
+//		}
+//
+//		model.addAttribute("property", property);
+//		return "/culturalProperties/culturalPropertiesDetail";
+//	}
+
+
+//이걸로 하는중
+//	@GetMapping("/detail/{id}")
+////	@ResponseBody // JSON 응답을 위해 추가
+//	public ResponseEntity<CulturalPropertiesDTO> getCulturalPropertyDetail(@PathVariable int id) {
+//		CulturalPropertiesDTO property = culturalPropertiesService.getCulturalPropertiesById(id);
+//
+//		System.out.println("detail id" + id);
+//		// 데이터 확인을 위한 로그 추가
+//		if (property == null) {
+//			return ResponseEntity.notFound().build(); // 404 Not Found
+//		}
+//
+//		return ResponseEntity.ok(property); // 200 OK와 함께 DTO 반환
+//	}
+
+
+//	@PostMapping("/detail/{id}")
+//	public String getDetail(@PathVariable int id, @RequestBody CulturalPropertiesDTO property) {
+//		// POST 요청 처리
+//	}
+
+
+	//	@GetMapping("/detail/{id}")
+	//	public String CulturalPropertyDetail() {
+	//		return "/culturalProperties/culturalPropertiesDetail";
+	//	}
+
+	//	@GetMapping("/detail/{id}")
+	//	@ResponseBody
+	//	public String getCulturalPropertyDetail(@PathVariable int id, Model model) {
+	//		CulturalPropertiesDTO property = culturalPropertiesService.getCulturalPropertiesById(id);
+	//		model.addAttribute("property", property);
+	//		return "/culturalProperties/culturalPropertiesDetail";   // detail.html로 변경
+	//	}
+
+
+//	@GetMapping("/detail/{id}")
+//	@ResponseBody // JSON 형식으로 데이터 전송
+//	public ResponseEntity<CulturalPropertiesDTO> getCulturalPropertyDetail(@PathVariable int id) {
+//		CulturalPropertiesDTO property = culturalPropertiesService.getCulturalPropertyById(id);
+//		if (property != null) {
+//			return ResponseEntity.ok(property); // JSON 형태로 반환
+//		} else {
+//			return ResponseEntity.notFound().build(); // 데이터가 없을 경우 404 응답
+//		}
+//	}
+
+//	@GetMapping("/detail/{id}")
+//	public String culturalPropertiesDetail(@RequestParam("id") int id, Model model, @AuthenticationPrincipal VWUserRoleDTO user) {
+//
+//		CulturalPropertiesDTO property = culturalPropertiesService.getCulturalPropertyById(id);
+//		model.addAttribute("culturalProperties", property);
+//
+//		int userId = user.getUserId();
+//		model.addAttribute("userId", userId);
+//		model.addAttribute("naverClientId", naverClientId);
+//
+//		return "/culturalProperties/culturalPropertiesDetail";
+//
+//	}
+
+//	@GetMapping("/detail/{id}")
+////	@ResponseBody
+//	public ResponseEntity<CulturalPropertiesDTO> getCulturalPropertyDetail(@PathVariable int id) {
+//		CulturalPropertiesDTO property = culturalPropertiesService.getCulturalPropertyById(id);
+//		if (property != null) {
+//			return ResponseEntity.ok(property); // JSON 형식으로 반환
+//		} else {
+//			return ResponseEntity.notFound().build(); // 데이터가 없을 경우 404 응답
+//		}
+//	}
+
+//	//  id 기반 데이터 불러오기(상세정보)
+//	@GetMapping("/detail/{id}")
+//	public CulturalPropertiesDTO getCulturalPropertyDetail(
+//			@AuthenticationPrincipal VWUserRoleDTO userId,
+//			@PathVariable int id
+//	){
+////        System.out.println("exhibition: " + exhibitionService.getExhibitionById(currentUser.getUserId(), exhibitionId));
+//		return culturalPropertiesService.getCulturalPropertyById(userId.getUserId(), id);
+//	}
+
+//	@GetMapping("/detail/{id}")
+//	public String culturalPropertiesDetail(@AuthenticationPrincipal VWUserRoleDTO userId,
+//										   @PathVariable int id,
+//										   Model model) {
+//		CulturalPropertiesDTO property = culturalPropertiesService.getCulturalPropertyById(userId.getUserId(), id);
+//		model.addAttribute("culturalProperties", property);
+//		return "culturalProperties/culturalPropertiesDetail"; // Thymeleaf 템플릿 경로를 반환
+//	}
+
+
+//네모버튼
+//	@PostMapping("/like")
+//	@ResponseBody
+//	public String likeAttraction(@RequestParam int id) {
+//		culturalPropertiesService.likeAttraction(id);
+//		return "success";
+//	}
+//
+//	@PostMapping("/dislike")
+//	@ResponseBody
+//	public String dislikeAttraction(@RequestParam int id) {
+//		culturalPropertiesService.dislikeAttraction(id);
+//		return "success";
+//	}
+
+
+//	@GetMapping("/detail/{id}")
+//	public String getCulturalPropertyDetail(@PathVariable int id, Model model, @AuthenticationPrincipal UserDetails userDetails) {
+//		CulturalPropertiesDTO property = culturalPropertiesService.getCulturalPropertyById(id);
+//		int userId = userDetails.getId(); // 현재 로그인한 사용자 ID 가져오기
+//
+//		// 사용자의 찜 상태를 확인
+//		boolean isLiked = culturalPropertiesService.isPropertyLikedByUser(id, userId);
+//		boolean isDisliked = culturalPropertiesService.isPropertyDislikedByUser(id, userId);
+//
+//		model.addAttribute("property", property);
+//		model.addAttribute("isLiked", isLiked);
+//		model.addAttribute("isDisliked", isDisliked);
+//
+//		return "/culturalProperties/culturalPropertiesDetail";
+//	}
+
+
+
+//	@PostMapping("/detail/{id}")
+//	public String addInterest(@AuthenticationPrincipal VWUserRoleDTO user,
+//								 @PathVariable int id,
+//								 String action) {
+//		int userId = user.getUserId();
+//
+//		if ("like".equals(action)) {
+//			culturalPropertiesService.addInterest(userId, id, "LIKE");
+//		} else if ("dislike".equals(action)) {
+//			culturalPropertiesService.addInterest(userId, id, "DISLIKE");
+//		}
+//
+//		// 적절한 페이지로 리다이렉트
+//		return "/culturalProperties/culturalPropertiesDetail";
+//	}
+
+
+	// 리뷰 상세 페이지
+	@GetMapping("/detail/{id}/review/detail")
+	public String culturalPropertiesReviewDetail(@PathVariable int id, Model model) {
+		CulturalPropertiesDTO property = culturalPropertiesService.getCulturalPropertyById(id);
+
+		System.out.println("리뷰디테일 아이디 "+ id);
+		model.addAttribute("property", property);
+
+		return "/culturalProperties/culturalPropertiesReviewDetail";
 	}
 
 

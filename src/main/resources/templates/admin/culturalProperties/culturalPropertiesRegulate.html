@@ -141,7 +141,6 @@
                     <div class="search-options" id="searchOptions">
                         <label>종목:</label>
                         <select id="categoryFilter">
-<!--                            <option value="전체">전체</option>-->
                             <option value="all">전체</option>
                             <option value="국보">국보</option>
                             <option value="보물">보물</option>
@@ -174,7 +173,6 @@
                     <button type="button" id="deleteDB" class="btn btn-outline-primary ml-3"> 삭제 </button>
                 </div>
                 <div class="col d-flex justify-content-end align-items-center">
-<!--                    <button type="button" class="btn btn-outline-primary"> 삭제 </button>-->
                 </div>
             </div>
         </div>
@@ -219,10 +217,6 @@
         <br><br><br>
 
 
-<!--        <div class="d-flex justify-content-center align-items-center">-->
-<!--            <h2 class="mr-auto">전국 문화재 실시간</h2>-->
-<!--            <button type="button" id="addDB" class="btn btn-outline-primary ml-3">DB 추가</button>-->
-<!--        </div>-->
 
         <div class="container-fluid">
             <div class="row">
@@ -230,6 +224,10 @@
                     <button class="search-btn btn-lg" id="toggleOptionsBtn2">🔍</button>
 
                     <div class="search-options" id="searchOptions2">
+                        <input type="text" id="searchPage2" maxlength="10" placeholder="페이지 검색 (1 - 1716)"/>
+                        <button id="searchPageBtn" class="btn btn-outline-primary ml-3" >검색</button>
+                        <br>
+
                         <label>종목:</label>
                         <select id="categoryFilter2">
                             <option value="전체">전체</option>
@@ -250,12 +248,14 @@
                             <option value="category15">국가등록유산</option>
                             <option value="category16">이북5도 무형유산</option>
                         </select>
+
                         <input type="text" id="searchName2" maxlength="20" placeholder="문화재 이름" />
                         <input type="text" id="searchRegion2" maxlength="10" placeholder="지역"/>
                         <input type="text" id="searchDynasty2" maxlength="10" placeholder="시대"/>
 
                         <button id="searchDB2" class="btn btn-outline-primary ml-3" >검색</button>
                         <button id="reset2" class="btn btn-outline-primary ml-3" >초기화</button>
+
                     </div>
 
                 </div>
@@ -264,7 +264,6 @@
                     <button type="button" id="addDB" class="btn btn-outline-primary ml-3">DB 추가</button>
                 </div>
                 <div class="col d-flex justify-content-end align-items-center">
-<!--                    <button type="button" id="addDB" class="btn btn-outline-primary ml-3">DB 추가</button>-->
                 </div>
             </div>
         </div>
