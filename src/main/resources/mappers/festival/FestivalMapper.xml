@@ -280,19 +280,50 @@
 
     <select id="findFestivalSmallLoveHateKeyword" parameterType="userFestivalLoveHateDTO">
 
+<!--        SELECT * FROM (-->
+
+<!--            SELECT ROW_NUMBER() OVER ( PARTITION BY user_id, sort_code-->
+<!--                ORDER BY festival_keyword_total_count DESC)-->
+<!--            AS rownum, f2.*-->
+<!--            FROM vw_festival_user_love_hate_keyword_mapping_total_data f2-->
+<!--            WHERE f2.user_id = #{userId}-->
+<!--                AND f2.sort_code = #{sortCode}-->
+<!--                AND <![CDATA[ festival_keyword_total_count < 10 ]]>-->
+
+<!--        ) f1-->
+
+<!--        WHERE f1.rownum BETWEEN #{pageDTO.start} AND #{pageDTO.end};-->
+
+
         SELECT * FROM (
 
-            SELECT ROW_NUMBER() OVER ( PARTITION BY user_id, sort_code
-                ORDER BY festival_keyword_total_count DESC)
-            AS rownum, f2.*
-            FROM vw_festival_user_love_hate_keyword_mapping_total_data f2
-            WHERE f2.user_id = #{userId}
-                AND f2.sort_code = #{sortCode}
-                AND <![CDATA[ festival_keyword_total_count < 10 ]]>
+            SELECT ROW_NUMBER() OVER (ORDER BY festival_keyword_total_count DESC) AS rownum, f4.*
+            FROM (
 
-        ) f1
+                SELECT DISTINCT(f2.festival_keyword_id), f2.festival_keyword_total_count FROM (
 
-        WHERE f1.rownum BETWEEN #{pageDTO.start} AND #{pageDTO.end};
+                    SELECT *
+                    FROM vw_festival_user_love_hate_keyword_mapping_total_data
+                    WHERE user_id = #{userId}
+                    AND sort_code = #{sortCode}
+                    AND festival_keyword_total_count >= 10
+
+                )f1
+
+            RIGHT JOIN (
+
+                SELECT * FROM vw_festival_user_love_hate_keyword_mapping_total_data
+                WHERE sort_code = #{sortCode}
+
+            ) f2
+
+            ON f1.festival_keyword_id = f2.festival_keyword_id
+
+            WHERE f1.festival_keyword_id IS NULL) f4
+
+        ) f5 WHERE f5.rownum BETWEEN #{pageDTO.start} AND #{pageDTO.end};
+
+
 
     </select>
 

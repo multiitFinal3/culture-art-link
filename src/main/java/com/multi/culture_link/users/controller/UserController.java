@@ -260,7 +260,7 @@ public class UserController {
 		
 		try {
 			
-			if (file != null && !file.isEmpty()) {
+			if (file != null) {
 				String fileUUIDName = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
 				String uploadDir = System.getProperty("user.dir") + "/src/main/resources/static/img/user/userProfile/";
 				
@@ -326,8 +326,8 @@ public class UserController {
 		
 		
 		try {
-//			UserDTO newUser = userService.findUserByEmail(email);
-			VWUserRoleDTO newVWUser = new VWUserRoleDTO(userDTO);
+			UserDTO newUser = userService.findUserByEmail(email);
+			VWUserRoleDTO newVWUser = new VWUserRoleDTO(newUser);
 			
 			UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(newVWUser, null, user.getAuthorities());
 			SecurityContextHolder.getContext().setAuthentication(authenticationToken);
