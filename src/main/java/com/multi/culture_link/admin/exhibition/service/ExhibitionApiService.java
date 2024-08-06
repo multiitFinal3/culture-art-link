@@ -7,10 +7,9 @@ import com.multi.culture_link.admin.exhibition.model.dao.AdminExhibitionDao;
 import com.multi.culture_link.admin.exhibition.model.dao.ExhibitionKeywordDao;
 import com.multi.culture_link.admin.exhibition.model.dto.api.ExhibitionApiDto;
 import com.multi.culture_link.admin.exhibition.model.dto.api.ExhibitionApiResponseDto;
-import com.multi.culture_link.common.keyword.service.KeywordExtractService1;
+import com.multi.culture_link.common.keyword.service.KeywordExtractService;
 import com.multi.culture_link.exhibition.model.dao.ExhibitionCommentDao;
 import com.multi.culture_link.exhibition.model.dto.ExhibitionCommentDto;
-import com.multi.culture_link.exhibition.model.dto.ExhibitionDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -42,7 +41,7 @@ public class ExhibitionApiService {
 
 
 
-    private final KeywordExtractService1 keywordExtractService1;
+    private final KeywordExtractService keywordExtractService;
 
 
 
@@ -154,7 +153,8 @@ public class ExhibitionApiService {
             String combinedContent = content.toString().trim();
 
             if (!combinedContent.isEmpty()) {
-                HashMap<String, Integer> keyWordsMap = keywordExtractService1.getKeywordByKomoran(combinedContent, path);
+            
+                HashMap<String, Integer> keyWordsMap = keywordExtractService.getKeywordByKomoran(combinedContent, path);
 
                 System.out.println("Exhibition ID: " + exhibition.getId());
                 System.out.println("Combined content: " + combinedContent);
@@ -195,9 +195,10 @@ public class ExhibitionApiService {
         for (Map.Entry<Integer, StringBuilder> entry : exhibitionContents.entrySet()) {
             int exhibitionId = entry.getKey();
             String combinedContent = entry.getValue().toString().trim();
+            String path = "classpath:static/txt/festival/stop.txt";
 
             if (!combinedContent.isEmpty()) {
-                HashMap<String, Integer> keyWordsMap = keywordExtractService1.getKeywordByKomoran(combinedContent, path);
+                HashMap<String, Integer> keyWordsMap = keywordExtractService.getKeywordByKomoran(combinedContent, path);
                 saveExhibitionCommentKeywordDB(exhibitionId, keyWordsMap);
             }
         }

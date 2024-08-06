@@ -2,11 +2,15 @@ package com.multi.culture_link.admin.performance.service;
 
 import com.multi.culture_link.admin.performance.mapper.PerformanceMapper;
 import com.multi.culture_link.admin.performance.model.dto.PerformanceDTO;
+import com.multi.culture_link.map.model.dto.NaverLocalSearchResponse;
+import com.multi.culture_link.map.service.NaverMapService;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -30,6 +34,9 @@ public class PerformanceDBService { // 상세데이터, 외부 API로부터 공�
 
     @Autowired
     private PerformanceRegionService performanceRegionService;
+
+    @Autowired
+    private NaverMapService naverMapService;
 
     private static final String DETAIL_URL = "http://www.kopis.or.kr/openApi/restful/pblprfr/%s?service=a0cfef9bedc443bc9153b8b024d1b1dc&newsql=Y";
 
@@ -133,6 +140,13 @@ public class PerformanceDBService { // 상세데이터, 외부 API로부터 공�
                     performance.setGenre(getValue("genrenm", element)); // 공연장르
                     performance.setTicketing(getValue("relatenm", element)); // 티켓팅
                     performance.setTicketingUrl(getValue("relateurl", element));
+
+
+                    // 위도와 경도 설정
+                    performance.setLatitude(Double.parseDouble(getValue("latitude", element)));
+                    performance.setLongitude(Double.parseDouble(getValue("longitude", element)));
+
+
                 }
             }
         } catch (Exception e) {
@@ -180,4 +194,20 @@ public class PerformanceDBService { // 상세데이터, 외부 API로부터 공�
         return performanceMapper.getPerformancesByGenre(mappedGenre);
     }
 
+    // 특정 공연 ID에 해당하는 공연 정보를 반환하는 메소드
+    public PerformanceDTO getPerformanceById(int performanceId) {
+        PerformanceDTO performance = performanceMapper.getPerformanceById(performanceId);
+        if (performance != null) {
+            performance.updateFormattedDate(); // 날짜 포맷 업데이트
+
+            // 공연 장소의 위도와 경도 가져오기
+            ResponseEntity<NaverLocalSearchResponse> response = naverMapService.searchLocation(performance.getLocation());
+            if (response.getStatusCode() == HttpStatus.OK && response.getBody() != null && !response.getBody().getItems().isEmpty()) {
+                NaverLocalSearchResponse.Item location = response.getBody().getItems().get(0);
+                performance.setLatitude(Double.parseDouble(location.getMapy()));
+                performance.setLongitude(Double.parseDouble(location.getMapx()));
+            }
+        }
+        return performance;
+    }
 }

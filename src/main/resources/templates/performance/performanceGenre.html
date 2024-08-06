@@ -8,71 +8,10 @@
     <meta charset="UTF-8">
     <title>공연정보</title>
     <link rel="stylesheet" th:href="@{/css/performance/performanceHome.css}">
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const genreItems = document.querySelectorAll('.genre-item');
-            const genreItems2 = document.querySelectorAll('.genre-item2');
-            const currentGenre = new URLSearchParams(window.location.search).get('genre') || '홈';
-
-            genreItems.forEach(item => {
-                if (item.textContent.trim() === currentGenre) {
-                    item.classList.add('active');
-                } else {
-                    item.classList.remove('active');
-                }
-            });
-
-            genreItems2.forEach(item => {
-                const genre2 = new URLSearchParams(window.location.search).get('genre') || '전체';
-                if (item.textContent.trim() === genre2) {
-                    item.classList.add('active');
-                } else {
-                    item.classList.remove('active');
-                }
-            });
-
-            genreItems.forEach(item => {
-                item.addEventListener('click', function() {
-                    const genre = this.textContent.trim();
-                    window.location.href = `/performance/performance-genre?genre=${encodeURIComponent(genre)}`;
-                });
-            });
-
-            genreItems2.forEach(item => {
-                item.addEventListener('click', function() {
-                    const genre = this.textContent.trim();
-                    window.location.href = `/performance/performanceRanking?genre=${encodeURIComponent(genre)}`;
-                });
-            });
-
-            // 랭킹 클릭 이벤트 리스너 추가
-            const rankingItem = document.getElementById('ranking-item');
-            if (rankingItem) {
-                rankingItem.addEventListener('click', function() {
-                    window.location.href = `/performance/performanceRanking`;
-                });
-            }
-
-            // 지역별 클릭 이벤트 리스너 추가
-            const regionItem = document.getElementById('region-item');
-            if (regionItem) {
-                regionItem.addEventListener('click', function() {
-                    window.location.href = `/performance/performanceLocation`;
-                });
-            }
+    <link rel="stylesheet" th:href="@{/css/performance/performanceAllList.css}">
+    <script th:src="@{/js/performance/performance.js}"></script>
 
 
-            // 공연 카드 클릭 이벤트 추가
-            const performanceCards = document.querySelectorAll('.card');
-            performanceCards.forEach(card => {
-                card.addEventListener('click', function() {
-                    const performanceId = this.getAttribute('data-performance-id');
-                    window.location.href = `/performance/performanceDetail?performanceId=${encodeURIComponent(performanceId)}`;
-                });
-            });
-        });
-    </script>
 </head>
 <body>
 
@@ -107,20 +46,21 @@
     <div class="ranking">
         <div class="ranking-title">장르별 랭킹</div>
         <div class="ranking-items" th:if="${rankingData != null}">
-            <!-- 카드 반복 -->
             <div th:each="ranking, iterStat : ${rankingData}">
-                <div class="card" th:data-performance-id="${ranking.id}">
-                <!-- 카드 번호 -->
-                    <div class="card-number" th:text="${iterStat.index + 1}">1</div>
-                    <!-- 공연 이미지 -->
-                    <img th:src="${ranking.imageMain}" alt="공연 이미지">
-                </div>
-                <!-- 공연 정보 -->
-                <div class="performance-info">
-                    <div class="performance-title" th:text="${ranking.title}">공연명</div>
-                    <div class="performance-location" th:text="${ranking.location}">공연장소</div>
-                    <div class="performance-date" th:text="${ranking.formattedDate}">공연날짜</div>
-                </div>
+                <a th:href="@{'/performance/performanceDetail?performanceId=' + ${ranking.id} + '&source=api'}">
+                    <div class="card" th:data-performance-id="${ranking.id}">
+                        <!-- 카드 번호 -->
+                        <div class="card-number" th:text="${iterStat.index + 1}">1</div>
+                        <!-- 공연 이미지 -->
+                        <img th:src="${ranking.imageMain}" alt="공연 이미지">
+                    </div>
+                    <!-- 공연 정보 -->
+                    <div class="performance-info">
+                        <div class="performance-title" th:text="${ranking.title}">공연명</div>
+                        <div class="performance-location" th:text="${ranking.location}">공연장소</div>
+                        <div class="performance-date" th:text="${ranking.formattedDate}">공연날짜</div>
+                    </div>
+                </a>
             </div>
         </div>
         <!-- 공연 정보가 없을 때 -->
@@ -136,18 +76,22 @@
     <!-- 전체 공연 목록 -->
     <div class="all-performances">
         <div class="all-performances-title">전체 공연 목록</div>
+
         <div class="all-performances-items" th:if="${allPerformances != null}">
             <div th:each="performance : ${allPerformances}">
-                <div class="card" th:data-performance-id="${performance.id}">
-                    <img th:src="${performance.imageMain}" alt="공연 이미지">
-                    <div class="performance-info">
-                        <div class="performance-title" th:text="${performance.title}">공연명</div>
-                        <div class="performance-location" th:text="${performance.location}">공연장소</div>
-                        <div class="performance-date" th:text="${performance.formattedDate}">공연날짜</div>
+                <a th:href="@{'/performance/performanceDetail?performanceId=' + ${performance.id} + '&source=db'}">
+                    <div class="all-card" th:data-performance-id="${performance.id}">
+                        <img th:src="${performance.imageMain}" alt="공연 이미지">
                     </div>
-                </div>
+                    <div class="all-performance-info">
+                        <div class="all-title" th:text="${performance.title}">공연명</div>
+                        <div class="all-location" th:text="${performance.location}">공연장소</div>
+                        <div class="all-date" th:text="${performance.formattedDate}">공연날짜</div>
+                    </div>
+                </a>
             </div>
         </div>
+
         <div th:if="${allPerformances == null}">
             <p>전체 공연 정보가 없습니다.</p>
         </div>

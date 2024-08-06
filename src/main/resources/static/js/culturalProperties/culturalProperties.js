@@ -44,16 +44,24 @@ $(document).ready(function() {
             const colDiv = $('<div>').addClass('col');
             const cardDiv = $('<div>').addClass('card h-100').css('cursor', 'pointer').click(function() {
                 window.location.href = `/cultural-properties/detail/${property.id}`; // ID에 따라 URL 수정
+//            const id = property.id; // 클릭한 카드의 문화재 ID 가져오기
+//                    getCulturalPropertyDetail(id); // 문화재 ID를 인자로 전달하여 함수 호출
+//                const culturalPropertyId = property.id;
+//                getCulturalPropertyDetail(culturalPropertyId);
+//                            getCulturalPropertyDetail();
              }).attr('data-cultural-properties-id', property.id); // ID를 data 속성에 추가
+
+
 
             const img = $('<img>').addClass('card-img-top')
                 .attr('src', property.mainImgUrl)
                 .attr('alt', property.culturalPropertiesName);
 
             const cardBodyDiv = $('<div>').addClass('card-body');
+            const category = $('<p>').addClass('card-text').text(property.categoryName).css('margin-bottom', '0');
             const title = $('<h5>').addClass('card-title').text(property.culturalPropertiesName);
-            const locationText = $('<p>').addClass('card-text')
-                .text((property.region && property.district) ? `${property.region} ${property.district}` : '위치정보가 없습니다');
+            const locationText = $('<p>').addClass('card-text').text((property.region && property.district) ? `${property.region} ${property.district}` : '위치정보가 없습니다').css('margin-bottom', '0');
+            const dynasty = $('<p>').addClass('card-text').text(property.dynasty).css('margin-bottom', '0');
 
 
             // 배지 추가
@@ -195,7 +203,7 @@ $(document).ready(function() {
 
 
             // 카드 구성
-            cardBodyDiv.append(title).append(locationText);
+            cardBodyDiv.append(category).append(title).append(locationText).append(dynasty);
             cardBodyDiv.append(badgeDiv); // 배지를 카드 본문에 추가
             cardDiv.append(img).append(cardBodyDiv);
             colDiv.append(cardDiv);
@@ -379,6 +387,249 @@ $(document).ready(function() {
             console.error('사용자 ID 요청 중 오류 발생:', error);
         });
     });
+
+
+
+    // 검색 호출 함수
+    function searchCulturalProperties(searchParams) {
+        $.ajax({
+            type: 'GET',
+            url: '/cultural-properties/searchMain',
+            data: searchParams, // 검색 폼 데이터 전달
+            success: function(response) {
+                // 검색 결과를 처리하는 로직을 여기에 작성
+                console.log(response);
+
+                // 결과를 화면에 표시하는 코드
+                renderCulturalProperties(response.content); // 검색 결과를 전달하여 함수 호출
+
+                createPagination(response.totalPages, searchParams.get('page'), searchParams); // 페이지네이션 업데이트
+
+
+                // 찜 정보를 사용자 ID로 불러오기
+                getUserId().then(userId => {
+                    loadUserInterest(userId); // 찜 상태 로드
+                }).catch(error => {
+                    console.error('사용자 ID 요청 중 오류 발생:', error);
+                });
+            },
+            error: function(xhr, status, error) {
+                console.error('Ajax 오류 발생: ', error);
+                // 오류 처리 로직을 추가하세요
+            }
+        });
+    }
+
+    // 페이지네이션 클릭 이벤트 핸들러에서 호출될 함수
+    function handlePageClick(page, totalPages, searchParams) {
+        const newSearchParams = new URLSearchParams(searchParams);
+        newSearchParams.set('page', page.toString());
+
+        // 새로운 URLSearchParams를 사용하여 검색 실행
+        searchCulturalProperties(newSearchParams.toString());
+
+        // 찜 정보를 사용자 ID로 다시 불러오기
+        getUserId().then(userId => {
+            loadUserInterest(userId); // 찜 상태 로드
+        }).catch(error => {
+            console.error('사용자 ID 요청 중 오류 발생:', error);
+        });
+
+    }
+
+
+    // 페이지네이션 생성 함수 수정
+    function createPagination(totalPages, currentPage, searchParams) {
+        const paginationContainer = $('#pagination');
+        paginationContainer.empty(); // 기존 페이지 버튼 제거
+
+        // 이전 버튼
+        if (currentPage > 1) {
+            paginationContainer.append(`
+                <li class="page-item" id="prev-btn">
+                    <a class="page-link" href="#" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+            `);
+        }
+
+        // 페이지 버튼 생성
+        for (let i = 1; i <= totalPages; i++) {
+            const pageButton = $('<li>')
+                .addClass('page-item')
+                .append($('<a>').addClass('page-link').text(i).attr('href', '#').data('page', i));
+
+            if (i === currentPage) {
+                pageButton.addClass('active'); // 현재 페이지에 active 클래스 추가
+            }
+
+            paginationContainer.append(pageButton);
+        }
+
+        // 다음 버튼
+        if (currentPage < totalPages) {
+            paginationContainer.append(`
+                <li class="page-item" id="next-btn">
+                    <a class="page-link" href="#" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            `);
+        }
+
+        // 다음 버튼이 마지막 페이지에서만 숨기기
+        if (currentPage === totalPages) {
+            $('#next-btn').hide();
+        } else {
+            $('#next-btn').show();
+        }
+
+        // 페이지 버튼 클릭 이벤트
+        $('.page-link').on('click', function(e) {
+            e.preventDefault(); // 기본 링크 동작 방지
+            const page = $(this).data('page');
+            if (page) {
+                const newSearchParams = new URLSearchParams(searchParams); // URLSearchParams 객체 생성
+                newSearchParams.set('page', page.toString()); // 페이지 번호 설정
+
+                // 새로운 URLSearchParams를 사용하여 쿼리스트링을 업데이트하고 검색 실행
+                searchCulturalProperties(newSearchParams.toString());
+
+                // 페이지네이션 업데이트 (클릭한 페이지 버튼을 활성화 상태로 설정)
+                createPagination(totalPages, page, searchParams);
+
+                // 찜 정보를 사용자 ID로 불러오기
+                getUserId().then(userId => {
+                    loadUserInterest(userId); // 찜 상태 로드
+                }).catch(error => {
+                    console.error('사용자 ID 요청 중 오류 발생:', error);
+                });
+            }
+        });
+
+        // 이전 버튼 클릭 이벤트
+        $('#prev-btn').on('click', function(e) {
+            e.preventDefault(); // 기본 링크 동작 방지
+            if (currentPage > 1) {
+                const prevPage = currentPage - 1;
+                const newSearchParams = new URLSearchParams(searchParams); // URLSearchParams 객체 생성
+                newSearchParams.set('page', prevPage.toString()); // 이전 페이지 번호 설정
+
+                // 새로운 URLSearchParams를 사용하여 쿼리스트링을 업데이트하고 검색 실행
+                searchCulturalProperties(newSearchParams.toString());
+
+                // 페이지네이션 업데이트 (이전 페이지 버튼을 활성화 상태로 설정)
+                createPagination(totalPages, prevPage, searchParams);
+
+                // 찜 정보를 사용자 ID로 불러오기
+                getUserId().then(userId => {
+                    loadUserInterest(userId); // 찜 상태 로드
+                }).catch(error => {
+                    console.error('사용자 ID 요청 중 오류 발생:', error);
+                });
+            }
+        });
+
+        // 다음 버튼 클릭 이벤트
+        $('#next-btn').on('click', function(e) {
+            e.preventDefault(); // 기본 링크 동작 방지
+            if (currentPage < totalPages) {
+                const nextPage = currentPage + 1;
+                const newSearchParams = new URLSearchParams(searchParams); // URLSearchParams 객체 생성
+                newSearchParams.set('page', nextPage.toString()); // 다음 페이지 번호 설정
+
+                // 새로운 URLSearchParams를 사용하여 쿼리스트링을 업데이트하고 검색 실행
+                searchCulturalProperties(newSearchParams.toString());
+
+                // 페이지네이션 업데이트 (다음 페이지 버튼을 활성화 상태로 설정)
+                createPagination(totalPages, nextPage, searchParams);
+
+                // 찜 정보를 사용자 ID로 불러오기
+                getUserId().then(userId => {
+                    loadUserInterest(userId); // 찜 상태 로드
+                }).catch(error => {
+                    console.error('사용자 ID 요청 중 오류 발생:', error);
+                });
+            }
+        });
+    }
+
+
+    // 검색 버튼 클릭 이벤트 핸들러
+    $('#searchButton').click(function(e) {
+        e.preventDefault(); // 기본 이벤트 제거
+
+        var formData = $('#searchForm').serialize(); // 폼 데이터 직렬화
+
+        $.ajax({
+            type: 'GET',
+            url: '/cultural-properties/searchMain', // 컨트롤러 매핑 경로
+            data: formData,
+            success: function(response) {
+                // 검색 결과를 처리하는 로직을 여기에 작성
+                console.log(response); // 검색 결과 콘솔에 로그
+
+                // 결과를 화면에 표시하는 코드
+                renderCulturalProperties(response.content); // 검색 결과를 전달하여 함수 호출
+
+                createPagination(response.totalPages, 1, new URLSearchParams(formData)); // 검색된 페이지 수와 초기 페이지 설정
+
+                // 찜 정보를 사용자 ID로 불러오기
+                getUserId().then(userId => {
+                    loadUserInterest(userId); // 찜 상태 로드
+                }).catch(error => {
+                    console.error('사용자 ID 요청 중 오류 발생:', error);
+                });
+            },
+            error: function(xhr, status, error) {
+                console.error('Ajax 오류 발생: ', error);
+                // 오류 처리 로직을 추가하세요
+            }
+        });
+    });
+
+    // 페이지 로드 시 초기 페이지네이션 생성
+    $(document).ready(function() {
+        createPagination(1, 1, new URLSearchParams('')); // 초기 페이지네이션 생성 (페이지 1, 검색 파라미터 없음)
+
+        // 초기 찜 정보 로드
+        getUserId().then(userId => {
+            loadUserInterest(userId); // 찜 상태 로드
+        }).catch(error => {
+            console.error('사용자 ID 요청 중 오류 발생:', error);
+        });
+    });
+
+
+    $('#resetButton').click(function(e) {
+        e.preventDefault(); // 기본 이벤트 제거
+
+        // 검색 폼 초기화
+        $('#searchForm')[0].reset();
+
+        loadDBList(currentPage, pageSize);
+
+
+    });
+
+
+
+    // 문화재 상세 정보를 가져오는 함수 정의
+    function getCulturalPropertyDetail(id) {
+        $.ajax({
+            url: `/cultural-properties/detail/${id}`,
+            method: 'GET',
+            dataType: 'json',
+            success: function(property) {
+                console.log('문화재 정보:', property);
+                // 데이터가 정상적으로 로드되면 HTML에 추가하는 코드 작성
+            },
+            error: function(xhr, status, error) {
+                console.error('상세 정보 로드 실패:', status, error);
+            }
+        });
+    }
 
 
     loadNewsArticles(); // 페이지가 로드될 때 뉴스 기사를 불러옴

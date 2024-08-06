@@ -35,6 +35,7 @@
         SELECT COUNT(*) FROM cultural_properties
     </select>
 
+
     <select id="getCulturalPropertyById" resultType="CulturalPropertiesDTO">
         SELECT * FROM cultural_properties WHERE id = #{id}
     </select>
@@ -60,6 +61,119 @@
         WHERE c2.user_id = #{userId}
         ORDER BY c1.created_at DESC
     </select>
+
+
+    <select id="searchCulturalProperties" resultType="CulturalPropertiesDTO">
+        SELECT * FROM cultural_properties
+        <where>
+            <if test="category != null and category != ''">
+                AND category_name = #{category}
+            </if>
+            <if test="culturalPropertiesName != null and culturalPropertiesName != ''">
+                AND cultural_properties_name LIKE CONCAT('%', #{culturalPropertiesName}, '%')
+            </if>
+            <if test="region != null and region != ''">
+                AND (region LIKE CONCAT('%', #{region}, '%')
+                OR district LIKE CONCAT('%', #{region}, '%')) <!-- region 또는 district에서 검색 -->
+            </if>
+            <if test="dynasty != null and dynasty != ''">
+                AND dynasty LIKE CONCAT('%', #{dynasty}, '%')
+            </if>
+        </where>
+        LIMIT #{offset}, #{pageSize}
+    </select>
+
+    <select id="countCulturalProperties" resultType="long">
+        SELECT COUNT(*) FROM cultural_properties
+        <where>
+            <if test="category != null and category != ''">
+                AND category_name = #{category}
+            </if>
+            <if test="culturalPropertiesName != null and culturalPropertiesName != ''">
+                AND cultural_properties_name LIKE CONCAT('%', #{culturalPropertiesName}, '%')
+            </if>
+            <if test="region != null and region != ''">
+                AND (region LIKE CONCAT('%', #{region}, '%')
+                OR district LIKE CONCAT('%', #{region}, '%')) <!-- region 또는 district에서 검색 -->
+            </if>
+            <if test="dynasty != null and dynasty != ''">
+                AND dynasty LIKE CONCAT('%', #{dynasty}, '%')
+            </if>
+        </where>
+    </select>
+
+    <select id="getAllCategories" resultType="string">
+        SELECT DISTINCT category_name FROM cultural_properties
+    </select>
+
+
+
+<!--    <select id="getCulturalPropertyById" resultType="CulturalPropertiesDTO">-->
+<!--        SELECT * FROM cultural_properties WHERE id = #{id}-->
+<!--    </select>-->
+
+<!--    <select id="getCulturalPropertyById" resultType="CulturalPropertiesDTO">-->
+<!--        SELECT id, cultural_properties_name, main_img_url,-->
+<!--        content, region, district, address, dynasty, imgUrl, imgDesc,-->
+<!--        videoUrl, narrationUrl-->
+<!--        FROM cultural_properties-->
+<!--        WHERE id = #{id}-->
+<!--    </select>-->
+
+
+<!--    <select id="getNearbyPlace" resultType="CulturalPropertiesDTO">-->
+<!--        SELECT * FROM cultural_properties-->
+<!--        WHERE region = #{region} AND district = #{district} AND id != #{id}-->
+<!--    </select>-->
+
+    <!-- 1. 근처 문화재를 조회하는 쿼리 -->
+    <select id="getNearbyPlace" resultType="CulturalPropertiesDTO">
+        SELECT * FROM cultural_properties
+        WHERE region = #{region} AND district = #{district} AND id != #{id}
+    </select>
+
+<!--    &lt;!&ndash; 2. 특정 지역에서 랜덤으로 10개 데이터를 가져오는 쿼리 &ndash;&gt;-->
+<!--    <select id="getRandomPlace" resultType="CulturalPropertiesDTO">-->
+<!--        SELECT * FROM cultural_properties-->
+<!--        WHERE region = #{region}-->
+<!--        ORDER BY RAND() LIMIT 10-->
+<!--    </select>-->
+
+    <!-- 2. 특정 지역에서 랜덤으로 10개 데이터를 가져오는 쿼리, 특정 id 제외 -->
+    <select id="getRandomPlace" resultType="CulturalPropertiesDTO">
+        SELECT * FROM cultural_properties
+        WHERE region = #{region} AND id != #{id}
+        ORDER BY RAND() LIMIT 10
+    </select>
+
+
+
+
+<!--    <insert id="insertInterest">-->
+<!--        INSERT INTO cultural_properties_interest (cultural_properties_id, user_id, interest_type)-->
+<!--        VALUES (#{id}, #{userId}, #{interestType})-->
+<!--        ON DUPLICATE KEY UPDATE interest_type = #{interestType}-->
+<!--    </insert>-->
+
+<!--    <delete id="deleteInterest">-->
+<!--        DELETE FROM cultural_properties_interest-->
+<!--        WHERE cultural_properties_id = #{id} AND user_id = #{userId}-->
+<!--    </delete>-->
+
+<!--    <select id="isLiked" resultType="boolean">-->
+<!--        SELECT COUNT(*) > 0 FROM cultural_properties_interest-->
+<!--        WHERE cultural_properties_id = #{id} AND user_id = #{userId} AND interest_type = 'LIKE'-->
+<!--    </select>-->
+
+<!--    <select id="isDisliked" resultType="boolean">-->
+<!--        SELECT COUNT(*) > 0 FROM cultural_properties_interest-->
+<!--        WHERE cultural_properties_id = #{id} AND user_id = #{userId} AND interest_type = 'DISLIKE'-->
+<!--    </select>-->
+
+<!--    <select id="getReview" resultType="com.example.demo.model.Review">-->
+<!--        SELECT * FROM reviews WHERE property_id = #{propertyId} LIMIT 5-->
+<!--    </select>-->
+
 
 
 </mapper>

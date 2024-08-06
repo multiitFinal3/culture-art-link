@@ -81,7 +81,7 @@ public class FestivalController {
 			throw new RuntimeException(e);
 		}
 		
-		return "/festival/festivalDetail";
+		return "/festival/festivalDetailPage";
 		
 	}
 	
@@ -108,45 +108,44 @@ public class FestivalController {
 		try {
 			
 			festivalService.insertUserLoveFestival(map1);
-			
-			
-			keywordList = festivalService.findFestivalKeywordByFestivalId(festivalId);
-			
-			ArrayList<FestivalKeywordDTO> list = new ArrayList<FestivalKeywordDTO>();
-			
-			for (FestivalKeywordDTO keywordDTO : keywordList) {
-				
-				if (!list.contains(keywordDTO)) {
-					list.add(keywordDTO);
-				}
-				
-			}
-			
-			for (FestivalKeywordDTO keywordDTO : list) {
-				
-				UserFestivalLoveHateMapDTO userMap = new UserFestivalLoveHateMapDTO();
-				userMap.setUserId(userId);
-				userMap.setSortCode(sortCode);
-				userMap.setFestivalKeywordId(keywordDTO.getFestivalKeywordId());
-				
-				UserFestivalLoveHateMapDTO userMap2 = festivalService.findUserMapByUserMap(userMap);
-				
-				if (userMap2 == null) {
-					
-					userMap.setFestivalCount(1);
-					festivalService.insertUserKeywordMap(userMap);
-					
-				} else {
-					
-					int count = userMap2.getFestivalCount() + 1;
-					System.out.println("count : " + count);
-					userMap2.setFestivalCount(count);
-					System.out.println("update : " + userMap2);
-					festivalService.updateUserKeywordMap(userMap2);
-					
-				}
-				
-			}
+			// 뷰에 키워드 매핑이 자동으로 생성된다
+//			keywordList = festivalService.findFestivalKeywordByFestivalId(festivalId);
+//
+//			ArrayList<FestivalKeywordDTO> list = new ArrayList<FestivalKeywordDTO>();
+//
+//			for (FestivalKeywordDTO keywordDTO : keywordList) {
+//
+//				if (!list.contains(keywordDTO)) {
+//					list.add(keywordDTO);
+//				}
+//
+//			}
+//
+//			for (FestivalKeywordDTO keywordDTO : list) {
+//
+//				UserFestivalLoveHateMapDTO userMap = new UserFestivalLoveHateMapDTO();
+//				userMap.setUserId(userId);
+//				userMap.setSortCode(sortCode);
+//				userMap.setFestivalKeywordId(keywordDTO.getFestivalKeywordId());
+//
+//				UserFestivalLoveHateMapDTO userMap2 = festivalService.findUserMapByUserMap(userMap);
+//
+//				if (userMap2 == null) {
+//
+//					userMap.setFestivalCount(1);
+//					festivalService.insertUserKeywordMap(userMap);
+//
+//				} else {
+//
+//					int count = userMap2.getFestivalCount() + 1;
+//					System.out.println("count : " + count);
+//					userMap2.setFestivalCount(count);
+//					System.out.println("update : " + userMap2);
+//					festivalService.updateUserKeywordMap(userMap2);
+//
+//				}
+//
+//			}
 			
 			return "찜하기 및 관련 키워드 추가 성공";
 			
@@ -161,7 +160,7 @@ public class FestivalController {
 	
 	
 	/**
-	 * 유저가 찜한 목록을 표시하기 위해 리스트를 가져옴
+	 * 유저가 찜한 목록을 표시하기 위해 찜 번호 리스트를 가져옴
 	 *
 	 * @param user
 	 * @return 축제 DB 번호
@@ -187,7 +186,7 @@ public class FestivalController {
 	
 	
 	/**
-	 * 찜한 목록을 삭제하고 그와 연관된 키워드도 전부 삭제
+	 * 찜한 목록을 삭제하고 그와 연관된 키워드는 뷰에서 자동으로 차감됨
 	 *
 	 * @param festivalId
 	 * @param user
@@ -208,36 +207,38 @@ public class FestivalController {
 			userMap1.setSortCode(sortCode);
 			festivalService.deleteUserLoveFestival(userMap1);
 			
-			ArrayList<FestivalKeywordDTO> keyList = festivalService.findFestivalKeywordByFestivalId(festivalId);
-			
-			ArrayList<FestivalKeywordDTO> list = new ArrayList<FestivalKeywordDTO>();
-			
-			for (FestivalKeywordDTO keywordDTO : keyList) {
-				
-				if (!list.contains(keywordDTO)) {
-					list.add(keywordDTO);
-				}
-				
-			}
-			
-			for (FestivalKeywordDTO keywordDTO : list) {
-				
-				UserFestivalLoveHateMapDTO userMap = new UserFestivalLoveHateMapDTO();
-				userMap.setUserId(userId);
-				userMap.setSortCode(sortCode);
-				userMap.setFestivalKeywordId(keywordDTO.getFestivalKeywordId());
-				
-				UserFestivalLoveHateMapDTO userMap2 = festivalService.findUserMapByUserMap(userMap);
-				
-				if (userMap2 != null) {
-					
-					festivalService.deleteUserKeywordMap(userMap2);
-					
-				}
-				
-			}
-			
-			
+			// 뷰 생성으로 인해 키워드 처리는 전부 뷰에서 자동으로 생성 및 차감 됨
+
+//			ArrayList<FestivalKeywordDTO> keyList = festivalService.findFestivalKeywordByFestivalId(festivalId);
+//
+//			ArrayList<FestivalKeywordDTO> list = new ArrayList<FestivalKeywordDTO>();
+//
+//			for (FestivalKeywordDTO keywordDTO : keyList) {
+//
+//				if (!list.contains(keywordDTO)) {
+//					list.add(keywordDTO);
+//				}
+//
+//			}
+//
+//			for (FestivalKeywordDTO keywordDTO : list) {
+//
+//				UserFestivalLoveHateMapDTO userMap = new UserFestivalLoveHateMapDTO();
+//				userMap.setUserId(userId);
+//				userMap.setSortCode(sortCode);
+//				userMap.setFestivalKeywordId(keywordDTO.getFestivalKeywordId());
+//
+//				UserFestivalLoveHateMapDTO userMap2 = festivalService.findUserMapByUserMap(userMap);
+//
+//				if (userMap2 != null) {
+//
+//					festivalService.deleteUserKeywordMap(userMap2);
+//
+//				}
+//
+//			}
+		
+		
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
@@ -265,50 +266,50 @@ public class FestivalController {
 		map1.setUserId(userId);
 		map1.setSortCode(sortCode);
 		map1.setFestivalId(festivalId);
-		
-		ArrayList<FestivalKeywordDTO> keywordList = null;
+
+//		ArrayList<FestivalKeywordDTO> keywordList = null;
 		
 		try {
 			
 			festivalService.insertUserHateFestival(map1);
-			
-			
-			keywordList = festivalService.findFestivalKeywordByFestivalId(festivalId);
-			
-			ArrayList<FestivalKeywordDTO> list = new ArrayList<FestivalKeywordDTO>();
-			
-			for (FestivalKeywordDTO keywordDTO : keywordList) {
-				
-				if (!list.contains(keywordDTO)) {
-					list.add(keywordDTO);
-				}
-				
-			}
-			
-			for (FestivalKeywordDTO keywordDTO : list) {
-				
-				UserFestivalLoveHateMapDTO userMap = new UserFestivalLoveHateMapDTO();
-				userMap.setUserId(userId);
-				userMap.setSortCode(sortCode);
-				userMap.setFestivalKeywordId(keywordDTO.getFestivalKeywordId());
-				
-				UserFestivalLoveHateMapDTO userMap2 = festivalService.findUserMapByUserMap(userMap);
-				
-				if (userMap2 == null) {
-					
-					userMap.setFestivalCount(1);
-					festivalService.insertUserKeywordMap(userMap);
-					
-				} else {
-					
-					int count = userMap2.getFestivalCount() + 1;
-					userMap2.setFestivalCount(count);
-					System.out.println("update : " + userMap2);
-					festivalService.updateUserKeywordMap(userMap2);
-					
-				}
-				
-			}
+
+
+//			keywordList = festivalService.findFestivalKeywordByFestivalId(festivalId);
+//
+//			ArrayList<FestivalKeywordDTO> list = new ArrayList<FestivalKeywordDTO>();
+//
+//			for (FestivalKeywordDTO keywordDTO : keywordList) {
+//
+//				if (!list.contains(keywordDTO)) {
+//					list.add(keywordDTO);
+//				}
+//
+//			}
+//
+//			for (FestivalKeywordDTO keywordDTO : list) {
+//
+//				UserFestivalLoveHateMapDTO userMap = new UserFestivalLoveHateMapDTO();
+//				userMap.setUserId(userId);
+//				userMap.setSortCode(sortCode);
+//				userMap.setFestivalKeywordId(keywordDTO.getFestivalKeywordId());
+//
+//				UserFestivalLoveHateMapDTO userMap2 = festivalService.findUserMapByUserMap(userMap);
+//
+//				if (userMap2 == null) {
+//
+//					userMap.setFestivalCount(1);
+//					festivalService.insertUserKeywordMap(userMap);
+//
+//				} else {
+//
+//					int count = userMap2.getFestivalCount() + 1;
+//					userMap2.setFestivalCount(count);
+//					System.out.println("update : " + userMap2);
+//					festivalService.updateUserKeywordMap(userMap2);
+//
+//				}
+//
+//			}
 			
 			return "관심없음 및 관련 관심없음 키워드 추가 성공";
 			
@@ -349,7 +350,7 @@ public class FestivalController {
 	
 	
 	/**
-	 * 관심없음한 목록을 삭제하고 그와 연관된 키워드도 전부 삭제
+	 * 관심없음한 목록을 삭제하고 그와 연관된 키워드는 뷰에서 차감 또는 삭제 됨
 	 *
 	 * @param festivalId
 	 * @param user
@@ -369,35 +370,35 @@ public class FestivalController {
 			userMap1.setFestivalId(festivalId);
 			userMap1.setSortCode(sortCode);
 			festivalService.deleteUserLoveFestival(userMap1);
-			
-			ArrayList<FestivalKeywordDTO> keyList = festivalService.findFestivalKeywordByFestivalId(festivalId);
-			
-			ArrayList<FestivalKeywordDTO> list = new ArrayList<FestivalKeywordDTO>();
-			
-			for (FestivalKeywordDTO keywordDTO : keyList) {
-				
-				if (!list.contains(keywordDTO)) {
-					list.add(keywordDTO);
-				}
-				
-			}
-			
-			for (FestivalKeywordDTO keywordDTO : list) {
-				
-				UserFestivalLoveHateMapDTO userMap = new UserFestivalLoveHateMapDTO();
-				userMap.setUserId(userId);
-				userMap.setSortCode(sortCode);
-				userMap.setFestivalKeywordId(keywordDTO.getFestivalKeywordId());
-				
-				UserFestivalLoveHateMapDTO userMap2 = festivalService.findUserMapByUserMap(userMap);
-				
-				if (userMap2 != null) {
-					
-					festivalService.deleteUserKeywordMap(userMap2);
-					
-				}
-				
-			}
+
+//			ArrayList<FestivalKeywordDTO> keyList = festivalService.findFestivalKeywordByFestivalId(festivalId);
+//
+//			ArrayList<FestivalKeywordDTO> list = new ArrayList<FestivalKeywordDTO>();
+//
+//			for (FestivalKeywordDTO keywordDTO : keyList) {
+//
+//				if (!list.contains(keywordDTO)) {
+//					list.add(keywordDTO);
+//				}
+//
+//			}
+//
+//			for (FestivalKeywordDTO keywordDTO : list) {
+//
+//				UserFestivalLoveHateMapDTO userMap = new UserFestivalLoveHateMapDTO();
+//				userMap.setUserId(userId);
+//				userMap.setSortCode(sortCode);
+//				userMap.setFestivalKeywordId(keywordDTO.getFestivalKeywordId());
+//
+//				UserFestivalLoveHateMapDTO userMap2 = festivalService.findUserMapByUserMap(userMap);
+//
+//				if (userMap2 != null) {
+//
+//					festivalService.deleteUserKeywordMap(userMap2);
+//
+//				}
+//
+//			}
 			
 			
 		} catch (Exception e) {
@@ -411,7 +412,7 @@ public class FestivalController {
 	
 	
 	/**
-	 * 해당 축제의 컨텐트 키워드를 반환
+	 * 해당 축제의 키워드를 반환
 	 *
 	 * @param festivalId
 	 * @return
@@ -422,7 +423,11 @@ public class FestivalController {
 		
 		ArrayList<FestivalContentReviewNaverKeywordMapDTO> list = null;
 		try {
-			list = festivalService.findContentKeywordListByFestivalId(festivalId);
+			
+			FestivalContentReviewNaverKeywordMapDTO mapDTO = new FestivalContentReviewNaverKeywordMapDTO();
+			mapDTO.setFestivalId(festivalId);
+			mapDTO.setSortCode("C");
+			list = festivalService.findKeywordListByFestivalId(mapDTO);
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
@@ -708,7 +713,38 @@ public class FestivalController {
 	
 	
 	/**
+	 * 같은 키워드의 축제를 추천리스트로 가져가며 본인은 제외함
+	 *
+	 * @param festivalId
+	 * @return
+	 */
+	@PostMapping("/findSameKeywordFestivalByfestivalId")
+	@ResponseBody
+	public ArrayList<FestivalDTO> findSameKeywordFestivalByfestivalId(@RequestParam("festivalId") int festivalId) {
+		
+		
+		ArrayList<FestivalDTO> list = null;
+		try {
+			
+			FestivalContentReviewNaverKeywordMapDTO mapDTO = new FestivalContentReviewNaverKeywordMapDTO();
+			mapDTO.setFestivalId(festivalId);
+			
+			list = festivalService.findSameKeywordFestivalByfestivalId(mapDTO);
+			System.out.println("findSameKeywordFestivalByfestivalId list : " + list);
+			
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+		
+		System.out.println("findSameKeywordFestivalByfestivalId : " + list);
+		
+		return list;
+	}
+	
+	
+	/**
 	 * 관련된 페스티벌 이름으로 유튜브 영상을 검색
+	 *
 	 * @param page
 	 * @param festivalName
 	 * @return
@@ -721,7 +757,7 @@ public class FestivalController {
 		
 		try {
 			youtubeId = festivalService.findFestivalYoutube(page, formattedStart, festivalName);
-			System.out.println("findFestivalYoutube : " + youtubeId);
+			System.out.println("findFestivalYoutube id : " + youtubeId);
 			
 		} catch (Exception e) {
 			throw new RuntimeException(e);
@@ -731,19 +767,25 @@ public class FestivalController {
 	}
 	
 	
-	
-	
 	/**
 	 * 관련된 페스티벌 이름으로 네이버 기사를 검색
+	 *
 	 * @param page
-	 * @param festivalDTO
+	 * @param festivalId
 	 * @return
 	 */
 	@PostMapping("/findFestivalNaverArticle")
 	@ResponseBody
-	public NaverArticleDTO findFestivalNaverArticle(@RequestParam("page") int page, @RequestParam("festival") FestivalDTO festivalDTO) {
+	public NaverArticleDTO findFestivalNaverArticle(@RequestParam("page") int page, @RequestParam("festivalId") int festivalId) {
 		
 		NaverArticleDTO naverArticleDTO = new NaverArticleDTO();
+		
+		FestivalDTO festivalDTO = null;
+		try {
+			festivalDTO = adminFestivalService.findDBFestivalByFestivalId(festivalId);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
 		
 		PageDTO pageDTO = new PageDTO();
 		pageDTO.setPage(page);
@@ -761,9 +803,9 @@ public class FestivalController {
 	}
 	
 	
-	
 	/**
 	 * 관련된 페스티벌 이름으로 네이버 블로그를 검색
+	 *
 	 * @param page
 	 * @param festivalName
 	 * @return
@@ -773,9 +815,15 @@ public class FestivalController {
 	public NaverBlogDTO findFestivalNaverBlog(@RequestParam("page") int page, @RequestParam("formattedStart") String formattedStart, @RequestParam("festivalName") String festivalName) {
 		
 		NaverBlogDTO naverBlogDTO = new NaverBlogDTO();
+		FestivalDTO festivalDTO = new FestivalDTO();
+		festivalDTO.setFormattedStart(formattedStart);
+		festivalDTO.setFestivalName(festivalName);
+		PageDTO pageDTO = new PageDTO();
+		pageDTO.setPage(page);
+		festivalDTO.setPageDTO(pageDTO);
 		
 		try {
-			naverBlogDTO = festivalService.findFestivalNaverBlog(page, formattedStart, festivalName);
+			naverBlogDTO = festivalService.findFestivalNaverBlog(festivalDTO);
 			System.out.println("findFestivalNaverBlog : " + naverBlogDTO);
 			
 		} catch (Exception e) {
@@ -786,8 +834,284 @@ public class FestivalController {
 	}
 	
 	
+	/**
+	 * 축제의 리뷰 키워드를 반환
+	 *
+	 * @param festivalId
+	 * @return
+	 */
+	@PostMapping("/findReviewKeywordListByFestivalId")
+	@ResponseBody
+	public ArrayList<FestivalContentReviewNaverKeywordMapDTO> findReviewKeywordListByFestivalId(@RequestParam("festivalId") int festivalId) {
+		
+		ArrayList<FestivalContentReviewNaverKeywordMapDTO> list = null;
+		try {
+			FestivalContentReviewNaverKeywordMapDTO mapDTO = new FestivalContentReviewNaverKeywordMapDTO();
+			mapDTO.setFestivalId(festivalId);
+			mapDTO.setSortCode("R");
+			list = festivalService.findKeywordListByFestivalId(mapDTO);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+		
+		return list;
+		
+	}
 	
 	
+	/**
+	 * 축제의 네이버 기사 키워드를 반환
+	 *
+	 * @param festivalId
+	 * @return
+	 */
+	@PostMapping("/findNaverArticleKeywordListByFestivalId")
+	@ResponseBody
+	public ArrayList<FestivalContentReviewNaverKeywordMapDTO> findNaverArticleKeywordListByFestivalId(@RequestParam("festivalId") int festivalId) {
+		
+		ArrayList<FestivalContentReviewNaverKeywordMapDTO> list = null;
+		try {
+			FestivalContentReviewNaverKeywordMapDTO mapDTO = new FestivalContentReviewNaverKeywordMapDTO();
+			mapDTO.setFestivalId(festivalId);
+			mapDTO.setSortCode("NA");
+			list = festivalService.findKeywordListByFestivalId(mapDTO);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+		
+		return list;
+		
+	}
+	
+	
+	/**
+	 * 축제의 네이버 블로그 키워드를 반환
+	 *
+	 * @param festivalId
+	 * @return
+	 */
+	@PostMapping("/findNaverBlogKeywordListByFestivalId")
+	@ResponseBody
+	public ArrayList<FestivalContentReviewNaverKeywordMapDTO> findNaverBlogKeywordListByFestivalId(@RequestParam("festivalId") int festivalId) {
+		
+		ArrayList<FestivalContentReviewNaverKeywordMapDTO> list = null;
+		try {
+			FestivalContentReviewNaverKeywordMapDTO mapDTO = new FestivalContentReviewNaverKeywordMapDTO();
+			mapDTO.setFestivalId(festivalId);
+			mapDTO.setSortCode("NB");
+			list = festivalService.findKeywordListByFestivalId(mapDTO);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+		
+		return list;
+		
+	}
+	
+	/**
+	 * vw_festival_keyword_tf_idf 테이블에서 tf_idf가 높은 순서대로 반환
+	 *
+	 * @param page
+	 * @return
+	 */
+	@PostMapping("/findPopularFestivalKeyword")
+	@ResponseBody
+	public ArrayList<FestivalContentReviewNaverKeywordMapDTO> findPopularFestivalKeyword(@RequestParam("page") int page) {
+		
+		ArrayList<FestivalContentReviewNaverKeywordMapDTO> list = null;
+		PageDTO pageDTO = new PageDTO();
+		pageDTO.setStartEnd(page);
+//		pageDTO.setStart(1);
+		FestivalContentReviewNaverKeywordMapDTO mapDTO = new FestivalContentReviewNaverKeywordMapDTO();
+		mapDTO.setPageDTO(pageDTO);
+		try {
+			list = festivalService.findPopularFestivalKeyword(mapDTO);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+		
+		System.out.println("findPopularFestivalKeyword : " + list);
+		
+		return list;
+		
+	}
+	
+	/**
+	 * 같은 키워드 추천 작품 리스트를 반환(찜 포함)
+	 *
+	 * @param user
+	 * @return
+	 */
+	@PostMapping("/findKeywordRecommendFestivalList")
+	@ResponseBody
+	public ArrayList<FestivalDTO> findKeywordRecommendFestivalList(@AuthenticationPrincipal VWUserRoleDTO user) {
+		
+		int userId = user.getUserId();
+		ArrayList<FestivalContentReviewNaverKeywordMapDTO> mapDTOS = null;
+		try {
+			mapDTOS = festivalService.findUserLoveKeywordList(userId);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+		
+		ArrayList<FestivalDTO> list = new ArrayList<>();
+		
+		for (FestivalContentReviewNaverKeywordMapDTO mapDTO : mapDTOS) {
+			
+			String festivalKeywordId = mapDTO.getFestivalKeywordId();
+			ArrayList<FestivalDTO> allList = null;
+			try {
+				allList = festivalService.findSameKeywordFestivalByKeywordId(festivalKeywordId);
+			} catch (Exception e) {
+				throw new RuntimeException(e);
+			}
+			
+			for (FestivalDTO festivalDTO : allList) {
+				
+				if (!list.contains(festivalDTO)) {
+					
+					list.add(festivalDTO);
+					
+				}
+				
+			}
+			
+			
+		}
+		
+		System.out.println("findKeywordRecommendFestivalList : " + list);
+		return list;
+		
+	}
+	
+	
+	/**
+	 * 찜을 한 축제 리스트를 반환
+	 *
+	 * @param user
+	 * @return
+	 */
+	@PostMapping("/findLoveFestivalList")
+	@ResponseBody
+	public ArrayList<FestivalDTO> findLoveFestivalList(@AuthenticationPrincipal VWUserRoleDTO user) {
+		
+		System.out.println("findLoveFestivalList 1");
+		int userId = user.getUserId();
+		UserFestivalLoveHateMapDTO mapDTO = new UserFestivalLoveHateMapDTO();
+		mapDTO.setUserId(userId);
+		mapDTO.setSortCode("L");
+		
+		
+		ArrayList<FestivalDTO> list = null;
+		try {
+			list = festivalService.findLoveHateFestivalList(mapDTO);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+		
+		System.out.println("findLoveFestivalList : " + list);
+		
+		return list;
+		
+		
+	}
+	
+	
+	/**
+	 * 관심없음을 한 축제 리스트를 반환
+	 *
+	 * @param user
+	 * @return
+	 */
+	@PostMapping("/findHateFestivalList")
+	@ResponseBody
+	public ArrayList<FestivalDTO> findHateFestivalList(@AuthenticationPrincipal VWUserRoleDTO user) {
+		
+		System.out.println("findHateFestivalList 1");
+		
+		UserFestivalLoveHateMapDTO mapDTO = new UserFestivalLoveHateMapDTO();
+		int userId = user.getUserId();
+		mapDTO.setUserId(userId);
+		mapDTO.setSortCode("H");
+		ArrayList<FestivalDTO> list = null;
+		try {
+			list = festivalService.findLoveHateFestivalList(mapDTO);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+		
+		System.out.println("findHateFestivalList : " + list);
+		
+		return list;
+		
+		
+	}
+	
+	
+	/**
+	 * 특정 유저의 축제의 리뷰 전부를 리뷰 페이지 번호에 맞게 가져오기
+	 *
+	 * @param user
+	 * @param page
+	 * @return
+	 */
+	@PostMapping("/findFestivalReviewListByUserId")
+	@ResponseBody
+	public ArrayList<VWUserReviewDataDTO> findFestivalReviewListByUserId(@AuthenticationPrincipal VWUserRoleDTO user, @RequestParam("page") int page) {
+		
+		VWUserReviewDataDTO vwUserReviewDataDTO = new VWUserReviewDataDTO();
+		PageDTO pageDTO = new PageDTO();
+		pageDTO.setPage(page);
+		pageDTO.setStartEnd(pageDTO.getPage());
+		vwUserReviewDataDTO.setPageDTO(pageDTO);
+		vwUserReviewDataDTO.setUserId(user.getUserId());
+		
+		System.out.println("보내는 : " + vwUserReviewDataDTO);
+		
+		ArrayList<VWUserReviewDataDTO> list = null;
+		
+		try {
+			list = festivalService.findFestivalReviewListByUserId(vwUserReviewDataDTO);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+		
+		System.out.println("findFestivalReviewListByUserId : " + list);
+		
+		return list;
+		
+	}
+	
+	
+	/**
+	 * 특정 유저의 축제의 리뷰 전부를 리뷰 페이지 번호에 맞게 가져오기
+	 *
+	 * @param user
+	 *
+	 * @return
+	 */
+	@PostMapping("/findUserReviewCount")
+	@ResponseBody
+	public int findUserReviewCountByUserId(@AuthenticationPrincipal VWUserRoleDTO user) {
+		
+		VWUserReviewDataDTO vwUserReviewDataDTO = new VWUserReviewDataDTO();
+		vwUserReviewDataDTO.setUserId(user.getUserId());
+		
+		System.out.println("보내는 : " + vwUserReviewDataDTO);
+		
+		int count = 0;
+		
+		try {
+			count = festivalService.findUserReviewCountByUserReviewDataDTO(vwUserReviewDataDTO);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+		
+		System.out.println("findUserReviewCountByUserReviewDataDTO : " + count);
+		
+		return count;
+		
+	}
 	
 	
 }

@@ -16,17 +16,12 @@
     </select>
 
 
-
     <insert id="insertUser" parameterType="userDTO">
 
-        INSERT INTO user(user_id, email, password, user_name, tel, gender, region_id)
-        VALUES(#{userId},#{email},#{password},#{userName},#{tel},#{gender},#{regionId});
-
-
+        INSERT INTO user(user_id, email, password, user_age, user_name, tel, gender, region_id, user_profile_pic)
+        VALUES(#{userId},#{email},#{password},#{userAge},#{userName},#{tel},#{gender},#{regionId},#{userProfilePic});
 
     </insert>
-
-
 
 
 </mapper>
