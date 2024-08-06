@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.multi.culture_link.admin.festival.model.mapper.AdminFestivalMapper;
-import com.multi.culture_link.common.keyword.service.KeywordExtractService1;
+import com.multi.culture_link.common.keyword.service.KeywordExtractService;
 import com.multi.culture_link.festival.model.dto.*;
 import com.multi.culture_link.festival.service.FestivalService;
 import okhttp3.OkHttpClient;
@@ -32,7 +32,7 @@ public class AdminFestivalServiceImpl implements AdminFestivalService {
 	private final FestivalService festivalService;
 	private final OkHttpClient client;
 	private final Gson gson;
-	private final KeywordExtractService1 keywordExtractService;
+	private final KeywordExtractService keywordExtractService;
 	
 	
 	ArrayList<FestivalDTO> list = new ArrayList<>();
@@ -46,7 +46,7 @@ public class AdminFestivalServiceImpl implements AdminFestivalService {
 	 * @param adminFestivalMapper   페스티벌 관리자 매퍼
 	 * @param keywordExtractService 키워드 추출 서비스
 	 */
-	public AdminFestivalServiceImpl(OkHttpClient client, Gson gson, OkHttpClient client1, AdminFestivalMapper adminFestivalMapper, FestivalService festivalService, KeywordExtractService1 keywordExtractService) {
+	public AdminFestivalServiceImpl(OkHttpClient client, Gson gson, OkHttpClient client1, AdminFestivalMapper adminFestivalMapper, FestivalService festivalService, KeywordExtractService keywordExtractService) {
 		this.client = client;
 		this.gson = gson;
 		this.adminFestivalMapper = adminFestivalMapper;
@@ -904,7 +904,8 @@ public class AdminFestivalServiceImpl implements AdminFestivalService {
 		String all = content + " " + title;
 		
 		// 코모란으로 결정
-		HashMap<String, Integer> map = keywordExtractService.getKeywordByKomoran(all);
+		String path = "classpath:static/txt/festival/stop.txt";
+		HashMap<String, Integer> map = keywordExtractService.getKeywordByKomoran(all, path);
 //		ArrayList<String> list = keywordExtractService.getKeywordByApacheLucene(all);
 		
 		LinkedList<Map.Entry<String, Integer>> list = new LinkedList<>(map.entrySet());
@@ -965,7 +966,7 @@ public class AdminFestivalServiceImpl implements AdminFestivalService {
 	 * @throws Exception
 	 */
 	@Override
-	public FestivalContentReviewNaverKeywordMapDTO findKeywordMappingByKeywordMapping(FestivalContentReviewNaverKeywordMapDTO keywordMapping1) throws Exception {
+	public  FestivalContentReviewNaverKeywordMapDTO findKeywordMappingByKeywordMapping(FestivalContentReviewNaverKeywordMapDTO keywordMapping1) throws Exception {
 		
 		FestivalContentReviewNaverKeywordMapDTO keywordMapping = adminFestivalMapper.findKeywordMappingByKeywordMapping(keywordMapping1);
 		
@@ -1035,9 +1036,10 @@ public class AdminFestivalServiceImpl implements AdminFestivalService {
 			}
 			
 			
-			// TF-ID
+			// 모든 명사를 전부 추출 해 삽입하면 뷰로 자동 계산 됨
 			String allContent = naverArticleDTO.getTotalContent();
-			map = keywordExtractService.getKeywordByKomoran(allContent);
+			String path = "classpath:static/txt/festival/stop.txt";
+			map = keywordExtractService.getKeywordByKomoran(allContent, path);
 			
 			System.out.println("TF-ID 결과 : " + map);
 			
@@ -1051,6 +1053,13 @@ public class AdminFestivalServiceImpl implements AdminFestivalService {
 		
 	}
 	
+	/**
+	 * 이미 사용된 네이버 url인지 확인
+	 *
+	 * @param naverArticleDTO
+	 * @return
+	 * @throws Exception
+	 */
 	@Override
 	public NaverArticleDTO findFestivalNaverUrlByNaverArticle(NaverArticleDTO naverArticleDTO) throws Exception {
 		NaverArticleDTO naverArticleDTO2 = adminFestivalMapper.findFestivalNaverUrlByNaverArticle(naverArticleDTO);
@@ -1058,6 +1067,12 @@ public class AdminFestivalServiceImpl implements AdminFestivalService {
 		return naverArticleDTO2;
 	}
 	
+	/**
+	 * 네이버 기사의 url을 축제 네이버 url 매핑 테이블에 삽입
+	 *
+	 * @param naverArticleDTO
+	 * @throws Exception
+	 */
 	@Override
 	public void insertFestivalNaverUrlMappingByNaverArticle(NaverArticleDTO naverArticleDTO) throws Exception {
 		
@@ -1067,10 +1082,185 @@ public class AdminFestivalServiceImpl implements AdminFestivalService {
 		
 	}
 	
+	/**
+	 * 키워드가 이미 존재할 시 빈도수를 더함
+	 *
+	 * @param keywordMapping1
+	 * @throws Exception
+	 */
 	@Override
 	public void updateKeywordMappingByKeywordMapping(FestivalContentReviewNaverKeywordMapDTO keywordMapping1) throws Exception {
 		
 		adminFestivalMapper.updateKeywordMappingByKeywordMapping(keywordMapping1);
+		
+	}
+	
+	/**
+	 * 특정 축제에 대한 네이버 블로그 키워드를 추출
+	 *
+	 * @param festivalId
+	 * @return
+	 * @throws Exception
+	 */
+	@Override
+	public ArrayList<HashMap<String, Integer>> findNaverBlogKeywordByFestivalId(int festivalId) throws Exception {
+		
+		FestivalDTO festivalDTO = adminFestivalMapper.findDBFestivalByFestivalId(festivalId);
+		System.out.println("ser impl findNaverBlogKeywordByFestivalId : " + festivalDTO);
+
+//		System.out.println(festivalDTO.getStartDate());
+
+//		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-mm-DD");
+//		String formattedStart = simpleDateFormat.format(festivalDTO.getStartDate()).substring(0,4);
+		
+		String festivalName = festivalDTO.getFestivalName();
+		
+		PageDTO pageDTO = new PageDTO();
+		pageDTO.setPage(1);
+		festivalDTO.setPageDTO(pageDTO);
+		
+		NaverBlogDTO naverBlogDTO = festivalService.findFestivalNaverBlog(festivalDTO);
+		
+		ArrayList<HashMap<String, Integer>> list = new ArrayList<HashMap<String, Integer>>();
+		
+		for (int i = 1; i <= naverBlogDTO.getDisplay(); i++) {
+			
+			HashMap<String, Integer> map = new HashMap<>();
+			
+			pageDTO.setPage(i);
+			
+			festivalDTO.setPageDTO(pageDTO);
+			
+			naverBlogDTO = festivalService.findFestivalNaverBlog(festivalDTO);
+			
+			NaverBlogDTO naverBlogDTO2 = adminFestivalMapper.findFestivalNaverUrlByNaverBlog(naverBlogDTO);
+			
+			
+			if (naverBlogDTO2 == null) {
+				
+				this.insertFestivalNaverUrlMappingByNaverBlog(naverBlogDTO);
+				
+			}
+			
+			
+			// 모든 명사를 전부 추출 해 삽입하면 뷰로 자동 계산 됨
+			String allContent = naverBlogDTO.getTitle() + " " + naverBlogDTO.getDescription();
+			String path = "classpath:static/txt/festival/stop.txt";
+			map = keywordExtractService.getKeywordByKomoran(allContent, path);
+			
+			System.out.println("TF-ID 결과 : " + map);
+			
+			list.add(map);
+			
+			
+		}
+		
+		
+		return list;
+		
+		
+	}
+	
+	/**
+	 * 네이버 블로그의 url을 이미 사용했다는 것을 축제 네이버 url 매핑 테이블에 삽입
+	 * @param naverBlogDTO
+	 * @throws Exception
+	 */
+	@Override
+	public void insertFestivalNaverUrlMappingByNaverBlog(NaverBlogDTO naverBlogDTO) throws Exception {
+		
+		adminFestivalMapper.insertFestivalNaverUrlMappingByNaverBlog(naverBlogDTO);
+		
+		return;
+		
+	}
+	
+	/**
+	 * 사이트의 리뷰 키워드를 구해서 각각의 빈도수와 함께 반환
+	 * @param festivalId
+	 * @return
+	 * @throws Exception
+	 */
+	@Override
+	public ArrayList<HashMap<String, Integer>> findReviewKeywordByFestivalId(int festivalId) throws Exception {
+		
+		ArrayList<String> reviewContentList = new ArrayList<>();
+		
+		reviewContentList = this.findAllFestivalReviewContentByFestivalId(festivalId);
+		
+		ArrayList<HashMap<String, Integer>> list = new ArrayList<HashMap<String, Integer>>();
+		
+		FestivalContentReviewNaverKeywordMapDTO mapDTO = new FestivalContentReviewNaverKeywordMapDTO();
+		mapDTO.setFestivalId(festivalId);
+		mapDTO.setSortCode("R");
+		
+		ArrayList<FestivalContentReviewNaverKeywordMapDTO> existReviewKeywordList = this.findExistingFestivalContentReviewNaverKeywordMapList(mapDTO);
+		
+		if (existReviewKeywordList!=null){
+			
+			this.deleteAllReviewKeywordByFestivalId(festivalId);
+			
+		}
+		
+		for (String allContent : reviewContentList) {
+			
+			HashMap<String, Integer> map = new HashMap<>();
+			String path = "classpath:static/txt/festival/stop.txt";
+			// 모든 명사를 전부 추출 해 삽입하면 뷰로 자동 계산 됨
+			map = keywordExtractService.getKeywordByKomoran(allContent, path);
+			
+			System.out.println("코모란 전체 명사 분석 결과 : " + map);
+			
+			list.add(map);
+			
+			
+		}
+		
+		
+		return list;
+		
+	}
+	
+	/**
+	 * 해당 페스티벌의 모든 리뷰의 내용을 반환
+	 * @param festivalId
+	 * @return
+	 * @throws Exception
+	 */
+	@Override
+	public ArrayList<String> findAllFestivalReviewContentByFestivalId(int festivalId) throws Exception {
+		
+		ArrayList<String> list = adminFestivalMapper.findAllFestivalReviewContentByFestivalId(festivalId);
+		
+		return list;
+		
+		
+	}
+	
+	/**
+	 * 해당 페스티벌에서 추출되었던 기존의 리뷰 키워드를 모두 삭제
+	 * @param festivalId
+	 * @throws Exception
+	 */
+	@Override
+	public void deleteAllReviewKeywordByFestivalId(int festivalId) throws Exception {
+		
+		adminFestivalMapper.deleteAllReviewKeywordByFestivalId(festivalId);
+		
+	}
+	
+	/**
+	 * 기존에 존재하는 내용 리뷰 네이버 기사 네이버 블로그 키워드를 반환
+	 * @param mapDTO
+	 * @return
+	 * @throws Exception
+	 */
+	@Override
+	public ArrayList<FestivalContentReviewNaverKeywordMapDTO> findExistingFestivalContentReviewNaverKeywordMapList(FestivalContentReviewNaverKeywordMapDTO mapDTO) throws Exception {
+		
+		ArrayList<FestivalContentReviewNaverKeywordMapDTO> list = adminFestivalMapper.findExistingFestivalContentReviewNaverKeywordMapList(mapDTO);
+		
+		return list;
 		
 	}
 	

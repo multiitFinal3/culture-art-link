@@ -31,10 +31,13 @@
     </select>
 
 
-
-
     <select id="getPerformancesByGenre" parameterType="String" resultType="com.multi.culture_link.admin.performance.model.dto.PerformanceDTO">
         SELECT * FROM performance_info WHERE genre = #{genre}
+    </select>
+
+
+    <select id="getPerformanceById" resultType="com.multi.culture_link.admin.performance.model.dto.PerformanceDTO">
+        SELECT * FROM performance_info WHERE id = #{performanceId}
     </select>
 
 </mapper>

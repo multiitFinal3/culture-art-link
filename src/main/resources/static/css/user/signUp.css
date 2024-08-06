@@ -1,0 +1,62 @@
+
+    #realContent{
+
+        width: 100vw;
+        height: 100vh;
+        display: flex;
+        flex-flow: row;
+
+
+    }
+
+    #welcome{
+
+        width: 30%;
+
+    }
+
+    #welcome img{
+
+        width: 100%;
+
+    }
+
+
+    #signUp{
+
+        padding: 5%;
+        width: 70%;
+
+    }
+
+
+    .round{
+
+        padding: 10px;
+        border-radius 0.7rem;
+        width: 200px;
+        margin: 1%;
+    }
+
+    button, input, optgroup, select, textarea {
+        margin: 1%;
+        min-width: 100px;
+        font-family: inherit;
+        font-size: inherit;
+        line-height: inherit;
+    }
+
+    #festivalKeywordBtns{
+        font-size: 20px;
+        overflow-x: scroll;
+        margin: 3%;
+        text-align: center;
+        display: flex;
+
+    }
+
+    .hasLove{
+
+        background-color: #ffe5ea;
+
+    }

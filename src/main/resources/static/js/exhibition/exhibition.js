@@ -48,11 +48,33 @@ async function getExhibitions() {
         museum: item.museum,
         startDate: item.startDate ? new Date(item.startDate) : null,
         endDate: item.endDate ? new Date(item.endDate) : null,
-        state: item.state
+        state: item.state,
+        starsAVG:item.starsAVG
     }));
 
     filterAndRenderExhibitions();
 }
+
+// async function getExhibitions() {
+//     const response = await axios.get("/exhibition/exhibition");
+//
+//     exhibitions = await Promise.all(response.data.map(async (item) => {
+//         const ratingResponse = await axios.get(`/exhibition/${item.id}/rating`);
+//         return {
+//             id: item.id,
+//             image: item.image,
+//             title: item.title,
+//             artist: item.artist,
+//             museum: item.museum,
+//             startDate: item.startDate ? new Date(item.startDate) : null,
+//             endDate: item.endDate ? new Date(item.endDate) : null,
+//             state: item.state,
+//             averageRating: ratingResponse.data.averageRating
+//         };
+//     }));
+//
+//     filterAndRenderExhibitions();
+// }
 
 // 날짜 기준으로 날짜 필터링
 function filterAndRenderExhibitions() {
@@ -114,6 +136,8 @@ function renderExhibitions(exhibitionsToRender) {
             $li.addClass("background-gray")
         }
 
+
+        console.log('exhibition : ',exhibition)
         // html 그려주기
         $li.html(`
                 <div class="exhibition-content" data-id="${exhibition.id}">
@@ -124,6 +148,7 @@ function renderExhibitions(exhibitionsToRender) {
                     <p>${exhibition.museum}</p>
                     <p>시작일: ${exhibition.startDate ? exhibition.startDate.toISOString().split("T")[0] : "미정"}</p>
                     <p>종료일: ${exhibition.endDate ? exhibition.endDate.toISOString().split("T")[0] : "미정"}</p>
+                    <p>★ <span class="average-rating">${Number(exhibition?.starsAVG).toFixed(1)}</span></p>
                   </div>
                 </div>
                 <div class="exhibition-actions">

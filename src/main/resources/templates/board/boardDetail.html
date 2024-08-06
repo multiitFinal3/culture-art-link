@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html
+        xmlns:th="http://www.thymeleaf.org"
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
+>
+<html layout:decorate="~{common/layout/layoutMenubar}">
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>게시글 상세</title>
+    <link rel="stylesheet" href="/css/board/boardDetail.css">
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="/js/board/boardDetail.js"></script>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="container">
+        <h1 id="postTitle">내일 보라카이관한 전시</h1>
+        <div class="post-content">
+            <p>내일 보라카이관한 전시 언제까요?</p>
+            <p>서울시에서는 가족과의 보라카이 여행정보다.</p>
+        </div>
+        <div class="button-group">
+            <button class="btn">글 수정</button>
+            <button class="btn">삭제</button>
+        </div>
+
+        <div class="comments-section">
+            <h2>댓글</h2>
+            <div class="comment">
+                <p class="comment-content">댓글 작성자1</p>
+                <p>서울에서는 지금 보라카이의 모든 멋글있다, 직접 만나 이글들을 읽어 보면 좋겠어요.</p>
+            </div>
+            <div class="comment">
+                <p class="comment-content">댓글 작성자2</p>
+                <p>직접 방문해보세요.</p>
+            </div>
+            <form id="commentForm">
+                <textarea id="newComment" placeholder="댓글을 입력하세요."></textarea>
+                <button type="submit" class="btn">댓글 작성하기</button>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>
+</html>

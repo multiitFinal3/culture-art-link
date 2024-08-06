@@ -5,6 +5,7 @@ import com.multi.culture_link.festival.model.dto.*;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
 
 @Mapper
 public interface FestivalMapper {
@@ -30,7 +31,7 @@ public interface FestivalMapper {
 	
 	ArrayList<Integer> findHateList(int userId) throws Exception;
 	
-	ArrayList<FestivalContentReviewNaverKeywordMapDTO> findContentKeywordListByFestivalId(int festivalId) throws Exception;
+	ArrayList<FestivalContentReviewNaverKeywordMapDTO> findKeywordListByFestivalId(FestivalContentReviewNaverKeywordMapDTO mapDTO) throws Exception;
 	
 	TimeDTO findTimeIdByFestivalId(int festivalId) throws Exception;
 	
@@ -51,4 +52,19 @@ public interface FestivalMapper {
 	ArrayList<FestivalDTO> findSameManageFestivalByManageInstitution(FestivalDTO festivalDTO) throws Exception;
 	
 	
+	ArrayList<FestivalContentReviewNaverKeywordMapDTO> findReviewKeywordListByFestivalId(int festivalId) throws ExecutionException;
+	
+	ArrayList<FestivalContentReviewNaverKeywordMapDTO> findPopularFestivalKeyword(FestivalContentReviewNaverKeywordMapDTO mapDTO) throws Exception;
+	
+	void insertUserSelectKeyword(UserFestivalLoveHateMapDTO mapDTO) throws Exception;
+	
+	ArrayList<FestivalContentReviewNaverKeywordMapDTO> findUserLoveKeywordList(int userId) throws Exception;
+	
+	ArrayList<FestivalDTO> findSameKeywordFestivalByKeywordId(String festivalKeywordId) throws Exception;
+	
+	ArrayList<FestivalDTO> findLoveHateFestivalList(UserFestivalLoveHateMapDTO mapDTO) throws Exception;
+	
+	ArrayList<VWUserReviewDataDTO> findFestivalReviewListByUserId(VWUserReviewDataDTO vwUserReviewDataDTO) throws Exception;
+	
+	int findUserReviewCountByUserReviewDataDTO(VWUserReviewDataDTO vwUserReviewDataDTO) throws Exception;
 }

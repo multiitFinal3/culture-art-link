@@ -2,6 +2,120 @@ $(document).ready(
     function(){
 
 
+        //#region
+
+            function findKeywordRecommendFestivalList(){
+
+                $('#list2').html("");
+
+
+                $.ajax({
+
+                    url: '/festival/findKeywordRecommendFestivalList',
+                    method: 'POST',
+                    contentType: 'application/json',
+                    success: function(list){
+
+                        console.log(list);
+                        $.each(list, function(index, festival){
+
+                            var content = festival.festivalContent.length > 30?
+                            festival.festivalContent.substring(0,30) + "..."
+                            : festival.festivalContent;
+
+                            var inst1 = festival.manageInstitution.length > 15?
+                            festival.manageInstitution.substring(0,15) + "..."
+                            : festival.manageInstitution;
+
+                            var inst2 = festival.hostInstitution.length > 15?
+                            festival.hostInstitution.substring(0,15) + "..."
+                            : festival.hostInstitution;
+
+                            var inst3 = festival.sponserInstitution.length > 15?
+                            festival.sponserInstitution.substring(0,15) + "..."
+                            : festival.sponserInstitution;
+
+
+                            console.log("축제 날짜")
+                            console.log(festival.startDate);
+                            console.log(festival.endDate);
+
+                            var start = festival.startDate.length >0?
+                            festival.startDate.substring(0,10):
+                            "없음";
+
+                            var end = festival.endDate.length >0?
+                            festival.endDate.substring(0,10):
+                            "없음";
+
+
+
+
+                            var firstHtml= ``;
+
+                            if(! festival.imgUrl || festival.imgUrl == "null"){
+
+                                firstHtml = `
+                                    <div class="card" style="width: 18rem;" id="${festival.festivalId}">
+                                        <img class="card-img-top" src="/img/festival/noPhoto.png" alt="Card image cap" style="min-width: 380px; min-height: 400px;">
+
+                                `;
+
+                            }else{
+
+                                firstHtml = `
+                                    <div class="card" style="width: 18rem;" id="${festival.festivalId}">
+                                        <img class="card-img-top" src="${festival.imgUrl}" alt="Card image cap" style="min-width: 380px; min-height: 400px;">
+
+                                `;
+
+                            }
+
+
+
+                            var secondHtml = `
+                                <div class="card-body">
+                                      <h5 class="card-title">${festival.festivalName}</h5>
+                                      <p class="card-text">${content}</p>
+                                      <a href="/festival/festival-detail?festivalId=${festival.festivalId}" class="btn btn-primary">자세히</a>
+                                      <button class="btn btn-primary heart" type="button" style="margin:0px" value="${festival.festivalId}">
+                                          <img src="/img/festival/heart.png"
+                                               style="width : 20px; height: 20px;">
+                                      </button>
+                                      <button class="btn btn-primary hate" type="button" style="margin:0px" value="${festival.festivalId}">
+                                            <img src="/img/festival/trash.png"
+                                                 style="width : 20px; height: 20px;">
+                                      </button>
+                                </div>
+
+                            </div>
+                            `;
+
+
+                            var finalHtml = firstHtml + secondHtml;
+
+                            $('#list2').append(finalHtml);
+
+                            findLoveList();
+                            findHateList();
+
+
+
+
+                        })
+
+                    }
+
+                })
+            }
+
+
+        findKeywordRecommendFestivalList();
+
+
+        //#end region
+
+
         //#region festivalList 관련 함수
 
         /**
@@ -622,6 +736,8 @@ $(document).ready(
 
 
         //#endregion
+
+
 
 
     }

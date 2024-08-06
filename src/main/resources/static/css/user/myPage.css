@@ -1,0 +1,260 @@
+
+    #realContent{
+
+        width: 100vw;
+        height: 100vh;
+        display: flex;
+        flex-flow: row;
+
+
+    }
+
+    #leftZone{
+
+        width: 30%;
+
+    }
+
+
+
+    #rightZone{
+
+        padding: 1%;
+        width: 65%;
+        display: flex;
+        flex-flow: column;
+        align-items: center;
+        justify-content: flex-start;
+
+    }
+
+
+    .round{
+
+        padding: 10px;
+        border-radius 0.7rem;
+        width: 200px;
+        margin: 1%;
+    }
+
+    button, input, optgroup, select, textarea {
+        margin: 3%;
+        font-family: inherit;
+        font-size: inherit;
+        line-height: inherit;
+    }
+
+    #festivalKeywordBtns{
+        font-size: 20px;
+        overflow-x: scroll;
+        margin: 3%;
+        text-align: center;
+        display: flex;
+
+    }
+
+    .hasLove{
+
+        background-color: #ffe5ea;
+
+    }
+
+    .profileImg{
+
+        border-radius: 50%;
+
+    }
+
+    #upperZone{
+
+        width: 100%;
+        display: flex;
+        flex-flow: column;
+        margin-top: 4%;
+        margin-bottom: 1%;
+
+    }
+
+    #downZone{
+
+        width: 100%;
+        display: flex;
+        flex-flow: column;
+    }
+
+    #rightZone ul {
+
+          list-style-type: none;
+          margin: 0;
+          padding: 0;
+          overflow: hidden;
+          background-color: #faf3f9;
+          display: flex;
+          flex-flow: row;
+          justify-content: space-around;
+          align-items: center;
+    }
+
+    #rightZone li {
+      float: left;
+    }
+
+    #rightZone li a, #rightZone .dropbtn {
+      display: inline-block;
+      color: black;
+      text-align: center;
+      padding: 14px 16px;
+      text-decoration: none;
+    }
+
+    #rightZone li a:hover, #rightZone .dropdown:hover .dropbtn {
+      background-color: #fcccf6;
+    }
+
+    #rightZone li.dropdown {
+      display: inline-block;
+    }
+
+    #rightZone .dropdown-content {
+      display: none;
+      position: fixed;
+      background-color: #f9f9f9;
+      min-width: 160px;
+      box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+      z-index: 5;
+    }
+
+    #rightZone .dropdown-content a {
+      color: black;
+      padding: 12px 16px;
+      text-decoration: none;
+      display: block;
+      text-align: left;
+    }
+
+    #rightZone .dropdown-content a:hover {
+        display: block;
+        background-color: #fcccf6;
+
+    }
+
+    #rightZone .dropdown:hover .dropdown-content {
+      display: block;
+    }
+
+    .active{
+
+        background-color: #eae5fc;
+
+    }
+
+    #upper{
+
+    }
+
+    .scroll{
+
+        overflow-x: scroll;
+        margin: 3%;
+        text-align: center;
+        display: flex;
+        flex-flow: row;
+
+    }
+
+    .page{
+
+        margin: 3%;
+        text-align: center;
+        display: flex;
+        flex-flow: column;
+
+    }
+
+
+
+    .card{
+
+        margin: 1%;
+        min-width: 300px;
+        min-height: 500px;
+        display: flex;
+        align-items: center;
+
+    }
+
+
+   .card-img-top{
+
+        width: 300px;
+        height: 300px;
+
+    }
+
+
+    button{
+
+        margin: 1%;
+
+    }
+
+
+    .hate, .heart{
+
+        min-width: 30px;
+        min-height: 30px;
+
+    }
+
+   .hasLove{
+
+        background-color: #ffe5ea;
+
+   }
+
+   .hasHate{
+
+        background-color: #dfdfdf;
+
+   }
+
+/*   table, th, td {
+     border: 1px solid;
+     border-collapse: collapse;
+   }*/
+
+   table{
+
+     width: 100%;
+
+   }
+
+   tr{
+
+        text-align: center;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+   }
+
+
+   th, td{
+
+     padding : 10px;
+     text-align:center;
+     width: 200px;
+
+   }
+
+
+   td{
+
+        height: 130px;
+        display: flex;
+        flex-flow: row;
+        align-items: center;
+        justify-content: center;
+
+   }
+

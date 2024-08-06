@@ -3,6 +3,7 @@ package com.multi.culture_link.file.service;
 
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
+import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,47 +21,38 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @Service
 public class FileService {
-//    private final AmazonS3Client amazonS3Client;
-//
-//    @Value("${cloud.aws.s3.bucket}")
-//    private String bucket;
-//
-//    public String uploadFiles(MultipartFile multipartFile, String dirName) throws IOException {
-//        File uploadFile = convert(multipartFile)
-//                .orElseThrow(() -> new IllegalArgumentException("error: MultipartFile -> File convert fail"));
-//        return upload(uploadFile, dirName);
-//    }
-//
-//    public String upload(File uploadFile, String filePath) {
-//        String fileName = filePath + "/" + UUID.randomUUID() + uploadFile.getName();   // S3에 저장된 파일 이름
-//        String uploadImageUrl = putS3(uploadFile, fileName);
-//        removeNewFile(uploadFile);
-//        return uploadImageUrl;
-//    }
-//
-//    private String putS3(File uploadFile, String fileName) {
-//        amazonS3Client.putObject(new PutObjectRequest(bucket, fileName, uploadFile).withCannedAcl(CannedAccessControlList.PublicRead));
-//        return amazonS3Client.getUrl(bucket, fileName).toString();
-//    }
-//
-//    private void removeNewFile(File targetFile) {
-//        if (targetFile.delete()) {
-//            System.out.println("File delete success");
-//            return;
-//        }
-//        System.out.println("File delete fail");
-//    }
-//
-//    // 로컬에 파일 업로드 하기
-//    private Optional<File> convert(MultipartFile file) throws IOException {
-//        File convertFile = new File(System.getProperty("user.dir") + "/" + file.getOriginalFilename());
-//        if (convertFile.createNewFile()) {
-//            try (FileOutputStream fos = new FileOutputStream(convertFile)) {
-//                fos.write(file.getBytes());
-//            }
-//            return Optional.of(convertFile);
-//        }
-//        return Optional.empty();
-//    }
+    private final AmazonS3Client amazonS3Client;
+
+    // 넣을 버킷 이름
+    @Value("${cloud.aws.s3.bucket}")
+    private String bucket;
+
+    // 파일이 저장된 경로
+    public String uploadFiles(MultipartFile multipartFile, String path) throws IOException {
+        String uploadImageUrl = putS3(multipartFile, path.replaceFirst("^/", ""));
+
+        return uploadImageUrl;
+    }
+
+    private String putS3(MultipartFile multipartFile, String path) throws IOException {
+        String fileUrl = "";
+
+        ObjectMetadata metadata = new ObjectMetadata();
+        metadata.setContentType(multipartFile.getContentType());
+        metadata.setContentLength(multipartFile.getSize());
+
+        try {
+            // request 보낼 데이터 모음
+            String filePath = path.replaceFirst("^/", "");
+            PutObjectRequest putObjectRequest = new PutObjectRequest(
+                    bucket, filePath, multipartFile.getInputStream(), metadata)
+                    .withCannedAcl(CannedAccessControlList.PublicRead); // 접근 권한 설정
+            amazonS3Client.putObject(putObjectRequest); // 업로드
+            fileUrl = amazonS3Client.getUrl(bucket, filePath).toString();
+        }catch (IOException e) {
+            throw new IOException("파일 업로드 중 오류 발생", e);
+        }
+        return fileUrl;
+    }
 
 }

@@ -284,6 +284,7 @@
     <select id="findKeywordMappingByKeywordMapping" parameterType="festivalContentReviewNaverKeywordMapping">
 
         SELECT * FROM festival_content_review_naver_keyword_mapping
+
         WHERE festival_id = #{festivalId}
         AND sort_code = #{sortCode}
         AND festival_keyword_id = #{festivalKeywordId};
@@ -324,6 +325,66 @@
             festival_keyword_id = #{festivalKeywordId};
 
     </update>
+
+    <select id="findFestivalNaverUrlByNaverBlog" parameterType="naverBlogDTO" resultType="naverBlogDTO">
+
+        SELECT * FROM festival_naver_url_mapping
+        WHERE festival_id = #{festivalId}
+        AND sort_code = "NB"
+        AND page_url=#{link};
+
+    </select>
+
+
+    <insert id="insertFestivalNaverUrlMappingByNaverBlog" parameterType="naverBlogDTO">
+
+        INSERT INTO festival_naver_url_mapping(festival_id, sort_code, page_url)
+        VALUES(#{festivalId}, "NB", #{link})
+
+    </insert>
+
+    <select id="findAllFestivalReviewContentByFestivalId">
+
+        SELECT festival_review_content FROM festival_review
+        WHERE festival_id = #{festivalId};
+
+    </select>
+
+    <delete id="deleteAllReviewKeywordByFestivalId">
+
+        DELETE FROM festival_content_review_naver_keyword_mapping
+        WHERE festival_id = #{festivalId}
+        AND sort_code="R";
+
+    </delete>
+
+    <select id="findExistingFestivalContentReviewNaverKeywordMapList" parameterType="festivalContentReviewNaverKeywordMapping" resultType="festivalContentReviewNaverKeywordMapping">
+
+        SELECT * FROM festival_content_review_naver_keyword_mapping
+
+        <where>
+
+            <if test="festivalId !=null and festivalId!=0">
+
+                AND festival_id = #{festivalId}
+
+            </if>
+
+            <if test="sortCode !=null and !sortCode.equals('') and !sortCode.equals('0')">
+
+                AND sort_code = #{sortCode}
+
+            </if>
+
+            <if test="festivalKeywordId !=null and !festivalKeywordId.equals('') and !festivalKeywordId.equals('0')">
+
+                AND festival_keyword_id = #{festivalKeywordId};
+
+            </if>
+
+        </where>
+
+    </select>
 
 
 </mapper>

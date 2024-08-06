@@ -39,8 +39,8 @@
         UPDATE user_festival_love_hate_keyword_mapping
         SET festival_count = #{festivalCount}
         WHERE user_id = #{userId} AND
-              sort_code = #{sortCode} AND
-              festival_keyword_id = #{festivalKeywordId};
+        sort_code = #{sortCode} AND
+        festival_keyword_id = #{festivalKeywordId};
 
     </update>
 
@@ -85,11 +85,31 @@
 
     </select>
 
-    <select id="findContentKeywordListByFestivalId" resultType="festivalContentReviewNaverKeywordMapping">
+    <select id="findKeywordListByFestivalId" resultType="festivalContentReviewNaverKeywordMapping">
 
-        SELECT * FROM festival_content_review_naver_keyword_mapping
-        WHERE festival_id = #{festivalId}
-        AND sort_code = "C";
+        SELECT * FROM vw_festival_keyword_tf_idf_top10_data
+
+        <where>
+
+            <if test="festivalId !=null and festivalId!=0">
+
+                AND festival_id = #{festivalId}
+
+            </if>
+
+            <if test="sortCode !=null and !sortCode.equals('')">
+
+                AND sort_code = #{sortCode}
+
+            </if>
+
+            <if test="festivalKeywordId !=null and !festivalKeywordId.equals('')">
+
+                AND festival_keyword_id = #{festivalKeywordId}
+
+            </if>
+
+        </where>
 
     </select>
 
@@ -98,8 +118,8 @@
 
         SELECT * FROM time t
         WHERE t.time_id = (
-            SELECT f.time_id FROM festival f
-            WHERE f.festival_id = #{festivalId}
+        SELECT f.time_id FROM festival f
+        WHERE f.festival_id = #{festivalId}
         );
 
     </select>
@@ -108,9 +128,9 @@
 
         SELECT * FROM (
 
-            SELECT ROW_NUMBER() OVER (ORDER BY festival_review_id DESC) AS rownum, urd.*
-            FROM vw_user_review_data urd
-        
+        SELECT ROW_NUMBER() OVER (ORDER BY festival_review_id DESC) AS rownum, urd.*
+        FROM vw_festival_user_review_data urd
+
         ) f1
 
         WHERE f1.festival_id = #{festivalId}
@@ -121,7 +141,7 @@
 
     <select id="findFestivalReviewCountByVWUserReviewDTO">
 
-        SELECT COUNT(*) FROM vw_user_review_data
+        SELECT COUNT(*) FROM vw_festival_user_review_data
         WHERE festival_id = #{festivalId};
 
     </select>
@@ -145,7 +165,7 @@
 
         UPDATE festival_review
         SET festival_review_star = #{festivalReviewStar},
-            festival_review_content = #{festivalReviewContent}
+        festival_review_content = #{festivalReviewContent}
         WHERE festival_review_id = #{festivalReviewId};
 
     </update>
@@ -166,7 +186,6 @@
 
     </select>
 
-
     <select id="findSameManageFestivalByManageInstitution" parameterType="festivalDTO" resultType="festivalDTO">
 
         SELECT * FROM festival
@@ -175,6 +194,79 @@
 
     </select>
 
+    <select id="findPopularFestivalKeyword" parameterType="festivalContentReviewNaverKeywordMapping">
+
+        SELECT * FROM (
+
+        SELECT ROW_NUMBER() OVER (ORDER BY tf_idf DESC) AS rownum, topten.*
+        FROM vw_festival_keyword_tf_idf_top10_data topten
+
+        ) f1
+
+        WHERE f1.rownum BETWEEN #{pageDTO.start} AND #{pageDTO.end};
+
+    </select>
+
+
+    <insert id="insertUserSelectKeyword" parameterType="userFestivalLoveHateDTO">
+
+        INSERT INTO festival_user_love_hate_select_keyword_mapping(user_id, sort_code, festival_keyword_id, festival_count)
+        VALUES(#{userId}, #{sortCode}, #{festivalKeywordId}, #{festivalCount});
+
+    </insert>
+
+    <select id="findUserLoveKeywordList">
+
+        SELECT * FROM vw_festival_love_hate_keyword_count_sum_data
+        WHERE user_id = #{userId}
+        AND love_hate_sum >= 10;
+
+    </select>
+
+    <select id="findSameKeywordFestivalByKeywordId" resultType="festivalDTO">
+
+        SELECT f.*
+        FROM vw_festival_keyword_tf_idf_top10_data vw
+        INNER JOIN festival f
+        ON vw.festival_id = f.festival_id
+        WHERE vw.festival_keyword_id = #{festivalKeywordId};
+
+    </select>
+
+    <select id="findLoveHateFestivalList">
+
+        SELECT f.*
+        FROM user_festival_love_hate_festival_mapping m
+
+        JOIN festival f
+        ON m.festival_id = f.festival_id
+
+        WHERE user_id = #{userId}
+        AND sort_code = #{sortCode};
+
+    </select>
+
+    <select id="findFestivalReviewListByUserId" resultType="vwUserReviewDTO" parameterType="vwUserReviewDTO">
+
+        SELECT * FROM (
+
+        SELECT ROW_NUMBER() OVER (ORDER BY festival_review_id DESC) AS rownum, urd.*
+        FROM vw_festival_user_review_data urd
+
+        ) f1
+
+        WHERE f1.user_id = #{userId}
+        AND f1.rownum BETWEEN #{pageDTO.start} AND #{pageDTO.end};
+
+    </select>
+
+
+    <select id="findUserReviewCountByUserReviewDataDTO">
+
+        SELECT COUNT(*) FROM vw_festival_user_review_data urd
+        WHERE urd.user_id = #{userId};
+
+    </select>
 
 
 
