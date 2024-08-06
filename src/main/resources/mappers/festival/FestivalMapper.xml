@@ -128,7 +128,7 @@
 
         SELECT * FROM (
 
-        SELECT ROW_NUMBER() OVER (ORDER BY festival_review_id DESC) AS rownum, urd.*
+        SELECT ROW_NUMBER() OVER (PARTITION BY festival_id ORDER BY festival_review_id DESC) AS rownum, urd.*
         FROM vw_festival_user_review_data urd
 
         ) f1
@@ -250,7 +250,7 @@
 
         SELECT * FROM (
 
-        SELECT ROW_NUMBER() OVER (ORDER BY festival_review_id DESC) AS rownum, urd.*
+        SELECT ROW_NUMBER() OVER (PARTITION BY user_id ORDER BY festival_review_id DESC) AS rownum, urd.*
         FROM vw_festival_user_review_data urd
 
         ) f1
