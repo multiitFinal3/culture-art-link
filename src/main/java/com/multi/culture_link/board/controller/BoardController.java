@@ -1,7 +1,9 @@
 package com.multi.culture_link.board.controller;
 
 import com.multi.culture_link.admin.exhibition.model.dto.api.ExhibitionApiDto;
+import com.multi.culture_link.board.model.dto.BoardCommentDto;
 import com.multi.culture_link.board.model.dto.BoardDto;
+import com.multi.culture_link.board.service.BoardCommentService;
 import com.multi.culture_link.board.service.BoardService;
 import com.multi.culture_link.culturalProperties.model.dto.Video;
 import com.multi.culture_link.exhibition.model.dto.ExhibitionAnalyzeDto;
@@ -34,6 +36,7 @@ import java.util.Map;
 @RequestMapping("/board")
 public class BoardController {
     private final BoardService boardService;
+    private final BoardCommentService boardcommentService;
 
     @PostMapping()
     public void createBoard(
@@ -57,7 +60,7 @@ public class BoardController {
             @RequestBody BoardDto data,
             @AuthenticationPrincipal VWUserRoleDTO currentUser
     ){
-        boardService.deleteBoard(data, currentUser);
+        boardService.deleteBoard(data, currentUser.getUserId());
     }
 
     @PatchMapping()
@@ -65,17 +68,61 @@ public class BoardController {
             @RequestBody BoardDto data,
             @AuthenticationPrincipal VWUserRoleDTO currentUser
     ){
-        boardService.updateBoard(data, currentUser);
+        boardService.updateBoard(data, currentUser.getUserId());
     }
 
     @GetMapping("/{boardId}")
     public BoardDto selectBoard(
-            @RequestBody BoardDto data,
             @PathVariable int boardId,
             @AuthenticationPrincipal VWUserRoleDTO currentUser
     ){
-        return boardService.selectBoard(data, currentUser);
+        return boardService.selectBoard(boardId, currentUser.getUserId());
 
+    }
+
+
+
+
+
+
+
+    // 댓글 목록 가져오기
+    @GetMapping("/{boardId}/comment")
+    public List<BoardCommentDto> getComment(
+            @PathVariable int boardId,
+            @AuthenticationPrincipal VWUserRoleDTO currentUser
+    ) {
+        BoardCommentDto data = new BoardCommentDto();
+        data.setUserId(currentUser.getUserId());
+        data.setBoardId(boardId);
+        return boardcommentService.getComment(data);
+    }
+
+    // 댓글 작성
+    @PostMapping("/{boardId}/comment")
+    public void setComment(
+            @RequestBody BoardCommentDto data,
+            @AuthenticationPrincipal VWUserRoleDTO currentUser,
+            @PathVariable int boardId
+    ) {
+        data.setBoardId(boardId);
+        data.setUserId(currentUser.getUserId());
+
+        System.out.println("data : "+ data);
+        boardcommentService.createComment(data);
+    }
+
+    // 댓글 삭제
+    @DeleteMapping("/{boardId}/comment")
+    public void deleteComment(
+            @AuthenticationPrincipal VWUserRoleDTO currentUser,
+            @PathVariable int boardId,
+            @RequestBody BoardCommentDto data
+
+    ) {
+        data.setBoardId(boardId);
+        data.setUserId(currentUser.getUserId());
+        boardcommentService.deleteComment(data);
     }
 
 

@@ -33,4 +33,11 @@ public class BoardViewController {
 
     }
 
+
+
+    @GetMapping("/update/{boardId}")
+    public String updateBoard() {
+        return "/board/updateBoard";
+    }
+
 }

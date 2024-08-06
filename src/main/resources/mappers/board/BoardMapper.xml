@@ -15,28 +15,33 @@
         FROM board b left join user u on b.user_id = u.user_id
         <where>
             <if test="genre != null and genre != 'all'">
-                AND genre = #{data.genre}
+                AND genre = #{genre}
             </if>
             <if test="query != null and query != ''">
                 AND title LIKE CONCAT('%', #{query}, '%')
             </if>
         </where>
-        ORDER BY b.created_at ASC
+        ORDER BY b.created_at DESC
     </select>
 
     <delete id="deleteBoard">
         DELETE FROM board
-        WHERE user_id = #{userId} AND id = #{id}
+        WHERE user_id = #{userId} AND id = #{data.id}
     </delete>
 
     <update id="updateBoard" parameterType="com.multi.culture_link.board.model.dto.BoardDto">
         UPDATE board
-        SET content = #{content}
-        WHERE user_id = #{userId} AND id=#{id}
+        SET content = #{data.content}
+        WHERE user_id = #{userId} AND id=#{data.id}
     </update>
 
     <select id="getBoardDetail" resultType="com.multi.culture_link.board.model.dto.BoardDto">
-        SELECT * FROM board WHERE id = #{id}
+        SELECT *,
+               CASE
+                   WHEN user_id = #{userId} THEN true
+                   ELSE false
+                   END AS isAuth
+           FROM board WHERE id = #{boardId}
     </select>
 
 

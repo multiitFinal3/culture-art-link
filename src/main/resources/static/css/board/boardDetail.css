@@ -28,7 +28,7 @@ h1 {
     margin-bottom: 20px;
 }
 
-.btn {
+.btn-detail {
     padding: 10px 20px;
     background-color: #333;
     color: white;
@@ -38,7 +38,7 @@ h1 {
     margin-right: 10px;
 }
 
-.btn:hover {
+.btn-detail:hover {
     background-color: #555;
 }
 
@@ -52,6 +52,7 @@ h1 {
     padding: 10px;
     margin-bottom: 10px;
     border-radius: 4px;
+    position: relative;
 }
 
 .comment-content {
@@ -71,4 +72,16 @@ h1 {
     border: 1px solid #ddd;
     border-radius: 4px;
     resize: vertical;
+}
+
+.delete-comment-btn {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background-color: red;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    display: none; /* 기본적으로 숨김 */
 }

@@ -12,7 +12,7 @@ import java.util.List;
 public interface BoardDao {
     void setBoard(BoardDto data, int userId);
     List<BoardDto> getBoardList(String genre, String query);
-    void deleteBoard(BoardDto data, VWUserRoleDTO currentUser);
-    void updateBoard(BoardDto data, VWUserRoleDTO currentUser);
-    BoardDto getBoardDetail(BoardDto data, VWUserRoleDTO currentUser);
+    void deleteBoard(BoardDto data, int userId);
+    void updateBoard(BoardDto data, int userId);
+    BoardDto getBoardDetail(int boardId, int userId);
 }

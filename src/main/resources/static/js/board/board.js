@@ -1,4 +1,4 @@
-let currentCategory = 'all';
+let currentCategory = 'performance';
 let currentPage = 1;
 const postsPerPage = 10;
 
@@ -67,14 +67,20 @@ function searchPosts() {
     displayPosts(currentCategory, currentPage, searchTerm);
 }
 
-// 탭 이벤트 리스너 설정
-document.querySelectorAll('.tab').forEach(tab => {
-    tab.addEventListener('click', () => {
-        document.querySelector('.tab.active').classList.remove('active');
-        tab.classList.add('active');
-        currentCategory = tab.dataset.category;
-        currentPage = 1;
-        displayPosts(currentCategory, currentPage);
+document.addEventListener('DOMContentLoaded', function() {
+    const tabs = document.querySelectorAll('.tab');
+
+    tabs.forEach(tab => {
+        tab.addEventListener('click', function() {
+            tabs.forEach(t => t.classList.remove('active'));
+            this.classList.add('active');
+            const category = this.getAttribute('data-category');
+            currentCategory = tab.dataset.category;
+            console.log('선택된 카테고리:', category);
+
+            currentPage = 1;
+            displayPosts(currentCategory, currentPage);
+        });
     });
 });
 

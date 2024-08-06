@@ -15,6 +15,7 @@ import okhttp3.OkHttpClient;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -37,15 +38,15 @@ public class BoardService {
         return boardDao.getBoardList(genre, query);
     }
 
-    public void deleteBoard(BoardDto data, VWUserRoleDTO currentUser) {
-        boardDao.deleteBoard(data, currentUser);
+    public void deleteBoard(BoardDto data, int userId) {
+        boardDao.deleteBoard(data, userId);
     }
 
-    public void updateBoard(BoardDto data, VWUserRoleDTO currentUser) {
-        boardDao.updateBoard(data, currentUser);
+    public void updateBoard(BoardDto data, int userId) {
+        boardDao.updateBoard(data, userId);
     }
 
-    public BoardDto selectBoard(BoardDto data, VWUserRoleDTO currentUser) {
-        return boardDao.getBoardDetail(data, currentUser);
+    public BoardDto selectBoard(int boardId, int userId) {
+        return boardDao.getBoardDetail(boardId, userId);
     }
 }
