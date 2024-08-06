@@ -6,9 +6,10 @@ import lombok.Data;
 @Data
 public class BoardDto {
     public int id;
-    public int user_id;
+    public int userId;
+    public String author;
     public String genre;
-    public String image;
     public String title;
-    public int content;
+    public String content;
+    public String createdAt;
 }

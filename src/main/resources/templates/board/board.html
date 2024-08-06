@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html
+        xmlns:th="http://www.thymeleaf.org"
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
+>
+<html layout:decorate="~{common/layout/layoutMenubar}">
+    <html lang="ko">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>게시판</title>
+        <link rel="stylesheet" href="/css/board/board.css">
+        <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+        <script src="/js/board/board.js"></script>
+    </head>
+    <body>
+    <div layout:fragment="content">
+        <div class="container">
+            <div class="tabs">
+                <button class="tab active" data-category="performance">공연 게시판</button>
+                <button class="tab" data-category="exhibition">전시 게시판</button>
+                <button class="tab" data-category="festival">축제 게시판</button>
+                <button class="tab" data-category="cultural_properties">문화재 게시판</button>
+            </div>
+            <button class="write-btn" onclick="location.href='/board/view/create'">글쓰기</button>
+
+            <table id="postTable">
+                <thead>
+                <tr>
+                    <th>번호</th>
+                    <th>제목</th>
+                    <th>글쓴이</th>
+                    <th>작성일</th>
+                </tr>
+                </thead>
+                <tbody id="postList"></tbody>
+            </table>
+
+            <div class="pagination" id="pagination"></div>
+
+            <div class="search">
+                <input type="text" id="searchInput" placeholder="Search">
+                <button onclick="searchPosts()">검색</button>
+            </div>
+        </div>
+    </div>
+    </body>
+    </html>
+</html>

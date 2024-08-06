@@ -33,6 +33,7 @@ public class AdminFestivalServiceImpl implements AdminFestivalService {
 	private final OkHttpClient client;
 	private final Gson gson;
 	private final KeywordExtractService1 keywordExtractService;
+	String path = "classpath:static/txt/festival/stop.txt";
 	
 	
 	ArrayList<FestivalDTO> list = new ArrayList<>();
@@ -904,7 +905,7 @@ public class AdminFestivalServiceImpl implements AdminFestivalService {
 		String all = content + " " + title;
 		
 		// 코모란으로 결정
-		HashMap<String, Integer> map = keywordExtractService.getKeywordByKomoran(all);
+		HashMap<String, Integer> map = keywordExtractService.getKeywordByKomoran(all, path);
 //		ArrayList<String> list = keywordExtractService.getKeywordByApacheLucene(all);
 		
 		LinkedList<Map.Entry<String, Integer>> list = new LinkedList<>(map.entrySet());
@@ -1037,7 +1038,7 @@ public class AdminFestivalServiceImpl implements AdminFestivalService {
 			
 			// TF-ID
 			String allContent = naverArticleDTO.getTotalContent();
-			map = keywordExtractService.getKeywordByKomoran(allContent);
+			map = keywordExtractService.getKeywordByKomoran(allContent, path);
 			
 			System.out.println("TF-ID 결과 : " + map);
 			

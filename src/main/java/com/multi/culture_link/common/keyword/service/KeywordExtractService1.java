@@ -178,7 +178,7 @@ public class KeywordExtractService1 {
 	 * @return
 	 * @throws Exception
 	 */
-	public HashMap<String, Integer> getKeywordByKomoran(String allContent) throws Exception {
+	public HashMap<String, Integer> getKeywordByKomoran(String allContent, String path) throws Exception {
 		
 		
 		System.out.println("allContent : " + allContent);
@@ -202,7 +202,7 @@ public class KeywordExtractService1 {
 		ArrayList<String> stopWords = new ArrayList<String>();
 		
 		
-		Resource resource = resourceLoader.getResource("classpath:static/txt/festival/stop.txt");
+		Resource resource = resourceLoader.getResource(path);
 		
 		BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(new FileInputStream(resource.getFile())));
 		

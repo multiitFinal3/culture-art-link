@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.multi.culture_link.board.model.dao.BoardDao"><!-- 메퍼위치하고  동일하게 네임스페이스 작성-->
+
+    <insert id="setBoard">
+        INSERT INTO board (user_id, genre, title, content)
+        VALUES (#{userId}, #{data.genre}, #{data.title}, #{data.content})
+    </insert>
+
+    <select id="getBoardList" resultType="com.multi.culture_link.board.model.dto.BoardDto">
+        SELECT *, u.user_name AS author
+        FROM board b left join user u on b.user_id = u.user_id
+        <where>
+            <if test="genre != null and genre != 'all'">
+                AND genre = #{data.genre}
+            </if>
+            <if test="query != null and query != ''">
+                AND title LIKE CONCAT('%', #{query}, '%')
+            </if>
+        </where>
+        ORDER BY b.created_at ASC
+    </select>
+
+    <delete id="deleteBoard">
+        DELETE FROM board
+        WHERE user_id = #{userId} AND id = #{id}
+    </delete>
+
+    <update id="updateBoard" parameterType="com.multi.culture_link.board.model.dto.BoardDto">
+        UPDATE board
+        SET content = #{content}
+        WHERE user_id = #{userId} AND id=#{id}
+    </update>
+
+    <select id="getBoardDetail" resultType="com.multi.culture_link.board.model.dto.BoardDto">
+        SELECT * FROM board WHERE id = #{id}
+    </select>
+
+
+
+
+
+
+</mapper>
