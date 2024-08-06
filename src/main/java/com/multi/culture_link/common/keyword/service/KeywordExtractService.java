@@ -52,7 +52,7 @@ import java.util.stream.Collectors;
  * @since 2024-07-23
  */
 @Service
-public class KeywordExtractService1 {
+public class KeywordExtractService {
 	
 	
 	private ResourceLoader resourceLoader;
@@ -65,7 +65,7 @@ public class KeywordExtractService1 {
 	 *
 	 * @param resourceLoader 해당 파일을 찾는 리소스 로더
 	 */
-	public KeywordExtractService1(ResourceLoader resourceLoader) {
+	public KeywordExtractService(ResourceLoader resourceLoader) {
 		this.resourceLoader = resourceLoader;
 	}
 	
@@ -176,7 +176,7 @@ public class KeywordExtractService1 {
 	 * @return
 	 * @throws Exception
 	 */
-	public HashMap<String, Integer> getKeywordByKomoran(String allContent) throws Exception {
+	public HashMap<String, Integer> getKeywordByKomoran(String allContent, String path) throws Exception {
 		
 		System.out.println("allContent : " + allContent);
 
@@ -201,7 +201,8 @@ public class KeywordExtractService1 {
 		ArrayList<String> stopWords = new ArrayList<String>();
 		
 		
-		Resource resource = resourceLoader.getResource("classpath:static/txt/festival/stop.txt");
+		Resource resource = resourceLoader.getResource(path);
+//		"classpath:static/txt/festival/stop.txt"
 		
 		BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(new FileInputStream(resource.getFile())));
 		

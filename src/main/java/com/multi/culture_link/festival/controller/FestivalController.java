@@ -160,7 +160,7 @@ public class FestivalController {
 	
 	
 	/**
-	 * 유저가 찜한 목록을 표시하기 위해 리스트를 가져옴
+	 * 유저가 찜한 목록을 표시하기 위해 찜 번호 리스트를 가져옴
 	 *
 	 * @param user
 	 * @return 축제 DB 번호
@@ -918,7 +918,6 @@ public class FestivalController {
 	@ResponseBody
 	public ArrayList<FestivalContentReviewNaverKeywordMapDTO> findPopularFestivalKeyword(@RequestParam("page") int page) {
 		
-		System.out.println("들어롬");
 		ArrayList<FestivalContentReviewNaverKeywordMapDTO> list = null;
 		PageDTO pageDTO = new PageDTO();
 		pageDTO.setStartEnd(page);
@@ -939,6 +938,7 @@ public class FestivalController {
 	
 	/**
 	 * 같은 키워드 추천 작품 리스트를 반환(찜 포함)
+	 *
 	 * @param user
 	 * @return
 	 */
@@ -981,6 +981,135 @@ public class FestivalController {
 		
 		System.out.println("findKeywordRecommendFestivalList : " + list);
 		return list;
+		
+	}
+	
+	
+	/**
+	 * 찜을 한 축제 리스트를 반환
+	 *
+	 * @param user
+	 * @return
+	 */
+	@PostMapping("/findLoveFestivalList")
+	@ResponseBody
+	public ArrayList<FestivalDTO> findLoveFestivalList(@AuthenticationPrincipal VWUserRoleDTO user) {
+		
+		System.out.println("findLoveFestivalList 1");
+		int userId = user.getUserId();
+		UserFestivalLoveHateMapDTO mapDTO = new UserFestivalLoveHateMapDTO();
+		mapDTO.setUserId(userId);
+		mapDTO.setSortCode("L");
+		
+		
+		ArrayList<FestivalDTO> list = null;
+		try {
+			list = festivalService.findLoveHateFestivalList(mapDTO);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+		
+		System.out.println("findLoveFestivalList : " + list);
+		
+		return list;
+		
+		
+	}
+	
+	
+	/**
+	 * 관심없음을 한 축제 리스트를 반환
+	 *
+	 * @param user
+	 * @return
+	 */
+	@PostMapping("/findHateFestivalList")
+	@ResponseBody
+	public ArrayList<FestivalDTO> findHateFestivalList(@AuthenticationPrincipal VWUserRoleDTO user) {
+		
+		System.out.println("findHateFestivalList 1");
+		
+		UserFestivalLoveHateMapDTO mapDTO = new UserFestivalLoveHateMapDTO();
+		int userId = user.getUserId();
+		mapDTO.setUserId(userId);
+		mapDTO.setSortCode("H");
+		ArrayList<FestivalDTO> list = null;
+		try {
+			list = festivalService.findLoveHateFestivalList(mapDTO);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+		
+		System.out.println("findHateFestivalList : " + list);
+		
+		return list;
+		
+		
+	}
+	
+	
+	/**
+	 * 특정 유저의 축제의 리뷰 전부를 리뷰 페이지 번호에 맞게 가져오기
+	 *
+	 * @param user
+	 * @param page
+	 * @return
+	 */
+	@PostMapping("/findFestivalReviewListByUserId")
+	@ResponseBody
+	public ArrayList<VWUserReviewDataDTO> findFestivalReviewListByUserId(@AuthenticationPrincipal VWUserRoleDTO user, @RequestParam("page") int page) {
+		
+		VWUserReviewDataDTO vwUserReviewDataDTO = new VWUserReviewDataDTO();
+		PageDTO pageDTO = new PageDTO();
+		pageDTO.setPage(page);
+		pageDTO.setStartEnd(pageDTO.getPage());
+		vwUserReviewDataDTO.setPageDTO(pageDTO);
+		vwUserReviewDataDTO.setUserId(user.getUserId());
+		
+		System.out.println("보내는 : " + vwUserReviewDataDTO);
+		
+		ArrayList<VWUserReviewDataDTO> list = null;
+		
+		try {
+			list = festivalService.findFestivalReviewListByUserId(vwUserReviewDataDTO);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+		
+		System.out.println("findFestivalReviewListByUserId : " + list);
+		
+		return list;
+		
+	}
+	
+	
+	/**
+	 * 특정 유저의 축제의 리뷰 전부를 리뷰 페이지 번호에 맞게 가져오기
+	 *
+	 * @param user
+	 *
+	 * @return
+	 */
+	@PostMapping("/findUserReviewCount")
+	@ResponseBody
+	public int findUserReviewCountByUserId(@AuthenticationPrincipal VWUserRoleDTO user) {
+		
+		VWUserReviewDataDTO vwUserReviewDataDTO = new VWUserReviewDataDTO();
+		vwUserReviewDataDTO.setUserId(user.getUserId());
+		
+		System.out.println("보내는 : " + vwUserReviewDataDTO);
+		
+		int count = 0;
+		
+		try {
+			count = festivalService.findUserReviewCountByUserReviewDataDTO(vwUserReviewDataDTO);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+		
+		System.out.println("findUserReviewCountByUserReviewDataDTO : " + count);
+		
+		return count;
 		
 	}
 	
