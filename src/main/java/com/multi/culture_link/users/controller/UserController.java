@@ -181,6 +181,7 @@ public class UserController {
 		
 	}
 	
+	
 	/**
 	 * 회원가입 페이지의 지역정보를 가져옴
 	 *
@@ -203,6 +204,25 @@ public class UserController {
 		map.put("regionList", list);
 		
 		return list;
+		
+	}
+	
+	
+	/**
+	 * 회원가입 페이지의 지역정보를 가져옴
+	 *
+	 * @return
+	 */
+	@PostMapping("/deleteUserAccount")
+	@ResponseBody
+	public void deleteUserAccount(@AuthenticationPrincipal VWUserRoleDTO user) {
+		
+		try {
+			userService.deleteUserAccount(user);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+		
 		
 	}
 	

@@ -15,7 +15,6 @@ public class PageDTO {
 		this.start = (page - 1) * 5 + 1;
 		this.end = page * 5;
 		
-		
 	}
 	
 	

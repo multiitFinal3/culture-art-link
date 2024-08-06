@@ -1,6 +1,7 @@
 package com.multi.culture_link.users.service;
 
 import com.multi.culture_link.users.model.dto.UserDTO;
+import com.multi.culture_link.users.model.dto.VWUserRoleDTO;
 import com.multi.culture_link.users.model.mapper.UserMapper;
 import org.springframework.stereotype.Service;
 
@@ -36,6 +37,12 @@ public class UserService {
 		UserDTO user = userMapper.findUserByEmail(email);
 		
 		return user;
+		
+	}
+	
+	public void deleteUserAccount(VWUserRoleDTO user) throws Exception{
+		
+		userMapper.deleteUserAccount(user);
 		
 	}
 }
