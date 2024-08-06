@@ -145,7 +145,6 @@
 
 
 
-
                 /**
                 * 회원정보 삭제
                 *
@@ -160,6 +159,67 @@
                         success: function(){
                             alert("회원 탈퇴 되었습니다.");
                             window.location = "/user/logout";
+                        }
+                    })
+                })
+
+
+
+                /**
+                * 회원정보 수정
+                *
+                */
+                $(document).on('submit','#basicForm', function(event){
+                    console.log("#updateAccount")
+                    event.preventDefault();
+
+                    var formData = new FormData();
+
+                    var fileInput = document.getElementById('uploadFile');
+                    if(fileInput && fileInput.files.length > 0){
+                        formData.append('file', fileInput.files[0]);
+                    }
+
+
+                    var email = document.getElementById('email').value;
+                    formData.append('email', email);
+
+                    var password = document.getElementById('password').value;
+                    formData.append('password', password);
+
+                    var userName = document.getElementById('userName').value;
+                    formData.append('userName', userName);
+
+                    var tel = document.getElementById('tel').value;
+                    formData.append('tel', tel);
+
+                    var userAge = document.getElementById('userAge').value;
+                    formData.append('userAge', userAge);
+
+                    var gender = document.getElementById('gender').options[document.getElementById('gender').selectedIndex].value;
+                    formData.append('gender', gender);
+
+                    var regionId = document.getElementById('regionId').options[document.getElementById('regionId').selectedIndex].value;
+                    formData.append('regionId', regionId);
+
+                    console.log(regionId);
+                    console.log(email);
+
+                    $.ajax({
+
+                        url: '/user/updateUserAccount',
+                        method: 'POST',
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        success: function(){
+                            alert("회원정보 수정 되었습니다.");
+                            window.location = "/user/myPage";
+                        },
+                        error: function(xhr, status, error){
+
+                            alert('회원정보 수정 실패');
+
                         }
                     })
                 })
@@ -917,7 +977,7 @@
 
         <div id="leftZone">
 
-            <form th:action="@{/user/updateUserBasicInfo}" method="post" encType="multipart/form-data" id="basicForm" style="font-size: 28px;margin: 10%;">
+            <form encType="multipart/form-data" id="basicForm" style="font-size: 28px;margin: 10%;">
 
                 <div id="profileImg" style="width: 100%;">
 
@@ -925,17 +985,17 @@
 
                 </div><br>
                 프로필 사진 <input name="uploadFile" class="rounded" id="uploadFile" type="file" accept="image/*"><br>
-                이메일  <input name="email" class="rounded" readonly th:placeholder="${user.email}"><br>
-                비밀번호  <input name="password" class="rounded" type="password" placeholder="******"><br>
-                이름  <input name="userName" class="rounded" style="width:100px;" th:placeholder="${user.userName}">
-                전화번호  <input name="tel" class="rounded" type="tel" style="width:200px;" th:placeholder="${user.tel}"><br>
-                나이 <input name="userAge" class="rounded" type="number" style="width:80px;" th:placeholder="${user.userAge}">
+                이메일  <input name="email" class="rounded" id="email" th:value="${user.email}" placeholder="${user.email}"><br>
+                비밀번호  <input name="password" class="rounded" id="password" type="password" th:value="${user.password}" placeholder="******"><br>
+                이름  <input name="userName" class="rounded" id="userName" style="width:100px;" th:value="${user.userName}" placeholder="${user.userName}">
+                전화번호  <input name="tel" class="rounded" id="tel" type="tel" style="width:200px;" th:value="${user.tel}"  placeholder="${user.tel}"><br>
+                나이 <input name="userAge" class="rounded" id="userAge" type="number" style="width:80px;" th:value="${user.userAge}"  th:placeholder="${user.userAge}">
                 성별
-                <select name="gender" class="rounded" style="width:80px;" id="gender">
+                <select name="gender" class="rounded" style="width:80px;" id="gender" th:value="${user.gender}">
                 </select>
                 지역 <select name="regionId" id="regionId" class="rounded" style="width:100px;"></select><br>
 
-                <button type="submit" th:value="${user.userId}">회원정보 수정</button>
+                <button type="submit" id="updateAccount" th:value="${user.userId}">회원정보 수정</button>
                 <button type="button" id="deleteAccount" th:value="${user.userId}">회원탈퇴</button>
 
             </form>

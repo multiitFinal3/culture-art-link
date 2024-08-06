@@ -45,4 +45,10 @@ public class UserService {
 		userMapper.deleteUserAccount(user);
 		
 	}
+	
+	public void updateUserAccount(UserDTO userDTO) throws Exception{
+		
+		userMapper.updateUserAccount(userDTO);
+		
+	}
 }

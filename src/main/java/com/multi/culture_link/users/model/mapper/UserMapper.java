@@ -14,4 +14,6 @@ public interface UserMapper {
 	int insertUser(UserDTO userDTO) throws Exception;
 	
 	void deleteUserAccount(VWUserRoleDTO user) throws Exception;
+	
+	void updateUserAccount(UserDTO userDTO) throws Exception;
 }

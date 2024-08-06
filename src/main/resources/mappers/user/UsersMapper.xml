@@ -31,5 +31,21 @@
 
     </delete>
 
+    <update id="updateUserAccount">
+
+        UPDATE user
+        SET
+            email = #{email},
+            password = #{password},
+            user_age = #{userAge},
+            user_name = #{userName},
+            tel = #{tel},
+            gender = #{gender},
+            region_id = #{regionId},
+            user_profile_pic = #{userProfilePic}
+        WHERE user_id = #{userId};
+
+    </update>
+
 
 </mapper>
