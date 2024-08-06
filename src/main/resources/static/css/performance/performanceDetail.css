@@ -1,4 +1,8 @@
-
+.container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 30px;
+}
 .top-section {
     display: flex;
     gap: 20px;
@@ -34,7 +38,7 @@
     align-self: flex-end;
 }
 
-.calendar-section {
+.info-section {
     display: flex;
     flex-direction: column;
     gap: 16px;
@@ -93,19 +97,19 @@
     color: #A8A8A8;
 }
 
-.showtime-section {
+.info-section-content {
     display: flex;
     flex-direction: column;
     gap: 8px;
 }
 
-.showtime-title, .remaining-seats {
+.info-location, .info-date, .info-runtime, .info-age, .info-genre, .info-organizer, .info-producer, .info-price{
     font-size: 20px;
     font-weight: 300;
     color: black;
 }
 
-.showtime-button, .book-button {
+.info-ticketbutton {
     width: 229px;
     height: 56px;
     border-radius: 100px;
@@ -116,6 +120,13 @@
     cursor: pointer;
     margin-bottom: 16px;
 }
+
+.info-ticketbutton a {
+    text-decoration: none;
+    color: blue;
+    font-weight: 600;
+}
+
 
 .book-button {
     height: 71px;

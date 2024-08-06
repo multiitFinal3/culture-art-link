@@ -11,12 +11,48 @@
     <link rel="stylesheet" th:href="@{/css/performance/performanceDetail.css}">
     <link rel="stylesheet" th:href="@{/css/performance/performanceHome.css}">
     <script th:src="@{/js/performance/performance.js}"></script>
+    <!--<script th:src="'https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=' + ${naverClientId} + '&submodules=geocoder'"></script>-->
+    <script th:inline="javascript" th:src="'https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=' + ${naverClientId}"></script>
 
 
+
+    <script th:inline="javascript">
+        var naverClientId = /*[[${naverClientId}]]*/ 'YOUR_CLIENT_ID';
+
+        function initMap() {
+            var lat = /*[[${performance.latitude}]]*/ 'default_latitude';
+            var lng = /*[[${performance.longitude}]]*/ 'default_longitude';
+
+            if (document.getElementById('map')) {
+                var map = new naver.maps.Map('map', {
+                    center: new naver.maps.LatLng(lat, lng),
+                    zoom: 15
+                });
+
+                var marker = new naver.maps.Marker({
+                    position: new naver.maps.LatLng(lat, lng),
+                    map: map
+                });
+            } else {
+                console.error("Container map not found.");
+            }
+        }
+
+        function showMap() {
+            var largeCard = document.querySelector('.large-card .related-info .content');
+            largeCard.innerHTML = '<div id="map" style="width: 100%; height: 400px;"></div>';
+            initMap();
+        }
+
+        document.addEventListener("DOMContentLoaded", function() {
+            document.getElementById("showMapBtn").addEventListener("click", function() {
+                showMap();
+            });
+        });
+    </script>
 
 </head>
 <body>
-
 <div layout:fragment="content">
     <div class="filter-container">
         <!-- 장르 필터 -->
@@ -45,102 +81,43 @@
         </div>
     </div>
 
-
-    <div class="top-section">
-        <div class="title">Title</div>
-        <div class="detail-card">
-            <img class="thumbnail" src="https://via.placeholder.com/300x400" />
-            <div class="star-icon">★</div>
-        </div>
-        <div class="calendar-section">
-            <div class="calendar-header">관람일</div>
-            <div class="calendar-box">
-                <div class="month">May 2023</div>
-                <div class="calendar">
-                    <!-- 캘린더 내용 -->
-                    <div class="days">
-                        <div class="day">Mo</div>
-                        <div class="day">Tu</div>
-                        <div class="day">We</div>
-                        <div class="day">Th</div>
-                        <div class="day">Fr</div>
-                        <div class="day">Sa</div>
-                        <div class="day">Su</div>
-                    </div>
-                    <div class="dates">
-                        <div class="date">1</div>
-                        <div class="date">2</div>
-                        <div class="date">3</div>
-                        <div class="date">4</div>
-                        <div class="date">5</div>
-                        <div class="date">6</div>
-                        <div class="date">7</div>
-                        <div class="date">8</div>
-                        <div class="date">9</div>
-                        <div class="date">10</div>
-                        <div class="date">11</div>
-                        <div class="date">12</div>
-                        <div class="date">13</div>
-                        <div class="date highlight">14</div>
-                        <div class="date">15</div>
-                        <div class="date">16</div>
-                        <div class="date">17</div>
-                        <div class="date highlight">18</div>
-                        <div class="date">19</div>
-                        <div class="date">20</div>
-                        <div class="date">21</div>
-                        <div class="date">22</div>
-                        <div class="date">23</div>
-                        <div class="date">24</div>
-                        <div class="date">25</div>
-                        <div class="date">26</div>
-                        <div class="date">27</div>
-                        <div class="date">28</div>
-                        <div class="date">29</div>
-                        <div class="date">30</div>
-                        <div class="date">31</div>
-                        <div class="date inactive">1</div>
-                        <div class="date inactive">2</div>
-                        <div class="date inactive">3</div>
-                        <div class="date inactive">4</div>
+    <div class="container">
+        <div class="top-section">
+            <div class="detail-card">
+                <img class="thumbnail" th:src="${performance.imageMain}" alt="공연 이미지" />
+                <div class="star-icon">★</div>
+            </div>
+            <div class="info-section">
+                <div class="title" th:text="${performance.title}">공연명</div>
+                <div class="info-section-content">
+                    <div class="info-location" th:text="${performance.location}">공연장소</div>
+                    <div class="info-date" th:text="${performance.formattedDate}">공연기간</div>
+                    <div class="info-runtime" th:text="${performance.runtime}">관람시간</div>
+                    <div class="info-age" th:text="${performance.age}">관람등급</div>
+                    <div class="info-genre" th:text="${performance.genre}">장르</div>
+                    <div class="info-organizer" th:text="${performance.organizer}">기관</div>
+                    <div class="info-producer" th:text="${performance.producer}">주체</div>
+                    <div class="info-price" th:text="${performance.price}">가격</div>
+                    <div class="info-ticketbutton">
+                        <a th:href="${performance.ticketingUrl}" target="_blank">예매하기</a>
                     </div>
                 </div>
             </div>
-            <div class="showtime-section">
-                <div class="showtime-title">회차</div>
-                <div class="remaining-seats">남은좌석 : 100</div>
-                <div class="showtime-button">1회 14:30</div>
-                <div class="showtime-button">1회 19:30</div>
-                <div class="book-button">
-                    <div class="text">예매하기</div>
-                </div>
-            </div>
         </div>
-    </div>
-    <div class="performance-container">
-        <div class="button-box">공연상세</div>
-        <div class="button-box">공연장소</div>
-        <div class="button-box">공연후기</div>
-    </div>
-    <div class="large-card">
-        <div class="related-info">
-            <div class="title">관련정보</div>
-            <div class="content">
-                공연이름<br>
-                공연날짜<br>
-                공연장소<br>
-                출연진<br>
-                런타임<br>
-                제작사<br>
-                가격<br>
-                장르<br>
-                공연상태: 공연중인지 공연종료인지<br>
-                공연 관람 연령<br>
-                예매처
+        <div class="performance-container">
+            <div class="button-box">공연상세</div>
+            <div class="button-box" id="showMapBtn">공연장소</div>
+            <div class="button-box">공연후기</div>
+        </div>
+        <div class="large-card">
+            <div class="related-info">
+                <div class="title">관련정보</div>
+                <div class="content">
+                    <img class="detailImage" th:src="${performance.imageDetail1}" alt="공연 상세 이미지" />
+                </div>
             </div>
         </div>
     </div>
 </div>
-
 </body>
 </html>
