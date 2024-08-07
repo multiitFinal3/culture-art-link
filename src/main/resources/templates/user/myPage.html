@@ -1011,11 +1011,10 @@
 
                                     <thead class="table-light">
                                     <tr style="text-align: center;">
-                                        <th scope="col" style="width: 300px;">#</th>
-                                        <th scope="col" style="width: 300px;">별점</th>
-                                        <th scope="col" style="width: 300px;">내용</th>
-                                        <th scope="col" style="width: 300px;">첨부파일</th>
-                                        <th scope="col" style="width: 300px;">삭제</th>
+                                        <th scope="col" style="width: 400px;">#</th>
+                                        <th scope="col" style="width: 400px;">별점</th>
+                                        <th scope="col" style="width: 400px;">내용</th>
+                                        <th scope="col" style="width: 400px;">삭제</th>
                                     </tr>
                                     </thead>
                                     <tbody id="reviewList">
@@ -1035,7 +1034,6 @@
                                 var reviewIdPlusExhibitionId = review.id + "," + review.exhibitionId;
                                 var index1 = (page-1)*5 + index+1;
                                 var reviewHtml = ``;
-                                var attachment = ``;
 
                                 var content = review.content.length > 10?
                                 review.content.substring(0,10) + "..."
@@ -1064,35 +1062,17 @@
                                 }
 
 
-                                if((review.attachment == null) || (review.attachment == "")){
-
-                                    attachment = `
-                                    <td style="width: 300px;">
-                                        <img src="/img/festival/noPhoto.png" style="width:100%;height:100%;display: block;">
-                                    </td>
-                                    `
-
-                                }else{
-
-                                    attachment = `
-                                    <td style="width: 300px;">
-                                        <img src="${review.attachment}" alt="사진 없음" style="width:100%;height:100%;display: block;">
-                                    </td>
-                                    `
-
-                                }
-
                                  reviewHtml = `
 
                                     <tr class="reviewRow" id="reviewRow" style="width: 100%;">
 
-                                        <td class="index1" style="width: 300px;">
+                                        <td class="index1" style="width: 400px;">
                                             ${index1}
                                         </td>`
 
                                         +
 
-                                        `<td style="width: 300px;">
+                                        `<td style="width: 400px;">
                                             <div class="star">`
 
                                                  + reviewStarHtml +
@@ -1101,18 +1081,14 @@
                                         </td>`
                                         +
 
-                                        `<td style="width: 300px;">
+                                        `<td style="width: 400px;">
                                             ${content}
                                         </td>`
 
                                         +
 
-                                        attachment
-
-                                        +
-
                                         `
-                                        <td style="width: 300px;">
+                                        <td style="width: 400px;">
                                             <button class="deleteBtn2" value="${reviewIdPlusExhibitionId}">삭제</button>
                                         </td>
 
