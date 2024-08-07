@@ -85,9 +85,38 @@
             initMap(location);
         }
 
+        function showReviews() {
+            const largeCard = document.querySelector('.large-card .related-info .content');
+            largeCard.innerHTML = `
+                <div class="review-form">
+                    <h3>공연후기 작성</h3>
+                    <textarea id="reviewContent" rows="4" cols="50" placeholder="공연후기를 작성하세요"></textarea>
+                    <div class="star-rating">
+                        <span class="star" data-value="1">★</span>
+                        <span class="star" data-value="2">★</span>
+                        <span class="star" data-value="3">★</span>
+                        <span class="star" data-value="4">★</span>
+                        <span class="star" data-value="5">★</span>
+                    </div>
+                    <button id="submitReview">후기 제출</button>
+                </div>
+                <div class="review-list">
+                    <h3>공연후기</h3>
+                    <div id="reviewsContainer"></div>
+                </div>
+            `;
+            initializeStarRating();
+            loadReviews();
+        }
+
+
         document.addEventListener("DOMContentLoaded", function() {
             document.getElementById("showMapBtn").addEventListener("click", function() {
                 showMap();
+            });
+
+            document.getElementById("showReviewsBtn").addEventListener("click", function() {
+                showReviews();
             });
         });
     </script>
@@ -147,7 +176,7 @@
         <div class="performance-container">
             <div class="button-box">공연상세</div>
             <div class="button-box" id="showMapBtn">공연장소</div>
-            <div class="button-box">공연후기</div>
+            <div class="button-box" id="showReviewsBtn">공연후기</div>
         </div>
         <div class="large-card">
             <div class="related-info">
