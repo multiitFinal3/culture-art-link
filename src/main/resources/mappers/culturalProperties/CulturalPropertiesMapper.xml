@@ -178,4 +178,16 @@
 
 
 
+    <update id="updateReview" parameterType="CulturalPropertiesReviewDTO">
+        UPDATE cultural_properties_review
+        SET content = #{content}, star = #{star}
+        WHERE id = #{id}
+    </update>
+
+
+
+
+
+
+
 </mapper>

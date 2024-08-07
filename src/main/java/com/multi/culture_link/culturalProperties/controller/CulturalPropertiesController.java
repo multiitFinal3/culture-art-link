@@ -445,6 +445,7 @@ public class CulturalPropertiesController {
 	}
 
 
+
 	@DeleteMapping("/detail/{culturalPropertiesId}/review/remove")
 	public ResponseEntity<String> deleteReview(
 			@RequestParam int id,
@@ -468,40 +469,22 @@ public class CulturalPropertiesController {
 	}
 
 
-//	@DeleteMapping("/detail/{id}/review/remove")
-//	public ResponseEntity<String> deleteReview(
-//			@PathVariable int culturalPropertiesId,
-//			@RequestBody CulturalPropertiesReviewDTO reviewDTO) {
-//
-//		// 현재 로그인된 사용자 정보를 가져오기
-//		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//
-//		if (authentication != null && authentication.getPrincipal() instanceof VWUserRoleDTO) {
-//			VWUserRoleDTO vwUserRoleDTO = (VWUserRoleDTO) authentication.getPrincipal();
-//			int userId = vwUserRoleDTO.getUserId(); // 사용자 ID 가져오기
-//
-//			int id = reviewDTO.getId();
-//
-//			reviewDTO.setUserId(userId); // 리뷰 DTO에 사용자 ID 설정
-//			reviewDTO.setCulturalPropertiesId(culturalPropertiesId);
-//			reviewDTO.setId(id);
-//
-//			System.out.println("삭제 userId" + userId);
-//			System.out.println("삭제 culturalPropertiesId" + culturalPropertiesId);
-//			System.out.println("삭제 id" + id);
-//
-//			// 리뷰 삭제 서비스 호출
-//			boolean deleted = culturalPropertiesService.deleteReview(id, culturalPropertiesId, userId);
-//
-//			if (deleted) {
-//				return ResponseEntity.ok("리뷰가 성공적으로 삭제되었습니다.");
-//			} else {
-//				return ResponseEntity.status(HttpStatus.FORBIDDEN).body("리뷰 삭제 권한이 없습니다.");
-//			}
-//		}
-//        return null;
-//    }
 
+
+	@PutMapping("/detail/{culturalPropertiesId}/review/update")
+	public ResponseEntity<String> updateReview(
+			@PathVariable int culturalPropertiesId,
+			@RequestParam int id,
+			@RequestBody CulturalPropertiesReviewDTO reviewDTO) {
+
+		boolean updated = culturalPropertiesService.updateReview(id, culturalPropertiesId, reviewDTO);
+
+		if (updated) {
+			return ResponseEntity.ok("리뷰가 성공적으로 수정되었습니다.");
+		} else {
+			return ResponseEntity.status(HttpStatus.FORBIDDEN).body("리뷰 수정 권한이 없습니다.");
+		}
+	}
 
 
 

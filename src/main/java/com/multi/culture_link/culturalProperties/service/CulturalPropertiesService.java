@@ -170,6 +170,21 @@ public class CulturalPropertiesService {
     }
 
 
+    public boolean updateReview(int id, int culturalPropertiesId, CulturalPropertiesReviewDTO reviewDTO) {
+
+        CulturalPropertiesReviewDTO review = culturalPropertiesDAO.findByReviewId(id);
+
+        // 리뷰가 존재하고, 문화재 ID가 일치하는지 확인
+        if (review != null && review.getCulturalPropertiesId() == culturalPropertiesId) {
+            review.setContent(reviewDTO.getContent()); // 수정할 내용 설정
+            review.setStar(reviewDTO.getStar()); // 별점 수정
+            culturalPropertiesDAO.updateReview(review); // 리뷰 업데이트
+            return true; // 수정 성공
+        }
+        return false; // 수정 실패
+    }
+
+
 
 
 }

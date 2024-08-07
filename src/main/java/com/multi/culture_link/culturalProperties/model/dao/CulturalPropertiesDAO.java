@@ -73,5 +73,7 @@ public interface CulturalPropertiesDAO {
     CulturalPropertiesReviewDTO findByReviewId(int id);
     void deleteReview(int id);
 
+    void updateReview(CulturalPropertiesReviewDTO review);
+
 
 }
