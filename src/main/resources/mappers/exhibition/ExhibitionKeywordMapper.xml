@@ -12,6 +12,27 @@
                                  frequency = VALUES(frequency)
     </insert>
 
+    <select id="getExhibitionKeyword" resultType="string">
+        SELECT keyword
+        FROM exhibition_keyword
+        WHERE exhibition_id = #{exhibitionId}
+    </select>
+
+    <insert id="updateUserKeyword">
+        INSERT INTO exhibition_interested_keyword (user_id, keyword, count)
+        VALUES (#{userId}, #{keyword}, #{countChange})
+            ON DUPLICATE KEY UPDATE
+                                 count = count + #{countChange}
+    </insert>
+
+
+
+
+
+
+
+
+
 
     <insert id="saveExhibitionCommentKeyword">
         INSERT INTO exhibition_comment_keyword (exhibition_id, keyword, frequency)
