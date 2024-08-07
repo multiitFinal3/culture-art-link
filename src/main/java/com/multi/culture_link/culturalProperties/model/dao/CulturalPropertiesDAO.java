@@ -2,6 +2,7 @@ package com.multi.culture_link.culturalProperties.model.dao;
 
 import com.multi.culture_link.admin.culturalProperties.model.dto.CulturalPropertiesDTO;
 import com.multi.culture_link.culturalProperties.model.dto.CulturalPropertiesInterestDTO;
+import com.multi.culture_link.culturalProperties.model.dto.CulturalPropertiesReviewDTO;
 import com.multi.culture_link.culturalProperties.model.dto.PageDTO;
 import com.multi.culture_link.exhibition.model.dto.ExhibitionDto;
 import org.apache.ibatis.annotations.Mapper;
@@ -43,15 +44,6 @@ public interface CulturalPropertiesDAO {
 
 
 
-
-//    CulturalPropertiesDTO getCulturalPropertyById(int id);
-
-    // 특정 문화재 ID로 조회
-//    CulturalPropertiesDTO getCulturalPropertyById(@Param("id") int id);
-
-//    CulturalPropertiesDTO getCulturalPropertyById(int userId, int id);
-
-
     List<CulturalPropertiesDTO> getNearbyPlace(@Param("region") String region, @Param("district") String district, @Param("id") int id);
 
     List<CulturalPropertiesDTO> getRandomPlace(@Param("region") String region, @Param("id") int id);
@@ -73,6 +65,13 @@ public interface CulturalPropertiesDAO {
 //    boolean isDisliked(@Param("userId") int userId,
 //                       @Param("id") int id);
 
+
+    void addReview(CulturalPropertiesReviewDTO reviewDTO);
+
+    List<CulturalPropertiesReviewDTO> getReviewsByCulturalPropertyId(@Param("culturalPropertiesId") int culturalPropertiesId);
+
+    CulturalPropertiesReviewDTO findByReviewId(int id);
+    void deleteReview(int id);
 
 
 }
