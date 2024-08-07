@@ -36,7 +36,7 @@
     </select>
 
     <!-- 사용자가 작성한 모든 댓글 조회 -->
-    <select id="getUserComments" resultType="com.multi.culture_link.exhibition.model.dto.ExhibitionCommentDto">
+    <select id="getUserComment" resultType="com.multi.culture_link.exhibition.model.dto.ExhibitionCommentDto">
         SELECT ec.*, e.title as exhibitionTitle
         FROM exhibition_comment ec
                  INNER JOIN exhibition e ON ec.exhibition_id = e.id

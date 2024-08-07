@@ -1003,6 +1003,204 @@
 
 
 
+                 /**
+                 * 전체 전시 리뷰 내역을 가져옴(페이지 별로)
+                 *
+                 */
+                function findExhibitionReviewListByPage(page){
+
+                    console.log("findExhibitionReviewListByPage");
+
+                    $.ajax({
+
+                        url: '/exhibition/user-comment',
+                        method: 'GET',
+                        contentType: 'application/json',
+                        success: function(list){
+                            $('#upper').html("");
+                            $('#upper').removeClass("scroll")
+                            $('#upper').addClass("page")
+
+                            console.log("리뷰" + list)
+
+                            var reviewHeader = `
+
+                                <table class="table table-striped" id="reviewTable" style="text-align: center;">
+
+                                    <thead class="table-light">
+                                    <tr style="text-align: center;">
+                                        <th scope="col">#</th>
+                                        <th scope="col">별점</th>
+                                        <th scope="col">내용</th>
+                                        <th scope="col">첨부파일</th>
+                                        <th scope="col">삭제</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody id="reviewList">
+
+                            `;
+
+                            $('#upper').html(reviewHeader);
+
+                            var startIndex = (page -1)*5 + 1;
+                            var endIndex = (page)*5;
+                            var sliceList = list.slice(startIndex-1, endIndex);
+
+
+                            console.log("sliceList");
+                            console.log(sliceList);
+                            $.each(sliceList, function(index, review){
+                                var reviewIdPlusExhibitionId = review.id + "," + review.exhibitionId;
+                                var index1 = (page-1)*5 + index+1;
+                                var reviewHtml = ``;
+                                var attachment = ``;
+
+                                var content = review.content.length > 10?
+                                review.content.substring(0,10) + "..."
+                                : review.content;
+
+
+                                if((review.attachment == null) || (review.attachment == "")){
+
+                                    attachment = `
+                                    <td>
+                                        <img src="/img/festival/noPhoto.png" style="width:100%;display: block;">
+                                    </td>
+                                    `
+
+                                }else{
+
+                                    attachment = `
+                                    <td>
+                                        <img src="${review.attachment}" alt="사진 없음" style="width:100%;height:100%;display: block;">
+                                    </td>
+                                    `
+
+                                }
+
+                                 reviewHtml = `
+
+                                    <tr class="reviewRow" id="reviewRow">
+
+                                        <td class="index1">
+                                            ${index1}
+                                        </td>`
+
+                                        +
+
+                                        `
+                                        <td>
+                                            <img src="/img/festival/star.png" style="width:30%;height:auto;display: block;">&nbsp;<input class="reviewStar" type="number" step="0.5" value="${review.stars}" max="5" min="0" text-align: center; width:40%">
+                                        </td>`
+
+                                        +
+
+                                        `<td>
+                                            ${content}
+                                        </td>`
+
+                                        +
+
+                                        attachment
+
+                                        +
+
+                                        `
+                                        <td>
+                                            <button class="deleteBtn2" value="${reviewIdPlusExhibitionId}">삭제</button>
+                                        </td>
+
+                                    </tr>
+                                 `;
+
+                                $('#upper').append(reviewHtml);
+
+                            })
+
+                            var reviewFooter =  `</tbody></table>`;
+                            $('#upper').append(reviewFooter);
+
+                            var count = list.length;
+                            $('#reviewPages').html("");
+
+                            var reviewPagesHtml = `
+                                <div id="reviewPages"><div>
+                            `;
+
+                            $('#upper').append(reviewPagesHtml);
+
+                            var pages = 0;
+
+                            if(count % 5 == 0){
+                                pages = count / 5;
+                            }else{
+                                pages = count / 5 + 1;
+                            }
+
+                            for(var p=1; p<=pages; p++){
+
+                                $('#reviewPages').append(`<button class="pageBtn2" style="font-size: 20px; margin: 0.5%">${p}</button>`)
+
+                            }
+
+                        }
+                    })
+                }
+
+
+               /**
+                * 리뷰 페이지 이벤트 버튼
+                *
+                */
+                $(document).on('click','.pageBtn2', function(){
+                    var page = $(this).text();
+                    findExhibitionReviewListByPage(page);
+                })
+
+
+
+                /**
+                * 전시 리뷰 삭제
+                *
+                */
+                $(document).on('click','.deleteBtn2', function(){
+
+                    var reviewIdPlusExhibitionId = $(this).val().trim();
+                    var ids = reviewIdPlusExhibitionId.split(",");
+                    var reviewId = ids[0];
+                    var exhibitionId = ids[1];
+
+                    console.log(reviewId);
+                    console.log(exhibitionId)
+
+                    var data = {
+
+                        id : reviewId
+
+                    };
+
+                    $.ajax({
+
+                        url: `/exhibition/exhibition/${exhibitionId}/comment`,
+                        method: 'DELETE',
+                        contentType: 'application/json',
+                        data: JSON.stringify(data),
+                        success: function(){
+
+                            alert("전시 댓글 삭제 성공");
+                            findFestivalReviewListByPage(1);
+
+                        },
+                        error: function(error){
+
+                            alert("전시 댓글 삭제 실패");
+
+                        }
+                    })
+                })
+
+
+
 
 
 
@@ -1352,9 +1550,9 @@
 
                         findFestivalReviewListByPage(1);
 
-                    }else{
+                    }else if(category=="전시"){
 
-
+                        findExhibitionReviewListByPage(1);
 
                     }
 
