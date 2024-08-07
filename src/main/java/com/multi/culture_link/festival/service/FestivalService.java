@@ -67,4 +67,10 @@ public interface FestivalService {
 	ArrayList<VWUserReviewDataDTO> findFestivalReviewListByUserId(VWUserReviewDataDTO vwUserReviewDataDTO) throws Exception;
 	
 	int findUserReviewCountByUserReviewDataDTO(VWUserReviewDataDTO vwUserReviewDataDTO) throws Exception;
+	
+	ArrayList<FestivalContentReviewNaverKeywordMapDTO> findFestivalBigLoveHateKeyword(UserFestivalLoveHateMapDTO mapDTO) throws Exception;
+	
+	ArrayList<FestivalContentReviewNaverKeywordMapDTO> findFestivalSmallLoveHateKeyword(UserFestivalLoveHateMapDTO mapDTO) throws Exception;
+	
+	void deleteAllUserSelectFestivalKeyword(UserFestivalLoveHateMapDTO mapDTO) throws Exception;
 }

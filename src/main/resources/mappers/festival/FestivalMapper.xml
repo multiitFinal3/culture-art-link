@@ -128,7 +128,7 @@
 
         SELECT * FROM (
 
-        SELECT ROW_NUMBER() OVER (ORDER BY festival_review_id DESC) AS rownum, urd.*
+        SELECT ROW_NUMBER() OVER (PARTITION BY festival_id ORDER BY festival_review_id DESC) AS rownum, urd.*
         FROM vw_festival_user_review_data urd
 
         ) f1
@@ -250,7 +250,7 @@
 
         SELECT * FROM (
 
-        SELECT ROW_NUMBER() OVER (ORDER BY festival_review_id DESC) AS rownum, urd.*
+        SELECT ROW_NUMBER() OVER (PARTITION BY user_id ORDER BY festival_review_id DESC) AS rownum, urd.*
         FROM vw_festival_user_review_data urd
 
         ) f1
@@ -260,13 +260,81 @@
 
     </select>
 
-
     <select id="findUserReviewCountByUserReviewDataDTO">
 
         SELECT COUNT(*) FROM vw_festival_user_review_data urd
         WHERE urd.user_id = #{userId};
 
     </select>
+
+    <select id="findFestivalBigLoveHateKeyword" parameterType="userFestivalLoveHateDTO">
+
+        SELECT * FROM vw_festival_user_love_hate_keyword_mapping_total_data
+        WHERE user_id = #{userId}
+        AND sort_code = #{sortCode}
+        AND festival_keyword_total_count >= 10
+        ORDER BY festival_keyword_total_count DESC;
+
+    </select>
+
+
+    <select id="findFestivalSmallLoveHateKeyword" parameterType="userFestivalLoveHateDTO">
+
+<!--        SELECT * FROM (-->
+
+<!--            SELECT ROW_NUMBER() OVER ( PARTITION BY user_id, sort_code-->
+<!--                ORDER BY festival_keyword_total_count DESC)-->
+<!--            AS rownum, f2.*-->
+<!--            FROM vw_festival_user_love_hate_keyword_mapping_total_data f2-->
+<!--            WHERE f2.user_id = #{userId}-->
+<!--                AND f2.sort_code = #{sortCode}-->
+<!--                AND <![CDATA[ festival_keyword_total_count < 10 ]]>-->
+
+<!--        ) f1-->
+
+<!--        WHERE f1.rownum BETWEEN #{pageDTO.start} AND #{pageDTO.end};-->
+
+
+        SELECT * FROM (
+
+            SELECT ROW_NUMBER() OVER (ORDER BY festival_keyword_total_count DESC) AS rownum, f4.*
+            FROM (
+
+                SELECT DISTINCT(f2.festival_keyword_id), f2.festival_keyword_total_count FROM (
+
+                    SELECT *
+                    FROM vw_festival_user_love_hate_keyword_mapping_total_data
+                    WHERE user_id = #{userId}
+                    AND sort_code = #{sortCode}
+                    AND festival_keyword_total_count >= 10
+
+                )f1
+
+            RIGHT JOIN (
+
+                SELECT * FROM vw_festival_user_love_hate_keyword_mapping_total_data
+                WHERE sort_code = #{sortCode}
+
+            ) f2
+
+            ON f1.festival_keyword_id = f2.festival_keyword_id
+
+            WHERE f1.festival_keyword_id IS NULL) f4
+
+        ) f5 WHERE f5.rownum BETWEEN #{pageDTO.start} AND #{pageDTO.end};
+
+
+
+    </select>
+
+    <delete id="deleteAllUserSelectFestivalKeyword" parameterType="userFestivalLoveHateDTO">
+
+        DELETE FROM festival_user_love_hate_select_keyword_mapping
+        WHERE user_id = #{userId}
+        AND sort_code = #{sortCode};
+
+    </delete>
+
 
 
 

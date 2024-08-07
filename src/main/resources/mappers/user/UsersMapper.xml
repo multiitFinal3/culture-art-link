@@ -24,4 +24,35 @@
     </insert>
 
 
+    <delete id="deleteUserAccount">
+
+        DELETE FROM user
+        WHERE user_id = ${userId};
+
+    </delete>
+
+    <update id="updateUserAccount">
+
+        UPDATE user
+        SET
+            email = #{email},
+            password = #{password},
+            user_age = #{userAge},
+            user_name = #{userName},
+            tel = #{tel},
+            gender = #{gender},
+            region_id = #{regionId},
+            user_profile_pic = #{userProfilePic}
+        WHERE user_id = #{userId};
+
+    </update>
+
+    <insert id="insertRoleId">
+
+        INSERT INTO user_role_mapping(user_id, role_id)
+        VALUES(#{userId}, #{roleId});
+
+    </insert>
+
+
 </mapper>
