@@ -24,14 +24,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 img.src = "https://kr.object.ncloudstorage.com/team3" + filePath;
                 img.style.maxWidth = '100%';
 
-                // const selection = window.getSelection();
-                // if (selection.rangeCount > 0) {
-                //     const range = selection.getRangeAt(0);
-                //     range.insertNode(img);
-                //     range.collapse(false);
-                // } else {
-                    editor.appendChild(img);
-                // }
+                editor.appendChild(img);
             } catch (error) {
                 console.error('Error uploading image:', error);
                 alert('이미지 업로드에 실패했습니다.');

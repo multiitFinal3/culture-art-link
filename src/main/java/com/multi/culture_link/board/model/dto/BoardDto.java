@@ -8,6 +8,7 @@ public class BoardDto {
     public int id;
     public int userId;
     public String author;
+    private boolean isAuth;
     public String genre;
     public String title;
     public String content;
