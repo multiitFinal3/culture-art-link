@@ -1029,11 +1029,11 @@
 
                                     <thead class="table-light">
                                     <tr style="text-align: center;">
-                                        <th scope="col">#</th>
-                                        <th scope="col">별점</th>
-                                        <th scope="col">내용</th>
-                                        <th scope="col">첨부파일</th>
-                                        <th scope="col">삭제</th>
+                                        <th scope="col" style="width: 300px;">#</th>
+                                        <th scope="col" style="width: 300px;">별점</th>
+                                        <th scope="col" style="width: 300px;">내용</th>
+                                        <th scope="col" style="width: 300px;">첨부파일</th>
+                                        <th scope="col" style="width: 300px;">삭제</th>
                                     </tr>
                                     </thead>
                                     <tbody id="reviewList">
@@ -1059,19 +1059,41 @@
                                 review.content.substring(0,10) + "..."
                                 : review.content;
 
+                                var reviewStarNum = parseInt(review.stars);
+                                var reviewStarHtml = ``;
+
+                                for(let i = 1; i <= reviewStarNum; i++){
+                                    var append = `
+                                    <label style="color: #f6d74d;">★</label>
+                                    `;
+                                    reviewStarHtml += append;
+                                }
+
+                                if(reviewStarNum < 5){
+
+                                    for(let i = reviewStarNum + 1; i <= 5; i++){
+
+                                        var append = `
+                                        <label>★</label>
+                                        `;
+                                        reviewStarHtml += append;
+
+                                    }
+                                }
+
 
                                 if((review.attachment == null) || (review.attachment == "")){
 
                                     attachment = `
-                                    <td>
-                                        <img src="/img/festival/noPhoto.png" style="width:100%;display: block;">
+                                    <td style="width: 300px;">
+                                        <img src="/img/festival/noPhoto.png" style="width:100%;height:100%;display: block;">
                                     </td>
                                     `
 
                                 }else{
 
                                     attachment = `
-                                    <td>
+                                    <td style="width: 300px;">
                                         <img src="${review.attachment}" alt="사진 없음" style="width:100%;height:100%;display: block;">
                                     </td>
                                     `
@@ -1080,22 +1102,24 @@
 
                                  reviewHtml = `
 
-                                    <tr class="reviewRow" id="reviewRow">
+                                    <tr class="reviewRow" id="reviewRow" style="width: 100%;">
 
-                                        <td class="index1">
+                                        <td class="index1" style="width: 300px;">
                                             ${index1}
                                         </td>`
 
                                         +
 
-                                        `
-                                        <td>
-                                            <img src="/img/festival/star.png" style="width:30%;height:auto;display: block;">&nbsp;<input class="reviewStar" type="number" step="0.5" value="${review.stars}" max="5" min="0" text-align: center; width:40%">
-                                        </td>`
+                                        `<td style="width: 300px;">
+                                            <div class="star">`
 
+                                                 + reviewStarHtml +
+
+                                            `</div>
+                                        </td>`
                                         +
 
-                                        `<td>
+                                        `<td style="width: 300px;">
                                             ${content}
                                         </td>`
 
@@ -1106,7 +1130,7 @@
                                         +
 
                                         `
-                                        <td>
+                                        <td style="width: 300px;">
                                             <button class="deleteBtn2" value="${reviewIdPlusExhibitionId}">삭제</button>
                                         </td>
 
