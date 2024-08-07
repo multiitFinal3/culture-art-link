@@ -5,6 +5,7 @@ import com.multi.culture_link.admin.performance.service.PerformanceDBService;
 import com.multi.culture_link.performance.service.PerformanceLocationService;
 import com.multi.culture_link.performance.service.PerformanceRankingService;
 import com.multi.culture_link.users.model.dto.VWUserRoleDTO;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -23,6 +24,9 @@ import java.util.List;
 @Controller
 @RequestMapping("/performance")
 public class PerformanceController {
+
+    @Value("${API-KEY.naverClientId}")
+    private String naverClientId;
 
     private final PerformanceRankingService performanceRankingService;
     private final PerformanceLocationService performanceLocationService;
@@ -237,6 +241,9 @@ public class PerformanceController {
             // 공연 정보를 가져오지 못했을 때의 처리
             model.addAttribute("error", "공연 정보를 가져오지 못했습니다.");
         }
+
+        model.addAttribute("naverClientId", naverClientId); // 클라이언트 ID를 모델에 추가
+
 
         return "/performance/performanceDetail";
     }

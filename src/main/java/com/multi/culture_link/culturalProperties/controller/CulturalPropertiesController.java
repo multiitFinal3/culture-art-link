@@ -2,11 +2,9 @@ package com.multi.culture_link.culturalProperties.controller;
 
 
 import com.multi.culture_link.admin.culturalProperties.model.dto.CulturalPropertiesDTO;
-import com.multi.culture_link.culturalProperties.model.dto.CulturalPropertiesInterestDTO;
-import com.multi.culture_link.culturalProperties.model.dto.NewsArticle;
-import com.multi.culture_link.culturalProperties.model.dto.Video;
-import com.multi.culture_link.culturalProperties.model.dto.YoutubeConfig;
+import com.multi.culture_link.culturalProperties.model.dto.*;
 import com.multi.culture_link.culturalProperties.service.CulturalPropertiesService;
+import com.multi.culture_link.exhibition.model.dto.ExhibitionCommentDto;
 import com.multi.culture_link.exhibition.model.dto.ExhibitionDto;
 import com.multi.culture_link.festival.model.dto.FestivalDTO;
 import com.multi.culture_link.users.model.dto.VWUserRoleDTO;
@@ -234,10 +232,15 @@ public class CulturalPropertiesController {
 	public String getCulturalPropertyDetail(@PathVariable int id, Model model) {
 		CulturalPropertiesDTO property = culturalPropertiesService.getCulturalPropertyById(id);
 
+		// 리뷰 목록 가져오기
+		List<CulturalPropertiesReviewDTO> reviews = culturalPropertiesService.getReviewsByCulturalPropertyId(id);
+
 		System.out.println("디테일 아이디 "+ id);
 		model.addAttribute("property", property);
 		model.addAttribute("getNearbyPlace", culturalPropertiesService.getNearbyPlace(property.getRegion(), property.getDistrict(), id));
+		model.addAttribute("reviews", reviews);
 
+		System.out.println("Reviews: " + reviews);
 //		System.out.println("근처 문화재 수: " + nearbyPlaces.size());
 
 		return "/culturalProperties/culturalPropertiesDetail";
@@ -320,130 +323,6 @@ public class CulturalPropertiesController {
 	}
 
 
-//	// 문화재 상세 페이지
-//	@GetMapping("/detail/{id}")
-//	@ResponseBody
-//	public String getCulturalPropertyDetail(@PathVariable int id, Model model) {
-//		CulturalPropertiesDTO property = culturalPropertiesService.getCulturalPropertiesById(id);
-//		model.addAttribute("property", property);
-//		return "culturalProperties/culturalPropertiesDetail"; // detail.html로 변경
-//	}
-
-
-//	@GetMapping("/cultural-properties-detail/{id}")
-//	public CulturalPropertiesDTO getCulturalPropertyDetail(@PathVariable int id) {
-//		return culturalPropertiesService.getCulturalPropertiesById(id);
-//	}
-
-
-//	@GetMapping("/detail/{id}")
-////	@ResponseBody
-//	public String getCulturalPropertyDetail(@PathVariable int id, Model model) {
-//		CulturalPropertiesDTO property = culturalPropertiesService.getCulturalPropertiesById(id);
-//
-//		// 데이터 확인을 위한 로그 추가
-//		if (property == null) {
-//			System.out.println("Property is null for ID: " + id);
-//		} else {
-//			System.out.println("Property details: " + property);
-//		}
-//
-//		model.addAttribute("property", property);
-//		return "/culturalProperties/culturalPropertiesDetail";
-//	}
-
-
-//이걸로 하는중
-//	@GetMapping("/detail/{id}")
-////	@ResponseBody // JSON 응답을 위해 추가
-//	public ResponseEntity<CulturalPropertiesDTO> getCulturalPropertyDetail(@PathVariable int id) {
-//		CulturalPropertiesDTO property = culturalPropertiesService.getCulturalPropertiesById(id);
-//
-//		System.out.println("detail id" + id);
-//		// 데이터 확인을 위한 로그 추가
-//		if (property == null) {
-//			return ResponseEntity.notFound().build(); // 404 Not Found
-//		}
-//
-//		return ResponseEntity.ok(property); // 200 OK와 함께 DTO 반환
-//	}
-
-
-//	@PostMapping("/detail/{id}")
-//	public String getDetail(@PathVariable int id, @RequestBody CulturalPropertiesDTO property) {
-//		// POST 요청 처리
-//	}
-
-
-	//	@GetMapping("/detail/{id}")
-	//	public String CulturalPropertyDetail() {
-	//		return "/culturalProperties/culturalPropertiesDetail";
-	//	}
-
-	//	@GetMapping("/detail/{id}")
-	//	@ResponseBody
-	//	public String getCulturalPropertyDetail(@PathVariable int id, Model model) {
-	//		CulturalPropertiesDTO property = culturalPropertiesService.getCulturalPropertiesById(id);
-	//		model.addAttribute("property", property);
-	//		return "/culturalProperties/culturalPropertiesDetail";   // detail.html로 변경
-	//	}
-
-
-//	@GetMapping("/detail/{id}")
-//	@ResponseBody // JSON 형식으로 데이터 전송
-//	public ResponseEntity<CulturalPropertiesDTO> getCulturalPropertyDetail(@PathVariable int id) {
-//		CulturalPropertiesDTO property = culturalPropertiesService.getCulturalPropertyById(id);
-//		if (property != null) {
-//			return ResponseEntity.ok(property); // JSON 형태로 반환
-//		} else {
-//			return ResponseEntity.notFound().build(); // 데이터가 없을 경우 404 응답
-//		}
-//	}
-
-//	@GetMapping("/detail/{id}")
-//	public String culturalPropertiesDetail(@RequestParam("id") int id, Model model, @AuthenticationPrincipal VWUserRoleDTO user) {
-//
-//		CulturalPropertiesDTO property = culturalPropertiesService.getCulturalPropertyById(id);
-//		model.addAttribute("culturalProperties", property);
-//
-//		int userId = user.getUserId();
-//		model.addAttribute("userId", userId);
-//		model.addAttribute("naverClientId", naverClientId);
-//
-//		return "/culturalProperties/culturalPropertiesDetail";
-//
-//	}
-
-//	@GetMapping("/detail/{id}")
-////	@ResponseBody
-//	public ResponseEntity<CulturalPropertiesDTO> getCulturalPropertyDetail(@PathVariable int id) {
-//		CulturalPropertiesDTO property = culturalPropertiesService.getCulturalPropertyById(id);
-//		if (property != null) {
-//			return ResponseEntity.ok(property); // JSON 형식으로 반환
-//		} else {
-//			return ResponseEntity.notFound().build(); // 데이터가 없을 경우 404 응답
-//		}
-//	}
-
-//	//  id 기반 데이터 불러오기(상세정보)
-//	@GetMapping("/detail/{id}")
-//	public CulturalPropertiesDTO getCulturalPropertyDetail(
-//			@AuthenticationPrincipal VWUserRoleDTO userId,
-//			@PathVariable int id
-//	){
-////        System.out.println("exhibition: " + exhibitionService.getExhibitionById(currentUser.getUserId(), exhibitionId));
-//		return culturalPropertiesService.getCulturalPropertyById(userId.getUserId(), id);
-//	}
-
-//	@GetMapping("/detail/{id}")
-//	public String culturalPropertiesDetail(@AuthenticationPrincipal VWUserRoleDTO userId,
-//										   @PathVariable int id,
-//										   Model model) {
-//		CulturalPropertiesDTO property = culturalPropertiesService.getCulturalPropertyById(userId.getUserId(), id);
-//		model.addAttribute("culturalProperties", property);
-//		return "culturalProperties/culturalPropertiesDetail"; // Thymeleaf 템플릿 경로를 반환
-//	}
-
 
 //네모버튼
 //	@PostMapping("/like")
@@ -479,33 +358,112 @@ public class CulturalPropertiesController {
 
 
 
-//	@PostMapping("/detail/{id}")
-//	public String addInterest(@AuthenticationPrincipal VWUserRoleDTO user,
-//								 @PathVariable int id,
-//								 String action) {
-//		int userId = user.getUserId();
-//
-//		if ("like".equals(action)) {
-//			culturalPropertiesService.addInterest(userId, id, "LIKE");
-//		} else if ("dislike".equals(action)) {
-//			culturalPropertiesService.addInterest(userId, id, "DISLIKE");
-//		}
-//
-//		// 적절한 페이지로 리다이렉트
-//		return "/culturalProperties/culturalPropertiesDetail";
-//	}
-
-
-	// 리뷰 상세 페이지
 	@GetMapping("/detail/{id}/review/detail")
-	public String culturalPropertiesReviewDetail(@PathVariable int id, Model model) {
+	public String culturalPropertiesReviewDetail(@PathVariable int id,
+												 @AuthenticationPrincipal VWUserRoleDTO user, Model model) {
 		CulturalPropertiesDTO property = culturalPropertiesService.getCulturalPropertyById(id);
 
-		System.out.println("리뷰디테일 아이디 "+ id);
+		// 리뷰 목록 가져오기
+		List<CulturalPropertiesReviewDTO> reviews = culturalPropertiesService.getReviewsByCulturalPropertyId(id);
+
+		// 현재 로그인된 사용자 정보를 가져오기
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		String userName = null; // 사용자 이름 초기화
+
+		if (authentication != null && authentication.getPrincipal() instanceof VWUserRoleDTO) {
+			VWUserRoleDTO vwUserRoleDTO = (VWUserRoleDTO) authentication.getPrincipal();
+			userName = vwUserRoleDTO.getUsername(); // 사용자 이름 가져오기
+		}
+
+		System.out.println("리뷰디테일 아이디 " + id);
 		model.addAttribute("property", property);
+		model.addAttribute("userName", user.getUsername()); // 사용자 이름 추가
+		model.addAttribute("userId", user.getUserId()); // 사용자 ID 추가
+		model.addAttribute("userName", userName);
+
+		if (property == null) {
+			// 이곳에 로그 추가하여 property가 null인지 확인
+			System.out.println("Property is null for ID: " + id);
+		} else {
+			System.out.println("Property ID: " + property.getId()); // ID 확인
+		}
+
+		model.addAttribute("reviews", reviews);
+
+		System.out.println("Reviews: " + reviews);
 
 		return "/culturalProperties/culturalPropertiesReviewDetail";
 	}
+
+
+	@GetMapping("/detail/{id}/review/getReviewUserId")
+	public ResponseEntity<Map<String, Integer>> getReviewUserId() {
+		// 현재 로그인된 사용자 정보를 가져오기
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+		if (authentication != null && authentication.getPrincipal() instanceof VWUserRoleDTO) {
+			VWUserRoleDTO vwUserRoleDTO = (VWUserRoleDTO) authentication.getPrincipal();
+			int userId = vwUserRoleDTO.getUserId(); // 사용자 ID 가져오기
+
+			// 사용자 ID를 Map 형태로 반환
+			Map<String, Integer> response = new HashMap<>();
+			response.put("userId", userId);
+
+			return ResponseEntity.ok(response); // 사용자 ID를 응답으로 반환
+		}
+
+		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build(); // 로그인하지 않은 경우
+	}
+
+
+
+
+	@PostMapping("/detail/{id}/review/add")
+	public ResponseEntity<String> addReview(@PathVariable int id, @RequestBody CulturalPropertiesReviewDTO reviewDTO) {
+		System.out.println("Received review DTO: " + reviewDTO);
+
+		// 현재 로그인된 사용자 정보를 가져오기
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+		if (authentication != null && authentication.getPrincipal() instanceof VWUserRoleDTO) {
+			VWUserRoleDTO vwUserRoleDTO = (VWUserRoleDTO) authentication.getPrincipal();
+			int userId = vwUserRoleDTO.getUserId(); // 사용자 ID 가져오기
+			String userName = vwUserRoleDTO.getUsername(); // 사용자 이름 가져오기
+			String userProfileImage = vwUserRoleDTO.getUserProfilePic();
+
+			reviewDTO.setUserId(userId); // 리뷰 DTO에 사용자 ID 설정
+			reviewDTO.setCulturalPropertiesId(id); // culturalPropertiesId도 설정
+			reviewDTO.setUserName(userName);
+			reviewDTO.setUserProfileImage(userProfileImage);
+
+			// 리뷰 추가 서비스 호출
+			culturalPropertiesService.addReview(reviewDTO);
+			return ResponseEntity.ok("리뷰가 등록되었습니다.");
+		}
+
+		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("로그인이 필요합니다.");
+	}
+
+
+	@DeleteMapping("/detail/{id}/review/delete")
+	public ResponseEntity<String> deleteReview(
+			@PathVariable int id,
+			@PathVariable int culturalPropertiesId,
+			@AuthenticationPrincipal VWUserRoleDTO user) {
+
+		// 현재 로그인한 사용자의 ID 가져오기
+		int userId = user.getUserId();
+
+		// 리뷰 삭제 서비스 호출
+		boolean deleted = culturalPropertiesService.deleteReview(id, culturalPropertiesId, userId);
+
+		if (deleted) {
+			return ResponseEntity.ok("리뷰가 성공적으로 삭제되었습니다.");
+		} else {
+			return ResponseEntity.status(HttpStatus.FORBIDDEN).body("리뷰 삭제 권한이 없습니다.");
+		}
+	}
+
 
 
 }

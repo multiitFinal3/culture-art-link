@@ -774,4 +774,47 @@ public class FestivalServiceImpl implements FestivalService {
 	}
 	
 	
+	/**
+	 * 특정 유저의 찜 또는 관심없음 한 키워드의 카운트가 10이상인 것만 조회
+	 * @param mapDTO
+	 * @return
+	 * @throws Exception
+	 */
+	@Override
+	public ArrayList<FestivalContentReviewNaverKeywordMapDTO> findFestivalBigLoveHateKeyword(UserFestivalLoveHateMapDTO mapDTO) throws Exception {
+		
+		ArrayList<FestivalContentReviewNaverKeywordMapDTO> list = festivalMapper.findFestivalBigLoveHateKeyword(mapDTO);
+		
+		return list;
+		
+	}
+	
+	
+	/**
+	 * 유저의 찜 / 관심없음 키워드의 카운트가 10 미만인 것을 카운트 내림차순으로 반환
+	 * @param mapDTO
+	 * @return
+	 * @throws Exception
+	 */
+	@Override
+	public ArrayList<FestivalContentReviewNaverKeywordMapDTO> findFestivalSmallLoveHateKeyword(UserFestivalLoveHateMapDTO mapDTO) throws Exception {
+		
+		ArrayList<FestivalContentReviewNaverKeywordMapDTO> list = festivalMapper.findFestivalSmallLoveHateKeyword(mapDTO);
+		return list;
+		
+	}
+	
+	
+	/**
+	 * 특정 유저의 특정 분류(찜 / 관심없음) 선택 키워드를 전부 삭제함
+	 * @param mapDTO
+	 * @throws Exception
+	 */
+	@Override
+	public void deleteAllUserSelectFestivalKeyword(UserFestivalLoveHateMapDTO mapDTO) throws Exception {
+		
+		festivalMapper.deleteAllUserSelectFestivalKeyword(mapDTO);
+		
+	}
+	
 }
