@@ -18,6 +18,10 @@ public interface ExhibitionDao {
     List<ExhibitionDto> getExhibition(int userId);
     
     // 찜, 관심없음 리스트
-    List<ExhibitionApiDto> getUserInterestedExhibitions(int id);
+//    List<ExhibitionApiDto> getUserInterestedExhibitions(int id);
+
+    List<ExhibitionApiDto> getLikeExhibition(int userId);
+    List<ExhibitionApiDto> getUnlikeExhibition(int userId);
+
 
 }

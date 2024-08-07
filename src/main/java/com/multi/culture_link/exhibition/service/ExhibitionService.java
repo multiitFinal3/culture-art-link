@@ -32,7 +32,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 @Service
 public class ExhibitionService {
-    private final ExhibitionDao ExhibitionDao;
+    private final ExhibitionDao exhibitionDao;
     private final ExhibitionKeywordDao exhibitionKeywordDao;
     private final OkHttpClient client;
     private final Gson gson;
@@ -42,23 +42,24 @@ public class ExhibitionService {
     private String youtubeKey;
 
     public List<ExhibitionApiDto> searchExhibition(Map<String, String> searchParams) {
-        return ExhibitionDao.searchExhibition(searchParams);
+        return exhibitionDao.searchExhibition(searchParams);
     }
 
     public ExhibitionDto getExhibitionById(int userId, int exhibitionId){
-        return ExhibitionDao.getExhibitionById(userId, exhibitionId);
+        return exhibitionDao.getExhibitionById(userId, exhibitionId);
     }
 
     public void setInterested(int userId, int exhibitionId, String state){
-        ExhibitionDao.setInterested(userId, exhibitionId, state);
+        exhibitionDao.setInterested(userId, exhibitionId, state);
+//        List<String> keywords = exhibitionDao.getExhibitionKeywords(exhibitionId);
+//        int countChange = "interested".equals(state) ? 1 : -1;
+//        for (String keyword : keywords) {
+//            exhibitionDao.updateUserKeyword(userId, keyword, countChange);
+//        }
     }
 
     public List<ExhibitionDto> getExhibition(int userId){
-        return ExhibitionDao.getExhibition(userId);
-    }
-
-    public List<ExhibitionApiDto> getUserInterestedExhibitions(int id){
-        return ExhibitionDao.getUserInterestedExhibitions(id);
+        return exhibitionDao.getExhibition(userId);
     }
 
     public List<Video> crawlYouTubeVideos(String query) {
@@ -104,5 +105,15 @@ public class ExhibitionService {
 
         return result;
     }
+
+    public List<ExhibitionApiDto> getLikeExhibition(int userId) {
+        return exhibitionDao.getLikeExhibition(userId);
+    }
+
+    public List<ExhibitionApiDto> getUnlikeExhibition(int userId) {
+        return exhibitionDao.getUnlikeExhibition(userId);
+    }
+
+
 
 }

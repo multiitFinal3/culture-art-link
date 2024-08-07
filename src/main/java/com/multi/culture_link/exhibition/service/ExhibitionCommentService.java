@@ -16,20 +16,24 @@ import java.util.Map;
 @RequiredArgsConstructor
 @Service
 public class ExhibitionCommentService {
-    private final ExhibitionCommentDao ExhibitionCommentDao;
+    private final ExhibitionCommentDao exhibitionCommentDao;
 
     public List<ExhibitionCommentDto> getComment(ExhibitionCommentDto data) {
-        return ExhibitionCommentDao.getComment(data);
+        return exhibitionCommentDao.getComment(data);
     }
 
     public void createComment(ExhibitionCommentDto data) {
-        ExhibitionCommentDao.createComment(data);
+        exhibitionCommentDao.createComment(data);
     }
 
     public void deleteComment(ExhibitionCommentDto data) {
-        ExhibitionCommentDao.deleteComment(data);
+        exhibitionCommentDao.deleteComment(data);
     }
     public double getAverageRating(int exhibitionId){
-        return ExhibitionCommentDao.getAverageRating(exhibitionId);
+        return exhibitionCommentDao.getAverageRating(exhibitionId);
     };
+
+    public List<ExhibitionCommentDto> getUserComment(int userId) {
+        return exhibitionCommentDao.getUserComment(userId);
+    }
 }
