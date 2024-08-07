@@ -37,6 +37,13 @@ public class FestivalController {
 	@Value("${API-KEY.naverClientId}")
 	private String naverClientId;
 	
+	@Value("${cloud.aws.s3.endpoint}")
+	private String endPoint;
+	
+	@Value("${cloud.aws.s3.bucket}")
+	private String bucket;
+	
+	
 	public FestivalController(AdminFestivalService adminFestivalService, FestivalService festivalService) {
 		this.adminFestivalService = adminFestivalService;
 		this.festivalService = festivalService;
@@ -480,6 +487,15 @@ public class FestivalController {
 		ArrayList<VWUserReviewDataDTO> list = null;
 		try {
 			list = festivalService.findFestivalReviewListByVWUserReviewDTO(vwUserReviewDataDTO);
+			
+			// 비용 문제로 직접 연결하는 것은 문제있어 보임. 캐시를 사용하는 것을 고려 중.
+//			String storageLink = endPoint.trim() + "/" + bucket.trim();
+//
+//			for (VWUserReviewDataDTO mapDTO : list) {
+//
+//				mapDTO.setAttachment(storageLink + mapDTO.getAttachment().trim());
+//
+//			}
 			
 		} catch (Exception e) {
 			throw new RuntimeException(e);
