@@ -111,24 +111,51 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 
 
+   // 삭제 버튼 클릭 이벤트 설정
+   $(document).on('click', '[id^="delete-btn-"]', function(e) {
+       e.preventDefault(); // 기본 링크 동작 방지
+       const id = $(this).data('id'); // 버튼에서 리뷰 ID 가져오기
+       const culturalPropertiesId = $(this).data('cultural-id'); // 버튼에서 문화재 ID 가져오기
+
+       // 삭제할 리뷰 ID와 문화재 ID 출력
+
+       console.log('문화재 ID는:' +  culturalPropertiesId);
+       console.log('리뷰 ID는는:' +  id);
+//       console.log(`문화재 ID는: ${culturalPropertiesId}`);
+//       console.log(`리뷰 ID는: ${id}`);
+
+       // deleteReview 함수 호출
+       deleteReview(id, culturalPropertiesId);
+   });
+
+
    function deleteReview(id, culturalPropertiesId) {
        // 삭제 확인을 위한 알림창
        if (confirm("정말 이 리뷰를 삭제하시겠습니까?")) {
+       console.log(`문화재 ID는: ${culturalPropertiesId}`);
+       console.log(`리뷰 ID는: ${id}`);
+       console.log(`요청 URL: /cultural-properties/detail/${culturalPropertiesId}/review/remove?id=${id}`);
            $.ajax({
-               url: `/cultural-properties/detail/${culturalPropertiesId}/review/delete?id=${id}`,
+//           url: `/cultural-properties/detail/1/review/remove?id=12`,
+               url: `/cultural-properties/detail/${culturalPropertiesId}/review/remove?id=${id}`,
                type: 'DELETE',
                success: function(response) {
+               console.log('삭제id:', id);
+               console.log("삭제response" + response);
                    alert("리뷰가 삭제되었습니다.");
                    // 페이지 리로드 또는 리뷰 목록 갱신 코드 추가
                    location.reload(); // 전체 페이지를 새로고침
                },
                error: function(xhr, status, error) {
+               console.log('삭제에러id:', id);
                    console.error('리뷰 삭제 실패:', status, error);
                    alert("리뷰 삭제에 실패했습니다.");
                }
            });
        }
    }
+
+
 
 
 });
