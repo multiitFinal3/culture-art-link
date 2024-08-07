@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
 
@@ -49,13 +50,36 @@ public class ExhibitionService {
         return exhibitionDao.getExhibitionById(userId, exhibitionId);
     }
 
+    @Transactional
     public void setInterested(int userId, int exhibitionId, String state){
+        // 현재 상태 확인
+        String currentState = exhibitionDao.getInterestState(userId, exhibitionId);
+
+        // 새로운 상태가 현재 상태와 같으면 아무 것도 하지 않음
+        if (state != null && state.equals(currentState)) {
+            return;
+        }
+
         exhibitionDao.setInterested(userId, exhibitionId, state);
-//        List<String> keywords = exhibitionDao.getExhibitionKeywords(exhibitionId);
-//        int countChange = "interested".equals(state) ? 1 : -1;
-//        for (String keyword : keywords) {
-//            exhibitionDao.updateUserKeyword(userId, keyword, countChange);
-//        }
+
+        List<String> keywords = exhibitionKeywordDao.getExhibitionKeywordById(exhibitionId);
+
+        // 키워드 업데이트
+        int countChange = 0;
+        if (state == null && currentState != null) {
+            // 관심 상태 취소
+            countChange = "interested".equals(currentState) ? -1 : 1;
+        } else if (state != null && currentState == null) {
+            // 새로운 관심 상태 설정
+            countChange = "interested".equals(state) ? 1 : -1;
+        } else if (state != null && currentState != null && !state.equals(currentState)) {
+            // 관심 상태 변경 (찜 -> 관심없음 또는 관심없음 -> 찜)
+            countChange = "interested".equals(state) ? 2 : -2;
+        }
+
+        for (String keyword : keywords) {
+            exhibitionKeywordDao.updateUserKeyword(userId, keyword, countChange);
+        }
     }
 
     public List<ExhibitionDto> getExhibition(int userId){
@@ -93,12 +117,13 @@ public class ExhibitionService {
     }
 
 
+    @Transactional
     public HashMap<String, List<ExhibitionKeywordDto>> getKeyword(int exhibitionId) {
 
         HashMap<String, List<ExhibitionKeywordDto>> result = new HashMap<String, List<ExhibitionKeywordDto>>();
 
-        List<ExhibitionKeywordDto> exhibitionKeyword = exhibitionKeywordDao.getExhibtionKeyword(exhibitionId);
-        List<ExhibitionKeywordDto> exhibitionCommentKeyword = exhibitionKeywordDao.getExhibtionCommentKeyword(exhibitionId);
+        List<ExhibitionKeywordDto> exhibitionKeyword = exhibitionKeywordDao.getExhibitionKeyword(exhibitionId);
+        List<ExhibitionKeywordDto> exhibitionCommentKeyword = exhibitionKeywordDao.getExhibitionCommentKeyword(exhibitionId);
 
         result.put("keyword", exhibitionKeyword);
         result.put("keywordComment", exhibitionCommentKeyword);

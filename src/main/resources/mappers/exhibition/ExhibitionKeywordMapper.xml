@@ -12,7 +12,7 @@
                                  frequency = VALUES(frequency)
     </insert>
 
-    <select id="getExhibitionKeyword" resultType="string">
+    <select id="getExhibitionKeywordById" resultType="string">
         SELECT keyword
         FROM exhibition_keyword
         WHERE exhibition_id = #{exhibitionId}
@@ -22,7 +22,7 @@
         INSERT INTO exhibition_interested_keyword (user_id, keyword, count)
         VALUES (#{userId}, #{keyword}, #{countChange})
             ON DUPLICATE KEY UPDATE
-                                 count = count + #{countChange}
+                                 count = count + VALUES(count)
     </insert>
 
 
@@ -43,13 +43,13 @@
 
 
 
-    <select id="getExhibtionKeyword" resultType="com.multi.culture_link.admin.exhibition.model.dto.api.ExhibitionKeywordDto">
+    <select id="getExhibitionKeyword" resultType="com.multi.culture_link.admin.exhibition.model.dto.api.ExhibitionKeywordDto">
         SELECT * FROM exhibition_keyword
         WHERE exhibition_id = #{exhibitionId}
         ORDER BY frequency DESC
     </select>
 
-    <select id="getExhibtionCommentKeyword" resultType="com.multi.culture_link.admin.exhibition.model.dto.api.ExhibitionKeywordDto">
+    <select id="getExhibitionCommentKeyword" resultType="com.multi.culture_link.admin.exhibition.model.dto.api.ExhibitionKeywordDto">
         SELECT * FROM exhibition_comment_keyword
         WHERE exhibition_id = #{exhibitionId}
         ORDER BY frequency DESC

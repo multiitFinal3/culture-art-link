@@ -22,6 +22,6 @@ public interface ExhibitionDao {
 
     List<ExhibitionApiDto> getLikeExhibition(int userId);
     List<ExhibitionApiDto> getUnlikeExhibition(int userId);
-
+    String getInterestState(int userId, int exhibitionId);
 
 }
