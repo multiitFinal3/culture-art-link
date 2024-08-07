@@ -604,8 +604,7 @@ public class FestivalController {
 	 * @return
 	 */
 	@PostMapping("/updateFestivalReview")
-	@ResponseBody
-	public String updateFestivalReview(@RequestParam("festivalReviewId") int festivalReviewId, @RequestParam("reviewText") String reviewText, @RequestParam("reviewStar") int reviewStar) {
+	public String updateFestivalReview(@RequestParam("festivalId") int festivalId, @RequestParam("festivalReviewId") int festivalReviewId, @RequestParam("reviewText") String reviewText, @RequestParam("reviewStar") int reviewStar) {
 		
 		try {
 			
@@ -618,7 +617,7 @@ public class FestivalController {
 			throw new RuntimeException(e);
 		}
 		
-		return "수정 성공";
+		return "redirect:/festival/festival-detail?festivalId=" + festivalId;
 	}
 	
 	
@@ -947,9 +946,11 @@ public class FestivalController {
 	public ArrayList<FestivalDTO> findKeywordRecommendFestivalList(@AuthenticationPrincipal VWUserRoleDTO user) {
 		
 		int userId = user.getUserId();
+		System.out.println("유저 추천 리스트 컨트롤러");
 		ArrayList<FestivalContentReviewNaverKeywordMapDTO> mapDTOS = null;
 		try {
 			mapDTOS = festivalService.findUserLoveKeywordList(userId);
+			System.out.println("mapDTOS : " + mapDTOS);
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
@@ -959,6 +960,7 @@ public class FestivalController {
 		for (FestivalContentReviewNaverKeywordMapDTO mapDTO : mapDTOS) {
 			
 			String festivalKeywordId = mapDTO.getFestivalKeywordId();
+			System.out.println("festivalKeywordId : " + festivalKeywordId);
 			ArrayList<FestivalDTO> allList = null;
 			try {
 				allList = festivalService.findSameKeywordFestivalByKeywordId(festivalKeywordId);
@@ -1087,7 +1089,6 @@ public class FestivalController {
 	 * 특정 유저의 축제의 리뷰 전부를 리뷰 페이지 번호에 맞게 가져오기
 	 *
 	 * @param user
-	 *
 	 * @return
 	 */
 	@PostMapping("/findUserReviewCount")
@@ -1112,7 +1113,6 @@ public class FestivalController {
 		return count;
 		
 	}
-	
 	
 	
 	/**
@@ -1144,7 +1144,6 @@ public class FestivalController {
 	}
 	
 	
-	
 	/**
 	 * 특정 유저의 카운트 10 미만의 찜(L) 키워드를 가져오기
 	 *
@@ -1152,7 +1151,7 @@ public class FestivalController {
 	 */
 	@PostMapping("/findFestivalSmallLoveKeyword")
 	@ResponseBody
-	public ArrayList<FestivalContentReviewNaverKeywordMapDTO> findFestivalSmallLoveKeyword(@AuthenticationPrincipal VWUserRoleDTO user,@RequestParam("page") int page) {
+	public ArrayList<FestivalContentReviewNaverKeywordMapDTO> findFestivalSmallLoveKeyword(@AuthenticationPrincipal VWUserRoleDTO user, @RequestParam("page") int page) {
 		
 		UserFestivalLoveHateMapDTO mapDTO = new UserFestivalLoveHateMapDTO();
 		int userId = user.getUserId();
@@ -1175,9 +1174,6 @@ public class FestivalController {
 		return list;
 		
 	}
-	
-	
-	
 	
 	
 	/**
@@ -1209,8 +1205,6 @@ public class FestivalController {
 	}
 	
 	
-	
-	
 	/**
 	 * 특정 유저의 카운트 10 미만의 관심없음(H) 키워드를 가져오기
 	 *
@@ -1218,7 +1212,7 @@ public class FestivalController {
 	 */
 	@PostMapping("/findFestivalSmallHateKeyword")
 	@ResponseBody
-	public ArrayList<FestivalContentReviewNaverKeywordMapDTO> findFestivalSmallHateKeyword(@AuthenticationPrincipal VWUserRoleDTO user,@RequestParam("page") int page) {
+	public ArrayList<FestivalContentReviewNaverKeywordMapDTO> findFestivalSmallHateKeyword(@AuthenticationPrincipal VWUserRoleDTO user, @RequestParam("page") int page) {
 		
 		UserFestivalLoveHateMapDTO mapDTO = new UserFestivalLoveHateMapDTO();
 		int userId = user.getUserId();
@@ -1241,10 +1235,6 @@ public class FestivalController {
 		return list;
 		
 	}
-	
-	
-	
-	
 	
 	
 }

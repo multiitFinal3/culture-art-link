@@ -490,23 +490,25 @@
                                                 ${review.userName}
                                             </td>
 
-                                            <td style="width: 100px">
-                                                <div class="star-rating">
-                                                    <input type="radio" id="sr-0-5" name="reviewStar" value="5" />
-                                                    <label for="sr-0-5">★</label>
-                                                    <input type="radio" id="sr-0-4" name="reviewStar" value="4" />
-                                                    <label for="sr-0-4">★</label>
-                                                    <input type="radio" id="sr-0-3" name="reviewStar" value="3" />
-                                                    <label for="sr-0-3">★</label>
-                                                    <input type="radio" id="sr-0-2" name="reviewStar" value="2" />
-                                                    <label for="sr-0-2">★</label>
-                                                    <input type="radio" id="sr-0-1" name="reviewStar" value="1" />
-                                                    <label for="sr-0-1">★</label>
-                                                </div>
-                                            </td>
 
-                                            <td style="width: 100px">
-                                            <textarea class="reviewText" rows="2" cols="100" style="text-align: center;">${review.festivalReviewContent}</textarea>
+                                            <td style="width: 200px">
+                                            <form id="reviewForm_${review.festivalReviewId}">
+                                                <div class="star-rating2">
+                                                    <input type="radio" id="star5_${review.festivalReviewId}" name="reviewStar" value="5" />
+                                                    <label for="star5_${review.festivalReviewId}">★</label>
+                                                    <input type="radio" id="star4_${review.festivalReviewId}" name="reviewStar" value="4" />
+                                                    <label for="star4_${review.festivalReviewId}">★</label>
+                                                    <input type="radio" id="star3_${review.festivalReviewId}" name="reviewStar" value="3" />
+                                                    <label for="star3_${review.festivalReviewId}">★</label>
+                                                    <input type="radio" id="star2_${review.festivalReviewId}" name="reviewStar" value="2" />
+                                                    <label for="star2_${review.festivalReviewId}">★</label>
+                                                    <input type="radio" id="star1_${review.festivalReviewId}" name="reviewStar" value="1" />
+                                                    <label for="star1_${review.festivalReviewId}">★</label>
+                                                </div>
+                                                <input type="hidden" value="${review.festivalReviewId}" name="festivalReviewId">
+                                                <input type="hidden" value="${festivalId}" name="festivalId">
+                                                <textarea class="reviewText" rows="2" cols="100" style="text-align: center;" name="reviewText">${review.festivalReviewContent}</textarea>
+                                            </form>
                                             </td>`
 
                                             +
@@ -516,8 +518,9 @@
                                             +
 
                                             `<td style="width: 130px">
-                                                <button class="updateBtn" value="${review.festivalReviewId}">수정</button>
+                                                <button class="updateBtn" value="${review.festivalReviewId}" type="button">수정</button>
                                             </td>
+
 
                                             <td style="width: 130px">
                                                 <button class="deleteBtn" value="${review.festivalReviewId}">삭제</button>
@@ -639,7 +642,7 @@
 
                             for(var p=1; p<=pages; p++){
 
-                                $('#reviewPages').append(`<button class="pageBtn1" style="font-size: 20px;">${p}</button>`)
+                                $('#reviewPages').append(`<button class="pageBtn1" style="font-size: 20px; margin: 0.3%;">${p}</button>`)
 
                             }
 
@@ -735,29 +738,21 @@
                 $(document).on('click','.updateBtn', function(){
 
                     var festivalReviewId = $(this).val();
-                    var button = $(this);
-
-                    var reviewText =  button.closest('.reviewRow').find('.reviewText').val();
-                    var reviewStar =  button.closest('.reviewRow').find('.reviewStar').val();
+                    var formId = `#reviewForm_${festivalReviewId}`;
+                    var formData = new FormData($(formId)[0]);
 
                     $.ajax({
 
                         url: '/festival/updateFestivalReview',
                         method: 'POST',
-                        data: {
-
-                            festivalReviewId: festivalReviewId,
-                            reviewText: reviewText,
-                            reviewStar: reviewStar
-
-                        },
+                        data: formData,
+                        processData: false,
+                        contentType: false,
                         success: function(res){
 
                             alert(res);
 
                             findFestivalReviewListByVWUserReviewDTO(festivalId,userId, 1);
-
-
 
                         }
                     })
