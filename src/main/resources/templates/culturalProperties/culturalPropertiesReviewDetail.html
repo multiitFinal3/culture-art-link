@@ -375,7 +375,7 @@
             <div class="review-actions" th:if="${review.userId == userId}">
                 <button type="button" th:onclick="'editReview(' + ${review.id} + ')'">수정</button>
 <!--                <button type="button" th:onclick="'deleteReview(' + ${review.id} + ')'">삭제</button>-->
-                <button type="button" id="delete-btn-${review.id}" data-id="${review.id}" data-cultural-id="${review.culturalPropertiesId}">삭제</button>
+                <button type="button" th:id="'delete-btn-' + ${review.id}" th:data-id="${review.id}" th:data-cultural-id="${review.culturalPropertiesId}">삭제</button>
 
                 리뷰 ID: <span th:text="${review.id}"></span><br>
                 문화재 ID: <span th:text="${review.culturalPropertiesId}"></span>
