@@ -1,6 +1,7 @@
 package com.multi.culture_link.users.service;
 
 import com.multi.culture_link.users.model.dto.UserDTO;
+import com.multi.culture_link.users.model.dto.VWUserRoleDTO;
 import com.multi.culture_link.users.model.mapper.UserMapper;
 import org.springframework.stereotype.Service;
 
@@ -37,5 +38,23 @@ public class UserService {
 		
 		return user;
 		
+	}
+	
+	public void deleteUserAccount(VWUserRoleDTO user) throws Exception{
+		
+		userMapper.deleteUserAccount(user);
+		
+	}
+	
+	public void updateUserAccount(UserDTO userDTO) throws Exception{
+		
+		userMapper.updateUserAccount(userDTO);
+		
+	}
+	
+	public void insertRoleId(UserDTO userDTO) throws Exception{
+	
+		userMapper.insertRoleId(userDTO);
+	
 	}
 }

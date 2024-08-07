@@ -145,7 +145,6 @@
 
 
 
-
                 /**
                 * 회원정보 삭제
                 *
@@ -154,30 +153,76 @@
 
                     $.ajax({
 
-                        url: '/festival/deleteUserAccount',
+                        url: '/user/deleteUserAccount',
                         method: 'POST',
                         contentType: 'application/json',
-                        success: function(res){
-
-                            alert(res);
-
-
-
+                        success: function(){
+                            alert("회원 탈퇴 되었습니다.");
+                            window.location = "/user/logout";
                         }
                     })
                 })
 
 
 
+                /**
+                * 회원정보 수정
+                *
+                */
+                $(document).on('submit','#basicForm', function(event){
+                    console.log("#updateAccount")
+                    event.preventDefault();
+
+                    var formData = new FormData();
+
+                    var fileInput = document.getElementById('uploadFile');
+                    if(fileInput && fileInput.files.length > 0){
+                        formData.append('file', fileInput.files[0]);
+                    }
 
 
+                    var email = document.getElementById('email').value;
+                    formData.append('email', email);
 
+                    var password = document.getElementById('password').value;
+                    formData.append('password', password);
 
+                    var userName = document.getElementById('userName').value;
+                    formData.append('userName', userName);
 
+                    var tel = document.getElementById('tel').value;
+                    formData.append('tel', tel);
 
+                    var userAge = document.getElementById('userAge').value;
+                    formData.append('userAge', userAge);
 
+                    var gender = document.getElementById('gender').options[document.getElementById('gender').selectedIndex].value;
+                    formData.append('gender', gender);
 
+                    var regionId = document.getElementById('regionId').options[document.getElementById('regionId').selectedIndex].value;
+                    formData.append('regionId', regionId);
 
+                    console.log(regionId);
+                    console.log(email);
+
+                    $.ajax({
+
+                        url: '/user/updateUserAccount',
+                        method: 'POST',
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        success: function(){
+                            alert("회원정보 수정 되었습니다.");
+                            window.location = "/user/myPage";
+                        },
+                        error: function(xhr, status, error){
+
+                            alert('회원정보 수정 실패');
+
+                        }
+                    })
+                })
 
                 //#endregion
 
@@ -186,7 +231,7 @@
 
 
 
-                //# region 축제의 카테고리별 찜 / 관심없음 / 리뷰 내역
+                //# region 상단바 : 축제 카테고리별 찜 / 관심없음 / 리뷰 내역
 
 
                 /**
@@ -817,7 +862,264 @@
 
 
 
-                //#region 공연 찜 관심없음 리뷰
+                //#region 상단바 : 공연
+
+                //#endregion
+
+
+                //#region 상단바 : 전시
+
+                //#endregion
+
+
+                //#region 상단바 : 문화제
+
+                //#endregion
+
+
+                //#region 하단바 : 축제의 찜키워드 , 관심없음 키워드
+
+
+                  /**
+                 * 축제 찜 키워드 중 카운트가 10개 이상인 것을 가져옴
+                 *
+                 */
+                function findFestivalBigLoveKeyword(){
+
+                    $.ajax({
+
+                        url: '/festival/findFestivalBigLoveKeyword',
+                        method: 'POST',
+                        contentType: 'application/json',
+                        success: function(list){
+                            console.log("findFestivalBigLoveKeyword")
+                            console.log(list);
+                            $('#festivalKeywordList').html("");
+                            var concat = '';
+                            $.each(list, function(index, keyword){
+
+                                var htmlContent = `<button value="${keyword.festivalKeywordId}" class="festivalLoveKeywordBtn bigLove">${keyword.festivalKeywordId}</button>`;
+
+                                $('#festivalKeywordList').append(htmlContent);
+
+                                concat += keyword.festivalKeywordId + " ";
+
+                            })
+
+                            $('#festivalKeyword').val(concat.trim()+" ");
+
+                            findFestivalSmallLoveKeyword(1);
+
+                        }
+
+                    })
+
+                }
+
+
+                  /**
+                 * 축제 찜 키워드 중 카운트가 10개 미만인 것을 5개씩 가져옴
+                 *
+                 */
+                function findFestivalSmallLoveKeyword(page){
+
+                    $.ajax({
+
+                        url: '/festival/findFestivalSmallLoveKeyword?page='+page,
+                        method: 'POST',
+                        contentType: 'application/json',
+                        success: function(list){
+                            console.log("findFestivalSmallLoveKeyword")
+                            console.log(list);
+                            $.each(list, function(index, keyword){
+
+                                var htmlContent = `<button value="${keyword.festivalKeywordId}" class="festivalLoveKeywordBtn">${keyword.festivalKeywordId}</button>`;
+
+                                $('#festivalKeywordList').append(htmlContent);
+
+                            })
+
+                        }
+
+                    })
+
+                }
+
+
+                /**
+                * 축제 찜 키워드 추가 버튼
+                *
+                */
+                $(document).on('click','#addFestivalLoveKeyword', function(){
+                    var page = parseInt($(this).val());
+                    page = page + 1;
+                    findFestivalSmallLoveKeyword(page);
+                    $(this).val(page);
+
+                })
+
+                findFestivalBigLoveKeyword();
+
+
+                /**
+                * 축제 찜 키워드 선택 시 색 변화 버튼
+                *
+                */
+                $(document).on('click','.festivalLoveKeywordBtn', function(){
+
+                    if($(this).hasClass('bigLove')){
+
+                        $(this).removeClass('bigLove');
+
+                    }else{
+
+                        $(this).addClass('bigLove');
+
+                    }
+
+                    var btns = document.querySelectorAll('button.bigLove');
+
+                    var concat = '';
+
+                    btns.forEach(function(btn){
+
+                        concat += (btn.value+" ");
+
+                    })
+
+                    $('#festivalKeyword').val(concat.trim());
+
+
+
+                })
+
+
+
+                  /**
+                 * 축제 관심없음 키워드 중 카운트가 10개 이상인 것을 가져옴
+                 *
+                 */
+                function findFestivalBigHateKeyword(){
+
+                    $.ajax({
+
+                        url: '/festival/findFestivalBigHateKeyword',
+                        method: 'POST',
+                        contentType: 'application/json',
+                        success: function(list){
+                            console.log("findFestivalBigHateKeyword")
+                            console.log(list);
+                            $('#festivalKeywordList').html("");
+                            var concat = '';
+                            $.each(list, function(index, keyword){
+
+                                var htmlContent = `<button value="${keyword.festivalKeywordId}" class="festivalHateKeywordBtn bigHate">${keyword.festivalKeywordId}</button>`;
+
+                                $('#festivalKeywordList').append(htmlContent);
+
+                                concat += keyword.festivalKeywordId + " ";
+
+                            })
+
+                            $('#festivalKeyword').val(concat.trim()+" ");
+
+                            findFestivalSmallHateKeyword(1);
+
+                        }
+
+                    })
+
+                }
+
+
+                  /**
+                 * 축제 관심없음 키워드 중 카운트가 10개 미만인 것을 5개씩 가져옴
+                 *
+                 */
+                function findFestivalSmallHateKeyword(page){
+
+                    $.ajax({
+
+                        url: '/festival/findFestivalSmallHateKeyword?page='+page,
+                        method: 'POST',
+                        contentType: 'application/json',
+                        success: function(list){
+                            console.log("findFestivalSmallHateKeyword")
+                            console.log(list);
+                            $.each(list, function(index, keyword){
+
+                                var htmlContent = `<button value="${keyword.festivalKeywordId}" class="festivalHateKeywordBtn">${keyword.festivalKeywordId}</button>`;
+
+                                $('#festivalKeywordList').append(htmlContent);
+
+                            })
+
+                        }
+
+                    })
+
+                }
+
+
+                /**
+                * 축제 관심없음 키워드 추가 버튼
+                *
+                */
+                $(document).on('click','#addFestivalHateKeyword', function(){
+                    var page = parseInt($(this).val());
+                    page = page + 1;
+                    findFestivalSmallHateKeyword(page);
+                    $(this).val(page);
+
+                })
+
+
+
+
+                /**
+                * 축제 관심없음 키워드 선택 시 색 변화 버튼
+                *
+                */
+                $(document).on('click','.festivalHateKeywordBtn', function(){
+
+                    if($(this).hasClass('bigHate')){
+
+                        $(this).removeClass('bigHate');
+
+                    }else{
+
+                        $(this).addClass('bigHate');
+
+                    }
+
+                    var btns = document.querySelectorAll('button.bigHate');
+
+                    var concat = '';
+
+                    btns.forEach(function(btn){
+
+                        concat += (btn.value+" ");
+
+                    })
+
+                    $('#festivalKeyword').val(concat.trim());
+
+
+
+                })
+
+
+                //#endregion
+
+
+
+
+
+
+
+
+
+
 
                 //#endregion
 
@@ -847,6 +1149,7 @@
                     }
 
                 })
+
 
 
 
@@ -896,6 +1199,112 @@
 
 
 
+                /**
+                * 하단바 찜 키워드 클릭 시
+                *
+                */
+                $(document).on('click','#loveKeywordList', function(){
+
+                    var performanceHtml = `
+
+                        <div id="performanceKeywordList"></div>
+                        <button id="addPerformanceLoveKeyword" value="1">공연 키워드 추가</button>
+
+                    `;
+
+
+                    var exhibitionHtml = `
+
+                        <div id="exhibitionKeywordList"></div>
+                        <button id="addExhibitionLoveKeyword" value="1">전시 키워드 추가</button>
+
+                    `;
+
+
+                    var festivalHtml = `
+
+                        <div id="festivalKeywordList"></div>
+                        <button id="addFestivalLoveKeyword" value="1">축제 키워드 추가</button>
+
+                    `;
+
+
+                    var culturalPropertiesHtml = `
+
+                        <div id="culturalPropertiesKeywordList"></div>
+                        <button id="addCulturalPropertiesLoveKeyword" value="1">문화재 키워드 추가</button>
+
+                    `;
+
+                    $('#performanceZone').html(performanceHtml);
+                    $('#exhibitionZone').html(exhibitionHtml);
+                    $('#festivalZone').html(festivalHtml);
+                    $('#culturalPropertiesZone').html(culturalPropertiesHtml);
+
+                    $('#festivalKeyword').val("");
+                    $('#loveOrHate').val("L");
+                    $('#keywordCountUpdate').text("선호 키워드 수정");
+
+
+                    findFestivalBigLoveKeyword();
+
+
+                });
+
+
+
+
+                /**
+                * 하단바 관심없음 키워드 클릭 시
+                *
+                */
+                $(document).on('click','#hateKeywordList', function(){
+
+                    var performanceHtml = `
+
+                        <div id="performanceKeywordList"></div>
+                        <button id="addPerformanceHateKeyword" value="1">공연 키워드 추가</button>
+
+                    `;
+
+
+                    var exhibitionHtml = `
+
+                        <div id="exhibitionKeywordList"></div>
+                        <button id="addExhibitionHateKeyword" value="1">전시 키워드 추가</button>
+
+                    `;
+
+
+                    var festivalHtml = `
+
+                        <div id="festivalKeywordList"></div>
+                        <button id="addFestivalHateKeyword" value="1">축제 키워드 추가</button>
+
+                    `;
+
+
+                    var culturalPropertiesHtml = `
+
+                        <div id="culturalPropertiesKeywordList"></div>
+                        <button id="addCulturalPropertiesHateKeyword" value="1">문화재 키워드 추가</button>
+
+                    `;
+
+                    $('#performanceZone').html(performanceHtml);
+                    $('#exhibitionZone').html(exhibitionHtml);
+                    $('#festivalZone').html(festivalHtml);
+                    $('#culturalPropertiesZone').html(culturalPropertiesHtml);
+
+                    findFestivalBigHateKeyword();
+                    $('#festivalKeyword').val("");
+                    $('#loveOrHate').val("H");
+                    $('#keywordCountUpdate').text("비선호 키워드 수정");
+
+
+                });
+
+
 
 
 
@@ -920,7 +1329,7 @@
 
         <div id="leftZone">
 
-            <form th:action="@{/user/updateUserBasicInfo}" method="post" encType="multipart/form-data" id="basicForm" style="font-size: 28px;margin: 10%;">
+            <form encType="multipart/form-data" id="basicForm" style="font-size: 28px;margin: 10%;">
 
                 <div id="profileImg" style="width: 100%;">
 
@@ -928,17 +1337,17 @@
 
                 </div><br>
                 프로필 사진 <input name="uploadFile" class="rounded" id="uploadFile" type="file" accept="image/*"><br>
-                이메일  <input name="email" class="rounded" readonly th:placeholder="${user.email}"><br>
-                비밀번호  <input name="password" class="rounded" type="password" placeholder="******"><br>
-                이름  <input name="userName" class="rounded" style="width:100px;" th:placeholder="${user.userName}">
-                전화번호  <input name="tel" class="rounded" type="tel" style="width:200px;" th:placeholder="${user.tel}"><br>
-                나이 <input name="userAge" class="rounded" type="number" style="width:80px;" th:placeholder="${user.userAge}">
+                이메일  <input name="email" class="rounded" id="email" th:value="${user.email}" placeholder="${user.email}"><br>
+                비밀번호  <input name="password" class="rounded" id="password" type="password" th:value="${user.password}" placeholder="******"><br>
+                이름  <input name="userName" class="rounded" id="userName" style="width:100px;" th:value="${user.userName}" placeholder="${user.userName}">
+                전화번호  <input name="tel" class="rounded" id="tel" type="tel" style="width:200px;" th:value="${user.tel}"  placeholder="${user.tel}"><br>
+                나이 <input name="userAge" class="rounded" id="userAge" type="number" style="width:80px;" th:value="${user.userAge}"  th:placeholder="${user.userAge}">
                 성별
-                <select name="gender" class="rounded" style="width:80px;" id="gender">
+                <select name="gender" class="rounded" style="width:80px;" id="gender" th:value="${user.gender}">
                 </select>
                 지역 <select name="regionId" id="regionId" class="rounded" style="width:100px;"></select><br>
 
-                <button type="submit" th:value="${user.userId}">회원정보 수정</button>
+                <button type="submit" id="updateAccount" th:value="${user.userId}">회원정보 수정</button>
                 <button type="button" id="deleteAccount" th:value="${user.userId}">회원탈퇴</button>
 
             </form>
@@ -986,9 +1395,36 @@
                 </ul>
 
                 <div id="down">
-
-                    dldldl
-
+                    <div id="performanceZone">
+                        <div id="performanceKeywordList">
+                        </div>
+                        <button id="addPerformanceLoveKeyword" value="1">공연 키워드 추가</button>
+                    </div>
+                    <div id="exhibitionZone">
+                        <div id="exhibitionKeywordList">
+                        </div>
+                        <button id="addExhibitionLoveKeyword" value="1">전시 키워드 추가</button>
+                    </div>
+                    <div id="festivalZone">
+                        <div id="festivalKeywordList">
+                        </div>
+                        <button id="addFestivalLoveKeyword" value="1">축제 키워드 추가</button>
+                    </div>
+                    <div id="culturalPropertiesZone">
+                        <div id="culturalPropertiesKeywordList">
+                        </div>
+                        <button id="addCulturalPropertiesLoveKeyword" value="1">문화재 키워드 추가</button>
+                    </div>
+                    <div id="updateBtnZone">
+                        <form th:action="@{/user/insertUserBigLoveHateKeyword}" method="post" style="font-size: 28px;">
+                            <input type="hidden" id="performanceKeyword" name="performanceKeyword">
+                            <input type="hidden" id="exhibitionKeyword" name="exhibitionKeyword">
+                            <input type="hidden" id="festivalKeyword" name="festivalKeyword">
+                            <input type="hidden" id="culturalPropertiesKeyword" name="culturalPropertiesKeyword">
+                            <input type="hidden" id="loveOrHate" name="loveOrHate" value="L">
+                            <button type="submit" id="keywordCountUpdate">선호 키워드 수정</button>
+                        </form>
+                    </div>
                 </div>
 
             </div>

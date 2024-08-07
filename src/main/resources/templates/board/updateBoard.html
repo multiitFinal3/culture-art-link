@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html
+        xmlns:th="http://www.thymeleaf.org"
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
+>
+<html layout:decorate="~{common/layout/layoutMenubar}">
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>글 수정</title>
+    <link rel="stylesheet" href="/css/board/createBoard.css">
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="/js/board/updateBoard.js"></script>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="container">
+        <h1>글 수정</h1>
+        <form id="updateForm">
+            <input type="text" id="title" placeholder="글 제목을 입력해주세요" required>
+            <select id="category" required>
+                <option value="performance">공연</option>
+                <option value="exhibition">전시</option>
+                <option value="festival">축제</option>
+                <option value="cultural_properties">문화재</option>
+            </select>
+            <div id="editor" contenteditable="true"></div>
+            <div class="button-group">
+                <label for="imageUpload" class="image-upload-btn">
+                    <img src="image-icon.png" alt="이미지 첨부">
+                </label>
+                <input type="file" id="imageUpload" accept="image/*" style="display: none;">
+                <button type="button" class="cancel-btn" onclick="history.back()">취소</button>
+                <button type="submit" class="submit-btn">수정</button>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+</html>

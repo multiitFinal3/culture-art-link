@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.multi.culture_link.board.model.dao.BoardCommentDao"><!-- 메퍼위치하고  동일하게 네임스페이스 작성-->
+
+
+    <select id="getComment" resultType="com.multi.culture_link.board.model.dto.BoardCommentDto">
+        SELECT *, u.user_name AS author,
+               CASE
+                   WHEN u.user_id = #{userId} THEN true
+                   ELSE false
+                   END AS isAuth
+            FROM board_comment bc left join user u on bc.user_id = u.user_id WHERE board_id = #{boardId} ORDER BY bc.created_at ASC
+    </select>
+
+    <insert id="createComment" >
+        INSERT INTO board_comment (board_id, user_id, content)
+            VALUES (#{boardId}, #{userId}, #{content})
+    </insert>
+
+    <delete id="deleteComment">
+        DELETE FROM board_comment
+        WHERE user_id = #{userId} AND board_id = #{boardId} AND id = #{id}
+    </delete>
+
+    <select id="getCommentAll" resultType="com.multi.culture_link.board.model.dto.BoardCommentDto">
+        SELECT *
+        FROM board_comment ec
+    </select>
+
+
+
+
+
+</mapper>

@@ -7,8 +7,11 @@ import com.multi.culture_link.festival.model.dto.UserFestivalLoveHateMapDTO;
 import com.multi.culture_link.festival.service.FestivalService;
 import com.multi.culture_link.users.model.dto.UserDTO;
 import com.multi.culture_link.users.model.dto.VWUserRoleDTO;
+import com.multi.culture_link.users.model.mapper.UserMapper;
 import com.multi.culture_link.users.service.UserService;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -30,12 +33,14 @@ public class UserController {
 	
 	
 	private final UserService userService;
+	private final UserMapper userMapper;
 	private final FestivalService festivalService;
 	private final RegionService regionService;
 	private final BCryptPasswordEncoder bCryptPasswordEncoder;
 	
-	public UserController(UserService userService, FestivalService festivalService, RegionService regionService, BCryptPasswordEncoder bCryptPasswordEncoder) {
+	public UserController(UserService userService, UserMapper userMapper, FestivalService festivalService, RegionService regionService, BCryptPasswordEncoder bCryptPasswordEncoder) {
 		this.userService = userService;
+		this.userMapper = userMapper;
 		this.festivalService = festivalService;
 		this.regionService = regionService;
 		this.bCryptPasswordEncoder = bCryptPasswordEncoder;
@@ -99,9 +104,8 @@ public class UserController {
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
-
-
-//		userDTO.setUserId(userId);
+		
+		
 		userDTO.setEmail(email);
 		userDTO.setPassword(password);
 		userDTO.setUserName(userName);
@@ -112,21 +116,37 @@ public class UserController {
 		
 		System.out.println("userdto : " + userDTO);
 		
-		/*userDTO.setRoleId(2);*/
-		
 		
 		try {
 			
 			String encoded_pw = bCryptPasswordEncoder.encode(userDTO.getPassword());
 			userDTO.setPassword(encoded_pw);
 			userService.signUp(userDTO);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+		
+		UserDTO user = null;
+		try {
+			user = userService.findUserByEmail(email);
+			user.setRoleId("ROLE_ADMIN");
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+		
+		int userId = user.getUserId();
+		
+		try {
+			userService.insertRoleId(user);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+		
+		
+		String[] list = festivalSelectKeyword.trim().split(" ");
+		for (String s : list) {
 			
-			
-			String[] list = festivalSelectKeyword.trim().split(" ");
-			for (String s : list) {
-				
-				UserDTO user = userService.findUserByEmail(email);
-				int userId = user.getUserId();
+			try {
 				
 				UserFestivalLoveHateMapDTO mapDTO = new UserFestivalLoveHateMapDTO();
 				mapDTO.setFestivalKeywordId(s);
@@ -134,13 +154,13 @@ public class UserController {
 				mapDTO.setUserId(userId);
 				mapDTO.setFestivalCount(15);
 				festivalService.insertUserSelectKeyword(mapDTO);
-				
+			} catch (Exception e) {
+				throw new RuntimeException(e);
 			}
 			
 			
-		} catch (Exception e) {
-			throw new RuntimeException(e);
 		}
+		
 		
 		System.out.println("회원가입 성공");
 		
@@ -181,6 +201,7 @@ public class UserController {
 		
 	}
 	
+	
 	/**
 	 * 회원가입 페이지의 지역정보를 가져옴
 	 *
@@ -204,6 +225,198 @@ public class UserController {
 		
 		return list;
 		
+	}
+	
+	
+	/**
+	 * 회원가입 페이지의 지역정보를 가져옴
+	 *
+	 * @return
+	 */
+	@PostMapping("/deleteUserAccount")
+	@ResponseBody
+	public void deleteUserAccount(@AuthenticationPrincipal VWUserRoleDTO user) {
+		
+		try {
+			userService.deleteUserAccount(user);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+		
+		
+	}
+	
+	
+	/**
+	 * 회원정보 수정을 함
+	 *
+	 * @return
+	 */
+	@PostMapping("/updateUserAccount")
+	@ResponseBody
+	public void updateUserAccount(@AuthenticationPrincipal VWUserRoleDTO user, @RequestParam(name = "file", required = false) MultipartFile file, @RequestParam("email") String email, @RequestParam("password") String password, @RequestParam("userName") String userName, @RequestParam("tel") String tel, @RequestParam("userAge") int userAge, @RequestParam("gender") String gender, @RequestParam("regionId") int regionId) {
+		
+		String attachment = "";
+		
+		try {
+			
+			if (file != null) {
+				String fileUUIDName = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
+				String uploadDir = System.getProperty("user.dir") + "/src/main/resources/static/img/user/userProfile/";
+				
+				
+				System.out.println("???");
+				
+				Files.createDirectories(Paths.get(uploadDir));
+				System.out.println("id : " + file);
+				
+				File savedFile = new File(uploadDir + fileUUIDName);
+				
+				System.out.println("savedFile.getAbsolutePath() : " + savedFile.getAbsolutePath());
+				System.out.println("savedFile.getName() : " + savedFile.getName());
+				System.out.println("path : " + savedFile.getPath());
+				System.out.println(System.getProperty("user.dir"));
+				
+				file.transferTo(savedFile);
+				
+				attachment = uploadDir + fileUUIDName;
+				int startIndex = attachment.indexOf("/img");
+				attachment = attachment.substring(startIndex);
+				
+				
+			}
+			
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+		
+		
+		UserDTO userDTO = new UserDTO();
+		userDTO.setUserId(user.getUserId());
+		userDTO.setUserProfilePic(attachment);
+		userDTO.setEmail(email);
+		
+		System.out.println("입력된 비밀번호 : " + password);
+		System.out.println("원래 비밀번호 : " + user.getPassword());
+		
+		if (!password.equals(user.getPassword())) {
+			System.out.println("비밀번호 다름");
+			String encryptedPassword = bCryptPasswordEncoder.encode(password);
+			System.out.println("암호화 된 비밀번호 : " + encryptedPassword);
+			userDTO.setPassword(encryptedPassword);
+		} else {
+			userDTO.setPassword(password);
+		}
+		
+		
+		userDTO.setUserName(userName);
+		userDTO.setTel(tel);
+		userDTO.setUserAge(userAge);
+		userDTO.setGender(gender);
+		userDTO.setRegionId(regionId);
+		
+		
+		System.out.println("받아온 정보 : " + userDTO);
+		
+		try {
+			userService.updateUserAccount(userDTO);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+		
+		
+		try {
+			UserDTO newUser = userService.findUserByEmail(email);
+			VWUserRoleDTO newVWUser = new VWUserRoleDTO(newUser);
+			
+			UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(newVWUser, null, user.getAuthorities());
+			SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+			
+			
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+		
+		
+	}
+	
+	
+	/**
+	 * 찜 관심없음 선택 키워드를 삽입
+	 *
+	 * @param user
+	 * @param performanceKeyword
+	 * @param exhibitionKeyword
+	 * @param festivalKeyword
+	 * @param culturalPropertiesKeyword
+	 * @param loveOrHate
+	 * @return
+	 */
+	@PostMapping("/insertUserBigLoveHateKeyword")
+	public String insertUserBigLoveHateKeyword(@AuthenticationPrincipal VWUserRoleDTO user, @RequestParam(name = "performanceKeyword", required = false) String performanceKeyword, @RequestParam(name = "exhibitionKeyword", required = false) String exhibitionKeyword, @RequestParam(name = "festivalKeyword", required = false) String festivalKeyword, @RequestParam(name = "culturalPropertiesKeyword", required = false) String culturalPropertiesKeyword, @RequestParam(name = "loveOrHate", required = false) String loveOrHate) {
+		
+		System.out.println("lh : " + loveOrHate);
+		System.out.println("fk : " + festivalKeyword);
+		
+		if (loveOrHate.equals("L")) {
+			
+			UserFestivalLoveHateMapDTO mapDTO = new UserFestivalLoveHateMapDTO();
+			mapDTO.setUserId(user.getUserId());
+			mapDTO.setSortCode("L");
+			
+			try {
+				festivalService.deleteAllUserSelectFestivalKeyword(mapDTO);
+				if ((!festivalKeyword.trim().equals("")) && (!festivalKeyword.isEmpty()) && (festivalKeyword != null)) {
+					
+					String[] festivalList = null;
+					festivalList = festivalKeyword.trim().split(" ");
+					
+					for (String s : festivalList) {
+						
+						mapDTO.setFestivalKeywordId(s);
+						mapDTO.setFestivalCount(15);
+						festivalService.insertUserSelectKeyword(mapDTO);
+						
+					}
+					
+					
+				}
+			} catch (Exception e) {
+				throw new RuntimeException(e);
+			}
+			
+			
+		} else if (loveOrHate.equals("H")) {
+			
+			UserFestivalLoveHateMapDTO mapDTO = new UserFestivalLoveHateMapDTO();
+			mapDTO.setUserId(user.getUserId());
+			mapDTO.setSortCode("H");
+			
+			try {
+				festivalService.deleteAllUserSelectFestivalKeyword(mapDTO);
+				if ((!festivalKeyword.trim().equals("")) && (!festivalKeyword.isEmpty()) && (festivalKeyword != null)) {
+					
+					String[] festivalList = null;
+					festivalList = festivalKeyword.trim().split(" ");
+					
+					for (String s : festivalList) {
+						
+						mapDTO.setFestivalKeywordId(s);
+						mapDTO.setFestivalCount(15);
+						festivalService.insertUserSelectKeyword(mapDTO);
+						
+					}
+					
+					
+				}
+			} catch (Exception e) {
+				throw new RuntimeException(e);
+			}
+			
+			
+		}
+		
+		return "redirect:/user/myPage";
 	}
 	
 	

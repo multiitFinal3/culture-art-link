@@ -5,6 +5,7 @@ import com.multi.culture_link.admin.culturalProperties.model.dto.CulturalPropert
 import com.multi.culture_link.admin.culturalProperties.model.dto.PageDTO;
 import com.multi.culture_link.culturalProperties.model.dao.CulturalPropertiesDAO;
 import com.multi.culture_link.culturalProperties.model.dto.CulturalPropertiesInterestDTO;
+import com.multi.culture_link.culturalProperties.model.dto.CulturalPropertiesReviewDTO;
 import com.multi.culture_link.culturalProperties.model.dto.NewsArticle;
 import com.multi.culture_link.exhibition.model.dto.ExhibitionDto;
 import com.multi.culture_link.users.model.dto.VWUserRoleDTO;
@@ -95,34 +96,6 @@ public class CulturalPropertiesService {
         return articles;
     }
 
-//    public CulturalPropertiesDTO getCulturalPropertiesById(int id) {
-//        return culturalPropertiesDAO.getCulturalPropertyById(id);
-//    }
-
-
-//    public CulturalPropertiesDTO getCulturalPropertyById(int userId, int id){
-//        return culturalPropertiesDAO.getCulturalPropertyById(userId, id);
-//    }
-
-
-//    public List<CulturalPropertiesDTO> getNearbyPlace(String region, String district, int id) {
-//        return culturalPropertiesDAO.getNearbyPlace(region, district, id);
-//
-//
-//    }
-
-
-//    public List<CulturalPropertiesDTO> getNearbyPlace(String region, String district, int id) {
-//        // 1. 근처 문화재를 조회
-//        List<CulturalPropertiesDTO> nearbyPlaces = culturalPropertiesDAO.getNearbyPlace(region, district, id);
-//
-//        // 2. 근처 문화재가 없으면 해당 지역에서 랜덤으로 10개 데이터 가져오기
-//        if (nearbyPlaces.isEmpty()) {
-//            nearbyPlaces = culturalPropertiesDAO.getRandomPlace(region);
-//        }
-//
-//        return nearbyPlaces;
-//    }
 
     public List<CulturalPropertiesDTO> getNearbyPlace(String region, String district, int id) {
         List<CulturalPropertiesDTO> nearbyPlaces = culturalPropertiesDAO.getNearbyPlace(region, district, id);
@@ -174,6 +147,27 @@ public class CulturalPropertiesService {
 //        return culturalPropertiesDAO.isDisliked(userId, id);
 //    }
 
+    public void addReview(CulturalPropertiesReviewDTO reviewDTO) {
+        System.out.println("리뷰 DTO: " + reviewDTO);
+        culturalPropertiesDAO.addReview(reviewDTO); // 리뷰 등록을 위한 매퍼 호출
+    }
+
+    public List<CulturalPropertiesReviewDTO> getReviewsByCulturalPropertyId(int id) {
+        // 해당 문화재 ID에 대한 리뷰를 반환하는 로직
+        return culturalPropertiesDAO.getReviewsByCulturalPropertyId(id);
+    }
+
+    public boolean deleteReview(int id, int culturalPropertiesId, int userId) {
+        // 리뷰를 조회하여 작성자와 문화재 ID를 확인
+        CulturalPropertiesReviewDTO review = culturalPropertiesDAO.findByReviewId(id);
+
+        if (review != null && review.getUserId() == userId && review.getCulturalPropertiesId() == culturalPropertiesId) {
+            // 조건이 일치하면 삭제
+            culturalPropertiesDAO.deleteReview(id);
+            return true; // 삭제 성공
+        }
+        return false; // 삭제 실패
+    }
 
 
 
