@@ -491,7 +491,18 @@
                                             </td>
 
                                             <td style="width: 100px">
-                                                <img src="/img/festival/star.png" height="25px">&nbsp;&nbsp;<input class="reviewStar" type="number" step="0.5" value="${review.festivalReviewStar}" max="5" min="0" style="width: 45px; height: 45px; text-align: center;">
+                                                <div class="star-rating">
+                                                    <input type="radio" id="sr-0-5" name="reviewStar" value="5" />
+                                                    <label for="sr-0-5">★</label>
+                                                    <input type="radio" id="sr-0-4" name="reviewStar" value="4" />
+                                                    <label for="sr-0-4">★</label>
+                                                    <input type="radio" id="sr-0-3" name="reviewStar" value="3" />
+                                                    <label for="sr-0-3">★</label>
+                                                    <input type="radio" id="sr-0-2" name="reviewStar" value="2" />
+                                                    <label for="sr-0-2">★</label>
+                                                    <input type="radio" id="sr-0-1" name="reviewStar" value="1" />
+                                                    <label for="sr-0-1">★</label>
+                                                </div>
                                             </td>
 
                                             <td style="width: 100px">
@@ -517,6 +528,31 @@
 
                                 }else{
 
+                                    var reviewStarNum = review.festivalReviewStar;
+                                    var reviewStarHtml = ``;
+
+                                    for(let i = 1; i <= reviewStarNum; i++){
+
+                                        var append = `
+                                        <label style="color: #f6d74d;">★</label>
+                                        `;
+                                        reviewStarHtml += append;
+                                    }
+
+                                    if(reviewStarNum < 5){
+
+                                        for(let i = reviewStarNum + 1; i <= 5; i++){
+
+                                            var append = `
+                                            <label>★</label>
+                                            `;
+                                            reviewStarHtml += append;
+
+                                        }
+                                    }
+
+
+
                                     reviewHtml = `
 
                                         <tr class="reviewRow" id="review.festivalReviewId">
@@ -536,7 +572,11 @@
                                             </td>
 
                                             <td style="width: 100px">
-                                                <img src="/img/festival/star.png" height="25px">&nbsp;&nbsp;<span class="reviewStar" value="${review.festivalReviewStar}" style="width: 30px; height: 30px">${review.festivalReviewStar}</span>
+                                                <div class="star">`
+
+                                                 + reviewStarHtml +
+
+                                                `</div>
                                             </td>
 
                                             <td style="width: 500px">
@@ -559,10 +599,6 @@
                                      `;
 
                                 }
-
-
-
-
 
                                 $('#reviewList').append(reviewHtml);
 
@@ -647,9 +683,13 @@
                         success: function(){
 
                             $('#reviewTextArea').val("");
-                            $('#reviewStar').val(0);
-                            alert("리뷰 제출 성공");
+                            var stars = document.querySelectorAll('input[name="reviewStar"]');
+                            stars.forEach(star=>{
+                                star.checked = false;
+                            });
+                            $('#uploadFile').val(null);
 
+                            alert("리뷰 제출 성공");
                             findFestivalReviewListByVWUserReviewDTO(festivalId,userId, 1);
                         },
                         error: function(error){
@@ -757,7 +797,40 @@
 
 
 
+                /**
+                * 탭 키 등으로 포커스 된 상태에서 에로우 키보드를 누르면 FLEX REVERSE여서 반대로 순서가 되는 것을 방지하기 위해 넣는 내용
+                *
+                *
+                */
+                for (const starRating of document.getElementsByClassName("star-rating")) {
+                  starRating.addEventListener("keydown", (e) => {
+                    let action;
+                    if (e.key === "ArrowRight" || e.key === "ArrowDown") {
+                      action = "next";
+                    } else if (e.key === "ArrowLeft" || e.key === "ArrowUp") {
+                      action = "previous";
+                    } else {
+                      return;
+                    }
 
+                    e.preventDefault();
+
+                    const inputs = Array.from(starRating.querySelectorAll("input"));
+
+                    for (let i = 0; i < inputs.length; i++) {
+                      if (document.activeElement === inputs[i]) {
+                        // focus the next/previous element, since we have reversed the order of the elements we need to subtract on next and add on previous
+                        let focusToIndex = action === "next" ? i - 1 : i + 1;
+                        if (focusToIndex < 0) focusToIndex = inputs.length - 1;
+                        if (focusToIndex >= inputs.length) focusToIndex = 0;
+
+                        inputs[focusToIndex].focus();
+                        inputs[focusToIndex].checked = true;
+                        break;
+                      }
+                    }
+                  });
+                }
 
                 //#endregion
 
@@ -1770,14 +1843,27 @@
                             <div>
 
                                 <!--                        <img src="/img/festival/reviewAttach/2f9d6fe0-28a4-4f4d-a64f-a260ce75d47f_스크린샷 2024-07-04 162835.png">-->
-
+<!--                                https://www.putzisan.com/articles/html-css-star-rating-input-->
                                 <form id="reviewForm" encType="multipart/form-data">
 
                                     <textarea name="reviewTextArea" id="reviewTextArea" rows="4" cols="150"
                                               placeholder="리뷰를 입력하세요">
                                     </textarea>
-                                    <input name="reviewStar" id="reviewStar" type="number" step="0.5" value="3" max="5"
-                                           min="0" style="width: 40px; height: 40px">
+                                    <div class="star-rating">
+<!--                                        FLEX-REVERSE-->
+                                        <input type="radio" id="sr-0-5" name="reviewStar" value="5" />
+                                        <label for="sr-0-5">★</label>
+                                        <input type="radio" id="sr-0-4" name="reviewStar" value="4" />
+                                        <label for="sr-0-4">★</label>
+                                        <input type="radio" id="sr-0-3" name="reviewStar" value="3" />
+                                        <label for="sr-0-3">★</label>
+                                        <input type="radio" id="sr-0-2" name="reviewStar" value="2" />
+                                        <label for="sr-0-2">★</label>
+                                        <input type="radio" id="sr-0-1" name="reviewStar" value="1" />
+                                        <label for="sr-0-1">★</label>
+                                    </div>
+<!--                                    <input name="reviewStar" id="reviewStar" type="number" step="0.5" value="3" max="5"-->
+<!--                                           min="0" style="width: 40px; height: 40px">-->
                                     <input name="uploadFile" id="uploadFile" type="file" accept="image/*">
                                     <input name="festivalId" type="hidden" th:value="${festival.festivalId}">
                                     <button id="reviewInsertBtn" type="button">리뷰 제출</button>

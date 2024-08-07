@@ -519,7 +519,7 @@ public class FestivalController {
 	 * @return
 	 */
 	@PostMapping("/insertFestivalReview")
-	public String insertFestivalReview(@RequestParam("reviewTextArea") String reviewTextArea, @RequestParam("reviewStar") double reviewStar, @RequestParam("uploadFile") MultipartFile uploadFile, @RequestParam("festivalId") int festivalId, @AuthenticationPrincipal VWUserRoleDTO user) {
+	public String insertFestivalReview(@RequestParam("reviewTextArea") String reviewTextArea, @RequestParam("reviewStar") int reviewStar, @RequestParam("uploadFile") MultipartFile uploadFile, @RequestParam("festivalId") int festivalId, @AuthenticationPrincipal VWUserRoleDTO user) {
 		
 		try {
 			
@@ -605,7 +605,7 @@ public class FestivalController {
 	 */
 	@PostMapping("/updateFestivalReview")
 	@ResponseBody
-	public String updateFestivalReview(@RequestParam("festivalReviewId") int festivalReviewId, @RequestParam("reviewText") String reviewText, @RequestParam("reviewStar") double reviewStar) {
+	public String updateFestivalReview(@RequestParam("festivalReviewId") int festivalReviewId, @RequestParam("reviewText") String reviewText, @RequestParam("reviewStar") int reviewStar) {
 		
 		try {
 			
