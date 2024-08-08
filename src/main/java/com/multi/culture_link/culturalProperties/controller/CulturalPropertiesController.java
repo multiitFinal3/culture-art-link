@@ -509,36 +509,41 @@ public class CulturalPropertiesController {
 //		return ResponseEntity.ok(reviews);
 //	}
 
+	@GetMapping("/detail/{culturalPropertiesId}/review/reviewList")
+	public ResponseEntity<Map<String, Object>> getReview(
+			@PathVariable int culturalPropertiesId,
+			@RequestParam(value = "page", defaultValue = "0") int page) {
+		// Pageable 객체를 생성합니다.
+		Pageable pageable = PageRequest.of(page, 10, Sort.by(Sort.Direction.DESC, "created_at"));
+
+		// 서비스 호출
+		Page<CulturalPropertiesReviewDTO> reviews = culturalPropertiesService.getReviewsByCulturalPropertiesId(culturalPropertiesId, pageable);
+
+		// 응답에 필요한 정보를 Map으로 만듭니다.
+		Map<String, Object> response = new HashMap<>();
+		response.put("reviews", reviews.getContent());
+		response.put("totalElements", reviews.getTotalElements());
+		response.put("totalPages", reviews.getTotalPages());
+		response.put("currentPage", reviews.getNumber());
+
+		return ResponseEntity.ok(response);
+	}
+
 //	@GetMapping("/detail/{culturalPropertiesId}/review/reviewList")
-//	public ResponseEntity<Map<String, Object>> getReview(
+//	public ResponseEntity<Map<String, Object>> getReviews(
 //			@PathVariable int culturalPropertiesId,
-//			@RequestParam(value = "page", defaultValue = "0") int page) {
-//		// Pageable 객체를 생성합니다.
-//		Pageable pageable = PageRequest.of(page, 10, Sort.by(Sort.Direction.DESC, "created_at"));
+//			@RequestParam(defaultValue = "0") int page,
+//			@RequestParam(defaultValue = "10") int size) {
 //
-//		// 서비스 호출
-//		Page<CulturalPropertiesReviewDTO> reviews = culturalPropertiesService.getReviewsByCulturalPropertiesId(culturalPropertiesId, pageable);
+//		Page<CulturalPropertiesReviewDTO> reviewsPage = culturalPropertiesService.getReviewsByCulturalPropertiesId(culturalPropertiesId, PageRequest.of(page, size));
 //
-//		// 응답에 필요한 정보를 Map으로 만듭니다.
+//		// JSON 객체 생성
 //		Map<String, Object> response = new HashMap<>();
-//		response.put("reviews", reviews.getContent());
-//		response.put("totalElements", reviews.getTotalElements());
-//		response.put("totalPages", reviews.getTotalPages());
-//		response.put("currentPage", reviews.getNumber());
+//		response.put("reviews", reviewsPage.getContent());
+//		response.put("totalCount", reviewsPage.getTotalElements());
 //
 //		return ResponseEntity.ok(response);
 //	}
-
-	@GetMapping("/detail/{culturalPropertiesId}/review/reviewList")
-	public ResponseEntity<List<CulturalPropertiesReviewDTO>> getReviews(
-			@PathVariable int culturalPropertiesId,
-			@RequestParam(defaultValue = "0") int page,
-			@RequestParam(defaultValue = "10") int size) {
-
-		Page<CulturalPropertiesReviewDTO> reviewsPage = culturalPropertiesService.getReviewsByCulturalPropertiesId(culturalPropertiesId, PageRequest.of(page, size));
-
-		return ResponseEntity.ok(reviewsPage.getContent());
-	}
 
 
 
