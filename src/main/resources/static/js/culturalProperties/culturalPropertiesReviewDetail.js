@@ -470,8 +470,8 @@ function loadReviews(page) {
             console.log(response); // 응답 데이터 확인
             if (response && Array.isArray(response.reviews)) {
                 // 리뷰 리스트 업데이트
-                reviewList.empty(); // 기존 리뷰 비우기
                 const reviewList = $('#reviewList');
+                reviewList.empty(); // 기존 리뷰 비우기
 
 
                 // 리뷰를 화면에 출력
