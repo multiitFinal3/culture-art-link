@@ -403,15 +403,18 @@ $(document).ready(function() {
                 // 결과를 화면에 표시하는 코드
                 renderCulturalProperties(response.content); // 검색 결과를 전달하여 함수 호출
 
-                createPagination(response.totalPages, searchParams.get('page'), searchParams); // 페이지네이션 업데이트
-
-
                 // 찜 정보를 사용자 ID로 불러오기
                 getUserId().then(userId => {
                     loadUserInterest(userId); // 찜 상태 로드
                 }).catch(error => {
                     console.error('사용자 ID 요청 중 오류 발생:', error);
                 });
+
+
+                createPagination(response.totalPages, searchParams.get('page'), searchParams); // 페이지네이션 업데이트
+
+
+
             },
             error: function(xhr, status, error) {
                 console.error('Ajax 오류 발생: ', error);
