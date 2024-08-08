@@ -21,6 +21,8 @@ public class CulturalPropertiesReviewDTO {
 	private String userName;
 	private String userProfileImage;
 
+	private double averageRating;
+
 }
 	
 	

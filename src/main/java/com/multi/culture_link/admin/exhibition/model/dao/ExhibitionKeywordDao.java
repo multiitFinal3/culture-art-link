@@ -13,7 +13,11 @@ public interface ExhibitionKeywordDao {
     void saveExhibitionKeyword(int exhibitionId, String keyword, int frequency);
     void saveExhibitionCommentKeyword(int exhibitionId, String keyword, int frequency);
 
-    List<ExhibitionKeywordDto> getExhibtionKeyword(int exhibitionId);
-    List<ExhibitionKeywordDto> getExhibtionCommentKeyword(int exhibitionId);
+    List<ExhibitionKeywordDto> getExhibitionKeyword(int exhibitionId);
+    List<ExhibitionKeywordDto> getExhibitionCommentKeyword(int exhibitionId);
+
+
+    List<String> getExhibitionKeywordById(int exhibitionId);
+    void updateUserKeyword(int userId, String keyword, int countChange);
 
 }

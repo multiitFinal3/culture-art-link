@@ -44,6 +44,13 @@
         FROM exhibition ex LEFT JOIN exhibition_interested ei ON ex.id = ei.exhibition_id AND ei.user_id = #{userId} ORDER BY ex.created_at DESC
     </select>
 
+<!--    관심 상태 확인  -->
+    <select id="getInterestState" resultType="string">
+        SELECT state
+        FROM exhibition_interested
+        WHERE user_id = #{userId} AND exhibition_id = #{exhibitionId}
+    </select>
+
 
 
 
