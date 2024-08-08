@@ -12,6 +12,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
@@ -33,6 +34,14 @@ public class AdminFestivalServiceImpl implements AdminFestivalService {
 	private final OkHttpClient client;
 	private final Gson gson;
 	private final KeywordExtractService keywordExtractService;
+	
+	@Value("${API-KEY.naverArticleClientId}")
+	private String clientId;
+	
+	@Value("${API-KEY.naverArticleClientSecret}")
+	private String clientSecret;
+	
+	
 	
 	
 	ArrayList<FestivalDTO> list = new ArrayList<>();
@@ -375,13 +384,33 @@ public class AdminFestivalServiceImpl implements AdminFestivalService {
 			String imgUrl = document.select("div.detail_info > a > img").attr("src");
 			
 			if (!imgUrl.equals("")) {
+				System.out.println("img : " + imgUrl);
+				festivalDTO.setImgUrl(imgUrl);
 				
+			} else {
+				
+				String urlFinal = "https://openapi.naver.com/v1/search/image?query=" + festivalName + "&display=10&sort=sim&filter=all";
+				
+				Request request = new Request.Builder()
+						.url(urlFinal)
+						.addHeader("X-Naver-Client-Id", clientId)
+						.addHeader("X-Naver-Client-Secret",clientSecret)
+						.get()
+						.build();
+				
+				
+				Response response = client.newCall(request).execute();
+				String responseBody = response.body().string();
+				JsonObject json = gson.fromJson(responseBody, JsonObject.class);
+				JsonArray items = json.getAsJsonArray("items");
+				String url = items.get(0).getAsJsonObject().get("link").getAsString();
+				
+				imgUrl = url;
 				festivalDTO.setImgUrl(imgUrl);
 				
 			}
 			
 			String content2 = document.select("div.intro_box > p.text").text();
-			
 			
 			String festivalContent = content1 + content2;
 			
@@ -966,7 +995,7 @@ public class AdminFestivalServiceImpl implements AdminFestivalService {
 	 * @throws Exception
 	 */
 	@Override
-	public  FestivalContentReviewNaverKeywordMapDTO findKeywordMappingByKeywordMapping(FestivalContentReviewNaverKeywordMapDTO keywordMapping1) throws Exception {
+	public FestivalContentReviewNaverKeywordMapDTO findKeywordMappingByKeywordMapping(FestivalContentReviewNaverKeywordMapDTO keywordMapping1) throws Exception {
 		
 		FestivalContentReviewNaverKeywordMapDTO keywordMapping = adminFestivalMapper.findKeywordMappingByKeywordMapping(keywordMapping1);
 		
@@ -1163,6 +1192,7 @@ public class AdminFestivalServiceImpl implements AdminFestivalService {
 	
 	/**
 	 * 네이버 블로그의 url을 이미 사용했다는 것을 축제 네이버 url 매핑 테이블에 삽입
+	 *
 	 * @param naverBlogDTO
 	 * @throws Exception
 	 */
@@ -1177,6 +1207,7 @@ public class AdminFestivalServiceImpl implements AdminFestivalService {
 	
 	/**
 	 * 사이트의 리뷰 키워드를 구해서 각각의 빈도수와 함께 반환
+	 *
 	 * @param festivalId
 	 * @return
 	 * @throws Exception
@@ -1196,7 +1227,7 @@ public class AdminFestivalServiceImpl implements AdminFestivalService {
 		
 		ArrayList<FestivalContentReviewNaverKeywordMapDTO> existReviewKeywordList = this.findExistingFestivalContentReviewNaverKeywordMapList(mapDTO);
 		
-		if (existReviewKeywordList!=null){
+		if (existReviewKeywordList != null) {
 			
 			this.deleteAllReviewKeywordByFestivalId(festivalId);
 			
@@ -1223,6 +1254,7 @@ public class AdminFestivalServiceImpl implements AdminFestivalService {
 	
 	/**
 	 * 해당 페스티벌의 모든 리뷰의 내용을 반환
+	 *
 	 * @param festivalId
 	 * @return
 	 * @throws Exception
@@ -1239,6 +1271,7 @@ public class AdminFestivalServiceImpl implements AdminFestivalService {
 	
 	/**
 	 * 해당 페스티벌에서 추출되었던 기존의 리뷰 키워드를 모두 삭제
+	 *
 	 * @param festivalId
 	 * @throws Exception
 	 */
@@ -1251,6 +1284,7 @@ public class AdminFestivalServiceImpl implements AdminFestivalService {
 	
 	/**
 	 * 기존에 존재하는 내용 리뷰 네이버 기사 네이버 블로그 키워드를 반환
+	 *
 	 * @param mapDTO
 	 * @return
 	 * @throws Exception

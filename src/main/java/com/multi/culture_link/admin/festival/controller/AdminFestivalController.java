@@ -1146,12 +1146,13 @@ public class AdminFestivalController {
 	
 	/**
 	 * 네이버 블로그 키워드를 삽입
+	 *
 	 * @param festivalId
 	 * @return
 	 */
 	@PostMapping("/insertNaverBlogKeywordByFestivalId")
 	@ResponseBody
-	public ArrayList<String> insertNaverBlogKeywordByFestivalId(@RequestParam("festivalId") int festivalId){
+	public ArrayList<String> insertNaverBlogKeywordByFestivalId(@RequestParam("festivalId") int festivalId) {
 		
 		ArrayList<HashMap<String, Integer>> list = new ArrayList<HashMap<String, Integer>>();
 		
@@ -1243,12 +1244,13 @@ public class AdminFestivalController {
 	
 	/**
 	 * 사이트 리뷰 키워드를 삽입
+	 *
 	 * @param festivalId
 	 * @return
 	 */
 	@PostMapping("/insertReviewKeywordByFestivalId")
 	@ResponseBody
-	public ArrayList<String> insertReviewKeywordByFestivalId(@RequestParam("festivalId") int festivalId){
+	public ArrayList<String> insertReviewKeywordByFestivalId(@RequestParam("festivalId") int festivalId) {
 		
 		ArrayList<HashMap<String, Integer>> list = new ArrayList<HashMap<String, Integer>>();
 		
@@ -1336,9 +1338,6 @@ public class AdminFestivalController {
 		return keys;
 		
 	}
-	
-	
-	
 	
 	
 }
