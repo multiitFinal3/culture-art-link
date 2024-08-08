@@ -4,17 +4,14 @@ package com.multi.culture_link.culturalProperties.controller;
 import com.multi.culture_link.admin.culturalProperties.model.dto.CulturalPropertiesDTO;
 import com.multi.culture_link.culturalProperties.model.dto.*;
 import com.multi.culture_link.culturalProperties.service.CulturalPropertiesService;
-import com.multi.culture_link.exhibition.model.dto.ExhibitionCommentDto;
-import com.multi.culture_link.exhibition.model.dto.ExhibitionDto;
-import com.multi.culture_link.festival.model.dto.FestivalDTO;
 import com.multi.culture_link.users.model.dto.VWUserRoleDTO;
 import jakarta.servlet.http.HttpSession;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.select.Elements;
 import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -26,14 +23,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -386,7 +381,7 @@ public class CulturalPropertiesController {
 		System.out.println("리뷰디테일 아이디 " + id);
 		model.addAttribute("property", property);
 		model.addAttribute("userName", user.getUsername()); // 사용자 이름 추가
-		model.addAttribute("userId", user.getUserId()); // 사용자 ID 추가
+		model.addAttribute("userId2", user.getUserId()); // 사용자 ID 추가
 		model.addAttribute("userName", userName);
 
 		if (property == null) {

@@ -356,7 +356,7 @@
                 <div style="display: flex; justify-content: space-between; align-items: center;">
 
 
-                    <div class="averageRating" data-average-rating="${averageRating}" data-review-count="${reviews.size()}">
+                    <div class="averageRating" th:data-average-rating="${averageRating}" th:data-review-count="${reviews.size()}">
                         <span th:text="${#numbers.formatDecimal(averageRating != null ? averageRating : 0.0, 1, 1)}"></span>
                         <span class="review-star"></span>
                     </div>
@@ -510,7 +510,7 @@
             </div>
                 <input type="number" th:id="'editStar-' + ${review.id}" min="1" max="5" style="display:none;" th:value="${review.star}" />
             </div>
-            <div class="review-actions" th:if="${review.userId == userId}">
+            <div class="review-actions" th:if="${review.userId == userId2}">
                 <button type="button" th:id="'edit-btn-' + ${review.id}" th:data-id="${review.id}" th:data-cultural-id="${review.culturalPropertiesId}">수정</button>
                 <button type="button" th:id="'delete-btn-' + ${review.id}" th:data-id="${review.id}" th:data-cultural-id="${review.culturalPropertiesId}">삭제</button>
 

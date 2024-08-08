@@ -231,7 +231,7 @@
 
 
     <select id="averageRating" parameterType="int" resultType="double">
-        SELECT AVG(star)
+        SELECT  COALESCE(AVG(star),0)
         FROM cultural_properties_review
         WHERE cultural_properties_id = #{culturalPropertiesId}
     </select>
