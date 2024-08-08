@@ -470,13 +470,21 @@ function loadReviews(page) {
             console.log(response); // 응답 데이터 확인
             if (response && Array.isArray(response.reviews)) {
                 // 리뷰 리스트 업데이트
-                reviewList.empty(); // 기존 리뷰 비우기
-                const reviewList = $('#reviewList');
 
+//                const reviewList = $('#reviewList');
+//                reviewList.empty(); // 기존 리뷰 비우기
+
+                $('.reviews').empty();
+
+                var topHtml = `<h2 style="display: inline-block;">리뷰</h2>
+                                   <div id="totalReviewCount" class="mt-3" style="display: inline-block; margin-left: 10px;"><span>15</span></div>`;
+
+               $('.reviews').append(topHtml);
 
                 // 리뷰를 화면에 출력
                 response.reviews.forEach(review => {
                     const reviewHtml = `
+
                         <div class="review">
                             <div class="user-info">
                                 <img src="${review.userProfileImage || '/img/festival/noPhoto.png'}" alt="${review.userName}">
@@ -487,7 +495,7 @@ function loadReviews(page) {
                                 <p>${review.content}</p>
                             </div>
                         </div>`;
-                    reviewList.append(reviewHtml);
+                    $('.reviews').append(reviewHtml);
                 });
 
                 // 총 리뷰 개수 및 페이지 업데이트
