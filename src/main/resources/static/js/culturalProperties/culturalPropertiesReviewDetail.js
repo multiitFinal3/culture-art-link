@@ -286,8 +286,77 @@ document.addEventListener("DOMContentLoaded", function() {
         reviewDiv.find('[id^="cancel-btn-"]').hide(); // 취소 버튼 숨기기
     });
 
+//    function updateStarDisplay(reviewDiv, starCount) {
+//        reviewDiv.find('.review-star').each(function(index) {
+//            if (index < starCount) {
+//                $(this).html('&#9733;'); // 채워진 별 표시
+//                $(this).css('color', 'gold'); // 노란색으로 설정
+//            } else {
+//                $(this).html('&#9734;'); // 빈 별 표시
+//                $(this).css('color', 'lightgray'); // 회색으로 설정
+//            }
+//        });
+//    }
+
+    // 평점을 double로 업데이트하는 예시
+//    const averageRating = 4.5; // 예시 값
+//    updateStarDisplay($('.averageRating'), Math.round(averageRating)); // 평점에 따라 별점 업데이트
 
 
+//별점 뜸/ 별이 다 노란색
+//const averageRating = parseFloat($('.averageRating').data('average-rating')); // 평균 평점 가져오기
+//    updateStarDisplay($('.averageRating'), Math.round(averageRating)); // 별점 업데이트
+//
+//
+//function updateStarDisplay(container, starCount) {
+//    container.find('.review-star').empty(); // 이전 별점 초기화
+//    for (let i = 0; i < 5; i++) {
+//        if (i < starCount) {
+//            container.find('.review-star').append('&#9733;'); // 채워진 별 표시
+//        } else {
+//            container.find('.review-star').append('&#9734;'); // 빈 별 표시
+//        }
+//    }
+//}
+
+
+
+// 페이지 로드 시 평균 별점 가져오기
+
+    const averageRating = parseFloat($('.averageRating').data('average-rating')); // 평균 평점 가져오기
+    console.log("Average Rating from data attribute: " + averageRating); // 평균 별점 로그
+    if (!isNaN(averageRating)) {
+        updateStarDisplay($('.averageRating'), averageRating); // 별점 업데이트
+    } else {
+        updateStarDisplay($('.averageRating'), 0); // 기본값 0으로 설정
+    }
+
+
+
+function updateStarDisplay(container, averageRating) {
+    const fullStars = Math.floor(averageRating); // 소수점 아래 버림
+    const hasHalfStar = (averageRating % 1) >= 0.5; // 소수점이 0.5 이상이면 반별 표시
+
+    container.find('.review-star').empty(); // 이전 별점 초기화
+
+    // 별 점수 반영
+    for (let i = 0; i < 5; i++) {
+        if (i < fullStars) {
+            container.find('.review-star').append('<span style="color: gold;">&#9733;</span>'); // 채워진 별 노란색
+        } else if (hasHalfStar && i === fullStars) {
+            container.find('.review-star').append('<span style="color: gold;">&#9733;</span>'); // 반별 추가
+        } else {
+            container.find('.review-star').append('<span style="color: lightgray;">&#9734;</span>'); // 빈 별 회색
+        }
+    }
+}
+
+
+
+
+
+//
+//
 //    const averageRating = parseFloat(document.getElementById("averageRatingValue").innerText);
 //        const averageStars = document.getElementById("averageStars");
 //
@@ -307,6 +376,86 @@ document.addEventListener("DOMContentLoaded", function() {
 //url: `/cultural-properties/detail/${culturalPropertiesId}/review/reviewList?page=${page}`,
 
 
+
+//let currentPage = 0; // 현재 페이지
+//let totalPages = 1; // 총 페이지 수
+//
+//function loadReviews(page) {
+//    const urlParts = window.location.pathname.split('/');
+//    const culturalPropertiesId = urlParts[urlParts.length - 3];
+//
+//    $.ajax({
+//        url: `/cultural-properties/detail/${culturalPropertiesId}/review/reviewList?page=${page}`,
+//        method: 'GET',
+//        success: function(response) {
+//            console.log(response); // 응답 데이터 확인
+//            if (response && Array.isArray(response.reviews)) {
+//                // 리뷰 리스트 업데이트
+//                const reviewList = $('#reviewList');
+//                reviewList.empty(); // 기존 리뷰 비우기
+//
+//                // 리뷰를 화면에 출력
+//                response.reviews.forEach(review => {
+//                    const reviewHtml = `
+//                        <div class="review">
+//                            <div class="user-info">
+//                                <img src="${review.userProfileImage || '/img/festival/noPhoto.png'}" alt="${review.userName}">
+//                                <span>${review.userName}</span>
+//                            </div>
+//                            <div class="review-content">
+//                                <div class="rating">${'★'.repeat(review.star)}${'☆'.repeat(5 - review.star)}</div>
+//                                <p>${review.content}</p>
+//                            </div>
+//                        </div>`;
+//                    reviewList.append(reviewHtml);
+//                });
+//
+//                // 총 리뷰 개수 및 페이지 업데이트
+//                $('#totalReviewCount span').text(response.totalElements); // 총 리뷰 개수 표시
+//                $('#currentPage').text(response.currentPage + 1); // 현재 페이지
+//                $('#totalPages').text(response.totalPages); // 총 페이지 수
+//
+//                // 페이지 버튼 상태 업데이트
+//                $('#prevPage').prop('disabled', response.currentPage === 0);
+//                $('#nextPage').prop('disabled', response.currentPage === response.totalPages - 1);
+//
+//                // 활성화 상태 업데이트
+//                $('#prevPage').toggleClass('active', response.currentPage > 0);
+//                $('#nextPage').toggleClass('active', response.currentPage < response.totalPages - 1);
+//
+//                // 총 페이지 수 업데이트
+//                totalPages = response.totalPages; // 전역 totalPages 업데이트
+//            } else {
+//                console.error("No reviews found or response format is incorrect");
+//            }
+//        },
+//        error: function(err) {
+//            console.error('Error loading reviews:', err);
+//        }
+//    });
+//}
+//
+//// 페이지 로드 시 리뷰 불러오기
+//loadReviews(currentPage);
+//
+//// 페이지 버튼 클릭 이벤트
+//$('#prevPage').click(function() {
+//    if (currentPage > 0) {
+//        currentPage--;
+//        loadReviews(currentPage);
+//    }
+//});
+//
+//$('#nextPage').click(function() {
+//    if (currentPage < totalPages - 1) {
+//        currentPage++;
+//        loadReviews(currentPage);
+//    }
+//});
+
+
+
+//--------------------------------------페이지버튼 활성화 회색
 let currentPage = 0; // 현재 페이지
 let totalPages = 1; // 총 페이지 수
 
@@ -321,8 +470,9 @@ function loadReviews(page) {
             console.log(response); // 응답 데이터 확인
             if (response && Array.isArray(response.reviews)) {
                 // 리뷰 리스트 업데이트
-                const reviewList = $('#reviewList');
                 reviewList.empty(); // 기존 리뷰 비우기
+                const reviewList = $('#reviewList');
+
 
                 // 리뷰를 화면에 출력
                 response.reviews.forEach(review => {

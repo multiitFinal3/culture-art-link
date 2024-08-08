@@ -378,6 +378,11 @@ public class CulturalPropertiesController {
 			userName = vwUserRoleDTO.getUsername(); // 사용자 이름 가져오기
 		}
 
+		// 평균 평점 계산
+		double averageRating = culturalPropertiesService.averageRating(id);
+		model.addAttribute("averageRating", averageRating);
+
+
 		System.out.println("리뷰디테일 아이디 " + id);
 		model.addAttribute("property", property);
 		model.addAttribute("userName", user.getUsername()); // 사용자 이름 추가

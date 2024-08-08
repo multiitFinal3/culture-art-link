@@ -206,6 +206,10 @@ public class CulturalPropertiesService {
         return new PageImpl<>(reviews, pageable, totalReviews); // PageImpl 사용하여 Page 객체 생성
     }
 
+    public double averageRating(int culturalPropertiesId) {
+        return culturalPropertiesDAO.averageRating(culturalPropertiesId);
+    }
+
 
 
 }

@@ -85,5 +85,7 @@ public interface CulturalPropertiesDAO {
     int countReview(@Param("culturalPropertiesId") int culturalPropertiesId);
 
 
+    // 평균 평점 조회
+    double averageRating(int culturalPropertiesId);
 
 }
