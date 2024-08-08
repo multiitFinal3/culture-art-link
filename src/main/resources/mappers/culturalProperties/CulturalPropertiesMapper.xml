@@ -177,5 +177,61 @@
     </delete>
 
 
+    <update id="updateReview" parameterType="CulturalPropertiesReviewDTO">
+        UPDATE cultural_properties_review
+        SET content = #{content}, star = #{star}
+        WHERE id = #{id}
+    </update>
+
+
+
+<!--    <select id="getReview" resultType="CulturalPropertiesReviewDTO">-->
+<!--        SELECT *-->
+<!--        FROM cultural_properties_review-->
+<!--        WHERE cultural_properties_id = #{culturalPropertiesId}-->
+<!--        LIMIT #{pageable.offset}, #{pageable.pageSize}-->
+<!--    </select>-->
+
+
+<!--    <select id="getReview" resultType="CulturalPropertiesReviewDTO">-->
+<!--        SELECT *-->
+<!--        FROM cultural_properties_review-->
+<!--        WHERE cultural_properties_id = #{culturalPropertiesId}-->
+<!--        ORDER BY created_at DESC-->
+<!--        LIMIT #{pageable.pageSize} OFFSET #{pageable.offset}-->
+<!--    </select>-->
+
+
+    <select id="getReview" parameterType="map" resultType="CulturalPropertiesReviewDTO">
+        SELECT r.id, r.cultural_properties_id, r.user_id, r.star, r.content,
+        u.user_name, u.user_profile_pic AS userProfileImage
+        FROM cultural_properties_review r
+        JOIN user u ON r.user_id = u.user_id
+        WHERE r.cultural_properties_id = #{culturalPropertiesId}
+        ORDER BY r.created_at DESC
+        LIMIT #{pageable.pageSize} OFFSET #{pageable.offset}
+    </select>
+
+<!--    <select id="getReview" resultType="CulturalPropertiesReviewDTO">-->
+<!--        SELECT r.id, r.cultural_properties_id, r.user_id, r.star, r.content,-->
+<!--        u.user_name, u.user_profile_pic AS userProfileImage-->
+<!--        FROM cultural_properties_review r-->
+<!--        JOIN user u ON r.user_id = u.user_id-->
+<!--        WHERE r.cultural_properties_id = #{culturalPropertiesId}-->
+<!--        ORDER BY created_at DESC-->
+<!--        LIMIT #{pageable.pageSize} OFFSET #{pageable.offset}-->
+<!--    </select>-->
+
+
+    <select id="countReview" resultType="int">
+        SELECT COUNT(*)
+        FROM cultural_properties_review
+        WHERE cultural_properties_id = #{culturalPropertiesId}
+    </select>
+
+
+
+
+
 
 </mapper>

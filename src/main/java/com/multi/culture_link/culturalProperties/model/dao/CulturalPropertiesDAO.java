@@ -7,6 +7,7 @@ import com.multi.culture_link.culturalProperties.model.dto.PageDTO;
 import com.multi.culture_link.exhibition.model.dto.ExhibitionDto;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -72,6 +73,17 @@ public interface CulturalPropertiesDAO {
 
     CulturalPropertiesReviewDTO findByReviewId(int id);
     void deleteReview(int id);
+
+    void updateReview(CulturalPropertiesReviewDTO review);
+
+//    List<CulturalPropertiesReviewDTO> getReview(@Param("culturalPropertiesId") int culturalPropertiesId, Pageable pageable);
+//
+//    int countReview(@Param("culturalPropertiesId") int culturalPropertiesId);
+
+
+    List<CulturalPropertiesReviewDTO> getReview(@Param("culturalPropertiesId") int culturalPropertiesId, @Param("pageable") Pageable pageable);
+    int countReview(@Param("culturalPropertiesId") int culturalPropertiesId);
+
 
 
 }
