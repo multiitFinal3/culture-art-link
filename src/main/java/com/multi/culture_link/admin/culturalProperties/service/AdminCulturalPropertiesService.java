@@ -367,9 +367,15 @@ public class AdminCulturalPropertiesService {
 
 
 	}
-
-
-
+	
+	public ArrayList<CulturalPropertiesDTO> findtotalDBData() {
+		
+		ArrayList<CulturalPropertiesDTO> list =  adminCulturalPropertiesDAO.findtotalDBData();
+		return list;
+	
+	}
+	
+	
 	//----------------api 검색 보류
 
 //	public List<CulturalPropertiesDTO> searchAPIDataFilter(int pageIndex, String categoryName, String culturalPropertiesName, String region, String dynasty) {

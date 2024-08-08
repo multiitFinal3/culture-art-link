@@ -6,12 +6,28 @@ $(document).ready(function() {
     var totalPages2 = 1716; // 전체 페이지 수 (예시에서는 임의로 설정, 실제 데이터에 맞게 수정 필요)
     var itemsPerPage2 = 10; // 페이지당 표시할 항목 수
     var dbData = []; // DB 데이터를 저장할 배열
+    var totalDBData = [];
     var selectedCheckboxes = []; // 선택된 체크박스 인덱스를 저장할 배열
 
 
     var itemsPerPage = 10; // 페이지당 항목 수
 
+     function findtotalDBData(){
 
+        $.ajax({
+            type: "POST",
+            url: "/admin/cultural-properties-regulate/findtotalDBData",
+            success: function(list) {
+                console.log("findtotalDBData");
+                console.log(list);
+                totalDBData = list;
+
+
+            }
+        })
+    }
+
+    findtotalDBData();
 
 
     function findListPage(currentPage, itemsPerPage){
@@ -52,7 +68,7 @@ $(document).ready(function() {
 
         for (var pageNum = startPage; pageNum <= endPage; pageNum++) {
             var pageHtml = '<li class="page-item ' + (pageNum == currentPage1 ? 'active' : '') + '">' +
-                '<a class="page-link page-num" href="#" data-page="' + pageNum + '">' + pageNum + '</a>' +
+                '<a class="page-link page-num1" href="#" data-page="' + pageNum + '">' + pageNum + '</a>' +
                 '</li>';
             $('#paginationSection1').append(pageHtml);
         }
@@ -96,7 +112,7 @@ $(document).ready(function() {
 
         for (var pageNum = startPage; pageNum <= endPage; pageNum++) {
             var pageHtml = '<li class="page-item ' + (pageNum == currentPage2 ? 'active' : '') + '">' +
-                '<a class="page-link page-num" href="#" data-page="' + pageNum + '">' + pageNum + '</a>' +
+                '<a class="page-link page-num2" href="#" data-page="' + pageNum + '">' + pageNum + '</a>' +
                 '</li>';
             $('#paginationSection2').append(pageHtml);
         }
@@ -306,7 +322,7 @@ $(document).ready(function() {
 
 
     // 페이지 버튼 클릭 이벤트
-    $(document).on('click', '.page-num, .prev-link, .next-link', function(e) {
+    $(document).on('click', '.page-num2, .prev-link, .next-link', function(e) {
         e.preventDefault();
         var pageIndex = parseInt($(this).attr('data-page'));
         currentPage2 = pageIndex; // 클릭된 페이지를 현재 페이지로 설정
@@ -379,7 +395,7 @@ $(document).ready(function() {
             var culturalPropertiesName = checkbox.closest('tr').find('.culturalPropertiesName').text().trim();
 
             // DB 데이터와 비교하여 해당 culturalPropertiesName이 DB에 이미 존재하는지 확인
-            var existsInDB = dbData.some(function(item) {
+            var existsInDB = totalDBData.some(function(item) {
                 return item.culturalPropertiesName === culturalPropertiesName;
             });
 
