@@ -179,6 +179,12 @@ public class KeywordExtractService {
 	public HashMap<String, Integer> getKeywordByKomoran(String allContent, String path) throws Exception {
 		
 		System.out.println("allContent : " + allContent);
+		
+		if (allContent==null){
+			
+			return null;
+			
+		}
 
 		allContent = allContent.trim().replaceAll("\\s+"," ");
 		

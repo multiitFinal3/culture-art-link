@@ -42,8 +42,6 @@ public class AdminFestivalServiceImpl implements AdminFestivalService {
 	private String clientSecret;
 	
 	
-	
-	
 	ArrayList<FestivalDTO> list = new ArrayList<>();
 	
 	
@@ -394,7 +392,7 @@ public class AdminFestivalServiceImpl implements AdminFestivalService {
 				Request request = new Request.Builder()
 						.url(urlFinal)
 						.addHeader("X-Naver-Client-Id", clientId)
-						.addHeader("X-Naver-Client-Secret",clientSecret)
+						.addHeader("X-Naver-Client-Secret", clientSecret)
 						.get()
 						.build();
 				
@@ -403,7 +401,7 @@ public class AdminFestivalServiceImpl implements AdminFestivalService {
 				String responseBody = response.body().string();
 				JsonObject json = gson.fromJson(responseBody, JsonObject.class);
 				JsonArray items = json.getAsJsonArray("items");
-				String url = items.get(0).getAsJsonObject().get("link").getAsString();
+				String url = items.get(1).getAsJsonObject().get("thumbnail").getAsString();
 				
 				imgUrl = url;
 				festivalDTO.setImgUrl(imgUrl);
@@ -1045,34 +1043,49 @@ public class AdminFestivalServiceImpl implements AdminFestivalService {
 		
 		ArrayList<HashMap<String, Integer>> list = new ArrayList<HashMap<String, Integer>>();
 		
-		for (int i = 1; i <= naverArticleDTO.getDisplay(); i++) {
+		if (naverArticleDTO != null) {
 			
-			HashMap<String, Integer> map = new HashMap<>();
+			int iter =  naverArticleDTO.getDisplay();
 			
-			pageDTO.setPage(i);
-			
-			festivalDTO.setPageDTO(pageDTO);
-			
-			naverArticleDTO = festivalService.findFestivalNaverArticle(festivalDTO);
-			
-			NaverArticleDTO naverArticleDTO2 = adminFestivalMapper.findFestivalNaverUrlByNaverArticle(naverArticleDTO);
-			
-			
-			if (naverArticleDTO2 == null) {
+			for (int i = 1; i <= iter; i++) {
 				
-				this.insertFestivalNaverUrlMappingByNaverArticle(naverArticleDTO);
+				
+				HashMap<String, Integer> map = new HashMap<>();
+				
+				pageDTO.setPage(i);
+				
+				festivalDTO.setPageDTO(pageDTO);
+				
+				naverArticleDTO = festivalService.findFestivalNaverArticle(festivalDTO);
+				
+				NaverArticleDTO naverArticleDTO2 = adminFestivalMapper.findFestivalNaverUrlByNaverArticle(naverArticleDTO);
+				
+				
+				if (naverArticleDTO2 == null) {
+					
+					this.insertFestivalNaverUrlMappingByNaverArticle(naverArticleDTO);
+					
+				}
+				
+				
+				// 모든 명사를 전부 추출 해 삽입하면 뷰로 자동 계산 됨
+				
+				if (naverArticleDTO == null) {
+					
+					continue;
+					
+				}
+				
+				String allContent = naverArticleDTO.getTotalContent();
+				String path = "classpath:static/txt/festival/stop.txt";
+				map = keywordExtractService.getKeywordByKomoran(allContent, path);
+				
+				System.out.println("TF-ID 결과 : " + map);
+				
+				list.add(map);
+				
 				
 			}
-			
-			
-			// 모든 명사를 전부 추출 해 삽입하면 뷰로 자동 계산 됨
-			String allContent = naverArticleDTO.getTotalContent();
-			String path = "classpath:static/txt/festival/stop.txt";
-			map = keywordExtractService.getKeywordByKomoran(allContent, path);
-			
-			System.out.println("TF-ID 결과 : " + map);
-			
-			list.add(map);
 			
 			
 		}
@@ -1105,7 +1118,12 @@ public class AdminFestivalServiceImpl implements AdminFestivalService {
 	@Override
 	public void insertFestivalNaverUrlMappingByNaverArticle(NaverArticleDTO naverArticleDTO) throws Exception {
 		
-		adminFestivalMapper.insertFestivalNaverUrlMappingByNaverArticle(naverArticleDTO);
+		if (naverArticleDTO != null) {
+			
+			adminFestivalMapper.insertFestivalNaverUrlMappingByNaverArticle(naverArticleDTO);
+			
+		}
+		
 		
 		return;
 		

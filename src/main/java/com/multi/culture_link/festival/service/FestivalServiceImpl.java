@@ -421,7 +421,7 @@ public class FestivalServiceImpl implements FestivalService {
 			String title = item.get("title").getAsString();
 			
 			
-			String originalLink = item.get("originallink").getAsString();
+			String originalLink = item.get("link").getAsString();
 			String description = item.get("description").getAsString();
 			String pubDate = item.get("pubDate").getAsString().substring(0, 16);
 			
@@ -448,18 +448,33 @@ public class FestivalServiceImpl implements FestivalService {
 			
 			//festival naver content + img
 			
-			Document document = Jsoup.connect(originalLink).get();
-			
-			Elements els = document.select("[itemprop=articleBody]");
-			Element el = null;
-			
-			if (els.isEmpty()) {
+			try {
 				
-				els = document.select("[id=articleBody]");
+				Document document = Jsoup.connect(originalLink).get();
+				Elements els = document.select("article");
+				Element el = null;
 				
 				if (els.isEmpty()) {
 					
-					el = document.body();
+					els = document.select("[id=articleBody]");
+					
+					if (els.isEmpty()) {
+						
+						els = document.select("[itemprop=articleBody]");
+						
+						if (els.isEmpty()) {
+							
+							el = document.body();
+							
+						}
+						
+						
+					} else {
+						
+						el = els.get(0);
+						
+					}
+					
 					
 				} else {
 					
@@ -468,31 +483,29 @@ public class FestivalServiceImpl implements FestivalService {
 				}
 				
 				
-			} else {
+				String imgUrl = el.select("img").attr("src");
 				
-				el = els.get(0);
+				if (!imgUrl.equals("")) {
+					
+					naverArticleDTO.setImgUrl(imgUrl);
+					
+				}
+				
+				
+				String content = el.text();
+				content = content.replaceAll("</[a-z]*>", "").replaceAll("<[a-z]*>", "").replaceAll("[^a-zA-Z0-9가-힣\\s]", " ");
+				
+				if (content != "") {
+					naverArticleDTO.setTotalContent(content);
+				}
+				
+				System.out.println("serviceIMpl : naverArticleDTO : " + naverArticleDTO);
+				
+			} catch (Exception e) {
+				
+				return null;
 				
 			}
-			
-			
-			String imgUrl = el.select("img").attr("src");
-			
-			if (!imgUrl.equals("")) {
-				
-				naverArticleDTO.setImgUrl(imgUrl);
-				
-			}
-			
-			
-			String content = el.text();
-			content = content.replaceAll("</[a-z]*>", "").replaceAll("<[a-z]*>", "").replaceAll("[^a-zA-Z0-9가-힣\\s]", " ");
-			
-			if (content != "") {
-				naverArticleDTO.setTotalContent(content);
-			}
-			
-			System.out.println("serviceIMpl : naverArticleDTO : " + naverArticleDTO);
-			
 		}
 		
 		
@@ -614,7 +627,7 @@ public class FestivalServiceImpl implements FestivalService {
 //			}
 //
 //			System.out.println("serviceIMpl : naverBlogDTO : " + naverBlogDTO);
-			
+		
 		}
 		
 		
@@ -761,6 +774,7 @@ public class FestivalServiceImpl implements FestivalService {
 	
 	/**
 	 * 특정 유저가 작성한 리뷰 전부의 수를 반환
+	 *
 	 * @param vwUserReviewDataDTO
 	 * @return
 	 * @throws Exception
@@ -776,6 +790,7 @@ public class FestivalServiceImpl implements FestivalService {
 	
 	/**
 	 * 특정 유저의 찜 또는 관심없음 한 키워드의 카운트가 10이상인 것만 조회
+	 *
 	 * @param mapDTO
 	 * @return
 	 * @throws Exception
@@ -792,6 +807,7 @@ public class FestivalServiceImpl implements FestivalService {
 	
 	/**
 	 * 유저의 찜 / 관심없음 키워드의 카운트가 10 미만인 것을 카운트 내림차순으로 반환
+	 *
 	 * @param mapDTO
 	 * @return
 	 * @throws Exception
@@ -807,6 +823,7 @@ public class FestivalServiceImpl implements FestivalService {
 	
 	/**
 	 * 특정 유저의 특정 분류(찜 / 관심없음) 선택 키워드를 전부 삭제함
+	 *
 	 * @param mapDTO
 	 * @throws Exception
 	 */

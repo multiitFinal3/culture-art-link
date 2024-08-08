@@ -1072,26 +1072,32 @@ public class AdminFestivalController {
 		
 		for (HashMap<String, Integer> map : list) {
 			
-			for (Map.Entry<String, Integer> entry : map.entrySet()) {
+			if (map != null) {
 				
-				FestivalKeywordDTO festivalKeywordDTO = new FestivalKeywordDTO();
-				festivalKeywordDTO.setFestivalKeywordId(entry.getKey());
-				keys.add(entry.getKey());
-				festivalKeywordDTO.setFreq(entry.getValue());
-				
-				DictionaryDTO dictionaryDTO = new DictionaryDTO();
-				
-				Query query = new Query(new Criteria("word").is(entry.getKey()));
-				dictionaryDTO = mongoTemplate.findOne(query, DictionaryDTO.class, "dictionary");
-				if (dictionaryDTO != null) {
-					festivalKeywordDTO.setEmotionStat(dictionaryDTO.getPolarity());
-				} else {
-					festivalKeywordDTO.setEmotionStat(0);
+				for (Map.Entry<String, Integer> entry : map.entrySet()) {
+					
+					FestivalKeywordDTO festivalKeywordDTO = new FestivalKeywordDTO();
+					festivalKeywordDTO.setFestivalKeywordId(entry.getKey());
+					keys.add(entry.getKey());
+					festivalKeywordDTO.setFreq(entry.getValue());
+					
+					DictionaryDTO dictionaryDTO = new DictionaryDTO();
+					
+					Query query = new Query(new Criteria("word").is(entry.getKey()));
+					dictionaryDTO = mongoTemplate.findOne(query, DictionaryDTO.class, "dictionary");
+					if (dictionaryDTO != null) {
+						festivalKeywordDTO.setEmotionStat(dictionaryDTO.getPolarity());
+					} else {
+						festivalKeywordDTO.setEmotionStat(0);
+					}
+					
+					keywordList.add(festivalKeywordDTO);
+					
 				}
 				
-				keywordList.add(festivalKeywordDTO);
 				
 			}
+			
 			
 		}
 		
