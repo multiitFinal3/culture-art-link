@@ -20,10 +20,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -89,31 +85,27 @@ public class UserController {
 		UserDTO userDTO = new UserDTO();
 		
 		String fileUUIDName = UUID.randomUUID().toString() + "_" + uploadFile.getOriginalFilename();
-		String uploadDir = System.getProperty("user.dir") + "/src/main/resources/static/img/user/userProfile/";
-		try {
-			Files.createDirectories(Paths.get(uploadDir));
-			File savedFile = new File(uploadDir + fileUUIDName);
-			
-			System.out.println("savedFile.getAbsolutePath() : " + savedFile.getAbsolutePath());
-			System.out.println("savedFile.getName() : " + savedFile.getName());
-			System.out.println("path : " + savedFile.getPath());
-			System.out.println(System.getProperty("user.dir"));
-			
-			uploadFile.transferTo(savedFile);
-			
-			String attachment = uploadDir + fileUUIDName;
-			
-			int startIndex = attachment.indexOf("/img");
-			System.out.println(startIndex);
-			attachment = attachment.substring(startIndex);
-			
-			
-			userDTO.setUserProfilePic(attachment);
-			
-			
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
+		
+		//			String uploadDir = System.getProperty("user.dir") + "/src/main/resources/static/img/user/userProfile/";
+//			Files.createDirectories(Paths.get(uploadDir));
+//			File savedFile = new File(uploadDir + fileUUIDName);
+//
+//			System.out.println("savedFile.getAbsolutePath() : " + savedFile.getAbsolutePath());
+//			System.out.println("savedFile.getName() : " + savedFile.getName());
+//			System.out.println("path : " + savedFile.getPath());
+//			System.out.println(System.getProperty("user.dir"));
+//
+//			uploadFile.transferTo(savedFile);
+//
+//			String attachment = uploadDir + fileUUIDName;
+//
+//			int startIndex = attachment.indexOf("/img");
+//			System.out.println(startIndex);
+//			attachment = attachment.substring(startIndex);
+		
+		String attachment = "/user/userProfile/" + fileUUIDName;
+		
+		userDTO.setUserProfilePic(attachment);
 		
 		
 		userDTO.setEmail(email);
@@ -200,13 +192,20 @@ public class UserController {
 		UserDTO userDTO = user.getUserDTO();
 		System.out.println("user : " + userDTO);
 		
+		if (userDTO.getUserProfilePic().contains(endPoint.trim()+"/"+bucket.trim())){
+			
+			userDTO.setUserProfilePic(userDTO.getUserProfilePic().replaceAll(endPoint.trim()+"/"+bucket.trim(),"").trim());
+			
+		}
+		
+		
 		// 네이버 스토리지 이용
 		String storageLink = endPoint.trim() + "/" + bucket.trim();
-		
+
 		if ((userDTO.getUserProfilePic().trim() != null) && (!userDTO.getUserProfilePic().trim().equals(""))) {
-			
+
 			userDTO.setUserProfilePic(storageLink + userDTO.getUserProfilePic().trim());
-			
+
 		}
 		
 		
@@ -299,7 +298,7 @@ public class UserController {
 //				attachment = attachment.substring(startIndex);
 				
 				String fileUUIDName = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
-				attachment = "/festival/reviewAttach/" + fileUUIDName.trim();
+				attachment = "/user/userProfile/" + fileUUIDName.trim();
 				// 네이버 스토리지 사용
 				fileController.uploadFile(file, attachment);
 				
