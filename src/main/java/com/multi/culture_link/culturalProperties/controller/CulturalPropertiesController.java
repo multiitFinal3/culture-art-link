@@ -18,6 +18,9 @@ import org.jsoup.nodes.Element;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -445,25 +448,66 @@ public class CulturalPropertiesController {
 	}
 
 
-	@DeleteMapping("/detail/{id}/review/delete")
+
+	@DeleteMapping("/detail/{culturalPropertiesId}/review/remove")
 	public ResponseEntity<String> deleteReview(
-			@PathVariable int id,
+			@RequestParam int id,
 			@PathVariable int culturalPropertiesId,
 			@AuthenticationPrincipal VWUserRoleDTO user) {
 
 		// 현재 로그인한 사용자의 ID 가져오기
 		int userId = user.getUserId();
+		System.out.println("삭제 userId"+ userId);
 
+		System.out.println("삭제 요청: userId=" + userId + ", reviewId=" + id + ", culturalPropertiesId=" + culturalPropertiesId);
 		// 리뷰 삭제 서비스 호출
 		boolean deleted = culturalPropertiesService.deleteReview(id, culturalPropertiesId, userId);
 
 		if (deleted) {
 			return ResponseEntity.ok("리뷰가 성공적으로 삭제되었습니다.");
 		} else {
+			System.out.println("리뷰 삭제 실패: 권한이 없거나 리뷰가 존재하지 않음.");
 			return ResponseEntity.status(HttpStatus.FORBIDDEN).body("리뷰 삭제 권한이 없습니다.");
 		}
 	}
 
+
+
+
+	@PutMapping("/detail/{culturalPropertiesId}/review/update")
+	public ResponseEntity<String> updateReview(
+			@PathVariable int culturalPropertiesId,
+			@RequestParam int id,
+			@RequestBody CulturalPropertiesReviewDTO reviewDTO) {
+
+		boolean updated = culturalPropertiesService.updateReview(id, culturalPropertiesId, reviewDTO);
+
+		if (updated) {
+			return ResponseEntity.ok("리뷰가 성공적으로 수정되었습니다.");
+		} else {
+			return ResponseEntity.status(HttpStatus.FORBIDDEN).body("리뷰 수정 권한이 없습니다.");
+		}
+	}
+
+//	@GetMapping("/detail/{culturalPropertiesId}/review/reviewList")
+//	public ResponseEntity<List<CulturalPropertiesReviewDTO>> getReviews(@RequestParam int page, @RequestParam int culturalPropertiesId) {
+//		Pageable pageable = PageRequest.of(page, 10); // 페이지 크기 10
+//		Page<CulturalPropertiesReviewDTO> reviews = culturalPropertiesService.getReviewsByCulturalPropertiesId(culturalPropertiesId, pageable);
+//		return ResponseEntity.ok(reviews.getContent());
+//	}
+
+
+	@GetMapping("/detail/{culturalPropertiesId}/review/reviewList")
+	public ResponseEntity<Page<CulturalPropertiesReviewDTO>> getReview(
+			@PathVariable int culturalPropertiesId,
+			@RequestParam(value = "page", defaultValue = "0") int page) { // 기본값을 0으로 설정
+		// Pageable 객체를 생성합니다.
+		Pageable pageable = PageRequest.of(page, 10, Sort.by(Sort.Direction.DESC, "created_at"));
+
+		// 서비스 호출
+		Page<CulturalPropertiesReviewDTO> reviews = culturalPropertiesService.getReviewsByCulturalPropertiesId(culturalPropertiesId, pageable);
+		return ResponseEntity.ok(reviews);
+	}
 
 
 }

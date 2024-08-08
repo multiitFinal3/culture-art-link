@@ -209,6 +209,19 @@
 }
 
 
+.review-editable .review-star {
+    cursor: pointer; /* 손 커서 */
+}
+
+.review-text-container {
+    display: flex; /* Flexbox 사용 */
+    flex-direction: column; /* 세로 방향으로 정렬 */
+    padding: 15px; /* 패딩 추가 */
+    border-bottom: 1px solid #e0e0e0; /* 하단 테두리 */
+    margin-bottom: 15px; /* 리뷰 간 여백 추가 */
+}
+
+
 
 /* 페이지네이션 스타일 */
 .pagination {
@@ -268,10 +281,18 @@
                 <p th:text="${property.categoryName}"></p>
                 <h1 th:text="${property.culturalPropertiesName}"></h1>
                 <p th:text="${property.content}"></p>
-        <!--        <div class="rating">-->
-        <!--            <span th:text="${review.averageRating}"></span>-->
-        <!--            &lt;!&ndash; 별점 표시 &ndash;&gt;-->
-        <!--        </div>-->
+
+<!--                <div class="averageRating">-->
+<!--                    <span th:text="${review.averageRating}"></span>-->
+<!--                    &lt;!&ndash; 별점 표시 &ndash;&gt;-->
+<!--                </div>-->
+
+<!--                <div class="averageRating">-->
+<!--                    <span th:text="${#numbers.formatDecimal(review.averageRating, 1, 1)}"></span>-->
+<!--                    <span id="averageStars" class="review-star"></span>-->
+<!--                </div>-->
+
+
                     <br>
                     <a href="/cultural-properties" class="btn btn-primary">목록으로 돌아가기</a>
             </div>
@@ -346,9 +367,17 @@
         <h2>리뷰</h2>
         <div class="review" th:each="review : ${reviews}">
             <div class="user-info">
+
                 <img th:if="${review.userProfileImage != null}"
                      th:src="@{/img/user/userProfile/{filename}(filename=${review.userProfileImage})}"
                      th:alt="${review.userName}">
+                <img th:if="${review.userProfileImage == null}"
+                     th:src="@{/img/festival/noPhoto.png}"
+                     th:alt="기본 사용자 이미지">
+
+<!--                <img th:if="${review.userProfileImage != null}"-->
+<!--                     th:src="@{/img/user/userProfile/{filename}(filename=${review.userProfileImage})}"-->
+<!--                     th:alt="${review.userName}">-->
                 <div class="user-details">
                     <span th:text="${review.userName}"></span>
                     <div class="review-rating" th:attr="data-rating=${review.star}">
@@ -365,51 +394,64 @@
                     </div>
                 </div>
             </div>
+
+
+<!--            // 리뷰내용에 박스생김-->
+<!--            <div class="review" data-id="${review.id}" data-cultural-id="${review.culturalPropertiesId}">-->
             <div class="review-content">
-                <p th:text="${review.content}"></p>
+                <p th:text="${review.content}" class="review-text"></p>
+            <div class="review-text-container">
+                <textarea th:id="'editContent-' + ${review.id}" rows="5" style="display:none;" th:text="${review.content}"></textarea>
             </div>
-
-
+                <input type="number" th:id="'editStar-' + ${review.id}" min="1" max="5" style="display:none;" th:value="${review.star}" />
+            </div>
             <div class="review-actions" th:if="${review.userId == userId}">
-                <button type="button" th:onclick="'editReview(' + ${review.id} + ')'">수정</button>
-                <button type="button" th:onclick="'deleteReview(' + ${review.id} + ')'">삭제</button>
+                <button type="button" th:id="'edit-btn-' + ${review.id}" th:data-id="${review.id}" th:data-cultural-id="${review.culturalPropertiesId}">수정</button>
+                <button type="button" th:id="'delete-btn-' + ${review.id}" th:data-id="${review.id}" th:data-cultural-id="${review.culturalPropertiesId}">삭제</button>
+
+                <button type="button" th:id="'save-btn-' + ${review.id}" style="display:none;" th:data-id="${review.id}" th:data-cultural-id="${review.culturalPropertiesId}">저장</button>
+                <button type="button" th:id="'cancel-btn-' + ${review.id}" style="display:none;">취소</button>
             </div>
-
         </div>
-    </section>
 
+<!--        <div class="pagination">-->
+<!--            <button id="prevPage" disabled>이전</button>-->
+<!--            <span id="currentPage">1</span> / <span id="totalPages">1</span>-->
+<!--            <button id="nextPage">다음</button>-->
+<!--        </div>-->
 
-
-
-
-
-
-
-
-
-
-    <br><br><br><br><br><br><br><br>
-</div>
         <div class="pagination">
-            <!-- 페이지네이션 구현 -->
+            <button class="btn btn-primary" id="prevPage" type="button" disabled> &lt; </button>
+            <span id="currentPage">1</span> / <span id="totalPages">1</span>
+            <button class="btn btn-primary" id="nextPage" type="button"> &gt; </button>
         </div>
+
+
     </section>
+
+
+
+
+    <br><br><br>
+</div>
+<!--        <div class="pagination">-->
+<!--            &lt;!&ndash; 페이지네이션 구현 &ndash;&gt;-->
+<!--        </div>-->
+
+<!--<div class="pagination">-->
+<!--    <button id="prevPage" disabled>이전</button>-->
+<!--    <span id="currentPage">1</span> / <span id="totalPages">1</span>-->
+<!--    <button id="nextPage">다음</button>-->
+<!--</div>-->
+<!--    </section>-->
 
 
 </div>
 
 <script>
 
-<!--    function editReview(reviewId) {-->
-<!--        // 수정 버튼 클릭 시 실행할 코드-->
-<!--        alert("리뷰 수정 기능은 아직 구현되지 않았습니다. ID: " + reviewId);-->
-<!--    }-->
-
-<!--    function deleteReview(reviewId) {-->
-<!--        // 삭제 버튼 클릭 시 실행할 코드-->
-<!--        alert("리뷰 삭제 기능은 아직 구현되지 않았습니다. ID: " + reviewId);-->
-<!--    }-->
 
 </script>
+
 </body>
 </html>
