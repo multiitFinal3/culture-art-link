@@ -16,6 +16,46 @@
 
                 //#region 기본정보 입력
 
+
+                /**
+                 * 사용자 프로필 사진 변경 시 이미지 바꾸는 이벤트
+                 *
+                 */
+                $("input:file").change(function(){
+
+                    var file = this.files[0];
+
+                    if(file){
+
+                        var reader = new FileReader();
+
+                        reader.onload = function(e){
+
+                            var changeSrc = e.target.result;
+
+                            var htmlContent = ``;
+
+                            htmlContent = `
+                                <img class="profileImg round" src="${changeSrc}" alt="이미지가 없습니다" style="width:100%;">
+                            `;
+
+                            $('#profileImg').html(htmlContent);
+
+
+                        }
+
+                        reader.readAsDataURL(file);
+
+                    }
+                })
+
+
+
+
+
+
+
+
                 /**
                  * 전체 지역 정보를 가져옴
                  *
@@ -140,6 +180,193 @@
                 //#endregion
 
 
+
+                //#region 회원가입
+
+
+                /**
+                * 회원가입
+                *
+                * @param {Event} event 제출버튼 클릭 이벤트
+                */
+
+                $(document).on('submit','#basicForm', function(event){
+                    console.log("#createAccount");
+                    event.preventDefault();
+
+                    $('#emailError').text("");
+                    $('#passwordError').text("");
+
+                     var email = $('#email').val();
+                     var password = $('#password').val();
+
+                     if(!validateEmail(email)){
+
+                        $('#emailError').text("이메일은 @를 포함하며 아이디는 대소영문자 숫자 언더바 5자 이상로 이루어져있고 도메인은 대소영문자 3자 이상입니다.");
+                        return;
+                     }
+
+                     if(!validatePassword(password)){
+
+                        $('#passwordError').text("비밀번호는 5글자 이상의 대소영문자 숫자 언더바로 이루어져있습니다.");
+                        return;
+                     }
+
+                     validateSameEmail(email)
+                        .then(isUnique =>{
+
+                            if(!isUnique){
+
+                                $('#emailError').text("존재하는 이메일입니다.");
+                                return;
+
+                            }
+                        })
+                        .catch(error => {
+
+                            console.log("중복 이메일 검증 중 에러 발생.")
+
+                        })
+
+                    var formData = new FormData();
+
+                    var fileInput = document.getElementById('uploadFile');
+                    if(fileInput && fileInput.files.length > 0){
+                        formData.append('uploadFile', fileInput.files[0]);
+                    }
+
+                    formData.append('email', email);
+                    formData.append('password', password);
+
+                    var userName = $('#userName').val();
+                    formData.append('userName', userName);
+
+                    var tel = $('#tel').val();
+                    formData.append('tel', tel);
+
+                    var userAge = $('#userAge').val();
+                    formData.append('userAge', userAge);
+
+                    var gender = document.getElementById('gender').options[document.getElementById('gender').selectedIndex].value;
+                    formData.append('gender', gender);
+
+                    var regionId = document.getElementById('regionId').options[document.getElementById('regionId').selectedIndex].value;
+                    formData.append('regionId', regionId);
+
+                    console.log(regionId);
+                    console.log(email);
+
+                    $.ajax({
+
+                        url: '/user/signUp',
+                        method: 'POST',
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        success: function(){
+                            alert("회원가입되었습니다. 로그인하세요.");
+                            window.location = "/user/login";
+                        },
+                        error: function(xhr, status, error){
+
+                            alert('회원가입 실패');
+
+                        }
+                    })
+                })
+
+
+
+                /**
+                * 이메일 검증
+                * @param {string} email 검증할 이메일 주소
+                * @returns {boolean} 이메일이 유효한 경우 true, 아닐 경우 false
+                * @example
+                * dkswldus31@naver.com
+                */
+                function validateEmail(email){
+                    console.log("validateEmail")
+                    const emailPattern = /^[a-zA-Z0-9_]{5,}@[a-zA-Z]{3,}\.com$/;
+                    console.log(emailPattern.test(email))
+                    return emailPattern.test(email);
+
+                }
+
+
+                /**
+                * 비밀번호 검증
+                * @param {string} password 검증할 비밀번호
+                * @returns {boolean} 비밀번호가 유효한 경우 true, 아닐 경우 false
+                * @example
+                * wldus31
+                */
+                function validatePassword(password){
+
+                    const passwordPattern = /^[a-zA-Z0-9_]{5,}$/;
+                    return passwordPattern.test(password);
+
+                }
+
+
+
+                /**
+                * 이메일 중복 검증
+                * @param {string} email 검증할 이메일
+                * @returns {boolean} 이메일이 안겹칠경우 true, 겹칠 경우 false
+                *
+                */
+                function validateSameEmail(email){
+
+                    return new Promise((resolve, reject)=>{
+
+                        $.ajax({
+                            url: '/user/validateSameEmail',
+                            method: 'POST',
+                            data: {
+                                email : email
+                            },
+                            success: function(user){
+
+                                if(user){
+
+                                    resolve(false);
+
+                                }else{
+
+                                    resolve(true);
+
+                                }
+
+                            },
+                            error: function(xhr, status, error){
+
+                                alert('같은 이메일 확인 실패');
+                                reject(false);
+
+                            }
+                        })
+
+                    })
+
+                }
+
+
+
+
+
+
+
+                //#endregion
+
+
+
+
+
+
+
+                //#end region
+
+
             }
         )
 
@@ -162,23 +389,34 @@
 
         <div id="signUp">
 
-            <h1 style="font-size: 5rem;">계정을 등록하세요</h1><br>
+            <h1 style="font-size: 5rem;">계정을 등록하세요</h1><br><br>
 
-            <form th:action="@{/user/signUp}" method="post" style="font-size: 28px;" encType="multipart/form-data">
+            <div id="profileImg" style="width: 300px;">
+
+                <img class="profileImg round" src="/img/festival/noPhoto.png" alt="이미지가 없습니다" style="width:100%;">
+
+            </div><br>
+
+            <form id="basicForm" method="post" style="font-size: 28px;" encType="multipart/form-data">
 
                 프로필 사진 <input name="uploadFile" class="rounded" id="uploadFile" type="file" accept="image/*"><br>
-<!--                아이디  <input name="userId" class="rounded" placeholder="아이디 입력">-->
-                이메일  <input name="email" class="rounded" placeholder="dkswldus@gmail.com">
-                비밀번호  <input name="password" class="rounded" type="password" placeholder="*****"><br>
-                이름  <input name="userName" class="rounded" placeholder="안지연" style="width:100px;">
-                전화번호  <input name="tel" class="rounded" placeholder="010-0000-1234" type="tel">
-                나이 <input name="userAge" class="rounded" placeholder="12" type="number" style="width:80px;">
+
+                이메일  <input name="email" id="email" class="rounded" placeholder="dkswldus@gmail.com" required><br>
+                        <span id="emailError" class="error"></span><br>
+
+                비밀번호  <input name="password" id="password" class="rounded" type="password" placeholder="*****" required><br>
+                        <span id="passwordError" class="error"></span><br>
+
+                이름  <input name="userName" id="userName" class="rounded" placeholder="안지연" style="width:100px;" required><br>
+
+                전화번호  <input name="tel" id="tel" class="rounded" placeholder="010-0000-1234" type="tel"><br>
+                나이 <input name="userAge" id="userAge" class="rounded" placeholder="12" type="number" style="width:80px;"><br>
                 성별
-                <select name="gender" class="rounded" style="width:80px;">
+                <select name="gender" id="gender" class="rounded" style="width:80px;">
                     <option value="남">남</option>
                     <option value="여">여</option>
-                </select>
-                지역 <select name="regionId" id="regionId" class="rounded" style="width:100px;"></select><br>
+                </select><br>
+                지역 <select name="regionId" id="regionId" class="rounded" style="width:100px;"></select><br><br>
 
                 <div id="festivalKeywordZone">
 

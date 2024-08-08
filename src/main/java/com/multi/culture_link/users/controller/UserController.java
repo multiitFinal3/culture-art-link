@@ -78,13 +78,29 @@ public class UserController {
 	 * @param festivalSelectKeyword
 	 */
 	@PostMapping("/signUp")
-	public void signUpPost(@RequestParam("uploadFile") MultipartFile uploadFile, /*@RequestParam("userId") int userId,*/ @RequestParam("email") String email, @RequestParam("password") String password, @RequestParam("userName") String userName, @RequestParam("tel") String tel, @RequestParam("userAge") int userAge, @RequestParam("gender") String gender, @RequestParam("regionId") int regionId, @RequestParam("festivalSelectKeyword") String festivalSelectKeyword) {
+	@ResponseBody
+	public void signUpPost(@RequestParam(name = "uploadFile", required = false) MultipartFile uploadFile, @RequestParam(name = "email") String email, @RequestParam(name = "password") String password, @RequestParam(name = "userName") String userName, @RequestParam(name = "tel", required = false) String tel, @RequestParam(name = "userAge", required = false) int userAge, @RequestParam(name = "gender") String gender, @RequestParam(name = "regionId") int regionId, @RequestParam(name = "festivalSelectKeyword", required = false) String festivalSelectKeyword) {
 		
 		// 회원 users/ admin 넣는 것도 추가할 것 = > 매핑 테이블에도 조인으로 추가하기
 		int result = 0;
 		UserDTO userDTO = new UserDTO();
 		
-		String fileUUIDName = UUID.randomUUID().toString() + "_" + uploadFile.getOriginalFilename();
+		String attachment = "";
+		
+		try {
+			
+			if (uploadFile != null) {
+				
+				String fileUUIDName = UUID.randomUUID().toString() + "_" + uploadFile.getOriginalFilename();
+				attachment = "/user/userProfile/" + fileUUIDName.trim();
+				// 네이버 스토리지 사용
+				fileController.uploadFile(uploadFile, attachment);
+				
+			}
+			
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
 		
 		//			String uploadDir = System.getProperty("user.dir") + "/src/main/resources/static/img/user/userProfile/";
 //			Files.createDirectories(Paths.get(uploadDir));
@@ -102,8 +118,6 @@ public class UserController {
 //			int startIndex = attachment.indexOf("/img");
 //			System.out.println(startIndex);
 //			attachment = attachment.substring(startIndex);
-		
-		String attachment = "/user/userProfile/" + fileUUIDName;
 		
 		userDTO.setUserProfilePic(attachment);
 		
@@ -145,19 +159,24 @@ public class UserController {
 		}
 		
 		
-		String[] list = festivalSelectKeyword.trim().split(" ");
-		for (String s : list) {
+		if (festivalSelectKeyword != null) {
 			
-			try {
+			String[] list = festivalSelectKeyword.trim().split(" ");
+			for (String s : list) {
 				
-				UserFestivalLoveHateMapDTO mapDTO = new UserFestivalLoveHateMapDTO();
-				mapDTO.setFestivalKeywordId(s);
-				mapDTO.setSortCode("L");
-				mapDTO.setUserId(userId);
-				mapDTO.setFestivalCount(15);
-				festivalService.insertUserSelectKeyword(mapDTO);
-			} catch (Exception e) {
-				throw new RuntimeException(e);
+				try {
+					
+					UserFestivalLoveHateMapDTO mapDTO = new UserFestivalLoveHateMapDTO();
+					mapDTO.setFestivalKeywordId(s);
+					mapDTO.setSortCode("L");
+					mapDTO.setUserId(userId);
+					mapDTO.setFestivalCount(15);
+					festivalService.insertUserSelectKeyword(mapDTO);
+				} catch (Exception e) {
+					throw new RuntimeException(e);
+				}
+				
+				
 			}
 			
 			
@@ -192,20 +211,20 @@ public class UserController {
 		UserDTO userDTO = user.getUserDTO();
 		System.out.println("user : " + userDTO);
 		
-		if (userDTO.getUserProfilePic().contains(endPoint.trim()+"/"+bucket.trim())){
+		if (userDTO.getUserProfilePic().contains(endPoint.trim() + "/" + bucket.trim())) {
 			
-			userDTO.setUserProfilePic(userDTO.getUserProfilePic().replaceAll(endPoint.trim()+"/"+bucket.trim(),"").trim());
+			userDTO.setUserProfilePic(userDTO.getUserProfilePic().replaceAll(endPoint.trim() + "/" + bucket.trim(), "").trim());
 			
 		}
 		
 		
 		// 네이버 스토리지 이용
 		String storageLink = endPoint.trim() + "/" + bucket.trim();
-
+		
 		if ((userDTO.getUserProfilePic().trim() != null) && (!userDTO.getUserProfilePic().trim().equals(""))) {
-
+			
 			userDTO.setUserProfilePic(storageLink + userDTO.getUserProfilePic().trim());
-
+			
 		}
 		
 		
@@ -435,4 +454,20 @@ public class UserController {
 	}
 	
 	
+	@PostMapping("/validateSameEmail")
+	@ResponseBody
+	public UserDTO validateSameEmail(@RequestParam(name = "email") String email) {
+		
+		UserDTO user = null;
+		
+		try {
+			user = userService.findUserByEmail(email);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+		
+		System.out.println("user : " + user);
+		return user;
+		
+	}
 }

@@ -33,7 +33,7 @@
     .round{
 
         padding: 10px;
-        border-radius 0.7rem;
+        border-radius: 50%;
         width: 200px;
         margin: 1%;
     }
@@ -58,5 +58,11 @@
     .hasLove{
 
         background-color: #ffe5ea;
+
+    }
+
+    .error{
+
+        color: red;
 
     }
