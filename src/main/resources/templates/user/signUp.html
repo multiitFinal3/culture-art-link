@@ -196,9 +196,11 @@
 
                     $('#emailError').text("");
                     $('#passwordError').text("");
+                    $('#userError').text("");
 
                      var email = $('#email').val();
                      var password = $('#password').val();
+                     var userName = $('#userName').val();
 
                      if(!validateEmail(email)){
 
@@ -210,6 +212,13 @@
 
                         $('#passwordError').text("비밀번호는 5글자 이상의 대소영문자 숫자 언더바로 이루어져있습니다.");
                         return;
+                     }
+
+                     if(!validateName(userName)){
+
+                        $('#nameError').text("이름은 3자 이상의 영어 한글 입니다.");
+                        return;
+
                      }
 
                      validateSameEmail(email)
@@ -238,7 +247,7 @@
                     formData.append('email', email);
                     formData.append('password', password);
 
-                    var userName = $('#userName').val();
+
                     formData.append('userName', userName);
 
                     var tel = $('#tel').val();
@@ -306,6 +315,23 @@
                     return passwordPattern.test(password);
 
                 }
+
+
+                /**
+                *  이름 검증
+                * @param {string} name 검증할 이름
+                * @returns {boolean} 이름이 유효한 경우 true, 아닐 경우 false
+                * @example
+                * 안지연
+                */
+                function validateName(name){
+                    console.log("validatename")
+                    const namePattern = /^[a-zA-Z가-힣]{3,}$/;
+                    console.log(namePattern.test(name))
+                    return namePattern.test(name);
+                }
+
+
 
 
 
@@ -401,13 +427,14 @@
 
                 프로필 사진 <input name="uploadFile" class="rounded" id="uploadFile" type="file" accept="image/*"><br>
 
-                이메일  <input name="email" id="email" class="rounded" placeholder="dkswldus@gmail.com" required><br>
+                이메일  <input name="email" id="email" class="rounded" placeholder="dkswldus@gmail.com" required style="background-color: lightblue">
                         <span id="emailError" class="error"></span><br>
 
-                비밀번호  <input name="password" id="password" class="rounded" type="password" placeholder="*****" required><br>
+                비밀번호  <input name="password" id="password" class="rounded" type="password" placeholder="*****" required style="background-color: lightblue">
                         <span id="passwordError" class="error"></span><br>
 
-                이름  <input name="userName" id="userName" class="rounded" placeholder="안지연" style="width:100px;" required><br>
+                이름  <input name="userName" id="userName" class="rounded" placeholder="안지연" style="width:100px; background-color: lightblue" required>
+                <span id="nameError" class="error"></span><br>
 
                 전화번호  <input name="tel" id="tel" class="rounded" placeholder="010-0000-1234" type="tel"><br>
                 나이 <input name="userAge" id="userAge" class="rounded" placeholder="12" type="number" style="width:80px;"><br>
@@ -417,7 +444,7 @@
                     <option value="여">여</option>
                 </select><br>
                 지역 <select name="regionId" id="regionId" class="rounded" style="width:100px;"></select><br><br>
-
+                카테고리별 키워드
                 <div id="festivalKeywordZone">
 
                     <input type="hidden" id="festivalSelectKeyword" name="festivalSelectKeyword" value="">
