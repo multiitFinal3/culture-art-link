@@ -44,12 +44,19 @@
         FROM exhibition ex LEFT JOIN exhibition_interested ei ON ex.id = ei.exhibition_id AND ei.user_id = #{userId} ORDER BY ex.created_at DESC
     </select>
 
+<!--    관심 상태 확인  -->
+    <select id="getInterestState" resultType="string">
+        SELECT state
+        FROM exhibition_interested
+        WHERE user_id = #{userId} AND exhibition_id = #{exhibitionId}
+    </select>
+
 
 
 
 
     <!-- 사용자의 모든 찜 전시회 조회 -->
-    <select id="getUserLikeExhibitions" resultType="com.multi.culture_link.admin.exhibition.model.dto.api.ExhibitionApiDto">
+    <select id="getLikeExhibition" resultType="com.multi.culture_link.admin.exhibition.model.dto.api.ExhibitionApiDto">
         SELECT e.*
         FROM exhibition e
                  INNER JOIN exhibition_interested ei ON e.id = ei.exhibition_id
@@ -57,7 +64,7 @@
     </select>
 
     <!--     사용자의 모든 관심없음 전시회 조회-->
-    <select id="getUserUnlikeExhibitions" resultType="com.multi.culture_link.admin.exhibition.model.dto.api.ExhibitionApiDto">
+    <select id="getUnlikeExhibition" resultType="com.multi.culture_link.admin.exhibition.model.dto.api.ExhibitionApiDto">
         SELECT e.*
         FROM exhibition e
                  INNER JOIN exhibition_interested ei ON e.id = ei.exhibition_id

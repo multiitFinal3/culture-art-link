@@ -112,6 +112,26 @@ public class ExhibitionController {
         return exhibitionService.getExhibition(currentUser.getUserId());
     }
 
+    // 사용자가 찜한 전시회 목록
+    @GetMapping("/liked")
+    public List<ExhibitionApiDto> getLikedExhibition(
+            @AuthenticationPrincipal VWUserRoleDTO currentUser
+    ) {
+        return exhibitionService.getLikeExhibition(currentUser.getUserId());
+    }
+
+    // 사용자가 관심없음으로 표시한 전시회 목록
+    @GetMapping("/unliked")
+    public List<ExhibitionApiDto> getUnlikeExhibition(
+            @AuthenticationPrincipal VWUserRoleDTO currentUser
+    ) {
+        return exhibitionService.getUnlikeExhibition(currentUser.getUserId());
+    }
+
+
+
+
+
     // 댓글 목록 가져오기
     @GetMapping("/exhibition/{exhibitionId}/comment")
     public List<ExhibitionCommentDto> getComment(
@@ -202,6 +222,15 @@ public class ExhibitionController {
         data.setUserId(currentUser.getUserId());
         exhibitionAnalyzeService.deleteAnalyze(data);
     }
+
+    // 사용자별 작성한 댓글 목록
+    @GetMapping("/user-comment")
+    public List<ExhibitionCommentDto> getUserComment(
+            @AuthenticationPrincipal VWUserRoleDTO currentUser
+    ) {
+        return exhibitionCommentService.getUserComment(currentUser.getUserId());
+    }
+
 
 
     @PostMapping("/videos")
