@@ -18,6 +18,9 @@ import org.jsoup.nodes.Element;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -486,8 +489,25 @@ public class CulturalPropertiesController {
 		}
 	}
 
+//	@GetMapping("/detail/{culturalPropertiesId}/review/reviewList")
+//	public ResponseEntity<List<CulturalPropertiesReviewDTO>> getReviews(@RequestParam int page, @RequestParam int culturalPropertiesId) {
+//		Pageable pageable = PageRequest.of(page, 10); // 페이지 크기 10
+//		Page<CulturalPropertiesReviewDTO> reviews = culturalPropertiesService.getReviewsByCulturalPropertiesId(culturalPropertiesId, pageable);
+//		return ResponseEntity.ok(reviews.getContent());
+//	}
 
 
+	@GetMapping("/detail/{culturalPropertiesId}/review/reviewList")
+	public ResponseEntity<Page<CulturalPropertiesReviewDTO>> getReview(
+			@PathVariable int culturalPropertiesId,
+			@RequestParam(value = "page", defaultValue = "0") int page) { // 기본값을 0으로 설정
+		// Pageable 객체를 생성합니다.
+		Pageable pageable = PageRequest.of(page, 10, Sort.by(Sort.Direction.DESC, "created_at"));
+
+		// 서비스 호출
+		Page<CulturalPropertiesReviewDTO> reviews = culturalPropertiesService.getReviewsByCulturalPropertiesId(culturalPropertiesId, pageable);
+		return ResponseEntity.ok(reviews);
+	}
 
 
 }

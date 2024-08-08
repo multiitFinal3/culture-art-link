@@ -14,9 +14,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.XML;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.*;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -184,6 +182,29 @@ public class CulturalPropertiesService {
         return false; // 수정 실패
     }
 
+
+//    public Page<CulturalPropertiesReviewDTO> getReviewsByCulturalPropertiesId(int culturalPropertiesId, Pageable pageable) {
+//        List<CulturalPropertiesReviewDTO> reviews = culturalPropertiesDAO.getReview(culturalPropertiesId, pageable);
+//        int totalReviews = culturalPropertiesDAO.countReview(culturalPropertiesId); // 총 리뷰 개수 가져오기
+//        return new PageImpl<>(reviews, pageable, totalReviews); // PageImpl 사용하여 Page 객체 생성
+//    }
+//    public Page<CulturalPropertiesReviewDTO> getReviewsByCulturalPropertiesId(int culturalPropertiesId, int page) {
+//        // pageable 객체를 생성하고, created_at을 기준으로 내림차순 정렬
+//        Pageable pageable = PageRequest.of(page, 10, Sort.by(Sort.Direction.DESC, "created_at"));
+//        // DAO에서 리뷰를 가져옵니다.
+//        List<CulturalPropertiesReviewDTO> reviews = culturalPropertiesDAO.getReview(culturalPropertiesId, pageable);
+//        // 총 리뷰 개수를 가져옵니다.
+//        int totalReviews = culturalPropertiesDAO.countReview(culturalPropertiesId);
+//        // PageImpl 객체를 생성하여 반환합니다.
+//        return new PageImpl<>(reviews, pageable, totalReviews);
+//    }
+
+
+    public Page<CulturalPropertiesReviewDTO> getReviewsByCulturalPropertiesId(int culturalPropertiesId, Pageable pageable) {
+        List<CulturalPropertiesReviewDTO> reviews = culturalPropertiesDAO.getReview(culturalPropertiesId, pageable);
+        int totalReviews = culturalPropertiesDAO.countReview(culturalPropertiesId); // 총 리뷰 개수 가져오기
+        return new PageImpl<>(reviews, pageable, totalReviews); // PageImpl 사용하여 Page 객체 생성
+    }
 
 
 

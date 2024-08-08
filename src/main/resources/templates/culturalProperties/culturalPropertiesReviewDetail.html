@@ -281,10 +281,18 @@
                 <p th:text="${property.categoryName}"></p>
                 <h1 th:text="${property.culturalPropertiesName}"></h1>
                 <p th:text="${property.content}"></p>
-        <!--        <div class="rating">-->
-        <!--            <span th:text="${review.averageRating}"></span>-->
-        <!--            &lt;!&ndash; 별점 표시 &ndash;&gt;-->
-        <!--        </div>-->
+
+<!--                <div class="averageRating">-->
+<!--                    <span th:text="${review.averageRating}"></span>-->
+<!--                    &lt;!&ndash; 별점 표시 &ndash;&gt;-->
+<!--                </div>-->
+
+<!--                <div class="averageRating">-->
+<!--                    <span th:text="${#numbers.formatDecimal(review.averageRating, 1, 1)}"></span>-->
+<!--                    <span id="averageStars" class="review-star"></span>-->
+<!--                </div>-->
+
+
                     <br>
                     <a href="/cultural-properties" class="btn btn-primary">목록으로 돌아가기</a>
             </div>
@@ -404,27 +412,38 @@
                 <button type="button" th:id="'save-btn-' + ${review.id}" style="display:none;" th:data-id="${review.id}" th:data-cultural-id="${review.culturalPropertiesId}">저장</button>
                 <button type="button" th:id="'cancel-btn-' + ${review.id}" style="display:none;">취소</button>
             </div>
-
-
         </div>
-    </section>
 
+<!--        <div class="pagination">-->
+<!--            <button id="prevPage" disabled>이전</button>-->
+<!--            <span id="currentPage">1</span> / <span id="totalPages">1</span>-->
+<!--            <button id="nextPage">다음</button>-->
+<!--        </div>-->
 
-
-
-
-
-
-
-
-
-
-    <br><br><br><br><br><br><br><br>
-</div>
         <div class="pagination">
-            <!-- 페이지네이션 구현 -->
+            <button class="btn btn-primary" id="prevPage" type="button" disabled> &lt; </button>
+            <span id="currentPage">1</span> / <span id="totalPages">1</span>
+            <button class="btn btn-primary" id="nextPage" type="button"> &gt; </button>
         </div>
+
+
     </section>
+
+
+
+
+    <br><br><br>
+</div>
+<!--        <div class="pagination">-->
+<!--            &lt;!&ndash; 페이지네이션 구현 &ndash;&gt;-->
+<!--        </div>-->
+
+<!--<div class="pagination">-->
+<!--    <button id="prevPage" disabled>이전</button>-->
+<!--    <span id="currentPage">1</span> / <span id="totalPages">1</span>-->
+<!--    <button id="nextPage">다음</button>-->
+<!--</div>-->
+<!--    </section>-->
 
 
 </div>
