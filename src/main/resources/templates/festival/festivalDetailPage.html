@@ -414,6 +414,8 @@
                 */
                 function findFestivalReviewListByVWUserReviewDTO(festivalId, userId, page){
 
+                    festivalId = festivalId + "";
+
                     $.ajax({
 
                         url: '/festival/findFestivalReviewListByVWUserReviewDTO?festivalId=' + festivalId + "&page=" + page,
@@ -668,11 +670,13 @@
 
 
                 /**
-                * 리뷰를 테이블에 담고 이미지는 프로젝트 폴더에 저장함
+                * 리뷰를 테이블에 담고 이미지는 네이버 스토리지에 저장함
                 * @param {int} festivalId 축제아이디
                 *
                 */
-                $(document).on('click','#reviewInsertBtn', function(festivalId){
+                $(document).on('click','#reviewInsertBtn', function(){
+
+                    var festivalId = $(this).val();
 
                     var formData = new FormData($('#reviewForm')[0]);
 
@@ -693,7 +697,11 @@
                             $('#uploadFile').val(null);
 
                             alert("리뷰 제출 성공");
+
+                            festivalId = festivalId+"";
                             findFestivalReviewListByVWUserReviewDTO(festivalId,userId, 1);
+
+
                         },
                         error: function(error){
                             alert(error);
@@ -1859,7 +1867,7 @@
 <!--                                           min="0" style="width: 40px; height: 40px">-->
                                     <input name="uploadFile" id="uploadFile" type="file" accept="image/*">
                                     <input name="festivalId" type="hidden" th:value="${festival.festivalId}">
-                                    <button id="reviewInsertBtn" type="button">리뷰 제출</button>
+                                    <button id="reviewInsertBtn" type="button" th:value="${festival.festivalId}">리뷰 제출</button>
 
                                 </form>
 
