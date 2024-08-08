@@ -356,7 +356,7 @@
                 <div style="display: flex; justify-content: space-between; align-items: center;">
 
 
-                    <div class="averageRating" data-average-rating="${averageRating}" data-review-count="${reviews.size()}">
+                    <div class="averageRating" th:data-average-rating="${averageRating}" th:data-review-count="${reviews.size()}">
                         <span th:text="${#numbers.formatDecimal(averageRating != null ? averageRating : 0.0, 1, 1)}"></span>
                         <span class="review-star"></span>
                     </div>
