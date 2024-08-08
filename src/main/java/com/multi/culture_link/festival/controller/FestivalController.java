@@ -492,7 +492,18 @@ public class FestivalController {
 			
 			for (VWUserReviewDataDTO mapDTO : list) {
 				
-				mapDTO.setAttachment(storageLink + mapDTO.getAttachment().trim());
+				if ((mapDTO.getAttachment().trim() != null) && (!mapDTO.getAttachment().trim().equals(""))) {
+					
+					mapDTO.setAttachment(storageLink + mapDTO.getAttachment().trim());
+					
+				}
+				
+				if ((mapDTO.getUserProfilePic().trim() != null) && (!mapDTO.getUserProfilePic().trim().equals(""))) {
+					
+					mapDTO.setUserProfilePic(storageLink + mapDTO.getUserProfilePic().trim());
+					
+				}
+				
 				
 			}
 			
@@ -536,7 +547,6 @@ public class FestivalController {
 	@PostMapping("/insertFestivalReview")
 	public String insertFestivalReview(@RequestParam("reviewTextArea") String reviewTextArea, @RequestParam("reviewStar") int reviewStar, @RequestParam("uploadFile") MultipartFile uploadFile, @RequestParam("festivalId") int festivalId, @AuthenticationPrincipal VWUserRoleDTO user) {
 		
-		String fileUUIDName = UUID.randomUUID().toString() + "_" + uploadFile.getOriginalFilename();
 		
 		// 프로젝트 폴더에 저장하는 방법
 //			String uploadDir = System.getProperty("user.dir") + "/src/main/resources/static/img/festival/reviewAttach/";
@@ -558,14 +568,18 @@ public class FestivalController {
 //			System.out.println(startIndex);
 //			attachment = attachment.substring(startIndex);
 		
-		
-		String attachment = "/festival/reviewAttach/" + fileUUIDName.trim();
-		
-		// 네이버 스토리지 사용
-		
-		fileController.uploadFile(uploadFile, attachment);
-		
 		VWUserReviewDataDTO userReviewDataDTO = new VWUserReviewDataDTO();
+		
+		if (uploadFile != null) {
+			
+			String fileUUIDName = UUID.randomUUID().toString() + "_" + uploadFile.getOriginalFilename();
+			String attachment = "/festival/reviewAttach/" + fileUUIDName.trim();
+			// 네이버 스토리지 사용
+			fileController.uploadFile(uploadFile, attachment);
+			userReviewDataDTO.setAttachment(attachment);
+		}
+		
+		
 		userReviewDataDTO.setFestivalId(festivalId);
 		userReviewDataDTO.setFestivalReviewStar(reviewStar);
 		
@@ -575,7 +589,7 @@ public class FestivalController {
 		
 		int userId = user.getUserId();
 		
-		userReviewDataDTO.setAttachment(attachment);
+		
 		userReviewDataDTO.setUserId(userId);
 		
 		System.out.println("controller userReviewDTO : " + userReviewDataDTO);
@@ -1094,9 +1108,22 @@ public class FestivalController {
 			
 			for (VWUserReviewDataDTO mapDTO : list) {
 				
-				mapDTO.setAttachment(storageLink + mapDTO.getAttachment().trim());
+				if ((mapDTO.getAttachment().trim() != null) && (!mapDTO.getAttachment().trim().equals(""))) {
+					
+					mapDTO.setAttachment(storageLink + mapDTO.getAttachment().trim());
+					
+				}
+				
+				if ((mapDTO.getUserProfilePic().trim() != null) && (!mapDTO.getUserProfilePic().trim().equals(""))) {
+					
+					mapDTO.setUserProfilePic(storageLink + mapDTO.getUserProfilePic().trim());
+					
+				}
+				
 				
 			}
+			
+			
 			
 			
 		} catch (Exception e) {

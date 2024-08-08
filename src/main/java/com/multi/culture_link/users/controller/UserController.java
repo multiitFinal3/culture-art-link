@@ -5,10 +5,12 @@ import com.multi.culture_link.common.region.model.dto.RegionDTO;
 import com.multi.culture_link.common.region.service.RegionService;
 import com.multi.culture_link.festival.model.dto.UserFestivalLoveHateMapDTO;
 import com.multi.culture_link.festival.service.FestivalService;
+import com.multi.culture_link.file.controller.FileController;
 import com.multi.culture_link.users.model.dto.UserDTO;
 import com.multi.culture_link.users.model.dto.VWUserRoleDTO;
 import com.multi.culture_link.users.model.mapper.UserMapper;
 import com.multi.culture_link.users.service.UserService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -37,13 +39,21 @@ public class UserController {
 	private final FestivalService festivalService;
 	private final RegionService regionService;
 	private final BCryptPasswordEncoder bCryptPasswordEncoder;
+	private final FileController fileController;
 	
-	public UserController(UserService userService, UserMapper userMapper, FestivalService festivalService, RegionService regionService, BCryptPasswordEncoder bCryptPasswordEncoder) {
+	@Value("${cloud.aws.s3.endpoint}")
+	private String endPoint;
+	
+	@Value("${cloud.aws.s3.bucket}")
+	private String bucket;
+	
+	public UserController(UserService userService, UserMapper userMapper, FestivalService festivalService, RegionService regionService, BCryptPasswordEncoder bCryptPasswordEncoder, FileController fileController) {
 		this.userService = userService;
 		this.userMapper = userMapper;
 		this.festivalService = festivalService;
 		this.regionService = regionService;
 		this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+		this.fileController = fileController;
 	}
 	
 	/**
@@ -188,8 +198,17 @@ public class UserController {
 	public String myPage(@AuthenticationPrincipal VWUserRoleDTO user, Model model) {
 		
 		UserDTO userDTO = user.getUserDTO();
-		System.out.println("userdto" + userDTO);
-		System.out.println("pr : " + user.getUserProfilePic());
+		System.out.println("user : " + userDTO);
+		
+		// 네이버 스토리지 이용
+		String storageLink = endPoint.trim() + "/" + bucket.trim();
+		
+		if ((userDTO.getUserProfilePic().trim() != null) && (!userDTO.getUserProfilePic().trim().equals(""))) {
+			
+			userDTO.setUserProfilePic(storageLink + userDTO.getUserProfilePic().trim());
+			
+		}
+		
 		
 		model.addAttribute("user", userDTO);
 /*		model.addAttribute("gender", user.getGender());
@@ -257,32 +276,32 @@ public class UserController {
 	public void updateUserAccount(@AuthenticationPrincipal VWUserRoleDTO user, @RequestParam(name = "file", required = false) MultipartFile file, @RequestParam("email") String email, @RequestParam("password") String password, @RequestParam("userName") String userName, @RequestParam("tel") String tel, @RequestParam("userAge") int userAge, @RequestParam("gender") String gender, @RequestParam("regionId") int regionId) {
 		
 		String attachment = "";
+		UserDTO userDTO = new UserDTO();
 		
 		try {
 			
 			if (file != null) {
+				
+				// 프로젝트 폴더에 저장
+//				String fileUUIDName = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
+//				String uploadDir = System.getProperty("user.dir") + "/src/main/resources/static/img/user/userProfile/";
+//				System.out.println("???");
+//				Files.createDirectories(Paths.get(uploadDir));
+//				System.out.println("id : " + file);
+//				File savedFile = new File(uploadDir + fileUUIDName);
+//				System.out.println("savedFile.getAbsolutePath() : " + savedFile.getAbsolutePath());
+//				System.out.println("savedFile.getName() : " + savedFile.getName());
+//				System.out.println("path : " + savedFile.getPath());
+//				System.out.println(System.getProperty("user.dir"));
+//				file.transferTo(savedFile);
+//				attachment = uploadDir + fileUUIDName;
+//				int startIndex = attachment.indexOf("/img");
+//				attachment = attachment.substring(startIndex);
+				
 				String fileUUIDName = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
-				String uploadDir = System.getProperty("user.dir") + "/src/main/resources/static/img/user/userProfile/";
-				
-				
-				System.out.println("???");
-				
-				Files.createDirectories(Paths.get(uploadDir));
-				System.out.println("id : " + file);
-				
-				File savedFile = new File(uploadDir + fileUUIDName);
-				
-				System.out.println("savedFile.getAbsolutePath() : " + savedFile.getAbsolutePath());
-				System.out.println("savedFile.getName() : " + savedFile.getName());
-				System.out.println("path : " + savedFile.getPath());
-				System.out.println(System.getProperty("user.dir"));
-				
-				file.transferTo(savedFile);
-				
-				attachment = uploadDir + fileUUIDName;
-				int startIndex = attachment.indexOf("/img");
-				attachment = attachment.substring(startIndex);
-				
+				attachment = "/festival/reviewAttach/" + fileUUIDName.trim();
+				// 네이버 스토리지 사용
+				fileController.uploadFile(file, attachment);
 				
 			}
 			
@@ -290,8 +309,6 @@ public class UserController {
 			throw new RuntimeException(e);
 		}
 		
-		
-		UserDTO userDTO = new UserDTO();
 		userDTO.setUserId(user.getUserId());
 		userDTO.setUserProfilePic(attachment);
 		userDTO.setEmail(email);
@@ -307,7 +324,6 @@ public class UserController {
 		} else {
 			userDTO.setPassword(password);
 		}
-		
 		
 		userDTO.setUserName(userName);
 		userDTO.setTel(tel);
