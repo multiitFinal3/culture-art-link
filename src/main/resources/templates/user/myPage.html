@@ -234,24 +234,6 @@
                 //# region 상단바 : 축제 카테고리별 찜 / 관심없음 / 리뷰 내역
 
 
-                /**
-                * 카테고리 드롭다운 클릭 시 텍스트를 가져옴
-                *
-                */
-                $(document).on('click','.category', function(){
-
-                    var categoryText = $(this).text();
-                    $('#category').text(categoryText);
-
-                    if(categoryText="축제"){
-
-                        findLoveFestivalList();
-
-                    }
-
-
-                })
-
 
                 /**
                  * 축제 찜한 내역을 가져옴
@@ -277,7 +259,7 @@
 
                                 var firstHtml= ``;
 
-                                if(! festival.imgUrl || festival.imgUrl == "null"){
+                                if(! festival.imgUrl || festival.imgUrl == "null" || festival.imgUrl == ""){
 
                                     firstHtml = `
                                         <div class="card" id="${festival.festivalId}">
@@ -617,14 +599,11 @@
 
                                     <thead class="table-light">
                                     <tr style="text-align: center;">
-                                        <th scope="col">#</th>
-                                        <th scope="col">프로필</th>
-                                        <th scope="col">이름</th>
-                                        <th scope="col">별점</th>
-                                        <th scope="col">내용</th>
-                                        <th scope="col">첨부파일</th>
-                                        <th scope="col">수정</th>
-                                        <th scope="col">삭제</th>
+                                        <th scope="col" style="width: 300px;">#</th>
+                                        <th scope="col" style="width: 900px;">별점 / 내용</th>
+                                        <th scope="col" style="width: 300px;">첨부파일</th>
+                                        <th scope="col" style="width: 150px;">수정</th>
+                                        <th scope="col" style="width: 150px;">삭제</th>
                                     </tr>
                                     </thead>
                                     <tbody id="reviewList">
@@ -637,31 +616,15 @@
 
                                 var index1 = (page-1)*5 + index+1;
                                 var reviewHtml = ``;
-                                var profilePic = ``;
                                 var attachment = ``;
                                 var reviewUserId = review.userId;
+                                var festivalId = review.festivalId;
 
-                                if((review.userProfilePic == null) || (review.userProfilePic == "")){
-
-                                     profilePic = `
-                                     <td class="userProfilePic">
-                                        <img src="/img/festival/noPhoto.png" style="width: 100%;height:100%;display: block;">
-                                     </td>
-                                    `
-
-                                }else{
-
-                                    profilePic = `
-                                    <td class="userProfilePic">
-                                        <img src="${review.userProfilePic}" style="width:100%;height:100%;display: block;">
-                                    </td>
-                                    `
-                                }
 
                                 if((review.attachment == null) || (review.attachment == "")){
 
                                     attachment = `
-                                    <td>
+                                    <td style="width: 300px;">
                                         <img src="/img/festival/noPhoto.png" style="width:100%;display: block;">
                                     </td>
                                     `
@@ -669,7 +632,7 @@
                                 }else{
 
                                     attachment = `
-                                    <td>
+                                    <td style="width: 300px;">
                                         <img src="${review.attachment}" alt="사진 없음" style="width:100%;height:100%;display: block;">
                                     </td>
                                     `
@@ -680,25 +643,32 @@
 
                                     <tr class="reviewRow" id="reviewRow">
 
-                                        <td class="index1">
+                                        <td class="index1" style="width: 300px;">
                                             ${index1}
-                                        </td>` +
-
-                                        profilePic
+                                        </td>`
 
                                         +
 
-                                        `<td class="reviewUserName">
-                                            ${review.userName}
-                                        </td>
-
-                                        <td>
-                                            <img src="/img/festival/star.png" style="width:30%;height:auto;display: block;">&nbsp;<input class="reviewStar" type="number" step="0.5" value="${review.festivalReviewStar}" max="5" min="0" text-align: center; width:40%">
-                                        </td>
-
-                                        <td>
-                                        <textarea class="reviewText" style="text-align: center; height: 100%;">${review.festivalReviewContent}</textarea>
-                                        </td>`
+                                        `
+                                       <td style="width: 900px">
+                                            <form id="reviewForm_${review.festivalReviewId}" style="width: 100%;display: flex;flex-flow: column;align-items: center;justify-content: center;">
+                                                <div class="star-rating2" style="width: 100%;display: flex;justify-content: center;">
+                                                    <input type="radio" id="star5_${review.festivalReviewId}" name="reviewStar" value="5" ${review.festivalReviewStar == 5? 'checked' : ''}/>
+                                                    <label for="star5_${review.festivalReviewId}">★</label>
+                                                    <input type="radio" id="star4_${review.festivalReviewId}" name="reviewStar" value="4" ${review.festivalReviewStar == 4? 'checked' : ''}/>
+                                                    <label for="star4_${review.festivalReviewId}">★</label>
+                                                    <input type="radio" id="star3_${review.festivalReviewId}" name="reviewStar" value="3" ${review.festivalReviewStar == 3? 'checked' : ''}/>
+                                                    <label for="star3_${review.festivalReviewId}">★</label>
+                                                    <input type="radio" id="star2_${review.festivalReviewId}" name="reviewStar" value="2" ${review.festivalReviewStar == 2? 'checked' : ''}/>
+                                                    <label for="star2_${review.festivalReviewId}">★</label>
+                                                    <input type="radio" id="star1_${review.festivalReviewId}" name="reviewStar" value="1" ${review.festivalReviewStar == 1? 'checked' : ''}/>
+                                                    <label for="star1_${review.festivalReviewId}">★</label>
+                                                </div>
+                                                <input type="hidden" value="${review.festivalReviewId}" name="festivalReviewId">
+                                                <input type="hidden" value="${festivalId}" name="festivalId">
+                                                <textarea class="reviewText" rows="2" cols="100" style="text-align: center;" name="reviewText" style="max-width: 100%;">${review.festivalReviewContent}</textarea>
+                                            </form>
+                                            </td>`
 
                                         +
 
@@ -706,11 +676,11 @@
 
                                         +
 
-                                        `<td>
+                                        `<td style="width: 150px;">
                                             <button class="updateBtn" value="${review.festivalReviewId}">수정</button>
                                         </td>
 
-                                        <td>
+                                        <td style="width: 150px;">
                                             <button class="deleteBtn" value="${review.festivalReviewId}">삭제</button>
                                         </td>
 
@@ -819,37 +789,31 @@
 
 
 
-                /**
+                 /**
                 * 리뷰 수정
                 *
                 */
                 $(document).on('click','.updateBtn', function(){
 
                     var festivalReviewId = $(this).val();
-                    var button = $(this);
-
-                    var reviewText =  button.closest('.reviewRow').find('.reviewText').val();
-                    var reviewStar =  button.closest('.reviewRow').find('.reviewStar').val();
+                    var formId = `#reviewForm_${festivalReviewId}`;
+                    var formData = new FormData($(formId)[0]);
 
                     $.ajax({
 
                         url: '/festival/updateFestivalReview',
                         method: 'POST',
-                        data: {
-
-                            festivalReviewId: festivalReviewId,
-                            reviewText: reviewText,
-                            reviewStar: reviewStar
-
-                        },
+                        data: formData,
+                        processData: false,
+                        contentType: false,
                         success: function(res){
 
-                            alert(res);
-                            findFestivalReviewListByPage(1);
+                            alert("리뷰 수정 성공!!");
 
                         }
                     })
                 })
+
 
 
 
@@ -868,6 +832,360 @@
 
 
                 //#region 상단바 : 전시
+
+
+                /**
+                 * 전시 찜한 내역을 가져옴
+                 *
+                 */
+                function findLoveExhibitionList(){
+
+                    console.log("findLoveExhibitionList()")
+
+                    $.ajax({
+
+                        url: '/exhibition/liked',
+                        method: 'GET',
+                        contentType: 'application/json',
+                        success: function(list){
+                            console.log("/exhibition/liked")
+                            $('#upper').html("");
+                            $('#upper').removeClass("page")
+                            $('#upper').addClass("scroll")
+
+                            $.each(list, function(index, exhibition){
+
+                                var content = exhibition.description.length > 10?
+                                exhibition.description.substring(0,10) + "..."
+                                : exhibition.description;
+
+                                var firstHtml= ``;
+
+                                if(! exhibition.image || exhibition.image == ""){
+
+                                    firstHtml = `
+                                        <div class="card hasLove" id="${exhibition.id}">
+                                            <img class="card-img-top" src="/img/festival/noPhoto.png" alt="Card image cap">
+
+                                    `;
+
+                                }else{
+
+                                    firstHtml = `
+                                        <div class="card hasLove" id="${exhibition.id}">
+                                            <img class="card-img-top" src="${exhibition.image}" alt="Card image cap">
+
+                                    `;
+
+                                }
+
+                                var secondHtml = `
+                                    <div class="card-body">
+                                          <h5 class="card-title">${exhibition.title}</h5>
+                                          <p class="card-text">${content}</p>
+                                          <a href="/exhibition/detail/${exhibition.id}" class="btn btn-primary">자세히</a>
+                                           <button class="btn btn-primary heart" type="button" style="margin:0px" value="${exhibition.id}">
+                                              <img src="/img/festival/heart.png"
+                                                   style="width : 20px; height: 20px;">
+                                          </button>
+                                          <button class="btn btn-primary hate" type="button" style="margin:0px" value="${exhibition.id}">
+                                                <img src="/img/festival/trash.png"
+                                                     style="width : 20px; height: 20px;">
+                                          </button>
+                                    </div>
+
+                                </div>
+                                `;
+
+                                var finalHtml = firstHtml + secondHtml;
+
+                                $('#upper').append(finalHtml);
+
+                            })
+                        }
+
+                    })
+
+                }
+
+
+
+                /**
+                 * 전시 관심없음한 내역을 가져옴
+                 *
+                 */
+                function findHateExhibitionList(){
+
+                    $.ajax({
+
+                        url: '/exhibition/unliked',
+                        method: 'GET',
+                        contentType: 'application/json',
+                        success: function(list){
+
+                            $('#upper').html("");
+                            $('#upper').removeClass("page")
+                            $('#upper').addClass("scroll")
+
+
+                            $.each(list, function(index, exhibition){
+
+                                var content = exhibition.description.length > 10?
+                                exhibition.description.substring(0,10) + "..."
+                                : exhibition.description;
+
+                                var firstHtml= ``;
+
+                                if(! exhibition.image || exhibition.image == ""){
+
+                                    firstHtml = `
+                                        <div class="card hasHate" id="${exhibition.id}">
+                                            <img class="card-img-top" src="/img/festival/noPhoto.png" alt="Card image cap">
+
+                                    `;
+
+                                }else{
+
+                                    firstHtml = `
+                                        <div class="card hasHate" id="${exhibition.id}">
+                                            <img class="card-img-top" src="${exhibition.image}" alt="Card image cap">
+
+                                    `;
+
+                                }
+
+                                var secondHtml = `
+                                    <div class="card-body">
+                                          <h5 class="card-title">${exhibition.title}</h5>
+                                          <p class="card-text">${content}</p>
+                                          <a href="/exhibition/detail/${exhibition.id}" class="btn btn-primary">자세히</a>
+                                           <button class="btn btn-primary heart" type="button" style="margin:0px" value="${exhibition.id}">
+                                              <img src="/img/festival/heart.png"
+                                                   style="width : 20px; height: 20px;">
+                                          </button>
+                                          <button class="btn btn-primary hate" type="button" style="margin:0px" value="${exhibition.id}">
+                                                <img src="/img/festival/trash.png"
+                                                     style="width : 20px; height: 20px;">
+                                          </button>
+                                    </div>
+
+                                </div>
+                                `;
+
+                                var finalHtml = firstHtml + secondHtml;
+
+                                $('#upper').append(finalHtml);
+
+                            })
+
+                        }
+
+                    })
+                }
+
+
+
+                 /**
+                 * 전체 전시 리뷰 내역을 가져옴(페이지 별로)
+                 *
+                 */
+                function findExhibitionReviewListByPage(page){
+
+                    console.log("findExhibitionReviewListByPage");
+
+                    $.ajax({
+
+                        url: '/exhibition/user-comment',
+                        method: 'GET',
+                        contentType: 'application/json',
+                        success: function(list){
+                            $('#upper').html("");
+                            $('#upper').removeClass("scroll")
+                            $('#upper').addClass("page")
+
+                            console.log("리뷰" + list)
+
+                            var reviewHeader = `
+
+                                <table class="table table-striped" id="reviewTable" style="text-align: center;">
+
+                                    <thead class="table-light">
+                                    <tr style="text-align: center;">
+                                        <th scope="col" style="width: 400px;">#</th>
+                                        <th scope="col" style="width: 400px;">별점</th>
+                                        <th scope="col" style="width: 400px;">내용</th>
+                                        <th scope="col" style="width: 400px;">삭제</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody id="reviewList">
+
+                            `;
+
+                            $('#upper').html(reviewHeader);
+
+                            var startIndex = (page -1)*5 + 1;
+                            var endIndex = (page)*5;
+                            var sliceList = list.slice(startIndex-1, endIndex);
+
+
+                            console.log("sliceList");
+                            console.log(sliceList);
+                            $.each(sliceList, function(index, review){
+                                var reviewIdPlusExhibitionId = review.id + "," + review.exhibitionId;
+                                var index1 = (page-1)*5 + index+1;
+                                var reviewHtml = ``;
+
+                                var content = review.content.length > 10?
+                                review.content.substring(0,10) + "..."
+                                : review.content;
+
+                                var reviewStarNum = parseInt(review.stars);
+                                var reviewStarHtml = ``;
+
+                                for(let i = 1; i <= reviewStarNum; i++){
+                                    var append = `
+                                    <label style="color: #f6d74d;">★</label>
+                                    `;
+                                    reviewStarHtml += append;
+                                }
+
+                                if(reviewStarNum < 5){
+
+                                    for(let i = reviewStarNum + 1; i <= 5; i++){
+
+                                        var append = `
+                                        <label>★</label>
+                                        `;
+                                        reviewStarHtml += append;
+
+                                    }
+                                }
+
+
+                                 reviewHtml = `
+
+                                    <tr class="reviewRow" id="reviewRow" style="width: 100%;">
+
+                                        <td class="index1" style="width: 400px;">
+                                            ${index1}
+                                        </td>`
+
+                                        +
+
+                                        `<td style="width: 400px;">
+                                            <div class="star">`
+
+                                                 + reviewStarHtml +
+
+                                            `</div>
+                                        </td>`
+                                        +
+
+                                        `<td style="width: 400px;">
+                                            ${content}
+                                        </td>`
+
+                                        +
+
+                                        `
+                                        <td style="width: 400px;">
+                                            <button class="deleteBtn2" value="${reviewIdPlusExhibitionId}">삭제</button>
+                                        </td>
+
+                                    </tr>
+                                 `;
+
+                                $('#upper').append(reviewHtml);
+
+                            })
+
+                            var reviewFooter =  `</tbody></table>`;
+                            $('#upper').append(reviewFooter);
+
+                            var count = list.length;
+                            $('#reviewPages').html("");
+
+                            var reviewPagesHtml = `
+                                <div id="reviewPages"><div>
+                            `;
+
+                            $('#upper').append(reviewPagesHtml);
+
+                            var pages = 0;
+
+                            if(count % 5 == 0){
+                                pages = count / 5;
+                            }else{
+                                pages = count / 5 + 1;
+                            }
+
+                            for(var p=1; p<=pages; p++){
+
+                                $('#reviewPages').append(`<button class="pageBtn2" style="font-size: 20px; margin: 0.5%">${p}</button>`)
+
+                            }
+
+                        }
+                    })
+                }
+
+
+               /**
+                * 리뷰 페이지 이벤트 버튼
+                *
+                */
+                $(document).on('click','.pageBtn2', function(){
+                    var page = $(this).text();
+                    findExhibitionReviewListByPage(page);
+                })
+
+
+
+                /**
+                * 전시 리뷰 삭제
+                *
+                */
+                $(document).on('click','.deleteBtn2', function(){
+
+                    var reviewIdPlusExhibitionId = $(this).val().trim();
+                    var ids = reviewIdPlusExhibitionId.split(",");
+                    var reviewId = ids[0];
+                    var exhibitionId = ids[1];
+
+                    console.log(reviewId);
+                    console.log(exhibitionId)
+
+                    var data = {
+
+                        id : reviewId
+
+                    };
+
+                    $.ajax({
+
+                        url: `/exhibition/exhibition/${exhibitionId}/comment`,
+                        method: 'DELETE',
+                        contentType: 'application/json',
+                        data: JSON.stringify(data),
+                        success: function(){
+
+                            alert("전시 댓글 삭제 성공");
+                            findFestivalReviewListByPage(1);
+
+                        },
+                        error: function(error){
+
+                            alert("전시 댓글 삭제 실패");
+
+                        }
+                    })
+                })
+
+
+
+
+
+
 
                 //#endregion
 
@@ -1131,6 +1449,31 @@
 
 
                 /**
+                * 카테고리 드롭다운 클릭 시 텍스트를 가져옴
+                *
+                */
+                $(document).on('click','.category', function(){
+
+                    var categoryText = $(this).text();
+                    $('#category').text(categoryText);
+
+                    if(categoryText=="축제"){
+
+                        findLoveFestivalList();
+
+                    }else if(categoryText=="전시"){
+
+                        findLoveExhibitionList();
+
+                    }
+
+
+                })
+
+
+
+
+                /**
                 * 찜한내역 클릭 시 카테고리에 따라 다른 내용이 채워짐
                 *
                 */
@@ -1142,9 +1485,9 @@
 
                         findLoveFestivalList();
 
-                    }else{
+                    }else if(category=="전시"){
 
-
+                        findLoveExhibitionList();
 
                     }
 
@@ -1166,9 +1509,9 @@
 
                         findHateFestivalList();
 
-                    }else{
+                    }else if(category=="전시"){
 
-
+                        findHateExhibitionList();
 
                     }
 
@@ -1189,9 +1532,9 @@
 
                         findFestivalReviewListByPage(1);
 
-                    }else{
+                    }else if(category=="전시"){
 
-
+                        findExhibitionReviewListByPage(1);
 
                     }
 

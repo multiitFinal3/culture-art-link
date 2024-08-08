@@ -262,3 +262,50 @@
         display: none;
 
     }
+
+    [class^="star-rating"] {
+      position: relative;
+      display: inline-flex;
+      flex-direction: row-reverse;
+      justify-content: flex-end;
+      margin: 0 -0.25rem;
+    }
+
+    [class^="star-rating"] input {
+      position: absolute;
+      opacity: 0;
+    }
+
+    [class^="star-rating"] label {
+      cursor: pointer;
+      color: grey;
+      padding: 0 0.25rem;
+      transition: color 0.15s;
+    }
+
+    [class^="star-rating"] input:checked ~ label {
+      color: gold;
+    }
+
+    [class^="star-rating"] input:hover ~ label {
+      color: goldenrod;
+      transition: none;
+    }
+
+    [class^="star-rating"] label:active {
+      color: darkgoldenrod !important;
+    }
+
+    [class^="star-rating"] input:focus-visible + label {
+      outline-offset: 1px;
+      outline: #4f46e5 solid 2px;
+    }
+
+    .gold {
+
+        color: gold;
+
+    }
+
+
+

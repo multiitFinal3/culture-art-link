@@ -7,7 +7,7 @@ $(document).ready(
             function findKeywordRecommendFestivalList(){
 
                 $('#list2').html("");
-
+                console.log("들어옴")
 
                 $.ajax({
 
@@ -15,7 +15,7 @@ $(document).ready(
                     method: 'POST',
                     contentType: 'application/json',
                     success: function(list){
-
+                        console.log("추천 들어옴")
                         console.log(list);
                         $.each(list, function(index, festival){
 
