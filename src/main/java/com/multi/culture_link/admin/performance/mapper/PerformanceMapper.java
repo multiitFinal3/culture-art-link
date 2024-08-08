@@ -17,5 +17,7 @@ public interface PerformanceMapper {
 
     List<PerformanceDTO> getPerformancesByGenre(String genre);
 
-    PerformanceDTO getPerformanceById(int performanceId);
+
+    // 상세정보가져오려고
+    PerformanceDTO getPerformanceByCode(String performanceCode);
 }

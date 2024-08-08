@@ -64,8 +64,8 @@ document.addEventListener('DOMContentLoaded', function() {
             const performanceCards = document.querySelectorAll('.card, .all-card, .ranking-card, .location-card');
             performanceCards.forEach(card => {
                 card.addEventListener('click', function() {
-                    const performanceId = this.getAttribute('data-performance-id');
-                    window.location.href = `/performance/performanceDetail?performanceId=${encodeURIComponent(performanceId)}`;
+                    const performanceCode = this.getAttribute('data-performance-code');
+                    window.location.href = `/performance/performanceDetail?performanceCode=${encodeURIComponent(performanceCode)}`;
                 });
             });
 
