@@ -319,51 +319,51 @@ public class KeywordExtractService {
 	}
 
 
-//	/**
-//	 * 지피티 예시
-//	 *
-//	 * @param args
-//	 */
-//	public static void main(String[] args) {
-//
-//
-//		OpenAiChatModel model = OpenAiChatModel.builder()
-//				.apiKey("직접넣기")
-//				.modelName("gpt-3.5-turbo")
-//				.temperature(0.1)
-//				.build();
-//
-//		GPTAssistance assistance = AiServices.builder(GPTAssistance.class)
-//				.chatLanguageModel(model)
-//				.build();
-//
-//
-//		String allContent = "(서울=연합뉴스) 곽민서 기자 = 윤석열 대통령은 27일 2024 파리 올림픽에서 활약하는 국가대표 선수들에게 축하를 보냈다.\n" +
-//				"\n" +
-//				"윤 대통령은 이날 페이스북 축전을 통해 \"한계를 뛰어넘는 국가대표 여러분의 도전은 계속될 것\"이라며 \"끝까지 국민과 함께 한마음으로 응원하겠다\"고 말했다.\n" +
-//				"\n" +
-//				"윤 대통령은 강호 독일을 상대로 승리한 여자 핸드볼 국가대표에 \"4골 차를 뒤집고 종료 22초 전 역전에 성공한 투지는 2004년 '우생순(우리 생애 최고의 순간)' 그 자체였다\"며 \"승리 후 모든 선수가 모여 보여준 강강술래 세리머니는 저와 대한민국 국민 모두에게 큰 감동을 줬다\"고 말했다.";
-//
-//
-//		String answer = assistance.chat(allContent);
-//		System.out.println("GPT answer : " + answer);
-//
-//		String[] list = answer.trim().split(",");
-//
-//		ArrayList<String> list2 = new ArrayList<>();
-//
-//		for (String s : list) {
-//
-//			s = s.trim();
-//			list2.add(s);
-//
-//		}
-//
-//		System.out.println(list2);
-//
-//		return;
-//
-//	}
+	/**
+	 * 지피티 예시
+	 *
+	 * @param args
+	 */
+	public static void main(String[] args) {
+
+
+		OpenAiChatModel model = OpenAiChatModel.builder()
+				.apiKey("직접넣기")
+				.modelName("gpt-3.5-turbo")
+				.temperature(0.1)
+				.build();
+
+		GPTAssistance assistance = AiServices.builder(GPTAssistance.class)
+				.chatLanguageModel(model)
+				.build();
+
+
+		String allContent = "(서울=연합뉴스) 곽민서 기자 = 윤석열 대통령은 27일 2024 파리 올림픽에서 활약하는 국가대표 선수들에게 축하를 보냈다.\n" +
+				"\n" +
+				"윤 대통령은 이날 페이스북 축전을 통해 \"한계를 뛰어넘는 국가대표 여러분의 도전은 계속될 것\"이라며 \"끝까지 국민과 함께 한마음으로 응원하겠다\"고 말했다.\n" +
+				"\n" +
+				"윤 대통령은 강호 독일을 상대로 승리한 여자 핸드볼 국가대표에 \"4골 차를 뒤집고 종료 22초 전 역전에 성공한 투지는 2004년 '우생순(우리 생애 최고의 순간)' 그 자체였다\"며 \"승리 후 모든 선수가 모여 보여준 강강술래 세리머니는 저와 대한민국 국민 모두에게 큰 감동을 줬다\"고 말했다.";
+
+
+		String answer = assistance.chat(allContent);
+		System.out.println("GPT answer : " + answer);
+
+		String[] list = answer.trim().split(",");
+
+		ArrayList<String> list2 = new ArrayList<>();
+
+		for (String s : list) {
+
+			s = s.trim();
+			list2.add(s);
+
+		}
+
+		System.out.println(list2);
+
+		return;
+
+	}
 	
 	/**
 	 * 키워드를 뽑으려하는 전체 작품들의 스트링들을 각각 리스트에 담아 넣으면
@@ -428,9 +428,6 @@ public class KeywordExtractService {
 		
 		word2Vec.fit();// 학습
 		
-		
-		// TfidfVectorizer
-		
 		// 아파치루신의 그냥 분석기는 한글을 인식 못해 아파치 루신의 한국어 분석기 이용
 		KoreanAnalyzer koreanAnalyzer = new KoreanAnalyzer();
 		
@@ -441,17 +438,13 @@ public class KeywordExtractService {
 		IndexWriter writer = new IndexWriter(index, config);
 		
 		for (String content : allContentList) {
-			
 			Document document = new Document();
 			// 토큰화된 내용 뿐만 아니라 원본 내용도 저장됨
 			document.add(new TextField("content", content, Field.Store.YES));
 			writer.addDocument(document);
-			
 		}
 		
 		writer.close();
-		
-		
 		IndexReader reader = DirectoryReader.open(index);
 		IndexSearcher searcher = new IndexSearcher(reader);
 		
@@ -809,7 +802,7 @@ public class KeywordExtractService {
 //
 //		return;
 //	}
-	
+//
 	
 }
 	

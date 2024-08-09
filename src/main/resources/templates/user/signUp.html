@@ -196,7 +196,7 @@
 
                     $('#emailError').text("");
                     $('#passwordError').text("");
-                    $('#userError').text("");
+                    $('#nameError').text("");
 
                      var email = $('#email').val();
                      var password = $('#password').val();
@@ -298,7 +298,6 @@
                     const emailPattern = /^[a-zA-Z0-9_]{5,}@[a-zA-Z]{3,}\.com$/;
                     console.log(emailPattern.test(email))
                     return emailPattern.test(email);
-
                 }
 
 
@@ -408,7 +407,7 @@
 
         <div id="welcome">
 
-            <img src="/img/user/welcome.png">
+            <img src="https://images.rawpixel.com/image_800/czNmcy1wcml2YXRlL3Jhd3BpeGVsX2ltYWdlcy93ZWJzaXRlX2NvbnRlbnQvbHIvam9iMjlhYmF0Y2g1LXM1OC13ZWxjb21lLTA5LmpwZw.jpg">
 
         </div>
 
@@ -436,8 +435,8 @@
                 이름  <input name="userName" id="userName" class="rounded" placeholder="안지연" style="width:100px; background-color: lightblue" required>
                 <span id="nameError" class="error"></span><br>
 
-                전화번호  <input name="tel" id="tel" class="rounded" placeholder="010-0000-1234" type="tel"><br>
-                나이 <input name="userAge" id="userAge" class="rounded" placeholder="12" type="number" style="width:80px;"><br>
+                전화번호  <input name="tel" id="tel" class="rounded" placeholder="010-0000-1234" type="tel" pattern="[0-9]{3}-[0-9]{4}-[0-9]{4}"><br>
+                나이 <input name="userAge" id="userAge" class="rounded" placeholder="12" type="number" style="width:80px;" min="0" max="100" value="12"><br>
                 성별
                 <select name="gender" id="gender" class="rounded" style="width:80px;">
                     <option value="남">남</option>
