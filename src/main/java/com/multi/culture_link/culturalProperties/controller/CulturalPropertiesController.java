@@ -4,17 +4,14 @@ package com.multi.culture_link.culturalProperties.controller;
 import com.multi.culture_link.admin.culturalProperties.model.dto.CulturalPropertiesDTO;
 import com.multi.culture_link.culturalProperties.model.dto.*;
 import com.multi.culture_link.culturalProperties.service.CulturalPropertiesService;
-import com.multi.culture_link.exhibition.model.dto.ExhibitionCommentDto;
-import com.multi.culture_link.exhibition.model.dto.ExhibitionDto;
-import com.multi.culture_link.festival.model.dto.FestivalDTO;
 import com.multi.culture_link.users.model.dto.VWUserRoleDTO;
 import jakarta.servlet.http.HttpSession;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.select.Elements;
 import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -26,14 +23,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -218,20 +213,8 @@ public class CulturalPropertiesController {
 
 
 
-
-//	// 문화재 상세 페이지
-//	@GetMapping("/detail/{id}")
-////	@ResponseBody
-//	public String getCulturalPropertyDetail(@PathVariable int id, Model model) {
-//		CulturalPropertiesDTO property = culturalPropertiesService.getCulturalPropertyById(id);
-//		model.addAttribute("property", property);
-//		return "/culturalProperties/culturalPropertiesDetail";
-//	}
-
 	// 문화재 상세 페이지
 	@GetMapping("/detail/{id}")
-//	@ResponseBody
-	//	@ResponseBody
 	public String getCulturalPropertyDetail(@PathVariable int id, Model model) {
 		CulturalPropertiesDTO property = culturalPropertiesService.getCulturalPropertyById(id);
 
@@ -343,23 +326,6 @@ public class CulturalPropertiesController {
 //	}
 
 
-//	@GetMapping("/detail/{id}")
-//	public String getCulturalPropertyDetail(@PathVariable int id, Model model, @AuthenticationPrincipal UserDetails userDetails) {
-//		CulturalPropertiesDTO property = culturalPropertiesService.getCulturalPropertyById(id);
-//		int userId = userDetails.getId(); // 현재 로그인한 사용자 ID 가져오기
-//
-//		// 사용자의 찜 상태를 확인
-//		boolean isLiked = culturalPropertiesService.isPropertyLikedByUser(id, userId);
-//		boolean isDisliked = culturalPropertiesService.isPropertyDislikedByUser(id, userId);
-//
-//		model.addAttribute("property", property);
-//		model.addAttribute("isLiked", isLiked);
-//		model.addAttribute("isDisliked", isDisliked);
-//
-//		return "/culturalProperties/culturalPropertiesDetail";
-//	}
-
-
 
 	@GetMapping("/detail/{id}/review/detail")
 	public String culturalPropertiesReviewDetail(@PathVariable int id,
@@ -378,10 +344,15 @@ public class CulturalPropertiesController {
 			userName = vwUserRoleDTO.getUsername(); // 사용자 이름 가져오기
 		}
 
+		// 평균 평점 계산
+		double averageRating = culturalPropertiesService.averageRating(id);
+		model.addAttribute("averageRating", averageRating);
+
+
 		System.out.println("리뷰디테일 아이디 " + id);
 		model.addAttribute("property", property);
 		model.addAttribute("userName", user.getUsername()); // 사용자 이름 추가
-		model.addAttribute("userId", user.getUserId()); // 사용자 ID 추가
+		model.addAttribute("userId2", user.getUserId()); // 사용자 ID 추가
 		model.addAttribute("userName", userName);
 
 		if (property == null) {
@@ -489,25 +460,27 @@ public class CulturalPropertiesController {
 		}
 	}
 
-//	@GetMapping("/detail/{culturalPropertiesId}/review/reviewList")
-//	public ResponseEntity<List<CulturalPropertiesReviewDTO>> getReviews(@RequestParam int page, @RequestParam int culturalPropertiesId) {
-//		Pageable pageable = PageRequest.of(page, 10); // 페이지 크기 10
-//		Page<CulturalPropertiesReviewDTO> reviews = culturalPropertiesService.getReviewsByCulturalPropertiesId(culturalPropertiesId, pageable);
-//		return ResponseEntity.ok(reviews.getContent());
-//	}
-
 
 	@GetMapping("/detail/{culturalPropertiesId}/review/reviewList")
-	public ResponseEntity<Page<CulturalPropertiesReviewDTO>> getReview(
+	public ResponseEntity<Map<String, Object>> getReview(
 			@PathVariable int culturalPropertiesId,
-			@RequestParam(value = "page", defaultValue = "0") int page) { // 기본값을 0으로 설정
+			@RequestParam(value = "page", defaultValue = "0") int page) {
 		// Pageable 객체를 생성합니다.
 		Pageable pageable = PageRequest.of(page, 10, Sort.by(Sort.Direction.DESC, "created_at"));
 
 		// 서비스 호출
 		Page<CulturalPropertiesReviewDTO> reviews = culturalPropertiesService.getReviewsByCulturalPropertiesId(culturalPropertiesId, pageable);
-		return ResponseEntity.ok(reviews);
+
+		// 응답에 필요한 정보를 Map으로 만듭니다.
+		Map<String, Object> response = new HashMap<>();
+		response.put("reviews", reviews.getContent());
+		response.put("totalElements", reviews.getTotalElements());
+		response.put("totalPages", reviews.getTotalPages());
+		response.put("currentPage", reviews.getNumber());
+
+		return ResponseEntity.ok(response);
 	}
+
 
 
 }

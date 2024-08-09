@@ -1,4 +1,9 @@
+
 document.addEventListener("DOMContentLoaded", function() {
+
+
+    var userId1 = 0;
+
     const stars = document.querySelectorAll(".star");
     let selectedRating = 0; // 선택된 별점 초기화
 
@@ -30,10 +35,13 @@ document.addEventListener("DOMContentLoaded", function() {
     function getUserId() {
         return new Promise((resolve, reject) => {
             $.ajax({
-                url: `/cultural-properties/detail/${culturalPropertiesId}/review/getReviewUserId`, // API 요청 URL
+                url: `/cultural-properties/detail/${culturalPropertiesId}/review/getReviewUserId`,
                 type: 'GET',
                 success: function(response) {
-                    const userId = response.userId; // 사용자 ID 추출
+                    var userId = response.userId; // 사용자 ID 추출
+                    userId1 = response.userId;
+//                    console.log("userId1 : ")
+//                    console.log(userId1)
                     console.log('User ID:', userId);
                     resolve(userId); // ID를 반환
                 },
@@ -45,6 +53,45 @@ document.addEventListener("DOMContentLoaded", function() {
             });
         });
     }
+
+
+    // 페이지 로드 시 평균 별점 가져오기
+    const averageRating = parseFloat($('.averageRating').data('average-rating')); // 평균 평점 가져오기
+    console.log("Average Rating from data attribute: " + averageRating); // 평균 별점 로그
+    if (!isNaN(averageRating)) {
+        updateAvgStarDisplay($('.averageRating'), averageRating); // 별점 업데이트
+    } else {
+        updateAvgStarDisplay($('.averageRating'), 0); // 기본값 0으로 설정
+    }
+
+
+
+    function updateAvgStarDisplay(container, averageRating) {
+        const fullStars = Math.floor(averageRating); // 소수점 아래 버림
+    //    const hasHalfStar = (averageRating % 1) >= 0.5; // 소수점이 0.5 이상이면 반별 표시
+        const hasHalfStar = (averageRating % 1) >= 0.25; // 소수점이 0.25 이상이면 반별 표시
+
+        container.find('.review-avgstar').empty(); // 이전 별점 초기화
+
+
+// 별 점수 반영
+    for (let i = 0; i < 5; i++) {
+        if (i < fullStars) {
+            container.find('.review-avgstar').append('<span class="avgstar full">&#9733;</span>'); // 채워진 별 노란색
+        } else if (hasHalfStar && i === fullStars) {
+//            container.find('.review-avgstar').append('<span class="avgstar half"></span>'); // 반별 추가
+            container.find('.review-avgstar').append('<span class="avgstar half" style="color: gold;">&#9733;</span>'); // 반별 추가
+//            container.find('.review-avgstar').append('<span class="avgstar half">&#9733;</span><span class="avgstar empty">&#9734;</span>'); // 반별 추가
+//            container.find('.review-avgstar').append('<span class="avgstar half">&#9734;</span>'); // 반별 추가
+//            container.find('.review-avgstar').append('<span class="avgstar half" style="color: gold;">&#9733;</span><span class="avgstar half" style="color: lightgray;">&#9734;</span>'); // 반별로 채워진 별과 빈 별 조합
+        } else {
+            container.find('.review-avgstar').append('<span class="avgstar empty">&#9734;</span>'); // 빈 별 회색
+        }
+    }
+}
+
+
+
 
     // URL에서 문화재 ID 추출
     const urlParts = window.location.pathname.split('/');
@@ -111,16 +158,291 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 
 
+    let currentPage = 0; // 현재 페이지
+    let totalPages = 1; // 총 페이지 수
+
+    function loadReviews(page) {
+        const urlParts = window.location.pathname.split('/');
+        const culturalPropertiesId = urlParts[urlParts.length - 3];
+
+        $.ajax({
+            url: `/cultural-properties/detail/${culturalPropertiesId}/review/reviewList?page=${page}`,
+            method: 'GET',
+            success: function(response) {
+                console.log(response); // 응답 데이터 확인
+                if (response && Array.isArray(response.reviews)) {
+
+                    // 총 리뷰 개수
+                    const reviewCount = response.totalElements; // 응답에서 총 리뷰 개수 가져오기
+
+                    // 리뷰 리스트 업데이트
+
+                    $('.reviews').empty();
+
+                    var topHtml = `<h2 style="display: inline-block;">리뷰</h2>
+                                   <div id="totalReviewCount" class="mt-3" style="display: inline-block; margin-left: 10px;">
+                                   <span>${reviewCount}</span>
+                                   </div>`;
+
+
+                   $('.reviews').append(topHtml);
+
+                   // 리뷰가 없는 경우 메시지 추가
+                   if (reviewCount === 0) {
+                       $('.reviews').append('<br><br><br><br><br><div class="no-reviews" style="font-size: 20px; ">리뷰가 없습니다. 리뷰를 작성해보세요.</div><br><br><br><br><br>');
+
+                       // 페이지 정보를 1/1로 설정
+                       $('#currentPage').text('1'); // 현재 페이지
+                       $('#totalPages').text('1'); // 총 페이지 수
+
+                       // 버튼 비활성화
+                       $('#prevPage').prop('disabled', true);
+                       $('#nextPage').prop('disabled', true);
+                   } else {
+
+                    // 리뷰를 화면에 출력
+                    response.reviews.forEach(review => {
+
+                        var userId = getUserId();
+
+                        // createdAt 값을 Date 객체로 변환
+                        const createdAt = new Date(review.createdAt);
+                        //(YYYY-MM-DD HH:mm:ss) 형식으로 날짜 포맷팅
+                        const formattedDate = createdAt.toISOString().slice(0, 19).replace('T', ' ') + '             ';
+
+                        // updatedAt 포맷팅 (updatedAt이 존재하는 경우)
+                        const updatedAtHtml = review.updatedAt && review.updatedAt !== review.createdAt
+                            ? ` 수정 : ${new Date(review.updatedAt).toISOString().slice(0, 19).replace('T', ' ')}`
+                            : '';
+
+                        const reviewHtml = `
+                            <div class="review">
+                                <div class="user-info">
+                                    <img src="${review.userProfileImage || '/img/festival/noPhoto.png'}" alt="${review.userName}">
+                                    <div class="user-details">
+                                    <span>${review.userName}</span>
+
+                                    <span style="font-size: 13px;">
+                                        ${formattedDate}   ${updatedAtHtml}
+                                    </span>
+
+
+                                    <div class="review-rating" data-rating="${review.star}"> <!-- 수정된 부분 -->
+                                    ${Array.from({ length: 5 }, (_, index) => {
+                                        if (index < review.star) {
+                                            return `<span class="review-star">&#9733;</span>`; // 채워진 별
+                                        } else {
+                                            return `<span class="review-star empty">&#9734;</span>`; // 빈 별
+                                        }
+                                    }).join('')}
+                                    </div>
+
+                                    </div>
+                                </div>
+                                <div class="review-content">
+                                    <p class="review-content-p-${review.id}">${review.content}</p>
+                                    <div class="review-text-container">
+                                        <textarea id="editContent-${review.id}" rows="5" style="display:none;" value="${review.content}">${review.content}</textarea>
+                                    </div>
+                                </div>
+                                <div class="review-actions" style="display: ${review.userId == userId1 ? 'block' : 'none'};"> <button type="button" id="edit-btn-${review.id}" data-id="${review.id}">수정</button> <button type="button" id="delete-btn-${review.id}" data-id="${review.id}" data-cultural-id="${review.culturalPropertiesId}">삭제</button>
+
+                                <button type="button" id="save-btn-${review.id}" style="display:none;" data-id="${review.id}" data-cultural-id="${review.culturalPropertiesId}">저장</button>
+                                <button type="button" id="cancel-btn-${review.id}" style="display:none;">취소</button>
+                                </div>
+                            </div>
+                            `;
+                        $('.reviews').append(reviewHtml);
+                    });
+
+                    // 총 리뷰 개수 및 페이지 업데이트
+                    $('#totalReviewCount span').text(response.totalElements); // 총 리뷰 개수 표시
+                    $('#currentPage').text(response.currentPage + 1); // 현재 페이지
+                    $('#totalPages').text(response.totalPages); // 총 페이지 수
+
+                    // 페이지 버튼 상태 업데이트
+                    $('#prevPage').prop('disabled', response.currentPage === 0);
+                    $('#nextPage').prop('disabled', response.currentPage === response.totalPages - 1);
+
+                    // 총 페이지 수 업데이트
+                    totalPages = response.totalPages; // 전역 totalPages 업데이트
+                    }
+                } else {
+                    console.error("No reviews found or response format is incorrect");
+                }
+            },
+            error: function(err) {
+                console.error('Error loading reviews:', err);
+            }
+        });
+    }
+
+
+
+    // 페이지 버튼 클릭 이벤트
+    $('#prevPage').click(function() {
+        if (currentPage > 0) {
+            currentPage--;
+            loadReviews(currentPage);
+        }
+    });
+
+    $('#nextPage').click(function() {
+        if (currentPage < totalPages - 1) {
+            currentPage++;
+            loadReviews(currentPage);
+        }
+    });
+
+
+
+    // 리뷰 수정 버튼 클릭 이벤트
+    $(document).on('click', '[id^="edit-btn-"]', function() {
+        const reviewDiv = $(this).closest('.review'); // 수정 버튼이 포함된 리뷰 Div
+        const contentTextarea = reviewDiv.find('textarea'); // 텍스트 영역
+        const reviewText = reviewDiv.find('.review-content > p'); // 기존 리뷰 텍스트
+        const reviewId = $(this).data('id'); // 버튼에서 리뷰 ID 가져오기
+
+        // 기존 리뷰 텍스트 숨기기
+        reviewText.hide();
+
+        // 텍스트 영역 보이기
+        contentTextarea.show();
+        $(this).hide(); // 수정 버튼 숨기기
+        reviewDiv.find('[id^="save-btn-"]').show(); // 저장 버튼 보이기
+        reviewDiv.find('[id^="cancel-btn-"]').show(); // 취소 버튼 보이기
+
+        // 별점 클릭 가능하게
+        reviewDiv.addClass('review-editable');
+
+        // 별점 클릭 이벤트 추가
+        reviewDiv.find('.review-star').off('click').on('click', function() {
+            const currentStarIndex = $(this).index(); // 클릭한 별의 인덱스
+            const isFilledStar = $(this).html().trim() === '&#9733;'; // 클릭한 별이 노란색 별인지 확인
+
+            // 클릭한 별이 노란색 별일 때
+            if (isFilledStar) {
+                reviewDiv.find('.review-star').each(function(index) {
+                    if (index <= currentStarIndex) {
+                        $(this).html('&#9734;'); // 빈 별로 변경
+                        $(this).css('color', 'lightgray'); // 회색으로 설정
+                    }
+                });
+                reviewDiv.data('selected-star', currentStarIndex); // 선택된 별점 업데이트
+            } else {
+                reviewDiv.find('.review-star').each(function(index) {
+                    if (index <= currentStarIndex) {
+                        $(this).html('&#9733;'); // 노란색 별로 변경
+                        $(this).css('color', 'gold'); // 노란색으로 설정
+                    } else {
+                        $(this).html('&#9734;'); // 빈 별로 변경
+                        $(this).css('color', 'lightgray'); // 회색으로 설정
+                    }
+                });
+                reviewDiv.data('selected-star', currentStarIndex + 1); // 선택된 별점 업데이트
+            }
+        });
+    });
+
+    // 저장 버튼 클릭 이벤트
+    $(document).on('click', '[id^="save-btn-"]', function() {
+        const reviewDiv = $(this).closest('.review'); // 리뷰 Div 선택
+        const contentTextarea = reviewDiv.find('textarea'); // 텍스트 영역
+        const reviewId = $(this).data('id'); // 리뷰 ID 가져오기
+        const culturalId = $(this).data('cultural-id'); // 문화재 ID 가져오기
+        const newContent = contentTextarea.val().trim(); // 수정된 내용 (공백 제거)
+        const newStar = reviewDiv.data('selected-star'); // 클릭된 별점 가져오기
+        const reviewText = reviewDiv.find('.review-content > p'); // 기존 리뷰 텍스트
+
+        // 내용이 비어있으면 경고 메시지 출력하고 종료
+        if (newContent === '') {
+            alert('내용을 입력해주세요.');
+            return;
+        }
+
+        // AJAX 요청
+        $.ajax({
+            url: `/cultural-properties/detail/${culturalId}/review/update?id=${reviewId}`, // 요청 URL
+            type: 'PUT',
+            contentType: 'application/json',
+            data: JSON.stringify({ content: newContent, star: newStar || reviewDiv.find('.review-rating').data('rating') }), // 수정된 내용 전송
+            success: function(response) {
+                alert(response); // 수정 성공 메시지
+
+                // 수정된 내용을 DOM에 반영
+                reviewText.text(newContent).show(); // 텍스트 보이기
+                contentTextarea.hide(); // 텍스트 영역 숨기기
+
+                // 별점 업데이트
+                const updatedStar = newStar || reviewDiv.find('.review-rating').data('rating'); // 수정된 별점 또는 기존 별점
+                reviewDiv.find('.review-rating').attr('data-rating', updatedStar); // 데이터 속성 업데이트
+
+                // 별점 시각적 업데이트
+                updateStarDisplay(reviewDiv, updatedStar);
+
+                // 저장 후 별점 클릭 이벤트 제거
+                reviewDiv.find('.review-star').off('click'); // 별점 클릭 이벤트 제거
+                reviewDiv.removeClass('review-editable'); // 별점 클릭 불가능하게 설정
+
+                reviewDiv.data('selected-star', null); // 선택된 별점 초기화
+                reviewDiv.find('[id^="edit-btn-"]').show(); // 수정 버튼 보이기
+                reviewDiv.find('[id^="save-btn-"]').hide(); // 저장 버튼 숨기기
+                reviewDiv.find('[id^="cancel-btn-"]').hide(); // 취소 버튼 숨기기
+            },
+            error: function(xhr) {
+                alert(xhr.responseText); // 오류 메시지
+            }
+        });
+    });
+
+    // 별점 시각적 업데이트 함수
+    function updateStarDisplay(reviewDiv, starCount) {
+        reviewDiv.find('.review-star').each(function(index) {
+            if (index < starCount) {
+                $(this).html('&#9733;'); // 채워진 별 표시
+                $(this).css('color', 'gold'); // 노란색으로 설정
+            } else {
+                $(this).html('&#9734;'); // 빈 별 표시
+                $(this).css('color', 'lightgray'); // 회색으로 설정
+            }
+        });
+    }
+
+    // 취소 버튼 클릭 이벤트
+    $(document).on('click', '[id^="cancel-btn-"]', function() {
+        const reviewDiv = $(this).closest('.review'); // 리뷰 Div 선택
+        const contentTextarea = reviewDiv.find('textarea'); // 텍스트 영역
+        const reviewText = reviewDiv.find('.review-content > p'); // 기존 리뷰 텍스트
+
+        // 기존 내용과 별점 복원
+        const originalContent = reviewText.text(); // 기존 리뷰 내용
+        const originalStar = reviewDiv.find('.review-rating').data('rating'); // 기존 별점
+
+        // 수정 취소 시
+        contentTextarea.val(originalContent); // 텍스트 영역에 기존 내용 설정
+        contentTextarea.hide(); // 텍스트 영역 숨기기
+        reviewText.show(); // 기존 텍스트 보이기
+        updateStarDisplay(reviewDiv, originalStar); // 별점 복원
+        reviewDiv.find('[id^="edit-btn-"]').show(); // 수정 버튼 보이기
+        reviewDiv.find('[id^="save-btn-"]').hide(); // 저장 버튼 숨기기
+        reviewDiv.find('[id^="cancel-btn-"]').hide(); // 취소 버튼 숨기기
+    });
+
+    // 페이지 로드 시 리뷰 불러오기
+    getUserId();
+    loadReviews(0);
+
+
+
     // 삭제 버튼 클릭 이벤트 설정
     $(document).on('click', '[id^="delete-btn-"]', function(e) {
         e.preventDefault(); // 기본 링크 동작 방지
         const id = $(this).data('id'); // 버튼에서 리뷰 ID 가져오기
         const culturalPropertiesId = $(this).data('cultural-id'); // 버튼에서 문화재 ID 가져오기
 
-        // 삭제할 리뷰 ID와 문화재 ID 출력
-
-        console.log('문화재 ID는:' +  culturalPropertiesId);
-        console.log('리뷰 ID는는:' +  id);
+//        // 삭제할 리뷰 ID와 문화재 ID 출력
+//        console.log('문화재 ID는:' +  culturalPropertiesId);
+//        console.log('리뷰 ID는는:' +  id);
 
         // deleteReview 함수 호출
         deleteReview(id, culturalPropertiesId);
@@ -153,405 +475,5 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
 
-    // 리뷰 수정 버튼 클릭 이벤트
-    $('[id^="edit-btn-"]').on('click', function() {
-        const reviewDiv = $(this).closest('.review'); // 수정 버튼이 포함된 리뷰 Div
-        const contentTextarea = reviewDiv.find('textarea'); // 텍스트 영역
-        const reviewText = reviewDiv.find('.review-text'); // 기존 리뷰 텍스트
-
-        const reviewId = $(this).data('id'); // 버튼에서 리뷰 ID 가져오기
-        const culturalId = $(this).data('cultural-id'); // 버튼에서 문화재 ID 가져오기
-
-        // 텍스트 영역 보이기
-        contentTextarea.show();
-        $(this).hide(); // 수정 버튼 숨기기
-        reviewDiv.find('[id^="save-btn-"]').show(); // 저장 버튼 보이기
-        reviewDiv.find('[id^="cancel-btn-"]').show(); // 취소 버튼 보이기
-        reviewText.hide(); // 기존 리뷰 텍스트 숨기기
-
-        // 별점 클릭 가능하게
-        reviewDiv.addClass('review-editable');
-
-        // 별점 클릭 이벤트 추가
-        reviewDiv.find('.review-star').off('click').on('click', function() {
-            const currentStarIndex = $(this).index(); // 클릭한 별의 인덱스
-            const isFilledStar = $(this).html().trim() === '&#9733;'; // 클릭한 별이 노란색 별인지 확인
-
-            // 클릭한 별이 노란색 별일 때
-            if (isFilledStar) {
-                // 클릭한 별과 이전의 별을 빈 별로 변경
-                reviewDiv.find('.review-star').each(function(index) {
-                    if (index <= currentStarIndex) {
-                       $(this).html('&#9734;'); // 빈 별로 변경
-                       $(this).css('color', 'lightgray'); // 회색으로 설정
-                    }
-                });
-                reviewDiv.data('selected-star', currentStarIndex); // 선택된 별점 업데이트
-            } else {
-                // 클릭한 별이 회색 빈 별일 때
-                reviewDiv.find('.review-star').each(function(index) {
-                    if (index <= currentStarIndex) {
-                       $(this).html('&#9733;'); // 노란색 별로 변경
-                       $(this).css('color', 'gold'); // 노란색으로 설정
-                    } else {
-                       $(this).html('&#9734;'); // 빈 별로 변경
-                       $(this).css('color', 'lightgray'); // 회색으로 설정
-                    }
-                });
-                reviewDiv.data('selected-star', currentStarIndex + 1); // 선택된 별점 업데이트
-            }
-        });
-    });
-
-    // 저장 버튼 클릭 이벤트
-    $('[id^="save-btn-"]').on('click', function() {
-        const reviewDiv = $(this).closest('.review'); // 리뷰 Div 선택
-        const contentTextarea = reviewDiv.find('textarea'); // 텍스트 영역
-        const reviewId = $(this).data('id'); // 리뷰 ID 가져오기
-        const culturalId = $(this).data('cultural-id'); // 문화재 ID 가져오기
-        const newContent = contentTextarea.val(); // 수정된 내용
-        const newStar = reviewDiv.data('selected-star'); // 클릭된 별점 가져오기
-
-        // AJAX 요청
-        $.ajax({
-            url: `/cultural-properties/detail/${culturalId}/review/update?id=${reviewId}`, // 요청 URL
-            type: 'PUT',
-            contentType: 'application/json',
-            data: JSON.stringify({ content: newContent, star: newStar }), // 수정된 내용 전송
-            success: function(response) {
-                alert(response); // 수정 성공 메시지
-
-                // 수정된 내용을 DOM에 반영
-                reviewDiv.find('.review-text').text(newContent).show(); // 텍스트 보이기
-
-                // 별점 업데이트
-                reviewDiv.find('.review-rating').attr('data-rating', newStar); // 데이터 속성 업데이트
-
-                // 별점 시각적 업데이트
-                updateStarDisplay(reviewDiv, newStar);
-
-                contentTextarea.hide(); // 텍스트 영역 숨기기
-                reviewDiv.data('selected-star', null); // 선택된 별점 초기화
-                reviewDiv.find('[id^="edit-btn-"]').show(); // 수정 버튼 보이기
-                reviewDiv.find('[id^="save-btn-"]').hide(); // 저장 버튼 숨기기
-                reviewDiv.find('[id^="cancel-btn-"]').hide(); // 취소 버튼 숨기기
-            },
-            error: function(xhr) {
-                alert(xhr.responseText); // 오류 메시지
-            }
-        });
-    });
-
-    // 별점 시각적 업데이트 함수
-    function updateStarDisplay(reviewDiv, starCount) {
-        reviewDiv.find('.review-star').each(function(index) {
-            if (index < starCount) {
-                $(this).html('&#9733;'); // 채워진 별 표시
-                $(this).css('color', 'gold'); // 노란색으로 설정
-            } else {
-                $(this).html('&#9734;'); // 빈 별 표시
-                $(this).css('color', 'lightgray'); // 회색으로 설정
-            }
-        });
-    }
-
-    // 취소 버튼 클릭 이벤트
-    $('[id^="cancel-btn-"]').on('click', function() {
-        const reviewDiv = $(this).closest('.review'); // 리뷰 Div 선택
-        const contentTextarea = reviewDiv.find('textarea'); // 텍스트 영역
-        const reviewText = reviewDiv.find('.review-text'); // 기존 리뷰 텍스트
-
-        // 기존 내용과 별점 복원
-        const originalContent = reviewText.text(); // 기존 리뷰 내용
-        const originalStar = reviewDiv.find('.review-rating').data('rating'); // 기존 별점
-
-        // 수정 취소 시
-        contentTextarea.val(originalContent); // 텍스트 영역에 기존 내용 설정
-        contentTextarea.hide(); // 텍스트 영역 숨기기
-        reviewText.show(); // 기존 텍스트 보이기
-        updateStarDisplay(reviewDiv, originalStar); // 별점 복원
-        reviewDiv.find('[id^="edit-btn-"]').show(); // 수정 버튼 보이기
-        reviewDiv.find('[id^="save-btn-"]').hide(); // 저장 버튼 숨기기
-        reviewDiv.find('[id^="cancel-btn-"]').hide(); // 취소 버튼 숨기기
-    });
-
-
-
-//    const averageRating = parseFloat(document.getElementById("averageRatingValue").innerText);
-//        const averageStars = document.getElementById("averageStars");
-//
-//        // 별점 표시
-//        for (let i = 1; i <= 5; i++) {
-//            if (i <= Math.floor(averageRating)) {
-//                averageStars.innerHTML += '★'; // 채워진 별
-//            } else if (i - 1 < averageRating && i > Math.floor(averageRating)) {
-//                averageStars.innerHTML += '½'; // 반별
-//            } else {
-//                averageStars.innerHTML += '☆'; // 빈 별
-//            }
-//        }
-
-
-
-
-//let currentPage = 0;
-//let totalPages = 0;
-//
-//$(document).ready(function () {
-//    loadReviews(currentPage); // 초기 리뷰 로드
-//
-//    $('#nextPage').click(function () {
-//        if (currentPage < totalPages - 1) {
-//            currentPage++;
-//            loadReviews(currentPage);
-//        }
-//    });
-//
-//    $('#prevPage').click(function () {
-//        if (currentPage > 0) {
-//            currentPage--;
-//            loadReviews(currentPage);
-//        }
-//    });
-//});
-//
-//function loadReviews(page) {
-//    $.ajax({
-//        url: `/cultural-properties/detail/${culturalPropertiesId}/review/reviewList?page=${page}`,
-//        method: 'GET',
-//        success: function (data) {
-//            renderReviews(data);
-//        },
-//        error: function (error) {
-//            console.error('Error fetching reviews:', error);
-//        }
-//    });
-//}
-//
-//function renderReviews(data) {
-//    const reviewList = $('.reviews');
-//    reviewList.find('.review').remove(); // 기존 리뷰를 제거합니다.
-//
-//    data.content.forEach(review => {
-//        const reviewElement = `
-//            <div class="review">
-//                <div class="user-info">
-//                    <img src="${review.userProfileImage || '/img/festival/noPhoto.png'}" alt="${review.userName}">
-//                    <div class="user-details">
-//                        <span>${review.userName}</span>
-//                        <div class="review-rating" data-rating="${review.star}">
-//                            ${generateStars(review.star)}
-//                        </div>
-//                    </div>
-//                </div>
-//                <div class="review-content">
-//                    <p>${review.content}</p>
-//                </div>
-//                <div class="review-actions" ${review.userId === userId ? '' : 'style="display:none;"'}>
-//                    <button type="button" id="edit-btn-${review.id}">수정</button>
-//                    <button type="button" id="delete-btn-${review.id}">삭제</button>
-//                </div>
-//            </div>
-//        `;
-//        reviewList.append(reviewElement);
-//    });
-//
-//    totalPages = data.totalPages; // 총 페이지 수 업데이트
-//    $('#totalPages').text(totalPages);
-//    $('#currentPage').text(currentPage + 1);
-//
-//    // 버튼 활성화 상태 업데이트
-//    $('#prevPage').prop('disabled', currentPage === 0);
-//    $('#nextPage').prop('disabled', currentPage >= totalPages - 1);
-//}
-//
-//function generateStars(starCount) {
-//    let stars = '';
-//    for (let i = 1; i <= 5; i++) {
-//        stars += i <= starCount ? '&#9733;' : '&#9734;'; // 꽉찬 별 또는 빈 별
-//    }
-//    return stars;
-//}
-
-
-
-
-
-//---------------------------------------서버에서페이지
-//
-let currentPage = 0; // 현재 페이지
-let totalPages = 0; // 총 페이지 수
-
-function fetchReviews(page) {
-    const urlParts = window.location.pathname.split('/');
-    const culturalPropertiesId = urlParts[urlParts.length - 3];
-    $.get(`/cultural-properties/detail/${culturalPropertiesId}/review/reviewList?page=${page}`, function(data) {
-        console.log(`Response for page ${page}:`, data);
-        renderReviews(data);
-    }).fail(function() {
-        console.error('Error fetching reviews');
-    });
-
-    console.log(`Fetching reviews for page ${page}`);
-}
-
-//
-//function renderReviews(data) {
-//    const reviewList = $('#reviewList');
-//    reviewList.empty(); // 리뷰 리스트 초기화
-//
-//    // 데이터에서 리뷰 내용 렌더링
-//    data.content.forEach(review => {
-//        const reviewElement = `
-//            <div class="review">
-//                <div class="user-info">
-//                    <img src="${review.userProfileImage || '/img/festival/noPhoto.png'}" alt="${review.userName}">
-//                    <span>${review.userName}</span>
-//                </div>
-//                <div class="review-content">
-//                    <p>${review.content}</p>
-//                </div>
-//            </div>
-//        `;
-//        reviewList.append(reviewElement); // 리뷰 리스트에 추가
-//    });
-//
-//    totalPages = data.totalPages; // 서버에서 반환된 총 페이지 수
-//    $('#totalPages').text(totalPages);
-//    $('#currentPage').text(currentPage + 1); // 현재 페이지 표시
-//
-//    // 페이지 버튼 비활성화/활성화 설정
-//    $('#prevPage').prop('disabled', currentPage === 0);
-//    $('#nextPage').prop('disabled', currentPage >= totalPages - 1);
-//}
-
-function renderReviews(data) {
-    const reviewList = $('#reviewList');
-    // reviewList.empty(); // 삭제: 기존 리뷰를 유지하고 새로운 리뷰를 추가
-
-    // 데이터에서 리뷰 내용 렌더링
-    data.content.forEach(review => {
-        const reviewElement = `
-            <div class="review">
-                <div class="user-info">
-                    <img src="${review.userProfileImage || '/img/festival/noPhoto.png'}" alt="${review.userName}">
-                    <span>${review.userName}</span>
-                </div>
-                <div class="review-content">
-                    <p>${review.content}</p>
-                </div>
-            </div>
-        `;
-        reviewList.append(reviewElement); // 리뷰 리스트에 추가
-    });
-
-    totalPages = data.totalPages; // 서버에서 반환된 총 페이지 수
-    $('#totalPages').text(totalPages);
-    $('#currentPage').text(currentPage + 1); // 현재 페이지 표시
-
-    // 페이지 버튼 비활성화/활성화 설정
-    $('#prevPage').prop('disabled', currentPage === 0);
-    $('#nextPage').prop('disabled', currentPage >= totalPages - 1);
-}
-
-
-
-// 이전 페이지 버튼 클릭
-$('#prevPage').click(function() {
-    if (currentPage > 0) {
-        currentPage--;
-        fetchReviews(currentPage);
-    }
-});
-
-// 다음 페이지 버튼 클릭
-$('#nextPage').click(function() {
-    if (currentPage < totalPages - 1) {
-        currentPage++;
-        fetchReviews(currentPage);
-    }
-});
-
-// 페이지 초기 로드
-fetchReviews(currentPage);
-
-//////----------------------------------
-
-
-
-
-//    let currentPage = 0; // 현재 페이지
-//    let totalPages = 0; // 총 페이지 수
-//
-//    function fetchReviews(page) {
-//        const urlParts = window.location.pathname.split('/');
-//        const culturalPropertiesId = urlParts[urlParts.length - 3]; // 경로에서 culturalPropertiesId를 가져옴
-//        $.get(`/cultural-properties/detail/${culturalPropertiesId}/review/reviewList?page=${page}`, function(data) {
-//            renderReviews(data);
-//        });
-//    }
-//
-//    function renderReviews(data) {
-//        const reviewList = $('#reviewList');
-//        reviewList.empty(); // 이전 리뷰를 지우고 새로 고침
-//
-//        data.content.forEach(review => {
-//            const reviewElement = `
-//                <div class="review">
-//                    <div class="user-info">
-//                        <img src="${review.userProfileImage || '/img/festival/noPhoto.png'}" alt="${review.userName}">
-//                        <span>${review.userName}</span>
-//                    </div>
-//                    <div class="review-content">
-//                        <p>${review.content}</p>
-//                    </div>
-//                </div>
-//            `;
-//            reviewList.append(reviewElement);
-//        });
-//
-//        totalPages = data.totalPages; // 서버에서 반환된 총 페이지 수
-//        $('#totalPages').text(totalPages);
-//        $('#currentPage').text(currentPage + 1); // 현재 페이지는 0부터 시작하므로 1을 더해줍니다.
-//
-//        // 페이지 버튼 비활성화/활성화 설정
-//        $('#prevPage').prop('disabled', currentPage === 0);
-//        $('#nextPage').prop('disabled', currentPage >= totalPages - 1);
-//    }
-//
-//    // 이전 페이지 버튼 클릭
-//    $('#prevPage').click(function() {
-//        if (currentPage > 0) {
-//            currentPage--;
-//            fetchReviews(currentPage);
-//        }
-//    });
-//
-//    // 다음 페이지 버튼 클릭
-//    $('#nextPage').click(function() {
-//        if (currentPage < totalPages - 1) {
-//            currentPage++;
-//            fetchReviews(currentPage);
-//        }
-//    });
-//
-//    // 페이지 초기 로드
-//    $(document).ready(function() {
-//        fetchReviews(currentPage);
-//    });
-
-
 
 });
-
-
-
-
-
-
-
-
-
-
-
-
