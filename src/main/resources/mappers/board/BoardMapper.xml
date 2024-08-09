@@ -10,24 +10,43 @@
         VALUES (#{userId}, #{data.genre}, #{data.title}, #{data.content})
     </insert>
 
+<!--    <select id="getBoardList" resultType="com.multi.culture_link.board.model.dto.BoardDto">-->
+<!--        SELECT *, u.user_name AS author-->
+<!--        FROM board b left join user u on b.user_id = u.user_id-->
+<!--        <where>-->
+<!--            <if test="genre != null and genre != 'all'">-->
+<!--                AND genre = #{genre}-->
+<!--            </if>-->
+<!--            <if test="query != null and query != ''">-->
+<!--                AND title LIKE CONCAT('%', #{query}, '%')-->
+<!--            </if>-->
+<!--        </where>-->
+<!--        ORDER BY b.created_at DESC-->
+<!--    </select>-->
+
+<!--    <delete id="deleteBoard">-->
+<!--        DELETE FROM board-->
+<!--        WHERE user_id = #{userId} AND id = #{data.id}-->
+<!--    </delete>-->
+
+
     <select id="getBoardList" resultType="com.multi.culture_link.board.model.dto.BoardDto">
-        SELECT *, u.user_name AS author
-        FROM board b left join user u on b.user_id = u.user_id
+        SELECT b.*, u.user_name AS author,
+        COUNT(bc.id) AS commentSize
+        FROM board b
+        LEFT JOIN user u ON b.user_id = u.user_id
+        LEFT JOIN board_comment bc ON b.id = bc.board_id
         <where>
             <if test="genre != null and genre != 'all'">
-                AND genre = #{genre}
+                AND b.genre = #{genre}
             </if>
             <if test="query != null and query != ''">
-                AND title LIKE CONCAT('%', #{query}, '%')
+                AND b.title LIKE CONCAT('%', #{query}, '%')
             </if>
         </where>
+        GROUP BY b.id
         ORDER BY b.created_at DESC
     </select>
-
-    <delete id="deleteBoard">
-        DELETE FROM board
-        WHERE user_id = #{userId} AND id = #{data.id}
-    </delete>
 
     <update id="updateBoard" parameterType="com.multi.culture_link.board.model.dto.BoardDto">
         UPDATE board
