@@ -53,7 +53,7 @@
 
         display: flex;
         flex-flow: row;
-        flex-wrap: wrap;
+        flex-wrap: no-wrap;
         align-items: center;
         justify-content: center;
         margin-top: 3%;
@@ -66,19 +66,21 @@
     .card{
 
        min-width: 280px;
+       max-width: 280px;
        margin: 1%;
        max-height: 460px;
+       min-height: 460px;
 
     }
 
 
    .card-img-top{
 
-        max-height: 58%;
-        min-width: 98%;
-        min-height: 58%;
-        max-width: 98%;
-        
+        max-height: 58% !important;
+        min-width: 98% !important;
+        min-height: 58% !important;
+        max-width: 98% !important;
+
     }
 
 
@@ -122,6 +124,7 @@
        display: inline-flex;
        align-items: center;
        justify-content: center;
+       margin: 1%;
 
    }
 
@@ -134,5 +137,25 @@
    .hasHate{
 
         background-color: #dfdfdf;
+
+   }
+
+   #list1 .card{
+    min-width: 280px;
+    max-width: 280px;
+    margin: 1%;
+    max-height: 380px;
+    min-height: 380px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+   }
+
+   .buttonZone{
+
+     display: flex;
+     flex-flow: row;
+     align-items: center;
+     justify-content: center;
 
    }
