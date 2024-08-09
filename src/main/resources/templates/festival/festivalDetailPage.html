@@ -406,6 +406,18 @@
 
                 //#region 리뷰 관련 함수
 
+
+                /**
+                * 텍스트 에어리어 클릭 시 처음으로 가게 함
+                *
+                */
+                $(document).on('click','#reviewTextArea', function(){
+
+                    this.setSelectionRange(0,0);
+
+                })
+
+
                 /**
                 * 페이지당 리뷰 리스트 가져와서 넣어주기
                 * @param {int} festivalId 축제아이디
@@ -413,6 +425,8 @@
                 * @param {int} page 페이지
                 */
                 function findFestivalReviewListByVWUserReviewDTO(festivalId, userId, page){
+
+                    festivalId = festivalId + "";
 
                     $.ajax({
 
@@ -507,7 +521,7 @@
                                                 </div>
                                                 <input type="hidden" value="${review.festivalReviewId}" name="festivalReviewId">
                                                 <input type="hidden" value="${festivalId}" name="festivalId">
-                                                <textarea class="reviewText" rows="2" cols="100" style="text-align: center;" name="reviewText">${review.festivalReviewContent}</textarea>
+                                                <textarea class="reviewText" rows="2" cols="100" name="reviewText">${review.festivalReviewContent}</textarea>
                                             </form>
                                             </td>`
 
@@ -668,11 +682,13 @@
 
 
                 /**
-                * 리뷰를 테이블에 담고 이미지는 프로젝트 폴더에 저장함
+                * 리뷰를 테이블에 담고 이미지는 네이버 스토리지에 저장함
                 * @param {int} festivalId 축제아이디
                 *
                 */
-                $(document).on('click','#reviewInsertBtn', function(festivalId){
+                $(document).on('click','#reviewInsertBtn', function(){
+
+                    var festivalId = $(this).val();
 
                     var formData = new FormData($('#reviewForm')[0]);
 
@@ -693,7 +709,11 @@
                             $('#uploadFile').val(null);
 
                             alert("리뷰 제출 성공");
+
+                            festivalId = festivalId+"";
                             findFestivalReviewListByVWUserReviewDTO(festivalId,userId, 1);
+
+
                         },
                         error: function(error){
                             alert(error);
@@ -751,7 +771,7 @@
                         success: function(res){
 
                             alert("리뷰 수정 성공!!");
-
+                            findFestivalReviewListByVWUserReviewDTO(festivalId,userId, 1);
                         }
                     })
                 })
@@ -1859,7 +1879,7 @@
 <!--                                           min="0" style="width: 40px; height: 40px">-->
                                     <input name="uploadFile" id="uploadFile" type="file" accept="image/*">
                                     <input name="festivalId" type="hidden" th:value="${festival.festivalId}">
-                                    <button id="reviewInsertBtn" type="button">리뷰 제출</button>
+                                    <button id="reviewInsertBtn" type="button" th:value="${festival.festivalId}">리뷰 제출</button>
 
                                 </form>
 

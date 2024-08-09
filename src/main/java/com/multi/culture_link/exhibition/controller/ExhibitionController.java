@@ -2,8 +2,9 @@ package com.multi.culture_link.exhibition.controller;
 
 import com.multi.culture_link.admin.exhibition.model.dto.api.ExhibitionApiDto;
 import com.multi.culture_link.admin.exhibition.model.dto.api.ExhibitionKeywordDto;
+import com.multi.culture_link.admin.exhibition.model.dto.api.ExhibitionKeywordPageDto;
+import com.multi.culture_link.admin.exhibition.model.dto.api.PageResponseDto;
 import com.multi.culture_link.culturalProperties.model.dto.Video;
-import com.multi.culture_link.culturalProperties.model.dto.YoutubeConfig;
 import com.multi.culture_link.exhibition.model.dto.ExhibitionAnalyzeDto;
 import com.multi.culture_link.exhibition.model.dto.ExhibitionCommentDto;
 import com.multi.culture_link.exhibition.model.dto.ExhibitionDto;
@@ -11,7 +12,6 @@ import com.multi.culture_link.exhibition.model.dto.ExhibitionInterestDto;
 import com.multi.culture_link.exhibition.service.ExhibitionAnalyzeService;
 import com.multi.culture_link.exhibition.service.ExhibitionCommentService;
 import com.multi.culture_link.exhibition.service.ExhibitionService;
-import com.multi.culture_link.users.model.dto.UserDTO;
 import com.multi.culture_link.users.model.dto.VWUserRoleDTO;
 import lombok.RequiredArgsConstructor;
 import org.apache.http.HttpEntity;
@@ -20,23 +20,14 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
-import org.json.JSONArray;
-import org.json.JSONObject;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 @RestController
 @RequiredArgsConstructor
@@ -256,5 +247,12 @@ public class ExhibitionController {
         return exhibitionService.getKeyword(exhibitionId);
     };
 
-
+    @GetMapping("/exhibition/keyword")
+    public PageResponseDto<ExhibitionKeywordPageDto> getAllKeyword(
+            // cursor : 다음 값을 가져올 수 있도록 알려주는 값, 넘버링
+            @RequestParam(defaultValue = "") String cursor,
+            @RequestParam(defaultValue = "5") int size
+    ) {
+        return exhibitionService.getAllKeyword(cursor, size);
+    }
 }

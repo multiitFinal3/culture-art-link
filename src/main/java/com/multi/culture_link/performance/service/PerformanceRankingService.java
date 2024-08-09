@@ -146,9 +146,9 @@ public class PerformanceRankingService {
 
 
 
-    public PerformanceDTO getPerformanceDetailFromAPI(int performanceId) {
-        String url = String.format("http://www.kopis.or.kr/openApi/restful/pblprfr/%d?service=%s&newsql=Y", performanceId, apiKey);
-        System.out.println("Fetching performance by ID from API: " + url);
+    public PerformanceDTO getPerformanceDetailFromAPI(String performanceCode) {
+        String url = String.format("http://www.kopis.or.kr/openApi/restful/pblprfr/%s?service=%s&newsql=Y", performanceCode, apiKey);
+        System.out.println("Fetching performance by CODE from API: " + url);
         String response = restTemplate.getForObject(url, String.class);
         System.out.println("API Response: " + response);
 
@@ -201,6 +201,15 @@ public class PerformanceRankingService {
         }
 
         return performance;
+    }
+
+
+    public PerformanceDTO getPerformanceDetail(String performanceCode) {
+        PerformanceDTO performanceDTO = performanceMapper.getPerformanceByCode(performanceCode);
+        if (performanceDTO != null) {
+            performanceDTO.updateFormattedDate(); // formattedDate 필드를 업데이트
+        }
+        return performanceDTO;
     }
 
 

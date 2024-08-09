@@ -179,6 +179,12 @@ public class KeywordExtractService {
 	public HashMap<String, Integer> getKeywordByKomoran(String allContent, String path) throws Exception {
 		
 		System.out.println("allContent : " + allContent);
+		
+		if (allContent==null){
+			
+			return null;
+			
+		}
 
 		allContent = allContent.trim().replaceAll("\\s+"," ");
 		
@@ -360,7 +366,8 @@ public class KeywordExtractService {
 //	}
 	
 	/**
-	 * 키워드를 뽑으려하는 전체 작품들의 스트링들을 각각 리스트에 담아 넣으면 각각의 키워드가 word2vec(유사도, 문맥 추출)과 tf-idf(통계적 추출)를 모두 고려한 결합 벡터로 추출함
+	 * 키워드를 뽑으려하는 전체 작품들의 스트링들을 각각 리스트에 담아 넣으면
+	 * 각각의 키워드가 word2vec(유사도, 문맥 추출)과 tf-idf(통계적 추출)를 모두 고려해 곱한 결합 벡터로 추출함
 	 *
 	 * @param allContentList
 	 * @return
