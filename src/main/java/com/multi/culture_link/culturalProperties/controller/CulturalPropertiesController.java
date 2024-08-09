@@ -213,20 +213,8 @@ public class CulturalPropertiesController {
 
 
 
-
-//	// 문화재 상세 페이지
-//	@GetMapping("/detail/{id}")
-////	@ResponseBody
-//	public String getCulturalPropertyDetail(@PathVariable int id, Model model) {
-//		CulturalPropertiesDTO property = culturalPropertiesService.getCulturalPropertyById(id);
-//		model.addAttribute("property", property);
-//		return "/culturalProperties/culturalPropertiesDetail";
-//	}
-
 	// 문화재 상세 페이지
 	@GetMapping("/detail/{id}")
-//	@ResponseBody
-	//	@ResponseBody
 	public String getCulturalPropertyDetail(@PathVariable int id, Model model) {
 		CulturalPropertiesDTO property = culturalPropertiesService.getCulturalPropertyById(id);
 
@@ -335,23 +323,6 @@ public class CulturalPropertiesController {
 //	public String dislikeAttraction(@RequestParam int id) {
 //		culturalPropertiesService.dislikeAttraction(id);
 //		return "success";
-//	}
-
-
-//	@GetMapping("/detail/{id}")
-//	public String getCulturalPropertyDetail(@PathVariable int id, Model model, @AuthenticationPrincipal UserDetails userDetails) {
-//		CulturalPropertiesDTO property = culturalPropertiesService.getCulturalPropertyById(id);
-//		int userId = userDetails.getId(); // 현재 로그인한 사용자 ID 가져오기
-//
-//		// 사용자의 찜 상태를 확인
-//		boolean isLiked = culturalPropertiesService.isPropertyLikedByUser(id, userId);
-//		boolean isDisliked = culturalPropertiesService.isPropertyDislikedByUser(id, userId);
-//
-//		model.addAttribute("property", property);
-//		model.addAttribute("isLiked", isLiked);
-//		model.addAttribute("isDisliked", isDisliked);
-//
-//		return "/culturalProperties/culturalPropertiesDetail";
 //	}
 
 
@@ -489,25 +460,6 @@ public class CulturalPropertiesController {
 		}
 	}
 
-//	@GetMapping("/detail/{culturalPropertiesId}/review/reviewList")
-//	public ResponseEntity<List<CulturalPropertiesReviewDTO>> getReviews(@RequestParam int page, @RequestParam int culturalPropertiesId) {
-//		Pageable pageable = PageRequest.of(page, 10); // 페이지 크기 10
-//		Page<CulturalPropertiesReviewDTO> reviews = culturalPropertiesService.getReviewsByCulturalPropertiesId(culturalPropertiesId, pageable);
-//		return ResponseEntity.ok(reviews.getContent());
-//	}
-
-
-//	@GetMapping("/detail/{culturalPropertiesId}/review/reviewList")
-//	public ResponseEntity<Page<CulturalPropertiesReviewDTO>> getReview(
-//			@PathVariable int culturalPropertiesId,
-//			@RequestParam(value = "page", defaultValue = "0") int page) { // 기본값을 0으로 설정
-//		// Pageable 객체를 생성합니다.
-//		Pageable pageable = PageRequest.of(page, 10, Sort.by(Sort.Direction.DESC, "created_at"));
-//
-//		// 서비스 호출
-//		Page<CulturalPropertiesReviewDTO> reviews = culturalPropertiesService.getReviewsByCulturalPropertiesId(culturalPropertiesId, pageable);
-//		return ResponseEntity.ok(reviews);
-//	}
 
 	@GetMapping("/detail/{culturalPropertiesId}/review/reviewList")
 	public ResponseEntity<Map<String, Object>> getReview(
@@ -528,23 +480,6 @@ public class CulturalPropertiesController {
 
 		return ResponseEntity.ok(response);
 	}
-
-//	@GetMapping("/detail/{culturalPropertiesId}/review/reviewList")
-//	public ResponseEntity<Map<String, Object>> getReviews(
-//			@PathVariable int culturalPropertiesId,
-//			@RequestParam(defaultValue = "0") int page,
-//			@RequestParam(defaultValue = "10") int size) {
-//
-//		Page<CulturalPropertiesReviewDTO> reviewsPage = culturalPropertiesService.getReviewsByCulturalPropertiesId(culturalPropertiesId, PageRequest.of(page, size));
-//
-//		// JSON 객체 생성
-//		Map<String, Object> response = new HashMap<>();
-//		response.put("reviews", reviewsPage.getContent());
-//		response.put("totalCount", reviewsPage.getTotalElements());
-//
-//		return ResponseEntity.ok(response);
-//	}
-
 
 
 
