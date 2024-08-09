@@ -91,7 +91,7 @@
                 //#endregion
 
 
-                //#region 선호도 입력 부분
+                //#region 선호도 입력 부분 - 축제
 
 
                  /**
@@ -160,7 +160,7 @@
 
                     }
 
-                    var btns = document.querySelectorAll('button.hasLove');
+                    var btns = document.querySelectorAll('button.festivalKeywordBtn.hasLove');
 
                     var concat = '';
 
@@ -178,6 +178,111 @@
 
 
                 //#endregion
+
+
+
+                //#region 선호도 입력 부분 - 전시
+
+
+                 /**
+                 * 전시 키워드를 frequency가 높은 순으로 5개씩 가져옴
+                 *
+                 */
+                function findPopularExhibitionKeyword(cursor){
+                    console.log("first cursor : ")
+                    console.log(cursor);
+                    cursor = cursor.toString().padStart(20,'0');
+                    console.log(cursor);
+
+                    $.ajax({
+
+                        url: '/exhibition/exhibition/keyword?',
+                        method: 'GET',
+                        data: {
+
+                            cursor : cursor
+
+                        },
+                        contentType: 'application/json',
+                        success: function(result){
+
+                            var keywords = result.data;
+                            var nextCursor = result.nextCursor;
+                            console.log("nextCursor");
+                            console.log(nextCursor);
+                            $('#addExhibitionKeyword').val(nextCursor);
+
+                            $.each(keywords, function(index, keyword){
+
+                                var htmlContent = `<button value="${keyword.keyword}" class="exhibitionKeywordBtn">${keyword.keyword}</button>`;
+
+                                $('#exhibitionKeywordBtns').append(htmlContent);
+
+
+                            })
+
+                        }
+
+                    })
+
+                }
+
+                findPopularExhibitionKeyword("");
+
+
+
+                /**
+                * 전시 키워드 추가 버튼
+                *
+                */
+                $(document).on('click','#addExhibitionKeyword', function(){
+                    event.preventDefault();
+                    var cursor = parseInt($(this).val());
+                    findPopularExhibitionKeyword(cursor);
+
+                })
+
+
+                /**
+                * 전시 키워드 선택 시 색 변화 버튼
+                *
+                */
+                $(document).on('click','.exhibitionKeywordBtn', function(){
+
+                    event.preventDefault();
+
+                    if($(this).hasClass('hasLove')){
+
+                        $(this).removeClass('hasLove');
+
+                    }else{
+
+                        $(this).addClass('hasLove');
+
+                    }
+
+                    var btns = document.querySelectorAll('button.exhibitionKeywordBtn.hasLove');
+
+                    var concat = '';
+
+                    btns.forEach(function(btn){
+
+                        concat += (btn.value+" ");
+
+                    })
+
+                    $('#exhibitionSelectKeyword').val(concat.trim());
+
+
+
+                })
+
+
+                //#endregion
+
+
+
+
 
 
 
@@ -444,6 +549,7 @@
                 </select><br>
                 지역 <select name="regionId" id="regionId" class="rounded" style="width:100px;"></select><br><br>
                 카테고리별 키워드
+
                 <div id="festivalKeywordZone">
 
                     <input type="hidden" id="festivalSelectKeyword" name="festivalSelectKeyword" value="">
@@ -453,6 +559,19 @@
                     </div>
 
                     <button id="addFestivalKeyword" value="1">축제 키워드 추가</button>
+
+
+                </div>
+
+                <div id="exhibitionKeywordZone">
+
+                    <input type="hidden" id="exhibitionSelectKeyword" name="exhibitionSelectKeyword" value="">
+
+                    <div id="exhibitionKeywordBtns">
+
+                    </div>
+
+                    <button id="addExhibitionKeyword" value="0">전시 키워드 추가</button>
 
 
                 </div>
