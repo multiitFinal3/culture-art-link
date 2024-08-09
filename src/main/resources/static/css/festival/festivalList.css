@@ -65,22 +65,20 @@
 
     .card{
 
-        margin: 1%;
-        min-width: 400px;
-        max-width: 400px;
-        min-height: 600px;
-        max-height: 600px;
+       min-width: 280px;
+       margin: 1%;
+       max-height: 460px;
 
     }
 
 
    .card-img-top{
 
-        margin: 1%;
-        width: 380px;
-        height: 400px;
-
-
+        max-height: 58%;
+        min-width: 98%;
+        min-height: 58%;
+        max-width: 98%;
+        
     }
 
 
@@ -107,10 +105,23 @@
 
    }
 
+   card-body a.btn{
+
+        width: 20%;
+        height: 30%;
+        text-align: center;
+        display: inline-flex;
+        align-items: center;
+
+   }
+
    .hate, .heart{
 
-        min-width: 30px;
-        min-height: 30px;
+       width: 15%;
+       height: 20%;
+       display: inline-flex;
+       align-items: center;
+       justify-content: center;
 
    }
 

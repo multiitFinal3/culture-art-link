@@ -56,16 +56,16 @@ $(document).ready(
                             if(! festival.imgUrl || festival.imgUrl == "null"){
 
                                 firstHtml = `
-                                    <div class="card" style="width: 18rem;" id="${festival.festivalId}">
-                                        <img class="card-img-top" src="/img/festival/noPhoto.png" alt="Card image cap" style="min-width: 380px; min-height: 400px;">
+                                    <div class="card" id="${festival.festivalId}" onclick="window.location.href='/festival/festival-detail?festivalId=${festival.festivalId}'">
+                                        <img class="card-img-top" src="/img/festival/noPhoto.png" alt="Card image cap">
 
                                 `;
 
                             }else{
 
                                 firstHtml = `
-                                    <div class="card" style="width: 18rem;" id="${festival.festivalId}">
-                                        <img class="card-img-top" src="${festival.imgUrl}" alt="Card image cap" style="min-width: 380px; min-height: 400px;">
+                                    <div class="card" id="${festival.festivalId}" onclick="window.location.href='/festival/festival-detail?festivalId=${festival.festivalId}'">
+                                        <img class="card-img-top" src="${festival.imgUrl}" alt="Card image cap">
 
                                 `;
 
@@ -77,14 +77,13 @@ $(document).ready(
                                 <div class="card-body">
                                       <h5 class="card-title">${festival.festivalName}</h5>
                                       <p class="card-text">${content}</p>
-                                      <a href="/festival/festival-detail?festivalId=${festival.festivalId}" class="btn btn-primary">자세히</a>
                                       <button class="btn btn-primary heart" type="button" style="margin:0px" value="${festival.festivalId}">
                                           <img src="/img/festival/heart.png"
-                                               style="width : 20px; height: 20px;">
+                                               style="width : 100%; height: 100%;">
                                       </button>
                                       <button class="btn btn-primary hate" type="button" style="margin:0px" value="${festival.festivalId}">
                                             <img src="/img/festival/trash.png"
-                                                 style="width : 20px; height: 20px;">
+                                                 style="width : 100%; height: 100%;">
                                       </button>
                                 </div>
 
@@ -529,7 +528,9 @@ $(document).ready(
         * 찜하기 / 찜 취소하기 버튼
         *
         */
-        $(document).on('click','.heart', function(){
+        $(document).on('click','.heart', function(e){
+
+            e.stopPropagation();
 
             var button = $(this);
             var festivalId = $(this).val();
@@ -634,8 +635,9 @@ $(document).ready(
         * 관심없음 하기 / 관심없음 취소하기 버튼
         *
         */
-        $(document).on('click','.hate', function(){
+        $(document).on('click','.hate', function(e){
 
+            e.stopPropagation();
             var button = $(this);
             var festivalId = $(this).val();
 
