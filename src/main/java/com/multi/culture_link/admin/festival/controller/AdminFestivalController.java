@@ -1346,4 +1346,26 @@ public class AdminFestivalController {
 	}
 	
 	
+	/**
+	 * 전체 축제 리스트를 반환
+	 *
+	 *
+	 * @return
+	 */
+	@PostMapping("/findDBFestivalAllList")
+	@ResponseBody
+	public ArrayList<FestivalDTO> findDBFestivalAllList() {
+		
+		ArrayList<FestivalDTO> list = null;
+		try {
+			list = adminFestivalService.findDBFestivalAllList();
+			System.out.println("all list : " + list);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+		return list;
+		
+	}
+	
+	
 }

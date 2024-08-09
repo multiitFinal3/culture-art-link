@@ -38,7 +38,7 @@
     #festivalList{
 
         display: flex;
-        width: 100%;
+        width: 80%;
         flex-flow: column;
         align-items: center;
         justify-content: center;
@@ -59,7 +59,7 @@
         margin-top: 3%;
         margin-left: 5%;
         margin-right: 5%;
-
+        flex-wrap: wrap;
 
     }
 

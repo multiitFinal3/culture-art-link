@@ -387,4 +387,11 @@
     </select>
 
 
+    <select id="findDBFestivalAllList" resultType="festivalDTO">
+
+        SELECT * FROM festival;
+
+    </select>
+
+
 </mapper>

@@ -10,7 +10,7 @@ $(document).ready(
 
         })
         //#endRegion
-        
+
 
         //#region 키워드 추천 관련 함수
 
@@ -127,6 +127,120 @@ $(document).ready(
 
         //#region festivalList 관련 함수
 
+
+
+
+        /**
+       * DB 전체 리스트 페이지 없이 전부 조회 기능
+       *
+       */
+        function findDBFestivalAllList(){
+
+            $('#list1').html("");
+
+
+            $.ajax({
+
+                url: '/admin/festival-regulate/findDBFestivalAllList',
+                method: 'POST',
+                contentType: 'application/json',
+                success: function(list){
+
+                    console.log("all List");
+                    $.each(list, function(index, festival){
+
+                        var content = festival.festivalContent.length > 30?
+                        festival.festivalContent.substring(0,30) + "..."
+                        : festival.festivalContent;
+
+                        var inst1 = festival.manageInstitution.length > 15?
+                        festival.manageInstitution.substring(0,15) + "..."
+                        : festival.manageInstitution;
+
+                        var inst2 = festival.hostInstitution.length > 15?
+                        festival.hostInstitution.substring(0,15) + "..."
+                        : festival.hostInstitution;
+
+                        var inst3 = festival.sponserInstitution.length > 15?
+                        festival.sponserInstitution.substring(0,15) + "..."
+                        : festival.sponserInstitution;
+
+
+                        console.log("축제 날짜")
+                        console.log(festival.startDate);
+                        console.log(festival.endDate);
+
+                        var start = festival.startDate.length >0?
+                        festival.startDate.substring(0,10):
+                        "없음";
+
+                        var end = festival.endDate.length >0?
+                        festival.endDate.substring(0,10):
+                        "없음";
+
+                        var firstHtml= ``;
+
+                        if(! festival.imgUrl || festival.imgUrl == "null"){
+
+                            firstHtml = `
+                                <div class="card" id="${festival.festivalId}">
+                                    <img class="card-img-top" src="/img/festival/noPhoto.png" alt="Card image cap">
+
+                            `;
+
+                        }else{
+
+                            firstHtml = `
+                                <div class="card" id="${festival.festivalId}">
+                                    <img class="card-img-top" src="${festival.imgUrl}" alt="Card image cap">
+
+                            `;
+
+                        }
+
+
+                        var secondHtml = `
+                            <div class="card-body">
+                                  <h5 class="card-title">${festival.festivalName}</h5>
+                                  <p class="card-text">${content}</p>
+                                  <div class="buttonZone">
+                                    <button class="btn btn-primary heart" type="button" value="${festival.festivalId}">
+                                      <img src="/img/festival/heart.png"
+                                           style="width : 100%; height: 100%;">
+                                      </button>
+                                      <button class="btn btn-primary hate" type="button" value="${festival.festivalId}">
+                                            <img src="/img/festival/trash.png"
+                                                 style="width : 100%; height: 100%;">
+                                      </button>
+                                  </div>
+                            </div>
+
+                        </div>
+                        `;
+
+
+                        var finalHtml = firstHtml + secondHtml;
+
+                        $('#list1').append(finalHtml);
+
+                        findLoveList();
+                        findHateList();
+
+                    })
+
+
+                }
+
+            })
+        }
+
+        findDBFestivalAllList();
+
+
+
+
+
+
         /**
        * DB 전체 리스트 페이지별 조회 기능
        * @param {int} page 페이지
@@ -237,8 +351,8 @@ $(document).ready(
             })
         }
 
-        // 1페이지 호출
-        findDBFestivalList(1);
+        // 1페이지 호출 : 전체 리스트 불러오는 방식으로 변경하여 주석 처리함
+//        findDBFestivalList(1);
 
         /**
        * DB 전체 갯수를 알아와 페이지 버튼 추가 기능
@@ -278,8 +392,8 @@ $(document).ready(
 
         }
 
-        // 버튼 붙히기
-        findDBFestivalCount();
+        // 버튼 붙히기 : 전체를 불러오는 방식으로 변경함
+//        findDBFestivalCount();
 
         /**
        * DB 페이지 버튼에 해당 페이지의 순서에 해당하는 데이터 보이는 클릭 이벤트 추가
@@ -526,8 +640,9 @@ $(document).ready(
         $(document).on('click','.pageBtn4', function(){
 
             $('#list1').html("");
-            findDBFestivalList(1);
-            findDBFestivalCount();
+//            findDBFestivalList(1);
+//            findDBFestivalCount();
+            findDBFestivalAllList();
 
         })
 

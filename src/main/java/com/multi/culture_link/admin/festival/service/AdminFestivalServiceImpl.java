@@ -1316,6 +1316,12 @@ public class AdminFestivalServiceImpl implements AdminFestivalService {
 		
 	}
 	
+	@Override
+	public ArrayList<FestivalDTO> findDBFestivalAllList() throws Exception {
+		ArrayList<FestivalDTO> list = adminFestivalMapper.findDBFestivalAllList();
+		return list;
+	}
+	
 	
 }
 
