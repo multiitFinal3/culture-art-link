@@ -213,29 +213,6 @@ public class CulturalPropertiesController {
 
 
 
-	// 문화재 상세 페이지
-	@GetMapping("/detail/{id}")
-	public String getCulturalPropertyDetail(@PathVariable int id, Model model) {
-		CulturalPropertiesDTO property = culturalPropertiesService.getCulturalPropertyById(id);
-
-		// 리뷰 목록 가져오기
-		List<CulturalPropertiesReviewDTO> reviews = culturalPropertiesService.getReviewsByCulturalPropertyId(id);
-
-		System.out.println("디테일 아이디 "+ id);
-		model.addAttribute("property", property);
-		model.addAttribute("getNearbyPlace", culturalPropertiesService.getNearbyPlace(property.getRegion(), property.getDistrict(), id));
-		model.addAttribute("reviews", reviews);
-
-		System.out.println("Reviews: " + reviews);
-//		System.out.println("근처 문화재 수: " + nearbyPlaces.size());
-
-		return "/culturalProperties/culturalPropertiesDetail";
-	}
-
-
-
-
-
 	@GetMapping("/news")
 	@ResponseBody
 	public ResponseEntity<List<NewsArticle>> getNewsArticles(Model model) {
@@ -310,6 +287,30 @@ public class CulturalPropertiesController {
 
 
 
+	// 문화재 상세 페이지
+	@GetMapping("/detail/{id}")
+	public String getCulturalPropertyDetail(@PathVariable int id, Model model) {
+		CulturalPropertiesDTO property = culturalPropertiesService.getCulturalPropertyById(id);
+
+		// 리뷰 목록 가져오기
+		List<CulturalPropertiesReviewDTO> reviews = culturalPropertiesService.getReviewsByCulturalPropertyId(id);
+
+		System.out.println("디테일 아이디 "+ id);
+		model.addAttribute("property", property);
+		model.addAttribute("getNearbyPlace", culturalPropertiesService.getNearbyPlace(property.getRegion(), property.getDistrict(), id));
+		model.addAttribute("reviews", reviews);
+
+		System.out.println("Reviews: " + reviews);
+//		System.out.println("근처 문화재 수: " + nearbyPlaces.size());
+
+		return "/culturalProperties/culturalPropertiesDetail";
+	}
+
+
+
+
+
+
 //네모버튼
 //	@PostMapping("/like")
 //	@ResponseBody
@@ -327,6 +328,30 @@ public class CulturalPropertiesController {
 
 
 
+
+	//상세페이지 리뷰
+	@GetMapping("/detail/{culturalPropertiesId}/review")
+	public ResponseEntity<Map<String, Object>> getRecentReview(@PathVariable int culturalPropertiesId) {
+		List<CulturalPropertiesReviewDTO> reviews = culturalPropertiesService.getRecentReview(culturalPropertiesId);
+		int totalReviews = culturalPropertiesService.countReviews(culturalPropertiesId); // 총 리뷰 수
+
+		Map<String, Object> response = new HashMap<>();
+		response.put("reviews", reviews);
+		response.put("totalReviews", totalReviews);
+
+		return ResponseEntity.ok(response); // 200 OK와 함께 응답 반환
+	}
+
+
+
+
+
+
+
+
+
+
+	// 리뷰페이지
 	@GetMapping("/detail/{id}/review/detail")
 	public String culturalPropertiesReviewDetail(@PathVariable int id,
 												 @AuthenticationPrincipal VWUserRoleDTO user, Model model) {
@@ -462,7 +487,7 @@ public class CulturalPropertiesController {
 
 
 	@GetMapping("/detail/{culturalPropertiesId}/review/reviewList")
-	public ResponseEntity<Map<String, Object>> getReview(
+	public ResponseEntity<Map<String, Object>> getReviewList(
 			@PathVariable int culturalPropertiesId,
 			@RequestParam(value = "page", defaultValue = "0") int page) {
 		// Pageable 객체를 생성합니다.
@@ -480,6 +505,11 @@ public class CulturalPropertiesController {
 
 		return ResponseEntity.ok(response);
 	}
+
+
+
+
+
 
 
 
