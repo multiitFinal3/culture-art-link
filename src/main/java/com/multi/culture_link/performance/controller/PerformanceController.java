@@ -199,6 +199,45 @@ public class PerformanceController {
 
 
 
+//    @GetMapping("/performanceDetail")
+//    public String performanceDetailPage(@AuthenticationPrincipal VWUserRoleDTO user,
+//                                        @RequestParam("performanceCode") String performanceCode,
+//                                        @RequestParam(value = "source", required = false, defaultValue = "db") String source,
+//                                        Model model) {
+//        PerformanceDTO performance = null;
+//        System.out.println("Requested performanceCode: " + performanceCode);
+//        System.out.println("Data source: " + source);
+//
+//        if ("db".equals(source)) {
+//            // DB에서 공연 정보 가져오기
+//            performance = performanceDBService.getPerformanceByCode(performanceCode);
+//            System.out.println("Fetched from DB: " + performance);
+//        } else if ("api".equals(source)) {
+//            // API에서 공연 정보 가져오기
+//            try {
+//                performance = performanceRankingService.getPerformanceDetailFromAPI(performanceCode);
+//                System.out.println("Fetched from API: " + performance);
+//            } catch (Exception e) {
+//                model.addAttribute("error", "공연 정보를 가져오는 중 오류가 발생했습니다.");
+//                e.printStackTrace();
+//            }
+//        }
+//
+//        if (performance != null) {
+//            performance.updateFormattedDate(); // 날짜 포맷 업데이트
+//            model.addAttribute("user", user.getUser());
+//            model.addAttribute("performance", performance);
+//        } else {
+//            // 공연 정보를 가져오지 못했을 때의 처리
+//            model.addAttribute("error", "공연 정보를 가져오지 못했습니다.");
+//        }
+//
+//        model.addAttribute("naverClientId", naverClientId); // 클라이언트 ID를 모델에 추가
+//
+//
+//        return "/performance/performanceDetail";
+//    }
+
     @GetMapping("/performanceDetail")
     public String performanceDetailPage(@AuthenticationPrincipal VWUserRoleDTO user,
                                         @RequestParam("performanceCode") String performanceCode,
@@ -209,11 +248,9 @@ public class PerformanceController {
         System.out.println("Data source: " + source);
 
         if ("db".equals(source)) {
-            // DB에서 공연 정보 가져오기
             performance = performanceDBService.getPerformanceByCode(performanceCode);
             System.out.println("Fetched from DB: " + performance);
         } else if ("api".equals(source)) {
-            // API에서 공연 정보 가져오기
             try {
                 performance = performanceRankingService.getPerformanceDetailFromAPI(performanceCode);
                 System.out.println("Fetched from API: " + performance);
@@ -223,6 +260,7 @@ public class PerformanceController {
             }
         }
 
+        // performance 객체가 null인 경우 처리
         if (performance != null) {
             performance.updateFormattedDate(); // 날짜 포맷 업데이트
             model.addAttribute("user", user.getUser());
@@ -230,13 +268,14 @@ public class PerformanceController {
         } else {
             // 공연 정보를 가져오지 못했을 때의 처리
             model.addAttribute("error", "공연 정보를 가져오지 못했습니다.");
+            return "redirect:/errorPage";  // Error 페이지로 리다이렉트 또는 에러 메시지 출력 페이지로 이동
         }
 
         model.addAttribute("naverClientId", naverClientId); // 클라이언트 ID를 모델에 추가
 
-
         return "/performance/performanceDetail";
     }
+
 
 
 
