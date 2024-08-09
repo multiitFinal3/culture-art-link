@@ -14,7 +14,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 공연 정보를 처리하는 컨트롤러 클래스
@@ -41,7 +43,7 @@ public class PerformanceController {
         this.performanceDBService = performanceDBService;
 
 
-   
+
     }
 
     /**
@@ -58,7 +60,7 @@ public class PerformanceController {
     }
 
     /**
-     * 공연 장르 페이지 매핑
+     * 공연 장르 페이지 매핑 -> 5위까지 performanceGenre.html
      *
      * @param user  the user
      * @param genre the genre
@@ -69,7 +71,7 @@ public class PerformanceController {
     public String performanceGenrePage(@AuthenticationPrincipal VWUserRoleDTO user,
                                        @RequestParam("genre") String genre,
                                        Model model) {
-        String date = "20240802"; // 일간 데이터 날짜
+        String date = "20240807"; // 일간 데이터 날짜
         List<PerformanceDTO> rankingData = performanceRankingService.fetchGenreRanking(genre, date, 5);
         System.out.println("Fetched Data: " + rankingData); // 로그 추가
 
@@ -119,14 +121,14 @@ public class PerformanceController {
     }
 
     /**
-     * 공연 장르별 랭킹 데이터
+     * 공연 랭킹 페이지 -> 50위 performanceRanking.html
      *
      * @param genre the genre
      * @return 공연 장르별 랭킹 페이지
      */
     @GetMapping("/genre-rankings")
     public ResponseEntity<List<PerformanceDTO>> getPerformanceGenreRankings(@RequestParam String genre) {
-        String date = "20240802"; // 일간 데이터 날짜
+        String date = "20240807"; // 일간 데이터 날짜
         List<PerformanceDTO> rankingData;
 
         if (genre.equals("전체")) {
@@ -153,7 +155,7 @@ public class PerformanceController {
     public String performanceRankingPage(@AuthenticationPrincipal VWUserRoleDTO user, Model model,
                                          @RequestParam(required = false) String genre) {
         model.addAttribute("user", user.getUser());
-        String date = "20240802"; // 일간 데이터 날짜
+        String date = "20240807"; // 일간 데이터 날짜
         List<PerformanceDTO> rankingData;
 
         if (genre == null || genre.isEmpty() || genre.equals("전체")) {
@@ -182,8 +184,8 @@ public class PerformanceController {
     public String performanceLocationPage(@AuthenticationPrincipal VWUserRoleDTO user,
                                           @RequestParam(required = false) String locationCode,
                                           Model model) {
-        String stdate = "20240803"; // 시작 날짜
-        String eddate = "20240903"; // 종료 날짜
+        String stdate = "20240807"; // 시작 날짜
+        String eddate = "20240907"; // 종료 날짜
 
         System.out.println("Received locationCode: " + locationCode); // Debug line
 
@@ -197,35 +199,23 @@ public class PerformanceController {
 
 
 
-
-
-//    @GetMapping("/performanceDetail")
-//    public String performanceDetailPage(@AuthenticationPrincipal VWUserRoleDTO user,
-//                                        @RequestParam("performanceId") int performanceId,
-//                                        Model model) {
-//        PerformanceDTO performance = performanceRankingService.getPerformanceDetail(performanceId);
-//        model.addAttribute("user", user.getUser());
-//        model.addAttribute("performance", performance);
-//        return "/performance/performanceDetail";
-//    }
-
     @GetMapping("/performanceDetail")
     public String performanceDetailPage(@AuthenticationPrincipal VWUserRoleDTO user,
-                                        @RequestParam("performanceId") int performanceId,
+                                        @RequestParam("performanceCode") String performanceCode,
                                         @RequestParam(value = "source", required = false, defaultValue = "db") String source,
                                         Model model) {
         PerformanceDTO performance = null;
-        System.out.println("Requested performanceId: " + performanceId);
+        System.out.println("Requested performanceCode: " + performanceCode);
         System.out.println("Data source: " + source);
 
         if ("db".equals(source)) {
             // DB에서 공연 정보 가져오기
-            performance = performanceDBService.getPerformanceById(performanceId);
+            performance = performanceDBService.getPerformanceByCode(performanceCode);
             System.out.println("Fetched from DB: " + performance);
         } else if ("api".equals(source)) {
             // API에서 공연 정보 가져오기
             try {
-                performance = performanceRankingService.getPerformanceDetailFromAPI(performanceId);
+                performance = performanceRankingService.getPerformanceDetailFromAPI(performanceCode);
                 System.out.println("Fetched from API: " + performance);
             } catch (Exception e) {
                 model.addAttribute("error", "공연 정보를 가져오는 중 오류가 발생했습니다.");
@@ -247,6 +237,39 @@ public class PerformanceController {
 
         return "/performance/performanceDetail";
     }
+
+
+
+
+
+
+
+    @GetMapping("/performanceDetailByTitle")
+    public String performanceDetailByTitle(@RequestParam("performanceTitle") String performanceTitle, Model model) {
+        // DB에서 공연명을 통해 공연 정보를 검색
+        PerformanceDTO performance = performanceDBService.getPerformanceByTitle(performanceTitle);
+
+        if (performance == null) {
+            model.addAttribute("error", "해당 공연명을 가진 공연을 찾을 수 없습니다.");
+            return "/performance/performanceDetail";
+        }
+
+        // 공연 디테일 페이지에 정보를 전달
+        model.addAttribute("performance", performance);
+        model.addAttribute("naverClientId", naverClientId);
+        return "/performance/performanceDetail";
+    }
+
+
+
+    @GetMapping("/getPerformanceCode")
+    public ResponseEntity<Map<String, String>> getPerformanceCode(@RequestParam("performanceTitle") String performanceTitle) {
+        String performanceCode = performanceDBService.getPerformanceCodeByTitle(performanceTitle);
+        Map<String, String> response = new HashMap<>();
+        response.put("performanceCode", performanceCode);
+        return ResponseEntity.ok(response);
+    }
+
 
 
 

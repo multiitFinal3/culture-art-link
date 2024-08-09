@@ -185,25 +185,8 @@
 
 
 
-<!--    <select id="getReview" resultType="CulturalPropertiesReviewDTO">-->
-<!--        SELECT *-->
-<!--        FROM cultural_properties_review-->
-<!--        WHERE cultural_properties_id = #{culturalPropertiesId}-->
-<!--        LIMIT #{pageable.offset}, #{pageable.pageSize}-->
-<!--    </select>-->
-
-
-<!--    <select id="getReview" resultType="CulturalPropertiesReviewDTO">-->
-<!--        SELECT *-->
-<!--        FROM cultural_properties_review-->
-<!--        WHERE cultural_properties_id = #{culturalPropertiesId}-->
-<!--        ORDER BY created_at DESC-->
-<!--        LIMIT #{pageable.pageSize} OFFSET #{pageable.offset}-->
-<!--    </select>-->
-
-
     <select id="getReview" parameterType="map" resultType="CulturalPropertiesReviewDTO">
-        SELECT r.id, r.cultural_properties_id, r.user_id, r.star, r.content,
+        SELECT r.id, r.cultural_properties_id, r.user_id, r.star, r.content, r.created_at, r.updated_at,
         u.user_name, u.user_profile_pic AS userProfileImage
         FROM cultural_properties_review r
         JOIN user u ON r.user_id = u.user_id
@@ -212,15 +195,6 @@
         LIMIT #{pageable.pageSize} OFFSET #{pageable.offset}
     </select>
 
-<!--    <select id="getReview" resultType="CulturalPropertiesReviewDTO">-->
-<!--        SELECT r.id, r.cultural_properties_id, r.user_id, r.star, r.content,-->
-<!--        u.user_name, u.user_profile_pic AS userProfileImage-->
-<!--        FROM cultural_properties_review r-->
-<!--        JOIN user u ON r.user_id = u.user_id-->
-<!--        WHERE r.cultural_properties_id = #{culturalPropertiesId}-->
-<!--        ORDER BY created_at DESC-->
-<!--        LIMIT #{pageable.pageSize} OFFSET #{pageable.offset}-->
-<!--    </select>-->
 
 
     <select id="countReview" resultType="int">
@@ -228,6 +202,14 @@
         FROM cultural_properties_review
         WHERE cultural_properties_id = #{culturalPropertiesId}
     </select>
+
+
+    <select id="averageRating" parameterType="int" resultType="double">
+        SELECT  COALESCE(AVG(star),0)
+        FROM cultural_properties_review
+        WHERE cultural_properties_id = #{culturalPropertiesId}
+    </select>
+
 
 
 

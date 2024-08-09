@@ -2,6 +2,7 @@ package com.multi.culture_link.admin.exhibition.model.dao;
 
 import com.multi.culture_link.admin.exhibition.model.dto.api.ExhibitionApiDto;
 import com.multi.culture_link.admin.exhibition.model.dto.api.ExhibitionKeywordDto;
+import com.multi.culture_link.admin.exhibition.model.dto.api.ExhibitionKeywordPageDto;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -16,6 +17,7 @@ public interface ExhibitionKeywordDao {
     List<ExhibitionKeywordDto> getExhibitionKeyword(int exhibitionId);
     List<ExhibitionKeywordDto> getExhibitionCommentKeyword(int exhibitionId);
 
+    List<ExhibitionKeywordPageDto> getExhibitionAllKeyword(String nextCursor, int size);
 
     List<String> getExhibitionKeywordById(int exhibitionId);
     void updateUserKeyword(int userId, String keyword, int countChange);

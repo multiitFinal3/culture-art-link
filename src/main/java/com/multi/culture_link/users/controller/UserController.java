@@ -5,10 +5,12 @@ import com.multi.culture_link.common.region.model.dto.RegionDTO;
 import com.multi.culture_link.common.region.service.RegionService;
 import com.multi.culture_link.festival.model.dto.UserFestivalLoveHateMapDTO;
 import com.multi.culture_link.festival.service.FestivalService;
+import com.multi.culture_link.file.controller.FileController;
 import com.multi.culture_link.users.model.dto.UserDTO;
 import com.multi.culture_link.users.model.dto.VWUserRoleDTO;
 import com.multi.culture_link.users.model.mapper.UserMapper;
 import com.multi.culture_link.users.service.UserService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -18,10 +20,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -37,13 +35,21 @@ public class UserController {
 	private final FestivalService festivalService;
 	private final RegionService regionService;
 	private final BCryptPasswordEncoder bCryptPasswordEncoder;
+	private final FileController fileController;
 	
-	public UserController(UserService userService, UserMapper userMapper, FestivalService festivalService, RegionService regionService, BCryptPasswordEncoder bCryptPasswordEncoder) {
+	@Value("${cloud.aws.s3.endpoint}")
+	private String endPoint;
+	
+	@Value("${cloud.aws.s3.bucket}")
+	private String bucket;
+	
+	public UserController(UserService userService, UserMapper userMapper, FestivalService festivalService, RegionService regionService, BCryptPasswordEncoder bCryptPasswordEncoder, FileController fileController) {
 		this.userService = userService;
 		this.userMapper = userMapper;
 		this.festivalService = festivalService;
 		this.regionService = regionService;
 		this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+		this.fileController = fileController;
 	}
 	
 	/**
@@ -72,38 +78,48 @@ public class UserController {
 	 * @param festivalSelectKeyword
 	 */
 	@PostMapping("/signUp")
-	public void signUpPost(@RequestParam("uploadFile") MultipartFile uploadFile, /*@RequestParam("userId") int userId,*/ @RequestParam("email") String email, @RequestParam("password") String password, @RequestParam("userName") String userName, @RequestParam("tel") String tel, @RequestParam("userAge") int userAge, @RequestParam("gender") String gender, @RequestParam("regionId") int regionId, @RequestParam("festivalSelectKeyword") String festivalSelectKeyword) {
+	@ResponseBody
+	public void signUpPost(@RequestParam(name = "uploadFile", required = false) MultipartFile uploadFile, @RequestParam(name = "email") String email, @RequestParam(name = "password") String password, @RequestParam(name = "userName") String userName, @RequestParam(name = "tel", required = false) String tel, @RequestParam(name = "userAge", required = false) int userAge, @RequestParam(name = "gender") String gender, @RequestParam(name = "regionId") int regionId, @RequestParam(name = "festivalSelectKeyword", required = false) String festivalSelectKeyword) {
 		
 		// 회원 users/ admin 넣는 것도 추가할 것 = > 매핑 테이블에도 조인으로 추가하기
 		int result = 0;
 		UserDTO userDTO = new UserDTO();
 		
-		String fileUUIDName = UUID.randomUUID().toString() + "_" + uploadFile.getOriginalFilename();
-		String uploadDir = System.getProperty("user.dir") + "/src/main/resources/static/img/user/userProfile/";
+		String attachment = "";
+		
 		try {
-			Files.createDirectories(Paths.get(uploadDir));
-			File savedFile = new File(uploadDir + fileUUIDName);
 			
-			System.out.println("savedFile.getAbsolutePath() : " + savedFile.getAbsolutePath());
-			System.out.println("savedFile.getName() : " + savedFile.getName());
-			System.out.println("path : " + savedFile.getPath());
-			System.out.println(System.getProperty("user.dir"));
+			if (uploadFile != null) {
+				
+				String fileUUIDName = UUID.randomUUID().toString() + "_" + uploadFile.getOriginalFilename();
+				attachment = "/user/userProfile/" + fileUUIDName.trim();
+				// 네이버 스토리지 사용
+				fileController.uploadFile(uploadFile, attachment);
+				
+			}
 			
-			uploadFile.transferTo(savedFile);
-			
-			String attachment = uploadDir + fileUUIDName;
-			
-			int startIndex = attachment.indexOf("/img");
-			System.out.println(startIndex);
-			attachment = attachment.substring(startIndex);
-			
-			
-			userDTO.setUserProfilePic(attachment);
-			
-			
-		} catch (IOException e) {
+		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
+		
+		//			String uploadDir = System.getProperty("user.dir") + "/src/main/resources/static/img/user/userProfile/";
+//			Files.createDirectories(Paths.get(uploadDir));
+//			File savedFile = new File(uploadDir + fileUUIDName);
+//
+//			System.out.println("savedFile.getAbsolutePath() : " + savedFile.getAbsolutePath());
+//			System.out.println("savedFile.getName() : " + savedFile.getName());
+//			System.out.println("path : " + savedFile.getPath());
+//			System.out.println(System.getProperty("user.dir"));
+//
+//			uploadFile.transferTo(savedFile);
+//
+//			String attachment = uploadDir + fileUUIDName;
+//
+//			int startIndex = attachment.indexOf("/img");
+//			System.out.println(startIndex);
+//			attachment = attachment.substring(startIndex);
+		
+		userDTO.setUserProfilePic(attachment);
 		
 		
 		userDTO.setEmail(email);
@@ -143,19 +159,24 @@ public class UserController {
 		}
 		
 		
-		String[] list = festivalSelectKeyword.trim().split(" ");
-		for (String s : list) {
+		if (festivalSelectKeyword != null) {
 			
-			try {
+			String[] list = festivalSelectKeyword.trim().split(" ");
+			for (String s : list) {
 				
-				UserFestivalLoveHateMapDTO mapDTO = new UserFestivalLoveHateMapDTO();
-				mapDTO.setFestivalKeywordId(s);
-				mapDTO.setSortCode("L");
-				mapDTO.setUserId(userId);
-				mapDTO.setFestivalCount(15);
-				festivalService.insertUserSelectKeyword(mapDTO);
-			} catch (Exception e) {
-				throw new RuntimeException(e);
+				try {
+					
+					UserFestivalLoveHateMapDTO mapDTO = new UserFestivalLoveHateMapDTO();
+					mapDTO.setFestivalKeywordId(s);
+					mapDTO.setSortCode("L");
+					mapDTO.setUserId(userId);
+					mapDTO.setFestivalCount(15);
+					festivalService.insertUserSelectKeyword(mapDTO);
+				} catch (Exception e) {
+					throw new RuntimeException(e);
+				}
+				
+				
 			}
 			
 			
@@ -188,8 +209,24 @@ public class UserController {
 	public String myPage(@AuthenticationPrincipal VWUserRoleDTO user, Model model) {
 		
 		UserDTO userDTO = user.getUserDTO();
-		System.out.println("userdto" + userDTO);
-		System.out.println("pr : " + user.getUserProfilePic());
+		System.out.println("user : " + userDTO);
+		
+		if (userDTO.getUserProfilePic().contains(endPoint.trim() + "/" + bucket.trim())) {
+			
+			userDTO.setUserProfilePic(userDTO.getUserProfilePic().replaceAll(endPoint.trim() + "/" + bucket.trim(), "").trim());
+			
+		}
+		
+		
+		// 네이버 스토리지 이용
+		String storageLink = endPoint.trim() + "/" + bucket.trim();
+		
+		if ((userDTO.getUserProfilePic().trim() != null) && (!userDTO.getUserProfilePic().trim().equals(""))) {
+			
+			userDTO.setUserProfilePic(storageLink + userDTO.getUserProfilePic().trim());
+			
+		}
+		
 		
 		model.addAttribute("user", userDTO);
 /*		model.addAttribute("gender", user.getGender());
@@ -257,32 +294,32 @@ public class UserController {
 	public void updateUserAccount(@AuthenticationPrincipal VWUserRoleDTO user, @RequestParam(name = "file", required = false) MultipartFile file, @RequestParam("email") String email, @RequestParam("password") String password, @RequestParam("userName") String userName, @RequestParam("tel") String tel, @RequestParam("userAge") int userAge, @RequestParam("gender") String gender, @RequestParam("regionId") int regionId) {
 		
 		String attachment = "";
+		UserDTO userDTO = new UserDTO();
 		
 		try {
 			
 			if (file != null) {
+				
+				// 프로젝트 폴더에 저장
+//				String fileUUIDName = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
+//				String uploadDir = System.getProperty("user.dir") + "/src/main/resources/static/img/user/userProfile/";
+//				System.out.println("???");
+//				Files.createDirectories(Paths.get(uploadDir));
+//				System.out.println("id : " + file);
+//				File savedFile = new File(uploadDir + fileUUIDName);
+//				System.out.println("savedFile.getAbsolutePath() : " + savedFile.getAbsolutePath());
+//				System.out.println("savedFile.getName() : " + savedFile.getName());
+//				System.out.println("path : " + savedFile.getPath());
+//				System.out.println(System.getProperty("user.dir"));
+//				file.transferTo(savedFile);
+//				attachment = uploadDir + fileUUIDName;
+//				int startIndex = attachment.indexOf("/img");
+//				attachment = attachment.substring(startIndex);
+				
 				String fileUUIDName = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
-				String uploadDir = System.getProperty("user.dir") + "/src/main/resources/static/img/user/userProfile/";
-				
-				
-				System.out.println("???");
-				
-				Files.createDirectories(Paths.get(uploadDir));
-				System.out.println("id : " + file);
-				
-				File savedFile = new File(uploadDir + fileUUIDName);
-				
-				System.out.println("savedFile.getAbsolutePath() : " + savedFile.getAbsolutePath());
-				System.out.println("savedFile.getName() : " + savedFile.getName());
-				System.out.println("path : " + savedFile.getPath());
-				System.out.println(System.getProperty("user.dir"));
-				
-				file.transferTo(savedFile);
-				
-				attachment = uploadDir + fileUUIDName;
-				int startIndex = attachment.indexOf("/img");
-				attachment = attachment.substring(startIndex);
-				
+				attachment = "/user/userProfile/" + fileUUIDName.trim();
+				// 네이버 스토리지 사용
+				fileController.uploadFile(file, attachment);
 				
 			}
 			
@@ -290,8 +327,6 @@ public class UserController {
 			throw new RuntimeException(e);
 		}
 		
-		
-		UserDTO userDTO = new UserDTO();
 		userDTO.setUserId(user.getUserId());
 		userDTO.setUserProfilePic(attachment);
 		userDTO.setEmail(email);
@@ -307,7 +342,6 @@ public class UserController {
 		} else {
 			userDTO.setPassword(password);
 		}
-		
 		
 		userDTO.setUserName(userName);
 		userDTO.setTel(tel);
@@ -420,4 +454,20 @@ public class UserController {
 	}
 	
 	
+	@PostMapping("/validateSameEmail")
+	@ResponseBody
+	public UserDTO validateSameEmail(@RequestParam(name = "email") String email) {
+		
+		UserDTO user = null;
+		
+		try {
+			user = userService.findUserByEmail(email);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+		
+		System.out.println("user : " + user);
+		return user;
+		
+	}
 }

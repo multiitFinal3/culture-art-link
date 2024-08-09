@@ -221,9 +221,20 @@ public class AdminCulturalPropertiesController {
 
 	// 	return filteredList;
 	// }
-
-
-
+	
+	
+	
+	@PostMapping("/findtotalDBData")
+	@ResponseBody
+	public ArrayList<CulturalPropertiesDTO> findtotalDBData(){
+		
+		ArrayList<CulturalPropertiesDTO> list = adminCulturalPropertiesService.findtotalDBData();
+		
+		System.out.println("total db : "  + list);
+		
+		return list;
+		
+	}
 
 }
 

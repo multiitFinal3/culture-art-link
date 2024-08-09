@@ -71,6 +71,23 @@
         WHERE ei.user_id = #{userId} AND ei.state = 'not_interested'
     </select>
 
+    <delete id="removeInterest">
+        DELETE FROM exhibition_interested
+        WHERE user_id = #{userId} AND exhibition_id = #{exhibitionId}
+    </delete>
+
+    <select id="getExhibitionKeywords" resultType="string">
+        SELECT keyword
+        FROM exhibition_keyword
+        WHERE exhibition_id = #{exhibitionId}
+    </select>
+
+    <update id="updateUserKeyword">
+        UPDATE exhibition_interested_keyword
+        SET count = count + #{countChange}
+        WHERE user_id = #{userId} AND keyword = #{keyword}
+    </update>
+
 
 
 

@@ -1,25 +1,22 @@
 package com.multi.culture_link.exhibition.service;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 import com.multi.culture_link.admin.exhibition.model.dao.ExhibitionKeywordDao;
 import com.multi.culture_link.admin.exhibition.model.dto.api.ExhibitionApiDto;
 import com.multi.culture_link.admin.exhibition.model.dto.api.ExhibitionKeywordDto;
+import com.multi.culture_link.admin.exhibition.model.dto.api.ExhibitionKeywordPageDto;
+import com.multi.culture_link.admin.exhibition.model.dto.api.PageResponseDto;
 import com.multi.culture_link.culturalProperties.model.dto.Video;
 import com.multi.culture_link.culturalProperties.model.dto.YoutubeConfig;
 import com.multi.culture_link.exhibition.model.dao.ExhibitionDao;
 import com.multi.culture_link.exhibition.model.dto.ExhibitionDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import okhttp3.Request;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
@@ -57,6 +54,8 @@ public class ExhibitionService {
 
         // 새로운 상태가 현재 상태와 같으면 아무 것도 하지 않음
         if (state != null && state.equals(currentState)) {
+            //delete logic 추가
+
             return;
         }
 
@@ -127,6 +126,22 @@ public class ExhibitionService {
 
         result.put("keyword", exhibitionKeyword);
         result.put("keywordComment", exhibitionCommentKeyword);
+
+        return result;
+    }
+
+
+    @Transactional
+    public PageResponseDto<ExhibitionKeywordPageDto> getAllKeyword(String cursor, int size) {
+        List<ExhibitionKeywordPageDto> exhibitionAllKeyword = exhibitionKeywordDao.getExhibitionAllKeyword(cursor, size);
+
+        String nextCursor = "";
+        ExhibitionKeywordPageDto lastItem = exhibitionAllKeyword.get(exhibitionAllKeyword.size() - 1);
+        nextCursor = lastItem.getNextCursor();
+
+        PageResponseDto<ExhibitionKeywordPageDto> result = new PageResponseDto<ExhibitionKeywordPageDto>();
+        result.setData(exhibitionAllKeyword);
+        result.setNextCursor(nextCursor);
 
         return result;
     }

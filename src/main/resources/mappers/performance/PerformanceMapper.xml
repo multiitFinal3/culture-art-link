@@ -36,8 +36,15 @@
     </select>
 
 
-    <select id="getPerformanceById" resultType="com.multi.culture_link.admin.performance.model.dto.PerformanceDTO">
-        SELECT * FROM performance_info WHERE id = #{performanceId}
+    <!--상세정보가져오려고-->
+    <select id="getPerformanceByCode" parameterType="String" resultType="com.multi.culture_link.admin.performance.model.dto.PerformanceDTO">
+        SELECT * FROM performance_info WHERE code = #{performanceCode}
     </select>
+
+    <select id="getPerformanceByTitle" parameterType="String" resultType="com.multi.culture_link.admin.performance.model.dto.PerformanceDTO">
+        SELECT * FROM performance_info WHERE title = #{performanceTitle}
+    </select>
+
+
 
 </mapper>

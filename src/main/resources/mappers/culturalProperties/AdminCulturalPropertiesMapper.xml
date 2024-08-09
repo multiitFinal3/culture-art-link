@@ -113,4 +113,10 @@
     </update>
 
 
+    <select id="findtotalDBData" resultType="culturalPropertiesDTO">
+
+        SELECT * FROM cultural_properties;
+
+    </select>
+
 </mapper>
