@@ -389,7 +389,8 @@
 
     <select id="findDBFestivalAllList" resultType="festivalDTO">
 
-        SELECT * FROM festival;
+        SELECT * FROM festival
+        ORDER BY festival_id DESC;
 
     </select>
 

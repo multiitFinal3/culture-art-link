@@ -137,7 +137,7 @@ $(document).ready(
         function findDBFestivalAllList(){
 
             $('#list1').html("");
-
+            $('#pageNum1').html("");
 
             $.ajax({
 

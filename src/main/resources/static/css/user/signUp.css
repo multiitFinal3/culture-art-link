@@ -59,7 +59,16 @@
         margin: 3%;
         text-align: center;
         display: flex;
+        max-width: 650px;
 
+    }
+
+    .festivalKeywordBtn{
+
+        min-width: 150px;
+        max-width: 150px;
+        max-height: 45px;
+        min-height: 45px;
     }
 
     .hasLove{
