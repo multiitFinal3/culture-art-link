@@ -2,6 +2,9 @@ package com.multi.culture_link.culturalProperties.model.dto;
 
 import lombok.Data;
 
+import java.util.Date;
+
+
 @Data
 public class CulturalPropertiesReviewDTO {
 
@@ -10,6 +13,8 @@ public class CulturalPropertiesReviewDTO {
 //	user_id INT not null,
 //	star INT not null,
 //	content varchar(500),
+//created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+//	updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 
 
 	private int id;
@@ -18,8 +23,14 @@ public class CulturalPropertiesReviewDTO {
 	private int star;
 	private String content;
 
+	private Date createdAt;
+	private Date updatedAt;
+
 	private String userName;
 	private String userProfileImage;
+
+	private double averageRating;
+
 
 }
 	

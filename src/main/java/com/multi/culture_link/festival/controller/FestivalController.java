@@ -5,6 +5,7 @@ import com.multi.culture_link.admin.festival.service.AdminFestivalService;
 import com.multi.culture_link.common.time.model.dto.TimeDTO;
 import com.multi.culture_link.festival.model.dto.*;
 import com.multi.culture_link.festival.service.FestivalService;
+import com.multi.culture_link.file.controller.FileController;
 import com.multi.culture_link.users.model.dto.VWUserRoleDTO;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -13,10 +14,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.UUID;
 
@@ -33,13 +30,22 @@ public class FestivalController {
 	
 	private final AdminFestivalService adminFestivalService;
 	private final FestivalService festivalService;
+	private final FileController fileController;
 	
 	@Value("${API-KEY.naverClientId}")
 	private String naverClientId;
 	
-	public FestivalController(AdminFestivalService adminFestivalService, FestivalService festivalService) {
+	@Value("${cloud.aws.s3.endpoint}")
+	private String endPoint;
+	
+	@Value("${cloud.aws.s3.bucket}")
+	private String bucket;
+	
+	
+	public FestivalController(AdminFestivalService adminFestivalService, FestivalService festivalService, FileController fileController) {
 		this.adminFestivalService = adminFestivalService;
 		this.festivalService = festivalService;
+		this.fileController = fileController;
 	}
 	
 	/**
@@ -481,6 +487,26 @@ public class FestivalController {
 		try {
 			list = festivalService.findFestivalReviewListByVWUserReviewDTO(vwUserReviewDataDTO);
 			
+			// 네이버 스토리지 이용
+			String storageLink = endPoint.trim() + "/" + bucket.trim();
+			
+			for (VWUserReviewDataDTO mapDTO : list) {
+				
+				if ((mapDTO.getAttachment().trim() != null) && (!mapDTO.getAttachment().trim().equals(""))) {
+					
+					mapDTO.setAttachment(storageLink + mapDTO.getAttachment().trim());
+					
+				}
+				
+				if ((mapDTO.getUserProfilePic().trim() != null) && (!mapDTO.getUserProfilePic().trim().equals(""))) {
+					
+					mapDTO.setUserProfilePic(storageLink + mapDTO.getUserProfilePic().trim());
+					
+				}
+				
+				
+			}
+			
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
@@ -519,56 +545,58 @@ public class FestivalController {
 	 * @return
 	 */
 	@PostMapping("/insertFestivalReview")
-	public String insertFestivalReview(@RequestParam("reviewTextArea") String reviewTextArea, @RequestParam("reviewStar") double reviewStar, @RequestParam("uploadFile") MultipartFile uploadFile, @RequestParam("festivalId") int festivalId, @AuthenticationPrincipal VWUserRoleDTO user) {
+	public String insertFestivalReview(@RequestParam("reviewTextArea") String reviewTextArea, @RequestParam("reviewStar") int reviewStar, @RequestParam("uploadFile") MultipartFile uploadFile, @RequestParam("festivalId") int festivalId, @AuthenticationPrincipal VWUserRoleDTO user) {
 		
-		try {
+		
+		// 프로젝트 폴더에 저장하는 방법
+//			String uploadDir = System.getProperty("user.dir") + "/src/main/resources/static/img/festival/reviewAttach/";
+//			Files.createDirectories(Paths.get(uploadDir));
+//
+//			System.out.println("id : " + festivalId);
+//
+//			File savedFile = new File(uploadDir + fileUUIDName);
+//
+//			System.out.println("savedFile.getAbsolutePath() : " + savedFile.getAbsolutePath());
+//			System.out.println("savedFile.getName() : " + savedFile.getName());
+//			System.out.println("path : " + savedFile.getPath());
+//			System.out.println(System.getProperty("user.dir"));
+//
+//			uploadFile.transferTo(savedFile);
+//
+//			String attachment = uploadDir + fileUUIDName;
+//			int startIndex = attachment.indexOf("/img");
+//			System.out.println(startIndex);
+//			attachment = attachment.substring(startIndex);
+		
+		VWUserReviewDataDTO userReviewDataDTO = new VWUserReviewDataDTO();
+		
+		if (uploadFile != null) {
 			
 			String fileUUIDName = UUID.randomUUID().toString() + "_" + uploadFile.getOriginalFilename();
-			String uploadDir = System.getProperty("user.dir") + "/src/main/resources/static/img/festival/reviewAttach/";
-			Files.createDirectories(Paths.get(uploadDir));
-			
-			System.out.println("id : " + festivalId);
-			
-			File savedFile = new File(uploadDir + fileUUIDName);
-			
-			System.out.println("savedFile.getAbsolutePath() : " + savedFile.getAbsolutePath());
-			System.out.println("savedFile.getName() : " + savedFile.getName());
-			System.out.println("path : " + savedFile.getPath());
-			System.out.println(System.getProperty("user.dir"));
-			
-			uploadFile.transferTo(savedFile);
-			
-			String attachment = uploadDir + fileUUIDName;
-			
-			VWUserReviewDataDTO userReviewDataDTO = new VWUserReviewDataDTO();
-			userReviewDataDTO.setFestivalId(festivalId);
-			userReviewDataDTO.setFestivalReviewStar(reviewStar);
-			
-			reviewTextArea = reviewTextArea.trim();
-			
-			userReviewDataDTO.setFestivalReviewContent(reviewTextArea);
-			
-			int userId = user.getUserId();
-			
-			
-			int startIndex = attachment.indexOf("/img");
-			System.out.println(startIndex);
-			attachment = attachment.substring(startIndex);
-			
-			
+			String attachment = "/festival/reviewAttach/" + fileUUIDName.trim();
+			// 네이버 스토리지 사용
+			fileController.uploadFile(uploadFile, attachment);
 			userReviewDataDTO.setAttachment(attachment);
-			userReviewDataDTO.setUserId(userId);
-			
-			System.out.println("controller userReviewDTO : " + userReviewDataDTO);
-			
-			try {
-				festivalService.insertFestivalReview(userReviewDataDTO);
-			} catch (Exception e) {
-				throw new RuntimeException(e);
-			}
-			
-			
-		} catch (IOException e) {
+		}
+		
+		
+		userReviewDataDTO.setFestivalId(festivalId);
+		userReviewDataDTO.setFestivalReviewStar(reviewStar);
+		
+		reviewTextArea = reviewTextArea.trim();
+		
+		userReviewDataDTO.setFestivalReviewContent(reviewTextArea);
+		
+		int userId = user.getUserId();
+		
+		
+		userReviewDataDTO.setUserId(userId);
+		
+		System.out.println("controller userReviewDTO : " + userReviewDataDTO);
+		
+		try {
+			festivalService.insertFestivalReview(userReviewDataDTO);
+		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
 		
@@ -604,8 +632,7 @@ public class FestivalController {
 	 * @return
 	 */
 	@PostMapping("/updateFestivalReview")
-	@ResponseBody
-	public String updateFestivalReview(@RequestParam("festivalReviewId") int festivalReviewId, @RequestParam("reviewText") String reviewText, @RequestParam("reviewStar") double reviewStar) {
+	public String updateFestivalReview(@RequestParam("festivalId") int festivalId, @RequestParam("festivalReviewId") int festivalReviewId, @RequestParam("reviewText") String reviewText, @RequestParam("reviewStar") int reviewStar) {
 		
 		try {
 			
@@ -618,7 +645,7 @@ public class FestivalController {
 			throw new RuntimeException(e);
 		}
 		
-		return "수정 성공";
+		return "redirect:/festival/festival-detail?festivalId=" + festivalId;
 	}
 	
 	
@@ -947,9 +974,11 @@ public class FestivalController {
 	public ArrayList<FestivalDTO> findKeywordRecommendFestivalList(@AuthenticationPrincipal VWUserRoleDTO user) {
 		
 		int userId = user.getUserId();
+		System.out.println("유저 추천 리스트 컨트롤러");
 		ArrayList<FestivalContentReviewNaverKeywordMapDTO> mapDTOS = null;
 		try {
 			mapDTOS = festivalService.findUserLoveKeywordList(userId);
+			System.out.println("mapDTOS : " + mapDTOS);
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
@@ -959,6 +988,7 @@ public class FestivalController {
 		for (FestivalContentReviewNaverKeywordMapDTO mapDTO : mapDTOS) {
 			
 			String festivalKeywordId = mapDTO.getFestivalKeywordId();
+			System.out.println("festivalKeywordId : " + festivalKeywordId);
 			ArrayList<FestivalDTO> allList = null;
 			try {
 				allList = festivalService.findSameKeywordFestivalByKeywordId(festivalKeywordId);
@@ -1072,6 +1102,30 @@ public class FestivalController {
 		
 		try {
 			list = festivalService.findFestivalReviewListByUserId(vwUserReviewDataDTO);
+			
+			// 네이버 스토리지 이용
+			String storageLink = endPoint.trim() + "/" + bucket.trim();
+			
+			for (VWUserReviewDataDTO mapDTO : list) {
+				
+				if ((mapDTO.getAttachment().trim() != null) && (!mapDTO.getAttachment().trim().equals(""))) {
+					
+					mapDTO.setAttachment(storageLink + mapDTO.getAttachment().trim());
+					
+				}
+				
+				if ((mapDTO.getUserProfilePic().trim() != null) && (!mapDTO.getUserProfilePic().trim().equals(""))) {
+					
+					mapDTO.setUserProfilePic(storageLink + mapDTO.getUserProfilePic().trim());
+					
+				}
+				
+				
+			}
+			
+			
+			
+			
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
@@ -1087,7 +1141,6 @@ public class FestivalController {
 	 * 특정 유저의 축제의 리뷰 전부를 리뷰 페이지 번호에 맞게 가져오기
 	 *
 	 * @param user
-	 *
 	 * @return
 	 */
 	@PostMapping("/findUserReviewCount")
@@ -1112,7 +1165,6 @@ public class FestivalController {
 		return count;
 		
 	}
-	
 	
 	
 	/**
@@ -1144,7 +1196,6 @@ public class FestivalController {
 	}
 	
 	
-	
 	/**
 	 * 특정 유저의 카운트 10 미만의 찜(L) 키워드를 가져오기
 	 *
@@ -1152,7 +1203,7 @@ public class FestivalController {
 	 */
 	@PostMapping("/findFestivalSmallLoveKeyword")
 	@ResponseBody
-	public ArrayList<FestivalContentReviewNaverKeywordMapDTO> findFestivalSmallLoveKeyword(@AuthenticationPrincipal VWUserRoleDTO user,@RequestParam("page") int page) {
+	public ArrayList<FestivalContentReviewNaverKeywordMapDTO> findFestivalSmallLoveKeyword(@AuthenticationPrincipal VWUserRoleDTO user, @RequestParam("page") int page) {
 		
 		UserFestivalLoveHateMapDTO mapDTO = new UserFestivalLoveHateMapDTO();
 		int userId = user.getUserId();
@@ -1175,9 +1226,6 @@ public class FestivalController {
 		return list;
 		
 	}
-	
-	
-	
 	
 	
 	/**
@@ -1209,8 +1257,6 @@ public class FestivalController {
 	}
 	
 	
-	
-	
 	/**
 	 * 특정 유저의 카운트 10 미만의 관심없음(H) 키워드를 가져오기
 	 *
@@ -1218,7 +1264,7 @@ public class FestivalController {
 	 */
 	@PostMapping("/findFestivalSmallHateKeyword")
 	@ResponseBody
-	public ArrayList<FestivalContentReviewNaverKeywordMapDTO> findFestivalSmallHateKeyword(@AuthenticationPrincipal VWUserRoleDTO user,@RequestParam("page") int page) {
+	public ArrayList<FestivalContentReviewNaverKeywordMapDTO> findFestivalSmallHateKeyword(@AuthenticationPrincipal VWUserRoleDTO user, @RequestParam("page") int page) {
 		
 		UserFestivalLoveHateMapDTO mapDTO = new UserFestivalLoveHateMapDTO();
 		int userId = user.getUserId();
@@ -1241,10 +1287,6 @@ public class FestivalController {
 		return list;
 		
 	}
-	
-	
-	
-	
 	
 	
 }

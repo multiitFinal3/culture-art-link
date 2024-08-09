@@ -38,6 +38,12 @@ public class PerformanceDBService { // 상세데이터, 외부 API로부터 공�
     @Autowired
     private NaverMapService naverMapService;
 
+
+
+
+
+
+
     private static final String DETAIL_URL = "http://www.kopis.or.kr/openApi/restful/pblprfr/%s?service=a0cfef9bedc443bc9153b8b024d1b1dc&newsql=Y";
 
     // 모든 공연 데이터
@@ -77,9 +83,9 @@ public class PerformanceDBService { // 상세데이터, 외부 API로부터 공�
     }
 
     // 특정 공연 ID에 대해 API를 호출해 상세 데이터를 가져오기
-    private PerformanceDTO fetchDetailData(String id) throws IOException {
+    private PerformanceDTO fetchDetailData(String performanceCode) throws IOException {
         CloseableHttpClient httpClient = HttpClients.createDefault();
-        HttpGet httpGet = new HttpGet(String.format(DETAIL_URL, id));
+        HttpGet httpGet = new HttpGet(String.format(DETAIL_URL, performanceCode));
         CloseableHttpResponse httpResponse = httpClient.execute(httpGet);
 
         BufferedReader br = new BufferedReader(new InputStreamReader(httpResponse.getEntity().getContent()));
@@ -93,7 +99,7 @@ public class PerformanceDBService { // 상세데이터, 외부 API로부터 공�
 
         PerformanceDTO performance = parseXML(res.toString());
         if (performance == null) {
-            System.out.println("Performance data is null for ID: " + id);
+            System.out.println("Performance data is null for CODE: " + performanceCode);
         }
         return performance;
     }
@@ -195,8 +201,8 @@ public class PerformanceDBService { // 상세데이터, 외부 API로부터 공�
     }
 
     // 특정 공연 ID에 해당하는 공연 정보를 반환하는 메소드
-    public PerformanceDTO getPerformanceById(int performanceId) {
-        PerformanceDTO performance = performanceMapper.getPerformanceById(performanceId);
+    public PerformanceDTO getPerformanceByCode(String performanceCode) {
+        PerformanceDTO performance = performanceMapper.getPerformanceByCode(performanceCode);
         if (performance != null) {
             performance.updateFormattedDate(); // 날짜 포맷 업데이트
 
@@ -209,5 +215,20 @@ public class PerformanceDBService { // 상세데이터, 외부 API로부터 공�
             }
         }
         return performance;
+    }
+
+
+
+
+
+    // 공연명을 통해 공연 정보를 검색하는 메서드
+    // 공연명을 통해 공연 정보를 검색하는 메서드
+    public PerformanceDTO getPerformanceByTitle(String performanceTitle) {
+        return performanceMapper.getPerformanceByTitle(performanceTitle);
+    }
+
+    public String getPerformanceCodeByTitle(String performanceTitle) {
+        PerformanceDTO performance = performanceMapper.getPerformanceByTitle(performanceTitle);
+        return performance != null ? performance.getCode() : null;
     }
 }

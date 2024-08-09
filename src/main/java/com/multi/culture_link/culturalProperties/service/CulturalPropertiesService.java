@@ -14,9 +14,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.XML;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.*;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -169,6 +167,32 @@ public class CulturalPropertiesService {
         return false; // 삭제 실패
     }
 
+
+    public boolean updateReview(int id, int culturalPropertiesId, CulturalPropertiesReviewDTO reviewDTO) {
+
+        CulturalPropertiesReviewDTO review = culturalPropertiesDAO.findByReviewId(id);
+
+        // 리뷰가 존재하고, 문화재 ID가 일치하는지 확인
+        if (review != null && review.getCulturalPropertiesId() == culturalPropertiesId) {
+            review.setContent(reviewDTO.getContent()); // 수정할 내용 설정
+            review.setStar(reviewDTO.getStar()); // 별점 수정
+            culturalPropertiesDAO.updateReview(review); // 리뷰 업데이트
+            return true; // 수정 성공
+        }
+        return false; // 수정 실패
+    }
+
+
+
+    public Page<CulturalPropertiesReviewDTO> getReviewsByCulturalPropertiesId(int culturalPropertiesId, Pageable pageable) {
+        List<CulturalPropertiesReviewDTO> reviews = culturalPropertiesDAO.getReview(culturalPropertiesId, pageable);
+        int totalReviews = culturalPropertiesDAO.countReview(culturalPropertiesId); // 총 리뷰 개수 가져오기
+        return new PageImpl<>(reviews, pageable, totalReviews); // PageImpl 사용하여 Page 객체 생성
+    }
+
+    public double averageRating(int culturalPropertiesId) {
+        return culturalPropertiesDAO.averageRating(culturalPropertiesId);
+    }
 
 
 

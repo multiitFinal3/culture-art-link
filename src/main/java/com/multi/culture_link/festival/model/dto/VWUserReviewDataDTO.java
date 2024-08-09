@@ -8,7 +8,7 @@ public class VWUserReviewDataDTO {
 	private int festivalReviewId;
 	private int userId;
 	private int festivalId;
-	private double festivalReviewStar;
+	private int festivalReviewStar;
 	private String festivalReviewContent;
 	private String attachment;
 	private String userName;

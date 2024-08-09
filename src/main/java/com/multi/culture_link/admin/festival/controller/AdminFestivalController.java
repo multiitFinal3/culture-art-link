@@ -1072,26 +1072,32 @@ public class AdminFestivalController {
 		
 		for (HashMap<String, Integer> map : list) {
 			
-			for (Map.Entry<String, Integer> entry : map.entrySet()) {
+			if (map != null) {
 				
-				FestivalKeywordDTO festivalKeywordDTO = new FestivalKeywordDTO();
-				festivalKeywordDTO.setFestivalKeywordId(entry.getKey());
-				keys.add(entry.getKey());
-				festivalKeywordDTO.setFreq(entry.getValue());
-				
-				DictionaryDTO dictionaryDTO = new DictionaryDTO();
-				
-				Query query = new Query(new Criteria("word").is(entry.getKey()));
-				dictionaryDTO = mongoTemplate.findOne(query, DictionaryDTO.class, "dictionary");
-				if (dictionaryDTO != null) {
-					festivalKeywordDTO.setEmotionStat(dictionaryDTO.getPolarity());
-				} else {
-					festivalKeywordDTO.setEmotionStat(0);
+				for (Map.Entry<String, Integer> entry : map.entrySet()) {
+					
+					FestivalKeywordDTO festivalKeywordDTO = new FestivalKeywordDTO();
+					festivalKeywordDTO.setFestivalKeywordId(entry.getKey());
+					keys.add(entry.getKey());
+					festivalKeywordDTO.setFreq(entry.getValue());
+					
+					DictionaryDTO dictionaryDTO = new DictionaryDTO();
+					
+					Query query = new Query(new Criteria("word").is(entry.getKey()));
+					dictionaryDTO = mongoTemplate.findOne(query, DictionaryDTO.class, "dictionary");
+					if (dictionaryDTO != null) {
+						festivalKeywordDTO.setEmotionStat(dictionaryDTO.getPolarity());
+					} else {
+						festivalKeywordDTO.setEmotionStat(0);
+					}
+					
+					keywordList.add(festivalKeywordDTO);
+					
 				}
 				
-				keywordList.add(festivalKeywordDTO);
 				
 			}
+			
 			
 		}
 		
@@ -1146,12 +1152,13 @@ public class AdminFestivalController {
 	
 	/**
 	 * 네이버 블로그 키워드를 삽입
+	 *
 	 * @param festivalId
 	 * @return
 	 */
 	@PostMapping("/insertNaverBlogKeywordByFestivalId")
 	@ResponseBody
-	public ArrayList<String> insertNaverBlogKeywordByFestivalId(@RequestParam("festivalId") int festivalId){
+	public ArrayList<String> insertNaverBlogKeywordByFestivalId(@RequestParam("festivalId") int festivalId) {
 		
 		ArrayList<HashMap<String, Integer>> list = new ArrayList<HashMap<String, Integer>>();
 		
@@ -1243,12 +1250,13 @@ public class AdminFestivalController {
 	
 	/**
 	 * 사이트 리뷰 키워드를 삽입
+	 *
 	 * @param festivalId
 	 * @return
 	 */
 	@PostMapping("/insertReviewKeywordByFestivalId")
 	@ResponseBody
-	public ArrayList<String> insertReviewKeywordByFestivalId(@RequestParam("festivalId") int festivalId){
+	public ArrayList<String> insertReviewKeywordByFestivalId(@RequestParam("festivalId") int festivalId) {
 		
 		ArrayList<HashMap<String, Integer>> list = new ArrayList<HashMap<String, Integer>>();
 		
@@ -1336,9 +1344,6 @@ public class AdminFestivalController {
 		return keys;
 		
 	}
-	
-	
-	
 	
 	
 }

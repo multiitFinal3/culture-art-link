@@ -4,7 +4,6 @@ import com.multi.culture_link.admin.culturalProperties.model.dto.CulturalPropert
 import com.multi.culture_link.admin.culturalProperties.model.dto.PageDTO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
-import org.mybatis.spring.SqlSessionTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,6 +30,7 @@ public interface AdminCulturalPropertiesDAO {
     void deleteDBData(@Param("list") List<Integer> id);
 
     void updateDBData(@Param("list") List<CulturalPropertiesDTO> data);
-
-
+	
+	
+	ArrayList<CulturalPropertiesDTO> findtotalDBData();
 }

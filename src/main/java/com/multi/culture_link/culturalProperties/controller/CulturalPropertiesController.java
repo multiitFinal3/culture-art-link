@@ -4,33 +4,31 @@ package com.multi.culture_link.culturalProperties.controller;
 import com.multi.culture_link.admin.culturalProperties.model.dto.CulturalPropertiesDTO;
 import com.multi.culture_link.culturalProperties.model.dto.*;
 import com.multi.culture_link.culturalProperties.service.CulturalPropertiesService;
-import com.multi.culture_link.exhibition.model.dto.ExhibitionCommentDto;
-import com.multi.culture_link.exhibition.model.dto.ExhibitionDto;
-import com.multi.culture_link.festival.model.dto.FestivalDTO;
 import com.multi.culture_link.users.model.dto.VWUserRoleDTO;
 import jakarta.servlet.http.HttpSession;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.select.Elements;
 import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -215,20 +213,8 @@ public class CulturalPropertiesController {
 
 
 
-
-//	// 문화재 상세 페이지
-//	@GetMapping("/detail/{id}")
-////	@ResponseBody
-//	public String getCulturalPropertyDetail(@PathVariable int id, Model model) {
-//		CulturalPropertiesDTO property = culturalPropertiesService.getCulturalPropertyById(id);
-//		model.addAttribute("property", property);
-//		return "/culturalProperties/culturalPropertiesDetail";
-//	}
-
 	// 문화재 상세 페이지
 	@GetMapping("/detail/{id}")
-//	@ResponseBody
-	//	@ResponseBody
 	public String getCulturalPropertyDetail(@PathVariable int id, Model model) {
 		CulturalPropertiesDTO property = culturalPropertiesService.getCulturalPropertyById(id);
 
@@ -340,23 +326,6 @@ public class CulturalPropertiesController {
 //	}
 
 
-//	@GetMapping("/detail/{id}")
-//	public String getCulturalPropertyDetail(@PathVariable int id, Model model, @AuthenticationPrincipal UserDetails userDetails) {
-//		CulturalPropertiesDTO property = culturalPropertiesService.getCulturalPropertyById(id);
-//		int userId = userDetails.getId(); // 현재 로그인한 사용자 ID 가져오기
-//
-//		// 사용자의 찜 상태를 확인
-//		boolean isLiked = culturalPropertiesService.isPropertyLikedByUser(id, userId);
-//		boolean isDisliked = culturalPropertiesService.isPropertyDislikedByUser(id, userId);
-//
-//		model.addAttribute("property", property);
-//		model.addAttribute("isLiked", isLiked);
-//		model.addAttribute("isDisliked", isDisliked);
-//
-//		return "/culturalProperties/culturalPropertiesDetail";
-//	}
-
-
 
 	@GetMapping("/detail/{id}/review/detail")
 	public String culturalPropertiesReviewDetail(@PathVariable int id,
@@ -375,10 +344,15 @@ public class CulturalPropertiesController {
 			userName = vwUserRoleDTO.getUsername(); // 사용자 이름 가져오기
 		}
 
+		// 평균 평점 계산
+		double averageRating = culturalPropertiesService.averageRating(id);
+		model.addAttribute("averageRating", averageRating);
+
+
 		System.out.println("리뷰디테일 아이디 " + id);
 		model.addAttribute("property", property);
 		model.addAttribute("userName", user.getUsername()); // 사용자 이름 추가
-		model.addAttribute("userId", user.getUserId()); // 사용자 ID 추가
+		model.addAttribute("userId2", user.getUserId()); // 사용자 ID 추가
 		model.addAttribute("userName", userName);
 
 		if (property == null) {
@@ -445,23 +419,66 @@ public class CulturalPropertiesController {
 	}
 
 
-	@DeleteMapping("/detail/{id}/review/delete")
+
+	@DeleteMapping("/detail/{culturalPropertiesId}/review/remove")
 	public ResponseEntity<String> deleteReview(
-			@PathVariable int id,
+			@RequestParam int id,
 			@PathVariable int culturalPropertiesId,
 			@AuthenticationPrincipal VWUserRoleDTO user) {
 
 		// 현재 로그인한 사용자의 ID 가져오기
 		int userId = user.getUserId();
+		System.out.println("삭제 userId"+ userId);
 
+		System.out.println("삭제 요청: userId=" + userId + ", reviewId=" + id + ", culturalPropertiesId=" + culturalPropertiesId);
 		// 리뷰 삭제 서비스 호출
 		boolean deleted = culturalPropertiesService.deleteReview(id, culturalPropertiesId, userId);
 
 		if (deleted) {
 			return ResponseEntity.ok("리뷰가 성공적으로 삭제되었습니다.");
 		} else {
+			System.out.println("리뷰 삭제 실패: 권한이 없거나 리뷰가 존재하지 않음.");
 			return ResponseEntity.status(HttpStatus.FORBIDDEN).body("리뷰 삭제 권한이 없습니다.");
 		}
+	}
+
+
+
+
+	@PutMapping("/detail/{culturalPropertiesId}/review/update")
+	public ResponseEntity<String> updateReview(
+			@PathVariable int culturalPropertiesId,
+			@RequestParam int id,
+			@RequestBody CulturalPropertiesReviewDTO reviewDTO) {
+
+		boolean updated = culturalPropertiesService.updateReview(id, culturalPropertiesId, reviewDTO);
+
+		if (updated) {
+			return ResponseEntity.ok("리뷰가 성공적으로 수정되었습니다.");
+		} else {
+			return ResponseEntity.status(HttpStatus.FORBIDDEN).body("리뷰 수정 권한이 없습니다.");
+		}
+	}
+
+
+	@GetMapping("/detail/{culturalPropertiesId}/review/reviewList")
+	public ResponseEntity<Map<String, Object>> getReview(
+			@PathVariable int culturalPropertiesId,
+			@RequestParam(value = "page", defaultValue = "0") int page) {
+		// Pageable 객체를 생성합니다.
+		Pageable pageable = PageRequest.of(page, 10, Sort.by(Sort.Direction.DESC, "created_at"));
+
+		// 서비스 호출
+		Page<CulturalPropertiesReviewDTO> reviews = culturalPropertiesService.getReviewsByCulturalPropertiesId(culturalPropertiesId, pageable);
+
+		// 응답에 필요한 정보를 Map으로 만듭니다.
+		Map<String, Object> response = new HashMap<>();
+		response.put("reviews", reviews.getContent());
+		response.put("totalElements", reviews.getTotalElements());
+		response.put("totalPages", reviews.getTotalPages());
+		response.put("currentPage", reviews.getNumber());
+
+		return ResponseEntity.ok(response);
 	}
 
 
