@@ -2,6 +2,7 @@ package com.multi.culture_link.admin.performance.mapper;
 
 import com.multi.culture_link.admin.performance.model.dto.PerformanceDTO;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -19,5 +20,16 @@ public interface PerformanceMapper {
 
 
     // 상세정보가져오려고
-    PerformanceDTO getPerformanceByCode(String performanceCode);
+    //PerformanceDTO getPerformanceByCode(String performanceCode);
+    PerformanceDTO getPerformanceByCode(@Param("performanceCode") String performanceCode);
+
+
+
+
+    // 추가: 공연명으로 검색하는 메서드
+    //PerformanceDTO getPerformanceByTitle(String performanceTitle);
+    PerformanceDTO getPerformanceByTitle(@Param("performanceTitle") String performanceTitle);
+
+
+
 }
