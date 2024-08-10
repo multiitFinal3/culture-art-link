@@ -122,41 +122,40 @@ function searchExhibitions() {
 
 // 전시회 목록을 렌더링하는 함수
 function renderExhibitions(exhibitionsToRender) {
-    const $exhibitionList = $(".exhibition-list");
+    const $exhibitionList = $(".all-exhibitions-items");
     $exhibitionList.empty();
 
-    // 뷰 그려주기
     $.each(exhibitionsToRender, function (index, exhibition) {
-        const $li = $("<li>").addClass("exhibition-item");
-
-        // 관심 여부에 따라 색갈 정해줌
+        const $exhibitionItem = $("<div>").addClass("exhibition-item");
+        let interestedSrc = "https://kr.object.ncloudstorage.com/team3/common/upNo.png"
+        let notInterestedSrc = "https://kr.object.ncloudstorage.com/team3/common/downNo.png"
         if(exhibition.state === "interested") {
-            $li.addClass("background-pink")
-        }else if(exhibition.state === "not_interested"){
-            $li.addClass("background-gray")
+            interestedSrc = "https://kr.object.ncloudstorage.com/team3/common/upBlue.png"
+        } else if(exhibition.state === "not_interested") {
+            notInterestedSrc = "https://kr.object.ncloudstorage.com/team3/common/downRed.png"
         }
 
+        $exhibitionItem.html(`
+            <div class="all-card exhibition-content" data-id="${exhibition.id}">
+                <img src="${exhibition.image}" alt="${exhibition.title}">
+            </div>
+            <div class="exhibition-info">
+                <h3 class="all-title">${exhibition.title}</h3>
+                <p class="all-location">${exhibition.museum}</p>
+                <p class="all-date">${exhibition.startDate ? exhibition.startDate.toISOString().split("T")[0] : "미정"} ~ ${exhibition.endDate ? exhibition.endDate.toISOString().split("T")[0] : "미정"}</p>
+                <p>★ <span class="average-rating">${Number(exhibition?.starsAVG).toFixed(1)}</span></p>
+            </div>
+            <div class="exhibition-actions">
+                <button class="exhibition-like interested-btn" data-id="${exhibition.id}">
+                    <img src="${interestedSrc}" alt="">
+                </button>
+                <button class="exhibition-dislike interested-btn" data-id="${exhibition.id}">
+                    <img src="${notInterestedSrc}" alt="">
+                </button>
+            </div>
+        `);
 
-        console.log('exhibition : ',exhibition)
-        // html 그려주기
-        $li.html(`
-                <div class="exhibition-content" data-id="${exhibition.id}">
-                  <img src="${exhibition.image}" alt="${exhibition.title}" class="exhibition-image">
-                  <div class="exhibition-info">
-                    <h3>${exhibition.title}</h3>
-                    <p>${exhibition.artist}</p>
-                    <p>${exhibition.museum}</p>
-                    <p>시작일: ${exhibition.startDate ? exhibition.startDate.toISOString().split("T")[0] : "미정"}</p>
-                    <p>종료일: ${exhibition.endDate ? exhibition.endDate.toISOString().split("T")[0] : "미정"}</p>
-                    <p>★ <span class="average-rating">${Number(exhibition?.starsAVG).toFixed(1)}</span></p>
-                  </div>
-                </div>
-                <div class="exhibition-actions">
-                  <button class="exhibition-like" data-id="${exhibition.id}">찜</button>
-                  <button class="exhibition-dislike" data-id="${exhibition.id}">관심없음</button>
-                </div>
-              `);
-        $exhibitionList.append($li);
+        $exhibitionList.append($exhibitionItem);
     });
 
     // 클릭하면 상세페이지로 들어감
@@ -190,21 +189,30 @@ async function updateInterest(exhibitionId, state) {
             exhibitionId: Number(exhibitionId),
             state: state
         })
+        let $downButton = $(`.exhibition-dislike[data-id="${exhibitionId}"] img`);
+        let downSrc = $downButton.attr('src');
 
-        const contentDiv = document.querySelector(`.exhibition-content[data-id="${exhibitionId}"]`).closest('li');
-
-        console.log("dom : ",contentDiv)
+        let $upButton = $(`.exhibition-like[data-id="${exhibitionId}"] img`);
+        let upSrc = $upButton.attr('src');
+        const baseUrl = 'https://kr.object.ncloudstorage.com/team3/common/';
         if (state === 'interested') {
-            contentDiv.classList.add('background-pink')
-            if (contentDiv.classList.contains('background-gray')) {
-                contentDiv.classList.remove('background-gray');
+            if (upSrc.includes('upBlue.png')) {
+                $upButton.attr('src', upSrc.replace('upBlue.png', 'upNo.png'));
+            } else if (upSrc.includes('upNo.png')) {
+                $upButton.attr('src', upSrc.replace('upNo.png', 'upBlue.png'));
             }
+            $downButton.attr('src', baseUrl + 'downNo.png');
         }else if(state ==='not_interested') {
-            contentDiv.classList.add('background-gray')
-            if (contentDiv.classList.contains('background-pink')) {
-                contentDiv.classList.remove('background-pink');
+            if (downSrc.includes('downRed.png')) {
+                $downButton.attr('src', downSrc.replace('downRed.png', 'downNo.png'));
+            } else if (downSrc.includes('downNo.png')) {
+                $downButton.attr('src', downSrc.replace('downNo.png', 'downRed.png'));
             }
+            $upButton.attr('src', baseUrl + 'upNo.png');
         }
+
+
+
     }catch(e) {
         console.log('error : ',e)
         alert(`${state === 'interested'} ? "찜 설정 실패" : "관심 없음 설정 실패"`)

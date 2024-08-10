@@ -1,7 +1,6 @@
 body {
     font-family: Arial, sans-serif;
     margin: 0;
-    padding: 20px;
 }
 .tab-menu {
     margin-bottom: 20px;
@@ -30,7 +29,6 @@ body {
 .exhibition-item {
     display: flex;
     margin-bottom: 20px;
-    border: 1px solid #ddd;
     padding: 10px;
 }
 .exhibition-image {
@@ -63,10 +61,110 @@ body {
     background-color: #f0f0f0;
 }
 
-.background-pink {
-    background-color: #ffe5ea;
+/* Existing styles */
+/* ... */
+
+/* New styles for exhibition layout */
+.all-exhibitions {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
 }
 
-.background-gray {
-    background-color: #dfdfdf;
+.all-exhibitions-title {
+    width: 100%;
+    text-align: center;
+    font-size: 22px;
+    font-weight: 600;
+    margin-bottom: 20px;
 }
+
+.all-exhibitions-items {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 10px;
+    width: calc(5 * 249px + 4 * 10px);
+}
+
+.exhibition-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 249px;
+    margin-bottom: 20px;
+}
+
+.all-card {
+    width: 249px;
+    height: 332px;
+    background: white;
+    border: 1px solid #D9D9D9;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    transition: transform 0.2s;
+}
+
+.all-card:hover {
+    transform: scale(1.05);
+}
+
+.all-card img {
+    width: 249px;
+    height: 332px;
+    object-fit: cover;
+    object-position: center;
+}
+
+.exhibition-info {
+    padding: 10px;
+    text-align: center;
+    background-color: #fff;
+    width: 249px;
+}
+
+.all-title {
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 5px;
+    white-space: normal;
+    overflow-wrap: break-word;
+}
+
+.all-location,
+.all-date {
+    font-size: 14px;
+    color: #555;
+    white-space: normal;
+    overflow-wrap: break-word;
+}
+
+.exhibition-actions {
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+}
+
+.exhibition-like,
+.exhibition-dislike {
+    padding: 5px 10px;
+    margin: 0 5px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    background: white;
+}
+
+.interested-btn > img {
+    width: 25px;
+}
+
+/*.exhibition-like {*/
+/*    background-color: #ffcccb;*/
+/*}*/
+
+/*.exhibition-dislike {*/
+/*    background-color: #d3d3d3;*/
+/*}*/
