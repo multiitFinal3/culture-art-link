@@ -2,6 +2,12 @@ document.addEventListener('DOMContentLoaded', function() {
     const imageUpload = document.getElementById('imageUpload');
     const editor = document.getElementById('editor');
 
+    const cancelBtn = document.querySelector('.cancel-btn');
+
+    cancelBtn.addEventListener('click', function() {
+        history.back();
+    });
+
     imageUpload.addEventListener('change', async function(e) {
         const file = e.target.files[0];
         if (file) {

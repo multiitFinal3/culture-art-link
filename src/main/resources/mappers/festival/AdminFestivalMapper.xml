@@ -387,4 +387,12 @@
     </select>
 
 
+    <select id="findDBFestivalAllList" resultType="festivalDTO">
+
+        SELECT * FROM festival
+        ORDER BY festival_id DESC;
+
+    </select>
+
+
 </mapper>
