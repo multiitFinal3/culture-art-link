@@ -462,6 +462,7 @@ $(document).ready(
             findDBFestivalByMultiple(data,1);
             findDBFestivalMultipleCount(data);
 
+
             // 다중 조건 검색 모달 닫기
             $('#close1').click();
 
@@ -488,11 +489,11 @@ $(document).ready(
                     $('#close1').click();
 
                     $('#list1').html("");
-
+                    console.log("받아온 페이지별 상세검색 리스트 각각: ")
+                    console.log(list);
 
                     $.each(list, function(index, festival){
 
-                        console.log(festival);
                         var index1 = (index + 1) + (page-1)*5;
 
                         var content = festival.festivalContent.length > 30?
@@ -618,12 +619,7 @@ $(document).ready(
 
                     }
 
-                    $(document).on('click','.pageBtn3', function(){
 
-                        const page = $(this).text();
-                        findDBFestivalByMultiple(data1, page);
-
-                    })
 
                 }
 
@@ -631,6 +627,24 @@ $(document).ready(
 
 
         }
+
+
+        $(document).on('click','.pageBtn3', function(){
+
+            const page = $(this).text();
+            var data1 = $("#searchForm1").serializeArray();
+            console.log("$(document).on('click','.pageBtn3' : ")
+            console.log(data1);
+            findDBFestivalByMultiple(data1, page);
+
+        })
+
+
+
+
+
+
+
 
 
         /**
@@ -735,9 +749,6 @@ $(document).ready(
                     console.log(list);
                     $.each(cardList, function(index, card){
 
-                        console.log("card.getAttribute('id')")
-                        console.log(card.getAttribute('id'));
-
                         var cardString = card.getAttribute('id');
                         var cardInt = parseInt(cardString, 10);
 
@@ -840,9 +851,6 @@ $(document).ready(
 
                     console.log(list);
                     $.each(cardList, function(index, card){
-
-                        console.log("card.getAttribute('id')")
-                        console.log(card.getAttribute('id'));
 
                         var cardString = card.getAttribute('id');
                         var cardInt = parseInt(cardString, 10);
