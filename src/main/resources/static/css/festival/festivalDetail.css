@@ -307,7 +307,7 @@
 
     }
 
-    .card:hover {
+    .recommendCard:hover {
         transform: scale(1.05);
     }
 
