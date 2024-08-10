@@ -60,21 +60,20 @@
 
     <!-- Ranking Cards -->
     <div class="ranking-container">
-        <div th:each="card : ${rankingData}">
-            <div class="ranking-card">
-                <div class="ranking-position" th:text="${card.rank} + ' 위'">1 위</div>
-                <img class="ranking-img" th:src="${card.imageMain}" alt="공연 이미지"/>
-                <div class="performance-info">
-                    <div class="performance-title" th:text="${card.title}">공연타이틀</div>
-                    <div class="performance-details">
-                        <span>⭐⭐⭐⭐⭐</span>
-                        <span th:text="${card.location}">공연장소</span>
-                        <span th:text="${card.formattedDate}">공연 기간</span>
-                    </div>
+        <div th:each="card : ${rankingData}" class="ranking-card" data-performance-code="${card.code}" data-source="db">
+            <div class="ranking-position" th:text="${card.rank} + ' 위'">1 위</div>
+            <img class="ranking-img" th:src="${card.imageMain}" alt="공연 이미지"/>
+            <div class="performance-info">
+                <div class="performance-title" th:text="${card.title}">공연타이틀</div>
+                <div class="performance-details">
+                    <span>⭐⭐⭐⭐⭐</span>
+                    <span th:text="${card.location}">공연장소</span>
+                    <span th:text="${card.formattedDate}">공연 기간</span>
                 </div>
             </div>
         </div>
     </div>
+
 </div>
 </body>
 </html>
