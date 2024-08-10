@@ -185,7 +185,7 @@ public class CulturalPropertiesService {
 
 
     public Page<CulturalPropertiesReviewDTO> getReviewsByCulturalPropertiesId(int culturalPropertiesId, Pageable pageable) {
-        List<CulturalPropertiesReviewDTO> reviews = culturalPropertiesDAO.getReview(culturalPropertiesId, pageable);
+        List<CulturalPropertiesReviewDTO> reviews = culturalPropertiesDAO.getReviewList(culturalPropertiesId, pageable);
         int totalReviews = culturalPropertiesDAO.countReview(culturalPropertiesId); // 총 리뷰 개수 가져오기
         return new PageImpl<>(reviews, pageable, totalReviews); // PageImpl 사용하여 Page 객체 생성
     }
@@ -194,6 +194,14 @@ public class CulturalPropertiesService {
         return culturalPropertiesDAO.averageRating(culturalPropertiesId);
     }
 
+
+    public List<CulturalPropertiesReviewDTO> getRecentReview(int culturalPropertiesId) {
+        return culturalPropertiesDAO.getRecentReview(culturalPropertiesId);
+    }
+
+    public int countReviews(int culturalPropertiesId) {
+        return culturalPropertiesDAO.countReview(culturalPropertiesId); // 총 리뷰 수를 반환하는 DAO 메서드
+    }
 
 
 }

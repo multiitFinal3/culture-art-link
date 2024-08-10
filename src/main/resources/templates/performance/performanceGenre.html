@@ -47,8 +47,8 @@
         <div class="ranking-title">장르별 랭킹</div>
         <div class="ranking-items" th:if="${rankingData != null}">
             <div th:each="ranking, iterStat : ${rankingData}">
-                <a th:href="@{'/performance/performanceDetail?performanceCode=' + ${ranking.code} + '&source=api'}">
-                    <div class="card" th:data-performance-title="${ranking.title}" th:data-source="api">
+                <a th:href="@{'/performance/performanceDetail?performanceCode=' + ${ranking.code} + '&source=db'}">
+                    <div class="card" th:data-performance-title="${ranking.title}" th:data-source="db">
                         <!-- 카드 번호 -->
                         <div class="card-number" th:text="${iterStat.index + 1}">1</div>
                         <!-- 공연 이미지 -->
