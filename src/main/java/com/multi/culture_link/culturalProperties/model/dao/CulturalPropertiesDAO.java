@@ -77,11 +77,13 @@ public interface CulturalPropertiesDAO {
     void updateReview(CulturalPropertiesReviewDTO review);
 
 
-    List<CulturalPropertiesReviewDTO> getReview(@Param("culturalPropertiesId") int culturalPropertiesId, @Param("pageable") Pageable pageable);
+    List<CulturalPropertiesReviewDTO> getReviewList(@Param("culturalPropertiesId") int culturalPropertiesId, @Param("pageable") Pageable pageable);
     int countReview(@Param("culturalPropertiesId") int culturalPropertiesId);
 
 
     // 평균 평점 조회
     double averageRating(int culturalPropertiesId);
+
+    List<CulturalPropertiesReviewDTO> getRecentReview(int culturalPropertiesId);
 
 }

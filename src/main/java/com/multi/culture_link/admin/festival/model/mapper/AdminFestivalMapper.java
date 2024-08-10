@@ -53,4 +53,6 @@ public interface AdminFestivalMapper {
 	void deleteAllReviewKeywordByFestivalId(int festivalId) throws Exception;
 	
 	ArrayList<FestivalContentReviewNaverKeywordMapDTO> findExistingFestivalContentReviewNaverKeywordMapList(FestivalContentReviewNaverKeywordMapDTO mapDTO) throws Exception;
+	
+	ArrayList<FestivalDTO> findDBFestivalAllList() throws Exception;
 }

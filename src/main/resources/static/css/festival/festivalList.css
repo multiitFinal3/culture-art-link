@@ -38,7 +38,7 @@
     #festivalList{
 
         display: flex;
-        width: 100%;
+        width: 80%;
         flex-flow: column;
         align-items: center;
         justify-content: center;
@@ -53,33 +53,33 @@
 
         display: flex;
         flex-flow: row;
-        flex-wrap: wrap;
+        flex-wrap: no-wrap;
         align-items: center;
         justify-content: center;
         margin-top: 3%;
         margin-left: 5%;
         margin-right: 5%;
-
+        flex-wrap: wrap;
 
     }
 
     .card{
 
-        margin: 1%;
-        min-width: 400px;
-        max-width: 400px;
-        min-height: 600px;
-        max-height: 600px;
+       min-width: 280px;
+       max-width: 280px;
+       margin: 1%;
+       max-height: 460px;
+       min-height: 460px;
 
     }
 
 
    .card-img-top{
 
-        margin: 1%;
-        width: 380px;
-        height: 400px;
-
+        max-height: 58% !important;
+        min-width: 98% !important;
+        min-height: 58% !important;
+        max-width: 98% !important;
 
     }
 
@@ -107,10 +107,24 @@
 
    }
 
+   card-body a.btn{
+
+        width: 20%;
+        height: 30%;
+        text-align: center;
+        display: inline-flex;
+        align-items: center;
+
+   }
+
    .hate, .heart{
 
-        min-width: 30px;
-        min-height: 30px;
+       width: 15%;
+       height: 20%;
+       display: inline-flex;
+       align-items: center;
+       justify-content: center;
+       margin: 1%;
 
    }
 
@@ -123,5 +137,25 @@
    .hasHate{
 
         background-color: #dfdfdf;
+
+   }
+
+   #list1 .card{
+    min-width: 280px;
+    max-width: 280px;
+    margin: 1%;
+    max-height: 380px;
+    min-height: 380px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+   }
+
+   .buttonZone{
+
+     display: flex;
+     flex-flow: row;
+     align-items: center;
+     justify-content: center;
 
    }

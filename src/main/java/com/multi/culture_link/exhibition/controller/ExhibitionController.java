@@ -253,6 +253,7 @@ public class ExhibitionController {
             @RequestParam(defaultValue = "") String cursor,
             @RequestParam(defaultValue = "5") int size
     ) {
+        System.out.println("result : " + exhibitionService.getAllKeyword(cursor, size));
         return exhibitionService.getAllKeyword(cursor, size);
     }
 }
