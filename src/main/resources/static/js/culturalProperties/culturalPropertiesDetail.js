@@ -119,7 +119,7 @@ $(document).ready(function() {
                                     <img src="${review.userProfileImage || '/img/festival/noPhoto.png'}" alt="${review.userName}">
                                     <div class="user-details">
                                         <span>${review.userName}</span>
-                                        <span>${new Date(review.createdAt).toLocaleString()}</span>
+                                        <span style="font-size: 13px; color: #999;">${new Date(review.createdAt).toLocaleString()}</span>
                                         <div class="review-rating" data-rating="${review.star}">
                                             ${Array.from({ length: 5 }, (_, index) => {
                                                 return index < review.star ?

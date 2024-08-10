@@ -214,7 +214,7 @@
 
 
 
-    <!-- 최근 3개의 리뷰 조회 쿼리 -->
+
     <select id="getRecentReview" parameterType="int" resultType="culturalPropertiesReviewDTO">
         SELECT r.*, u.user_name
         FROM cultural_properties_review r
