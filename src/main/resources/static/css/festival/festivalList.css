@@ -11,7 +11,9 @@
     }
 
 
-    #festivalRecommendation{
+    #festivalRecommendation,
+    #festivalList
+    {
 
         display: flex;
         flex-flow: column;
@@ -23,12 +25,25 @@
 
     }
 
+    #festivalList{
+
+        width: 1400px;
+
+    }
+
+    #festivalList h2{
+
+        font-size: 22px;
+
+    }
+
 
     #festivalRegulate  h2{
 
+        width: 100%;
+        text-align: center;
         font-size: 16px;
         font-weight: 600;
-        color: black;
         margin-bottom: 20px;
 
     }
@@ -43,6 +58,45 @@
         gap: 10px;
         height: 540px;
     }
+
+    #list2 .card{
+
+       min-width: 249px;
+       max-width: 249px;
+       margin: 0 10px;
+       max-height: 332px;
+       min-height: 332px;
+       background : white;
+       border: 1px solid #D9D9D9;
+       border-radius: 8px;
+       display: flex;
+       flex-direction: column;
+       align-items: center;
+       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+       transition: transform 0.2s;
+
+    }
+
+
+   .card-img-top{
+
+        max-height: 332px;
+        min-width: 249px;
+        min-height: 332px;
+        max-width: 249px;
+        border-radius: 8px;
+        object-fit: cover;
+
+    }
+
+
+    button{
+
+        margin: 1%;
+
+    }
+
+
 
     .card-number {
         font-size: 60px;
@@ -77,21 +131,6 @@
 
 
 
-    #festivalList{
-
-        display: flex;
-        width: 80%;
-        flex-flow: column;
-        align-items: center;
-        justify-content: center;
-        margin-top: 8%;
-        margin-left: 5%;
-        margin-right: 5%;
-
-    }
-
-
-
 
     #list1{
 
@@ -100,50 +139,28 @@
         flex-wrap: no-wrap;
         align-items: center;
         justify-content: center;
-        margin-top: 3%;
         margin-left: 5%;
         margin-right: 5%;
         flex-wrap: wrap;
+        gap: 10px;
 
     }
 
-    .card{
+    #list1 .card{
 
-       min-width: 249px;
-       max-width: 249px;
-       margin: 0 10px;
-       max-height: 332px;
-       min-height: 332px;
-       background : white;
-       border: 1px solid #D9D9D9;
-       border-radius: 8px;
-       display: flex;
-       flex-direction: column;
-       align-items: center;
-
-    }
-
-
-   .card-img-top{
-
-        max-height: 332px;
+        min-height: 440px;
+        max-height: 440px;
         min-width: 249px;
-        min-height: 332px;
         max-width: 249px;
-        border-radius: 8px;
-        object-fit: cover;
+        margin-bottom: 10px;
+        background: white;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        transition: transform 0.2s;
+        border: 0px;
 
     }
-
-
-    button{
-
-        margin: 1%;
-
-    }
-
-
-
 
 
 
@@ -155,6 +172,7 @@
        width: 30%;
        align-items: center;
        justify-content: center;
+       margin-top: 15px;
 
 
    }
@@ -211,16 +229,6 @@
 
    }
 
-   #list1 .card{
-    min-width: 280px;
-    max-width: 280px;
-    margin: 1%;
-    max-height: 380px;
-    min-height: 380px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-   }
 
    .buttonZone{
 
@@ -234,3 +242,31 @@
    .card:hover {
        transform: scale(1.05);
    }
+
+
+
+    #inputGroup{
+
+        display: flex;
+        flex-flow: row;
+        justify-content: flex-end;
+        align-items: center;
+
+    }
+
+    #inputGroup input{
+
+        width: 130px;
+        height: 50px;
+
+    }
+
+    #inputGroup select{
+
+        width: 130px;
+        height: 50px;
+    }
+
+
+
+

@@ -35,6 +35,7 @@ public class FestivalDTO {
 	private String imgUrl;
 	private String exist;
 	private PageDTO pageDTO;
+	private int page;
 	
 	
 	
