@@ -77,6 +77,8 @@ public class FestivalController {
 		
 		try {
 			FestivalDTO festivalDTO = adminFestivalService.findDBFestivalByFestivalId(festivalId);
+			festivalDTO.setFormattedStart(festivalDTO.getFormattedStart().replace("-","."));
+			festivalDTO.setFormattedEnd(festivalDTO.getFormattedEnd().replace("-","."));
 			model.addAttribute("festival", festivalDTO);
 			
 			int userId = user.getUserId();

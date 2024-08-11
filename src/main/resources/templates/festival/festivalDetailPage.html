@@ -7,7 +7,6 @@
     <title>Title</title>
     <link rel="stylesheet" th:href="@{/css/festival/festivalDetail.css}">
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
-    <script th:src="@{/js/festival/festivalDetail.js}"></script>
 
     <script th:inline="javascript">
 
@@ -37,12 +36,14 @@
                 * 찜하기 / 찜 취소하기 버튼
                 *
                 */
-                $(document).on('click','.heart', function(){
+                $(document).on('click','.heart', function(e){
 
-                    var button = $(this);
-                    var festivalId = $(this).val();
+                    e.stopImmediatePropagation();
 
-                    if(button.closest(".card").hasClass("hasLove")){
+                    var img = $(this);
+                    var festivalId = img.attr('value');
+
+                    if(img.closest(".card").hasClass("hasLove")){
 
                         $.ajax({
 
@@ -51,7 +52,8 @@
                             contentType: 'application/json',
                             success: function(res){
                                 alert(res);
-                                button.closest('.card').removeClass("hasLove");
+                                img.closest('.card').removeClass("hasLove");
+                                findLoveList();
                             },
                             error: function(xhr, status, error){
 
@@ -62,8 +64,8 @@
 
                     }else{
 
-                        if(button.closest(".card").hasClass("hasHate")){
-                            button.closest(".card").find(".hate").click();
+                        if(img.closest(".card").hasClass("hasHate")){
+                            img.closest(".card").find(".hate").click();
                         }
 
 
@@ -75,7 +77,8 @@
                             success: function(res){
 
                                 alert(res);
-                                button.closest(".card").addClass("hasLove");
+                                img.closest(".card").addClass("hasLove");
+                                findLoveList();
 
 
                             },
@@ -89,18 +92,18 @@
 
 
                     }
-
                 })
 
 
+
                 /**
-                * 찜 리스트 찾아서 색 바꾸기
+                * 찜 리스트 찾아서 up 이미지 색 바꾸기
                 *
                 */
                 function findLoveList(){
 
                     var cardList = document.querySelectorAll(".card");
-
+                    console.log(cardList);
                     $.ajax({
 
                         url: '/festival/findLoveList',
@@ -110,13 +113,21 @@
 
                             $.each(cardList, function(index, card){
 
-                                var cardString = card.getAttribute('value');
+                                var cardString = card.getAttribute('data-value');
+                                console.log(cardString)
                                 var cardInt = parseInt(cardString, 10);
-
+                                console.log(list);
                                 if(list.includes(cardInt)){
-
+                                    console.log("hasLove");
+                                    console.log(cardInt);
                                     $(card).addClass("hasLove");
+                                    var heartImg = $(card).find('.heart');
+                                    heartImg.attr('src','https://kr.object.ncloudstorage.com/team3/common/upBlue.png')
 
+                                }else{
+
+                                    var heartImg = $(card).find('.heart');
+                                    heartImg.attr('src','https://kr.object.ncloudstorage.com/team3/common/upNo.png');
                                 }
                             })
                         }
@@ -133,12 +144,14 @@
                 * 관심없음 하기 / 관심없음 취소하기 버튼
                 *
                 */
-                $(document).on('click','.hate', function(){
+                $(document).on('click','.hate', function(e){
 
-                    var button = $(this);
-                    var festivalId = $(this).val();
+                    e.stopImmediatePropagation();
 
-                    if(button.closest(".card").hasClass("hasHate")){
+                    var img = $(this);
+                    var festivalId = img.attr('value');
+
+                    if(img.closest(".card").hasClass("hasHate")){
 
                         $.ajax({
 
@@ -147,7 +160,8 @@
                             contentType: 'application/json',
                             success: function(res){
                                 alert(res);
-                                button.closest('.card').removeClass("hasHate");
+                                img.closest('.card').removeClass("hasHate");
+                                findHateList();
                             },
                             error: function(xhr, status, error){
 
@@ -158,8 +172,8 @@
 
                     }else{
 
-                        if(button.closest(".card").hasClass("hasLove")){
-                            button.closest(".card").find(".heart").click();
+                        if(img.closest(".card").hasClass("hasLove")){
+                            img.closest(".card").find(".heart").click();
                         }
 
                         $.ajax({
@@ -170,7 +184,8 @@
                             success: function(res){
 
                                 alert(res);
-                                button.closest(".card").addClass("hasHate");
+                                img.closest(".card").addClass("hasHate");
+                                findHateList();
 
 
                             },
@@ -185,15 +200,11 @@
 
                     }
 
-
-
-
-
                 })
 
 
                 /**
-                * 관심없음 리스트 찾아서 색 바꾸기
+                * 관심없음 리스트 찾아서 down 이미지 색 바꾸기
                 *
                 */
                 function findHateList(){
@@ -209,14 +220,21 @@
 
                             $.each(cardList, function(index, card){
 
-                                var cardString = card.getAttribute('value');
+                                var cardString = card.getAttribute('data-value');
                                 var cardInt = parseInt(cardString, 10);
 
                                 if(list.includes(cardInt)){
 
                                     $(card).addClass("hasHate");
+                                    var heartImg = $(card).find('.hate');
+                                    heartImg.attr('src','https://kr.object.ncloudstorage.com/team3/common/downRed.png')
 
+                                }else{
+
+                                    var heartImg = $(card).find('.hate');
+                                    heartImg.attr('src','https://kr.object.ncloudstorage.com/team3/common/downNo.png');
                                 }
+
                             })
                         }
                     })
@@ -224,9 +242,9 @@
                 }
 
 
-
                 findLoveList();
                 findHateList();
+
 
 
                 //#endregion
@@ -242,11 +260,10 @@
                 $(document).on('click','#detailBtn', function(){
 
                     $('#detailDescripZone').removeClass("hide");
-                    $('#review').addClass("hide");
-                    $('#youtubeList').addClass("hide");
-                    $('#naverNews').addClass("hide");
-                    $('#naverBlog').addClass("hide");
                     $('#mapDiv').addClass("hide");
+                    $('#review').addClass("hide");
+                    $('#festivalInfo').addClass("hide");
+                    $('#recommendCardZone').addClass("hide");
 
                 })
 
@@ -258,75 +275,55 @@
                 $(document).on('click','#reviewBtn', function(){
 
                     $('#detailDescripZone').addClass("hide");
+                    $('#mapDiv').addClass("hide");
                     $('#review').removeClass("hide");
-                    $('#youtubeList').addClass("hide");
-                    $('#naverNews').addClass("hide");
-                    $('#naverBlog').addClass("hide");
-                    $('#mapDiv').addClass("hide");
-
+                    $('#festivalInfo').addClass("hide");
+                    $('#recommendCardZone').addClass("hide");
                 })
 
 
                 /**
-                * 관련 동영상 버튼
+                * 관련 정보 버튼
                 *
                 */
-                $(document).on('click','#youtubeBtn', function(){
+                $(document).on('click','#relatedInfo', function(){
 
                     $('#detailDescripZone').addClass("hide");
-                    $('#review').addClass("hide");
-                    $('#youtubeList').removeClass("hide");
-                    $('#naverNews').addClass("hide");
-                    $('#naverBlog').addClass("hide");
                     $('#mapDiv').addClass("hide");
-
+                    $('#review').addClass("hide");
+                    $('#festivalInfo').removeClass("hide");
+                    $('#recommendCardZone').addClass("hide");
                 })
 
 
-                /**
-                * 네이버 기사 버튼
-                *
-                */
-                $(document).on('click','#naverArticleBtn', function(){
-
-                    $('#detailDescripZone').addClass("hide");
-                    $('#review').addClass("hide");
-                    $('#youtubeList').addClass("hide");
-                    $('#naverNews').removeClass("hide");
-                    $('#naverBlog').addClass("hide");
-                    $('#mapDiv').addClass("hide");
-
-                })
-
 
                 /**
-                * 네이버 블로그 버튼
-                *
-                */
-                $(document).on('click','#naverBlogBtn', function(){
-
-                    $('#detailDescripZone').addClass("hide");
-                    $('#review').addClass("hide");
-                    $('#youtubeList').addClass("hide");
-                    $('#naverNews').addClass("hide");
-                    $('#naverBlog').removeClass("hide");
-                    $('#mapDiv').addClass("hide");
-
-                })
-
-
-                /**
-                * 찾아오시는 길 버튼
+                * 축제 장소 버튼
                 *
                 */
                 $(document).on('click','#mapBtn', function(){
 
                     $('#detailDescripZone').addClass("hide");
-                    $('#review').addClass("hide");
-                    $('#youtubeList').addClass("hide");
-                    $('#naverNews').addClass("hide");
-                    $('#naverBlog').addClass("hide");
                     $('#mapDiv').removeClass("hide");
+                    $('#review').addClass("hide");
+                    $('#festivalInfo').addClass("hide");
+                    $('#recommendCardZone').addClass("hide");
+                })
+
+
+
+
+                /**
+                * 비슷한 축제 버튼
+                *
+                */
+                $(document).on('click','#similarFestival', function(){
+
+                    $('#detailDescripZone').addClass("hide");
+                    $('#mapDiv').addClass("hide");
+                    $('#review').addClass("hide");
+                    $('#festivalInfo').addClass("hide");
+                    $('#recommendCardZone').removeClass("hide");
 
                 })
 
@@ -902,7 +899,7 @@
                                 if(! festival.imgUrl || festival.imgUrl == "null"){
 
                                     firstHtml = `
-                                        <div class="card recommendCard" style="width: 18rem;" id="${festival.festivalId}" value="${festival.festivalId}">
+                                        <div class="card recommendCard" style="width: 18rem;" id="${festival.festivalId}" data-value="${festival.festivalId}">
                                             <img class="card-img-top" src="/img/festival/noPhoto.png" alt="Card image cap" style="min-width: 380px; min-height: 400px;">
 
                                     `;
@@ -910,7 +907,7 @@
                                 }else{
 
                                     firstHtml = `
-                                        <div class="card recommendCard" style="width: 18rem;" id="${festival.festivalId}" value="${festival.festivalId}">
+                                        <div class="card recommendCard" style="width: 18rem;" id="${festival.festivalId}" data-value="${festival.festivalId}">
                                             <img class="card-img-top" src="${festival.imgUrl}" alt="Card image cap" style="min-width: 380px; min-height: 400px;">
 
                                     `;
@@ -1027,7 +1024,7 @@
                                 if(! festival.imgUrl || festival.imgUrl == "null"){
 
                                     firstHtml = `
-                                        <div class="card recommendCard" style="width: 18rem;" id="${festival.festivalId}" value="${festival.festivalId}">
+                                        <div class="card recommendCard" style="width: 18rem;" id="${festival.festivalId}" data-value="${festival.festivalId}">
                                             <img class="card-img-top" src="/img/festival/noPhoto.png" alt="Card image cap" style="min-width: 380px; min-height: 400px;">
 
                                     `;
@@ -1035,7 +1032,7 @@
                                 }else{
 
                                     firstHtml = `
-                                        <div class="card recommendCard" style="width: 18rem;" id="${festival.festivalId}" value="${festival.festivalId}">
+                                        <div class="card recommendCard" style="width: 18rem;" id="${festival.festivalId}" data-value="${festival.festivalId}">
                                             <img class="card-img-top" src="${festival.imgUrl}" alt="Card image cap" style="min-width: 380px; min-height: 400px;">
 
                                     `;
@@ -1147,7 +1144,7 @@
                                 if(! festival.imgUrl || festival.imgUrl == "null"){
 
                                     firstHtml = `
-                                        <div class="card recommendCard" style="width: 18rem;" id="${festival.festivalId}" value="${festival.festivalId}">
+                                        <div class="card recommendCard" style="width: 18rem;" id="${festival.festivalId}" data-value="${festival.festivalId}">
                                             <img class="card-img-top" src="/img/festival/noPhoto.png" alt="Card image cap" style="min-width: 380px; min-height: 400px;">
 
                                     `;
@@ -1155,7 +1152,7 @@
                                 }else{
 
                                     firstHtml = `
-                                        <div class="card recommendCard" style="width: 18rem;" id="${festival.festivalId}" value="${festival.festivalId}">
+                                        <div class="card recommendCard" style="width: 18rem;" id="${festival.festivalId}" data-value="${festival.festivalId}">
                                             <img class="card-img-top" src="${festival.imgUrl}" alt="Card image cap" style="min-width: 380px; min-height: 400px;">
 
                                     `;
@@ -1265,7 +1262,7 @@
                                 if(! festival.imgUrl || festival.imgUrl == "null"){
 
                                     firstHtml = `
-                                        <div class="card recommendCard" style="width: 18rem;" id="${festival.festivalId}" value="${festival.festivalId}">
+                                        <div class="card recommendCard" style="width: 18rem;" id="${festival.festivalId}" data-value="${festival.festivalId}">
                                             <img class="card-img-top" src="/img/festival/noPhoto.png" alt="Card image cap" style="min-width: 380px; min-height: 400px;">
 
                                     `;
@@ -1273,7 +1270,7 @@
                                 }else{
 
                                     firstHtml = `
-                                        <div class="card recommendCard" style="width: 18rem;" id="${festival.festivalId}" value="${festival.festivalId}">
+                                        <div class="card recommendCard" style="width: 18rem;" id="${festival.festivalId}" data-value="${festival.festivalId}">
                                             <img class="card-img-top" src="${festival.imgUrl}" alt="Card image cap" style="min-width: 380px; min-height: 400px;">
 
                                     `;
@@ -1460,25 +1457,25 @@
 
                             $('#artlcles').html("");
 
-                            var imgHtml = ``;
+<!--                            var imgHtml = ``;-->
 
-                            if( festival.imgUrl || festival.imgUrl != "null" || festival.imgUrl != ""){
+<!--                            if( festival.imgUrl || festival.imgUrl != "null" || festival.imgUrl != ""){-->
 
-                                imgHtml = `<img class="card-img-top" src="${imgUrl}" alt="이미지 로딩 실패" style="width: auto;height: auto;">`;
+<!--                                imgHtml = `<img class="card-img-top" src="${imgUrl}" alt="이미지 로딩 실패" style="width: auto;height: auto;">`;-->
 
-                            }else{
+<!--                            }else{-->
 
 
-                                imgHtml = `<img class="card-img-top" src="/img/festival/noPhoto.png" alt="이미지 로딩 실패" style="width: auto;height: auto;">`;
+<!--                                imgHtml = `<img class="card-img-top" src="/img/festival/noPhoto.png" alt="이미지 로딩 실패" style="width: auto;height: auto;">`;-->
 
-                            }
+<!--                            }-->
 
                             var artlcleHtml = `
 
 
                                 <div class="card" style="width: 100%; height:100%">`
 
-                                 + imgHtml +
+                                 +
 
                                  `<div class="card-body">
                                     <h3 class="card-title">${title}</h5>
@@ -1614,20 +1611,15 @@
 
                             var blogHtml = `
 
-                                <div class="card" style="width: 100%; height:55rem">`
-
-                                 + imgHtml +
+                                <div class="card" style="width: 100%;">` +
 
                                  `<div class="card-body">
                                     <h3 class="card-title">${title}</h5>
-                                    <p>${bloggerName}</p>
+<!--                                    <p>${bloggerName}</p>-->
                                     <p class="card-text">${desc}</p>
                                     <a href="${link}" class="btn btn-primary">블로그 보기</a>
                                   </div>
-                                </div>
-
-
-                                `;
+                                </div>`;
 
                             $('#blogs').html(blogHtml);
 
@@ -1668,7 +1660,6 @@
                 })
 
 
-
                 /**
                 * 네이버 블로그 키워드 가져와서 넣어주기
                 * @param {int} festivalId 축제 아이디
@@ -1700,13 +1691,7 @@
 
                 findNaverBlogKeywordList(festivalId);
 
-
-
                 //#endregion
-
-
-
-
 
 
 
@@ -1723,327 +1708,372 @@
 
 <div layout:fragment="content">
 
-    <div id="columnFlow" style="width:100%">
+
+    <div class="container">
+
 
         <div id="upperZone">
 
+            <div th:switch="${festival.imgUrl}" class="detail-card card" th:data-value="${festival.festivalId}">
+
+                <img th:case="''" src="/img/festival/noPhoto.png" alt="이미지가 없습니다">
+                <img th:case="'null'" src="/img/festival/noPhoto.png" alt="이미지가 없습니다">
+                <img th:case="null" src="/img/festival/noPhoto.png" alt="이미지가 없습니다">
+                <img th:case="*" th:src="@{${festival.imgUrl}}" alt="이미지가 없습니다">
+
+                <img src="https://kr.object.ncloudstorage.com/team3/common/upNo.png"
+                     style="width : 30px; height: 30px;" class="heart" th:value="${festival.festivalId}">
+                <img src="https://kr.object.ncloudstorage.com/team3/common/downNo.png"
+                     style="width : 30px; height: 30px;" class="hate" th:value="${festival.festivalId}">
+
+            </div>
+
             <div id="detailCardZone">
 
-                <div class="card" id="detailCard" style="width: 100rem;" th:value="${festival.festivalId}">
-
-                    <div th:switch="${festival.imgUrl}">
-
-                        <img th:case="''" class="card-img-top" src="/img/festival/noPhoto.png" alt="이미지가 없습니다">
-                        <img th:case="'null'" class="card-img-top" src="/img/festival/noPhoto.png" alt="이미지가 없습니다">
-                        <img th:case="null" class="card-img-top" src="/img/festival/noPhoto.png" alt="이미지가 없습니다">
-                        <img th:case="*" class="card-img-top" th:src="@{${festival.imgUrl}}" alt="이미지가 없습니다">
-
-                    </div>
+                <div class="title">
 
                     <h1 class="card-title" th:text="${festival.festivalName}"></h1>
 
-                    <div id="contentBtnZone">
-                        <button id="detailBtn">상세 설명</button>
-                        <button id="reviewBtn">리뷰</button>
-                        <button id="youtubeBtn">관련 동영상</button>
-                        <button id="naverArticleBtn">네이버 뉴스</button>
-                        <button id="naverBlogBtn">네이버 블로그</button>
-                        <button id="mapBtn">찾아오는 길</button>
+                </div>
+
+                <div class="info-section-content">
+
+                    <div th:switch="${festival.manageInstitution}">
+
+                        <p th:case="''"></p>
+                        <p th:case="'null'"></p>
+                        <p th:case="null"></p>
+                        <p th:case="*" th:text="${festival.manageInstitution}"></p>
+
+                    </div>
+
+                    <div>
+
+                        <p th:switch="${festival.formattedStart}">
+                            <span th:case="''"></span>
+                            <span th:case="'null'"></span>
+                            <span th:case="null"></span>
+                            <span th:case="*"
+                                  th:text="${festival.formattedStart}+' - '+${festival.formattedEnd}"></span>
+                        </p>
+
+                    </div>
+
+                    <div th:switch="${festival.season}">
+
+                        <p th:case="''"></p>
+                        <p th:case="'null'"></p>
+                        <p th:case="null"></p>
+                        <p th:case="*" th:text="${festival.season}"></p>
+
+                    </div>
+
+                    <div th:switch="${festival.homepageUrl}">
+
+                        <a th:case="''"></a>
+                        <a th:case="'null'"></a>
+                        <a th:case="null"></a>
+                        <a th:if="${!festival.homepageUrl.startsWith('https') and !festival.homepageUrl.startsWith('http') and !festival.homepageUrl.startsWith('www')}"></a>
+                        <a th:if="${festival.homepageUrl.startsWith('https') or festival.homepageUrl.startsWith('http') or festival.homepageUrl.startsWith('www')}"
+                           th:href="@{${festival.homepageUrl}}">홈페이지</a>
 
                     </div>
 
 
-
-                    <div class="card-body" style="width:100%">
-
-                        <div id="detailDescripZone">
-
-                            <div id="contentKeyword" style="width:100%">
-                            </div>
-
-                            <div th:switch="${festival.detailAddress}">
-
-                                <p th:case="''"></p>
-                                <p th:case="'null'"></p>
-                                <p th:case="null"></p>
-                                <p th:case="*" th:text="'주소 : '+${festival.detailAddress}"></p>
-
-                            </div>
-                            <div th:switch="${festival.season}">
-
-                                <p th:case="''"></p>
-                                <p th:case="'null'"></p>
-                                <p th:case="null"></p>
-                                <p th:case="*" th:text="'계절 : '+${festival.season}"></p>
-
-                            </div>
-                            <div th:switch="${festival.formattedStart}">
-                                <p th:case="''"></p>
-                                <p th:case="'null'"></p>
-                                <p th:case="null"></p>
-                                <p th:case="*" th:text="'시작일 : '+${festival.formattedStart}"></p>
-
-                            </div>
-                            <div th:switch="${festival.formattedEnd}">
-                                <p th:case="''"></p>
-                                <p th:case="'null'"></p>
-                                <p th:case="null"></p>
-                                <p th:case="*" th:text="'종료일 : '+${festival.formattedEnd}"></p>
-
-                            </div>
-                            <div th:value="${festival.timeId}" id="timeId">
-
-                                <p> 시간대 자세한 설명 ajax</p>
-
-                            </div>
-                            <div th:switch="${festival.manageInstitution}">
-
-                                <p th:case="''"></p>
-                                <p th:case="'null'"></p>
-                                <p th:case="null"></p>
-                                <p th:case="*" th:text="'주체기관 : '+${festival.manageInstitution}"></p>
-
-                            </div>
-                            <div th:switch="${festival.hostInstitution}">
-
-                                <p th:case="''"></p>
-                                <p th:case="'null'"></p>
-                                <p th:case="null"></p>
-                                <p th:case="*" th:text="'주관기관 : '+${festival.hostInstitution}"></p>
-
-                            </div>
-                            <div th:switch="${festival.sponserInstitution}">
-
-                                <p th:case="''"></p>
-                                <p th:case="'null'"></p>
-                                <p th:case="null"></p>
-                                <p th:case="*" th:text="'후원기관 : '+${festival.sponserInstitution}"></p>
-
-                            </div>
-                            <div th:switch="${festival.homepageUrl}">
-
-                                <a th:case="''"></a>
-                                <a th:case="'null'"></a>
-                                <a th:case="null"></a>
-                                <a th:if="${!festival.homepageUrl.startsWith('https') and !festival.homepageUrl.startsWith('http') and !festival.homepageUrl.startsWith('www')}"></a>
-                                <a th:if="${festival.homepageUrl.startsWith('https') or festival.homepageUrl.startsWith('http') or festival.homepageUrl.startsWith('www')}"
-                                   th:href="@{${festival.homepageUrl}}">홈페이지</a>
-
-                            </div>
-                            <div th:switch="${festival.place}">
-                                <p th:case="''"></p>
-                                <p th:case="'null'"></p>
-                                <p th:case="null"></p>
-                                <p th:case="*" th:text="'장소 : '+${festival.place}"></p>
-                            </div>
-                            <div th:switch="${festival.tel}">
-                                <p th:case="''"></p>
-                                <p th:case="'null'"></p>
-                                <p th:case="null"></p>
-                                <p th:case="*" th:text="'전화번호 : '+${festival.tel}"></p>
-                            </div>
-                            <p class="card-text" th:text="${festival.festivalContent}"></p>
-
-                        </div>
-
-                        <div id="review" class="hide" style="width: 100%">
-
-                            <div id="reviewKeyword" style="width:100%">
-                            </div>
-
-                            <h3>리뷰 작성하기</h3>
-
-                            <div>
-
-                                <!--                        <img src="/img/festival/reviewAttach/2f9d6fe0-28a4-4f4d-a64f-a260ce75d47f_스크린샷 2024-07-04 162835.png">-->
-<!--                                https://www.putzisan.com/articles/html-css-star-rating-input-->
-                                <form id="reviewForm" encType="multipart/form-data">
-
-                                    <textarea name="reviewTextArea" id="reviewTextArea" rows="4" cols="150"
-                                              placeholder="리뷰를 입력하세요">
-                                    </textarea>
-                                    <div class="star-rating">
-<!--                                        FLEX-REVERSE-->
-                                        <input type="radio" id="sr-0-5" name="reviewStar" value="5" />
-                                        <label for="sr-0-5">★</label>
-                                        <input type="radio" id="sr-0-4" name="reviewStar" value="4" />
-                                        <label for="sr-0-4">★</label>
-                                        <input type="radio" id="sr-0-3" name="reviewStar" value="3" />
-                                        <label for="sr-0-3">★</label>
-                                        <input type="radio" id="sr-0-2" name="reviewStar" value="2" />
-                                        <label for="sr-0-2">★</label>
-                                        <input type="radio" id="sr-0-1" name="reviewStar" value="1" />
-                                        <label for="sr-0-1">★</label>
-                                    </div>
-<!--                                    <input name="reviewStar" id="reviewStar" type="number" step="0.5" value="3" max="5"-->
-<!--                                           min="0" style="width: 40px; height: 40px">-->
-                                    <input name="uploadFile" id="uploadFile" type="file" accept="image/*">
-                                    <input name="festivalId" type="hidden" th:value="${festival.festivalId}">
-                                    <button id="reviewInsertBtn" type="button" th:value="${festival.festivalId}">리뷰 제출</button>
-
-                                </form>
-
-                            </div>
-                            <br><br>
-                            <div id="reviewListHead">
-
-                                <table class="table table-striped" id="reviewTable" style="text-align: center;">
-
-                                    <thead class="table-light">
-                                    <tr style="text-align: center;">
-                                        <th scope="col" style="width: 15px">#</th>
-                                        <th scope="col" style="width: 100px">프로필</th>
-                                        <th scope="col" style="width: 300px">이름</th>
-                                        <th scope="col" style="width: 700px">별점 / 내용</th>
-                                        <th scope="col" style="width: 130px">첨부파일</th>
-                                        <th scope="col" style="width: 130px">수정</th>
-                                        <th scope="col" style="width: 130px">삭제</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody id="reviewList">
-
-                                    </tbody>
-
-                                </table>
-                            </div>
-
-                            <div id="reviewPages">
-
-                            </div>
-
-                        </div>
-
-                        <div id="youtubeList" class="hide" style="width: 100%">
-
-                            <div id="players">
-                            </div>
-                            <br>
-                            <div id="youtubePages" style="font-size: 20px;">
-                            </div>
-
-                        </div>
-
-                        <div id="naverNews" class="hide" style="width: 100%">
-
-                            <div id="naverArticleKeyword" style="width:100%">
-                            </div>
-
-                            <div id="artlcles">
-
-                            </div>
-
-                            <br>
-
-                            <div id="articlePages" style="font-size: 20px;">
-
-                            </div>
-
-                        </div>
-
-                        <div id="naverBlog" class="hide" style="width: 100%">
-
-                            <div id="naverBlogKeyword" style="width:100%">
-                            </div>
-
-                            <div id="blogs">
-
-                            </div>
-
-                            <br>
-
-                            <div id="blogPages" style="font-size: 20px;">
-
-                            </div>
-
-                        </div>
-
-                        <div id="mapDiv" class="hide" style="width: 100%">
-
-                            <div id="map" style="width:100%;height:800px;"></div>
-                            <script th:inline="javascript">
-
-                                //#region 네이버 지도
-
-                                    var festival = [[${festival}]];
-                                    var latitude = festival.latitude;
-                                    var longtitude = festival.longtitude;
-
-                                    var position = new naver.maps.LatLng(latitude, longtitude);
-
-                                    var map = new naver.maps.Map('map', {
-                                        center: position,
-                                        zoom: 15
-                                    });
-
-                                    var marker = new naver.maps.Marker({
-                                        position: position,
-                                        map: map
-                                    });
-
-                                    if(latitude==0 || longtitude==0){
-
-                                        $('#mapDiv').html("");
-
-                                    }
-
-
-
-                                    //#endregion
-
-
-                            </script>
-
-
-                        </div>
-
-                    </div>
-
-                    <div id="buttonZone">
-
-                        <button class="btn btn-primary heart" type="button" style="margin:0.5%"
-                                th:value="${festival.festivalId}">
-                            <img src="/img/festival/heart.png"
-                                 style="width : 20px; height: 20px;">
-                        </button>
-                        <button class="btn btn-primary hate" type="button" style="margin:0.5%"
-                                th:value="${festival.festivalId}">
-                            <img src="/img/festival/trash.png"
-                                 style="width : 20px; height: 20px;">
-                        </button>
-
-                    </div>
                 </div>
 
 
             </div>
 
+        </div>
+
+        <div id="contentBtnZone">
+
+            <button id="detailBtn">축제상세</button>
+            <button id="mapBtn">축제장소</button>
+            <button id="reviewBtn">축제후기</button>
+            <button id="relatedInfo">관련정보</button>
+            <button id="similarFestival">비슷한 축제</button>
 
         </div>
 
         <div id="downZone">
 
+            <div class="card-body" style="width:100%">
 
-            <div id="recommendCardZone">
-                <p style="font-size: 100px;background-color: red;width: 200px;height: 200px; display: flex; justify-content: center;    align-items: center;border-radius: 50%;">👍</p><p style="font-size: 100px;background-color: red;width: 200px;height: 200px; display: flex; justify-content: center;    align-items: center;border-radius: 50%;">👎</p>
-                <h3>
-                    <img src="/img/festival/star.png" alt="이미지 없음" height="50px"> 비슷한 축제
-                    <button class="btn btn-primary" id="regionRecommend" th:value="${festival.regionId}">같은 지역</button>
-                    <button class="btn btn-primary" id="seasonRecommend" th:value="${festival.season}">같은 계절</button>
-                    <button class="btn btn-primary" id="manageInstRecommend" th:value="${festival.manageInstitution}">
-                        주체기관 동일
-                    </button>
-                    <button class="btn btn-primary" id="keywordRecommend" th:value="${festival.festivalId}">키워드 동일
-                    </button>
-                </h3>
+                <div id="detailDescripZone">
 
-                <div id="recommendCardList">
+                    <div id="contentKeyword" style="width:100%">
+                    </div>
+
+                    <div th:switch="${festival.detailAddress}">
+
+                        <p th:case="''"></p>
+                        <p th:case="'null'"></p>
+                        <p th:case="null"></p>
+                        <p th:case="*" th:text="'주소 : '+${festival.detailAddress}"></p>
+
+                    </div>
+                    <div th:switch="${festival.season}">
+
+                        <p th:case="''"></p>
+                        <p th:case="'null'"></p>
+                        <p th:case="null"></p>
+                        <p th:case="*" th:text="'계절 : '+${festival.season}"></p>
+
+                    </div>
+                    <div th:switch="${festival.formattedStart}">
+                        <p th:case="''"></p>
+                        <p th:case="'null'"></p>
+                        <p th:case="null"></p>
+                        <p th:case="*" th:text="'시작일 : '+${festival.formattedStart}"></p>
+
+                    </div>
+                    <div th:switch="${festival.formattedEnd}">
+                        <p th:case="''"></p>
+                        <p th:case="'null'"></p>
+                        <p th:case="null"></p>
+                        <p th:case="*" th:text="'종료일 : '+${festival.formattedEnd}"></p>
+
+                    </div>
+                    <div th:value="${festival.timeId}" id="timeId">
+
+                        <p> 시간대 자세한 설명 ajax</p>
+
+                    </div>
+                    <div th:switch="${festival.manageInstitution}">
+
+                        <p th:case="''"></p>
+                        <p th:case="'null'"></p>
+                        <p th:case="null"></p>
+                        <p th:case="*" th:text="'주체기관 : '+${festival.manageInstitution}"></p>
+
+                    </div>
+                    <div th:switch="${festival.hostInstitution}">
+
+                        <p th:case="''"></p>
+                        <p th:case="'null'"></p>
+                        <p th:case="null"></p>
+                        <p th:case="*" th:text="'주관기관 : '+${festival.hostInstitution}"></p>
+
+                    </div>
+                    <div th:switch="${festival.sponserInstitution}">
+
+                        <p th:case="''"></p>
+                        <p th:case="'null'"></p>
+                        <p th:case="null"></p>
+                        <p th:case="*" th:text="'후원기관 : '+${festival.sponserInstitution}"></p>
+
+                    </div>
+                    <div th:switch="${festival.homepageUrl}">
+
+                        <p>
+                            <a th:case="''"></a>
+                            <a th:case="'null'"></a>
+                            <a th:case="null"></a>
+                            <a th:if="${!festival.homepageUrl.startsWith('https') and !festival.homepageUrl.startsWith('http') and !festival.homepageUrl.startsWith('www')}"></a>
+                            <a th:if="${festival.homepageUrl.startsWith('https') or festival.homepageUrl.startsWith('http') or festival.homepageUrl.startsWith('www')}"
+                               th:href="@{${festival.homepageUrl}}">홈페이지</a>
+                        </p>
+
+
+                    </div>
+                    <div th:switch="${festival.place}">
+                        <p th:case="''"></p>
+                        <p th:case="'null'"></p>
+                        <p th:case="null"></p>
+                        <p th:case="*" th:text="'장소 : '+${festival.place}"></p>
+                    </div>
+                    <div th:switch="${festival.tel}">
+                        <p th:case="''"></p>
+                        <p th:case="'null'"></p>
+                        <p th:case="null"></p>
+                        <p th:case="*" th:text="'전화번호 : '+${festival.tel}"></p>
+                    </div>
+                    <p class="card-text" th:text="${festival.festivalContent}"></p>
+
                 </div>
+
+                <div id="mapDiv" class="hide" style="width: 100%">
+
+                    <div id="map"></div>
+                    <script th:inline="javascript">
+
+                        //#region 네이버 지도
+
+                            var festival = [[${festival}]];
+                            var latitude = festival.latitude;
+                            var longtitude = festival.longtitude;
+
+                            var position = new naver.maps.LatLng(latitude, longtitude);
+
+                            var map = new naver.maps.Map('map', {
+                                center: position,
+                                zoom: 15
+                            });
+
+                            var marker = new naver.maps.Marker({
+                                position: position,
+                                map: map
+                            });
+
+                            if(latitude==0 || longtitude==0){
+
+                                $('#mapDiv').html("");
+
+                            }
+
+
+
+                            //#endregion
+
+
+                    </script>
+
+
+                </div>
+
+                <div id="review" class="hide" style="width: 100%">
+
+                    <div id="reviewKeyword" style="width:100%">
+                    </div>
+
+                    <h3>리뷰 작성하기</h3>
+
+                    <div>
+
+                        <!--                        <img src="/img/festival/reviewAttach/2f9d6fe0-28a4-4f4d-a64f-a260ce75d47f_스크린샷 2024-07-04 162835.png">-->
+                        <!--                                https://www.putzisan.com/articles/html-css-star-rating-input-->
+                        <form id="reviewForm" encType="multipart/form-data">
+
+                                    <textarea name="reviewTextArea" id="reviewTextArea" rows="4" cols="150"
+                                              placeholder="리뷰를 입력하세요">
+                                    </textarea>
+                            <div class="star-rating">
+                                <!--                                        FLEX-REVERSE-->
+                                <input type="radio" id="sr-0-5" name="reviewStar" value="5"/>
+                                <label for="sr-0-5">★</label>
+                                <input type="radio" id="sr-0-4" name="reviewStar" value="4"/>
+                                <label for="sr-0-4">★</label>
+                                <input type="radio" id="sr-0-3" name="reviewStar" value="3"/>
+                                <label for="sr-0-3">★</label>
+                                <input type="radio" id="sr-0-2" name="reviewStar" value="2"/>
+                                <label for="sr-0-2">★</label>
+                                <input type="radio" id="sr-0-1" name="reviewStar" value="1"/>
+                                <label for="sr-0-1">★</label>
+                            </div>
+                            <!--                                    <input name="reviewStar" id="reviewStar" type="number" step="0.5" value="3" max="5"-->
+                            <!--                                           min="0" style="width: 40px; height: 40px">-->
+                            <input name="uploadFile" id="uploadFile" type="file" accept="image/*">
+                            <input name="festivalId" type="hidden" th:value="${festival.festivalId}">
+                            <button id="reviewInsertBtn" type="button" th:value="${festival.festivalId}">리뷰 제출</button>
+
+                        </form>
+
+                    </div>
+                    <br><br>
+                    <div id="reviewListHead">
+
+                        <table class="table table-striped" id="reviewTable" style="text-align: center;">
+
+                            <thead class="table-light">
+                            <tr style="text-align: center;">
+                                <th scope="col" style="width: 15px">#</th>
+                                <th scope="col" style="width: 100px">프로필</th>
+                                <th scope="col" style="width: 300px">이름</th>
+                                <th scope="col" style="width: 700px">별점 / 내용</th>
+                                <th scope="col" style="width: 130px">첨부파일</th>
+                                <th scope="col" style="width: 130px">수정</th>
+                                <th scope="col" style="width: 130px">삭제</th>
+                            </tr>
+                            </thead>
+                            <tbody id="reviewList">
+
+                            </tbody>
+
+                        </table>
+                    </div>
+
+                    <div id="reviewPages">
+
+                    </div>
+
+                </div>
+
+                <div id="festivalInfo" class="hide">
+
+                    <div id="youtubeList" style="width: 100%">
+
+                        <div id="players">
+                        </div>
+                        <br>
+                        <div id="youtubePages" style="font-size: 20px;">
+                        </div>
+
+                    </div>
+
+                    <div id="naverNews" style="width: 100%">
+
+                        <div id="naverArticleKeyword" style="width:100%">
+                        </div>
+
+                        <div id="artlcles">
+
+                        </div>
+
+                        <br>
+
+                        <div id="articlePages" style="font-size: 20px;">
+
+                        </div>
+
+                    </div>
+
+                    <div id="naverBlog" style="width: 100%">
+
+                        <div id="naverBlogKeyword" style="width:100%">
+                        </div>
+
+                        <div id="blogs">
+
+                        </div>
+
+                        <br>
+
+                        <div id="blogPages" style="font-size: 20px;">
+
+                        </div>
+
+                    </div>
+
+
+                </div>
+
+<!--                <div id="recommendCardZone" class="hide">-->
+
+<!--                    <h3>-->
+<!--                        <img src="/img/festival/star.png" alt="이미지 없음" height="50px"> 비슷한 축제-->
+<!--                        <button class="btn btn-primary" id="regionRecommend" th:value="${festival.regionId}">같은 지역-->
+<!--                        </button>-->
+<!--                        <button class="btn btn-primary" id="seasonRecommend" th:value="${festival.season}">같은 계절-->
+<!--                        </button>-->
+<!--                        <button class="btn btn-primary" id="manageInstRecommend"-->
+<!--                                th:value="${festival.manageInstitution}">-->
+<!--                            주체기관 동일-->
+<!--                        </button>-->
+<!--                        <button class="btn btn-primary" id="keywordRecommend" th:value="${festival.festivalId}">키워드 동일-->
+<!--                        </button>-->
+<!--                    </h3>-->
+
+<!--                    <div id="recommendCardList">-->
+<!--                    </div>-->
+
+<!--                </div>-->
 
 
             </div>
 
         </div>
-
 
     </div>
 
