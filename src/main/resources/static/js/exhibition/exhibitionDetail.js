@@ -198,6 +198,36 @@ async function uploadImageToBucket(file, path) {
     });
 }
 
+function setInterestedBtn(state) {
+    let $downButton = $(`#notInterestedBtn img`);
+    let $upButton = $(`#favoriteBtn img`);
+    const baseUrl = 'https://kr.object.ncloudstorage.com/team3/common/';
+
+    $downButton.attr('src', baseUrl + 'downNo.png');
+    $upButton.attr('src', baseUrl + 'upNo.png');
+
+    let downSrc = $downButton.attr('src');
+    let upSrc = $upButton.attr('src');
+    console.log('setInterestedBtn : ', state)
+
+    if (state === 'interested') {
+        if (upSrc.includes('upBlue.png')) {
+            $upButton.attr('src', upSrc.replace('upBlue.png', 'upNo.png'));
+        } else if (upSrc.includes('upNo.png')) {
+            console.log('no')
+            $upButton.attr('src', upSrc.replace('upNo.png', 'upBlue.png'));
+        }
+        $downButton.attr('src', baseUrl + 'downNo.png');
+    }else if(state ==='not_interested') {
+        if (downSrc.includes('downRed.png')) {
+            $downButton.attr('src', downSrc.replace('downRed.png', 'downNo.png'));
+        } else if (downSrc.includes('downNo.png')) {
+            $downButton.attr('src', downSrc.replace('downNo.png', 'downRed.png'));
+        }
+        $upButton.attr('src', baseUrl + 'upNo.png');
+    }
+}
+
 async function updateInterest(exhibitionId, state) {
     console.log('update interest: ',exhibitionId, state)
     try {
@@ -206,7 +236,8 @@ async function updateInterest(exhibitionId, state) {
             state: state
         })
 
-        renderViewBackground(state)
+
+        setInterestedBtn(state)
     }catch(e) {
         console.log('error : ',e)
         alert(`${state === 'interested'} ? "찜 설정 실패" : "관심 없음 설정 실패"`)
@@ -214,22 +245,6 @@ async function updateInterest(exhibitionId, state) {
 
 }
 
-function renderViewBackground(state) {
-    const contentDiv = document.querySelector(`.container`)
-
-    console.log("dom : ",contentDiv)
-    if (state === 'interested') {
-        contentDiv.classList.add('background-pink')
-        if (contentDiv.classList.contains('background-gray')) {
-            contentDiv.classList.remove('background-gray');
-        }
-    }else if (state === 'not_interested') {
-        contentDiv.classList.add('background-gray')
-        if (contentDiv.classList.contains('background-pink')) {
-            contentDiv.classList.remove('background-pink');
-        }
-    }
-}
 
 function getExhibitionIdFromUrl() {
     const urlParts = window.location.pathname.split('/');
@@ -312,11 +327,14 @@ function renderExhibitionDetails(exhibition) {
     $('#exhibitionDate').text(`${exhibition.startDate} ~ ${exhibition.endDate}`);
     $('#exhibitionImage').attr('src', exhibition.image);
 
+
+
+
     initMap(exhibition.museum);
     renderInformation(exhibition)
-    renderViewBackground(exhibition?.state)
     // searchYoutubeVideos(exhibition.title, exhibition.museum);
     searchYoutubeVideos(exhibition.title);
+    setInterestedBtn(exhibition.state)
 }
 
 // async function searchYoutubeVideos(title, museum) {
@@ -364,8 +382,13 @@ async function initMap(location) {
         center: new naver.maps.LatLng(37.3595704, 127.105399),
         zoom: 15
     };
-    const map = new naver.maps.Map('map', mapOptions);
 
+    const mapDiv = document.getElementById('map');
+    const map = new naver.maps.Map(mapDiv, mapOptions);
+
+
+    console.log('mapDiv : ',mapDiv)
+    console.log('map : ',map)
     if (!location) {
         console.log('No location provided');
         $('#mapDiv').html("위치 정보가 없습니다.");
@@ -388,10 +411,14 @@ async function initMap(location) {
     // 좌표로 이동
     map.setCenter(point);
     // 해당 좌표에 마크 설정
-    new naver.maps.Marker({
+    await new naver.maps.Marker({
         position: point,
         map: map
     });
+
+    setTimeout( function() {
+        window.dispatchEvent(new Event('resize'));
+    }, 600);
 }
 
 function renderInformation(exhibition) {
@@ -416,11 +443,17 @@ function renderReviews(reviews) {
 
     const reviewsHtml = pageReviews.map(review => `
         <div class="review" data-id="${review.id}">
-            <div class="review-content">
-                <h3>${review.name}</h3>
+            <div class="review-top">
+                <img src="https://kr.object.ncloudstorage.com/team3${review.profileImage}" alt="프로필 이미지" class="profile-image">
+                <div class="review-info">
+                    <h3 class="review-name">${review.name}</h3>
+                    <p class="review-date">${review.createdAt}</p>
+                    <div class="review-rating">${'★'.repeat(review.stars)}${'☆'.repeat(5-review.stars)}</div>
+                </div>
+                ${(review.auth) ? '<button class="delete-review">삭제</button>' : ''}
+            </div>
+            <div class="review-bottom">
                 <p class="review-text">${review.content}</p>
-                <div class="review-rating">${'★'.repeat(review.stars)}${'☆'.repeat(5-review.stars)}</div>
-                ${(review.auth) ? '<button class="delete-review" style="position: absolute; top: 5px; right: 5px;">삭제</button>' : ''}
             </div>
         </div>
     `).join('');

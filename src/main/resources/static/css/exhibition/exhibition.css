@@ -2,16 +2,45 @@ body {
     font-family: Arial, sans-serif;
     margin: 0;
 }
+
+p {
+    margin-bottom: 0 !important;
+}
+
 .tab-menu {
     margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
 }
+
+.filter-container {
+    display: flex;
+    justify-content: space-between;
+    margin: 20px 0;
+}
+
+
+.genre-item {
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 400;
+    color: #1E1E1E;
+    cursor: pointer;
+}
+
+.genre-item.active {
+    background: #F5F5F5;
+    color: #444444;
+}
+
+
 .tab-menu button {
     padding: 10px 20px;
     margin-right: 5px;
 }
 .search-bar {
-    background-color: #f0f0f0;
-    padding: 20px;
     margin-bottom: 20px;
 }
 .search-bar select,
@@ -43,6 +72,13 @@ body {
 .exhibition-actions {
     display: flex;
     align-items: start;
+    font-weight: 700;
+    color: white;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    position: relative;
+    top: -200px;
+    right: -60px;
+
 }
 .action-button {
     background: none;
@@ -126,17 +162,19 @@ body {
 }
 
 .all-title {
-    font-size: 16px;
-    font-weight: bold;
+    font-size: 20px;
+    font-weight: 600;
     margin-bottom: 5px;
     white-space: normal;
+    color: #333;
     overflow-wrap: break-word;
 }
 
 .all-location,
 .all-date {
-    font-size: 14px;
-    color: #555;
+    font-size: 16px;
+    font-weight: 400;
+    color: #757575;
     white-space: normal;
     overflow-wrap: break-word;
 }

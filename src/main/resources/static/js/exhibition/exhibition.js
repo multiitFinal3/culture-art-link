@@ -6,6 +6,22 @@ let searchParams = { title: "", artist: "", museum: "" }; // 검색 조건 초�
 $(document).ready(function () {
     init();
 
+
+    const genreItems = document.querySelectorAll('.genre-item');
+
+    genreItems.forEach(item => {
+        item.addEventListener('click', function() {
+            // 모든 genre-item에서 active 클래스 제거
+            genreItems.forEach(el => {
+                el.classList.remove('active');
+            });
+
+            // 클릭된 요소에 active 클래스 추가
+            this.classList.add('active');
+        });
+    });
+
+
     // 전시 여부 버튼 할당
     $("#currentBtn").click(function () {
         changeViewStatus("current");
