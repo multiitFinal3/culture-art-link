@@ -1670,35 +1670,42 @@
 
     <div id="realContent">
 
-        <div id="leftZone">
-
-            <form encType="multipart/form-data" id="basicForm" style="font-size: 28px;margin: 10%;">
-
-                <div id="profileImg" style="width: 100%;">
-
-<!--                    <img th:src="@{${user.userProfilePic}}" alt="이미지가 없습니다.">-->
-
-                </div><br>
-                프로필 사진 <input name="uploadFile" class="rounded" id="uploadFile" type="file" accept="image/*"><br>
-                이메일  <input name="email" class="rounded" id="email" th:value="${user.email}" placeholder="${user.email}"><br>
-                비밀번호  <input name="password" class="rounded" id="password" type="password" th:value="${user.password}" placeholder="******"><br>
-                이름  <input name="userName" class="rounded" id="userName" style="width:100px;" th:value="${user.userName}" placeholder="${user.userName}">
-                전화번호  <input name="tel" class="rounded" id="tel" type="tel" style="width:200px;" th:value="${user.tel}"  placeholder="${user.tel}"><br>
-                나이 <input name="userAge" class="rounded" id="userAge" type="number" style="width:80px;" th:value="${user.userAge}"  th:placeholder="${user.userAge}">
-                성별
-                <select name="gender" class="rounded" style="width:80px;" id="gender" th:value="${user.gender}">
-                </select>
-                지역 <select name="regionId" id="regionId" class="rounded" style="width:100px;"></select><br>
-
-                <button type="submit" id="updateAccount" th:value="${user.userId}">회원정보 수정</button>
-                <button type="button" id="deleteAccount" th:value="${user.userId}">회원탈퇴</button>
-
-            </form>
-
-        </div>
-
 
         <div id="rightZone">
+
+            <div id="leftZone">
+
+                <form encType="multipart/form-data" id="basicForm" style="font-size: 28px;margin: 10%;">
+
+                    <div id="profileImg" style="width: 100%;">
+
+                        <!--                    <img th:src="@{${user.userProfilePic}}" alt="이미지가 없습니다.">-->
+
+                    </div>
+                    <br>
+                    프로필 사진 <input name="uploadFile" class="rounded" id="uploadFile" type="file" accept="image/*"><br>
+                    이메일 <input name="email" class="rounded" id="email" th:value="${user.email}"
+                               placeholder="${user.email}"><br>
+                    비밀번호 <input name="password" class="rounded" id="password" type="password"
+                                th:value="${user.password}" placeholder="******"><br>
+                    이름 <input name="userName" class="rounded" id="userName" style="width:100px;"
+                              th:value="${user.userName}" placeholder="${user.userName}">
+                    전화번호 <input name="tel" class="rounded" id="tel" type="tel" style="width:200px;"
+                                th:value="${user.tel}" placeholder="${user.tel}"><br>
+                    나이 <input name="userAge" class="rounded" id="userAge" type="number" style="width:80px;"
+                              th:value="${user.userAge}" th:placeholder="${user.userAge}">
+                    성별
+                    <select name="gender" class="rounded" style="width:80px;" id="gender" th:value="${user.gender}">
+                    </select>
+                    지역 <select name="regionId" id="regionId" class="rounded" style="width:100px;"></select><br>
+
+                    <button type="submit" id="updateAccount" th:value="${user.userId}">회원정보 수정</button>
+                    <button type="button" id="deleteAccount" th:value="${user.userId}">회원탈퇴</button>
+
+                </form>
+
+            </div>
+
 
             <div id="upperZone">
 
@@ -1722,8 +1729,6 @@
                     아아
 
                 </div>
-
-
 
 
             </div>
@@ -1771,7 +1776,6 @@
                 </div>
 
             </div>
-
 
 
         </div>
