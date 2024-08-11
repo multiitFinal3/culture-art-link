@@ -526,8 +526,8 @@
                                 if((review.userProfilePic == null) || (review.userProfilePic == "")){
 
                                      profilePic = `
-                                     <td class="userProfilePic" style="width: 100px">
-                                        <img src="/img/festival/noPhoto.png" style="height: 50px;">
+                                     <td class="userProfilePic">
+                                        <img src="/img/festival/noPhoto.png">
                                      </td>
                                     `
 
@@ -535,8 +535,8 @@
                                 }else{
 
                                     profilePic = `
-                                    <td class="userProfilePic" style="width: 100px">
-                                        <img src="${review.userProfilePic}" height="50px">
+                                    <td class="userProfilePic">
+                                        <img src="${review.userProfilePic}">
                                     </td>
                                     `
                                 }
@@ -546,16 +546,16 @@
                                 if((review.attachment == null) || (review.attachment == "")){
 
                                     attachment = `
-                                    <td style="width: 100px">
-                                        <img src="/img/festival/noPhoto.png" style="height: 50px;">
+                                    <td>
+                                        <img src="/img/festival/noPhoto.png">
                                     </td>
                                     `
 
                                 }else{
 
                                     attachment = `
-                                    <td style="width: 100px">
-                                        <img src="${review.attachment}" height="50px">
+                                    <td>
+                                        <img src="${review.attachment}">
                                     </td>
                                     `
 
@@ -568,7 +568,7 @@
 
                                         <tr class="reviewRow" id="review.festivalReviewId">
 
-                                            <td class="index1" style="width: 100px">
+                                            <td class="index1">
                                                 ${index1}
                                             </td>` +
 
@@ -576,12 +576,12 @@
 
                                             +
 
-                                            `<td class="reviewUserName" style="width: 100px">
+                                            `<td class="reviewUserName">
                                                 ${review.userName}
                                             </td>
 
 
-                                            <td style="width: 200px">
+                                            <td>
                                             <form id="reviewForm_${review.festivalReviewId}">
                                                 <div class="star-rating2">
                                                     <input type="radio" id="star5_${review.festivalReviewId}" name="reviewStar" value="5" ${review.festivalReviewStar == 5? 'checked' : ''}/>
@@ -597,7 +597,7 @@
                                                 </div>
                                                 <input type="hidden" value="${review.festivalReviewId}" name="festivalReviewId">
                                                 <input type="hidden" value="${festivalId}" name="festivalId">
-                                                <textarea class="reviewText" rows="2" cols="100" name="reviewText">${review.festivalReviewContent}</textarea>
+                                                <textarea class="reviewText" rows="2" cols="60" name="reviewText">${review.festivalReviewContent}</textarea>
                                             </form>
                                             </td>`
 
@@ -607,12 +607,12 @@
 
                                             +
 
-                                            `<td style="width: 130px">
+                                            `<td>
                                                 <button class="updateBtn" value="${review.festivalReviewId}" type="button">수정</button>
                                             </td>
 
 
-                                            <td style="width: 130px">
+                                            <td>
                                                 <button class="deleteBtn" value="${review.festivalReviewId}">삭제</button>
                                             </td>
 
@@ -660,11 +660,11 @@
 
                                             +
 
-                                            `<td class="reviewUserName" style="width: 100px">
+                                            `<td class="reviewUserName" style="width: 50px">
                                                 ${review.userName}
                                             </td>
 
-                                            <td style="width: 700px">
+                                            <td>
                                                 <div class="star" style="width: 100%">`
 
                                                  + reviewStarHtml +
@@ -673,7 +673,7 @@
 
 
 
-                                                <p class="reviewText" rows="2" cols="100" style="width: 100%">${review.festivalReviewContent}</p>
+                                                <p class="reviewText" rows="2" cols="100">${review.festivalReviewContent}</p>
                                             </td>`
 
                                             +
@@ -682,10 +682,10 @@
 
                                             +
 
-                                            `<td style="width: 100px">
+                                            `<td>
                                             </td>
 
-                                            <td style="width: 100px">
+                                            <td>
                                             </td>
 
                                         </tr>
@@ -2020,39 +2020,42 @@
                     <div id="reviewKeyword" style="width:100%">
                     </div>
 
-                    <h3>리뷰 작성하기</h3>
+                    <section id="reviewSection">
 
-                    <div>
+                        <span>
+                            <!-- https://www.putzisan.com/articles/html-css-star-rating-input-->
+                            <form id="reviewForm" encType="multipart/form-data">
+                                <span id="reviewHead1">리뷰 작성</span>
+                                <span class="star-rating">
+                                    <!--                                        FLEX-REVERSE-->
+                                    <input type="radio" id="sr-0-5" name="reviewStar" value="5"/>
+                                    <label for="sr-0-5">★</label>
+                                    <input type="radio" id="sr-0-4" name="reviewStar" value="4"/>
+                                    <label for="sr-0-4">★</label>
+                                    <input type="radio" id="sr-0-3" name="reviewStar" value="3"/>
+                                    <label for="sr-0-3">★</label>
+                                    <input type="radio" id="sr-0-2" name="reviewStar" value="2"/>
+                                    <label for="sr-0-2">★</label>
+                                    <input type="radio" id="sr-0-1" name="reviewStar" value="1"/>
+                                    <label for="sr-0-1">★</label>
+                                </span>
 
-                        <!--                        <img src="/img/festival/reviewAttach/2f9d6fe0-28a4-4f4d-a64f-a260ce75d47f_스크린샷 2024-07-04 162835.png">-->
-                        <!--                                https://www.putzisan.com/articles/html-css-star-rating-input-->
-                        <form id="reviewForm" encType="multipart/form-data">
+                                <textarea name="reviewTextArea" id="reviewTextArea" rows="4" cols="150"
+                                          placeholder="리뷰를 입력하세요">
+                                </textarea>
 
-                                    <textarea name="reviewTextArea" id="reviewTextArea" rows="4" cols="150"
-                                              placeholder="리뷰를 입력하세요">
-                                    </textarea>
-                            <div class="star-rating">
-                                <!--                                        FLEX-REVERSE-->
-                                <input type="radio" id="sr-0-5" name="reviewStar" value="5"/>
-                                <label for="sr-0-5">★</label>
-                                <input type="radio" id="sr-0-4" name="reviewStar" value="4"/>
-                                <label for="sr-0-4">★</label>
-                                <input type="radio" id="sr-0-3" name="reviewStar" value="3"/>
-                                <label for="sr-0-3">★</label>
-                                <input type="radio" id="sr-0-2" name="reviewStar" value="2"/>
-                                <label for="sr-0-2">★</label>
-                                <input type="radio" id="sr-0-1" name="reviewStar" value="1"/>
-                                <label for="sr-0-1">★</label>
-                            </div>
-                            <!--                                    <input name="reviewStar" id="reviewStar" type="number" step="0.5" value="3" max="5"-->
-                            <!--                                           min="0" style="width: 40px; height: 40px">-->
-                            <input name="uploadFile" id="uploadFile" type="file" accept="image/*">
-                            <input name="festivalId" type="hidden" th:value="${festival.festivalId}">
-                            <button id="reviewInsertBtn" type="button" th:value="${festival.festivalId}">리뷰 제출</button>
+                                <input name="uploadFile" id="uploadFile" type="file" accept="image/*">
+                                <input name="festivalId" type="hidden" th:value="${festival.festivalId}">
+                                <button id="reviewInsertBtn" type="button" th:value="${festival.festivalId}">리뷰 제출</button>
 
-                        </form>
+                            </form>
 
-                    </div>
+                        </span>
+
+
+                    </section>
+
+
                     <br><br>
                     <div id="reviewListHead">
 
@@ -2060,14 +2063,13 @@
 
                             <thead class="table-light">
                             <tr style="text-align: center;">
-                                <th scope="col" style="width: 15px">#</th>
-                                <th scope="col" style="width: 100px">프로필</th>
-                                <th scope="col" style="width: 300px">이름</th>
-                                <th scope="col" style="width: 700px">별점 / 내용</th>
-                                <th scope="col" style="width: 130px">첨부파일</th>
-                                <th scope="col" style="width: 130px">수정</th>
-                                <th scope="col" style="width: 130px">삭제</th>
-                            </tr>
+                                <th scope="col">#</th>
+                                <th scope="col">프로필</th>
+                                <th scope="col">이름</th>
+                                <th scope="col">별점 / 내용</th>
+                                <th scope="col">첨부파일</th>
+                                <th scope="col">수정</th>
+                                <th scope="col">삭제</th>                            </tr>
                             </thead>
                             <tbody id="reviewList">
 
