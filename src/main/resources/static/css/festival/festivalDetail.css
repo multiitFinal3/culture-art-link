@@ -361,49 +361,28 @@
 
    #contentKeyword, #reviewKeyword, #naverArticleKeyword, #naverBlogKeyword{
 
-        display : flex;
-        flex-flow: row;
-        align-items: center;
-        justify-content: space-around;
-        margin: 1%;
+        display: flex;
+        justify-content: left;
+        gap: 10px;
+        margin-bottom: 20px;
 
    }
 
-   #naverKeyword{
-
-        display : flex;
-        flex-flow: row;
-        align-items: center;
-        justify-content: space-around;
-        margin: 1%;
-
-
-   }
 
    button.keyword{
 
-        width: 150px;
-        height: 50px;
-        font-size: 18px;
-        margin: 1%;
-
+        background-color: #f0f0f0;
+        color: #333;
+        padding: 8px 15px;
+        border-radius: 20px;
+        font-size: 14px;
+        font-weight: bold;
+        text-decoration: none;
+        border: 0px;
    }
 
 
-   button.contentKeyword{
 
-        background-color: #E6E6FA;
-        color: black;
-
-   }
-
-
-   button.naverKeyword{
-
-        background-color: #EBFAC0;
-        color: black;
-
-   }
 
     #buttonZone{
 
@@ -484,3 +463,6 @@
         font-weight: bold;
     }
 
+    .avgstar.full {
+        color: gold;
+    }

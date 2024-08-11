@@ -13,15 +13,6 @@
         $(document).ready(
             function(){
 
-                //# region 카드 클릭 시 상세 페이지로 이동
-
-                $(document).on('click','#recommendCardList .card',function(){
-
-                    var festivalId = $(this).attr('id');
-                    window.location.href='/festival/festival-detail?festivalId='+festivalId;
-
-                })
-
 
 
                 // 전역변수 선언
@@ -39,6 +30,27 @@
 
 
                 var userId = [[${userId}]];
+
+
+                //# region 공통 기능
+
+                /**
+                * 카드 클릭 시 상세 페이지로 이동
+                *
+                */
+                $(document).on('click','#recommendCardList .card',function(){
+
+                    var festivalId = $(this).attr('id');
+                    window.location.href='/festival/festival-detail?festivalId='+festivalId;
+
+                })
+
+
+
+
+                //#endregion
+
+
 
                 //#region 찜 / 관심없음 관련 함수
 
@@ -414,6 +426,62 @@
 
                 //#region 리뷰 관련 함수
 
+                /**
+                * 리뷰 별점 표시
+                *
+                */
+                function insertReviewAvg(){
+
+                    var avgStar = Math.round(festival.avgRate);
+                    console.log("avgStar");
+                    console.log(avgStar)
+                    var starsHtml = ``;
+                    $("#reviewAvgStar").html("");
+
+
+                    if(avgStar == 0){
+
+                        starsHtml+=`
+                            <span class="avgstar full">★</span>
+                            <span class="avgstar full">★</span>
+                            <span class="avgstar full">★</span>
+                            <span class="avgstar full">★</span>
+                            <span class="avgstar full">★</span>
+                        `;
+
+                    }else if(0<avgStar && avgStar<5){
+
+                        for(var i =1; i<=avgStar ; i++){
+                            starsHtml+=`
+                            <span class="avgstar full">★</span>
+                            `;
+                        }
+
+                        for(var i=avgStar+1; i<=5; i++){
+                            starsHtml+=`
+                            <span class="avgstar empty">☆</span>
+                            `;
+                        }
+
+                    }else{
+                        starsHtml+=`
+                            <span class="avgstar empty">☆</span>
+                            <span class="avgstar empty">☆</span>
+                            <span class="avgstar empty">☆</span>
+                            <span class="avgstar empty">☆</span>
+                            <span class="avgstar empty">☆</span>
+                        `;
+                    }
+
+                    $("#reviewAvgStar").append(starsHtml);
+
+
+                }
+
+                insertReviewAvg();
+
+
+
 
                 /**
                 * 텍스트 에어리어 클릭 시 처음으로 가게 함
@@ -754,6 +822,8 @@
 
                         }
                     })
+
+                    insertReviewAvg();;
                 })
 
 
@@ -782,6 +852,8 @@
                             findFestivalReviewListByVWUserReviewDTO(festivalId,userId, 1);
                         }
                     })
+
+                    insertReviewAvg();
                 })
 
 
@@ -1782,6 +1854,11 @@
                         <a th:if="${festival.homepageUrl.startsWith('https') or festival.homepageUrl.startsWith('http') or festival.homepageUrl.startsWith('www')}"
                            th:href="@{${festival.homepageUrl}}">홈페이지</a>
 
+                    </div>
+
+                    <div class="averageRating" th:data-avgRate="${festival.avgRate}">
+                        <span th:text="${festival.avgRate}"></span>
+                        <span class="review-avgstar" id="reviewAvgStar"></span>
                     </div>
 
 
