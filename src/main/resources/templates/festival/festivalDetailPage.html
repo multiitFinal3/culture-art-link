@@ -13,6 +13,17 @@
         $(document).ready(
             function(){
 
+                //# region 카드 클릭 시 상세 페이지로 이동
+
+                $(document).on('click','#recommendCardList .card',function(){
+
+                    var festivalId = $(this).attr('id');
+                    window.location.href='/festival/festival-detail?festivalId='+festivalId;
+
+                })
+
+
+
                 // 전역변수 선언
 
                 var festival = [[${festival}]];
@@ -870,6 +881,10 @@
 
                             $.each(list, function(index, festival){
 
+                                var title = festival.festivalName.length > 14?
+                                festival.festivalName.substring(0,14) + "..."
+                                : festival.festivalName;
+
                                 var content = festival.festivalContent.length > 30?
                                 festival.festivalContent.substring(0,30) + "..."
                                 : festival.festivalContent;
@@ -899,16 +914,16 @@
                                 if(! festival.imgUrl || festival.imgUrl == "null"){
 
                                     firstHtml = `
-                                        <div class="card recommendCard" style="width: 18rem;" id="${festival.festivalId}" data-value="${festival.festivalId}">
-                                            <img class="card-img-top" src="/img/festival/noPhoto.png" alt="Card image cap" style="min-width: 380px; min-height: 400px;">
+                                        <div class="card" id="${festival.festivalId}" data-value="${festival.festivalId}">
+                                            <img class="card-img-top" src="/img/festival/noPhoto.png" alt="Card image cap">
 
                                     `;
 
                                 }else{
 
                                     firstHtml = `
-                                        <div class="card recommendCard" style="width: 18rem;" id="${festival.festivalId}" data-value="${festival.festivalId}">
-                                            <img class="card-img-top" src="${festival.imgUrl}" alt="Card image cap" style="min-width: 380px; min-height: 400px;">
+                                        <div class="card" id="${festival.festivalId}" data-value="${festival.festivalId}">
+                                            <img class="card-img-top" src="${festival.imgUrl}" alt="Card image cap">
 
                                     `;
 
@@ -917,18 +932,13 @@
 
                                 var secondHtml = `
                                     <div class="card-body">
-                                          <h5 class="card-title">${festival.festivalName}</h5>
+                                          <h5 class="card-title">${title}</h5>
                                           <p class="card-text">${content}</p>
-                                          <div>
-                                              <a href="/festival/festival-detail?festivalId=${festival.festivalId}" class="btn btn-primary">자세히</a>
-                                              <button class="btn btn-primary heart" type="button" style="margin:0px" value="${festival.festivalId}">
-                                                  <img src="/img/festival/heart.png"
-                                                       style="width : 20px; height: 20px;">
-                                              </button>
-                                              <button class="btn btn-primary hate" type="button" style="margin:0px" value="${festival.festivalId}">
-                                                    <img src="/img/festival/trash.png"
-                                                         style="width : 20px; height: 20px;">
-                                              </button>
+                                          <div class="buttonZone">
+                                            <img src="https://kr.object.ncloudstorage.com/team3/common/upNo.png"
+                                               style="width : 30px; height: 30px;" class="heart" value="${festival.festivalId}">
+                                            <img src="https://kr.object.ncloudstorage.com/team3/common/downNo.png"
+                                               style="width : 30px; height: 30px;" class="hate" value="${festival.festivalId}">
                                           </div>
                                     </div>
 
@@ -964,13 +974,12 @@
 
                     var regionId = $(this).val();
                     findSameRegionFestivalByRegionId(festivalId, regionId);
+                    findLoveList();
+                    findHateList();
 
                 })
 
-
-                // 초기 화면에 같은 지역 추천 보이게 하기
                 findSameRegionFestivalByRegionId(festivalId, regionId);
-
 
 
 
@@ -994,6 +1003,10 @@
                             $('#recommendCardList').html("");
 
                             $.each(list, function(index, festival){
+
+                                var title = festival.festivalName.length > 14?
+                                festival.festivalName.substring(0,14) + "..."
+                                : festival.festivalName;
 
                                 var content = festival.festivalContent.length > 30?
                                 festival.festivalContent.substring(0,30) + "..."
@@ -1024,16 +1037,16 @@
                                 if(! festival.imgUrl || festival.imgUrl == "null"){
 
                                     firstHtml = `
-                                        <div class="card recommendCard" style="width: 18rem;" id="${festival.festivalId}" data-value="${festival.festivalId}">
-                                            <img class="card-img-top" src="/img/festival/noPhoto.png" alt="Card image cap" style="min-width: 380px; min-height: 400px;">
+                                        <div class="card" id="${festival.festivalId}" data-value="${festival.festivalId}">
+                                            <img class="card-img-top" src="/img/festival/noPhoto.png" alt="Card image cap">
 
                                     `;
 
                                 }else{
 
                                     firstHtml = `
-                                        <div class="card recommendCard" style="width: 18rem;" id="${festival.festivalId}" data-value="${festival.festivalId}">
-                                            <img class="card-img-top" src="${festival.imgUrl}" alt="Card image cap" style="min-width: 380px; min-height: 400px;">
+                                        <div class="card" id="${festival.festivalId}" data-value="${festival.festivalId}">
+                                            <img class="card-img-top" src="${festival.imgUrl}" alt="Card image cap">
 
                                     `;
 
@@ -1042,18 +1055,13 @@
 
                                 var secondHtml = `
                                     <div class="card-body">
-                                          <h5 class="card-title">${festival.festivalName}</h5>
+                                          <h5 class="card-title">${title}</h5>
                                           <p class="card-text">${content}</p>
-                                          <div>
-                                              <a href="/festival/festival-detail?festivalId=${festival.festivalId}" class="btn btn-primary">자세히</a>
-                                              <button class="btn btn-primary heart" type="button" style="margin:0px" value="${festival.festivalId}">
-                                                  <img src="/img/festival/heart.png"
-                                                       style="width : 20px; height: 20px;">
-                                              </button>
-                                              <button class="btn btn-primary hate" type="button" style="margin:0px" value="${festival.festivalId}">
-                                                    <img src="/img/festival/trash.png"
-                                                         style="width : 20px; height: 20px;">
-                                              </button>
+                                          <div class="buttonZone">
+                                            <img src="https://kr.object.ncloudstorage.com/team3/common/upNo.png"
+                                               style="width : 30px; height: 30px;" class="heart" value="${festival.festivalId}">
+                                            <img src="https://kr.object.ncloudstorage.com/team3/common/downNo.png"
+                                               style="width : 30px; height: 30px;" class="hate" value="${festival.festivalId}">
                                           </div>
                                     </div>
 
@@ -1067,7 +1075,6 @@
 
                                 findLoveList();
                                 findHateList();
-
 
 
                             })
@@ -1115,6 +1122,10 @@
 
                             $.each(list, function(index, festival){
 
+                                var title = festival.festivalName.length > 14?
+                                festival.festivalName.substring(0,14) + "..."
+                                : festival.festivalName;
+
                                 var content = festival.festivalContent.length > 30?
                                 festival.festivalContent.substring(0,30) + "..."
                                 : festival.festivalContent;
@@ -1144,16 +1155,16 @@
                                 if(! festival.imgUrl || festival.imgUrl == "null"){
 
                                     firstHtml = `
-                                        <div class="card recommendCard" style="width: 18rem;" id="${festival.festivalId}" data-value="${festival.festivalId}">
-                                            <img class="card-img-top" src="/img/festival/noPhoto.png" alt="Card image cap" style="min-width: 380px; min-height: 400px;">
+                                        <div class="card" id="${festival.festivalId}" data-value="${festival.festivalId}">
+                                            <img class="card-img-top" src="/img/festival/noPhoto.png" alt="Card image cap">
 
                                     `;
 
                                 }else{
 
                                     firstHtml = `
-                                        <div class="card recommendCard" style="width: 18rem;" id="${festival.festivalId}" data-value="${festival.festivalId}">
-                                            <img class="card-img-top" src="${festival.imgUrl}" alt="Card image cap" style="min-width: 380px; min-height: 400px;">
+                                        <div class="card" id="${festival.festivalId}" data-value="${festival.festivalId}">
+                                            <img class="card-img-top" src="${festival.imgUrl}" alt="Card image cap">
 
                                     `;
 
@@ -1162,18 +1173,13 @@
 
                                 var secondHtml = `
                                     <div class="card-body">
-                                          <h5 class="card-title">${festival.festivalName}</h5>
+                                          <h5 class="card-title">${title}</h5>
                                           <p class="card-text">${content}</p>
-                                          <div>
-                                              <a href="/festival/festival-detail?festivalId=${festival.festivalId}" class="btn btn-primary">자세히</a>
-                                              <button class="btn btn-primary heart" type="button" style="margin:0px" value="${festival.festivalId}">
-                                                  <img src="/img/festival/heart.png"
-                                                       style="width : 20px; height: 20px;">
-                                              </button>
-                                              <button class="btn btn-primary hate" type="button" style="margin:0px" value="${festival.festivalId}">
-                                                    <img src="/img/festival/trash.png"
-                                                         style="width : 20px; height: 20px;">
-                                              </button>
+                                          <div class="buttonZone">
+                                            <img src="https://kr.object.ncloudstorage.com/team3/common/upNo.png"
+                                               style="width : 30px; height: 30px;" class="heart" value="${festival.festivalId}">
+                                            <img src="https://kr.object.ncloudstorage.com/team3/common/downNo.png"
+                                               style="width : 30px; height: 30px;" class="hate" value="${festival.festivalId}">
                                           </div>
                                     </div>
 
@@ -1233,6 +1239,10 @@
 
                             $.each(list, function(index, festival){
 
+                                var title = festival.festivalName.length > 14?
+                                festival.festivalName.substring(0,14) + "..."
+                                : festival.festivalName;
+
                                 var content = festival.festivalContent.length > 30?
                                 festival.festivalContent.substring(0,30) + "..."
                                 : festival.festivalContent;
@@ -1262,16 +1272,16 @@
                                 if(! festival.imgUrl || festival.imgUrl == "null"){
 
                                     firstHtml = `
-                                        <div class="card recommendCard" style="width: 18rem;" id="${festival.festivalId}" data-value="${festival.festivalId}">
-                                            <img class="card-img-top" src="/img/festival/noPhoto.png" alt="Card image cap" style="min-width: 380px; min-height: 400px;">
+                                        <div class="card" id="${festival.festivalId}" data-value="${festival.festivalId}">
+                                            <img class="card-img-top" src="/img/festival/noPhoto.png" alt="Card image cap">
 
                                     `;
 
                                 }else{
 
                                     firstHtml = `
-                                        <div class="card recommendCard" style="width: 18rem;" id="${festival.festivalId}" data-value="${festival.festivalId}">
-                                            <img class="card-img-top" src="${festival.imgUrl}" alt="Card image cap" style="min-width: 380px; min-height: 400px;">
+                                        <div class="card" id="${festival.festivalId}" data-value="${festival.festivalId}">
+                                            <img class="card-img-top" src="${festival.imgUrl}" alt="Card image cap">
 
                                     `;
 
@@ -1280,18 +1290,13 @@
 
                                 var secondHtml = `
                                     <div class="card-body">
-                                          <h5 class="card-title">${festival.festivalName}</h5>
+                                          <h5 class="card-title">${title}</h5>
                                           <p class="card-text">${content}</p>
-                                          <div>
-                                              <a href="/festival/festival-detail?festivalId=${festival.festivalId}" class="btn btn-primary">자세히</a>
-                                              <button class="btn btn-primary heart" type="button" style="margin:0px" value="${festival.festivalId}">
-                                                  <img src="/img/festival/heart.png"
-                                                       style="width : 20px; height: 20px;">
-                                              </button>
-                                              <button class="btn btn-primary hate" type="button" style="margin:0px" value="${festival.festivalId}">
-                                                    <img src="/img/festival/trash.png"
-                                                         style="width : 20px; height: 20px;">
-                                              </button>
+                                          <div class="buttonZone">
+                                            <img src="https://kr.object.ncloudstorage.com/team3/common/upNo.png"
+                                               style="width : 30px; height: 30px;" class="heart" value="${festival.festivalId}">
+                                            <img src="https://kr.object.ncloudstorage.com/team3/common/downNo.png"
+                                               style="width : 30px; height: 30px;" class="hate" value="${festival.festivalId}">
                                           </div>
                                     </div>
 
@@ -2049,26 +2054,26 @@
 
                 </div>
 
-<!--                <div id="recommendCardZone" class="hide">-->
+                <div id="recommendCardZone" class="hide">
 
-<!--                    <h3>-->
-<!--                        <img src="/img/festival/star.png" alt="이미지 없음" height="50px"> 비슷한 축제-->
-<!--                        <button class="btn btn-primary" id="regionRecommend" th:value="${festival.regionId}">같은 지역-->
-<!--                        </button>-->
-<!--                        <button class="btn btn-primary" id="seasonRecommend" th:value="${festival.season}">같은 계절-->
-<!--                        </button>-->
-<!--                        <button class="btn btn-primary" id="manageInstRecommend"-->
-<!--                                th:value="${festival.manageInstitution}">-->
-<!--                            주체기관 동일-->
-<!--                        </button>-->
-<!--                        <button class="btn btn-primary" id="keywordRecommend" th:value="${festival.festivalId}">키워드 동일-->
-<!--                        </button>-->
-<!--                    </h3>-->
+                    <h3>
+                        <img src="/img/festival/star.png" alt="이미지 없음" height="50px">
+                        <button class="btn btn-primary" id="regionRecommend" th:value="${festival.regionId}">같은 지역
+                        </button>
+                        <button class="btn btn-primary" id="seasonRecommend" th:value="${festival.season}">같은 계절
+                        </button>
+                        <button class="btn btn-primary" id="manageInstRecommend"
+                                th:value="${festival.manageInstitution}">
+                            주체기관 동일
+                        </button>
+                        <button class="btn btn-primary" id="keywordRecommend" th:value="${festival.festivalId}">키워드 동일
+                        </button>
+                    </h3>
 
-<!--                    <div id="recommendCardList">-->
-<!--                    </div>-->
+                    <div id="recommendCardList">
+                    </div>
 
-<!--                </div>-->
+                </div>
 
 
             </div>
