@@ -29,6 +29,8 @@ $(document).ready(
                         console.log(list);
                         $.each(list, function(index, festival){
 
+                            var indexNew = index + 1;
+
                             var content = festival.festivalContent.length > 30?
                             festival.festivalContent.substring(0,30) + "..."
                             : festival.festivalContent;
@@ -67,6 +69,7 @@ $(document).ready(
 
                                 firstHtml = `
                                     <div class="card" id="${festival.festivalId}">
+                                        <div class="card-number">${indexNew}</div>
                                         <img class="card-img-top" src="/img/festival/noPhoto.png" alt="Card image cap">
 
                                 `;
@@ -75,6 +78,7 @@ $(document).ready(
 
                                 firstHtml = `
                                     <div class="card" id="${festival.festivalId}">
+                                        <div class="card-number">${indexNew}</div>
                                         <img class="card-img-top" src="${festival.imgUrl}" alt="Card image cap">
 
                                 `;
@@ -87,14 +91,10 @@ $(document).ready(
                                 <div class="card-body">
                                       <h5 class="card-title">${festival.festivalName}</h5>
                                       <p class="card-text">${content}</p>
-                                      <button class="btn btn-primary heart" type="button" style="margin:0px" value="${festival.festivalId}">
-                                          <img src="/img/festival/heart.png"
-                                               style="width : 100%; height: 100%;">
-                                      </button>
-                                      <button class="btn btn-primary hate" type="button" style="margin:0px" value="${festival.festivalId}">
-                                            <img src="/img/festival/trash.png"
-                                                 style="width : 100%; height: 100%;">
-                                      </button>
+                                      <img src="https://kr.object.ncloudstorage.com/team3/common/upNo.png"
+                                           style="width : 30px; height: 30px;" class="heart" value="${festival.festivalId}">
+                                      <img src="https://kr.object.ncloudstorage.com/team3/common/downNo.png"
+                                           style="width : 30px; height: 30px;" class="hate" value="${festival.festivalId}">
                                 </div>
 
                             </div>
@@ -672,10 +672,12 @@ $(document).ready(
             e.stopImmediatePropagation();
 
 
-            var button = $(this);
-            var festivalId = $(this).val();
+            var img = $(this);
+            var festivalId = img.attr('value');;
+            console.log("$(document).on('click','.heart', function(e)")
+            console.log(festivalId);
 
-            if(button.closest(".card").hasClass("hasLove")){
+            if(img.closest(".card").hasClass("hasLove")){
 
                 $.ajax({
 
@@ -684,7 +686,8 @@ $(document).ready(
                     contentType: 'application/json',
                     success: function(res){
                         alert(res);
-                        button.closest('.card').removeClass("hasLove");
+                        img.closest('.card').removeClass("hasLove");
+                        findLoveList();
                     },
                     error: function(xhr, status, error){
 
@@ -695,8 +698,8 @@ $(document).ready(
 
             }else{
 
-                if(button.closest(".card").hasClass("hasHate")){
-                    button.closest(".card").find(".hate").click();
+                if(img.closest(".card").hasClass("hasHate")){
+                    img.closest(".card").find(".hate").click();
                 }
 
 
@@ -708,8 +711,9 @@ $(document).ready(
                     success: function(res){
 
                         alert(res);
-                        button.closest(".card").addClass("hasLove");
+                        img.closest(".card").addClass("hasLove");
                         console.log("addClass('hasLove');")
+                        findLoveList();
 
 
                     },
@@ -732,7 +736,7 @@ $(document).ready(
 
 
         /**
-        * 찜 리스트 찾아서 색 바꾸기
+        * 찜 리스트 찾아서 up 이미지 색 바꾸기
         *
         */
         function findLoveList(){
@@ -755,7 +759,13 @@ $(document).ready(
                         if(list.includes(cardInt)){
 
                             $(card).addClass("hasLove");
+                            var heartImg = $(card).find('.heart');
+                            heartImg.attr('src','https://kr.object.ncloudstorage.com/team3/common/upBlue.png')
 
+                        }else{
+
+                            var heartImg = $(card).find('.heart');
+                            heartImg.attr('src','https://kr.object.ncloudstorage.com/team3/common/upNo.png');
                         }
                     })
                 }
@@ -776,10 +786,14 @@ $(document).ready(
 
             e.stopImmediatePropagation();
 
-            var button = $(this);
-            var festivalId = $(this).val();
+            var img = $(this);
+            var festivalId = img.attr('value');
+            console.log("$(document).on('click','.hate', function(e)")
+            console.log(festivalId);
 
-            if(button.closest(".card").hasClass("hasHate")){
+
+
+            if(img.closest(".card").hasClass("hasHate")){
 
                 $.ajax({
 
@@ -788,7 +802,8 @@ $(document).ready(
                     contentType: 'application/json',
                     success: function(res){
                         alert(res);
-                        button.closest('.card').removeClass("hasHate");
+                        img.closest('.card').removeClass("hasHate");
+                        findHateList();
                     },
                     error: function(xhr, status, error){
 
@@ -799,8 +814,8 @@ $(document).ready(
 
             }else{
 
-                if(button.closest(".card").hasClass("hasLove")){
-                    button.closest(".card").find(".heart").click();
+                if(img.closest(".card").hasClass("hasLove")){
+                    img.closest(".card").find(".heart").click();
                 }
 
                 $.ajax({
@@ -811,8 +826,9 @@ $(document).ready(
                     success: function(res){
 
                         alert(res);
-                        button.closest(".card").addClass("hasHate");
+                        img.closest(".card").addClass("hasHate");
                         console.log("addClass('hasHate');")
+                        findHateList();
 
 
                     },
@@ -835,7 +851,7 @@ $(document).ready(
 
 
         /**
-        * 관심없음 리스트 찾아서 색 바꾸기
+        * 관심없음 리스트 찾아서 down 이미지 색 바꾸기
         *
         */
         function findHateList(){
@@ -858,8 +874,15 @@ $(document).ready(
                         if(list.includes(cardInt)){
 
                             $(card).addClass("hasHate");
+                            var heartImg = $(card).find('.hate');
+                            heartImg.attr('src','https://kr.object.ncloudstorage.com/team3/common/downRed.png')
 
+                        }else{
+
+                            var heartImg = $(card).find('.hate');
+                            heartImg.attr('src','https://kr.object.ncloudstorage.com/team3/common/downNo.png');
                         }
+
                     })
                 }
             })
