@@ -24,20 +24,84 @@
     }
 
 
-    .round{
+    #basicForm{
 
-        padding: 10px;
-        border-radius 50%;
-        width: 200px;
-        margin: 1%;
+        font-size: 28px;
+        display: flex;
+        flex-flow: column;
+        align-items: center;
+        justify-content: center;
+        background: beige;
+        border-radius: 60px;
+        margin-top: 10%;
+        margin-bottom: 10%;
+        padding: 5%;
+
+    }
+
+
+    h1{
+        font-size: 5rem;
+        margin-top: 5%;
+
+    }
+
+
+    #basicForm div{
+
+        display: flex;
+        flex-flow: row;
+        align-items: center;
+        justify-content: center;
+
+    }
+
+
+    #profileImg{
+
+        width: 50%;
+        overflow: hidden;
+
     }
 
     button, input, optgroup, select, textarea {
-        margin: 3%;
+        margin: 1%;
+        min-width: 100px;
         font-family: inherit;
         font-size: inherit;
         line-height: inherit;
     }
+
+    label{
+
+        width: 150px;
+        margin-bottom: 60px;
+
+    }
+
+    input{
+
+        width: 300px;
+
+    }
+
+    select{
+
+        width: 300px;
+
+    }
+
+
+    .round{
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        object-fit: cover;
+        display: block;
+        margin-bottom: 100px;
+    }
+
+
 
     #festivalKeywordBtns{
         font-size: 20px;
