@@ -1,6 +1,7 @@
 package com.multi.culture_link.admin.performance.mapper;
 
 import com.multi.culture_link.admin.performance.model.dto.PerformanceDTO;
+import com.multi.culture_link.performance.model.dto.PerformanceAddDTO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -32,4 +33,12 @@ public interface PerformanceMapper {
 
 
 
+
+
+
+    PerformanceAddDTO findByUserIdAndPerformanceId(@Param("userId") int userId, @Param("performanceId") int performanceId);
+    void updatePerformanceAdd(PerformanceAddDTO performanceAddDTO);
+    void insertPerformanceAdd(PerformanceAddDTO performanceAddDTO);
+
+    String getPerformanceLikeState(int userId, int performanceId);
 }

@@ -2,17 +2,18 @@ package com.multi.culture_link.performance.controller;
 
 import com.multi.culture_link.admin.performance.model.dto.PerformanceDTO;
 import com.multi.culture_link.admin.performance.service.PerformanceDBService;
+import com.multi.culture_link.performance.model.dto.PerformanceAddDTO;
 import com.multi.culture_link.performance.service.PerformanceLocationService;
 import com.multi.culture_link.performance.service.PerformanceRankingService;
+import com.multi.culture_link.performance.service.PerformanceService;
 import com.multi.culture_link.users.model.dto.VWUserRoleDTO;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.List;
@@ -33,14 +34,17 @@ public class PerformanceController {
     private final PerformanceRankingService performanceRankingService;
     private final PerformanceLocationService performanceLocationService;
     private final PerformanceDBService performanceDBService;
+    private final PerformanceService performanceService;
 
 
     public PerformanceController(PerformanceRankingService performanceRankingService,
                                  PerformanceLocationService performanceLocationService,
-                                 PerformanceDBService performanceDBService) {
+                                 PerformanceDBService performanceDBService,
+                                 PerformanceService performanceService) {
         this.performanceRankingService = performanceRankingService;
         this.performanceLocationService = performanceLocationService;
         this.performanceDBService = performanceDBService;
+        this.performanceService = performanceService;
 
 
 
@@ -71,7 +75,7 @@ public class PerformanceController {
     public String performanceGenrePage(@AuthenticationPrincipal VWUserRoleDTO user,
                                        @RequestParam("genre") String genre,
                                        Model model) {
-        String date = "20240807"; // 일간 데이터 날짜
+        String date = "20240810"; // 일간 데이터 날짜
         List<PerformanceDTO> rankingData = performanceRankingService.fetchGenreRanking(genre, date, 5);
         System.out.println("Fetched Data: " + rankingData); // 로그 추가
 
@@ -128,7 +132,7 @@ public class PerformanceController {
      */
     @GetMapping("/genre-rankings")
     public ResponseEntity<List<PerformanceDTO>> getPerformanceGenreRankings(@RequestParam String genre) {
-        String date = "20240807"; // 일간 데이터 날짜
+        String date = "20240810"; // 일간 데이터 날짜
         List<PerformanceDTO> rankingData;
 
         if (genre.equals("전체")) {
@@ -155,7 +159,7 @@ public class PerformanceController {
     public String performanceRankingPage(@AuthenticationPrincipal VWUserRoleDTO user, Model model,
                                          @RequestParam(required = false) String genre) {
         model.addAttribute("user", user.getUser());
-        String date = "20240807"; // 일간 데이터 날짜
+        String date = "20240810"; // 일간 데이터 날짜
         List<PerformanceDTO> rankingData;
 
         if (genre == null || genre.isEmpty() || genre.equals("전체")) {
@@ -184,8 +188,8 @@ public class PerformanceController {
     public String performanceLocationPage(@AuthenticationPrincipal VWUserRoleDTO user,
                                           @RequestParam(required = false) String locationCode,
                                           Model model) {
-        String stdate = "20240807"; // 시작 날짜
-        String eddate = "20240907"; // 종료 날짜
+        String stdate = "20240810"; // 시작 날짜
+        String eddate = "20240910"; // 종료 날짜
 
         System.out.println("Received locationCode: " + locationCode); // Debug line
 
@@ -315,5 +319,41 @@ public class PerformanceController {
 
 
 
+
+
+    // 좋아요/싫어요 상태 업데이트 메서드
+    @PostMapping("/updatePerformanceLikeState")
+    public ResponseEntity<?> updatePerformanceLikeState(@RequestBody PerformanceAddDTO performanceAddDTO) {
+        try {
+            performanceService.updatePerformanceLikeState(performanceAddDTO);
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
+
+
+    // 현재 좋아요/싫어요 상태를 가져오는 메서드
+    @GetMapping("/getPerformanceLikeState")
+    @ResponseBody
+    public Map<String, String> getPerformanceLikeState(@RequestParam int userId, @RequestParam int performanceId) {
+        Map<String, String> response = new HashMap<>();
+        try {
+            String state = performanceService.getPerformanceLikeState(userId, performanceId);
+            // 로그 추가 (선택 사항)
+            System.out.println("Retrieved state: " + state);
+
+            // 상태가 null인 경우 기본값 설정
+            if (state == null) {
+                state = "none";
+            }
+
+            response.put("state", state);
+        } catch (Exception e) {
+            e.printStackTrace();
+            response.put("state", "none");  // 기본값을 설정
+        }
+        return response;
+    }
 
 }

@@ -27,6 +27,30 @@
 }
 
 
+
+
+.like-dislike-container {
+    display: flex;
+    justify-content: flex-start; /* 왼쪽 정렬 */
+    align-items: center;
+    gap: 10px; /* 아이콘 사이의 간격 */
+}
+
+.like-dislike-icon {
+    width: 25px;  /* 이미지 너비 */
+    height: 25px; /* 이미지 높이 */
+    cursor: pointer; /* 클릭할 수 있는 커서 */
+
+    pointer-events: auto; /* 클릭 이벤트를 허용 */
+}
+
+
+
+
+
+
+
+
 .title {
     color: #1E1E1E;
     font-size: 24px;
