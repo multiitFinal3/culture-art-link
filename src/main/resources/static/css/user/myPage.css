@@ -77,12 +77,11 @@
         flex-flow: column;
     }
 
-    #rightZone ul {
+    ul {
 
           list-style-type: none;
           margin: 0;
           padding: 0;
-          overflow: hidden;
           background-color: #faf3f9;
           display: flex;
           flex-flow: row;
@@ -90,11 +89,11 @@
           align-items: center;
     }
 
-    #rightZone li {
+    #upperZone li {
       float: left;
     }
 
-    #rightZone li a, #rightZone .dropbtn {
+    li a, .dropbtn {
       display: inline-block;
       color: black;
       text-align: center;
@@ -102,24 +101,25 @@
       text-decoration: none;
     }
 
-    #rightZone li a:hover, #rightZone .dropdown:hover .dropbtn {
+    li a:hover, .dropdown:hover .dropbtn {
       background-color: #fcccf6;
     }
 
-    #rightZone li.dropdown {
+    #upperZone li.dropdown {
       display: inline-block;
+      position: relative;
     }
 
-    #rightZone .dropdown-content {
+    #upperZone .dropdown-content {
       display: none;
-      position: fixed;
+      position: absolute;
       background-color: #f9f9f9;
       min-width: 160px;
       box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
       z-index: 5;
     }
 
-    #rightZone .dropdown-content a {
+    #upperZone .dropdown-content a {
       color: black;
       padding: 12px 16px;
       text-decoration: none;
@@ -127,13 +127,13 @@
       text-align: left;
     }
 
-    #rightZone .dropdown-content a:hover {
+    #upperZone .dropdown-content a:hover {
         display: block;
         background-color: #fcccf6;
 
     }
 
-    #rightZone .dropdown:hover .dropdown-content {
+    #upperZone .dropdown:hover .dropdown-content {
       display: block;
     }
 
@@ -251,6 +251,10 @@
         justify-content: center;
 
    }
+
+
+
+
 
 
    #performanceZone,
