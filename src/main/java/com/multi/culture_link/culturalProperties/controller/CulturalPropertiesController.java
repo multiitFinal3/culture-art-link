@@ -64,32 +64,39 @@ public class CulturalPropertiesController {
 
 
 
-	@GetMapping("/getList")
+//	@GetMapping("/getList")
+//	@ResponseBody
+//	public ResponseEntity<Map<String, Object>> listCulturalProperties(
+//			@RequestParam(defaultValue = "1") int page,
+//			@RequestParam(defaultValue = "0") int size) {
+//
+//		int totalCount = culturalPropertiesService.getTotalCount(); // 전체 문화재 수
+//
+//		// size가 0 이하인 경우 전체 데이터 수로 설정
+//		if (size <= 0) {
+//			size = totalCount; // 전체 데이터 수로 설정
+//			page = 1; // 기본 페이지 번호는 1
+//		}
+//
+//		int offset = (page - 1) * size; // 오프셋 계산
+//		List<CulturalPropertiesDTO> culturalProperties = culturalPropertiesService.listCulturalProperties(offset, size);
+//		int totalPages = (int) Math.ceil((double) totalCount / size); // 전체 페이지 수 계산
+//
+//		Map<String, Object> response = new HashMap<>();
+//		response.put("culturalProperties", culturalProperties);
+//		response.put("totalCount", totalCount);
+//		response.put("totalPages", totalPages);
+//
+//		return ResponseEntity.ok(response);
+//	}
+
+
+	@GetMapping("/getAll")
 	@ResponseBody
-	public ResponseEntity<Map<String, Object>> listCulturalProperties(
-			@RequestParam(defaultValue = "1") int page,
-			@RequestParam(defaultValue = "0") int size) {
-
-		int totalCount = culturalPropertiesService.getTotalCount(); // 전체 문화재 수
-
-		// size가 0 이하인 경우 전체 데이터 수로 설정
-		if (size <= 0) {
-			size = totalCount; // 전체 데이터 수로 설정
-			page = 1; // 기본 페이지 번호는 1
-		}
-
-		int offset = (page - 1) * size; // 오프셋 계산
-		List<CulturalPropertiesDTO> culturalProperties = culturalPropertiesService.listCulturalProperties(offset, size);
-		int totalPages = (int) Math.ceil((double) totalCount / size); // 전체 페이지 수 계산
-
-		Map<String, Object> response = new HashMap<>();
-		response.put("culturalProperties", culturalProperties);
-		response.put("totalCount", totalCount);
-		response.put("totalPages", totalPages);
-
-		return ResponseEntity.ok(response);
+	public ResponseEntity<List<CulturalPropertiesDTO>> getAllCulturalProperties() {
+		List<CulturalPropertiesDTO> properties = culturalPropertiesService.getAllCulturalProperties();
+		return ResponseEntity.ok(properties);
 	}
-
 
 	@GetMapping("/getUserId")
 	public ResponseEntity<Map<String, Integer>> getUserId() {
@@ -111,8 +118,8 @@ public class CulturalPropertiesController {
 	}
 
 
-	@PostMapping("/addLike")
-	public ResponseEntity<String> addLike(@RequestParam int culturalPropertiesId) {
+	@PostMapping("/addInterest")
+	public ResponseEntity<String> addInterest(@RequestParam int culturalPropertiesId) {
 		// 현재 로그인된 사용자 정보를 가져오기
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
@@ -123,36 +130,57 @@ public class CulturalPropertiesController {
 			CulturalPropertiesInterestDTO interest = new CulturalPropertiesInterestDTO();
 			interest.setCulturalPropertiesId(culturalPropertiesId);
 			interest.setUserId(userId); // VWUserRoleDTO에서 userId 가져오기
-			interest.setInterestType("LIKE");
 
-			culturalPropertiesService.addLike(interest);
-			return ResponseEntity.ok("찜이 추가되었습니다.");
+			culturalPropertiesService.addInterest(interest);
+//			return ResponseEntity.ok("찜이 추가되었습니다.");
 		}
 
 		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("로그인이 필요합니다.");
 	}
 
 
-	@PostMapping("/addDislike")
-	public ResponseEntity<String> addDislike(@RequestParam int culturalPropertiesId) {
-		// 로그인된 사용자 정보 가져오기
-		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		if (authentication != null && authentication.getPrincipal() instanceof VWUserRoleDTO) {
-			VWUserRoleDTO vwUserRoleDTO = (VWUserRoleDTO) authentication.getPrincipal();
-			int userId = vwUserRoleDTO.getUserId(); // 사용자 ID 가져오기
-
-			CulturalPropertiesInterestDTO interest = new CulturalPropertiesInterestDTO();
-			interest.setCulturalPropertiesId(culturalPropertiesId);
-			interest.setUserId(userId); // UserDTO에서 userId 가져오기
-			interest.setInterestType("DISLIKE"); // 상태 설정
-
-			// 서비스 호출하여 관심없음 추가
-			culturalPropertiesService.addDislike(interest);
-			return ResponseEntity.ok("관심없음이 추가되었습니다.");
-		}
-
-		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("로그인이 필요합니다.");
-	}
+//	@PostMapping("/addLike")
+//	public ResponseEntity<String> addLike(@RequestParam int culturalPropertiesId) {
+//		// 현재 로그인된 사용자 정보를 가져오기
+//		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//
+//		if (authentication != null && authentication.getPrincipal() instanceof VWUserRoleDTO) {
+//			VWUserRoleDTO vwUserRoleDTO = (VWUserRoleDTO) authentication.getPrincipal();
+//			int userId = vwUserRoleDTO.getUserId(); // 사용자 ID 가져오기
+//
+//			CulturalPropertiesInterestDTO interest = new CulturalPropertiesInterestDTO();
+//			interest.setCulturalPropertiesId(culturalPropertiesId);
+//			interest.setUserId(userId); // VWUserRoleDTO에서 userId 가져오기
+//			interest.setInterestType("LIKE");
+//
+//			culturalPropertiesService.addLike(interest);
+//			return ResponseEntity.ok("찜이 추가되었습니다.");
+//		}
+//
+//		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("로그인이 필요합니다.");
+//	}
+//
+//
+//	@PostMapping("/addDislike")
+//	public ResponseEntity<String> addDislike(@RequestParam int culturalPropertiesId) {
+//		// 로그인된 사용자 정보 가져오기
+//		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//		if (authentication != null && authentication.getPrincipal() instanceof VWUserRoleDTO) {
+//			VWUserRoleDTO vwUserRoleDTO = (VWUserRoleDTO) authentication.getPrincipal();
+//			int userId = vwUserRoleDTO.getUserId(); // 사용자 ID 가져오기
+//
+//			CulturalPropertiesInterestDTO interest = new CulturalPropertiesInterestDTO();
+//			interest.setCulturalPropertiesId(culturalPropertiesId);
+//			interest.setUserId(userId); // UserDTO에서 userId 가져오기
+//			interest.setInterestType("DISLIKE"); // 상태 설정
+//
+//			// 서비스 호출하여 관심없음 추가
+//			culturalPropertiesService.addDislike(interest);
+//			return ResponseEntity.ok("관심없음이 추가되었습니다.");
+//		}
+//
+//		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("로그인이 필요합니다.");
+//	}
 
 
 

@@ -17,7 +17,7 @@ public interface CulturalPropertiesDAO {
     List<CulturalPropertiesDTO> listCulturalProperties(@Param("offset") int offset, @Param("limit") int limit);
     List<CulturalPropertiesDTO> listAllCulturalProperties();
 
-    int getTotalCount();
+//    int getTotalCount();
 
     CulturalPropertiesDTO getCulturalPropertyById(int id);
 

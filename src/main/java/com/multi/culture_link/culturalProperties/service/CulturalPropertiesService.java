@@ -31,17 +31,21 @@ public class CulturalPropertiesService {
 	@Autowired
 	private CulturalPropertiesDAO culturalPropertiesDAO;
 
-    public List<CulturalPropertiesDTO> listCulturalProperties(int offset, int limit) {
-        // limit가 0이면 모든 데이터를 가져옴
-        if (limit <= 0) {
-            return culturalPropertiesDAO.listAllCulturalProperties(); // 전체 문화재를 가져오는 메소드 호출
-        }
-        return culturalPropertiesDAO.listCulturalProperties(offset, limit);
-    }
+//    public List<CulturalPropertiesDTO> listCulturalProperties(int offset, int limit) {
+//        // limit가 0이면 모든 데이터를 가져옴
+//        if (limit <= 0) {
+//            return culturalPropertiesDAO.listAllCulturalProperties(); // 전체 문화재를 가져오는 메소드 호출
+//        }
+//        return culturalPropertiesDAO.listCulturalProperties(offset, limit);
+//    }
+//
+//
+//    public int getTotalCount() {
+//        return culturalPropertiesDAO.getTotalCount();
+//    }
 
-
-    public int getTotalCount() {
-        return culturalPropertiesDAO.getTotalCount();
+    public List<CulturalPropertiesDTO> getAllCulturalProperties() {
+        return culturalPropertiesDAO.listAllCulturalProperties();
     }
 
     public CulturalPropertiesDTO getCulturalPropertyById(int id) {
@@ -51,15 +55,22 @@ public class CulturalPropertiesService {
     }
 
 
-    public void addLike(CulturalPropertiesInterestDTO interest) {
-        interest.setInterestType("LIKE"); // LIKE 유형 설정
+
+    public void addInterest(CulturalPropertiesInterestDTO interest) {
+//        interest.setInterestType("LIKE"); // LIKE 유형 설정
         culturalPropertiesDAO.addInterest(interest);
     }
 
-    public void addDislike(CulturalPropertiesInterestDTO interest) {
-        interest.setInterestType("DISLIKE"); // DISLIKE 유형 설정
-        culturalPropertiesDAO.addInterest(interest);
-    }
+
+//    public void addLike(CulturalPropertiesInterestDTO interest) {
+//        interest.setInterestType("LIKE"); // LIKE 유형 설정
+//        culturalPropertiesDAO.addInterest(interest);
+//    }
+//
+//    public void addDislike(CulturalPropertiesInterestDTO interest) {
+//        interest.setInterestType("DISLIKE"); // DISLIKE 유형 설정
+//        culturalPropertiesDAO.addInterest(interest);
+//    }
 
     public void removeInterest(CulturalPropertiesInterestDTO interest) {
         culturalPropertiesDAO.removeInterest(interest);
