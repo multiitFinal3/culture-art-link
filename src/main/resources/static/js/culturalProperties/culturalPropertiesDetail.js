@@ -2,116 +2,52 @@ $(document).ready(function() {
     const propertiesContainer = $('.nearby-properties-container');
     const items = propertiesContainer.children('.nearby-property');
     const totalItems = items.length;
-    const itemsPerPage = 5; // 한 페이지에 보여줄 이미지 개수
+    const itemsPerPage = 5;
     let currentIndex = 0;
 
     function showPage(index) {
-        items.hide(); // 모든 이미지를 숨김
-        items.slice(index, index + itemsPerPage).show(); // 현재 페이지의 이미지 보여줌
+        items.hide();
+        items.slice(index, index + itemsPerPage).show();
     }
 
     $('.prev').click(function() {
         if (currentIndex > 0) {
-            currentIndex--; // 인덱스 감소
+            currentIndex--;
             showPage(currentIndex);
         }
     });
 
     $('.next').click(function() {
-        if (currentIndex + itemsPerPage < totalItems) { // 최대 인덱스 체크
-            currentIndex++; // 인덱스 증가
+        if (currentIndex + itemsPerPage < totalItems) {
+            currentIndex++;
             showPage(currentIndex);
         }
     });
 
-    // 초기 페이지 로드
     showPage(0);
-
-//    // 좋아요, 싫어요 버튼 이벤트 리스너
-//    const likeBtn = document.querySelector('.like-btn');
-//    const dislikeBtn = document.querySelector('.dislike-btn');
-//
-//    likeBtn.addEventListener('click', function() {
-//        updateInterest('like');
-//    });
-//
-//    dislikeBtn.addEventListener('click', function() {
-//        updateInterest('dislike');
-//    });
-//
-//    function updateInterest(action) {
-//        const culturalPropertiesId = window.location.pathname.split('/').slice(-2, -1)[0]; // URL에서 ID 추출
-//
-//        fetch(`/cultural-properties/detail/${culturalPropertiesId}`, {
-//            method: 'POST',
-//            headers: {
-//                'Content-Type': 'application/x-www-form-urlencoded'
-//            },
-//            body: new URLSearchParams({
-//                'action': action
-//            })
-//        })
-//        .then(response => {
-//            if (response.ok) {
-//                return response.json(); // JSON 응답 처리
-//            }
-//            throw new Error('Network response was not ok.');
-//        })
-//        .then(data => {
-//            // 버튼 상태 업데이트
-//            if (action === 'like') {
-//                likeBtn.classList.add('liked');
-//                dislikeBtn.classList.remove('disliked'); // 필요 시 상태 초기화
-//            } else {
-//                dislikeBtn.classList.add('disliked');
-//                likeBtn.classList.remove('liked'); // 필요 시 상태 초기화
-//            }
-//        })
-//        .catch(error => {
-//            console.error('Error:', error);
-//        });
-//    }
-
-//    const urlParts = window.location.pathname.split('/');
-//    const culturalPropertiesId = urlParts[urlParts.length - 2];
-
-
 
     function loadRecentReviews() {
         const urlParts = window.location.pathname.split('/');
         const culturalPropertiesId = urlParts[urlParts.length - 1];
 
-        console.log('Cultural Properties ID:', culturalPropertiesId);
-
-        fetch(`/cultural-properties/detail/${culturalPropertiesId}/review`) // 리뷰 조회 API 호출
+        fetch(`/cultural-properties/detail/${culturalPropertiesId}/review`)
             .then(response => {
                 if (!response.ok) {
                     throw new Error('네트워크 오류 발생');
                 }
-                return response.json(); // JSON 형식으로 응답받기
+                return response.json();
             })
             .then(data => {
-                console.log('API Response:', data); // 응답 확인용 로그
-
-                // 데이터 검증
-                if (!data || !data.reviews || !Array.isArray(data.reviews)) {
-                    throw new Error('잘못된 응답 형식');
-                }
-
-                const reviews = data.reviews; // 리뷰 리스트
-                const totalReviews = data.totalReviews || 0; // 총 리뷰 수, 기본값으로 0
+                const reviews = data.reviews;
+                const totalReviews = data.totalReviews || 0;
                 const reviewsContainer = document.getElementById('reviewsList');
 
-                reviewsContainer.innerHTML = ''; // 기존 리뷰 초기화
+                reviewsContainer.innerHTML = '';
+                document.querySelector('#totalReviewCount').textContent = totalReviews;
 
-                // 총 리뷰 개수 업데이트
-                document.querySelector('#totalReviewCount span').textContent = totalReviews;
-
-                // 리뷰가 존재하지 않으면 메시지 추가
                 if (totalReviews === 0) {
-                    reviewsContainer.innerHTML = '<li class="no-reviews">리뷰가 아직 없습니다. </li>';
+                    reviewsContainer.innerHTML = '<li class="no-reviews">리뷰가 아직 없습니다.</li>';
                 } else {
-                    // 각 리뷰를 HTML로 생성하여 추가
                     reviews.forEach(review => {
                         const reviewHtml = `
                             <li class="review">
@@ -134,7 +70,7 @@ $(document).ready(function() {
                                 </div>
                             </li>
                         `;
-                        reviewsContainer.innerHTML += reviewHtml; // 리뷰 추가
+                        reviewsContainer.innerHTML += reviewHtml;
                     });
                 }
             })
@@ -143,96 +79,167 @@ $(document).ready(function() {
             });
     }
 
-
-
-//    console.log('JavaScript file is loaded');
     loadRecentReviews();
 
+    $('#likeButton').click(function() {
+        const culturalPropertiesId = window.location.pathname.split('/').pop();
+        const isLiked = $(this).data('liked');
+        updateInterest(culturalPropertiesId, isLiked ? 'unlike' : 'like');
+    });
+
+    $('#dislikeButton').click(function() {
+        const culturalPropertiesId = window.location.pathname.split('/').pop();
+        const isDisliked = $(this).data('disliked');
+        updateInterest(culturalPropertiesId, isDisliked ? 'undislike' : 'dislike');
+    });
+
+    function updateInterest(culturalPropertiesId, action) {
+        $.ajax({
+            url: `/cultural-properties/updateInterest`,
+            type: 'POST',
+            data: { culturalPropertiesId: culturalPropertiesId, action: action },
+            success: function(response) {
+                if (response.success) {
+                    updateButtonState(action);
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('관심 업데이트 실패:', error);
+            }
+        });
+    }
+
+    function updateButtonState(action) {
+        const likeButton = $('#likeButton');
+        const dislikeButton = $('#dislikeButton');
+
+        switch(action) {
+            case 'like':
+                likeButton.data('liked', true).addClass('active');
+                dislikeButton.data('disliked', false).removeClass('active');
+                break;
+            case 'unlike':
+                likeButton.data('liked', false).removeClass('active');
+                break;
+            case 'dislike':
+                dislikeButton.data('disliked', true).addClass('active');
+                likeButton.data('liked', false).removeClass('active');
+                break;
+            case 'undislike':
+                dislikeButton.data('disliked', false).removeClass('active');
+                break;
+        }
+    }
+
+//    $("#showReviewsBtn").click(function() {
+//        const culturalPropertiesId = window.location.pathname.split('/').pop();
+//        window.location.href = `/cultural-properties/detail/${culturalPropertiesId}/review/detail`;
+//    });
+
+
+    // 페이지 로드 시 평균 별점 가져오기
+    const averageRating = parseFloat($('.averageRating').data('average-rating')); // 평균 평점 가져오기
+    console.log("Average Rating from data attribute: " + averageRating); // 평균 별점 로그
+    if (!isNaN(averageRating)) {
+        updateAvgStarDisplay($('.averageRating'), averageRating); // 별점 업데이트
+    } else {
+        updateAvgStarDisplay($('.averageRating'), 0); // 기본값 0으로 설정
+    }
+
+
+
+    function updateAvgStarDisplay(container, averageRating) {
+        const fullStars = Math.floor(averageRating); // 소수점 아래 버림
+    //    const hasHalfStar = (averageRating % 1) >= 0.5; // 소수점이 0.5 이상이면 반별 표시
+        const hasHalfStar = (averageRating % 1) >= 0.25; // 소수점이 0.25 이상이면 반별 표시
+
+        container.find('.review-avgstar').empty(); // 이전 별점 초기화
+
+
+        // 별 점수 반영
+        for (let i = 0; i < 5; i++) {
+            if (i < fullStars) {
+                container.find('.review-avgstar').append('<span class="avgstar full">&#9733;</span>'); // 채워진 별 노란색
+            } else if (hasHalfStar && i === fullStars) {
+        //            container.find('.review-avgstar').append('<span class="avgstar half"></span>'); // 반별 추가
+                container.find('.review-avgstar').append('<span class="avgstar half" style="color: gold;">&#9733;</span>'); // 반별 추가
+        //            container.find('.review-avgstar').append('<span class="avgstar half">&#9733;</span><span class="avgstar empty">&#9734;</span>'); // 반별 추가
+        //            container.find('.review-avgstar').append('<span class="avgstar half">&#9734;</span>'); // 반별 추가
+        //            container.find('.review-avgstar').append('<span class="avgstar half" style="color: gold;">&#9733;</span><span class="avgstar half" style="color: lightgray;">&#9734;</span>'); // 반별로 채워진 별과 빈 별 조합
+            } else {
+                container.find('.review-avgstar').append('<span class="avgstar empty">&#9734;</span>'); // 빈 별 회색
+            }
+        }
+    }
+
+
+//    const detailButton = document.querySelector('.button-box');
+//    const largeCard = document.querySelector('.large-card');
+//    const mapButton = document.getElementById('showMapBtn');
+//    const reviewButton = document.getElementById('showReviewsBtn');
+//
+//    detailButton.addEventListener('click', function() {
+//        largeCard.style.display = 'block';
+//    });
+//
+//    mapButton.addEventListener('click', function() {
+//        largeCard.style.display = 'none';
+////        showMap();
+//    });
+//
+//    reviewButton.addEventListener('click', function() {
+//        largeCard.style.display = 'none';
+//    });
+
+
+    const detailButton = document.querySelector('.button-box');
+    const mapButton = document.getElementById('showMapBtn');
+    const reviewButton = document.getElementById('showReviewsBtn');
+    const detailInfo = document.getElementById('detailInfo');
+    const mapInfo = document.getElementById('mapInfo');
+
+    detailButton.addEventListener('click', function() {
+        detailInfo.style.display = 'block';
+        mapInfo.style.display = 'none';
+        reviewInfo.style.display = 'none';
+    });
+
+    mapButton.addEventListener('click', function() {
+        detailInfo.style.display = 'none';
+        mapInfo.style.display = 'block';
+        reviewInfo.style.display = 'none';
+    });
+
+    reviewButton.addEventListener('click', function() {
+        detailInfo.style.display = 'none';
+        mapInfo.style.display = 'none';
+        reviewInfo.style.display = 'block';
+    });
+
+
+//    function showMap() {
+//        const locationElement = document.querySelector('.info-location');
+//        const location = locationElement ? locationElement.innerText.trim() : 'default location'; // 공연 장소 정보를 가져옴
+//        console.log('Place name to search:', location);
+//        const largeCard = document.querySelector('.large-card .related-info .content');
+//        largeCard.innerHTML = '<div id="map" style="width: 100%; height: 400px;"></div>';
+//        initMap(location);
+//    }
+
+
+//    document.addEventListener("DOMContentLoaded", function() {
+//        document.getElementById("showMapBtn").addEventListener("click", function() {
+//            showMap();
+//        });
+//
+//        document.getElementById("showReviewsBtn").addEventListener("click", function() {
+//            showReviews();
+//        });
+//
+//        document.getElementById("reviewForm").addEventListener("submit", async function(event) {
+//            event.preventDefault();
+//            await submitReview();
+//        });
+//    });
 
 });
-
-
-
-
-//$(document).ready(function() {
-//    const propertiesContainer = $('.nearby-properties-container');
-//    const items = propertiesContainer.children('.nearby-property');
-//    const totalItems = items.length;
-//    const itemsPerPage = 5; // 한 페이지에 보여줄 이미지 개수
-//    let currentIndex = 0;
-//
-//    function showPage(index) {
-//        items.hide(); // 모든 이미지를 숨김
-//        items.slice(index, index + itemsPerPage).show(); // 현재 페이지의 이미지 보여줌
-//    }
-//
-//    $('.prev').click(function() {
-//        if (currentIndex > 0) {
-//            currentIndex--; // 인덱스 감소
-//            showPage(currentIndex);
-//        }
-//    });
-//
-//    $('.next').click(function() {
-//        if (currentIndex + itemsPerPage < totalItems) { // 최대 인덱스 체크
-//            currentIndex++; // 인덱스 증가
-//            showPage(currentIndex);
-//        }
-//    });
-//
-//    // 초기 페이지 로드
-//    showPage(0);
-//
-//
-//
-//    document.addEventListener('DOMContentLoaded', function() {
-//        const likeBtn = document.querySelector('.like-btn');
-//        const dislikeBtn = document.querySelector('.dislike-btn');
-//
-//        likeBtn.addEventListener('click', function() {
-//            updateInterest('like');
-//        });
-//
-//        dislikeBtn.addEventListener('click', function() {
-//            updateInterest('dislike');
-//        });
-//
-//        function updateInterest(action) {
-//            const culturalPropertiesId = window.location.pathname.split('/').slice(-2, -1)[0]; // URL에서 ID 추출
-//
-//            fetch(`/cultural-properties/detail/${culturalPropertiesId}/interest`, {
-//                method: 'POST',
-//                headers: {
-//                    'Content-Type': 'application/x-www-form-urlencoded'
-//                },
-//                body: new URLSearchParams({
-//                    'action': action
-//                })
-//            })
-//            .then(response => {
-//                if (response.ok) {
-//                    return response.json(); // JSON 응답 처리
-//                }
-//                throw new Error('Network response was not ok.');
-//            })
-//            .then(data => {
-//                // 버튼 상태 업데이트
-//                if (action === 'like') {
-//                    likeBtn.classList.add('liked');
-//                    dislikeBtn.classList.remove('disliked'); // 필요 시 상태 초기화
-//                } else {
-//                    dislikeBtn.classList.add('disliked');
-//                    likeBtn.classList.remove('liked'); // 필요 시 상태 초기화
-//                }
-//            })
-//            .catch(error => {
-//                console.error('Error:', error);
-//            });
-//        }
-//    });
-//
-//
-//});
-
-
-

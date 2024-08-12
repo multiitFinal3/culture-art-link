@@ -240,6 +240,30 @@ function renderCulturalProperties(properties) {
           });
       });
 
+
+      const genreItems = document.querySelectorAll('.genre-item');
+      const tabPanes = document.querySelectorAll('.tab-pane');
+
+      genreItems.forEach(item => {
+          item.addEventListener('click', function() {
+              const target = this.getAttribute('data-target');
+
+              genreItems.forEach(item => item.classList.remove('active'));
+              this.classList.add('active');
+
+              tabPanes.forEach(pane => pane.classList.remove('show', 'active'));
+              document.getElementById(target).classList.add('show', 'active');
+
+              if (target === 'news') {
+                  loadNewsArticles();
+              } else if (target === 'video') {
+                  loadVideos();
+              }
+          });
+      });
+
+
+
       // 뉴스 로드 함수
       function loadNewsArticles() {
           $.ajax({
@@ -274,7 +298,7 @@ function renderCulturalProperties(properties) {
               const title = $('<h5>').addClass('mb-1').text(article.title);
               const content = $('<p>').addClass('mb-1').text(article.content);
               const date = $('<small>').addClass('text-muted').text(article.date);
-              const link = $('<a>').attr('href', article.link).addClass('btn btn-primary btn-sm mt-2').text('자세히 보기');
+              const link = $('<a>').attr('href', article.link).addClass('btn btn-primary btn-sm mt-2').text('자세히 보기').css('margin-left', '2rem');
 
               listItem.append(title, content, date, link);
               newsList.append(listItem);
@@ -304,7 +328,7 @@ function renderCulturalProperties(properties) {
           videoList.empty();
 
           if (!Array.isArray(videos) || videos.length === 0) {
-              videoList.append('<p>등록된 영상이 없습니다.</p>');
+              videoList.append('<br><p>등록된 영상이 없습니다.</p>');
               return;
           }
 
@@ -328,7 +352,7 @@ function renderCulturalProperties(properties) {
           });
       }
 
-      // 페이지 로드 시 뉴스와 비디오 로드
-      loadNewsArticles();
-      loadVideos();
+//      // 페이지 로드 시 뉴스와 비디오 로드
+//      loadNewsArticles();
+//      loadVideos();
   });

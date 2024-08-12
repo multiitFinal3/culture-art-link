@@ -15,27 +15,84 @@
     <style>
 
         /* 필터 컨테이너 스타일 */
+<!--.filter-container {-->
+<!--    display: flex;-->
+<!--    justify-content: space-between;-->
+<!--    margin-bottom: 20px;-->
+<!--}-->
+
+<!--.category-filter, .extra-filter {-->
+<!--    display: flex;-->
+<!--    gap: 10px;-->
+<!--}-->
+
+<!--.category-item, .extra-item {-->
+<!--    cursor: pointer;-->
+<!--    padding: 5px 10px;-->
+<!--    border: 1px solid #ddd;-->
+<!--    border-radius: 5px;-->
+<!--    transition: background-color 0.3s;-->
+<!--}-->
+
+<!--.category-item:hover, .extra-item:hover {-->
+<!--    background-color: #f0f0f0;-->
+<!--}-->
+
+/* 필터 컨테이너 */
 .filter-container {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 20px;
+    margin: 20px 0;
 }
 
-.category-filter, .extra-filter {
+/* 장르 필터 */
+.genre-filter {
     display: flex;
+    align-items: center;
     gap: 10px;
 }
 
-.category-item, .extra-item {
+/* 장르 아이템 스타일 */
+.genre-item {
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 400;
+    color: #1E1E1E;
     cursor: pointer;
-    padding: 5px 10px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    transition: background-color 0.3s;
 }
 
-.category-item:hover, .extra-item:hover {
-    background-color: #f0f0f0;
+/* 활성화된 장르 아이템 스타일 */
+.genre-item.active {
+    background: #F5F5F5;
+    color: #444444;
+}
+
+/* 추가 필터 */
+.extra-filter {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+/* 추가 필터 아이템 스타일 */
+.extra-item {
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 400;
+    color: #1E1E1E;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    cursor: pointer;
+}
+
+/* 추가 필터 아이템 내 이미지 스타일 */
+.extra-item img {
+    width: 20px; /* 아이콘 크기 조정 */
+    height: 20px; /* 아이콘 크기 조정 */
 }
 
 /* 검색 바 스타일 */
@@ -176,56 +233,120 @@ a {
 
 <body>
 <div layout:fragment="content">
+
+    <div class="filter-container"> <!-- 필터 컨테이너 추가 -->
+<!--        <div class="genre-filter">-->
+<!--            <div class="genre-item">전체 문화재 목록</div>-->
+<!--            <div class="genre-item">뉴스 & 소식</div>-->
+<!--            <div class="genre-item">관련 영상</div>-->
+<!--        </div>-->
+        <div class="genre-filter">
+            <div class="genre-item active" data-target="all">전체 문화재 목록</div>
+            <div class="genre-item" data-target="news">뉴스 & 소식</div>
+            <div class="genre-item" data-target="video">관련 영상</div>
+        </div>
+
+        <div class="extra-filter">
+
+            <div class="search-bar mt-3">
+                <form id="searchForm" class="d-flex">
+                    <div class="input-group">
+                        <select name="category" class="form-select me-2" style="width: 120px;">
+                            <option value="">종목 선택</option>
+                            <option value="">전체</option>
+                            <option value="국보">국보</option>
+                            <option value="보물">보물</option>
+                            <option value="사적">사적</option>
+                            <option value="사적및명승">사적및명승</option>
+                            <option value="명승">명승</option>
+                            <option value="천연기념물">천연기념물</option>
+                            <option value="국가무형유산">국가무형유산</option>
+                            <option value="국가민속문화유산">국가민속문화유산</option>
+                            <option value="시도유형문화유산">시도유형문화유산</option>
+                            <option value="시도무형유산">시도무형유산</option>
+                            <option value="시도기념물">시도기념물</option>
+                            <option value="시도민속문화유산">시도민속문화유산</option>
+                            <option value="시도등록유산">시도등록유산</option>
+                            <option value="문화유산자료">문화유산자료</option>
+                            <option value="국가등록유산">국가등록유산</option>
+                            <option value="이북5도 무형유산">이북5도 무형유산</option>
+                        </select>
+                        <input class="form-control me-2" type="text" name="culturalPropertiesName" placeholder="이름" aria-label="culturalPropertiesName" style="width: 120px;">
+                        <input class="form-control me-2" type="text" name="region" placeholder="지역" aria-label="Region" style="width: 120px;">
+                        <input class="form-control me-2" type="text" name="dynasty" placeholder="시대" aria-label="dynasty" style="width: 120px;">
+                        <button id="searchButton" class="btn btn-outline-success" type="button">검색</button>
+                        <button id="resetButton" class="btn btn-outline-secondary" type="button">초기화</button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="extra-item">
+                <img th:src="@{/img/performance/ranking.png}" alt="랭킹 아이콘" class="filter-icon">
+                랭킹
+            </div>
+            <div class="extra-item">
+                <img th:src="@{/img/performance/map.png}" alt="지역별 아이콘" class="filter-icon">
+                지역별
+            </div>
+        </div>
+
+
+    </div>
+
+
     <div class="container mt-4">
-        <div class="filter-container">
-            <div class="category-filter">
-                <div class="category-item">전체</div>
-                <div class="category-item">국보</div>
-                <div class="category-item">보물</div>
-                <div class="category-item">사적</div>
-                <div class="category-item">명승</div>
-                <div class="category-item">천연기념물</div>
-                <div class="category-item">국가무형문화재</div>
-                <div class="category-item">국가민속문화재</div>
-            </div>
-            <div class="extra-filter">
-                <div id="ranking-item" class="extra-item">랭킹</div>
-                <div class="extra-item">지역별</div>
-            </div>
-        </div>
+<!--        <div class="filter-container">-->
+<!--            <div class="category-filter">-->
+<!--                <div class="category-item">전체</div>-->
+<!--                <div class="category-item">국보</div>-->
+<!--                <div class="category-item">보물</div>-->
+<!--                <div class="category-item">사적</div>-->
+<!--                <div class="category-item">명승</div>-->
+<!--                <div class="category-item">천연기념물</div>-->
+<!--                <div class="category-item">국가무형문화재</div>-->
+<!--                <div class="category-item">국가민속문화재</div>-->
+<!--            </div>-->
+<!--            <div class="extra-filter">-->
+<!--                <div id="ranking-item" class="extra-item">랭킹</div>-->
+<!--                <div class="extra-item">지역별</div>-->
+<!--            </div>-->
+<!--        </div>-->
 
-        <div class="search-bar mt-3">
-            <form id="searchForm" class="d-flex">
-                <div class="input-group">
-                    <select name="category" class="form-select me-2">
-                        <option value="">종목 선택</option>
-                        <option value="">전체</option>
-                        <option value="국보">국보</option>
-                        <option value="보물">보물</option>
-                        <option value="사적">사적</option>
-                        <option value="사적및명승">사적및명승</option>
-                        <option value="명승">명승</option>
-                        <option value="천연기념물">천연기념물</option>
-                        <option value="국가무형유산">국가무형유산</option>
-                        <option value="국가민속문화유산">국가민속문화유산</option>
-                        <option value="시도유형문화유산">시도유형문화유산</option>
-                        <option value="시도무형유산">시도무형유산</option>
-                        <option value="시도기념물">시도기념물</option>
-                        <option value="시도민속문화유산">시도민속문화유산</option>
-                        <option value="시도등록유산">시도등록유산</option>
-                        <option value="문화유산자료">문화유산자료</option>
-                        <option value="국가등록유산">국가등록유산</option>
-                        <option value="이북5도 무형유산">이북5도 무형유산</option>
-                    </select>
-                    <input class="form-control me-2" type="text" name="culturalPropertiesName" placeholder="이름" aria-label="culturalPropertiesName">
-                    <input class="form-control me-2" type="text" name="region" placeholder="지역" aria-label="Region">
-                    <input class="form-control me-2" type="text" name="dynasty" placeholder="시대" aria-label="dynasty">
-                    <button id="searchButton" class="btn btn-outline-success" type="button">검색</button>
-                    <button id="resetButton" class="btn btn-outline-secondary" type="button">초기화</button>
-                </div>
-            </form>
-        </div>
+<!--        <div class="search-bar mt-3">-->
+<!--            <form id="searchForm" class="d-flex">-->
+<!--                <div class="input-group">-->
+<!--                    <select name="category" class="form-select me-2">-->
+<!--                        <option value="">종목 선택</option>-->
+<!--                        <option value="">전체</option>-->
+<!--                        <option value="국보">국보</option>-->
+<!--                        <option value="보물">보물</option>-->
+<!--                        <option value="사적">사적</option>-->
+<!--                        <option value="사적및명승">사적및명승</option>-->
+<!--                        <option value="명승">명승</option>-->
+<!--                        <option value="천연기념물">천연기념물</option>-->
+<!--                        <option value="국가무형유산">국가무형유산</option>-->
+<!--                        <option value="국가민속문화유산">국가민속문화유산</option>-->
+<!--                        <option value="시도유형문화유산">시도유형문화유산</option>-->
+<!--                        <option value="시도무형유산">시도무형유산</option>-->
+<!--                        <option value="시도기념물">시도기념물</option>-->
+<!--                        <option value="시도민속문화유산">시도민속문화유산</option>-->
+<!--                        <option value="시도등록유산">시도등록유산</option>-->
+<!--                        <option value="문화유산자료">문화유산자료</option>-->
+<!--                        <option value="국가등록유산">국가등록유산</option>-->
+<!--                        <option value="이북5도 무형유산">이북5도 무형유산</option>-->
+<!--                    </select>-->
+<!--                    <input class="form-control me-2" type="text" name="culturalPropertiesName" placeholder="이름" aria-label="culturalPropertiesName">-->
+<!--                    <input class="form-control me-2" type="text" name="region" placeholder="지역" aria-label="Region">-->
+<!--                    <input class="form-control me-2" type="text" name="dynasty" placeholder="시대" aria-label="dynasty">-->
+<!--                    <button id="searchButton" class="btn btn-outline-success" type="button">검색</button>-->
+<!--                    <button id="resetButton" class="btn btn-outline-secondary" type="button">초기화</button>-->
+<!--                </div>-->
+<!--            </form>-->
+<!--        </div>-->
 
+
+        <div class="tab-content mt-5" id="myTabContent">
+        <div class="tab-pane fade show active" id="all" role="tabpanel">
         <div class="ranking mt-5">
             <h2 class="mb-4">카테고리별 랭킹</h2>
             <div class="row" id="ranking-list">
@@ -276,17 +397,22 @@ a {
                 </div>
             </div>
         </div>
+        </div>
 
 
-        <div class="tab-content mt-5" id="myTabContent">
+<!--        <div class="tab-content mt-5" id="myTabContent">-->
             <div class="tab-pane fade" id="news" role="tabpanel" aria-labelledby="news-tab">
                 <div class="news-articles">
                     <h2>문화재 관련 뉴스</h2>
+                    <br>
                     <ul id="news-list" class="list-group mt-3">
                         <!-- 뉴스 기사가 여기에 추가됨 -->
                     </ul>
+                    <br><br><br><br>
                 </div>
             </div>
+
+
             <div class="tab-pane fade" id="video" role="tabpanel" aria-labelledby="video-tab">
                 <div class="container">
                     <h2>관련 영상</h2>
@@ -295,6 +421,8 @@ a {
                     </div>
                 </div>
             </div>
+
+            <br><br><br><br>
         </div>
     </div>
 </div>

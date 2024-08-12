@@ -268,6 +268,17 @@ public class CulturalPropertiesController {
 				articles.add(new NewsArticle(title, link, date, content, imgUrl));
 			}
 
+
+			// 최신 10개만 남기기
+			if (articles.size() > 10) {
+				articles = articles.subList(0, 10);
+			}
+//			// 최신순으로 정렬
+//			articles.sort((a, b) -> b.getParsedDate().compareTo(a.getParsedDate())); // 최신순 정렬
+
+
+
+
 			model.addAttribute("newsArticles", articles);
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -289,7 +300,8 @@ public class CulturalPropertiesController {
 		List<Video> videos = new ArrayList<>();
 		try {
 			String apiKey = youtubeConfig.getApiKey(); // API 키 가져오기
-			String url = "https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=5&q=" + query + "&type=video&key=" + apiKey;
+//			String url = "https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=5&q=" + query + "&type=video&key=" + apiKey;
+			String url = "https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=6&q=" + query + "&type=video&order=date&key=" + apiKey;
 			RestTemplate restTemplate = new RestTemplate();
 			String response = restTemplate.getForObject(url, String.class);
 
@@ -322,6 +334,10 @@ public class CulturalPropertiesController {
 
 		// 리뷰 목록 가져오기
 		List<CulturalPropertiesReviewDTO> reviews = culturalPropertiesService.getReviewsByCulturalPropertyId(id);
+
+		// 평균 평점 계산
+		double averageRating = culturalPropertiesService.averageRating(id);
+		model.addAttribute("averageRating", averageRating);
 
 		System.out.println("디테일 아이디 "+ id);
 		model.addAttribute("property", property);
