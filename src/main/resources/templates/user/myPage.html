@@ -1520,8 +1520,7 @@
 
 
 
-                // #region 상단바 하단바 클릭 이벤트
-
+                // #region 상단 필터 바 클릭 이벤트
 
 
                 /**
@@ -1532,6 +1531,17 @@
 
                     var categoryText = $(this).text();
                     $('#category').text(categoryText);
+
+                    $('#leftZone').addClass('none');
+                    $('#upperZone').removeClass('none');
+                    $('#downZone').addClass('none');
+
+                    $('#userInfo').closest('.genre-item').removeClass('active');
+                    $('#love').closest('.genre-item').addClass('active');
+                    $('#hate').closest('.genre-item').removeClass('active');
+                    $('#review').closest('.genre-item').removeClass('active');
+                    $('#loveKeywordList').closest('.genre-item').removeClass('active');
+                    $('#hateKeywordList').closest('.genre-item').removeClass('active');
 
                     if(categoryText=="축제"){
 
@@ -1547,6 +1557,27 @@
                 })
 
 
+                /**
+                * 회원정보 클릭 시
+                *
+                */
+                $(document).on('click','#userInfo', function(){
+
+
+                    $('#leftZone').removeClass('none');
+                    $('#upperZone').addClass('none');
+                    $('#downZone').addClass('none');
+
+                    $('#userInfo').closest('.genre-item').addClass('active');
+                    $('#love').closest('.genre-item').removeClass('active');
+                    $('#hate').closest('.genre-item').removeClass('active');
+                    $('#review').closest('.genre-item').removeClass('active');
+                    $('#loveKeywordList').closest('.genre-item').removeClass('active');
+                    $('#hateKeywordList').closest('.genre-item').removeClass('active');
+
+                })
+
+                $('#userInfo').closest('.genre-item').addClass('active');
 
 
                 /**
@@ -1556,6 +1587,16 @@
                 $(document).on('click','#love', function(){
 
                     var category = $('#category').text();
+                    $('#leftZone').addClass('none');
+                    $('#upperZone').removeClass('none');
+                    $('#downZone').addClass('none');
+
+                    $('#userInfo').closest('.genre-item').removeClass('active');
+                    $('#love').closest('.genre-item').addClass('active');
+                    $('#hate').closest('.genre-item').removeClass('active');
+                    $('#review').closest('.genre-item').removeClass('active');
+                    $('#loveKeywordList').closest('.genre-item').removeClass('active');
+                    $('#hateKeywordList').closest('.genre-item').removeClass('active');
 
                     if(category=="축제"){
 
@@ -1580,6 +1621,16 @@
                 $(document).on('click','#hate', function(){
 
                     var category = $('#category').text();
+                    $('#leftZone').addClass('none');
+                    $('#upperZone').removeClass('none');
+                    $('#downZone').addClass('none');
+
+                    $('#userInfo').closest('.genre-item').removeClass('active');
+                    $('#love').closest('.genre-item').removeClass('active');
+                    $('#hate').closest('.genre-item').addClass('active');
+                    $('#review').closest('.genre-item').removeClass('active');
+                    $('#loveKeywordList').closest('.genre-item').removeClass('active');
+                    $('#hateKeywordList').closest('.genre-item').removeClass('active');
 
                     if(category=="축제"){
 
@@ -1603,6 +1654,16 @@
                 $(document).on('click','#review', function(){
 
                     var category = $('#category').text();
+                    $('#leftZone').addClass('none');
+                    $('#upperZone').removeClass('none');
+                    $('#downZone').addClass('none');
+
+                    $('#userInfo').closest('.genre-item').removeClass('active');
+                    $('#love').closest('.genre-item').removeClass('active');
+                    $('#hate').closest('.genre-item').removeClass('active');
+                    $('#review').closest('.genre-item').addClass('active');
+                    $('#loveKeywordList').closest('.genre-item').removeClass('active');
+                    $('#hateKeywordList').closest('.genre-item').removeClass('active');
 
                     if(category=="축제"){
 
@@ -1619,10 +1680,23 @@
 
 
                 /**
-                * 하단바 찜 키워드 클릭 시
+                * 찜 키워드 클릭 시
                 *
                 */
                 $(document).on('click','#loveKeywordList', function(){
+
+
+                    $('#leftZone').addClass('none');
+                    $('#upperZone').addClass('none');
+                    $('#downZone').removeClass('none');
+
+                    $('#userInfo').closest('.genre-item').removeClass('active');
+                    $('#love').closest('.genre-item').removeClass('active');
+                    $('#hate').closest('.genre-item').removeClass('active');
+                    $('#review').closest('.genre-item').removeClass('active');
+                    $('#loveKeywordList').closest('.genre-item').addClass('active');
+                    $('#hateKeywordList').closest('.genre-item').removeClass('active');
+
 
                     var performanceHtml = `
 
@@ -1678,6 +1752,20 @@
                 *
                 */
                 $(document).on('click','#hateKeywordList', function(){
+
+                    $('#leftZone').addClass('none');
+                    $('#upperZone').addClass('none');
+                    $('#downZone').removeClass('none');
+
+                    $('#userInfo').closest('.genre-item').removeClass('active');
+                    $('#love').closest('.genre-item').removeClass('active');
+                    $('#hate').closest('.genre-item').removeClass('active');
+                    $('#review').closest('.genre-item').removeClass('active');
+                    $('#loveKeywordList').closest('.genre-item').removeClass('active');
+                    $('#hateKeywordList').closest('.genre-item').addClass('active');
+
+
+
 
                     var performanceHtml = `
 
@@ -1746,6 +1834,64 @@
 
     <div id="realContent">
 
+        <div class="filter-container"> <!-- 필터 컨테이너 추가 -->
+            <div class="genre-filter">
+                <ul>
+
+                    <li>
+                        <div class="genre-item">
+                            <a id="userInfo" class="userInfo">회원정보</a>
+                        </div>
+                    <li>
+
+                    <li class="dropdown">
+                        <div class="genre-item">
+                            <a href="javascript:void(0)" class="dropbtn" id="category">카테고리</a>
+                            <div class="dropdown-content">
+                                <a id="performance" class="category">공연</a>
+                                <a id="exhibition" class="category">전시</a>
+                                <a id="festival" class="category">축제</a>
+                                <a id="culturalPro" class="category">문화제</a>
+                            </div>
+                        </div>
+                    </li>
+
+                    <li>
+                        <div class="genre-item">
+                            <a id="love">찜한 내역</a>
+                        </div>
+                    </li>
+
+                    <li>
+                        <div class="genre-item">
+                            <a id="hate">관심없음 내역</a>
+                        </div>
+                    </li>
+
+                    <li>
+                        <div class="genre-item">
+                            <a id="review">내가 쓴 리뷰</a>
+                        </div>
+                    </li>
+
+
+                    <li>
+                        <div class="genre-item">
+                            <a id="loveKeywordList">찜 키워드</a>
+                        </div>
+                    </li>
+
+                    <li>
+                        <div class="genre-item">
+                            <a id="hateKeywordList">관심없음 키워드</a>
+                        </div>
+                    </li>
+
+                </ul>
+            </div>
+        </div>
+
+
 
         <div id="rightZone">
 
@@ -1770,13 +1916,12 @@
 
                     <div>
                         <label for="password"><img src="https://img.icons8.com/?size=100&id=B9ytemSyoM31&format=png&color=000000" alt="Password Icon"></label>
-                        <input name="password" class="rounded" id="password" type="password" required
-                                    th:value="${user.password}" placeholder="******" pattern="^[a-zA-Z0-9_]{5,}$">
+                        <input name="password" class="rounded" id="password" type="password" required style="background-color: lightblue" th:value="${user.password}" placeholder="******" pattern="^[a-zA-Z0-9_]{5,}$">
                     </div>
 
                     <div>
                         <label for="userName"><img src="https://img.icons8.com/?size=100&id=ZuNYjWxqVWsa&format=png&color=000000" alt="userName Icon"></label>
-                        <input name="userName" class="rounded" id="userName" th:value="${user.userName}" placeholder="${user.userName}" pattern="^[a-zA-Z가-힣]{3,}$">
+                        <input name="userName" class="rounded" id="userName" th:value="${user.userName}" placeholder="${user.userName}" pattern="^[a-zA-Z가-힣]{3,}$" style="background-color: lightblue">
                     </div>
 
                     <div>
@@ -1810,23 +1955,9 @@
             </div>
 
 
-            <div id="upperZone">
+            <div id="upperZone" class="none">
 
-                <ul>
-                    <li class="dropdown">
-                        <a href="javascript:void(0)" class="dropbtn" id="category">축제</a>
-                        <div class="dropdown-content">
-                            <a id="performance" class="category">공연</a>
-                            <a id="exhibition" class="category">전시</a>
-                            <a id="festival" class="category">축제</a>
-                            <a id="culturalPro" class="category">문화제</a>
-                        </div>
-                    </li>
-                    <li><a id="love">찜한 내역</a></li>
-                    <li><a id="hate">관심없음 내역</a></li>
-                    <li><a id="review">내가 쓴 리뷰</a></li>
 
-                </ul>
                 <div id="upper">
 
                     아아
@@ -1836,14 +1967,7 @@
 
             </div>
 
-            <div id="downZone">
-
-                <ul>
-
-                    <li><a id="loveKeywordList">찜 키워드</a></li>
-                    <li><a id="hateKeywordList">관심없음 키워드</a></li>
-
-                </ul>
+            <div id="downZone" class="none">
 
                 <div id="down">
                     <div id="performanceZone">
