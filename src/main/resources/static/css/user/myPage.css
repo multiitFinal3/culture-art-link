@@ -77,7 +77,7 @@
         flex-flow: column;
     }
 
-    ul {
+    #upperZone ul, #downZone ul{
 
           list-style-type: none;
           margin: 0;
@@ -93,7 +93,9 @@
       float: left;
     }
 
-    li a, .dropbtn {
+    #upperZone li a, #upperZone .dropbtn,
+     #downZone li a, #downZone .dropbtn
+     {
       display: inline-block;
       color: black;
       text-align: center;
@@ -101,7 +103,9 @@
       text-decoration: none;
     }
 
-    li a:hover, .dropdown:hover .dropbtn {
+    #upperZone li a:hover, #upperZone .dropdown:hover .dropbtn,
+     #downZone li a:hover
+     {
       background-color: #fcccf6;
     }
 
@@ -154,6 +158,8 @@
         text-align: center;
         display: flex;
         flex-flow: row;
+        gap: 10px;
+        height: 540px;
 
     }
 
@@ -170,21 +176,58 @@
 
     .card{
 
-        margin: 1%;
-        min-width: 300px;
-        min-height: 500px;
-        display: flex;
-        align-items: center;
+        min-width: 249px;
+       max-width: 249px;
+       margin: 0 10px;
+       max-height: 332px;
+       min-height: 332px;
+       background : white;
+       border: 1px solid #D9D9D9;
+       border-radius: 8px;
+       display: flex;
+       flex-direction: column;
+       align-items: center;
+       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+       transition: transform 0.2s;
 
     }
 
 
    .card-img-top{
 
-        width: 300px;
-        height: 300px;
+        max-height: 332px;
+        min-width: 249px;
+        min-height: 332px;
+        max-width: 249px;
+        border-radius: 8px;
+        object-fit: cover;
+
 
     }
+
+
+    .card-title{
+
+        font-size: 20px;
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 5px;
+        white-space: normal;
+
+    }
+
+    .card-body p{
+
+        margin-top: 0;
+        margin-bottom: 1rem;
+        font-size: 16px;
+        font-weight: 400;
+        color: #757575;
+        white-space: normal;
+
+    }
+
+
 
 
     button{
@@ -194,22 +237,39 @@
     }
 
 
-    .hate, .heart{
+    .heart{
 
-        min-width: 30px;
-        min-height: 30px;
+       font-weight: 700;
+       color: white;
+       text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+       position: absolute;
+       top: 300px;
+       right: 60px;
 
-    }
+   }
+
+   .hate{
+
+       font-weight: 700;
+       color: white;
+       text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+       position: absolute;
+       top: 300px;
+       right: 10px;
+
+   }
+
+
 
    .hasLove{
 
-        background-color: #ffe5ea;
+
 
    }
 
    .hasHate{
 
-        background-color: #dfdfdf;
+
 
    }
 

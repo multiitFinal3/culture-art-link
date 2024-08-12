@@ -864,10 +864,6 @@ $(document).ready(
 
             }
 
-
-
-
-
         })
 
 
