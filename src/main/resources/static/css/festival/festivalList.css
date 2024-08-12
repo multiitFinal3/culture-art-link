@@ -1,4 +1,55 @@
 
+    /* 필터 컨테이너 */
+        .filter-container {
+            display: flex;
+            justify-content: space-between;
+            margin: 20px 0;
+            align-self: flex-start;
+        }
+
+        /* 장르 필터 */
+        .genre-filter {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* 장르 아이템 스타일 */
+        .genre-item {
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 400;
+            color: #1E1E1E;
+            cursor: pointer;
+            padding: 8px 12px;
+        }
+
+        /* 활성화된 장르 아이템 스타일 */
+        .genre-item.active {
+            background: #F5F5F5;
+            color: #444444;
+        }
+
+
+        .genre-filter ul{
+
+              list-style-type: none;
+              margin: 0;
+              padding: 0;
+              display: flex;
+              flex-flow: row;
+              justify-content: space-around;
+              align-items: center;
+        }
+
+        .genre-filter li {
+          float: left;
+        }
+
+
+
+
+
     #festivalRegulate{
 
         display: flex;
@@ -52,28 +103,30 @@
 
     #list2{
 
-        overflow-x: scroll;
-        text-align: center;
         display: flex;
+        flex-flow: row;
+        flex-wrap: no-wrap;
+        align-items: center;
+        justify-content: center;
+        margin-left: 5%;
+        margin-right: 5%;
+        flex-wrap: wrap;
         gap: 10px;
-        height: 540px;
     }
 
     #list2 .card{
 
-       min-width: 249px;
-       max-width: 249px;
-       margin: 0 10px;
-       max-height: 332px;
-       min-height: 332px;
-       background : white;
-       border: 1px solid #D9D9D9;
-       border-radius: 8px;
-       display: flex;
-       flex-direction: column;
-       align-items: center;
-       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-       transition: transform 0.2s;
+       min-height: 440px;
+      max-height: 440px;
+      min-width: 249px;
+      max-width: 249px;
+      margin-bottom: 10px;
+      background: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      transition: transform 0.2s;
+      border: 0px;
 
     }
 
@@ -267,6 +320,10 @@
         height: 50px;
     }
 
+    .none{
 
+        display: none;
+
+    }
 
 

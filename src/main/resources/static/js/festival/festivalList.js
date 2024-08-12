@@ -224,7 +224,10 @@ $(document).ready(
         }
 
         findDBFestivalAllList();
-
+        $('#festivalList').removeClass('none');
+        $('#festivalRecommendation').addClass('none');
+        $('#allList').closest('.genre-item').addClass('active');
+        $('#love').closest('.genre-item').removeClass('active');
 
 
 
@@ -907,11 +910,42 @@ $(document).ready(
 
 
 
-
-
-
-
         //#endregion
+
+
+
+        //#region 상단바 클릭 이벤트
+
+        /**
+        * 전체 클릭 시
+        *
+        */
+        $(document).on('click','#allList', function(){
+
+            $('#festivalList').removeClass('none');
+            $('#festivalRecommendation').addClass('none');
+
+            $('#allList').closest('.genre-item').addClass('active');
+            $('#keywordList').closest('.genre-item').removeClass('active');
+
+        })
+
+        /**
+        * 키워드 추천 클릭 시
+        *
+        */
+        $(document).on('click','#keywordList', function(){
+
+            $('#festivalList').addClass('none');
+            $('#festivalRecommendation').removeClass('none');
+
+            $('#allList').closest('.genre-item').removeClass('active');
+            $('#keywordList').closest('.genre-item').addClass('active');
+
+        })
+
+
+        //#endRegion
 
 
 
