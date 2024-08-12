@@ -198,6 +198,36 @@ async function uploadImageToBucket(file, path) {
     });
 }
 
+// function setInterestedBtn(state) {
+//     let $downButton = $(`#notInterestedBtn img`);
+//     let $upButton = $(`#favoriteBtn img`);
+//     const baseUrl = 'https://kr.object.ncloudstorage.com/team3/common/';
+//
+//     $downButton.attr('src', baseUrl + 'downNo.png');
+//     $upButton.attr('src', baseUrl + 'upNo.png');
+//
+//     let downSrc = $downButton.attr('src');
+//     let upSrc = $upButton.attr('src');
+//     console.log('setInterestedBtn : ', state)
+//
+//     if (state === 'interested') {
+//         if (upSrc.includes('upBlue.png')) {
+//             $upButton.attr('src', upSrc.replace('upBlue.png', 'upNo.png'));
+//         } else if (upSrc.includes('upNo.png')) {
+//             console.log('no')
+//             $upButton.attr('src', upSrc.replace('upNo.png', 'upBlue.png'));
+//         }
+//         $downButton.attr('src', baseUrl + 'downNo.png');
+//     }else if(state ==='not_interested') {
+//         if (downSrc.includes('downRed.png')) {
+//             $downButton.attr('src', downSrc.replace('downRed.png', 'downNo.png'));
+//         } else if (downSrc.includes('downNo.png')) {
+//             $downButton.attr('src', downSrc.replace('downNo.png', 'downRed.png'));
+//         }
+//         $upButton.attr('src', baseUrl + 'upNo.png');
+//     }
+// }
+
 function setInterestedBtn(state) {
     let $downButton = $(`#notInterestedBtn img`);
     let $upButton = $(`#favoriteBtn img`);
@@ -206,44 +236,57 @@ function setInterestedBtn(state) {
     $downButton.attr('src', baseUrl + 'downNo.png');
     $upButton.attr('src', baseUrl + 'upNo.png');
 
-    let downSrc = $downButton.attr('src');
-    let upSrc = $upButton.attr('src');
-    console.log('setInterestedBtn : ', state)
-
     if (state === 'interested') {
-        if (upSrc.includes('upBlue.png')) {
-            $upButton.attr('src', upSrc.replace('upBlue.png', 'upNo.png'));
-        } else if (upSrc.includes('upNo.png')) {
-            console.log('no')
-            $upButton.attr('src', upSrc.replace('upNo.png', 'upBlue.png'));
-        }
+        $upButton.attr('src', baseUrl + 'upBlue.png');
         $downButton.attr('src', baseUrl + 'downNo.png');
-    }else if(state ==='not_interested') {
-        if (downSrc.includes('downRed.png')) {
-            $downButton.attr('src', downSrc.replace('downRed.png', 'downNo.png'));
-        } else if (downSrc.includes('downNo.png')) {
-            $downButton.attr('src', downSrc.replace('downNo.png', 'downRed.png'));
-        }
+    } else if (state === 'not_interested') {
+        $downButton.attr('src', baseUrl + 'downRed.png');
+        $upButton.attr('src', baseUrl + 'upNo.png');
+    } else if (state === 'none') {
+        // 상태가 제거된 경우
+        $downButton.attr('src', baseUrl + 'downNo.png');
         $upButton.attr('src', baseUrl + 'upNo.png');
     }
 }
 
+// async function updateInterest(exhibitionId, state) {
+//     console.log('update interest: ',exhibitionId, state)
+//     try {
+//         const response = await axios.post('/exhibition/interested', {
+//             exhibitionId: Number(exhibitionId),
+//             state: state
+//         })
+//
+//
+//         setInterestedBtn(state)
+//     }catch(e) {
+//         console.log('error : ',e)
+//         alert(`${state === 'interested'} ? "찜 설정 실패" : "관심 없음 설정 실패"`)
+//     }
+//
+// }
+
 async function updateInterest(exhibitionId, state) {
-    console.log('update interest: ',exhibitionId, state)
+    console.log('update interest: ', exhibitionId, state);
     try {
         const response = await axios.post('/exhibition/interested', {
             exhibitionId: Number(exhibitionId),
             state: state
-        })
+        });
 
-
-        setInterestedBtn(state)
-    }catch(e) {
-        console.log('error : ',e)
-        alert(`${state === 'interested'} ? "찜 설정 실패" : "관심 없음 설정 실패"`)
+        // 서버 응답에 따라 버튼 상태 업데이트
+        if (response.data === 'removed') {
+            setInterestedBtn('none');
+        } else {
+            setInterestedBtn(state);
+        }
+    } catch(e) {
+        console.log('error : ', e);
+        alert(state === 'interested' ? "찜 설정 실패" : "관심 없음 설정 실패");
     }
-
 }
+
+
 
 
 function getExhibitionIdFromUrl() {

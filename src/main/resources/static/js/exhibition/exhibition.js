@@ -141,14 +141,25 @@ function renderExhibitions(exhibitionsToRender) {
     const $exhibitionList = $(".all-exhibitions-items");
     $exhibitionList.empty();
 
+    // $.each(exhibitionsToRender, function (index, exhibition) {
+    //     const $exhibitionItem = $("<div>").addClass("exhibition-item");
+    //     let interestedSrc = "https://kr.object.ncloudstorage.com/team3/common/upNo.png"
+    //     let notInterestedSrc = "https://kr.object.ncloudstorage.com/team3/common/downNo.png"
+    //     if(exhibition.state === "interested") {
+    //         interestedSrc = "https://kr.object.ncloudstorage.com/team3/common/upBlue.png"
+    //     } else if(exhibition.state === "not_interested") {
+    //         notInterestedSrc = "https://kr.object.ncloudstorage.com/team3/common/downRed.png"
+    //     }
+
     $.each(exhibitionsToRender, function (index, exhibition) {
         const $exhibitionItem = $("<div>").addClass("exhibition-item");
-        let interestedSrc = "https://kr.object.ncloudstorage.com/team3/common/upNo.png"
-        let notInterestedSrc = "https://kr.object.ncloudstorage.com/team3/common/downNo.png"
-        if(exhibition.state === "interested") {
-            interestedSrc = "https://kr.object.ncloudstorage.com/team3/common/upBlue.png"
-        } else if(exhibition.state === "not_interested") {
-            notInterestedSrc = "https://kr.object.ncloudstorage.com/team3/common/downRed.png"
+        let interestedSrc = "https://kr.object.ncloudstorage.com/team3/common/upNo.png";
+        let notInterestedSrc = "https://kr.object.ncloudstorage.com/team3/common/downNo.png";
+
+        if (exhibition.state === "interested") {
+            interestedSrc = "https://kr.object.ncloudstorage.com/team3/common/upBlue.png";
+        } else if (exhibition.state === "not_interested") {
+            notInterestedSrc = "https://kr.object.ncloudstorage.com/team3/common/downRed.png";
         }
 
         $exhibitionItem.html(`
@@ -198,42 +209,78 @@ function renderExhibitions(exhibitionsToRender) {
 }
 
 // 누른 전시를 찾아 관심을 업데이트 해주고 색깔 바로 변하게 설정
+// async function updateInterest(exhibitionId, state) {
+//     console.log('update interest: ',exhibitionId, state)
+//     try {
+//         const response = await axios.post('/exhibition/interested', {
+//             exhibitionId: Number(exhibitionId),
+//             state: state
+//         })
+//         let $downButton = $(`.exhibition-dislike[data-id="${exhibitionId}"] img`);
+//         let downSrc = $downButton.attr('src');
+//
+//         let $upButton = $(`.exhibition-like[data-id="${exhibitionId}"] img`);
+//         let upSrc = $upButton.attr('src');
+//         const baseUrl = 'https://kr.object.ncloudstorage.com/team3/common/';
+//         if (state === 'interested') {
+//             if (upSrc.includes('upBlue.png')) {
+//                 $upButton.attr('src', upSrc.replace('upBlue.png', 'upNo.png'));
+//             } else if (upSrc.includes('upNo.png')) {
+//                 $upButton.attr('src', upSrc.replace('upNo.png', 'upBlue.png'));
+//             }
+//             $downButton.attr('src', baseUrl + 'downNo.png');
+//         }else if(state ==='not_interested') {
+//             if (downSrc.includes('downRed.png')) {
+//                 $downButton.attr('src', downSrc.replace('downRed.png', 'downNo.png'));
+//             } else if (downSrc.includes('downNo.png')) {
+//                 $downButton.attr('src', downSrc.replace('downNo.png', 'downRed.png'));
+//             }
+//             $upButton.attr('src', baseUrl + 'upNo.png');
+//         }
+//
+//
+//
+//     }catch(e) {
+//         console.log('error : ',e)
+//         alert(`${state === 'interested'} ? "찜 설정 실패" : "관심 없음 설정 실패"`)
+//     }
+//
+// }
+
 async function updateInterest(exhibitionId, state) {
-    console.log('update interest: ',exhibitionId, state)
+    console.log('update interest: ', exhibitionId, state);
     try {
         const response = await axios.post('/exhibition/interested', {
             exhibitionId: Number(exhibitionId),
             state: state
-        })
-        let $downButton = $(`.exhibition-dislike[data-id="${exhibitionId}"] img`);
-        let downSrc = $downButton.attr('src');
+        });
 
+        let $downButton = $(`.exhibition-dislike[data-id="${exhibitionId}"] img`);
         let $upButton = $(`.exhibition-like[data-id="${exhibitionId}"] img`);
-        let upSrc = $upButton.attr('src');
         const baseUrl = 'https://kr.object.ncloudstorage.com/team3/common/';
-        if (state === 'interested') {
-            if (upSrc.includes('upBlue.png')) {
-                $upButton.attr('src', upSrc.replace('upBlue.png', 'upNo.png'));
-            } else if (upSrc.includes('upNo.png')) {
-                $upButton.attr('src', upSrc.replace('upNo.png', 'upBlue.png'));
-            }
+
+        // 서버 응답에 따라 버튼 상태 업데이트
+        if (response.data === 'removed') {
             $downButton.attr('src', baseUrl + 'downNo.png');
-        }else if(state ==='not_interested') {
-            if (downSrc.includes('downRed.png')) {
-                $downButton.attr('src', downSrc.replace('downRed.png', 'downNo.png'));
-            } else if (downSrc.includes('downNo.png')) {
-                $downButton.attr('src', downSrc.replace('downNo.png', 'downRed.png'));
-            }
+            $upButton.attr('src', baseUrl + 'upNo.png');
+        } else if (state === 'interested') {
+            $upButton.attr('src', baseUrl + 'upBlue.png');
+            $downButton.attr('src', baseUrl + 'downNo.png');
+        } else if (state === 'not_interested') {
+            $downButton.attr('src', baseUrl + 'downRed.png');
             $upButton.attr('src', baseUrl + 'upNo.png');
         }
 
+        // exhibitions 배열에서 해당 전시회의 상태 업데이트
+        const exhibitionIndex = exhibitions.findIndex(ex => ex.id === exhibitionId);
+        if (exhibitionIndex !== -1) {
+            exhibitions[exhibitionIndex].state = response.data === 'removed' ? null : state;
+        }
 
-
-    }catch(e) {
-        console.log('error : ',e)
-        alert(`${state === 'interested'} ? "찜 설정 실패" : "관심 없음 설정 실패"`)
+    } catch(e) {
+        console.log('error : ', e);
+        alert(state === 'interested' ? "찜 설정 실패" : "관심 없음 설정 실패");
     }
-
 }
 
 //페이지에 들어갔을 때 실행 되는 init 함수
