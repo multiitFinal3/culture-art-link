@@ -122,8 +122,6 @@ $(document).ready(
 
         //#region festivalList 관련 함수
 
-// 주석
-
 
         /**
        * DB 전체 리스트 페이지 없이 전부 조회 기능
@@ -689,7 +687,7 @@ $(document).ready(
         $(document).on('click','.pageBtn4', function(){
 
             $('#list1').html("");
-            findDBFestivalAllList();
+            window.location.href='/festival/festival-list';
 
         })
 
@@ -702,8 +700,7 @@ $(document).ready(
         $(document).on('click','#resetBtn1', function(){
 
             $('#list1').html("");
-            findDBFestivalAllList();
-
+             window.location.href='/festival/festival-list';
         })
 
 
@@ -937,6 +934,7 @@ $(document).ready(
 
             $('#festivalList').removeClass('none');
             $('#festivalRecommendation').addClass('none');
+            $('.extra-filter').removeClass('none');
 
             $('#allList').closest('.genre-item').addClass('active');
             $('#keywordList').closest('.genre-item').removeClass('active');
@@ -951,6 +949,7 @@ $(document).ready(
 
             $('#festivalList').addClass('none');
             $('#festivalRecommendation').removeClass('none');
+            $('.extra-filter').addClass('none');
 
             $('#allList').closest('.genre-item').removeClass('active');
             $('#keywordList').closest('.genre-item').addClass('active');
