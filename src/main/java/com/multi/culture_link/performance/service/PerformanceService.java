@@ -1,9 +1,12 @@
 package com.multi.culture_link.performance.service;
 
 import com.multi.culture_link.admin.performance.mapper.PerformanceMapper;
+import com.multi.culture_link.admin.performance.model.dto.PerformanceDTO;
 import com.multi.culture_link.performance.model.dto.PerformanceAddDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * Please explain the class!!
@@ -50,5 +53,20 @@ public class PerformanceService {
         return state;
     }
 
+
+
+
+
+
+
+
+    // 검색
+    public List<PerformanceDTO> searchPerformances(String keyword, String genre) {
+        return performanceMapper.searchPerformancesByKeywordAndGenre(keyword, genre);
+    }
+
+    public PerformanceDTO getPerformanceByTitle(String title) {
+        return performanceMapper.getPerformanceByTitle(title);
+    }
 }
 

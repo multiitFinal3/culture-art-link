@@ -34,11 +34,12 @@
         <div class="extra-filter">
 
             <!--검색바-->
-            <form id="searchForm" class="d-flex">
+            <form id="searchForm" class="d-flex" th:action="@{/performance/search}" method="get">
                 <div class="input-group">
-                    <input class="form-control me-2" type="text" name="performanceName" placeholder="검색어를 입력해주세요." aria-label="performanceName" style="width: 300px;">
-                    <button id="searchButton" class="btn btn-outline-success" type="button">
-                        <img th:src="@{/img/performance/search.png}" alt="검색 아이콘" style="width: 20px; height: 20px;" >
+                    <input class="form-control me-2" type="text" name="keyword" placeholder="검색어를 입력해주세요." aria-label="performanceName" style="width: 300px;" th:value="${keyword}">
+                    <input type="hidden" name="genre" id="selectedGenre" th:value="${param.genre != null ? param.genre : '홈'}">
+                    <button id="searchButton" class="btn btn-outline-success" type="submit">
+                        <img th:src="@{/img/performance/search.png}" alt="검색 아이콘" style="width: 20px; height: 20px;">
                     </button>
                 </div>
             </form>

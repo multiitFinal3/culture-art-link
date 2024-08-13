@@ -27,18 +27,27 @@ public interface PerformanceMapper {
 
 
 
-    // 추가: 공연명으로 검색하는 메서드
-    //PerformanceDTO getPerformanceByTitle(String performanceTitle);
+    // 공연명으로 검색하는 메서드
     PerformanceDTO getPerformanceByTitle(@Param("performanceTitle") String performanceTitle);
 
 
 
 
 
-
+    //
     PerformanceAddDTO findByUserIdAndPerformanceId(@Param("userId") int userId, @Param("performanceId") int performanceId);
     void updatePerformanceAdd(PerformanceAddDTO performanceAddDTO);
     void insertPerformanceAdd(PerformanceAddDTO performanceAddDTO);
 
     String getPerformanceLikeState(int userId, int performanceId);
+
+
+
+    // 검색
+    // keyword와 genre로 공연 검색
+    List<PerformanceDTO> searchPerformancesByKeywordAndGenre(@Param("keyword") String keyword, @Param("genre") String genre);
+
+
+
+
 }
