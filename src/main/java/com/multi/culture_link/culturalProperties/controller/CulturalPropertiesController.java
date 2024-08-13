@@ -340,7 +340,7 @@ public class CulturalPropertiesController {
 		return videos;
 	}
 
-
+//
 
 	// 문화재 상세 페이지
 	@GetMapping("/detail/{id}")
