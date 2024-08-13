@@ -64,7 +64,9 @@ $(document).ready(
                                 <div class="card-body">
                                       <h5 class="card-title" title="${festival.festivalName}">${festival.festivalName}</h5>
                                       <p class="card-text" title="${festival.festivalContent}">${festival.festivalContent}</p>
-                                      <p class="card-text t2">${start} - ${end}</p>
+                                      <p class="card-text">${start} - ${end}</p>
+                                      <p class="card-text t2" style="text-align:center;">★ ${festival.avgRate}</p>
+
 
                                       <div class="buttonZone">
 
@@ -162,7 +164,8 @@ $(document).ready(
                             <div class="card-body">
                                   <h5 class="card-title" title="${festival.festivalName}">${festival.festivalName}</h5>
                                   <p class="card-text" title="${festival.festivalContent}">${festival.festivalContent}</p>
-                                  <p class="card-text t2">${start} - ${end}</p>
+                                  <p class="card-text">${start} - ${end}</p>
+                                  <p class="card-text t2" style="text-align:center;">★ ${festival.avgRate}</p>
                                   <div class="buttonZone">
 
                                       <button class="whiteHeartBtn">
@@ -263,7 +266,8 @@ $(document).ready(
                             <div class="card-body">
                                   <h5 class="card-title" title="${festival.festivalName}">${festival.festivalName}</h5>
                                   <p class="card-text" title="${festival.festivalContent}">${festival.festivalContent}</p>
-                                  <p class="card-text t2">${start} - ${end}</p>
+                                  <p class="card-text">${start} - ${end}</p>
+                                  <p class="card-text t2" style="text-align:center;">★ ${festival.avgRate}</p>
                                   <div class="buttonZone">
                                     <button class="btn btn-primary heart" type="button" value="${festival.festivalId}">
                                       <img src="/img/festival/heart.png"
@@ -496,7 +500,8 @@ $(document).ready(
                             <div class="card-body">
                                   <h5 class="card-title" title="${festival.festivalName}">${festival.festivalName}</h5>
                                   <p class="card-text" title="${festival.festivalContent}">${festival.festivalContent}</p>
-                                  <p class="card-text t2">${start} - ${end}</p>
+                                  <p class="card-text">${start} - ${end}</p>
+                                  <p class="card-text t2" style="text-align:center;">★ ${festival.avgRate}</p>
                                   <div class="buttonZone">
                                     <button class="whiteHeartBtn">
                                         <img src="https://kr.object.ncloudstorage.com/team3/common/upNo.png"

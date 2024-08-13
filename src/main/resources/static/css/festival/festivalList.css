@@ -115,8 +115,8 @@
 
     #list2 .card{
 
-       min-height: 440px;
-      max-height: 440px;
+       min-height: 470px;
+      max-height: 470px;
       min-width: 249px;
       max-width: 249px;
       margin-bottom: 10px;
@@ -170,6 +170,7 @@
         overflow: hidden;
         text-overflow: ellipsis;
         max-width: 230px;
+        text-align:center;
 
     }
 
@@ -184,14 +185,14 @@
         overflow: hidden;
         text-overflow: ellipsis;
         max-width: 200px;
-
+        text-align:center;
     }
 
 
     .card-body .t2{
         margin-top: 0px;
         margin-bottom: 20px;
-
+        text-align:center;
 
     }
 
@@ -225,7 +226,7 @@
         align-items: center;
         transition: transform 0.2s;
         border: 0px;
-
+        text-align:center;
     }
 
 

@@ -227,7 +227,7 @@
 
         SELECT f.*
         FROM vw_festival_keyword_tf_idf_top10_data vw
-        INNER JOIN festival f
+        INNER JOIN vw_festival_review_manage_data f
         ON vw.festival_id = f.festival_id
         WHERE vw.festival_keyword_id = #{festivalKeywordId};
 
@@ -238,7 +238,7 @@
         SELECT f.*
         FROM user_festival_love_hate_festival_mapping m
 
-        JOIN festival f
+        JOIN vw_festival_review_manage_data f
         ON m.festival_id = f.festival_id
 
         WHERE user_id = #{userId}

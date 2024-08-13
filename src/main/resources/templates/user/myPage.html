@@ -16,6 +16,13 @@
 
                 var user = [[${user}]];
 
+
+
+
+
+
+
+
                 //#region 기본정보 입력
 
                 /**
@@ -233,6 +240,18 @@
 
                 //# region 상단바 : 축제 카테고리별 찜 / 관심없음 / 리뷰 내역
 
+                //# region 카드 클릭 시 상세 페이지로 이동
+
+                $(document).on('click','.fcard',function(){
+
+                    var festivalId = $(this).attr('id');
+                    window.location.href='/festival/festival-detail?festivalId='+festivalId;
+
+                })
+                //#endRegion
+
+
+
 
 
                 /**
@@ -253,28 +272,6 @@
 
                             $.each(list, function(index, festival){
 
-                                var title = festival.festivalName.length > 14?
-                                festival.festivalName.substring(0,14) + "..."
-                                : festival.festivalName;
-
-                                var indexNew = index + 1;
-
-                                var content = festival.festivalContent.length > 15?
-                                festival.festivalContent.substring(0,15) + "..."
-                                : festival.festivalContent;
-
-                                var inst1 = festival.manageInstitution.length > 15?
-                                festival.manageInstitution.substring(0,15) + "..."
-                                : festival.manageInstitution;
-
-                                var inst2 = festival.hostInstitution.length > 15?
-                                festival.hostInstitution.substring(0,15) + "..."
-                                : festival.hostInstitution;
-
-                                var inst3 = festival.sponserInstitution.length > 15?
-                                festival.sponserInstitution.substring(0,15) + "..."
-                                : festival.sponserInstitution;
-
                                 var start = festival.startDate.length >0?
                                 festival.startDate.substring(0,10):
                                 "없음";
@@ -283,15 +280,12 @@
                                 festival.endDate.substring(0,10):
                                 "없음";
 
-
-
-
                                 var firstHtml= ``;
 
                                 if(! festival.imgUrl || festival.imgUrl == "null"){
 
                                     firstHtml = `
-                                        <div class="card" id="${festival.festivalId}">
+                                        <div class="card fcard" id="${festival.festivalId}" data-value="${festival.festivalId}">
                                             <img class="card-img-top" src="/img/festival/noPhoto.png" alt="Card image cap">
 
                                     `;
@@ -299,7 +293,7 @@
                                 }else{
 
                                     firstHtml = `
-                                        <div class="card" id="${festival.festivalId}">
+                                        <div class="card fcard" id="${festival.festivalId}" data-value="${festival.festivalId}">
                                             <img class="card-img-top" src="${festival.imgUrl}" alt="Card image cap">
 
                                     `;
@@ -307,15 +301,23 @@
                                 }
 
 
-
                                 var secondHtml = `
                                     <div class="card-body">
-                                          <h5 class="card-title">${title}</h5>
-                                          <p class="card-text">${content}</p>
-                                          <img src="https://kr.object.ncloudstorage.com/team3/common/upNo.png"
-                                               style="width : 30px; height: 30px;" class="heart" value="${festival.festivalId}">
-                                          <img src="https://kr.object.ncloudstorage.com/team3/common/downNo.png"
-                                               style="width : 30px; height: 30px;" class="hate" value="${festival.festivalId}">
+                                          <h5 class="card-title" title="${festival.festivalName}">${festival.festivalName}</h5>
+                                          <p class="card-text" title="${festival.festivalContent}">${festival.festivalContent}</p>
+                                          <p class="card-text">${start} - ${end}</p>
+                                          <p class="card-text t2" style="text-align:center;">★ ${festival.avgRate}</p>
+                                          <div class="buttonZone">
+                                            <button class="whiteHeartBtn">
+                                                <img src="https://kr.object.ncloudstorage.com/team3/common/upNo.png"
+                                                   style="width : 25px; height: 25px;" class="heart" value="${festival.festivalId}">
+                                            </button>
+
+                                            <button class="whiteHateBtn">
+                                                <img src="https://kr.object.ncloudstorage.com/team3/common/downNo.png"
+                                                   style="width : 25px; height: 25px;" class="hate" value="${festival.festivalId}">
+                                            </button>
+                                          </div>
                                     </div>
 
                                 </div>
@@ -360,28 +362,6 @@
 
                             $.each(list, function(index, festival){
 
-                                var title = festival.festivalName.length > 14?
-                                festival.festivalName.substring(0,14) + "..."
-                                : festival.festivalName;
-
-                                var indexNew = index + 1;
-
-                                var content = festival.festivalContent.length > 15?
-                                festival.festivalContent.substring(0,15) + "..."
-                                : festival.festivalContent;
-
-                                var inst1 = festival.manageInstitution.length > 15?
-                                festival.manageInstitution.substring(0,15) + "..."
-                                : festival.manageInstitution;
-
-                                var inst2 = festival.hostInstitution.length > 15?
-                                festival.hostInstitution.substring(0,15) + "..."
-                                : festival.hostInstitution;
-
-                                var inst3 = festival.sponserInstitution.length > 15?
-                                festival.sponserInstitution.substring(0,15) + "..."
-                                : festival.sponserInstitution;
-
                                 var start = festival.startDate.length >0?
                                 festival.startDate.substring(0,10):
                                 "없음";
@@ -390,15 +370,12 @@
                                 festival.endDate.substring(0,10):
                                 "없음";
 
-
-
-
                                 var firstHtml= ``;
 
                                 if(! festival.imgUrl || festival.imgUrl == "null"){
 
                                     firstHtml = `
-                                        <div class="card" id="${festival.festivalId}">
+                                        <div class="card fcard" id="${festival.festivalId}" data-value="${festival.festivalId}">
                                             <img class="card-img-top" src="/img/festival/noPhoto.png" alt="Card image cap">
 
                                     `;
@@ -406,7 +383,7 @@
                                 }else{
 
                                     firstHtml = `
-                                        <div class="card" id="${festival.festivalId}">
+                                        <div class="card fcard" id="${festival.festivalId}" data-value="${festival.festivalId}">
                                             <img class="card-img-top" src="${festival.imgUrl}" alt="Card image cap">
 
                                     `;
@@ -414,15 +391,23 @@
                                 }
 
 
-
                                 var secondHtml = `
                                     <div class="card-body">
-                                          <h5 class="card-title">${title}</h5>
-                                          <p class="card-text">${content}</p>
-                                          <img src="https://kr.object.ncloudstorage.com/team3/common/upNo.png"
-                                               style="width : 30px; height: 30px;" class="heart" value="${festival.festivalId}">
-                                          <img src="https://kr.object.ncloudstorage.com/team3/common/downNo.png"
-                                               style="width : 30px; height: 30px;" class="hate" value="${festival.festivalId}">
+                                          <h5 class="card-title" title="${festival.festivalName}">${festival.festivalName}</h5>
+                                          <p class="card-text" title="${festival.festivalContent}">${festival.festivalContent}</p>
+                                          <p class="card-text">${start} - ${end}</p>
+                                          <p class="card-text t2" style="text-align:center;">★ ${festival.avgRate}</p>
+                                          <div class="buttonZone">
+                                            <button class="whiteHeartBtn">
+                                                <img src="https://kr.object.ncloudstorage.com/team3/common/upNo.png"
+                                                   style="width : 25px; height: 25px;" class="heart" value="${festival.festivalId}">
+                                            </button>
+
+                                            <button class="whiteHateBtn">
+                                                <img src="https://kr.object.ncloudstorage.com/team3/common/downNo.png"
+                                                   style="width : 25px; height: 25px;" class="hate" value="${festival.festivalId}">
+                                            </button>
+                                          </div>
                                     </div>
 
                                 </div>
@@ -467,8 +452,7 @@
                             contentType: 'application/json',
                             success: function(res){
                                 alert(res);
-                                img.closest('.card').removeClass("hasLove");
-                                findLoveFestivalList();
+                                $('#love').click();
                             },
                             error: function(xhr, status, error){
 
@@ -492,9 +476,7 @@
                             success: function(res){
 
                                 alert(res);
-                                img.closest(".card").addClass("hasLove");
-                                findLoveFestivalList();
-
+                                $('#love').click();
 
                             },
                             error: function(xhr, status, error){
@@ -518,7 +500,7 @@
                 */
                 function findLoveList(){
 
-                    var cardList = document.querySelectorAll(".card");
+                    var cardList = document.querySelectorAll(".fcard");
 
                     $.ajax({
 
@@ -529,7 +511,8 @@
 
                             $.each(cardList, function(index, card){
 
-                                var cardString = card.getAttribute('id');
+                                var cardString = card.getAttribute('data-value');
+                                console.log(cardString);
                                 var cardInt = parseInt(cardString, 10);
 
                                 if(list.includes(cardInt)){
@@ -572,8 +555,8 @@
                             contentType: 'application/json',
                             success: function(res){
                                 alert(res);
-                                img.closest('.card').removeClass("hasHate");
-                                findHateFestivalList();
+                                $('#hate').click();
+
                             },
                             error: function(xhr, status, error){
 
@@ -596,8 +579,7 @@
                             success: function(res){
 
                                 alert(res);
-                                img.closest(".card").addClass("hasHate");
-                                findHateFestivalList();
+                                $('#hate').click();
 
 
                             },
@@ -621,7 +603,7 @@
                 */
                 function findHateList(){
 
-                    var cardList = document.querySelectorAll(".card");
+                    var cardList = document.querySelectorAll(".fcard");
 
                     $.ajax({
 
@@ -632,7 +614,8 @@
 
                             $.each(cardList, function(index, card){
 
-                                var cardString = card.getAttribute('id');
+                                var cardString = card.getAttribute('data-value');
+                                console.log(cardString);
                                 var cardInt = parseInt(cardString, 10);
 
                                 if(list.includes(cardInt)){
@@ -947,7 +930,7 @@
                                 if(! exhibition.image || exhibition.image == ""){
 
                                     firstHtml = `
-                                        <div class="card hasLove" id="${exhibition.id}">
+                                        <div class="card hasLove ecard" id="${exhibition.id}" data-value="${exhibition.id}">
                                             <img class="card-img-top" src="/img/festival/noPhoto.png" alt="Card image cap">
 
                                     `;
@@ -955,7 +938,7 @@
                                 }else{
 
                                     firstHtml = `
-                                        <div class="card hasLove" id="${exhibition.id}">
+                                        <div class="card hasLove ecard" id="${exhibition.id}" data-value="${exhibition.id}">
                                             <img class="card-img-top" src="${exhibition.image}" alt="Card image cap">
 
                                     `;
@@ -1021,7 +1004,7 @@
                                 if(! exhibition.image || exhibition.image == ""){
 
                                     firstHtml = `
-                                        <div class="card hasHate" id="${exhibition.id}">
+                                        <div class="card hasHate ecard" id="${exhibition.id}" data-value="${exhibition.id}">
                                             <img class="card-img-top" src="/img/festival/noPhoto.png" alt="Card image cap">
 
                                     `;
@@ -1029,7 +1012,7 @@
                                 }else{
 
                                     firstHtml = `
-                                        <div class="card hasLove" id="${exhibition.id}">
+                                        <div class="card hasHate ecard" id="${exhibition.id}" data-value="${exhibition.id}">
                                             <img class="card-img-top" src="${exhibition.image}" alt="Card image cap">
 
                                     `;
@@ -1846,7 +1829,7 @@
 
                     <li class="dropdown">
                         <div class="genre-item">
-                            <a href="javascript:void(0)" class="dropbtn" id="category">카테고리</a>
+                            <a href="javascript:void(0)" class="dropbtn" id="category">축제</a>
                             <div class="dropdown-content">
                                 <a id="performance" class="category">공연</a>
                                 <a id="exhibition" class="category">전시</a>
