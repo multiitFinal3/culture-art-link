@@ -10,40 +10,52 @@
 
     }
 
-    #welcome{
-
-        width: 100%;
-        height: 600px;
-
-    }
-
-    #welcome img{
-
-        width: 100%;
-        height: 600px;
-
-    }
-
-
     #signUp{
 
-        padding: 5%;
-        width: 70%;
+        width: 50%;
         display: flex;
         flex-flow: column;
         align-items: center;
         justify-content: center;
+        margin: 10%;
+        background: beige;
+        border-radius: 60px;
+    }
+
+
+    h1{
+        font-size: 5rem;
+        margin-top: 5%;
+
+    }
+
+    #profileImg{
+
+        width: 50%;
+        height: 50%;
+        overflow: hidden;
 
     }
 
 
     .round{
-
-        padding: 10px;
+        width: 100%;
+        height: 100%;
         border-radius: 50%;
-        width: 200px;
-        margin: 1%;
+        object-fit: cover;
+        display: block;
+        margin-bottom: 100px;
     }
+
+    #basicForm{
+
+        margin-top: 100px;
+        margin-bottom: 100px;
+
+    }
+
+
+
 
     button, input, optgroup, select, textarea {
         margin: 1%;
@@ -85,5 +97,24 @@
     .error{
 
         color: red;
+
+    }
+
+    label{
+
+        width: 150px;
+        margin-bottom: 60px;
+
+    }
+
+    input{
+
+        width: 300px;
+
+    }
+
+    select{
+
+        width: 300px;
 
     }

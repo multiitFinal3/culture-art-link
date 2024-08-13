@@ -71,6 +71,7 @@
         WHERE ei.user_id = #{userId} AND ei.state = 'not_interested'
     </select>
 
+    <!-- 관심 상태 제거 -->
     <delete id="removeInterest">
         DELETE FROM exhibition_interested
         WHERE user_id = #{userId} AND exhibition_id = #{exhibitionId}
@@ -87,9 +88,5 @@
         SET count = count + #{countChange}
         WHERE user_id = #{userId} AND keyword = #{keyword}
     </update>
-
-
-
-
 
 </mapper>

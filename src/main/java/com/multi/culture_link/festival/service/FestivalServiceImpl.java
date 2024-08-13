@@ -372,6 +372,8 @@ public class FestivalServiceImpl implements FestivalService {
 			
 		}
 		
+		
+		
 		JsonObject item = items.get(page - 1).getAsJsonObject();
 		
 		JsonObject id = item.getAsJsonObject("id");

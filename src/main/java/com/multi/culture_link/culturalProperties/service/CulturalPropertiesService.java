@@ -31,17 +31,21 @@ public class CulturalPropertiesService {
 	@Autowired
 	private CulturalPropertiesDAO culturalPropertiesDAO;
 
-    public List<CulturalPropertiesDTO> listCulturalProperties(int offset, int limit) {
-        // limit가 0이면 모든 데이터를 가져옴
-        if (limit <= 0) {
-            return culturalPropertiesDAO.listAllCulturalProperties(); // 전체 문화재를 가져오는 메소드 호출
-        }
-        return culturalPropertiesDAO.listCulturalProperties(offset, limit);
-    }
+//    public List<CulturalPropertiesDTO> listCulturalProperties(int offset, int limit) {
+//        // limit가 0이면 모든 데이터를 가져옴
+//        if (limit <= 0) {
+//            return culturalPropertiesDAO.listAllCulturalProperties(); // 전체 문화재를 가져오는 메소드 호출
+//        }
+//        return culturalPropertiesDAO.listCulturalProperties(offset, limit);
+//    }
+//
+//
+//    public int getTotalCount() {
+//        return culturalPropertiesDAO.getTotalCount();
+//    }
 
-
-    public int getTotalCount() {
-        return culturalPropertiesDAO.getTotalCount();
+    public List<CulturalPropertiesDTO> getAllCulturalProperties() {
+        return culturalPropertiesDAO.listAllCulturalProperties();
     }
 
     public CulturalPropertiesDTO getCulturalPropertyById(int id) {
@@ -51,15 +55,22 @@ public class CulturalPropertiesService {
     }
 
 
-    public void addLike(CulturalPropertiesInterestDTO interest) {
-        interest.setInterestType("LIKE"); // LIKE 유형 설정
+
+    public void addInterest(CulturalPropertiesInterestDTO interest) {
+//        interest.setInterestType("LIKE"); // LIKE 유형 설정
         culturalPropertiesDAO.addInterest(interest);
     }
 
-    public void addDislike(CulturalPropertiesInterestDTO interest) {
-        interest.setInterestType("DISLIKE"); // DISLIKE 유형 설정
-        culturalPropertiesDAO.addInterest(interest);
-    }
+
+//    public void addLike(CulturalPropertiesInterestDTO interest) {
+//        interest.setInterestType("LIKE"); // LIKE 유형 설정
+//        culturalPropertiesDAO.addInterest(interest);
+//    }
+//
+//    public void addDislike(CulturalPropertiesInterestDTO interest) {
+//        interest.setInterestType("DISLIKE"); // DISLIKE 유형 설정
+//        culturalPropertiesDAO.addInterest(interest);
+//    }
 
     public void removeInterest(CulturalPropertiesInterestDTO interest) {
         culturalPropertiesDAO.removeInterest(interest);
@@ -72,13 +83,22 @@ public class CulturalPropertiesService {
     }
 
 
-    public Page<CulturalPropertiesDTO> searchCulturalProperties(int page, int pageSize, String category, String culturalPropertiesName, String region, String dynasty) {
-        int offset = (page - 1) * pageSize;
-        List<CulturalPropertiesDTO> properties = culturalPropertiesDAO.searchCulturalProperties(category, culturalPropertiesName, region, dynasty, offset, pageSize);
-        long total = culturalPropertiesDAO.countCulturalProperties(category, culturalPropertiesName, region, dynasty);
+//    public Page<CulturalPropertiesDTO> searchCulturalProperties(int page, int pageSize, String category, String culturalPropertiesName, String region, String dynasty) {
+//        int offset = (page - 1) * pageSize;
+//        List<CulturalPropertiesDTO> properties = culturalPropertiesDAO.searchCulturalProperties(category, culturalPropertiesName, region, dynasty, offset, pageSize);
+//        long total = culturalPropertiesDAO.countCulturalProperties(category, culturalPropertiesName, region, dynasty);
+//
+//        return new PageImpl<>(properties, PageRequest.of(page - 1, pageSize), total);
+//    }
 
-        return new PageImpl<>(properties, PageRequest.of(page - 1, pageSize), total);
+    public List<CulturalPropertiesDTO> searchCulturalProperties(String category, String culturalPropertiesName, String region, String dynasty) {
+        long total = culturalPropertiesDAO.countCulturalProperties(category, culturalPropertiesName, region, dynasty); // 총 개수 조회
+        List<CulturalPropertiesDTO> properties = culturalPropertiesDAO.searchCulturalProperties(category, culturalPropertiesName, region, dynasty);
+
+        // 필요시 total을 이용해 추가적인 로직 구현 가능
+        return properties; // 검색된 문화재 목록 반환
     }
+
 
     public List<String> getAllCategories() {
         return culturalPropertiesDAO.getAllCategories();

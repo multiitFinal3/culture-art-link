@@ -361,6 +361,8 @@ public class AdminFestivalController {
 		map.put("regionList", list1);
 		map.put("timeList", list2);
 		
+		System.out.println("timelist" + list2);
+		
 		
 		return map;
 		
@@ -370,136 +372,51 @@ public class AdminFestivalController {
 	/**
 	 * DB 데이터를 다중 조건을 가공 및 적용해 반환함
 	 *
-	 * @param mapList 다중 조건 리스트
-	 * @param page    요구되는 페이지 번호
-	 * @return 페스티벌 DTO 리스트
+//	 *
+	 * @return
 	 */
 	@PostMapping("/findDBFestivalByMultiple")
 	@ResponseBody
-	public ArrayList<FestivalDTO> findDBFestivalByMultiple(
-			@RequestBody ArrayList<HashMap<String, String>> mapList,
-			@RequestParam("page") int page) {
+	public ArrayList<FestivalDTO> findDBFestivalByMultiple(@RequestBody FestivalDTO festivalDTO) {
 		
-		
-		FestivalDTO festivalDTO = new FestivalDTO();
-		PageDTO pageDTO = new PageDTO();
-		pageDTO.setPage(page);
-		pageDTO.setStartEnd(pageDTO.getPage());
-		festivalDTO.setPageDTO(pageDTO);
-		
-		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-		
-		
-		for (int i = 0; i < mapList.size(); i++) {
-			
-			if (!mapList.get(i).get("value").isEmpty()) {
-				
-				switch (i) {
-					
-					case 0:
-						festivalDTO.setRegionId(Integer.parseInt(mapList.get(i).get("value")));
-						break;
-					
-					case 1:
-						festivalDTO.setTimeId(mapList.get(i).get("value"));
-						break;
-					
-					case 2:
-						festivalDTO.setFestivalName(mapList.get(i).get("value").trim());
-						break;
-					
-					case 3:
-						festivalDTO.setFestivalContent(mapList.get(i).get("value").trim());
-						break;
-					
-					case 4:
-						festivalDTO.setManageInstitution(mapList.get(i).get("value").trim());
-						break;
-					
-					case 5:
-						festivalDTO.setHostInstitution(mapList.get(i).get("value").trim());
-						break;
-					
-					
-					case 6:
-						festivalDTO.setSponserInstitution(mapList.get(i).get("value").trim());
-						break;
-					
-					
-					case 7:
-						festivalDTO.setTel(mapList.get(i).get("value").replace("-", "").trim());
-						break;
-					
-					
-					case 8:
-						festivalDTO.setPlace(mapList.get(i).get("value").replace("-", "").trim());
-						break;
-					
-					
-					case 9:
-						Date date = null;
-						try {
-							date = simpleDateFormat.parse(mapList.get(i).get("value").trim());
-						} catch (ParseException e) {
-							throw new RuntimeException(e);
-						}
-						festivalDTO.setStartDate(date);
-						break;
-					
-					
-					case 10:
-						Date date2 = null;
-						try {
-							date2 = simpleDateFormat.parse(mapList.get(i).get("value").trim());
-						} catch (ParseException e) {
-							throw new RuntimeException(e);
-						}
-						festivalDTO.setEndDate(date2);
-						break;
-					
-					case 11:
-						festivalDTO.setAvgRate(Double.valueOf(mapList.get(i).get("value").trim()));
-						break;
-					
-					
-					case 12:
-						festivalDTO.setSeason(mapList.get(i).get("value").trim());
-						break;
-					
-				}
-				
-				
-			}
-			
-		}
-		
-		
+
 		System.out.println("findDBFestivalByMultiple 정보가 담긴 축제 : " + festivalDTO.toString());
-		
-		//		정보가 담긴 축제 : FestivalDTO(festivalId=0, regionId=11, regionName=null, timeId=평일, festivalName=null, festivalContent=null, manageInstitution=null, hostInstitution=null, sponserInstitution=null, tel=null, homepageUrl=null, detailAddress=null, latitude=0.0, longtitude=0.0, place=null, startDate=null, endDate=null, formattedStart=null, formattedEnd=null, avgRate=0.0, season=봄, imgUrl=null, exist=null)
-		
-		
+
+		PageDTO pageDTO = new PageDTO();
+		pageDTO.setStartEnd(festivalDTO.getPage());
+		festivalDTO.setPageDTO(pageDTO);
+
+
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		try {
+			Date startDate = simpleDateFormat.parse(festivalDTO.getFormattedStart());
+			festivalDTO.setStartDate(startDate);
+
+			Date endDate = simpleDateFormat.parse(festivalDTO.getFormattedEnd());
+			festivalDTO.setEndDate(endDate);
+
+		} catch (ParseException e) {
+			System.out.println(e);;
+		}
+
 		ArrayList<FestivalDTO> list = null;
 		try {
 			list = adminFestivalService.findDBFestivalByMultiple(festivalDTO);
 		} catch (Exception e) {
-			throw new RuntimeException(e);
+			System.out.println(e);
 		}
-		
+
 		System.out.println("받아온 리스트 : " + list);
 		for (FestivalDTO festivalDTO1 : list) {
-			
-			double avgRate = Math.round(festivalDTO1.getAvgRate() * 100) / 100.0;
-			festivalDTO1.setAvgRate(avgRate);
-			
-			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-			
-			festivalDTO1.setFormattedStart(dateFormat.format(festivalDTO1.getStartDate()));
-			festivalDTO1.setFormattedEnd(dateFormat.format(festivalDTO1.getEndDate()));
-			
-			
+
+			double avgRate1 = Math.round(festivalDTO1.getAvgRate() * 100) / 100.0;
+			festivalDTO1.setAvgRate(avgRate1);
+
+			festivalDTO1.setFormattedStart(simpleDateFormat.format(festivalDTO1.getStartDate()));
+			festivalDTO1.setFormattedEnd(simpleDateFormat.format(festivalDTO1.getEndDate()));
+
 			System.out.println(festivalDTO1.toString());
-			
+
 		}
 		
 		return list;
@@ -508,99 +425,25 @@ public class AdminFestivalController {
 	/**
 	 * DB 데이터에 다중 조건을 적용한 총 숫자
 	 *
-	 * @param mapList 다중 조건 리스트
-	 * @return 해당 갯수
+	 *
 	 */
 	@PostMapping("/findDBFestivalMultipleCount")
 	@ResponseBody
-	public int findDBFestivalMultipleCount(@RequestBody ArrayList<HashMap<String, String>> mapList) {
+	public int findDBFestivalMultipleCount(@RequestBody FestivalDTO festivalDTO) {
 		
-		FestivalDTO festivalDTO = new FestivalDTO();
+		
+		System.out.println("findDBFestivalByMultiple 정보가 담긴 축제 : " + festivalDTO.toString());
 		
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-		
-		
-		for (int i = 0; i < mapList.size(); i++) {
+		try {
+			Date startDate = simpleDateFormat.parse(festivalDTO.getFormattedStart());
+			festivalDTO.setStartDate(startDate);
 			
-			if (!mapList.get(i).get("value").isEmpty()) {
-				
-				switch (i) {
-					
-					case 0:
-						festivalDTO.setRegionId(Integer.parseInt(mapList.get(i).get("value")));
-						break;
-					
-					case 1:
-						festivalDTO.setTimeId(mapList.get(i).get("value"));
-						break;
-					
-					case 2:
-						festivalDTO.setFestivalName(mapList.get(i).get("value"));
-						break;
-					
-					case 3:
-						festivalDTO.setFestivalContent(mapList.get(i).get("value"));
-						break;
-					
-					case 4:
-						festivalDTO.setManageInstitution(mapList.get(i).get("value"));
-						break;
-					
-					case 5:
-						festivalDTO.setHostInstitution(mapList.get(i).get("value"));
-						break;
-					
-					
-					case 6:
-						festivalDTO.setSponserInstitution(mapList.get(i).get("value"));
-						break;
-					
-					
-					case 7:
-						festivalDTO.setTel(mapList.get(i).get("value"));
-						break;
-					
-					
-					case 8:
-						festivalDTO.setPlace(mapList.get(i).get("value"));
-						break;
-					
-					
-					case 9:
-						Date date = null;
-						try {
-							date = simpleDateFormat.parse(mapList.get(i).get("value").trim());
-						} catch (ParseException e) {
-							throw new RuntimeException(e);
-						}
-						festivalDTO.setStartDate(date);
-						break;
-					
-					
-					case 10:
-						Date date2 = null;
-						try {
-							date2 = simpleDateFormat.parse(mapList.get(i).get("value").trim());
-						} catch (ParseException e) {
-							throw new RuntimeException(e);
-						}
-						festivalDTO.setEndDate(date2);
-						break;
-					
-					case 11:
-						festivalDTO.setAvgRate(Double.valueOf(mapList.get(i).get("value")));
-						break;
-					
-					
-					case 12:
-						festivalDTO.setSeason(mapList.get(i).get("value"));
-						break;
-					
-				}
-				
-				
-			}
+			Date endDate = simpleDateFormat.parse(festivalDTO.getFormattedEnd());
+			festivalDTO.setEndDate(endDate);
 			
+		} catch (ParseException e) {
+			System.out.println(e);;
 		}
 		
 		
@@ -1348,7 +1191,6 @@ public class AdminFestivalController {
 	
 	/**
 	 * 전체 축제 리스트를 반환
-	 *
 	 *
 	 * @return
 	 */

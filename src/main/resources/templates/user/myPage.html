@@ -253,13 +253,42 @@
 
                             $.each(list, function(index, festival){
 
-                                var content = festival.festivalContent.length > 10?
-                                festival.festivalContent.substring(0,10) + "..."
+                                var title = festival.festivalName.length > 14?
+                                festival.festivalName.substring(0,14) + "..."
+                                : festival.festivalName;
+
+                                var indexNew = index + 1;
+
+                                var content = festival.festivalContent.length > 15?
+                                festival.festivalContent.substring(0,15) + "..."
                                 : festival.festivalContent;
+
+                                var inst1 = festival.manageInstitution.length > 15?
+                                festival.manageInstitution.substring(0,15) + "..."
+                                : festival.manageInstitution;
+
+                                var inst2 = festival.hostInstitution.length > 15?
+                                festival.hostInstitution.substring(0,15) + "..."
+                                : festival.hostInstitution;
+
+                                var inst3 = festival.sponserInstitution.length > 15?
+                                festival.sponserInstitution.substring(0,15) + "..."
+                                : festival.sponserInstitution;
+
+                                var start = festival.startDate.length >0?
+                                festival.startDate.substring(0,10):
+                                "없음";
+
+                                var end = festival.endDate.length >0?
+                                festival.endDate.substring(0,10):
+                                "없음";
+
+
+
 
                                 var firstHtml= ``;
 
-                                if(! festival.imgUrl || festival.imgUrl == "null" || festival.imgUrl == ""){
+                                if(! festival.imgUrl || festival.imgUrl == "null"){
 
                                     firstHtml = `
                                         <div class="card" id="${festival.festivalId}">
@@ -277,23 +306,21 @@
 
                                 }
 
+
+
                                 var secondHtml = `
                                     <div class="card-body">
-                                          <h5 class="card-title">${festival.festivalName}</h5>
+                                          <h5 class="card-title">${title}</h5>
                                           <p class="card-text">${content}</p>
-                                          <a href="/festival/festival-detail?festivalId=${festival.festivalId}" class="btn btn-primary">자세히</a>
-                                           <button class="btn btn-primary heart" type="button" style="margin:0px" value="${festival.festivalId}">
-                                              <img src="/img/festival/heart.png"
-                                                   style="width : 20px; height: 20px;">
-                                          </button>
-                                          <button class="btn btn-primary hate" type="button" style="margin:0px" value="${festival.festivalId}">
-                                                <img src="/img/festival/trash.png"
-                                                     style="width : 20px; height: 20px;">
-                                          </button>
+                                          <img src="https://kr.object.ncloudstorage.com/team3/common/upNo.png"
+                                               style="width : 30px; height: 30px;" class="heart" value="${festival.festivalId}">
+                                          <img src="https://kr.object.ncloudstorage.com/team3/common/downNo.png"
+                                               style="width : 30px; height: 30px;" class="hate" value="${festival.festivalId}">
                                     </div>
 
                                 </div>
                                 `;
+
 
                                 var finalHtml = firstHtml + secondHtml;
 
@@ -333,9 +360,38 @@
 
                             $.each(list, function(index, festival){
 
-                                var content = festival.festivalContent.length > 10?
-                                festival.festivalContent.substring(0,10) + "..."
+                                var title = festival.festivalName.length > 14?
+                                festival.festivalName.substring(0,14) + "..."
+                                : festival.festivalName;
+
+                                var indexNew = index + 1;
+
+                                var content = festival.festivalContent.length > 15?
+                                festival.festivalContent.substring(0,15) + "..."
                                 : festival.festivalContent;
+
+                                var inst1 = festival.manageInstitution.length > 15?
+                                festival.manageInstitution.substring(0,15) + "..."
+                                : festival.manageInstitution;
+
+                                var inst2 = festival.hostInstitution.length > 15?
+                                festival.hostInstitution.substring(0,15) + "..."
+                                : festival.hostInstitution;
+
+                                var inst3 = festival.sponserInstitution.length > 15?
+                                festival.sponserInstitution.substring(0,15) + "..."
+                                : festival.sponserInstitution;
+
+                                var start = festival.startDate.length >0?
+                                festival.startDate.substring(0,10):
+                                "없음";
+
+                                var end = festival.endDate.length >0?
+                                festival.endDate.substring(0,10):
+                                "없음";
+
+
+
 
                                 var firstHtml= ``;
 
@@ -357,25 +413,24 @@
 
                                 }
 
+
+
                                 var secondHtml = `
                                     <div class="card-body">
-                                          <h5 class="card-title">${festival.festivalName}</h5>
+                                          <h5 class="card-title">${title}</h5>
                                           <p class="card-text">${content}</p>
-                                          <a href="/festival/festival-detail?festivalId=${festival.festivalId}" class="btn btn-primary">자세히</a>
-                                           <button class="btn btn-primary heart" type="button" style="margin:0px" value="${festival.festivalId}">
-                                              <img src="/img/festival/heart.png"
-                                                   style="width : 20px; height: 20px;">
-                                          </button>
-                                          <button class="btn btn-primary hate" type="button" style="margin:0px" value="${festival.festivalId}">
-                                                <img src="/img/festival/trash.png"
-                                                     style="width : 20px; height: 20px;">
-                                          </button>
+                                          <img src="https://kr.object.ncloudstorage.com/team3/common/upNo.png"
+                                               style="width : 30px; height: 30px;" class="heart" value="${festival.festivalId}">
+                                          <img src="https://kr.object.ncloudstorage.com/team3/common/downNo.png"
+                                               style="width : 30px; height: 30px;" class="hate" value="${festival.festivalId}">
                                     </div>
 
                                 </div>
                                 `;
 
+
                                 var finalHtml = firstHtml + secondHtml;
+
 
                                 $('#upper').append(finalHtml);
 
@@ -395,12 +450,15 @@
                 * 찜하기 / 찜 취소하기 버튼
                 *
                 */
-                $(document).on('click','.heart', function(){
+                $(document).on('click','.heart', function(e){
 
-                    var button = $(this);
-                    var festivalId = $(this).val();
+                    e.stopImmediatePropagation();
 
-                    if(button.closest(".card").hasClass("hasLove")){
+
+                    var img = $(this);
+                    var festivalId = img.attr('value');
+
+                    if(img.closest(".card").hasClass("hasLove")){
 
                         $.ajax({
 
@@ -409,7 +467,7 @@
                             contentType: 'application/json',
                             success: function(res){
                                 alert(res);
-                                button.closest('.card').removeClass("hasLove");
+                                img.closest('.card').removeClass("hasLove");
                                 findLoveFestivalList();
                             },
                             error: function(xhr, status, error){
@@ -421,8 +479,8 @@
 
                     }else{
 
-                        if(button.closest(".card").hasClass("hasHate")){
-                            button.closest(".card").find(".hate").click();
+                        if(img.closest(".card").hasClass("hasHate")){
+                            img.closest(".card").find(".hate").click();
                         }
 
 
@@ -434,7 +492,7 @@
                             success: function(res){
 
                                 alert(res);
-                                button.closest(".card").addClass("hasLove");
+                                img.closest(".card").addClass("hasLove");
                                 findLoveFestivalList();
 
 
@@ -449,6 +507,7 @@
 
 
                     }
+
 
                 })
 
@@ -476,7 +535,13 @@
                                 if(list.includes(cardInt)){
 
                                     $(card).addClass("hasLove");
+                                    var heartImg = $(card).find('.heart');
+                                    heartImg.attr('src','https://kr.object.ncloudstorage.com/team3/common/upBlue.png')
 
+                                }else{
+
+                                    var heartImg = $(card).find('.heart');
+                                    heartImg.attr('src','https://kr.object.ncloudstorage.com/team3/common/upNo.png');
                                 }
                             })
                         }
@@ -491,12 +556,14 @@
                 * 관심없음 하기 / 관심없음 취소하기 버튼
                 *
                 */
-                $(document).on('click','.hate', function(){
+                $(document).on('click','.hate', function(e){
 
-                    var button = $(this);
-                    var festivalId = $(this).val();
+                    e.stopImmediatePropagation();
 
-                    if(button.closest(".card").hasClass("hasHate")){
+                    var img = $(this);
+                    var festivalId = img.attr('value');
+
+                    if(img.closest(".card").hasClass("hasHate")){
 
                         $.ajax({
 
@@ -505,7 +572,8 @@
                             contentType: 'application/json',
                             success: function(res){
                                 alert(res);
-                                button.closest('.card').removeClass("hasHate");
+                                img.closest('.card').removeClass("hasHate");
+                                findHateFestivalList();
                             },
                             error: function(xhr, status, error){
 
@@ -516,8 +584,8 @@
 
                     }else{
 
-                        if(button.closest(".card").hasClass("hasLove")){
-                            button.closest(".card").find(".heart").click();
+                        if(img.closest(".card").hasClass("hasLove")){
+                            img.closest(".card").find(".heart").click();
                         }
 
                         $.ajax({
@@ -528,7 +596,7 @@
                             success: function(res){
 
                                 alert(res);
-                                button.closest(".card").addClass("hasHate");
+                                img.closest(".card").addClass("hasHate");
                                 findHateFestivalList();
 
 
@@ -538,7 +606,10 @@
                              alert('error : ',error);
 
                             }
+
                         })
+
+
                     }
 
                 })
@@ -567,8 +638,15 @@
                                 if(list.includes(cardInt)){
 
                                     $(card).addClass("hasHate");
+                                    var heartImg = $(card).find('.hate');
+                                    heartImg.attr('src','https://kr.object.ncloudstorage.com/team3/common/downRed.png')
 
+                                }else{
+
+                                    var heartImg = $(card).find('.hate');
+                                    heartImg.attr('src','https://kr.object.ncloudstorage.com/team3/common/downNo.png');
                                 }
+
                             })
                         }
                     })
@@ -855,6 +933,11 @@
 
                             $.each(list, function(index, exhibition){
 
+                                var title = exhibition.title.length > 14?
+                                exhibition.title.substring(0,14) + "..."
+                                : exhibition.title;
+
+
                                 var content = exhibition.description.length > 10?
                                 exhibition.description.substring(0,10) + "..."
                                 : exhibition.description;
@@ -881,19 +964,13 @@
 
                                 var secondHtml = `
                                     <div class="card-body">
-                                          <h5 class="card-title">${exhibition.title}</h5>
+                                          <h5 class="card-title">${title}</h5>
                                           <p class="card-text">${content}</p>
-                                          <a href="/exhibition/detail/${exhibition.id}" class="btn btn-primary">자세히</a>
-                                           <button class="btn btn-primary heart" type="button" style="margin:0px" value="${exhibition.id}">
-                                              <img src="/img/festival/heart.png"
-                                                   style="width : 20px; height: 20px;">
-                                          </button>
-                                          <button class="btn btn-primary hate" type="button" style="margin:0px" value="${exhibition.id}">
-                                                <img src="/img/festival/trash.png"
-                                                     style="width : 20px; height: 20px;">
-                                          </button>
+                                          <img src="https://kr.object.ncloudstorage.com/team3/common/upBlue.png"
+                                               style="width : 30px; height: 30px;" class="heart" value="${festival.festivalId}">
+                                          <img src="https://kr.object.ncloudstorage.com/team3/common/downNo.png"
+                                               style="width : 30px; height: 30px;" class="hate" value="${festival.festivalId}">
                                     </div>
-
                                 </div>
                                 `;
 
@@ -930,6 +1007,11 @@
 
                             $.each(list, function(index, exhibition){
 
+                                var title = exhibition.title.length > 14?
+                                exhibition.title.substring(0,14) + "..."
+                                : exhibition.title;
+
+
                                 var content = exhibition.description.length > 10?
                                 exhibition.description.substring(0,10) + "..."
                                 : exhibition.description;
@@ -947,7 +1029,7 @@
                                 }else{
 
                                     firstHtml = `
-                                        <div class="card hasHate" id="${exhibition.id}">
+                                        <div class="card hasLove" id="${exhibition.id}">
                                             <img class="card-img-top" src="${exhibition.image}" alt="Card image cap">
 
                                     `;
@@ -956,19 +1038,13 @@
 
                                 var secondHtml = `
                                     <div class="card-body">
-                                          <h5 class="card-title">${exhibition.title}</h5>
+                                          <h5 class="card-title">${title}</h5>
                                           <p class="card-text">${content}</p>
-                                          <a href="/exhibition/detail/${exhibition.id}" class="btn btn-primary">자세히</a>
-                                           <button class="btn btn-primary heart" type="button" style="margin:0px" value="${exhibition.id}">
-                                              <img src="/img/festival/heart.png"
-                                                   style="width : 20px; height: 20px;">
-                                          </button>
-                                          <button class="btn btn-primary hate" type="button" style="margin:0px" value="${exhibition.id}">
-                                                <img src="/img/festival/trash.png"
-                                                     style="width : 20px; height: 20px;">
-                                          </button>
+                                          <img src="https://kr.object.ncloudstorage.com/team3/common/upNo.png"
+                                               style="width : 30px; height: 30px;" class="heart" value="${festival.festivalId}">
+                                          <img src="https://kr.object.ncloudstorage.com/team3/common/downRed.png"
+                                               style="width : 30px; height: 30px;" class="hate" value="${festival.festivalId}">
                                     </div>
-
                                 </div>
                                 `;
 
@@ -1444,8 +1520,7 @@
 
 
 
-                // #region 상단바 하단바 클릭 이벤트
-
+                // #region 상단 필터 바 클릭 이벤트
 
 
                 /**
@@ -1456,6 +1531,17 @@
 
                     var categoryText = $(this).text();
                     $('#category').text(categoryText);
+
+                    $('#leftZone').addClass('none');
+                    $('#upperZone').removeClass('none');
+                    $('#downZone').addClass('none');
+
+                    $('#userInfo').closest('.genre-item').removeClass('active');
+                    $('#love').closest('.genre-item').addClass('active');
+                    $('#hate').closest('.genre-item').removeClass('active');
+                    $('#review').closest('.genre-item').removeClass('active');
+                    $('#loveKeywordList').closest('.genre-item').removeClass('active');
+                    $('#hateKeywordList').closest('.genre-item').removeClass('active');
 
                     if(categoryText=="축제"){
 
@@ -1471,6 +1557,27 @@
                 })
 
 
+                /**
+                * 회원정보 클릭 시
+                *
+                */
+                $(document).on('click','#userInfo', function(){
+
+
+                    $('#leftZone').removeClass('none');
+                    $('#upperZone').addClass('none');
+                    $('#downZone').addClass('none');
+
+                    $('#userInfo').closest('.genre-item').addClass('active');
+                    $('#love').closest('.genre-item').removeClass('active');
+                    $('#hate').closest('.genre-item').removeClass('active');
+                    $('#review').closest('.genre-item').removeClass('active');
+                    $('#loveKeywordList').closest('.genre-item').removeClass('active');
+                    $('#hateKeywordList').closest('.genre-item').removeClass('active');
+
+                })
+
+                $('#userInfo').closest('.genre-item').addClass('active');
 
 
                 /**
@@ -1480,6 +1587,16 @@
                 $(document).on('click','#love', function(){
 
                     var category = $('#category').text();
+                    $('#leftZone').addClass('none');
+                    $('#upperZone').removeClass('none');
+                    $('#downZone').addClass('none');
+
+                    $('#userInfo').closest('.genre-item').removeClass('active');
+                    $('#love').closest('.genre-item').addClass('active');
+                    $('#hate').closest('.genre-item').removeClass('active');
+                    $('#review').closest('.genre-item').removeClass('active');
+                    $('#loveKeywordList').closest('.genre-item').removeClass('active');
+                    $('#hateKeywordList').closest('.genre-item').removeClass('active');
 
                     if(category=="축제"){
 
@@ -1504,6 +1621,16 @@
                 $(document).on('click','#hate', function(){
 
                     var category = $('#category').text();
+                    $('#leftZone').addClass('none');
+                    $('#upperZone').removeClass('none');
+                    $('#downZone').addClass('none');
+
+                    $('#userInfo').closest('.genre-item').removeClass('active');
+                    $('#love').closest('.genre-item').removeClass('active');
+                    $('#hate').closest('.genre-item').addClass('active');
+                    $('#review').closest('.genre-item').removeClass('active');
+                    $('#loveKeywordList').closest('.genre-item').removeClass('active');
+                    $('#hateKeywordList').closest('.genre-item').removeClass('active');
 
                     if(category=="축제"){
 
@@ -1527,6 +1654,16 @@
                 $(document).on('click','#review', function(){
 
                     var category = $('#category').text();
+                    $('#leftZone').addClass('none');
+                    $('#upperZone').removeClass('none');
+                    $('#downZone').addClass('none');
+
+                    $('#userInfo').closest('.genre-item').removeClass('active');
+                    $('#love').closest('.genre-item').removeClass('active');
+                    $('#hate').closest('.genre-item').removeClass('active');
+                    $('#review').closest('.genre-item').addClass('active');
+                    $('#loveKeywordList').closest('.genre-item').removeClass('active');
+                    $('#hateKeywordList').closest('.genre-item').removeClass('active');
 
                     if(category=="축제"){
 
@@ -1543,10 +1680,23 @@
 
 
                 /**
-                * 하단바 찜 키워드 클릭 시
+                * 찜 키워드 클릭 시
                 *
                 */
                 $(document).on('click','#loveKeywordList', function(){
+
+
+                    $('#leftZone').addClass('none');
+                    $('#upperZone').addClass('none');
+                    $('#downZone').removeClass('none');
+
+                    $('#userInfo').closest('.genre-item').removeClass('active');
+                    $('#love').closest('.genre-item').removeClass('active');
+                    $('#hate').closest('.genre-item').removeClass('active');
+                    $('#review').closest('.genre-item').removeClass('active');
+                    $('#loveKeywordList').closest('.genre-item').addClass('active');
+                    $('#hateKeywordList').closest('.genre-item').removeClass('active');
+
 
                     var performanceHtml = `
 
@@ -1602,6 +1752,20 @@
                 *
                 */
                 $(document).on('click','#hateKeywordList', function(){
+
+                    $('#leftZone').addClass('none');
+                    $('#upperZone').addClass('none');
+                    $('#downZone').removeClass('none');
+
+                    $('#userInfo').closest('.genre-item').removeClass('active');
+                    $('#love').closest('.genre-item').removeClass('active');
+                    $('#hate').closest('.genre-item').removeClass('active');
+                    $('#review').closest('.genre-item').removeClass('active');
+                    $('#loveKeywordList').closest('.genre-item').removeClass('active');
+                    $('#hateKeywordList').closest('.genre-item').addClass('active');
+
+
+
 
                     var performanceHtml = `
 
@@ -1670,53 +1834,130 @@
 
     <div id="realContent">
 
-        <div id="leftZone">
+        <div class="filter-container"> <!-- 필터 컨테이너 추가 -->
+            <div class="genre-filter">
+                <ul>
 
-            <form encType="multipart/form-data" id="basicForm" style="font-size: 28px;margin: 10%;">
+                    <li>
+                        <div class="genre-item">
+                            <a id="userInfo" class="userInfo">회원정보</a>
+                        </div>
+                    <li>
 
-                <div id="profileImg" style="width: 100%;">
+                    <li class="dropdown">
+                        <div class="genre-item">
+                            <a href="javascript:void(0)" class="dropbtn" id="category">카테고리</a>
+                            <div class="dropdown-content">
+                                <a id="performance" class="category">공연</a>
+                                <a id="exhibition" class="category">전시</a>
+                                <a id="festival" class="category">축제</a>
+                                <a id="culturalPro" class="category">문화제</a>
+                            </div>
+                        </div>
+                    </li>
 
-<!--                    <img th:src="@{${user.userProfilePic}}" alt="이미지가 없습니다.">-->
+                    <li>
+                        <div class="genre-item">
+                            <a id="love">찜한 내역</a>
+                        </div>
+                    </li>
 
-                </div><br>
-                프로필 사진 <input name="uploadFile" class="rounded" id="uploadFile" type="file" accept="image/*"><br>
-                이메일  <input name="email" class="rounded" id="email" th:value="${user.email}" placeholder="${user.email}"><br>
-                비밀번호  <input name="password" class="rounded" id="password" type="password" th:value="${user.password}" placeholder="******"><br>
-                이름  <input name="userName" class="rounded" id="userName" style="width:100px;" th:value="${user.userName}" placeholder="${user.userName}">
-                전화번호  <input name="tel" class="rounded" id="tel" type="tel" style="width:200px;" th:value="${user.tel}"  placeholder="${user.tel}"><br>
-                나이 <input name="userAge" class="rounded" id="userAge" type="number" style="width:80px;" th:value="${user.userAge}"  th:placeholder="${user.userAge}">
-                성별
-                <select name="gender" class="rounded" style="width:80px;" id="gender" th:value="${user.gender}">
-                </select>
-                지역 <select name="regionId" id="regionId" class="rounded" style="width:100px;"></select><br>
+                    <li>
+                        <div class="genre-item">
+                            <a id="hate">관심없음 내역</a>
+                        </div>
+                    </li>
 
-                <button type="submit" id="updateAccount" th:value="${user.userId}">회원정보 수정</button>
-                <button type="button" id="deleteAccount" th:value="${user.userId}">회원탈퇴</button>
+                    <li>
+                        <div class="genre-item">
+                            <a id="review">내가 쓴 리뷰</a>
+                        </div>
+                    </li>
 
-            </form>
 
+                    <li>
+                        <div class="genre-item">
+                            <a id="loveKeywordList">찜 키워드</a>
+                        </div>
+                    </li>
+
+                    <li>
+                        <div class="genre-item">
+                            <a id="hateKeywordList">관심없음 키워드</a>
+                        </div>
+                    </li>
+
+                </ul>
+            </div>
         </div>
+
 
 
         <div id="rightZone">
 
-            <div id="upperZone">
+            <div id="leftZone">
 
-                <ul>
-                    <li class="dropdown">
-                        <a href="javascript:void(0)" class="dropbtn" id="category">축제</a>
-                        <div class="dropdown-content">
-                            <a id="performance" class="category">공연</a>
-                            <a id="exhibition" class="category">전시</a>
-                            <a id="festival" class="category">축제</a>
-                            <a id="culturalPro" class="category">문화제</a>
-                        </div>
-                    </li>
-                    <li><a id="love">찜한 내역</a></li>
-                    <li><a id="hate">관심없음 내역</a></li>
-                    <li><a id="review">내가 쓴 리뷰</a></li>
+                <form encType="multipart/form-data" id="basicForm" style="font-size: 28px;">
+                    <h1>회원정보</h1><br><br>
+                    <div id="profileImg">
+                    </div>
+                    <br>
 
-                </ul>
+                    <div>
+                        <label for="uploadFile"><img src="https://img.icons8.com/?size=100&id=67360&format=png&color=000000" alt="User Icon"></label>
+                        <input name="uploadFile" class="rounded" id="uploadFile" type="file" accept="image/*">
+                    </div>
+
+                    <div>
+                        <label for="email"><img src="https://img.icons8.com/?size=100&id=8uaNSRthy4ju&format=png&color=000000" alt="Email Icon"></label>
+                        <input name="email" class="rounded" id="email" th:value="${user.email}"
+                                   placeholder="${user.email}" required style="background-color: lightblue" pattern="^[a-zA-Z0-9_]{5,}@[a-zA-Z]{3,}\.com$">
+                    </div>
+
+                    <div>
+                        <label for="password"><img src="https://img.icons8.com/?size=100&id=B9ytemSyoM31&format=png&color=000000" alt="Password Icon"></label>
+                        <input name="password" class="rounded" id="password" type="password" required style="background-color: lightblue" th:value="${user.password}" placeholder="******" pattern="^[a-zA-Z0-9_]{5,}$">
+                    </div>
+
+                    <div>
+                        <label for="userName"><img src="https://img.icons8.com/?size=100&id=ZuNYjWxqVWsa&format=png&color=000000" alt="userName Icon"></label>
+                        <input name="userName" class="rounded" id="userName" th:value="${user.userName}" placeholder="${user.userName}" pattern="^[a-zA-Z가-힣]{3,}$" style="background-color: lightblue">
+                    </div>
+
+                    <div>
+                        <label for="tel"><img src="https://img.icons8.com/?size=100&id=wqTsYydyXBbo&format=png&color=000000" alt="tel Icon"></label>
+                        <input name="tel" class="rounded" id="tel" type="tel" th:value="${user.tel}" placeholder="${user.tel}" pattern="[0-9]{3}-[0-9]{4}-[0-9]{4}">
+                    </div>
+
+                    <div>
+                        <label for="userAge"><img src="https://img.icons8.com/?size=100&id=7zkG0i0pLOGd&format=png&color=000000" alt="userAge Icon"></label>
+                        <input name="userAge" class="rounded" id="userAge" type="number" th:value="${user.userAge}" th:placeholder="${user.userAge}">
+                    </div>
+
+                    <div>
+                        <label for="gender"><img src="https://img.icons8.com/?size=100&id=33337Z2WxW0x&format=png&color=000000" alt="gender Icon"></label>
+                        <select name="gender" class="rounded" id="gender" th:value="${user.gender}">
+                        </select>
+                    </div>
+
+                    <div>
+                        <label for="regionId"><img src="https://img.icons8.com/?size=100&id=43632&format=png&color=000000" alt="region Icon"></label>
+                        <select name="regionId" id="regionId" class="rounded"></select>
+                    </div>
+
+                    <div>
+                        <button type="submit" id="updateAccount" th:value="${user.userId}">수정</button>
+                        <button type="button" id="deleteAccount" th:value="${user.userId}">탈퇴</button>
+                    </div>
+
+                </form>
+
+            </div>
+
+
+            <div id="upperZone" class="none">
+
+
                 <div id="upper">
 
                     아아
@@ -1724,18 +1965,9 @@
                 </div>
 
 
-
-
             </div>
 
-            <div id="downZone">
-
-                <ul>
-
-                    <li><a id="loveKeywordList">찜 키워드</a></li>
-                    <li><a id="hateKeywordList">관심없음 키워드</a></li>
-
-                </ul>
+            <div id="downZone" class="none">
 
                 <div id="down">
                     <div id="performanceZone">
@@ -1771,7 +2003,6 @@
                 </div>
 
             </div>
-
 
 
         </div>

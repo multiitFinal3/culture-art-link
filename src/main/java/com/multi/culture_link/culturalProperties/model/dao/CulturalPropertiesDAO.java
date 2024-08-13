@@ -17,7 +17,7 @@ public interface CulturalPropertiesDAO {
     List<CulturalPropertiesDTO> listCulturalProperties(@Param("offset") int offset, @Param("limit") int limit);
     List<CulturalPropertiesDTO> listAllCulturalProperties();
 
-    int getTotalCount();
+//    int getTotalCount();
 
     CulturalPropertiesDTO getCulturalPropertyById(int id);
 
@@ -29,17 +29,21 @@ public interface CulturalPropertiesDAO {
     List<CulturalPropertiesInterestDTO> getInterest(@Param("userId") int userId);
 
 
-    List<CulturalPropertiesDTO> searchCulturalProperties(@Param("category") String category,
-                                                    @Param("culturalPropertiesName") String culturalPropertiesName,
-                                                    @Param("region") String region,
-                                                    @Param("dynasty") String dynasty,
-                                                    @Param("offset") int offset,
-                                                    @Param("pageSize") int pageSize);
+//    List<CulturalPropertiesDTO> searchCulturalProperties(@Param("category") String category,
+//                                                    @Param("culturalPropertiesName") String culturalPropertiesName,
+//                                                    @Param("region") String region,
+//                                                    @Param("dynasty") String dynasty,
+//                                                    @Param("offset") int offset,
+//                                                    @Param("pageSize") int pageSize);
+//
+//
+//    long countCulturalProperties(@Param("category") String category,
+//                                 @Param("culturalPropertiesName") String culturalPropertiesName,
+//                                 @Param("region") String region,
+//                                 @Param("dynasty") String dynasty);
 
-    long countCulturalProperties(@Param("category") String category,
-                                 @Param("culturalPropertiesName") String culturalPropertiesName,
-                                 @Param("region") String region,
-                                 @Param("dynasty") String dynasty);
+    List<CulturalPropertiesDTO> searchCulturalProperties(String category, String culturalPropertiesName, String region, String dynasty);
+    long countCulturalProperties(String category, String culturalPropertiesName, String region, String dynasty);
 
     List<String> getAllCategories();
 
