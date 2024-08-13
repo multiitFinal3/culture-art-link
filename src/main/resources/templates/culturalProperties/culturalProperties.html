@@ -113,6 +113,68 @@
     border-radius: 5px;
 }
 
+<!--.search-bar {-->
+<!--    background-color: #f8f9fa;-->
+<!--    padding: 20px;-->
+<!--    border-radius: 10px;-->
+<!--    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);-->
+<!--}-->
+
+<!--.search-bar form {-->
+<!--    display: flex;-->
+<!--    gap: 10px;-->
+<!--    align-items: center;-->
+<!--}-->
+
+<!--.search-bar .input-group {-->
+<!--    display: flex;-->
+<!--    gap: 10px;-->
+<!--    align-items: center;-->
+<!--    flex-wrap: wrap;-->
+<!--}-->
+
+<!--.search-bar select,-->
+<!--.search-bar input {-->
+<!--    width: 150px;-->
+<!--    padding: 8px 12px;-->
+<!--    border: 1px solid #ced4da;-->
+<!--    border-radius: 4px;-->
+<!--    font-size: 14px;-->
+<!--}-->
+
+<!--.search-bar .button-group {-->
+<!--    display: flex;-->
+<!--    gap: 10px;-->
+<!--}-->
+
+<!--.search-bar button {-->
+<!--    padding: 8px 16px;-->
+<!--    font-size: 14px;-->
+<!--    border-radius: 4px;-->
+<!--}-->
+
+<!--.search-bar .btn-outline-success {-->
+<!--    color: #28a745;-->
+<!--    border-color: #28a745;-->
+<!--}-->
+
+<!--.search-bar .btn-outline-success:hover {-->
+<!--    background-color: #28a745;-->
+<!--    color: #fff;-->
+<!--}-->
+
+<!--.search-bar .btn-outline-secondary {-->
+<!--    color: #6c757d;-->
+<!--    border-color: #6c757d;-->
+<!--}-->
+
+<!--.search-bar .btn-outline-secondary:hover {-->
+<!--    background-color: #6c757d;-->
+<!--    color: #fff;-->
+<!--}-->
+
+
+
 /* 랭킹 섹션 스타일 */
 .ranking, .all-cultural-properties {
     margin-top: 30px;
@@ -248,7 +310,7 @@ a {
 
         <div class="extra-filter">
 
-            <div class="search-bar mt-3">
+<!--            <div class="search-bar mt-3">-->
                 <form id="searchForm" class="d-flex">
                     <div class="input-group">
                         <select name="category" class="form-select me-2" style="width: 120px;">
@@ -278,7 +340,41 @@ a {
                         <button id="resetButton" class="btn btn-outline-secondary" type="button">초기화</button>
                     </div>
                 </form>
-            </div>
+<!--            </div>-->
+
+<!--            <div class="search-bar">-->
+<!--                <form id="searchForm">-->
+<!--                    <div class="input-group">-->
+<!--                        <select name="category" class="form-select">-->
+<!--                            <option value="">종목 선택</option>-->
+<!--                            <option value="">전체</option>-->
+<!--                            <option value="국보">국보</option>-->
+<!--                            <option value="보물">보물</option>-->
+<!--                            <option value="사적">사적</option>-->
+<!--                            <option value="사적및명승">사적및명승</option>-->
+<!--                            <option value="명승">명승</option>-->
+<!--                            <option value="천연기념물">천연기념물</option>-->
+<!--                            <option value="국가무형유산">국가무형유산</option>-->
+<!--                            <option value="국가민속문화유산">국가민속문화유산</option>-->
+<!--                            <option value="시도유형문화유산">시도유형문화유산</option>-->
+<!--                            <option value="시도무형유산">시도무형유산</option>-->
+<!--                            <option value="시도기념물">시도기념물</option>-->
+<!--                            <option value="시도민속문화유산">시도민속문화유산</option>-->
+<!--                            <option value="시도등록유산">시도등록유산</option>-->
+<!--                            <option value="문화유산자료">문화유산자료</option>-->
+<!--                            <option value="국가등록유산">국가등록유산</option>-->
+<!--                            <option value="이북5도 무형유산">이북5도 무형유산</option>-->
+<!--                        </select>-->
+<!--                        <input class="form-control" type="text" name="culturalPropertiesName" placeholder="이름">-->
+<!--                        <input class="form-control" type="text" name="region" placeholder="지역">-->
+<!--                        <input class="form-control" type="text" name="dynasty" placeholder="시대">-->
+<!--                        <div class="button-group">-->
+<!--                            <button id="searchButton" class="btn btn-outline-success" type="button">검색</button>-->
+<!--                            <button id="resetButton" class="btn btn-outline-secondary" type="button">초기화</button>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </form>-->
+<!--            </div>-->
 
             <div class="extra-item">
                 <img th:src="@{/img/performance/ranking.png}" alt="랭킹 아이콘" class="filter-icon">
