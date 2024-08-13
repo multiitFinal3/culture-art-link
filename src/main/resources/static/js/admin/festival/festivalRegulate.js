@@ -110,7 +110,8 @@ $(document).ready(
                         }else{
 
                              htmlContent2 = `
-                             <td class="imgUrl"><img src="${festival.imgUrl}" width="40px" alt="이미지 없음"></td>
+                             <td class="imgUrl" style="min-width: 150px;"><img src="${festival.imgUrl}" alt="이미지 없음" style="width: 100%;
+                             height: 150px"></td>
                              <td class="buttonHead">
                                  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalLong" id="dbUpdateBtn" value="${festival.festivalId}">상세수정</button><br><hr>
                                  <button type="button" class="btn btn-primary contentKeywordInsertBtn" value="${festival.festivalId}">내용</button>
@@ -259,7 +260,6 @@ $(document).ready(
                 success: function(list){
 
                     alert("네이버 블로그 키워드 : " + list + ". 키워드 삽입 성공!")
-
 
                 }
 
@@ -455,40 +455,73 @@ $(document).ready(
         /**
        * db 다중조건을 이용힌 검색 버튼 클릭
        */
-         $(document).on('click','#searchBtn1', function(){
+         $(document).on('click','#searchBtn1', function(e){
 
-            var data = $("#searchForm1").serializeArray();
+            e.preventDefault();
 
-            console.log("폼 : ");
-
-            console.log(data);
-
-
-            findDBFestivalByMultiple(data,1);
-            findDBFestivalMultipleCount(data);
+            findDBFestivalByMultiple(1);
+            findDBFestivalMultipleCount();
 
             // 다중 조건 검색 모달 닫기
             $('#close1').click();
 
          })
 
-        /**
-       * 다중 조건을 담은 폼 데이터 보내기
-       * @param {int} page 페이지
-       * @param {Array<{name: string, value: string}>} data1 직렬화 된 폼 데이터
-       */
-         function findDBFestivalByMultiple(data1, page){
+       /**
+      * 다중 조건을 담은 폼 데이터 보내기
+      * @param {int} page 페이지
+      *
+      */
+        function findDBFestivalByMultiple(page){
+
+           console.log("findDBFestivalByMultiple(page)");
+           console.log(page);
+
+           var regionId = document.getElementById('searchRegion1').options[document.getElementById('searchRegion1').selectedIndex].value;
+           console.log(regionId);
+           var timeId = document.getElementById('searchTime1').options[document.getElementById('searchTime1').selectedIndex].value;
+           console.log(timeId);
+           var festivalName = $('#festivalName1').val();
+           var festivalContent = $('#festivalContent1').val();
+           var manageInstitution = $('#manageInstitution1').val();
+           var hostInstitution = $('#hostInstitution1').val();
+           var tel = $('#tel1').val();
+           var place = $('#place1').val();
+           var formattedStart = $('#formattedStart1').val();
+           var formattedEnd = $('#formattedEnd1').val();
+           var avgRate = $('#avgRate1').val();
+           console.log(avgRate);
+           var season = document.getElementById('searchSeason1').options[document.getElementById('searchSeason1').selectedIndex].value;
 
 
-            console.log(data1);
+           console.log(season)
 
-            $.ajax({
+           var data = {
 
-                url: '/admin/festival-regulate/findDBFestivalByMultiple?page=' + page,
-                method: 'POST',
-                contentType: 'application/json',
-                data: JSON.stringify(data1),
-                success: function(list){
+                   regionId : regionId,
+                   timeId : timeId,
+                   festivalName : festivalName,
+                   festivalContent : festivalContent,
+                   manageInstitution : manageInstitution,
+                   hostInstitution : hostInstitution,
+                   tel : tel,
+                   place : place,
+                   formattedStart : formattedStart,
+                   formattedEnd : formattedEnd,
+                   avgRate : avgRate,
+                   season : season,
+                   page : page
+
+               };
+
+
+           $.ajax({
+
+               url: '/admin/festival-regulate/findDBFestivalByMultiple',
+               method: 'POST',
+               contentType: 'application/json',
+               data : JSON.stringify(data),
+               success: function(list){
 
                     $('#list1').html("");
 
@@ -582,7 +615,7 @@ $(document).ready(
                         }else{
 
                              htmlContent2 = `
-                             <td class="imgUrl"><img src="${festival.imgUrl}" width="40px" alt="이미지 없음"></td>
+                             <td class="imgUrl" style="min-width: 150px;"><img src="${festival.imgUrl}" alt="이미지 없음" style="width: 100%;height:150px"></td>
                              <td class="buttonHead">
                                  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalLong" id="dbUpdateBtn" value="${festival.festivalId}">상세수정</button><br><hr>
                                  <button type="button" class="btn btn-primary contentKeywordInsertBtn" value="${festival.festivalId}">내용</button>
@@ -614,13 +647,57 @@ $(document).ready(
         * 다중 조건 검색에 해당하는 전체 갯수를 구하고 그 수만큼 페이지 버튼 붙히기
         * @param {Array<{name: string, value: string}>} data1 직렬화 된 폼 데이터
         */
-         function findDBFestivalMultipleCount(data1){
+         function findDBFestivalMultipleCount(){
+
+
+           console.log("findDBFestivalByMultipleCount()");
+
+           var regionId = document.getElementById('searchRegion1').options[document.getElementById('searchRegion1').selectedIndex].value;
+           console.log(regionId);
+           var timeId = document.getElementById('searchTime1').options[document.getElementById('searchTime1').selectedIndex].value;
+           console.log(timeId);
+           var festivalName = $('#festivalName1').val();
+           var festivalContent = $('#festivalContent1').val();
+           var manageInstitution = $('#manageInstitution1').val();
+           var hostInstitution = $('#hostInstitution1').val();
+           var tel = $('#tel1').val();
+           var place = $('#place1').val();
+           var formattedStart = $('#formattedStart1').val();
+           var formattedEnd = $('#formattedEnd1').val();
+           var avgRate = $('#avgRate1').val();
+           console.log(avgRate);
+           var season = document.getElementById('searchSeason1').options[document.getElementById('searchSeason1').selectedIndex].value;
+
+
+           console.log(season)
+
+           var data = {
+
+                   regionId : regionId,
+                   timeId : timeId,
+                   festivalName : festivalName,
+                   festivalContent : festivalContent,
+                   manageInstitution : manageInstitution,
+                   hostInstitution : hostInstitution,
+                   tel : tel,
+                   place : place,
+                   formattedStart : formattedStart,
+                   formattedEnd : formattedEnd,
+                   avgRate : avgRate,
+                   season : season
+           };
+
+
+
+
+
+
 
             $.ajax({
 
                 url: '/admin/festival-regulate/findDBFestivalMultipleCount',
                 method: 'POST',
-                data: JSON.stringify(data1),
+                data: JSON.stringify(data),
                 contentType: 'application/json',
                 success: function(count){
 
@@ -634,8 +711,6 @@ $(document).ready(
                         findDBFestivalCount();
 
                     })
-
-
 
                     console.log("카운트는...")
                     console.log(count)
@@ -659,7 +734,7 @@ $(document).ready(
                     $(document).on('click','.pageBtn3', function(){
 
                         const page = $(this).text();
-                        findDBFestivalByMultiple(data1, page);
+                        findDBFestivalByMultiple(page);
 
                     })
 

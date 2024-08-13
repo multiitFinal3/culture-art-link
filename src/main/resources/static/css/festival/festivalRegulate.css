@@ -141,15 +141,15 @@
 
     .buttonHead{
 
-        width: 200px;
+        max-width: 300px;
 
 
     }
 
-    .contentKeywordInsertBtn, .naverArticleKeywordInsertBtn,
-    .naverBlogKeywordInsertBtn, .reviewBlogKeywordInsertBtn{
+    #dbUpdateBtn, .contentKeywordInsertBtn, .naverArticleKeywordInsertBtn,
+    .naverBlogKeywordInsertBtn, .reviewKeywordInsertBtn{
 
-        font-size: 13px;
+        font-size: 10px;
 
     }
 
