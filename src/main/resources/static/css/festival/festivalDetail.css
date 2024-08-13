@@ -1,75 +1,250 @@
+    .container {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 30px;
+    }
 
-    #columnFlow{
+
+    #upperZone{
 
         display: flex;
-        flex-flow: column;
-        align-items: center;
-        justify-content: center;
+        gap: 20px;
+        position: relative;
 
     }
 
-    #upperZone{
-        width: 100%;
+    .detail-card {
+        width: 330px;
+        height: 440px;
+        padding: 24px;
+        background: white;
+        border-radius: 8px;
+        border: 1px #D9D9D9 solid;
         display: flex;
-        flex-flow: column;
+        flex-direction: column;
         align-items: center;
-        justify-content: center;
-        margin: 5%;
-        margin-bottom: 0;
+    }
 
+    #upperZone img:first-child{
+
+        width: 300px;
+        height: 400px;
+        background: linear-gradient(0deg, #E3E3E3 0%, #E3E3E3 100%);
+        vertical-align: middle;
+        border-style: none;
+        box-sizing: border-box;
     }
 
 
     #detailCardZone{
 
-        width: 80%;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      box-sizing: border-box;
+
+    }
+
+    .card-title{
+
+        color: #1E1E1E;
+        font-size: 24px;
+        font-weight: bold;
+
+    }
+
+    .info-section-content {
         display: flex;
-        flex-flow: column;
-        align-items: center;
-        justify-content: center;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .info-section-content *{
+
+        font-size: 20px;
+        font-weight: 300;
+        color: black;
 
     }
 
-    #recommendCardList{
 
-        overflow-x: scroll;
-        margin: 3%;
-        text-align: center;
+
+
+    .heart{
+
+       font-weight: 700;
+       color: white;
+       text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+       position: absolute;
+       top: 380px;
+       left: 220px;
+
+   }
+
+   .hate{
+
+       font-weight: 700;
+       color: white;
+       text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+       position: absolute;
+       top: 380px;
+       left: 280px;
+
+   }
+
+    #contentBtnZone {
         display: flex;
-
+        gap: 8px;
+        margin: 20px 0;
+        justify-content: flex-start;
     }
 
-    #detailCard{
+    #contentBtnZone button{
 
-        margin: 1%;
-        min-width: 1200px;
-        max-width: 100%;
-        min-height: 1000px;
-        display : flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 30px;
+      background: #D9D9D9;
+      border: 1px #F5F5F5 solid;
+      padding: 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      text-align: center;
+      width: 138px;
 
-    }
+   }
 
 
-    #detailCard img.card-img-top{
+    #downZone{
 
-        margin: 1%;
-        width: 780px;
-        height: 600px;
+       padding: 24px;
+       background: white;
+       border-radius: 8px;
+       border: 1px #D9D9D9 solid;
 
-    }
-
+   }
 
     .card-body{
 
-        display : flex;
+        display: flex;
         flex-flow: column;
         align-items: start;
         justify-content: space-between;
+        color: #757575;
+        font-size: 16px;
 
     }
+
+    #mapDiv #map{
+
+        width: 100%;
+        height: 400px;
+        position: relative;
+        overflow: hidden;
+        background: rgb(248, 249, 250);
+
+    }
+
+    #festivalInfo{
+
+        width: 100%;
+
+    }
+
+
+    #recommendCardZone h3{
+
+        margin-bottom: 10px;
+
+
+    }
+
+
+    #recommendCardList{
+
+        display: flex;
+        flex-flow: row;
+        flex-wrap: no-wrap;
+        align-items: center;
+        justify-content: center;
+        margin-left: 5%;
+        margin-right: 5%;
+        flex-wrap: wrap;
+        gap: 10px;
+
+    }
+
+
+    #recommendCardList .card{
+
+        min-height: 440px;
+        max-height: 440px;
+        min-width: 249px;
+        max-width: 249px;
+        margin-bottom: 10px;
+        background: white;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        transition: transform 0.2s;
+        border: 0px;
+
+
+    }
+
+    #recommendCardList .card:hover {
+       transform: scale(1.05);
+   }
+
+
+    #recommendCardList .card-img-top{
+
+        max-height: 332px;
+        min-width: 249px;
+        min-height: 332px;
+        max-width: 249px;
+        border-radius: 8px;
+        object-fit: cover;
+
+    }
+
+    #recommendCardList #card-title{
+
+        color: #1E1E1E;
+        font-size: 20px;
+        font-weight: bold;
+
+    }
+
+    #recommendCardList #card-text{
+
+        font-size: 14px !important;
+
+    }
+
+
+    #recommendCardList .heart{
+
+        font-weight: 700;
+        color: white;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        position: absolute;
+        top: 290px;
+        left: 150px;
+
+    }
+
+
+    #recommendCardList .hate{
+
+        font-weight: 700;
+        color: white;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        position: absolute;
+        top: 290px;
+        left: 200px;
+
+    }
+
+
+
 
     #detailDescripZone{
 
@@ -77,12 +252,6 @@
 
     }
 
-    .card-title{
-
-        text-align: center;
-        width: 100%;
-
-    }
 
     #reviewTextArea{
 
@@ -96,6 +265,17 @@
         font-size: 20px;
 
     }
+
+
+
+    #festivalInfo > div{
+
+        margin-top: 50px;
+        margin-bottom: 200px;
+
+    }
+
+
 
 
     #players{
@@ -119,11 +299,22 @@
     }
 
 
-    #recommendCardZone{
+    #articlePages, #blogPages{
 
-        margin-top: 6%
+        display: flex;
+        align-items: center;
+        justify-content: center;
 
     }
+
+
+    #blogs .card{
+
+        width: 100%;
+        height: 210px;
+
+    }
+
 
 
     .recommendCard{
@@ -137,22 +328,22 @@
 
     }
 
-    .card-text{
+    #recommendCardZone{
 
-        font-size: 20px !important;
+        width: 100%;
 
     }
 
 
     .hasLove{
 
-        background-color: #ffe5ea;
+
 
    }
 
    .hasHate{
 
-        background-color: #dfdfdf;
+
 
    }
 
@@ -166,73 +357,32 @@
 
    }
 
-   #contentBtnZone{
-        width: 100%;
-        display : flex;
-        flex-flow: row;
-        align-items: center;
-        justify-content: center;
-        margin: 1%;
 
-   }
-
-   #contentBtnZone button{
-
-      margin: 0.5%;
-      font-size: 20px;
-
-   }
 
    #contentKeyword, #reviewKeyword, #naverArticleKeyword, #naverBlogKeyword{
 
-        display : flex;
-        flex-flow: row;
-        align-items: center;
-        justify-content: space-around;
-        margin: 1%;
+        display: flex;
+        justify-content: left;
+        gap: 10px;
+        margin-bottom: 20px;
 
    }
 
-   #naverKeyword{
-
-        display : flex;
-        flex-flow: row;
-        align-items: center;
-        justify-content: space-around;
-        margin: 1%;
-
-
-   }
 
    button.keyword{
 
-        width: 150px;
-        height: 50px;
-        font-size: 18px;
-        margin: 1%;
-
-   }
-
-   .card-text{
-
-        font-size: 35px;
-
-   }
-
-   button.contentKeyword{
-
-        background-color: #E6E6FA;
-        color: black;
-
+        background-color: #f0f0f0;
+        color: #333;
+        padding: 8px 15px;
+        border-radius: 20px;
+        font-size: 14px;
+        font-weight: bold;
+        text-decoration: none;
+        border: 0px;
    }
 
 
-   button.naverKeyword{
 
-        background-color: #EBFAC0;
-        color: black;
-
-   }
 
     #buttonZone{
 
@@ -244,12 +394,7 @@
 
     }
 
-    #downZone{
 
-        margin-left: 8%;
-        width: 100%;
-
-    }
 
     span{
 
@@ -278,9 +423,13 @@
 
     [class^="star-rating"] label {
       cursor: pointer;
-      color: grey;
+
       padding: 0 0.25rem;
       transition: color 0.15s;
+      font-size: 24px;
+      color: rgba(189, 189, 189, 0.7);
+      margin-right: 5px;
+
     }
 
     [class^="star-rating"] input:checked ~ label {
@@ -307,5 +456,129 @@
 
     }
 
+    .recommendCard:hover {
+        transform: scale(1.05);
+    }
 
+
+    #recommendCardList .card-title{
+        color: #1E1E1E;
+        font-size: 19px;
+        font-weight: bold;
+    }
+
+    .avgstar.full {
+        color: gold;
+    }
+
+    #reviewSection{
+        background-color: #ecf0f1;
+        border-radius: 8px;
+        padding: 20px;
+        margin-bottom: 20px;
+        max-width: 1500px;
+        margin: 0 auto;
+
+    }
+
+    #reviewHead1{
+        font-size: 2rem;
+        margin-right: 20px;
+        margin-top: 0;
+        color: #2c3e50;
+    }
+
+    #reviewTextArea{
+        width: 100%;
+        height: 150px;
+        margin-bottom: 10px;
+        padding: 10px;
+        border: 1px solid #bdc3c7;
+        border-radius: 4px;
+        margin-right: 10px;
+        margin-top: 10px;
+
+    }
+
+
+    #reviewForm button{
+
+        background-color: #2ecc71;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 16px;
+        height: 42px;
+        white-space: nowrap;
+
+
+    }
+
+
+
+
+    #reviewTable {
+        width: 100%;
+        table-layout: fixed;
+    }
+
+    #reviewTable td{
+
+        max-height: 100px;
+        font-size: 15px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+
+    }
+
+    #reviewTable td img{
+
+        max-width: 100%;
+        max-height: 100%;
+        display: block;
+        height: 100%;
+
+    }
+
+    #reviewTable th{
+        font-size: 18px;
+    }
+
+
+    th, td {
+        padding: 5px;
+        text-align: center;
+        vertical-align: center;
+    }
+
+    th:nth-child(1), td:nth-child(1) {
+        width: 5%;
+    }
+
+    th:nth-child(2), td:nth-child(2) {
+        width: 10%;
+    }
+
+    th:nth-child(3), td:nth-child(3) {
+        width: 10%;
+    }
+
+    th:nth-child(4), td:nth-child(4) {
+        width: 55%;
+    }
+
+    th:nth-child(5), td:nth-child(5) {
+        width: 10%;
+    }
+
+    th:nth-child(6), td:nth-child(6) {
+        width: 5%;
+    }
+
+    th:nth-child(7), td:nth-child(7) {
+        width: 5%;
+    }
 

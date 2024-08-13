@@ -1,0 +1,505 @@
+<!--<!DOCTYPE html>-->
+<!--<html lang="ko" xmlns:th="http://www.thymeleaf.org"-->
+<!--      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"-->
+<!--      layout:decorate="~{common/layout/layoutMenubar}">-->
+
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <meta name="viewport" content="width=device-width, initial-scale=1.0">-->
+<!--    <title>리뷰 - [[${property.culturalPropertiesName}]]</title>-->
+<!--    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">-->
+<!--    <link rel="stylesheet" href="/css/culturalProperties/culturalProperties.css">-->
+
+<!--    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>-->
+
+<!--    <script src="/js/culturalProperties/culturalPropertiesReviewDetail.js"></script>-->
+
+<!--    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>-->
+
+
+<!--    <style>-->
+
+
+<!--        .cultural-property-detail {-->
+<!--            text-align: left;-->
+<!--            padding: 2rem;-->
+<!--        }-->
+
+<!--        .cultural-property-detail img {-->
+<!--            max-width: 100%;-->
+<!--            height: auto;-->
+<!--        }-->
+
+
+
+<!--     /* 리뷰 폼 스타일 */-->
+<!--#reviewForm {-->
+<!--    background-color: #ecf0f1;-->
+<!--    border-radius: 8px;-->
+<!--    padding: 20px;-->
+<!--    margin-bottom: 20px; /* 하단 여백 추가 */-->
+<!--    max-width: 1500px; /* 최대 너비를 1000px로 늘림 */-->
+<!--    margin: 0 auto; /* 중앙 정렬 */-->
+<!--}-->
+
+<!--.header-container {-->
+<!--    display: flex; /* Flexbox 사용하여 수평 정렬 */-->
+<!--    justify-content: space-between; /* 양 끝으로 정렬 */-->
+<!--    align-items: center; /* 수직 중앙 정렬 */-->
+<!--}-->
+
+<!--#reviewForm h2 {-->
+<!--    margin-top: 0;-->
+<!--    color: #2c3e50;-->
+<!--&lt;!&ndash;    margin-bottom: 10px;&ndash;&gt;-->
+<!--}-->
+
+<!--.star {-->
+<!--    font-size: 24px; /* 별 크기 조정 */-->
+<!--    color: rgba(189, 189, 189, 0.7); /* 기본 색상을 연한 회색으로 설정 */-->
+<!--    margin-right: 5px; /* 별 간격 */-->
+<!--    cursor: pointer; /* 커서를 포인터로 변경 */-->
+<!--}-->
+
+<!--.rating-container {-->
+<!--    display: flex; /* 별점을 수평으로 정렬 */-->
+<!--    margin-left: 1010px; /* 별점을 오른쪽으로 이동 */-->
+<!--}-->
+
+<!--.star.selected {-->
+<!--    color: #f1c40f; /* 선택된 별 색상 (노란색) */-->
+<!--}-->
+
+<!--#newReviewForm {-->
+<!--    display: flex; /* Flexbox를 사용하여 수평 정렬 */-->
+<!--    align-items: flex-start; /* 상단 정렬 */-->
+<!--    justify-content: space-between; /* 좌우 정렬 */-->
+<!--}-->
+
+<!--#newReviewForm textarea {-->
+<!--    width: 100%; /* 전체 너비 */-->
+<!--    height: 150px; /* 높이를 150px로 늘림 */-->
+<!--    margin-bottom: 10px; /* 텍스트 에어리어 아래 여백 추가 */-->
+<!--    padding: 10px;-->
+<!--    border: 1px solid #bdc3c7;-->
+<!--    border-radius: 4px;-->
+<!--    margin-right: 10px; /* 버튼과의 간격 */-->
+<!--    margin-top: 10px;-->
+<!--}-->
+
+<!--#newReviewForm button {-->
+<!--    background-color: #2ecc71;-->
+<!--    color: white;-->
+<!--    border: none;-->
+<!--    padding: 10px 20px; /* 버튼 크기 조정 */-->
+<!--    border-radius: 4px;-->
+<!--    cursor: pointer;-->
+<!--    font-size: 16px;-->
+<!--    height: 42px; /* 높이 조정하여 textarea와 맞춤 */-->
+<!--    white-space: nowrap; /* 버튼 이름이 잘리지 않도록 설정 */-->
+<!--}-->
+
+<!--#newReviewForm button:hover {-->
+<!--    background-color: #27a-->
+<!--}-->
+
+
+
+
+<!--.reviews {-->
+<!--    margin: 20px 320px; /* 상하 여백 추가 */-->
+<!--    padding: 20px; /* 내부 여백 추가 */-->
+<!--    background-color: #ffffff; /* 리뷰 섹션 배경색 */-->
+<!--    border-radius: 8px; /* 모서리 둥글게 */-->
+<!--    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* 그림자 추가 */-->
+<!--}-->
+
+<!--        .reviews h2 {-->
+<!--            font-size: 40px; /* 제목 크기 조정 */-->
+<!--            font-weight: bold;-->
+<!--            margin-bottom: 15px;-->
+<!--        }-->
+
+<!--.review {-->
+<!--    display: flex; /* Flexbox 사용 */-->
+<!--    flex-direction: column; /* 세로 방향으로 정렬 */-->
+<!--    padding: 15px;-->
+<!--    border-bottom: 1px solid #e0e0e0;-->
+<!--    margin-bottom: 15px; /* 리뷰 간 여백 추가 */-->
+<!--}-->
+
+<!--.user-info {-->
+<!--    display: flex;-->
+<!--    align-items: center; /* 아이템 수직 중앙 정렬 */-->
+<!--    margin-bottom: 20px; /* 사용자 정보와 리뷰 내용 사이 여백 추가 */-->
+<!--}-->
+
+<!--.user-info img {-->
+<!--    width: 50px; /* 프로필 이미지 크기 조정 */-->
+<!--    height: 50px;-->
+<!--    border-radius: 50%;-->
+<!--    margin-right: 10px;-->
+<!--}-->
+
+<!--.user-details {-->
+<!--    display: flex;-->
+<!--    flex-direction: column; /* 세로 정렬 */-->
+<!--    justify-content: center; /* 수직 중앙 정렬 */-->
+<!--}-->
+
+<!--.user-info span {-->
+<!--    font-weight: bold;-->
+<!--    font-size: 20px;-->
+<!--&lt;!&ndash;    font-size: 16px; /* 이름 크기 조정 */&ndash;&gt;-->
+<!--}-->
+
+<!--.rating {-->
+<!--    color: #ffc107; /* 노란색 별점 */-->
+<!--    margin-bottom: 5px;-->
+<!--}-->
+
+<!--.review-content {-->
+<!--    flex: 1; /* 나머지 공간을 차지하도록 설정 */-->
+<!--}-->
+
+<!--.review-content p {-->
+<!--font-size: 20px;-->
+<!--&lt;!&ndash;    font-size: 14px;&ndash;&gt;-->
+<!--    line-height: 1.4;-->
+<!--    color: #333;-->
+<!--}-->
+
+<!--.review-star {-->
+<!--    font-size: 24px; /* 별 크기 조정 */-->
+<!--    color: #ffc107; /* 노란색 */-->
+<!--}-->
+
+<!--.review-star.empty {-->
+<!--    font-size: 16px; /* 별 크기 조정 */-->
+<!--    color: #e0e0e0; /* 회색으로 설정 */-->
+
+<!--}-->
+
+<!--.review-avgstar {-->
+<!--    font-size: 24px; /* 별 크기 조정 */-->
+<!--    color: #ffc107; /* 노란색 */-->
+<!--}-->
+
+<!--/* 리뷰 액션 버튼 스타일 */-->
+<!--        .review {-->
+<!--    position: relative; /* 부모 요소를 기준으로 절대 위치 설정 */-->
+<!--    padding: 15px;-->
+<!--    border: 1px solid #e0e0e0;-->
+<!--    border-radius: 8px; /* 모서리 둥글게 */-->
+<!--    margin-bottom: 15px; /* 리뷰 간 여백 추가 */-->
+<!--}-->
+
+<!--.review-actions {-->
+<!--    position: absolute; /* 버튼을 리뷰의 모서리에 절대적으로 배치 */-->
+<!--    top: 10px; /* 상단 여백 */-->
+<!--    right: 10px; /* 오른쪽 여백 */-->
+<!--}-->
+
+<!--.review-actions button {-->
+<!--    background-color: #3498db; /* 버튼 배경색 */-->
+<!--    color: white;-->
+<!--    border: none;-->
+<!--    padding: 5px 10px;-->
+<!--    border-radius: 4px;-->
+<!--    margin-left: 5px; /* 버튼 간격 */-->
+<!--    cursor: pointer;-->
+<!--    font-size: 12px;-->
+<!--}-->
+
+<!--.review-actions button:hover {-->
+<!--    background-color: #2980b9; /* 버튼 호버 시 색상 변경 */-->
+<!--}-->
+
+
+<!--.review-editable .review-star {-->
+<!--    cursor: pointer; /* 손 커서 */-->
+<!--}-->
+
+<!--.review-text-container {-->
+<!--    display: flex; /* Flexbox 사용 */-->
+<!--    flex-direction: column; /* 세로 방향으로 정렬 */-->
+<!--    padding: 15px; /* 패딩 추가 */-->
+<!--    border-bottom: 1px solid #e0e0e0; /* 하단 테두리 */-->
+<!--    margin-bottom: 15px; /* 리뷰 간 여백 추가 */-->
+<!--}-->
+
+
+<!--.avgstar.full {-->
+<!--    color: gold; /* 채워진 별 색상 */-->
+<!--}-->
+
+<!--.avgstar.empty {-->
+<!--    color: lightgray; /* 빈 별 색상 */-->
+<!--}-->
+
+<!--.no-reviews {-->
+<!--    color: #999; /* 회색 텍스트 */-->
+<!--    text-align: center; /* 가운데 정렬 */-->
+<!--}-->
+
+
+
+<!--&lt;!&ndash;/* 반별 스타일 */&ndash;&gt;-->
+<!--&lt;!&ndash;.avgstar.half {&ndash;&gt;-->
+<!--&lt;!&ndash;    color: gold; /* 반별 색상 */&ndash;&gt;-->
+<!--&lt;!&ndash;    position: relative; /* 반별 위치 설정 */&ndash;&gt;-->
+<!--&lt;!&ndash;}&ndash;&gt;-->
+
+
+
+
+<!--&lt;!&ndash;/* 반별 스타일 */&ndash;&gt;-->
+<!--&lt;!&ndash;.avgstar.half {&ndash;&gt;-->
+<!--&lt;!&ndash;    color: gold; /* 반별 색상 */&ndash;&gt;-->
+<!--&lt;!&ndash;}&ndash;&gt;-->
+
+
+
+<!--&lt;!&ndash;.filled-star {&ndash;&gt;-->
+<!--&lt;!&ndash;    color: gold; /* 노란색 채워진 별 */&ndash;&gt;-->
+<!--&lt;!&ndash;}&ndash;&gt;-->
+
+<!--&lt;!&ndash;.half-star {&ndash;&gt;-->
+<!--&lt;!&ndash;    color: gold; /* 노란색 반쪽 별 */&ndash;&gt;-->
+<!--&lt;!&ndash;    display: inline-block; /* 인라인 블록으로 설정 */&ndash;&gt;-->
+<!--&lt;!&ndash;    position: relative; /* 위치 설정 */&ndash;&gt;-->
+<!--&lt;!&ndash;}&ndash;&gt;-->
+
+<!--&lt;!&ndash;.half-star:before {&ndash;&gt;-->
+<!--&lt;!&ndash;    content: '\2605'; /* 채워진 별 표시 */&ndash;&gt;-->
+<!--&lt;!&ndash;    position: absolute;&ndash;&gt;-->
+<!--&lt;!&ndash;    left: 0; /* 왼쪽 정렬 */&ndash;&gt;-->
+<!--&lt;!&ndash;    width: 50%; /* 절반 크기 */&ndash;&gt;-->
+<!--&lt;!&ndash;    overflow: hidden; /* 넘치는 부분 숨김 */&ndash;&gt;-->
+<!--&lt;!&ndash;    color: gold; /* 색상 설정 */&ndash;&gt;-->
+<!--&lt;!&ndash;}&ndash;&gt;-->
+
+
+
+<!--&lt;!&ndash;/* 페이지네이션 스타일 */&ndash;&gt;-->
+<!--&lt;!&ndash;.pagination {&ndash;&gt;-->
+<!--&lt;!&ndash;    display: flex;&ndash;&gt;-->
+<!--&lt;!&ndash;    justify-content: center;&ndash;&gt;-->
+<!--&lt;!&ndash;    margin-top: 20px;&ndash;&gt;-->
+<!--&lt;!&ndash;}&ndash;&gt;-->
+
+<!--&lt;!&ndash;.pagination button {&ndash;&gt;-->
+<!--&lt;!&ndash;    background-color: #f0f0f0; /* 비활성화 시 배경색 */&ndash;&gt;-->
+<!--&lt;!&ndash;    border: none;&ndash;&gt;-->
+<!--&lt;!&ndash;    color: #333;&ndash;&gt;-->
+<!--&lt;!&ndash;    padding: 5px 10px;&ndash;&gt;-->
+<!--&lt;!&ndash;    margin: 0 5px;&ndash;&gt;-->
+<!--&lt;!&ndash;    cursor: pointer;&ndash;&gt;-->
+<!--&lt;!&ndash;}&ndash;&gt;-->
+
+<!--&lt;!&ndash;/* 활성화 시 배경색 */&ndash;&gt;-->
+<!--&lt;!&ndash;.pagination button.active {&ndash;&gt;-->
+<!--&lt;!&ndash;    background-color: #3498db; /* 파란색 배경 */&ndash;&gt;-->
+<!--&lt;!&ndash;    color: white; /* 흰색 글자 */&ndash;&gt;-->
+<!--&lt;!&ndash;}&ndash;&gt;-->
+
+<!--&lt;!&ndash;.pagination button:hover {&ndash;&gt;-->
+<!--&lt;!&ndash;    background-color: #e0e0e0; /* 호버 시 색상 */&ndash;&gt;-->
+<!--&lt;!&ndash;}&ndash;&gt;-->
+
+<!--&lt;!&ndash;.pagination button:disabled {&ndash;&gt;-->
+<!--&lt;!&ndash;    background-color: #f0f0f0; /* 비활성화 시 배경색 */&ndash;&gt;-->
+<!--&lt;!&ndash;    color: #aaa; /* 비활성화 시 글자 색상 */&ndash;&gt;-->
+<!--&lt;!&ndash;    cursor: not-allowed; /* 비활성화 시 커서 변경 */&ndash;&gt;-->
+<!--&lt;!&ndash;}&ndash;&gt;-->
+
+
+
+
+<!--/* 페이지네이션 스타일 */-->
+<!--.pagination {-->
+<!--    display: flex;-->
+<!--    justify-content: center;-->
+<!--    margin-top: 20px;-->
+<!--}-->
+
+<!--.pagination button {-->
+<!--    background-color: #f0f0f0;-->
+<!--    border: none;-->
+<!--    color: #333;-->
+<!--    padding: 5px 10px;-->
+<!--    margin: 0 5px;-->
+<!--    cursor: pointer;-->
+<!--}-->
+
+<!--.pagination button:hover {-->
+<!--    background-color: #e0e0e0;-->
+<!--}-->
+
+
+
+
+
+<!--&lt;!&ndash;        /* 반응형 디자인 */&ndash;&gt;-->
+<!--&lt;!&ndash;@media (max-width: 768px) {&ndash;&gt;-->
+<!--&lt;!&ndash;    .review {&ndash;&gt;-->
+<!--&lt;!&ndash;        flex-direction: column;&ndash;&gt;-->
+<!--&lt;!&ndash;    }&ndash;&gt;-->
+
+<!--&lt;!&ndash;    .user-info {&ndash;&gt;-->
+<!--&lt;!&ndash;        width: 70%;&ndash;&gt;-->
+<!--&lt;!&ndash;        margin-bottom: 10px;&ndash;&gt;-->
+<!--&lt;!&ndash;    }&ndash;&gt;-->
+<!--&lt;!&ndash;}&ndash;&gt;-->
+
+
+<!--    </style>-->
+<!--</head>-->
+<!--<body>-->
+<!--<div layout:fragment="content">-->
+
+
+<!--&lt;!&ndash;    &lt;!&ndash; ID를 데이터 속성으로 저장 &ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;    <div id="property" data-id="[[${property.id}]]"></div>&ndash;&gt;-->
+
+
+<!--    <section class="cultural-property-detail">-->
+<!--    <div id="contentArea" class="container mt-4">-->
+<!--        <div class="d-flex">-->
+<!--            <div class="col-md-6 pe-5">-->
+
+<!--                <img th:src="${property.mainImgUrl}" th:alt="${property.culturalPropertiesName}">-->
+
+<!--            </div>-->
+<!--            <div class="col-md-6 ms-5">-->
+<!--                <p th:text="${property.categoryName}"></p>-->
+<!--                <h1 th:text="${property.culturalPropertiesName}"></h1>-->
+<!--                <p th:text="${property.content}"></p>-->
+
+<!--                <br>-->
+
+<!--                <div style="display: flex; justify-content: space-between; align-items: center;">-->
+
+
+<!--                    <div class="averageRating" th:data-average-rating="${averageRating}" th:data-review-count="${reviews.size()}">-->
+<!--                        <span th:text="${#numbers.formatDecimal(averageRating != null ? averageRating : 0.0, 1, 1)}"></span>-->
+<!--                        <span class="review-avgstar"></span>-->
+<!--                    </div>-->
+
+<!--                    <a href="/cultural-properties" class="btn btn-primary">목록으로 돌아가기</a>-->
+<!--                </div>-->
+
+
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--    </section>-->
+
+<!--    <br><br><br><br>-->
+
+
+<!--    <section id="reviewForm">-->
+<!--        <div style="display: flex; align-items: center;"> &lt;!&ndash; 추가: flexbox 사용 &ndash;&gt;-->
+<!--            <h2 style="margin-right: 20px;">리뷰 작성</h2> <br>-->
+<!--            <div class="rating-container">-->
+<!--                <div class="rating">-->
+<!--                    <span class="star" data-value="1">&#9733;</span>-->
+<!--                    <span class="star" data-value="2">&#9733;</span>-->
+<!--                    <span class="star" data-value="3">&#9733;</span>-->
+<!--                    <span class="star" data-value="4">&#9733;</span>-->
+<!--                    <span class="star" data-value="5">&#9733;</span>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--        <form id="newReviewForm">-->
+<!--            <textarea id="reviewContent" required placeholder="리뷰 내용을 작성하세요."></textarea>-->
+<!--            <button id="addReview" type="submit">리뷰 등록</button>-->
+<!--        </form>-->
+<!--    </section>-->
+
+<!--    <br><br><br><br>-->
+
+
+<!--    <section class="reviews">-->
+<!--        <h2 style="display: inline-block;">리뷰</h2>-->
+<!--        <div id="totalReviewCount" class="mt-3" style="display: inline-block; margin-left: 10px;"><span>0</span></div>-->
+
+<!--        <div class="review" th:each="review : ${reviews}">-->
+<!--            <div class="user-info">-->
+
+<!--                <img th:if="${review.userProfileImage != null}"-->
+<!--                     th:src="@{/img/user/userProfile/{filename}(filename=${review.userProfileImage})}"-->
+<!--                     th:alt="${review.userName}">-->
+<!--                <img th:if="${review.userProfileImage == null}"-->
+<!--                     th:src="@{/img/festival/noPhoto.png}"-->
+<!--                     th:alt="기본 사용자 이미지">-->
+
+<!--&lt;!&ndash;                <img th:if="${review.userProfileImage != null}"&ndash;&gt;-->
+<!--&lt;!&ndash;                     th:src="@{/img/user/userProfile/{filename}(filename=${review.userProfileImage})}"&ndash;&gt;-->
+<!--&lt;!&ndash;                     th:alt="${review.userName}">&ndash;&gt;-->
+<!--                <div class="user-details">-->
+<!--                    <span th:text="${review.userName}"></span>-->
+<!--                    <div class="review-rating" th:attr="data-rating=${review.star}">-->
+<!--                        <span class="review-star" th:if="${review.star >= 1}">&#9733;</span>-->
+<!--                        <span class="review-star" th:if="${review.star >= 2}">&#9733;</span>-->
+<!--                        <span class="review-star" th:if="${review.star >= 3}">&#9733;</span>-->
+<!--                        <span class="review-star" th:if="${review.star >= 4}">&#9733;</span>-->
+<!--                        <span class="review-star" th:if="${review.star >= 5}">&#9733;</span>-->
+<!--                        <span class="review-star empty" th:if="${review.star < 1}">&#9734;</span>-->
+<!--                        <span class="review-star empty" th:if="${review.star < 2}">&#9734;</span>-->
+<!--                        <span class="review-star empty" th:if="${review.star < 3}">&#9734;</span>-->
+<!--                        <span class="review-star empty" th:if="${review.star < 4}">&#9734;</span>-->
+<!--                        <span class="review-star empty" th:if="${review.star < 5}">&#9734;</span>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+
+
+<!--&lt;!&ndash;            // 리뷰내용에 박스생김&ndash;&gt;-->
+<!--&lt;!&ndash;            <div class="review" data-id="${review.id}" data-cultural-id="${review.culturalPropertiesId}">&ndash;&gt;-->
+<!--            <div class="review-content">-->
+<!--                <p th:text="${review.content}" class="review-text"></p>-->
+<!--            <div class="review-text-container">-->
+<!--                <textarea th:id="'editContent-' + ${review.id}" rows="5" style="display:none;" th:text="${review.content}"></textarea>-->
+<!--            </div>-->
+<!--                <input type="number" th:id="'editStar-' + ${review.id}" min="1" max="5" style="display:none;" th:value="${review.star}" />-->
+<!--            </div>-->
+<!--            <div class="review-actions" th:if="${review.userId == userId2}">-->
+<!--                <button type="button" th:id="'edit-btn-' + ${review.id}" th:data-id="${review.id}" th:data-cultural-id="${review.culturalPropertiesId}">수정</button>-->
+<!--                <button type="button" th:id="'delete-btn-' + ${review.id}" th:data-id="${review.id}" th:data-cultural-id="${review.culturalPropertiesId}">삭제</button>-->
+
+<!--                <button type="button" th:id="'save-btn-' + ${review.id}" style="display:none;" th:data-id="${review.id}" th:data-cultural-id="${review.culturalPropertiesId}">저장</button>-->
+<!--                <button type="button" th:id="'cancel-btn-' + ${review.id}" style="display:none;">취소</button>-->
+<!--            </div>-->
+<!--        </div>-->
+
+
+<!--    </section>-->
+
+
+
+
+<!--    <br>-->
+<!--    <section>-->
+<!--        <div class="pagination">-->
+<!--            <button class="btn btn-primary" id="prevPage" type="button" disabled> &lt; </button>-->
+<!--            <span id="currentPage">1</span> / <span id="totalPages">1</span>-->
+<!--            <button class="btn btn-primary" id="nextPage" type="button"> &gt; </button>-->
+<!--        </div>-->
+
+
+<!--    </section>-->
+
+<!--    <br><br><br><br>-->
+
+<!--</div>-->
+
+<!--</div>-->
+
+<!--<script>-->
+
+
+<!--</script>-->
+
+<!--</body>-->
+<!--</html>-->

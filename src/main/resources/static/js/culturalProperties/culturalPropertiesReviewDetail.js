@@ -93,6 +93,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
 
 
+
     // URL에서 문화재 ID 추출
     const urlParts = window.location.pathname.split('/');
     const culturalPropertiesId = urlParts[urlParts.length - 3]; // 문화재 ID를 URL에서 가져옴
@@ -222,17 +223,17 @@ document.addEventListener("DOMContentLoaded", function() {
                                     <div class="user-details">
                                     <span>${review.userName}</span>
 
-                                    <span style="font-size: 13px;">
+                                    <span style="font-size: 13px; color: #999;">
                                         ${formattedDate}   ${updatedAtHtml}
                                     </span>
 
 
-                                    <div class="review-rating" data-rating="${review.star}"> <!-- 수정된 부분 -->
+                                    <div class="review-rating" data-rating="${review.star}">
                                     ${Array.from({ length: 5 }, (_, index) => {
                                         if (index < review.star) {
-                                            return `<span class="review-star">&#9733;</span>`; // 채워진 별
+                                            return `<span class="review-star">&#9733;</span>`;
                                         } else {
-                                            return `<span class="review-star empty">&#9734;</span>`; // 빈 별
+                                            return `<span class="review-star empty">&#9734;</span>`;
                                         }
                                     }).join('')}
                                     </div>
