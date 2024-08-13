@@ -25,27 +25,8 @@ $(document).ready(
                     success: function(list){
                         $.each(list, function(index, festival){
 
-                            var title = festival.festivalName.length > 14?
-                            festival.festivalName.substring(0,14) + "..."
-                            : festival.festivalName;
 
                             var indexNew = index + 1;
-
-                            var content = festival.festivalContent.length > 15?
-                            festival.festivalContent.substring(0,15) + "..."
-                            : festival.festivalContent;
-
-                            var inst1 = festival.manageInstitution.length > 15?
-                            festival.manageInstitution.substring(0,15) + "..."
-                            : festival.manageInstitution;
-
-                            var inst2 = festival.hostInstitution.length > 15?
-                            festival.hostInstitution.substring(0,15) + "..."
-                            : festival.hostInstitution;
-
-                            var inst3 = festival.sponserInstitution.length > 15?
-                            festival.sponserInstitution.substring(0,15) + "..."
-                            : festival.sponserInstitution;
 
                             var start = festival.startDate.length >0?
                             festival.startDate.substring(0,10):
@@ -54,9 +35,6 @@ $(document).ready(
                             var end = festival.endDate.length >0?
                             festival.endDate.substring(0,10):
                             "없음";
-
-
-
 
                             var firstHtml= ``;
 
@@ -84,8 +62,9 @@ $(document).ready(
 
                             var secondHtml = `
                                 <div class="card-body">
-                                      <h5 class="card-title">${title}</h5>
-                                      <p class="card-text">${content}</p>
+                                      <h5 class="card-title" title="${festival.festivalName}">${festival.festivalName}</h5>
+                                      <p class="card-text" title="${festival.festivalContent}">${festival.festivalContent}</p>
+                                      <p class="card-text t2">${start} - ${end}</p>
 
                                       <div class="buttonZone">
 
@@ -114,8 +93,8 @@ $(document).ready(
 
 
 
-
                         })
+
 
                     }
 
@@ -150,26 +129,6 @@ $(document).ready(
 
                     $.each(list, function(index, festival){
 
-                        var title = festival.festivalName.length > 14?
-                        festival.festivalName.substring(0,14) + "..."
-                        : festival.festivalName;
-
-                        var content = festival.festivalContent.length > 14?
-                        festival.festivalContent.substring(0,14) + "..."
-                        : festival.festivalContent;
-
-                        var inst1 = festival.manageInstitution.length > 15?
-                        festival.manageInstitution.substring(0,15) + "..."
-                        : festival.manageInstitution;
-
-                        var inst2 = festival.hostInstitution.length > 15?
-                        festival.hostInstitution.substring(0,15) + "..."
-                        : festival.hostInstitution;
-
-                        var inst3 = festival.sponserInstitution.length > 15?
-                        festival.sponserInstitution.substring(0,15) + "..."
-                        : festival.sponserInstitution;
-
                         var start = festival.startDate.length >0?
                         festival.startDate.substring(0,10):
                         "없음";
@@ -201,8 +160,9 @@ $(document).ready(
 
                         var secondHtml = `
                             <div class="card-body">
-                                  <h5 class="card-title">${title}</h5>
-                                  <p class="card-text">${content}</p>
+                                  <h5 class="card-title" title="${festival.festivalName}">${festival.festivalName}</h5>
+                                  <p class="card-text" title="${festival.festivalContent}">${festival.festivalContent}</p>
+                                  <p class="card-text t2">${start} - ${end}</p>
                                   <div class="buttonZone">
 
                                       <button class="whiteHeartBtn">
@@ -267,26 +227,6 @@ $(document).ready(
 
                         var index1 = (index + 1) + (page-1)*5;
 
-                        var title = festival.festivalName.length > 14?
-                        festival.festivalName.substring(0,14) + "..."
-                        : festival.festivalName;
-
-                        var content = festival.festivalContent.length > 14?
-                        festival.festivalContent.substring(0,14) + "..."
-                        : festival.festivalContent;
-
-                        var inst1 = festival.manageInstitution.length > 15?
-                        festival.manageInstitution.substring(0,15) + "..."
-                        : festival.manageInstitution;
-
-                        var inst2 = festival.hostInstitution.length > 15?
-                        festival.hostInstitution.substring(0,15) + "..."
-                        : festival.hostInstitution;
-
-                        var inst3 = festival.sponserInstitution.length > 15?
-                        festival.sponserInstitution.substring(0,15) + "..."
-                        : festival.sponserInstitution;
-
                         var start = festival.startDate.length >0?
                         festival.startDate.substring(0,10):
                         "없음";
@@ -321,8 +261,9 @@ $(document).ready(
 
                         var secondHtml = `
                             <div class="card-body">
-                                  <h5 class="card-title">${title}</h5>
-                                  <p class="card-text">${content}</p>
+                                  <h5 class="card-title" title="${festival.festivalName}">${festival.festivalName}</h5>
+                                  <p class="card-text" title="${festival.festivalContent}">${festival.festivalContent}</p>
+                                  <p class="card-text t2">${start} - ${end}</p>
                                   <div class="buttonZone">
                                     <button class="btn btn-primary heart" type="button" value="${festival.festivalId}">
                                       <img src="/img/festival/heart.png"
@@ -522,27 +463,6 @@ $(document).ready(
 
                     $.each(list, function(index, festival){
 
-                        var title = festival.festivalName.length > 14?
-                        festival.festivalName.substring(0,14) + "..."
-                        : festival.festivalName;
-
-                        var content = festival.festivalContent.length > 14?
-                        festival.festivalContent.substring(0,14) + "..."
-                        : festival.festivalContent;
-
-                        var inst1 = festival.manageInstitution.length > 15?
-                        festival.manageInstitution.substring(0,15) + "..."
-                        : festival.manageInstitution;
-
-                        var inst2 = festival.hostInstitution.length > 15?
-                        festival.hostInstitution.substring(0,15) + "..."
-                        : festival.hostInstitution;
-
-                        var inst3 = festival.sponserInstitution.length > 15?
-                        festival.sponserInstitution.substring(0,15) + "..."
-                        : festival.sponserInstitution;
-
-
                         var start = festival.startDate.length >0?
                         festival.startDate.substring(0,10):
                         "없음";
@@ -574,8 +494,9 @@ $(document).ready(
 
                         var secondHtml = `
                             <div class="card-body">
-                                  <h5 class="card-title">${title}</h5>
-                                  <p class="card-text">${content}</p>
+                                  <h5 class="card-title" title="${festival.festivalName}">${festival.festivalName}</h5>
+                                  <p class="card-text" title="${festival.festivalContent}">${festival.festivalContent}</p>
+                                  <p class="card-text t2">${start} - ${end}</p>
                                   <div class="buttonZone">
                                     <button class="whiteHeartBtn">
                                         <img src="https://kr.object.ncloudstorage.com/team3/common/upNo.png"

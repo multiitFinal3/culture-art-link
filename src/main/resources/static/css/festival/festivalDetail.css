@@ -484,11 +484,52 @@
     }
 
 
-    #recommendCardList .card-title{
-        color: #1E1E1E;
-        font-size: 19px;
-        font-weight: bold;
+   #recommendCardList .card-title{
+
+        font-size: 20px;
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 5px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 230px;
+
     }
+
+    #recommendCardList .card-body p{
+
+        margin-top: 0px;
+        margin-bottom: 0px;
+        font-size: 16px;
+        font-weight: 400;
+        color: #757575;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 200px;
+
+    }
+
+
+    #recommendCardList .card-body .t2{
+        margin-top: 0px;
+        margin-bottom: 20px;
+
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+
 
     .avgstar.full {
         color: gold;
