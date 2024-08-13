@@ -4,7 +4,6 @@
             display: flex;
             justify-content: space-between;
             margin: 20px 0;
-            align-self: flex-start;
         }
 
         /* 장르 필터 */
@@ -303,22 +302,18 @@
         display: flex;
         flex-flow: row;
         justify-content: flex-end;
-        align-items: center;
 
     }
 
-    #inputGroup input{
 
-        width: 130px;
-        height: 50px;
+    #inputGroup > *{
+
+        margin-right: 5px;
 
     }
 
-    #inputGroup select{
 
-        width: 130px;
-        height: 50px;
-    }
+
 
     .none{
 
@@ -326,4 +321,17 @@
 
     }
 
+    .extra-filter {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+    }
 
+    #searchForm select,
+    #searchForm input{
+
+        border: 1px solid #ced4da;
+        border-radius: 0px;
+        color: #495057
+
+    }

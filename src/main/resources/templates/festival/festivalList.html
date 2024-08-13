@@ -31,6 +31,40 @@
 
             </ul>
         </div>
+
+        <div class="extra-filter">
+
+            <form id="searchForm" name="searchForm1" method="post" class="d-flex">
+                <div id="inputGroup">
+                    <select name="regionId"  id="searchRegion" class="form-select me-2" style="width: 120px;">
+                    </select>
+                    <select name="timeId"  id="searchTime" class="form-select me-2" style="width: 120px;">
+                    </select>
+                    <input  type="text" name="festivalName" id="festivalName" placeholder="축제 이름" aria-label="festivalName" class="form-control me-2" style="width: 120px;">
+                    <input  type="text" name="festivalContent" id="festivalContent" placeholder="내용 키워드" aria-label="festivalContent" class="form-control me-2" style="width: 120px;">
+                    <input  type="text" name="manageInstitution" id="manageInstitution" placeholder="주체기관" aria-label="manageInstitution" class="form-control me-2" style="width: 120px;">
+                    <input  type="text" name="hostInstitution" id="hostInstitution" placeholder="후원기관" aria-label="hostInstitution" class="form-control me-2" style="width: 120px;">
+                    <input  type="text" name="tel" id="tel" placeholder="전화번호" aria-label="tel" pattern="[0-9]{3}-[0-9]{4}-[0-9]{4}" class="form-control me-2" style="width: 120px;">
+                    <input type="text" name="place" id="place" placeholder="장소" aria-label="place" class="form-control me-2" style="width: 120px;">
+                    <input  type="date" name="formattedStart" id="formattedStart" placeholder="시작일" aria-label="formattedStart" class="form-control me-2" style="width: 120px;">
+                    <input  type="date" name="formattedEnd" id="formattedEnd" placeholder="종료일" aria-label="formattedEnd" class="form-control me-2" style="width: 120px;">
+                    <input type="number" name="avgRate" id="avgRate" value="0.0" step="0.1" placeholder="최소 별점" aria-label="avgRate" min="0" max="5" class="form-control me-2" style="width: 120px;">
+                    <select name="season"  id="searchSeason1" class="form-select me-2" style="width: 120px;">
+                        <option value="" selected>계절</option>
+                        <option value="봄">봄</option>
+                        <option value="여름">여름</option>
+                        <option value="가을">가을</option>
+                        <option value="겨울">겨울</option>
+                    </select>
+                    <button id="searchBtn1"  type="button" class="btn btn-outline-success" style="margin-right: 0px;margin-left: 5px;
+                    border-radius: 0px;margin-top: 0px;margin-bottom: 0px;">검색</button>
+                    <button id="resetBtn1"  type="button" class="btn btn-outline-secondary" style="margin-right: 0px;margin-left: -1px;border-radius: 0px;margin-top: 0px;margin-bottom: 0px;">초기화</button>
+
+                </div>
+            </form>
+
+
+        </div>
     </div>
 
     <div id="festivalRegulate">
@@ -110,35 +144,7 @@
 <!--                </button>-->
 <!--            </h2>-->
 
-            <div>
 
-                <div id="searchForm" name="searchForm1" method="post">
-                    <div id="inputGroup">
-                        <select name="regionId"  id="searchRegion">
-                        </select>
-                        <select name="timeId"  id="searchTime">
-                        </select>
-                        <input  type="text" name="festivalName" id="festivalName" placeholder="축제 이름" aria-label="festivalName">
-                        <input  type="text" name="festivalContent" id="festivalContent" placeholder="내용 키워드" aria-label="festivalContent">
-                        <input  type="text" name="manageInstitution" id="manageInstitution" placeholder="주체기관" aria-label="manageInstitution">
-                        <input  type="text" name="hostInstitution" id="hostInstitution" placeholder="후원기관" aria-label="hostInstitution">
-                        <input  type="text" name="tel" id="tel" placeholder="전화번호" aria-label="tel" pattern="[0-9]{3}-[0-9]{4}-[0-9]{4}">
-                        <input type="text" name="place" id="place" placeholder="장소" aria-label="place">
-                        <input  type="date" name="formattedStart" id="formattedStart" placeholder="시작일" aria-label="formattedStart">
-                        <input  type="date" name="formattedEnd" id="formattedEnd" placeholder="종료일" aria-label="formattedEnd">
-                        <input type="number" name="avgRate" id="avgRate" value="0.0" step="0.1" placeholder="최소 별점" aria-label="avgRate" min="0" max="5">
-                        <select name="season"  id="searchSeason1">
-                            <option value="" selected>계절</option>
-                            <option value="봄">봄</option>
-                            <option value="여름">여름</option>
-                            <option value="가을">가을</option>
-                            <option value="겨울">겨울</option>
-                        </select>
-                        <button id="searchBtn1"  type="button">검색</button>
-
-                    </div>
-                </div>
-            </div>
 
 
             <h2>축제 리스트</h2>

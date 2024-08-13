@@ -695,6 +695,19 @@ $(document).ready(
 
 
 
+        /**
+        * 상세 조건 검색에서 초기화 버튼으로 돌아가기 버튼
+        *
+        */
+        $(document).on('click','#resetBtn1', function(){
+
+            $('#list1').html("");
+            findDBFestivalAllList();
+
+        })
+
+
+
 
         /**
         * 찜하기 / 찜 취소하기 버튼
