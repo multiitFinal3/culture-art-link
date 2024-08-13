@@ -1,53 +1,43 @@
 <!DOCTYPE html>
-<html
-  xmlns:th="http://www.thymeleaf.org"
-  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
->
-  <html layout:decorate="~{common/layout/layoutMenubar}">
-    <html lang="ko">
-      <head>
-        <link rel="stylesheet" href="/css/exhibition/exhibition.css">
-        <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-        <script src="/js/exhibition/exhibition.js"></script>
-      </head>
-      <body>
-      <div layout:fragment="content">
-        <div class="tab-menu">
-          <button id="currentBtn">현재 전시</button>
-          <button id="pastBtn">지난 전시</button>
-          <button id="futureBtn">예정 전시</button>
-          <button id="unknownBtn">미정</button>
-        </div>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<html layout:decorate="~{common/layout/layoutMenubar}">
+<html lang="ko">
+<head>
+  <link rel="stylesheet" href="/css/exhibition/exhibition.css">
+  <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script src="/js/exhibition/exhibition.js"></script>
+</head>
+<body>
+<div layout:fragment="content">
 
-          <div class="search-bar">
-            <input type="text" id="searchTitle" placeholder="전시 이름" />
-            <input type="text" id="searchArtist" placeholder="작가" />
-            <input type="text" id="searchMuseum" placeholder="미술관" />
-            <button id="searchButton">검색</button>
-          </div>
+  <div class="filter-container">
+    <div class="tab-menu">
+      <div id="currentBtn" class="genre-item">현재 전시</div>
+      <div id="pastBtn" class="genre-item">지난 전시</div>
+      <div id="futureBtn" class="genre-item">예정 전시</div>
+      <div id="unknownBtn" class="genre-item">미정</div>
+    </div>
+    <div class="search-bar">
+      <input type="text" id="searchTitle" placeholder="전시 이름" />
+      <input type="text" id="searchArtist" placeholder="작가" />
+      <input type="text" id="searchMuseum" placeholder="미술관" />
+      <button id="searchButton">검색</button>
+    </div>
 
-          <ul class="exhibition-list">
-            <li class="exhibition-item">
-              <img
-                src="path_to_rembrandt_image.jpg"
-                alt="렘브란트, 17세기의 사진가"
-                class="exhibition-image"
-              />
-              <div class="exhibition-info">
-                <h3>렘브란트, 17세기의 사진가</h3>
-                <p>국립중앙박물관</p>
-                <p>2023-07-05~2023-09-29</p>
-              </div>
-              <div class="exhibition-interested">
-                <button class="exhibition-like">찜</button>
-                <button class="exhibition-dislike">관심없음</button>
-              </div>
-            </li>
-          </ul>
-        </div>
-      </body>
-    </html>
-  </html>
+  </div>
+
+
+  <div class="all-exhibitions">
+    <h2 class="all-exhibitions-title">전체 전시 목록</h2>
+    <div class="all-exhibitions-items">
+      <!-- This will be populated by JavaScript -->
+    </div>
+  </div>
+</div>
+</body>
+</html>
+</html>
 </html>
