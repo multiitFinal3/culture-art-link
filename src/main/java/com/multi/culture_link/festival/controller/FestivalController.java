@@ -77,6 +77,15 @@ public class FestivalController {
 		
 		try {
 			FestivalDTO festivalDTO = adminFestivalService.findDBFestivalByFestivalId(festivalId);
+			festivalDTO.setFormattedStart(festivalDTO.getFormattedStart().replace("-","."));
+			festivalDTO.setFormattedEnd(festivalDTO.getFormattedEnd().replace("-","."));
+			
+			Double avgRate = festivalDTO.getAvgRate();
+			
+			if (avgRate==null){
+				festivalDTO.setAvgRate(0.0);
+			}
+			
 			model.addAttribute("festival", festivalDTO);
 			
 			int userId = user.getUserId();
@@ -570,13 +579,18 @@ public class FestivalController {
 		
 		VWUserReviewDataDTO userReviewDataDTO = new VWUserReviewDataDTO();
 		
-		if (uploadFile != null) {
+		if (uploadFile != null && !uploadFile.isEmpty()) {
+			System.out.println("첨부파일??" + uploadFile);
 			
 			String fileUUIDName = UUID.randomUUID().toString() + "_" + uploadFile.getOriginalFilename();
 			String attachment = "/festival/reviewAttach/" + fileUUIDName.trim();
 			// 네이버 스토리지 사용
 			fileController.uploadFile(uploadFile, attachment);
 			userReviewDataDTO.setAttachment(attachment);
+		}else {
+			
+			userReviewDataDTO.setAttachment("");
+			
 		}
 		
 		

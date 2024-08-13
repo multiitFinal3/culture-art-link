@@ -2,6 +2,8 @@ package com.multi.culture_link.festival.model.dto;
 
 import lombok.Data;
 
+import java.util.Date;
+
 @Data
 public class VWUserReviewDataDTO {
 	
@@ -14,5 +16,7 @@ public class VWUserReviewDataDTO {
 	private String userName;
 	private String userProfilePic;
 	private PageDTO pageDTO;
+	private Date createdAt;
+	private Date updatedAt;
 	
 }
