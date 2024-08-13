@@ -328,6 +328,8 @@ public class PerformanceController {
             @RequestParam(value = "genre", required = false) String genre,
             Model model) {
 
+
+
         List<PerformanceDTO> performances = performanceService.searchPerformances(keyword, genre);
         model.addAttribute("allPerformances", performances);
         model.addAttribute("selectedGenre", genre);
@@ -337,6 +339,12 @@ public class PerformanceController {
         for (PerformanceDTO performance : performances) {
             performance.updateFormattedDate();
         }
+
+        // 검색 결과가 없을 경우 플래그 추가
+        boolean noResults = performances.isEmpty();
+        model.addAttribute("noResults", noResults);
+
+
 
         return "performance/performanceGenre"; // 적절한 템플릿 경로로 변경
     }

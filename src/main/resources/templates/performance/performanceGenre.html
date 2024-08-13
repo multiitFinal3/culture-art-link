@@ -95,7 +95,6 @@
     <!-- 전체 공연 목록 -->
     <div class="all-performances">
         <div class="all-performances-title">전체 공연 목록</div>
-
         <div class="all-performances-items" th:if="${allPerformances != null}">
             <div th:each="performance : ${allPerformances}">
                 <a th:href="@{'/performance/performanceDetail?performanceCode=' + ${performance.code} + '&source=db'}">
@@ -119,6 +118,11 @@
 
         <div th:if="${allPerformances == null}">
             <p>전체 공연 정보가 없습니다.</p>
+        </div>
+
+        <!-- 검색 결과가 없을 때 표시 -->
+        <div th:if="${noResults ?: false}">
+            <p>검색 결과가 없습니다.</p>
         </div>
     </div>
 </div>
