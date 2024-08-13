@@ -16,15 +16,14 @@
     <script th:src="'https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=' + ${naverClientId} + '&submodules=geocoder'"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
-<!--    <script th:inline="javascript">-->
-<!--        var userId = /*[[${user.userId}]]*/ '';-->
-<!--        var performanceId = /*[[${performance.id}]]*/ '';-->
-<!--    </script>-->
+
 
     <script>
         var userId = [[${user.userId}]];
         var performanceId = [[${performance.id}]];
     </script>
+
+
 
 
 
@@ -64,14 +63,10 @@
         <div class="top-section">
             <div class="detail-card">
                 <img class="thumbnail" th:src="${performance.imageMain}" alt="공연 이미지" />
-
-                <!-- 좋아요 및 싫어요 버튼 -->
-                <div class="like-dislike-container">
-                    <img id="likeBtn" src="/img/performance/Like:no.PNG" alt="Like" class="like-dislike-icon">
-                    <img id="dislikeBtn" src="/img/performance/notLike:no.PNG" alt="Dislike" class="like-dislike-icon">
-                </div>
-
             </div>
+
+
+
             <div class="info-section">
                 <div class="title" th:text="${performance.title}">공연명</div>
                 <div class="info-section-content">
@@ -89,6 +84,13 @@
                 </div>
             </div>
         </div>
+
+        <!-- 좋아요 및 싫어요 버튼 -->
+        <div class="like-dislike-container">
+            <img id="likeBtn" src="/img/performance/Like:no.PNG" alt="Like" class="like-dislike-icon">
+            <img id="dislikeBtn" src="/img/performance/notLike:no.PNG" alt="Dislike" class="like-dislike-icon">
+        </div>
+
         <div class="performance-container">
             <div class="button-box">공연상세</div>
             <div class="button-box" id="showMapBtn">공연장소</div>
