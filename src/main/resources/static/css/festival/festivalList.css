@@ -245,14 +245,43 @@
 
    }
 
+   .whiteHeartBtn{
+       position: absolute;
+       top: 290px;
+       right: 65px;
+       background: white;
+
+       padding: 5px 10px;
+       margin: 0 5px;
+       border: none;
+       border-radius: 5px;
+       cursor: pointer;
+   }
+
+
+
    .heart{
 
        font-weight: 700;
        color: white;
        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+
+
+   }
+
+
+
+   .whiteHateBtn{
+
        position: absolute;
-       top: 300px;
-       right: 60px;
+       top: 290px;
+       right: 10px;
+       background: white;
+        padding: 5px 10px;
+      margin: 0 5px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
 
    }
 
@@ -261,9 +290,6 @@
        font-weight: 700;
        color: white;
        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-       position: absolute;
-       top: 300px;
-       right: 10px;
 
    }
 
@@ -293,6 +319,10 @@
 
    .card-img-top:hover {
        transform: scale(1.05);
+   }
+
+   .card:hover .card-body{
+       text-decoration: underline #0b5eb6;
    }
 
 
@@ -333,5 +363,17 @@
         border: 1px solid #ced4da;
         border-radius: 0px;
         color: #495057
+
+    }
+
+
+    .whiteBtn{
+
+        padding: 5px 10px;
+        margin: 0 5px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        background: white;
 
     }
