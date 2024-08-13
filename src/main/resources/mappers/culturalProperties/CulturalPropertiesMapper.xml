@@ -80,7 +80,7 @@
                 AND dynasty LIKE CONCAT('%', #{dynasty}, '%')
             </if>
         </where>
-        LIMIT #{offset}, #{pageSize}
+<!--        LIMIT #{offset}, #{pageSize}-->
     </select>
 
     <select id="countCulturalProperties" resultType="long">

@@ -194,28 +194,61 @@ function renderCulturalProperties(properties) {
           });
       }
 
-      // 검색 버튼 클릭 이벤트 핸들러
-      $('#searchButton').click(function(e) {
-          e.preventDefault();
-          var formData = $('#searchForm').serialize();
-          $.ajax({
-              type: 'GET',
-              url: '/cultural-properties/searchMain',
-              data: formData,
-              success: function(response) {
-                  console.log(response);
-                  renderCulturalProperties(response);
-                  getUserId().then(userId => {
-                      loadUserInterest(userId);
-                  }).catch(error => {
-                      console.error('사용자 ID 요청 중 오류 발생:', error);
-                  });
-              },
-              error: function(xhr, status, error) {
-                  console.error('Ajax 오류 발생: ', error);
-              }
-          });
-      });
+//      // 검색 버튼 클릭 이벤트 핸들러
+//      $('#searchButton').click(function(e) {
+//          e.preventDefault();
+//          var formData = $('#searchForm').serialize();
+//          $.ajax({
+//              type: 'GET',
+//              url: '/cultural-properties/searchMain',
+//              data: formData,
+//              success: function(response) {
+//                  console.log(response);
+//                  renderCulturalProperties(response);
+//                  getUserId().then(userId => {
+//                      loadUserInterest(userId);
+//                  }).catch(error => {
+//                      console.error('사용자 ID 요청 중 오류 발생:', error);
+//                  });
+//              },
+//              error: function(xhr, status, error) {
+//                  console.error('Ajax 오류 발생: ', error);
+//              }
+//          });
+//      });
+
+    // 검색 버튼 클릭 이벤트 핸들러
+    $('#searchButton').click(function(e) {
+        e.preventDefault(); // 기본 이벤트 제거
+
+        var formData = $('#searchForm').serialize(); // 폼 데이터 직렬화
+
+        $.ajax({
+            type: 'GET',
+            url: '/cultural-properties/searchMain', // 컨트롤러 매핑 경로
+            data: formData,
+            success: function(response) {
+                // 검색 결과를 처리하는 로직을 여기에 작성
+                console.log(response); // 검색 결과 콘솔에 로그
+
+                // 결과를 화면에 표시하는 코드
+                renderCulturalProperties(response.content); // 검색 결과를 전달하여 함수 호출
+
+//                createPagination(response.totalPages, 1, new URLSearchParams(formData)); // 검색된 페이지 수와 초기 페이지 설정
+
+                // 찜 정보를 사용자 ID로 불러오기
+                getUserId().then(userId => {
+                    loadUserInterest(userId); // 찜 상태 로드
+                }).catch(error => {
+                    console.error('사용자 ID 요청 중 오류 발생:', error);
+                });
+            },
+            error: function(xhr, status, error) {
+                console.error('Ajax 오류 발생: ', error);
+                // 오류 처리 로직을 추가하세요
+            }
+        });
+    });
 
       // 초기화 버튼 클릭 이벤트 핸들러
       $('#resetButton').click(function(e) {
@@ -224,21 +257,21 @@ function renderCulturalProperties(properties) {
           loadAllCulturalProperties();
       });
 
-      // 카테고리 필터 클릭 이벤트
-      $('.category-item').click(function() {
-          const category = $(this).text().trim();
-          $.ajax({
-              type: 'GET',
-              url: '/cultural-properties/getByCategory',
-              data: { category: category },
-              success: function(response) {
-                  renderCulturalProperties(response);
-              },
-              error: function(xhr, status, error) {
-                  console.error('카테고리 필터링 오류:', error);
-              }
-          });
-      });
+//      // 카테고리 필터 클릭 이벤트
+//      $('.category-item').click(function() {
+//          const category = $(this).text().trim();
+//          $.ajax({
+//              type: 'GET',
+//              url: '/cultural-properties/getByCategory',
+//              data: { category: category },
+//              success: function(response) {
+//                  renderCulturalProperties(response);
+//              },
+//              error: function(xhr, status, error) {
+//                  console.error('카테고리 필터링 오류:', error);
+//              }
+//          });
+//      });
 
 
       const genreItems = document.querySelectorAll('.genre-item');

@@ -83,13 +83,22 @@ public class CulturalPropertiesService {
     }
 
 
-    public Page<CulturalPropertiesDTO> searchCulturalProperties(int page, int pageSize, String category, String culturalPropertiesName, String region, String dynasty) {
-        int offset = (page - 1) * pageSize;
-        List<CulturalPropertiesDTO> properties = culturalPropertiesDAO.searchCulturalProperties(category, culturalPropertiesName, region, dynasty, offset, pageSize);
-        long total = culturalPropertiesDAO.countCulturalProperties(category, culturalPropertiesName, region, dynasty);
+//    public Page<CulturalPropertiesDTO> searchCulturalProperties(int page, int pageSize, String category, String culturalPropertiesName, String region, String dynasty) {
+//        int offset = (page - 1) * pageSize;
+//        List<CulturalPropertiesDTO> properties = culturalPropertiesDAO.searchCulturalProperties(category, culturalPropertiesName, region, dynasty, offset, pageSize);
+//        long total = culturalPropertiesDAO.countCulturalProperties(category, culturalPropertiesName, region, dynasty);
+//
+//        return new PageImpl<>(properties, PageRequest.of(page - 1, pageSize), total);
+//    }
 
-        return new PageImpl<>(properties, PageRequest.of(page - 1, pageSize), total);
+    public List<CulturalPropertiesDTO> searchCulturalProperties(String category, String culturalPropertiesName, String region, String dynasty) {
+        long total = culturalPropertiesDAO.countCulturalProperties(category, culturalPropertiesName, region, dynasty); // 총 개수 조회
+        List<CulturalPropertiesDTO> properties = culturalPropertiesDAO.searchCulturalProperties(category, culturalPropertiesName, region, dynasty);
+
+        // 필요시 total을 이용해 추가적인 로직 구현 가능
+        return properties; // 검색된 문화재 목록 반환
     }
+
 
     public List<String> getAllCategories() {
         return culturalPropertiesDAO.getAllCategories();

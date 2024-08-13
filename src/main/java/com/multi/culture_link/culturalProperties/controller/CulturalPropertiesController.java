@@ -224,19 +224,34 @@ public class CulturalPropertiesController {
 
 
 
+//	@GetMapping("/searchMain")
+//	public ResponseEntity<?> searchCulturalProperties(
+//			@RequestParam(defaultValue = "1") int page,
+//			@RequestParam(required = false) String category,
+//			@RequestParam(required = false) String culturalPropertiesName,
+//			@RequestParam(required = false) String region,
+//			@RequestParam(required = false) String dynasty) {
+//
+//		int pageSize = 6;
+//		Page<CulturalPropertiesDTO> propertyPage = culturalPropertiesService.searchCulturalProperties(page, pageSize, category, culturalPropertiesName, region, dynasty);
+//
+//		return ResponseEntity.ok(propertyPage); // 검색 결과를 ResponseEntity로 반환
+//	}
+
 	@GetMapping("/searchMain")
 	public ResponseEntity<?> searchCulturalProperties(
-			@RequestParam(defaultValue = "1") int page,
 			@RequestParam(required = false) String category,
 			@RequestParam(required = false) String culturalPropertiesName,
 			@RequestParam(required = false) String region,
 			@RequestParam(required = false) String dynasty) {
 
-		int pageSize = 6;
-		Page<CulturalPropertiesDTO> propertyPage = culturalPropertiesService.searchCulturalProperties(page, pageSize, category, culturalPropertiesName, region, dynasty);
+		List<CulturalPropertiesDTO> properties = culturalPropertiesService.searchCulturalProperties(
+				category, culturalPropertiesName, region, dynasty
+		);
 
-		return ResponseEntity.ok(propertyPage); // 검색 결과를 ResponseEntity로 반환
+		return ResponseEntity.ok(properties); // 전체 검색 결과를 ResponseEntity로 반환
 	}
+
 
 
 
