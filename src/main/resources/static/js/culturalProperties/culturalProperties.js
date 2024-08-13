@@ -20,41 +20,16 @@ $(document).ready(function() {
           });
       }
 
-//      function renderCulturalProperties(properties) {
-//          const gallerySection = $('#gallery-section');
-//          gallerySection.empty();
-//
-//          if (properties.length === 0) {
-//              gallerySection.append('<p>등록된 문화재가 없습니다.</p>');
-//              return;
-//          }
-//
-//          const row = $('<div>').addClass('row');
-//          properties.forEach(function(property) {
-//              const col = $('<div>').addClass('col-md-4 mb-4');
-//              const card = $('<div>').addClass('card h-100').attr('data-cultural-property-id', property.id);
-//              const img = $('<img>').addClass('card-img-top').attr('src', property.mainImgUrl).attr('alt', property.culturalPropertiesName);
-//              const cardBody = $('<div>').addClass('card-body');
-//              const title = $('<h5>').addClass('card-title').text(property.culturalPropertiesName);
-//              const category = $('<p>').addClass('card-text').text(property.categoryName);
-//              const location = $('<p>').addClass('card-text').text(`${property.region} ${property.district}`);
-//
-//              cardBody.append(title, category, location);
-//              card.append(img, cardBody);
-//              col.append(card);
-//              row.append(col);
-//          });
-//
-//          gallerySection.append(row);
-//          addInterestFunctionality();
-//      }
 
 function renderCulturalProperties(properties) {
     const gallerySection = $('#gallery-section');
     gallerySection.empty();
 
-    if (properties.length === 0) {
-        gallerySection.append('<p>등록된 문화재가 없습니다.</p>');
+
+
+    // properties가 undefined이거나 빈 배열인 경우 처리
+    if (!properties || properties.length === 0) {
+        gallerySection.append('<p class="empty-message">등록된 문화재가 없습니다.</p>'); // 스타일 클래스를 추가
         return;
     }
 
@@ -65,11 +40,20 @@ function renderCulturalProperties(properties) {
         const img = $('<img>').attr('src', property.mainImgUrl).attr('alt', property.culturalPropertiesName);
         const info = $('<div>').addClass('all-cultural-property-info');
         const title = $('<div>').addClass('all-title').text(property.culturalPropertiesName);
-        const location = $('<div>').addClass('all-location').text(`${property.region} ${property.district}`);
+//        const location = $('<div>').addClass('all-location').text(`${property.region} ${property.district}`);
+        const location = $('<div>').addClass('all-location').text((property.region && property.district) ? `${property.region} ${property.district}` : '위치정보가 없습니다').css('margin-bottom', '0');
         const category = $('<div>').addClass('all-category').text(property.categoryName);
+        const dynasty = $('<div>').addClass('all-dynasty').text(property.dynasty);
+
+
+       // 별점 추가
+       const ratingWrapper = $('<div>').addClass('rating-wrapper');
+       const star = $('<span>').addClass('star').text('★ ');
+       const averageRating = $('<span>').addClass('average-rating').text(Number(property.averageRating).toFixed(1));
+       ratingWrapper.append(star, averageRating);
 
         card.append(img);
-        info.append(title, location, category);
+        info.append(title, category, location, dynasty, ratingWrapper);
         link.append(card, info);
         item.append(link);
         gallerySection.append(item);
@@ -194,28 +178,7 @@ function renderCulturalProperties(properties) {
           });
       }
 
-//      // 검색 버튼 클릭 이벤트 핸들러
-//      $('#searchButton').click(function(e) {
-//          e.preventDefault();
-//          var formData = $('#searchForm').serialize();
-//          $.ajax({
-//              type: 'GET',
-//              url: '/cultural-properties/searchMain',
-//              data: formData,
-//              success: function(response) {
-//                  console.log(response);
-//                  renderCulturalProperties(response);
-//                  getUserId().then(userId => {
-//                      loadUserInterest(userId);
-//                  }).catch(error => {
-//                      console.error('사용자 ID 요청 중 오류 발생:', error);
-//                  });
-//              },
-//              error: function(xhr, status, error) {
-//                  console.error('Ajax 오류 발생: ', error);
-//              }
-//          });
-//      });
+
 
     // 검색 버튼 클릭 이벤트 핸들러
     $('#searchButton').click(function(e) {
@@ -231,10 +194,10 @@ function renderCulturalProperties(properties) {
                 // 검색 결과를 처리하는 로직을 여기에 작성
                 console.log(response); // 검색 결과 콘솔에 로그
 
-                // 결과를 화면에 표시하는 코드
-                renderCulturalProperties(response.content); // 검색 결과를 전달하여 함수 호출
+                // response가 배열인 경우
+                const properties = response; // 응답을 직접 배열로 사용
+                renderCulturalProperties(properties); // 검색 결과를 전달하여 함수 호출
 
-//                createPagination(response.totalPages, 1, new URLSearchParams(formData)); // 검색된 페이지 수와 초기 페이지 설정
 
                 // 찜 정보를 사용자 ID로 불러오기
                 getUserId().then(userId => {
@@ -245,7 +208,7 @@ function renderCulturalProperties(properties) {
             },
             error: function(xhr, status, error) {
                 console.error('Ajax 오류 발생: ', error);
-                // 오류 처리 로직을 추가하세요
+
             }
         });
     });
@@ -257,21 +220,6 @@ function renderCulturalProperties(properties) {
           loadAllCulturalProperties();
       });
 
-//      // 카테고리 필터 클릭 이벤트
-//      $('.category-item').click(function() {
-//          const category = $(this).text().trim();
-//          $.ajax({
-//              type: 'GET',
-//              url: '/cultural-properties/getByCategory',
-//              data: { category: category },
-//              success: function(response) {
-//                  renderCulturalProperties(response);
-//              },
-//              error: function(xhr, status, error) {
-//                  console.error('카테고리 필터링 오류:', error);
-//              }
-//          });
-//      });
 
 
       const genreItems = document.querySelectorAll('.genre-item');
