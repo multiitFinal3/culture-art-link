@@ -32,6 +32,18 @@
         </div>
         <!-- 추가 필터 -->
         <div class="extra-filter">
+
+            <!--검색바-->
+            <form id="searchForm" class="d-flex">
+                <div class="input-group">
+                    <input class="form-control me-2" type="text" name="performanceName" placeholder="검색어를 입력해주세요." aria-label="performanceName" style="width: 300px;">
+                    <button id="searchButton" class="btn btn-outline-success" type="button">
+                        <img th:src="@{/img/performance/search.png}" alt="검색 아이콘" style="width: 20px; height: 20px;" >
+                    </button>
+                </div>
+            </form>
+
+
             <div class="extra-item" id="ranking-item">
                 <img th:src="@{/img/performance/ranking.png}" alt="랭킹 아이콘" class="filter-icon">
                 랭킹
@@ -53,6 +65,12 @@
                         <div class="card-number" th:text="${iterStat.index + 1}">1</div>
                         <!-- 공연 이미지 -->
                         <img th:src="${ranking.imageMain}" alt="공연 이미지">
+
+                        <!-- 좋아요 및 싫어요 버튼 -->
+<!--                        <div class="like-dislike-container">-->
+<!--                            <img id="likeBtn" src="/img/performance/Like:no.PNG" alt="Like" class="like-dislike-icon">-->
+<!--                            <img id="dislikeBtn" src="/img/performance/notLike:no.PNG" alt="Dislike" class="like-dislike-icon">-->
+<!--                        </div>-->
                     </div>
                     <!-- 공연 정보 -->
                     <div class="performance-info">
@@ -82,6 +100,12 @@
                 <a th:href="@{'/performance/performanceDetail?performanceCode=' + ${performance.code} + '&source=db'}">
                     <div class="all-card" th:data-performance-code="${performance.code}">
                         <img th:src="${performance.imageMain}" alt="공연 이미지">
+
+                        <!-- 좋아요 및 싫어요 버튼 -->
+<!--                        <div class="like-dislike-container">-->
+<!--                            <img id="likeBtn" src="/img/performance/Like:no.PNG" alt="Like" class="like-dislike-icon">-->
+<!--                            <img id="dislikeBtn" src="/img/performance/notLike:no.PNG" alt="Dislike" class="like-dislike-icon">-->
+<!--                        </div>-->
                     </div>
                     <div class="all-performance-info">
                         <div class="all-title" th:text="${performance.title}">공연명</div>
