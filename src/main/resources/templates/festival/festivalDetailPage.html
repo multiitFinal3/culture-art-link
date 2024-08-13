@@ -1007,10 +1007,15 @@
                                           <h5 class="card-title">${title}</h5>
                                           <p class="card-text">${content}</p>
                                           <div class="buttonZone">
-                                            <img src="https://kr.object.ncloudstorage.com/team3/common/upNo.png"
-                                               style="width : 30px; height: 30px;" class="heart" value="${festival.festivalId}">
-                                            <img src="https://kr.object.ncloudstorage.com/team3/common/downNo.png"
-                                               style="width : 30px; height: 30px;" class="hate" value="${festival.festivalId}">
+                                             <button class="whiteHeartBtn">
+                                                  <img src="https://kr.object.ncloudstorage.com/team3/common/upNo.png"
+                                                     style="width : 25px; height: 25px;" class="heart" value="${festival.festivalId}">
+                                            </button>
+
+                                            <button class="whiteHateBtn">
+                                              <img src="https://kr.object.ncloudstorage.com/team3/common/downNo.png"
+                                                 style="width : 25px; height: 25px;" class="hate" value="${festival.festivalId}">
+                                            </button>
                                           </div>
                                     </div>
 
@@ -1130,10 +1135,15 @@
                                           <h5 class="card-title">${title}</h5>
                                           <p class="card-text">${content}</p>
                                           <div class="buttonZone">
-                                            <img src="https://kr.object.ncloudstorage.com/team3/common/upNo.png"
-                                               style="width : 30px; height: 30px;" class="heart" value="${festival.festivalId}">
-                                            <img src="https://kr.object.ncloudstorage.com/team3/common/downNo.png"
-                                               style="width : 30px; height: 30px;" class="hate" value="${festival.festivalId}">
+                                             <button class="whiteHeartBtn">
+                                              <img src="https://kr.object.ncloudstorage.com/team3/common/upNo.png"
+                                                 style="width : 25px; height: 25px;" class="heart" value="${festival.festivalId}">
+                                            </button>
+
+                                            <button class="whiteHateBtn">
+                                              <img src="https://kr.object.ncloudstorage.com/team3/common/downNo.png"
+                                                 style="width : 25px; height: 25px;" class="hate" value="${festival.festivalId}">
+                                            </button>
                                           </div>
                                     </div>
 
@@ -1248,10 +1258,15 @@
                                           <h5 class="card-title">${title}</h5>
                                           <p class="card-text">${content}</p>
                                           <div class="buttonZone">
-                                            <img src="https://kr.object.ncloudstorage.com/team3/common/upNo.png"
-                                               style="width : 30px; height: 30px;" class="heart" value="${festival.festivalId}">
-                                            <img src="https://kr.object.ncloudstorage.com/team3/common/downNo.png"
-                                               style="width : 30px; height: 30px;" class="hate" value="${festival.festivalId}">
+                                             <button class="whiteHeartBtn">
+                                              <img src="https://kr.object.ncloudstorage.com/team3/common/upNo.png"
+                                                 style="width : 25px; height: 25px;" class="heart" value="${festival.festivalId}">
+                                            </button>
+
+                                            <button class="whiteHateBtn">
+                                              <img src="https://kr.object.ncloudstorage.com/team3/common/downNo.png"
+                                                 style="width : 25px; height: 25px;" class="hate" value="${festival.festivalId}">
+                                            </button>
                                           </div>
                                     </div>
 
@@ -1365,10 +1380,15 @@
                                           <h5 class="card-title">${title}</h5>
                                           <p class="card-text">${content}</p>
                                           <div class="buttonZone">
-                                            <img src="https://kr.object.ncloudstorage.com/team3/common/upNo.png"
-                                               style="width : 30px; height: 30px;" class="heart" value="${festival.festivalId}">
-                                            <img src="https://kr.object.ncloudstorage.com/team3/common/downNo.png"
-                                               style="width : 30px; height: 30px;" class="hate" value="${festival.festivalId}">
+                                             <button class="whiteHeartBtn">
+                                              <img src="https://kr.object.ncloudstorage.com/team3/common/upNo.png"
+                                                 style="width : 25px; height: 25px;" class="heart" value="${festival.festivalId}">
+                                            </button>
+
+                                            <button class="whiteHateBtn">
+                                              <img src="https://kr.object.ncloudstorage.com/team3/common/downNo.png"
+                                                 style="width : 25px; height: 25px;" class="hate" value="${festival.festivalId}">
+                                            </button>
                                           </div>
                                     </div>
 
@@ -1798,10 +1818,15 @@
                 <img th:case="null" src="/img/festival/noPhoto.png" alt="이미지가 없습니다">
                 <img th:case="*" th:src="@{${festival.imgUrl}}" alt="이미지가 없습니다">
 
-                <img src="https://kr.object.ncloudstorage.com/team3/common/upNo.png"
-                     style="width : 30px; height: 30px;" class="heart" th:value="${festival.festivalId}">
-                <img src="https://kr.object.ncloudstorage.com/team3/common/downNo.png"
-                     style="width : 30px; height: 30px;" class="hate" th:value="${festival.festivalId}">
+                <button class="whiteHeartBtn">
+                    <img src="https://kr.object.ncloudstorage.com/team3/common/upNo.png"
+                         style="width : 25px; height: 25px; background: white;" class="heart" th:value="${festival.festivalId}">
+                </button>
+
+                <button class="whiteHateBtn">
+                    <img src="https://kr.object.ncloudstorage.com/team3/common/downNo.png"
+                         style="width : 25px; height: 25px; background: white;" class="hate" th:value="${festival.festivalId}">
+                </button>
 
             </div>
 

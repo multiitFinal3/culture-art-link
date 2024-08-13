@@ -68,27 +68,76 @@
     }
 
 
+    .whiteHeartBtn{
+       position: absolute;
+       background: white;
+       padding: 5px 10px;
+       margin: 0 5px;
+       border: none;
+       border-radius: 5px;
+       cursor: pointer;
+   }
+
+    #upperZone .whiteHeartBtn{
+
+       top: 380px;
+      right: 70px;
+    }
 
 
-    .heart{
+    #downZone .whiteHeartBtn{
+
+       top: 290px;
+       right: 60px;
+    }
+
+
+
+   .heart{
 
        font-weight: 700;
        color: white;
        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-       position: absolute;
-       top: 380px;
-       left: 220px;
+
 
    }
+
+
+
+   .whiteHateBtn{
+
+       position: absolute;
+       background: white;
+        padding: 5px 10px;
+      margin: 0 5px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+
+   }
+
+
+
+   #upperZone .whiteHateBtn{
+
+       top: 380px;
+       right: 15px;
+
+   }
+
+   #downZone .whiteHateBtn{
+
+       top: 290px;
+       right: 5px;
+
+   }
+
 
    .hate{
 
        font-weight: 700;
        color: white;
        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-       position: absolute;
-       top: 380px;
-       left: 280px;
 
    }
 
@@ -218,32 +267,6 @@
         font-size: 14px !important;
 
     }
-
-
-    #recommendCardList .heart{
-
-        font-weight: 700;
-        color: white;
-        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-        position: absolute;
-        top: 290px;
-        left: 150px;
-
-    }
-
-
-    #recommendCardList .hate{
-
-        font-weight: 700;
-        color: white;
-        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-        position: absolute;
-        top: 290px;
-        left: 200px;
-
-    }
-
-
 
 
     #detailDescripZone{
