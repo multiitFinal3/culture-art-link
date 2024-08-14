@@ -3,6 +3,7 @@ package com.multi.culture_link.users.controller;
 
 import com.multi.culture_link.common.region.model.dto.RegionDTO;
 import com.multi.culture_link.common.region.service.RegionService;
+import com.multi.culture_link.exhibition.service.ExhibitionService;
 import com.multi.culture_link.festival.model.dto.UserFestivalLoveHateMapDTO;
 import com.multi.culture_link.festival.service.FestivalService;
 import com.multi.culture_link.file.controller.FileController;
@@ -20,17 +21,15 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 @Controller
 @RequestMapping("/user")
 public class UserController {
-	
-	
+
+
 	private final UserService userService;
+	private final ExhibitionService exhibitionService;
 	private final UserMapper userMapper;
 	private final FestivalService festivalService;
 	private final RegionService regionService;
@@ -43,13 +42,19 @@ public class UserController {
 	@Value("${cloud.aws.s3.bucket}")
 	private String bucket;
 	
-	public UserController(UserService userService, UserMapper userMapper, FestivalService festivalService, RegionService regionService, BCryptPasswordEncoder bCryptPasswordEncoder, FileController fileController) {
+	public UserController(UserService userService,
+						  UserMapper userMapper,
+						  FestivalService festivalService, RegionService regionService,
+						  BCryptPasswordEncoder bCryptPasswordEncoder,
+						  FileController fileController,
+						  ExhibitionService exhibitionService) {
 		this.userService = userService;
 		this.userMapper = userMapper;
 		this.festivalService = festivalService;
 		this.regionService = regionService;
 		this.bCryptPasswordEncoder = bCryptPasswordEncoder;
 		this.fileController = fileController;
+		this.exhibitionService = exhibitionService;
 	}
 	
 	/**
@@ -76,10 +81,22 @@ public class UserController {
 	 * @param gender
 	 * @param regionId
 	 * @param festivalSelectKeyword
+	 * @param exhibitionSelectKeyword
 	 */
 	@PostMapping("/signUp")
 	@ResponseBody
-	public void signUpPost(@RequestParam(name = "uploadFile", required = false) MultipartFile uploadFile, @RequestParam(name = "email") String email, @RequestParam(name = "password") String password, @RequestParam(name = "userName") String userName, @RequestParam(name = "tel", required = false) String tel, @RequestParam(name = "userAge", required = false) int userAge, @RequestParam(name = "gender") String gender, @RequestParam(name = "regionId") int regionId, @RequestParam(name = "festivalSelectKeyword", required = false) String festivalSelectKeyword) {
+	public void signUpPost(
+			@RequestParam(name = "uploadFile", required = false) MultipartFile uploadFile,
+			@RequestParam(name = "email") String email,
+			@RequestParam(name = "password") String password,
+			@RequestParam(name = "userName") String userName,
+			@RequestParam(name = "tel", required = false) String tel,
+			@RequestParam(name = "userAge", required = false) int userAge,
+			@RequestParam(name = "gender") String gender,
+			@RequestParam(name = "regionId") int regionId,
+			@RequestParam(name = "festivalSelectKeyword", required = false) String festivalSelectKeyword,
+			@RequestParam(name = "exhibitionSelectKeyword", required = false) String exhibitionSelectKeyword
+			) {
 		
 		// 회원 users/ admin 넣는 것도 추가할 것 = > 매핑 테이블에도 조인으로 추가하기
 		int result = 0;
@@ -180,6 +197,14 @@ public class UserController {
 			}
 			
 			
+		}
+
+		System.out.println("exhibitionSelectKeyword : " + exhibitionSelectKeyword);
+
+		if(exhibitionSelectKeyword != null) {
+			String[] array = exhibitionSelectKeyword.trim().split(" ");
+			List<String> list = Arrays.asList(array);
+			exhibitionService.saveKeyword(list, userId, 15);
 		}
 		
 		
