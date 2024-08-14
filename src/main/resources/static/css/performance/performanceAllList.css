@@ -76,3 +76,27 @@
     white-space: normal; /* 긴 텍스트 줄바꿈 허용 */
     overflow-wrap: break-word; /* 긴 단어가 있을 때 줄바꿈 */
 }
+
+
+
+
+
+/* 공통 스타일 */
+.card, .all-card {
+    position: relative; /* 자식 요소들의 절대 위치 지정 가능 */
+}
+
+.like-dislike-container {
+    display: flex;
+    justify-content: flex-end; /* 오른쪽 정렬 */
+    gap: 10px; /* 아이콘 사이 간격 */
+    position: absolute; /* 카드 내부에서 절대 위치 지정 */
+    bottom: 10px; /* 카드의 아래쪽에서 10px 위 */
+    right: 10px; /* 카드의 오른쪽에서 10px 왼쪽 */
+}
+
+.like-dislike-icon {
+    width: 23px;  /* 이미지 너비 */
+    height: 23px; /* 이미지 높이 */
+    cursor: pointer; /* 클릭 가능한 커서 */
+}

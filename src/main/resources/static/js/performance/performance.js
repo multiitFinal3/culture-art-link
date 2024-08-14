@@ -5,6 +5,10 @@ document.addEventListener('DOMContentLoaded', function() {
     const locationItems = document.querySelectorAll('.location-item');
     const currentGenre = new URLSearchParams(window.location.search).get('genre') || '홈';
 
+
+    const selectedGenreInput = document.getElementById('selectedGenre');
+
+
     // 장르 아이템의 활성화 상태 설정
     genreItems.forEach(item => {
         if (item.textContent.trim() === currentGenre) {
@@ -143,4 +147,35 @@ document.addEventListener('DOMContentLoaded', function() {
             window.location.href = `/performance/performanceLocation?locationCode=${encodeURIComponent(locationCode)}`;
         });
     });
+
+
+
+
+
+     genreItems.forEach(item => {
+         item.addEventListener('click', function() {
+             const genre = this.getAttribute('th:data-genre');
+             selectedGenreInput.value = genre;
+             document.getElementById('searchForm').submit();
+         });
+     });
+
+
+
+
+    // 검색한 후에 다른 장르페이지 이동이 가능하게
+     genreItems.forEach(item => {
+         item.addEventListener('click', function() {
+             const genre = this.textContent.trim();
+             window.location.href = `/performance/performance-genre?genre=${encodeURIComponent(genre)}&keyword=`;
+         });
+     });
+
+
+
+
+
+
+
+
 });
