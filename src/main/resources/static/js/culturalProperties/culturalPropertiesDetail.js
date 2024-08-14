@@ -187,6 +187,7 @@ $(document).ready(function() {
         detailInfo.style.display = 'none';
         mapInfo.style.display = 'block';
         reviewInfo.style.display = 'none';
+        initMap();
     });
 
     reviewButton.addEventListener('click', function() {
@@ -194,6 +195,270 @@ $(document).ready(function() {
         mapInfo.style.display = 'none';
         reviewInfo.style.display = 'block';
     });
+
+
+    function initMap() {
+        // 주소 가져오기
+        var address = document.getElementById('address').innerText;
+
+        // 위도 및 경도 값
+        var propertyData = document.getElementById('property-data');
+
+        if (propertyData) {
+            var latitude = parseFloat(propertyData.getAttribute('data-latitude'));
+            var longitude = parseFloat(propertyData.getAttribute('data-longitude'));
+
+            // 콘솔에 출력하여 값을 확인합니다.
+            console.log('Latitude:', latitude);
+            console.log('Longitude:', longitude);
+
+            // Naver Map 생성
+            var map = new naver.maps.Map('map', {
+                center: new naver.maps.LatLng(latitude || 37.5665, longitude || 126.978), // 기본 위치
+                zoom: 15, // 초기 줌 레벨
+                mapTypeId: naver.maps.MapTypeId.NORMAL // 지도 타입 설정
+            });
+
+            // 마커 위치를 결정할 변수
+            var markerPosition;
+
+            if (latitude === 0 && longitude === 0) {
+                // 위도와 경도가 0인 경우 주소를 사용하여 위치를 찾음
+                var geocoder = new naver.maps.Service.Geocoder();
+                geocoder.addressSearch(address, function(status, result) {
+                    if (status === naver.maps.Service.Status.OK) {
+                        var item = result.v2.addresses[0];
+                        markerPosition = new naver.maps.LatLng(item.y, item.x); // 주소로부터 위도와 경도 가져오기
+
+                        // 마커 추가
+                        var marker = new naver.maps.Marker({
+                            position: markerPosition,
+                            map: map,
+                            title: address
+                        });
+
+                        // 지도 중심 변경
+                        map.setCenter(markerPosition);
+
+                        // 정보창 추가
+                        var infoWindow = new naver.maps.InfoWindow({
+                            content: '<div style="width:150px;text-align:center;">' + address + '</div>'
+                        });
+
+                        // 마커 클릭 시 정보창 열기
+                        naver.maps.Event.addListener(marker, 'click', function() {
+                            infoWindow.open(map, marker);
+                        });
+                    } else {
+                        console.error('주소 검색 실패: ', status);
+                    }
+                });
+            } else {
+                // 위도와 경도가 0이 아닌 경우 마커 추가
+                markerPosition = new naver.maps.LatLng(latitude, longitude);
+                var marker = new naver.maps.Marker({
+                    position: markerPosition,
+                    map: map,
+                    title: address
+                });
+
+                // 지도 중심 변경
+                map.setCenter(markerPosition);
+
+                // 정보창 추가
+                var infoWindow = new naver.maps.InfoWindow({
+                    content: '<div style="width:150px;text-align:center;">' + address + '</div>'
+                });
+
+                // 마커 클릭 시 정보창 열기
+                naver.maps.Event.addListener(marker, 'click', function() {
+                    infoWindow.open(map, marker);
+                });
+            }
+        } else {
+            console.error('property-data 요소를 찾을 수 없습니다.');
+        }
+    }
+
+
+
+
+
+const imageButton = document.getElementById('imageButton');
+const videoButton = document.getElementById('videoButton');
+const narrationButton = document.getElementById('narrationButton');
+
+
+
+function showImage(imgUrls, imgDescs) {
+    const mediaContent = document.getElementById('mediaContent');
+    mediaContent.innerHTML = '';
+    mediaContent.style.display = 'flex';
+    mediaContent.style.flexDirection = 'column';
+    mediaContent.style.alignItems = 'center';
+
+    imgUrls.forEach((imgUrl, index) => {
+        const imgContainer = document.createElement('div');
+        imgContainer.style.position = 'relative';
+        imgContainer.style.marginBottom = '20px';
+        imgContainer.style.maxWidth = '100%';
+
+        const imgElement = document.createElement('img');
+        imgElement.src = imgUrl;
+        imgElement.style.width = '100%';
+        imgElement.style.maxHeight = '500px';
+        imgElement.style.objectFit = 'contain';
+
+        imgContainer.appendChild(imgElement);
+
+        if (index < imgDescs.length) {
+            const descElement = document.createElement('div');
+            descElement.textContent = imgDescs[index];
+            descElement.style.position = 'absolute';
+            descElement.style.top = '10px';
+            descElement.style.left = '10px';
+            descElement.style.backgroundColor = 'rgba(0, 0, 0, 0.7)';
+            descElement.style.color = 'white';
+            descElement.style.padding = '5px 10px';
+            descElement.style.borderRadius = '5px';
+            descElement.style.fontSize = '14px';
+            imgContainer.appendChild(descElement);
+        }
+
+        mediaContent.appendChild(imgContainer);
+
+        imgElement.onerror = function() {
+            console.error('Image failed to load:', imgUrl);
+            imgContainer.style.display = 'none';
+        };
+    });
+
+    const mediaModal = new bootstrap.Modal(document.getElementById('mediaModal'));
+    mediaModal.show();
+}
+
+// 이미지 버튼 이벤트 리스너
+if (imageButton) {
+    imageButton.addEventListener('click', function() {
+        const imgUrls = this.dataset.images.split(',').map(url => url.trim());
+        const imgDescs = this.dataset.descriptions.split(',').map(desc => desc.trim());
+        showImage(imgUrls, imgDescs);
+    });
+}
+
+
+function showVideo(videoUrls) {
+    const mediaContent = document.getElementById('mediaContent');
+    mediaContent.innerHTML = '';
+    mediaContent.style.display = 'flex';
+    mediaContent.style.flexDirection = 'column';
+    mediaContent.style.alignItems = 'center';
+
+    videoUrls.forEach((videoUrl, index) => {
+        if (videoUrl && videoUrl.trim() !== '') {
+            const videoContainer = document.createElement('div');
+            videoContainer.style.width = '100%';
+            videoContainer.style.marginBottom = '20px';
+
+            const videoElement = document.createElement('video');
+            videoElement.src = videoUrl;
+            videoElement.controls = true;
+            videoElement.style.width = '100%';
+            videoElement.style.maxHeight = '500px';
+
+            const videoTitle = document.createElement('h4');
+            videoTitle.textContent = `영상 ${index + 1}`;
+            videoTitle.style.marginBottom = '10px';
+
+            videoContainer.appendChild(videoTitle);
+            videoContainer.appendChild(videoElement);
+            mediaContent.appendChild(videoContainer);
+        }
+    });
+
+    if (mediaContent.children.length === 0) {
+        mediaContent.innerHTML = '<p>표시할 수 있는 비디오가 없습니다.</p>';
+    }
+
+    const mediaModal = new bootstrap.Modal(document.getElementById('mediaModal'));
+    mediaModal.show();
+
+    // 모달이 닫힐 때 비디오 중지
+    document.getElementById('mediaModal').addEventListener('hidden.bs.modal', function () {
+        const videos = mediaContent.querySelectorAll('video');
+        videos.forEach(video => {
+            video.pause();
+            video.currentTime = 0;
+        });
+    });
+}
+
+// 비디오 버튼 이벤트 리스너
+if (videoButton) {
+    videoButton.addEventListener('click', function() {
+        const videoUrls = this.dataset.video.split(',').map(url => url.trim());
+        showVideo(videoUrls);
+        console.log('Video URLs:', videoUrls); // 디버깅용 로그
+    });
+}
+
+
+function showNarration(narrationUrls) {
+    const mediaContent = document.getElementById('mediaContent');
+    mediaContent.innerHTML = '';
+    mediaContent.style.padding = '20px 0';
+
+    const languages = ['한국어', '영어', '일본어', '중국어'];
+
+    narrationUrls.forEach((url, index) => {
+        if (url && url.trim() !== '') {
+            const languageDiv = document.createElement('div');
+            languageDiv.style.display = 'flex';
+            languageDiv.style.alignItems = 'center';
+            languageDiv.style.marginBottom = '20px';
+
+            const languageLabel = document.createElement('span');
+            languageLabel.textContent = languages[index] + ': ';
+            languageLabel.style.width = '60px';
+            languageLabel.style.marginRight = '10px';
+            languageDiv.appendChild(languageLabel);
+
+            const audioElement = document.createElement('audio');
+            audioElement.src = url;
+            audioElement.controls = true;
+            audioElement.style.flex = '1';
+            languageDiv.appendChild(audioElement);
+
+            mediaContent.appendChild(languageDiv);
+        }
+    });
+
+    if (mediaContent.children.length === 0) {
+        mediaContent.innerHTML = '<p>사용 가능한 나레이션이 없습니다.</p>';
+    }
+
+    const mediaModal = new bootstrap.Modal(document.getElementById('mediaModal'));
+    mediaModal.show();
+
+    // 모달이 닫힐 때 오디오 중지
+    document.getElementById('mediaModal').addEventListener('hidden.bs.modal', function () {
+        const audioElements = mediaContent.querySelectorAll('audio');
+        audioElements.forEach(audio => {
+            audio.pause();
+            audio.currentTime = 0;
+        });
+    });
+}
+
+// 나레이션 버튼 이벤트 리스너
+if (narrationButton) {
+    narrationButton.addEventListener('click', function() {
+        const narrationUrls = this.dataset.narration.split(',');
+        showNarration(narrationUrls);
+    });
+}
+
+
 
 
     var userId1 = 0;
