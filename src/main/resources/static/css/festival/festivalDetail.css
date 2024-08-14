@@ -395,14 +395,15 @@
 
    button.keyword{
 
-        background-color: #f0f0f0;
-        color: #333;
+        background-color: #cff7d3;
+        color: #02542d;
         padding: 8px 15px;
-        border-radius: 20px;
+        border-radius: 15px;
         font-size: 14px;
         font-weight: bold;
         text-decoration: none;
         border: 0px;
+
    }
 
 

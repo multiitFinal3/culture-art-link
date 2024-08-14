@@ -1745,6 +1745,9 @@
 
             <div id="detailCardZone">
 
+                <div id="contentKeyword" style="width:100%">
+                </div>
+
                 <div class="title">
 
                     <h1 class="card-title" th:text="${festival.festivalName}"></h1>
@@ -1836,9 +1839,6 @@
             <div class="card-body" style="width:100%">
 
                 <div id="detailDescripZone">
-
-                    <div id="contentKeyword" style="width:100%">
-                    </div>
 
                     <div th:switch="${festival.detailAddress}">
 
