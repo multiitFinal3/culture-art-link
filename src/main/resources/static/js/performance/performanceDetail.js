@@ -151,14 +151,14 @@ async function initMap(location) {
                           // 상태에 따라 버튼 이미지를 설정
                           if (state === 'like') {
                               document.getElementById('likeBtn').src = '/img/performance/Like.PNG';
-                              document.getElementById('dislikeBtn').src = '/img/performance/notLike:no.PNG';
+                              document.getElementById('dislikeBtn').src = '/img/performance/notLikeNo.PNG';
                           } else if (state === 'not like') {
-                              document.getElementById('likeBtn').src = '/img/performance/Like:no.PNG';
+                              document.getElementById('likeBtn').src = '/img/performance/LikeNo.PNG';
                               document.getElementById('dislikeBtn').src = '/img/performance/notLike.PNG';
                           } else {
                               // 기본 초기 상태
-                              document.getElementById('likeBtn').src = '/img/performance/Like:no.PNG';
-                              document.getElementById('dislikeBtn').src = '/img/performance/notLike:no.PNG';
+                              document.getElementById('likeBtn').src = '/img/performance/LikeNo.PNG';
+                              document.getElementById('dislikeBtn').src = '/img/performance/notLikeNo.PNG';
                           }
                       })
                       .catch(error => {
@@ -190,10 +190,10 @@ async function initMap(location) {
                           // 상태에 따라 버튼 이미지를 설정하고 알림창 표시
                           if (state === 'like') {
                               document.getElementById('likeBtn').src = '/img/performance/Like.PNG';
-                              document.getElementById('dislikeBtn').src = '/img/performance/notLike:no.PNG';
+                              document.getElementById('dislikeBtn').src = '/img/performance/notLikeNo.PNG';
                               alert('찜이 추가되었습니다.');
                           } else {
-                              document.getElementById('likeBtn').src = '/img/performance/Like:no.PNG';
+                              document.getElementById('likeBtn').src = '/img/performance/LikeNo.PNG';
                               document.getElementById('dislikeBtn').src = '/img/performance/notLike.PNG';
                               alert('관심없음이 추가되었습니다.');
                           }
