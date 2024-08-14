@@ -4,7 +4,10 @@
 /*    margin: 0;*/
 /*    padding: 0;*/
 /*}*/
-
+p {
+    width: 100%;
+    word-wrap: break-word;
+}
 
 body {
     margin: 0;
@@ -88,7 +91,7 @@ header {
     position: relative;
     top: 95px;
     right: 157px;
-    opacity : 0.8;
+    opacity: 0.8;
 
 }
 
@@ -124,7 +127,7 @@ header {
 }
 
 .tab-menu button.active {
-    background-color: #ffb5b5;
+    background-color: #7f7f7f;
     color: white;
 }
 
@@ -188,6 +191,7 @@ header {
 }
 
 .analyze-text-content {
+    width: 100%;
     flex: 1;
 }
 
@@ -233,16 +237,16 @@ header {
     margin-top: 10px;
 }
 
-#artworkTextarea{
+#artworkTextarea {
     margin-top: 10px;
     border: 1px solid #ddd;
     border-radius: 5px;
 }
 
 #saveCommentBtn, #saveAnalyzeBtn {
-    background-color: #ffb5b5;
-    color: white;
-    border: none;
+    /*background-color: #ffb5b5;*/
+    /*color: white;*/
+    /*border: none;*/
     padding: 10px 20px;
     border-radius: 5px;
     cursor: pointer;
@@ -265,9 +269,6 @@ header {
     font-weight: bold;
     text-decoration: none;
 }
-
-
-
 
 
 .review {
@@ -327,25 +328,25 @@ header {
     position: absolute;
     top: 0;
     right: 0;
-    background-color: #ffb5b5;
-    color: white;
-    border: none;
+    /*background-color: #ffb5b5;*/
+    /*color: white;*/
+    /*border: none;*/
     padding: 5px 10px;
     cursor: pointer;
     font-size: 12px;
 }
 
 #imageUploadBtn {
-    background-color: #ffb5b5;
-    color: white;
-    border: none;
+    /*background-color: #ffb5b5;*/
+    /*color: white;*/
+    /*border: none;*/
     padding: 10px 20px;
     border-radius: 5px;
     cursor: pointer;
     margin-top: 10px;
 }
 
-.interested-img{
+.interested-img {
     width: 100%;
 }
 
@@ -361,3 +362,30 @@ header {
     background-color: white;
     cursor: pointer;
 }
+
+/*.페이징 색깔*/
+.page-btn.active {
+    background: #D9D9D9;
+}
+
+/*.pagination.active {*/
+/*    background-color: #7f7f7f;*/
+/*    color: white;*/
+/*}*/
+
+
+.like-dislike-container {
+    display: flex;
+    justify-content: center; /* 가운데 정렬 */
+    align-items: center;
+    gap: 10px; /* 아이콘 사이의 간격 */
+    margin-top: 20px; /* 카드와 버튼 사이에 간격 추가 */
+}
+
+.like-dislike-icon {
+    width: 30px; /* 이미지 너비 */
+    height: 30px; /* 이미지 높이 */
+    cursor: pointer; /* 클릭할 수 있는 커서 */
+    pointer-events: auto; /* 클릭 이벤트를 허용 */
+}
+
