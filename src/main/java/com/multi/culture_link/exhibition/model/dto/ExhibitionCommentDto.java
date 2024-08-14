@@ -14,6 +14,7 @@ public class ExhibitionCommentDto {
     private boolean isAuth;
     private String content;
     private String name;
+    private String profileImage;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 }

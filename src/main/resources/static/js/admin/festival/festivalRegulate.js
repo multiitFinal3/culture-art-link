@@ -21,35 +21,11 @@ $(document).ready(
                 contentType: 'application/json',
                 success: function(list){
 
-                    console.log(list)
-
                     $.each(list, function(index, festival){
 
                         console.log(festival)
 
                         var index1 = (index + 1) + (page-1)*5;
-
-
-                        var content = festival.festivalContent.length > 30?
-                        festival.festivalContent.substring(0,30) + "..."
-                        : festival.festivalContent;
-
-                        var inst1 = festival.manageInstitution.length > 15?
-                        festival.manageInstitution.substring(0,15) + "..."
-                        : festival.manageInstitution;
-
-                        var inst2 = festival.hostInstitution.length > 15?
-                        festival.hostInstitution.substring(0,15) + "..."
-                        : festival.hostInstitution;
-
-                        var inst3 = festival.sponserInstitution.length > 15?
-                        festival.sponserInstitution.substring(0,15) + "..."
-                        : festival.sponserInstitution;
-
-
-                        console.log("축제 날짜")
-                        console.log(festival.startDate);
-                        console.log(festival.endDate);
 
                         var start = festival.startDate.length >0?
                         festival.startDate.substring(0,10):
@@ -68,15 +44,15 @@ $(document).ready(
                                     <input class="check1" type="checkbox" name="index" value="${festival.festivalId}"/><br>
                                 </td>
                                 <td class="index1" style="width : 20px; height: 20px;">${index1}</td>
-                                <td class="festivalId">${festival.festivalId}</td>
-                                <td class="regionId">${festival.regionId}</td>
-                                <td class="timeId">${festival.timeId}</td>
-                                <td class="festivalName">${festival.festivalName}</td>
-                                <td class="festivalContent">${content}</td>
-                                <td class="manageInstitution">${inst1}</td>
-                                <td class="hostInstitution">${inst2}</td>
-                                <td class="sponserInstitution">${inst3}</td>
-                                <td class="tel">${festival.tel}</td>`;
+                                <td class="festivalId" title="${festival.festivalId}">${festival.festivalId}</td>
+                                <td class="regionId" title="${festival.regionId}">${festival.regionId}</td>
+                                <td class="timeId" title="${festival.timeId}">${festival.timeId}</td>
+                                <td class="festivalName" title="${festival.festivalName}">${festival.festivalName}</td>
+                                <td class="festivalContent" title="${festival.festivalContent}">${festival.festivalContent}</td>
+                                <td class="manageInstitution" title="${festival.manageInstitution}">${festival.manageInstitution}</td>
+                                <td class="hostInstitution" title="${festival.hostInstitution}">${festival.hostInstitution}</td>
+                                <td class="sponserInstitution" title="${festival.sponserInstitution}">${festival.sponserInstitution}</td>
+                                <td class="tel" title="${festival.tel}">${festival.tel}</td>`;
 
                         var htmlContent12 =``;
 
@@ -85,13 +61,13 @@ $(document).ready(
                             htmlContent12 = `
 
                                 <td class="homepageUrl"></td>
-                                <td class="detailAddress">${festival.detailAddress}</td>
+                                <td class="detailAddress" title="${festival.detailAddress}">${festival.detailAddress}</td>
 
-                                <td class="place">${festival.place}</td>
-                                <td class="formattedStart">${festival.formattedStart}</td>
-                                <td class="formattedEnd">${festival.formattedEnd}</td>
-                                <td class="avgRate">${festival.avgRate}</td>
-                                <td class="season">${festival.season}</td>
+                                <td class="place" title="${festival.place}">${festival.place}</td>
+                                <td class="formattedStart" title="${festival.formattedStart}">${festival.formattedStart}</td>
+                                <td class="formattedEnd" title="${festival.formattedEnd}">${festival.formattedEnd}</td>
+                                <td class="avgRate" title="${festival.avgRate}">${festival.avgRate}</td>
+                                <td class="season" title="${festival.season}">${festival.season}</td>
 
 
                             `;
@@ -100,14 +76,14 @@ $(document).ready(
 
                            htmlContent12 = `
 
-                                <td class="homepageUrl"><a href="${festival.homepageUrl}">클릭!</a></td>
-                                <td class="detailAddress">${festival.detailAddress}</td>
+                                <td class="homepageUrl" title="${festival.homepageUrl}"><a href="${festival.homepageUrl}">클릭!</a></td>
+                                <td class="detailAddress" title="${festival.detailAddress}">${festival.detailAddress}</td>
 
-                                <td class="place">${festival.place}</td>
-                                <td class="formattedStart">${festival.formattedStart}</td>
-                                <td class="formattedEnd">${festival.formattedEnd}</td>
-                                <td class="avgRate">${festival.avgRate}</td>
-                                <td class="season">${festival.season}</td>
+                                <td class="place" title="${festival.place}">${festival.place}</td>
+                                <td class="formattedStart" title="${festival.formattedStart}">${festival.formattedStart}</td>
+                                <td class="formattedEnd" title="${festival.formattedEnd}">${festival.formattedEnd}</td>
+                                <td class="avgRate" title="${festival.avgRate}">${festival.avgRate}</td>
+                                <td class="season" title="${festival.season}">${festival.season}</td>
 
                             `;
 
@@ -134,7 +110,8 @@ $(document).ready(
                         }else{
 
                              htmlContent2 = `
-                             <td class="imgUrl"><img src="${festival.imgUrl}" width="40px" alt="이미지 없음"></td>
+                             <td class="imgUrl" style="min-width: 150px;"><img src="${festival.imgUrl}" alt="이미지 없음" style="width: 100%;
+                             height: 150px"></td>
                              <td class="buttonHead">
                                  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalLong" id="dbUpdateBtn" value="${festival.festivalId}">상세수정</button><br><hr>
                                  <button type="button" class="btn btn-primary contentKeywordInsertBtn" value="${festival.festivalId}">내용</button>
@@ -283,7 +260,6 @@ $(document).ready(
                 success: function(list){
 
                     alert("네이버 블로그 키워드 : " + list + ". 키워드 삽입 성공!")
-
 
                 }
 
@@ -479,69 +455,82 @@ $(document).ready(
         /**
        * db 다중조건을 이용힌 검색 버튼 클릭
        */
-         $(document).on('click','#searchBtn1', function(){
+         $(document).on('click','#searchBtn1', function(e){
 
-            var data = $("#searchForm1").serializeArray();
+            e.preventDefault();
 
-            console.log("폼 : ");
-
-            console.log(data);
-
-
-            findDBFestivalByMultiple(data,1);
-            findDBFestivalMultipleCount(data);
+            findDBFestivalByMultiple(1);
+            findDBFestivalMultipleCount();
 
             // 다중 조건 검색 모달 닫기
             $('#close1').click();
 
          })
 
-        /**
-       * 다중 조건을 담은 폼 데이터 보내기
-       * @param {int} page 페이지
-       * @param {Array<{name: string, value: string}>} data1 직렬화 된 폼 데이터
-       */
-         function findDBFestivalByMultiple(data1, page){
+       /**
+      * 다중 조건을 담은 폼 데이터 보내기
+      * @param {int} page 페이지
+      *
+      */
+        function findDBFestivalByMultiple(page){
+
+           console.log("findDBFestivalByMultiple(page)");
+           console.log(page);
+
+           var regionId = document.getElementById('searchRegion1').options[document.getElementById('searchRegion1').selectedIndex].value;
+           console.log(regionId);
+           var timeId = document.getElementById('searchTime1').options[document.getElementById('searchTime1').selectedIndex].value;
+           console.log(timeId);
+           var festivalName = $('#festivalName1').val();
+           var festivalContent = $('#festivalContent1').val();
+           var manageInstitution = $('#manageInstitution1').val();
+           var hostInstitution = $('#hostInstitution1').val();
+           var tel = $('#tel1').val();
+           var place = $('#place1').val();
+           var formattedStart = $('#formattedStart1').val();
+           var formattedEnd = $('#formattedEnd1').val();
+           var avgRate = $('#avgRate1').val();
+           console.log(avgRate);
+           var season = document.getElementById('searchSeason1').options[document.getElementById('searchSeason1').selectedIndex].value;
 
 
-            console.log(data1);
+           console.log(season)
 
-            $.ajax({
+           var data = {
 
-                url: '/admin/festival-regulate/findDBFestivalByMultiple?page=' + page,
-                method: 'POST',
-                contentType: 'application/json',
-                data: JSON.stringify(data1),
-                success: function(list){
+                   regionId : regionId,
+                   timeId : timeId,
+                   festivalName : festivalName,
+                   festivalContent : festivalContent,
+                   manageInstitution : manageInstitution,
+                   hostInstitution : hostInstitution,
+                   tel : tel,
+                   place : place,
+                   formattedStart : formattedStart,
+                   formattedEnd : formattedEnd,
+                   avgRate : avgRate,
+                   season : season,
+                   page : page
+
+               };
+
+
+           $.ajax({
+
+               url: '/admin/festival-regulate/findDBFestivalByMultiple',
+               method: 'POST',
+               contentType: 'application/json',
+               data : JSON.stringify(data),
+               success: function(list){
 
                     $('#list1').html("");
 
 
                     $.each(list, function(index, festival){
 
-                        console.log(festival);
+                        console.log(festival)
+
                         var index1 = (index + 1) + (page-1)*5;
-
-                        var content = festival.festivalContent.length > 30?
-                        festival.festivalContent.substring(0,30) + "..."
-                        : festival.festivalContent;
-
-                        var inst1 = festival.manageInstitution.length > 15?
-                        festival.manageInstitution.substring(0,15) + "..."
-                        : festival.manageInstitution;
-
-                        var inst2 = festival.hostInstitution.length > 15?
-                        festival.hostInstitution.substring(0,15) + "..."
-                        : festival.hostInstitution;
-
-                        var inst3 = festival.sponserInstitution.length > 15?
-                        festival.sponserInstitution.substring(0,15) + "..."
-                        : festival.sponserInstitution;
-
-
-                        console.log("축제 날짜")
-                        console.log(festival.startDate);
-                        console.log(festival.endDate);
 
                         var start = festival.startDate.length >0?
                         festival.startDate.substring(0,10):
@@ -560,15 +549,15 @@ $(document).ready(
                                     <input class="check1" type="checkbox" name="index" value="${festival.festivalId}"/><br>
                                 </td>
                                 <td class="index1" style="width : 20px; height: 20px;">${index1}</td>
-                                <td class="festivalId">${festival.festivalId}</td>
-                                <td class="regionId">${festival.regionId}</td>
-                                <td class="timeId">${festival.timeId}</td>
-                                <td class="festivalName">${festival.festivalName}</td>
-                                <td class="festivalContent">${content}</td>
-                                <td class="manageInstitution">${inst1}</td>
-                                <td class="hostInstitution">${inst2}</td>
-                                <td class="sponserInstitution">${inst3}</td>
-                                <td class="tel">${festival.tel}</td>`;
+                                <td class="festivalId" title="${festival.festivalId}">${festival.festivalId}</td>
+                                <td class="regionId" title="${festival.regionId}">${festival.regionId}</td>
+                                <td class="timeId" title="${festival.timeId}">${festival.timeId}</td>
+                                <td class="festivalName" title="${festival.festivalName}">${festival.festivalName}</td>
+                                <td class="festivalContent" title="${festival.festivalContent}">${festival.festivalContent}</td>
+                                <td class="manageInstitution" title="${festival.manageInstitution}">${festival.manageInstitution}</td>
+                                <td class="hostInstitution" title="${festival.hostInstitution}">${festival.hostInstitution}</td>
+                                <td class="sponserInstitution" title="${festival.sponserInstitution}">${festival.sponserInstitution}</td>
+                                <td class="tel" title="${festival.tel}">${festival.tel}</td>`;
 
                         var htmlContent12 =``;
 
@@ -577,13 +566,13 @@ $(document).ready(
                             htmlContent12 = `
 
                                 <td class="homepageUrl"></td>
-                                <td class="detailAddress">${festival.detailAddress}</td>
+                                <td class="detailAddress" title="${festival.detailAddress}">${festival.detailAddress}</td>
 
-                                <td class="place">${festival.place}</td>
-                                <td class="formattedStart">${festival.formattedStart}</td>
-                                <td class="formattedEnd">${festival.formattedEnd}</td>
-                                <td class="avgRate">${festival.avgRate}</td>
-                                <td class="season">${festival.season}</td>
+                                <td class="place" title="${festival.place}">${festival.place}</td>
+                                <td class="formattedStart" title="${festival.formattedStart}">${festival.formattedStart}</td>
+                                <td class="formattedEnd" title="${festival.formattedEnd}">${festival.formattedEnd}</td>
+                                <td class="avgRate" title="${festival.avgRate}">${festival.avgRate}</td>
+                                <td class="season" title="${festival.season}">${festival.season}</td>
 
 
                             `;
@@ -592,14 +581,14 @@ $(document).ready(
 
                            htmlContent12 = `
 
-                                <td class="homepageUrl"><a href="${festival.homepageUrl}">클릭!</a></td>
-                                <td class="detailAddress">${festival.detailAddress}</td>
+                                <td class="homepageUrl" title="${festival.homepageUrl}"><a href="${festival.homepageUrl}">클릭!</a></td>
+                                <td class="detailAddress" title="${festival.detailAddress}">${festival.detailAddress}</td>
 
-                                <td class="place">${festival.place}</td>
-                                <td class="formattedStart">${festival.formattedStart}</td>
-                                <td class="formattedEnd">${festival.formattedEnd}</td>
-                                <td class="avgRate">${festival.avgRate}</td>
-                                <td class="season">${festival.season}</td>
+                                <td class="place" title="${festival.place}">${festival.place}</td>
+                                <td class="formattedStart" title="${festival.formattedStart}">${festival.formattedStart}</td>
+                                <td class="formattedEnd" title="${festival.formattedEnd}">${festival.formattedEnd}</td>
+                                <td class="avgRate" title="${festival.avgRate}">${festival.avgRate}</td>
+                                <td class="season" title="${festival.season}">${festival.season}</td>
 
                             `;
 
@@ -613,7 +602,6 @@ $(document).ready(
 
                             htmlContent2= `
                             <td class="imgUrl"></td>
-
                             <td class="buttonHead">
                                 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalLong" id="dbUpdateBtn" value="${festival.festivalId}">상세수정</button><br><hr>
                                 <button type="button" class="btn btn-primary contentKeywordInsertBtn" value="${festival.festivalId}">내용</button>
@@ -627,8 +615,7 @@ $(document).ready(
                         }else{
 
                              htmlContent2 = `
-                             <td class="imgUrl"><img src="${festival.imgUrl}" width="40px" alt="이미지 없음"></td>
-
+                             <td class="imgUrl" style="min-width: 150px;"><img src="${festival.imgUrl}" alt="이미지 없음" style="width: 100%;height:150px"></td>
                              <td class="buttonHead">
                                  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalLong" id="dbUpdateBtn" value="${festival.festivalId}">상세수정</button><br><hr>
                                  <button type="button" class="btn btn-primary contentKeywordInsertBtn" value="${festival.festivalId}">내용</button>
@@ -660,13 +647,57 @@ $(document).ready(
         * 다중 조건 검색에 해당하는 전체 갯수를 구하고 그 수만큼 페이지 버튼 붙히기
         * @param {Array<{name: string, value: string}>} data1 직렬화 된 폼 데이터
         */
-         function findDBFestivalMultipleCount(data1){
+         function findDBFestivalMultipleCount(){
+
+
+           console.log("findDBFestivalByMultipleCount()");
+
+           var regionId = document.getElementById('searchRegion1').options[document.getElementById('searchRegion1').selectedIndex].value;
+           console.log(regionId);
+           var timeId = document.getElementById('searchTime1').options[document.getElementById('searchTime1').selectedIndex].value;
+           console.log(timeId);
+           var festivalName = $('#festivalName1').val();
+           var festivalContent = $('#festivalContent1').val();
+           var manageInstitution = $('#manageInstitution1').val();
+           var hostInstitution = $('#hostInstitution1').val();
+           var tel = $('#tel1').val();
+           var place = $('#place1').val();
+           var formattedStart = $('#formattedStart1').val();
+           var formattedEnd = $('#formattedEnd1').val();
+           var avgRate = $('#avgRate1').val();
+           console.log(avgRate);
+           var season = document.getElementById('searchSeason1').options[document.getElementById('searchSeason1').selectedIndex].value;
+
+
+           console.log(season)
+
+           var data = {
+
+                   regionId : regionId,
+                   timeId : timeId,
+                   festivalName : festivalName,
+                   festivalContent : festivalContent,
+                   manageInstitution : manageInstitution,
+                   hostInstitution : hostInstitution,
+                   tel : tel,
+                   place : place,
+                   formattedStart : formattedStart,
+                   formattedEnd : formattedEnd,
+                   avgRate : avgRate,
+                   season : season
+           };
+
+
+
+
+
+
 
             $.ajax({
 
                 url: '/admin/festival-regulate/findDBFestivalMultipleCount',
                 method: 'POST',
-                data: JSON.stringify(data1),
+                data: JSON.stringify(data),
                 contentType: 'application/json',
                 success: function(count){
 
@@ -680,8 +711,6 @@ $(document).ready(
                         findDBFestivalCount();
 
                     })
-
-
 
                     console.log("카운트는...")
                     console.log(count)
@@ -705,7 +734,7 @@ $(document).ready(
                     $(document).on('click','.pageBtn3', function(){
 
                         const page = $(this).text();
-                        findDBFestivalByMultiple(data1, page);
+                        findDBFestivalByMultiple(page);
 
                     })
 
@@ -749,25 +778,6 @@ $(document).ready(
                         var index1 = (index + 1) + (page-1)*5;
                         var indexFromZero = index1 - 1;
 
-                        var content = festival.festivalContent.length > 30?
-                        festival.festivalContent.substring(0,30) + "..."
-                        : festival.festivalContent;
-
-                        var inst1 = festival.manageInstitution.length > 15?
-                        festival.manageInstitution.substring(0,15) + "..."
-                        : festival.manageInstitution;
-
-                        var inst2 = festival.hostInstitution.length > 15?
-                        festival.hostInstitution.substring(0,15) + "..."
-                        : festival.hostInstitution;
-
-                        var inst3 = festival.sponserInstitution.length > 15?
-                        festival.sponserInstitution.substring(0,15) + "..."
-                        : festival.sponserInstitution;
-
-
-
-
                         var start = festival.startDate.length >0?
                         festival.startDate.substring(0,10):
                         "링크없음";
@@ -794,13 +804,13 @@ $(document).ready(
                         var htmlContent11 =`
                                 <td class="index1">${index1}</td>
                                 <td class="regionId">${festival.regionId}</td>
-                                <td class="timeId">${festival.timeId}</td>
-                                <td class="festivalName">${festival.festivalName}</td>
-                                <td class="festivalContent">${content}</td>
-                                <td class="manageInstitution">${inst1}</td>
-                                <td class="hostInstitution">${inst2}</td>
-                                <td class="sponserInstitution">${inst3}</td>
-                                <td class="tel">${festival.tel}</td>`;
+                                <td class="timeId" title="${festival.timeId}">${festival.timeId}</td>
+                                <td class="festivalName" title="${festival.festivalName}">${festival.festivalName}</td>
+                                <td class="festivalContent" title="${festival.festivalContent}">${festival.festivalContent}</td>
+                                <td class="manageInstitution" title="${festival.manageInstitution}">${festival.manageInstitution}</td>
+                                <td class="hostInstitution" title="${festival.hostInstitution}">${festival.hostInstitution}</td>
+                                <td class="sponserInstitution" title="${festival.sponserInstitution}">${festival.sponserInstitution}</td>
+                                <td class="tel" title="${festival.tel}">${festival.tel}</td>`;
 
                         var htmlContent12 =``;
 
@@ -810,12 +820,11 @@ $(document).ready(
                             htmlContent12 = `
 
                                 <td class="homepageUrl"></td>
-                                <td class="detailAddress">${festival.detailAddress}</td>
-
-                                <td class="place">${festival.place}</td>
-                                <td class="startDate">${festival.formattedStart}</td>
-                                <td class="endDate">${festival.formattedEnd}</td>
-                                <td class="season">${festival.season}</td>
+                                <td class="detailAddress" title="${festival.detailAddress}">${festival.detailAddress}</td>
+                                <td class="place" title="${festival.place}">${festival.place}</td>
+                                <td class="startDate" title="${festival.formattedStart}">${festival.formattedStart}</td>
+                                <td class="endDate" title="${festival.formattedEnd}">${festival.formattedEnd}</td>
+                                <td class="season" title="${festival.season}">${festival.season}</td>
 
 
                             `;
@@ -824,13 +833,12 @@ $(document).ready(
 
                             htmlContent12 = `
 
-                                <td class="homepageUrl"><a href="${festival.homepageUrl}">클릭!</a></td>
-                                <td class="detailAddress">${festival.detailAddress}</td>
-
-                                <td class="place">${festival.place}</td>
-                                <td class="startDate">${festival.formattedStart}</td>
-                                <td class="endDate">${festival.formattedEnd}</td>
-                                <td class="season">${festival.season}</td>
+                                <td class="homepageUrl" title="${festival.homepageUrl}"><a href="${festival.homepageUrl}">클릭!</a></td>
+                                <td class="detailAddress" title="${festival.detailAddress}">${festival.detailAddress}</td>
+                                <td class="place" title="${festival.place}">${festival.place}</td>
+                                <td class="startDate" title="${festival.formattedStart}">${festival.formattedStart}</td>
+                                <td class="endDate" title="${festival.formattedEnd}">${festival.formattedEnd}</td>
+                                <td class="season" title="${festival.season}">${festival.season}</td>
 
 
                             `;
@@ -1011,23 +1019,6 @@ $(document).ready(
                         var index1 = (index + 1) + (page-1)*5;
                         var indexFromZero = index1 - 1;
 
-                        var content = festival.festivalContent.length > 30?
-                        festival.festivalContent.substring(0,30) + "..."
-                        : festival.festivalContent;
-
-                        var inst1 = festival.manageInstitution.length > 15?
-                        festival.manageInstitution.substring(0,15) + "..."
-                        : festival.manageInstitution;
-
-                        var inst2 = festival.hostInstitution.length > 15?
-                        festival.hostInstitution.substring(0,15) + "..."
-                        : festival.hostInstitution;
-
-                        var inst3 = festival.sponserInstitution.length > 15?
-                        festival.sponserInstitution.substring(0,15) + "..."
-                        : festival.sponserInstitution;
-
-
                         var start = festival.startDate.length >0?
                         festival.startDate.substring(0,10):
                         "링크없음";
@@ -1035,6 +1026,7 @@ $(document).ready(
                         var end = festival.endDate.length >0?
                         festival.endDate.substring(0,10):
                         "링크없음";
+
 
                         var htmlCheck = ``;
 
@@ -1050,38 +1042,71 @@ $(document).ready(
                                 <td><input class="check2" type="checkbox" name="index" value="${indexFromZero}"/></td>`
                         }
 
-
-                        var htmlContent =`
-
+                        var htmlContent11 =`
                                 <td class="index1">${index1}</td>
                                 <td class="regionId">${festival.regionId}</td>
-                                <td class="timeId">${festival.timeId}</td>
-                                <td class="festivalName">${festival.festivalName}</td>
-                                <td class="festivalContent">${content}</td>
-                                <td class="manageInstitution">${inst1}</td>
-                                <td class="hostInstitution">${inst2}</td>
-                                <td class="sponserInstitution">${inst3}</td>
-                                <td class="tel">${festival.tel}</td>
-                                <td class="homepageUrl"><a href="${festival.homepageUrl}">클릭!</a></td>
-                                <td class="detailAddress">${festival.detailAddress}</td>
+                                <td class="timeId" title="${festival.timeId}">${festival.timeId}</td>
+                                <td class="festivalName" title="${festival.festivalName}">${festival.festivalName}</td>
+                                <td class="festivalContent" title="${festival.festivalContent}">${festival.festivalContent}</td>
+                                <td class="manageInstitution" title="${festival.manageInstitution}">${festival.manageInstitution}</td>
+                                <td class="hostInstitution" title="${festival.hostInstitution}">${festival.hostInstitution}</td>
+                                <td class="sponserInstitution" title="${festival.sponserInstitution}">${festival.sponserInstitution}</td>
+                                <td class="tel" title="${festival.tel}">${festival.tel}</td>`;
 
-                                <td class="place">${festival.place}</td>
-                                <td class="startDate">${festival.formattedStart}</td>
-                                <td class="endDate">${festival.formattedEnd}</td>
-                                <td class="season">${festival.season}</td>
+                        var htmlContent12 =``;
 
-                            </tr>
 
-                        `;
+                        if(! festival.homepageUrl || festival.homepageUrl == "null" || festival.homepageUrl == ""){
 
-                        var finalHtml = htmlCheck + htmlContent;
+                            htmlContent12 = `
+
+                                <td class="homepageUrl"></td>
+                                <td class="detailAddress" title="${festival.detailAddress}">${festival.detailAddress}</td>
+                                <td class="place" title="${festival.place}">${festival.place}</td>
+                                <td class="startDate" title="${festival.formattedStart}">${festival.formattedStart}</td>
+                                <td class="endDate" title="${festival.formattedEnd}">${festival.formattedEnd}</td>
+                                <td class="season" title="${festival.season}">${festival.season}</td>
+
+
+                            `;
+
+                        }else{
+
+                            htmlContent12 = `
+
+                                <td class="homepageUrl" title="${festival.homepageUrl}"><a href="${festival.homepageUrl}">클릭!</a></td>
+                                <td class="detailAddress" title="${festival.detailAddress}">${festival.detailAddress}</td>
+                                <td class="place" title="${festival.place}">${festival.place}</td>
+                                <td class="startDate" title="${festival.formattedStart}">${festival.formattedStart}</td>
+                                <td class="endDate" title="${festival.formattedEnd}">${festival.formattedEnd}</td>
+                                <td class="season" title="${festival.season}">${festival.season}</td>
+
+
+                            `;
+
+                        }
+
+    //                        var htmlContent2 = ``;
+
+    //                        if(! festival.imgUrl || festival.imgUrl == "null"){
+    //
+    //                            htmlContent2= `
+    //                            <td class="imgUrl"></td></tr>
+    //                            `
+    //
+    //
+    //                        }else{
+    //
+    //                             htmlContent2 = `
+    //                             <td class="imgUrl"><img src="${festival.imgUrl}" width="40px"></td></tr>
+    //                            `
+    //                        }
+
+                        var finalHtml = htmlCheck + htmlContent11 + htmlContent12;
 
                         $('#list2').append(finalHtml);
 
-
-
                     })
-
 
                 }
 
