@@ -571,8 +571,10 @@
                                 if(userId == reviewUserId){
                                     actionBtns = `
                                         <div class="review-actions">
-                                            <button class="updateBtn" value="${review.festivalReviewId}" type="button">수정</button>
+                                            <button class="update" value="${review.festivalReviewId}" type="button">수정</button>
                                             <button class="deleteBtn" value="${review.festivalReviewId}">삭제</button>
+                                            <button class="editBtn hide" value="${review.festivalReviewId}">저장</button>
+                                            <button class="cancelBtn hide" value="${review.festivalReviewId}">취소</button>
                                         </div>
                                     `;
                                 }
@@ -619,9 +621,25 @@
 
 
                                         <div class="review-content">
-                                            <p class="review-content-p-${review.festivalReviewId}">${review.festivalReviewContent}</p>
-                                            <div class="review-text-container">
-                                                <textarea id="editContent-${review.festivalReviewId}" rows="5" style="display:none;" value="${review.festivalReviewContent}">${review.festivalReviewContent}</textarea>
+                                            <p class="review-content-p-${review.festivalReviewId} review-content-p">${review.festivalReviewContent}</p>
+                                            <div class="review-text-container hide">
+                                                <form id="reviewForm_${review.festivalReviewId}" style="width:100%;">
+                                                    <div class="star-rating2">
+                                                        <input type="radio" id="star5_${review.festivalReviewId}" name="reviewStar" value="5" ${review.festivalReviewStar == 5? 'checked' : ''}/>
+                                                        <label for="star5_${review.festivalReviewId}">★</label>
+                                                        <input type="radio" id="star4_${review.festivalReviewId}" name="reviewStar" value="4" ${review.festivalReviewStar == 4? 'checked' : ''}/>
+                                                        <label for="star4_${review.festivalReviewId}">★</label>
+                                                        <input type="radio" id="star3_${review.festivalReviewId}" name="reviewStar" value="3" ${review.festivalReviewStar == 3? 'checked' : ''}/>
+                                                        <label for="star3_${review.festivalReviewId}">★</label>
+                                                        <input type="radio" id="star2_${review.festivalReviewId}" name="reviewStar" value="2" ${review.festivalReviewStar == 2? 'checked' : ''}/>
+                                                        <label for="star2_${review.festivalReviewId}">★</label>
+                                                        <input type="radio" id="star1_${review.festivalReviewId}" name="reviewStar" value="1" ${review.festivalReviewStar == 1? 'checked' : ''}/>
+                                                        <label for="star1_${review.festivalReviewId}">★</label>
+                                                    </div>
+                                                    <input type="hidden" value="${review.festivalReviewId}" name="festivalReviewId">
+                                                    <input type="hidden" value="${festivalId}" name="festivalId">
+                                                    <textarea class="reviewText" name="reviewText" id="editContent-${review.festivalReviewId}" rows="5" value="${review.festivalReviewContent}">${review.festivalReviewContent}</textarea>
+                                                </form>
                                             </div>
                                         </div>
 
@@ -659,6 +677,8 @@
                         contentType: 'application/json',
                         success: function(count){
 
+                            $('#totalReviewCount').html(count);
+
                             $('#reviewPages').html("");
 
                             var pages = 0;
@@ -683,6 +703,46 @@
 
 
                 findFestivalReviewCountByVWUserReviewDTO(festivalId);
+
+
+
+
+               /**
+               * 리뷰 내역을 수정 가능하게 만들기
+               */
+                $(document).on('click','.update', function(){
+
+                    var thisBtn = $(this);
+                    thisBtn.addClass("hide");
+                    thisBtn.siblings(".editBtn").removeClass("hide");
+                    thisBtn.siblings(".cancelBtn").removeClass("hide");
+
+                    thisBtn.parent().siblings(".review-content").find(".review-text-container").removeClass("hide");
+                    thisBtn.parent().siblings(".review-content").find(".review-content-p").addClass("hide");
+                    thisBtn.parent().siblings(".user-info").find(".review-rating").addClass("hide");
+                })
+
+
+
+               /**
+               * 리뷰 내역 수정 취소 버튼
+               */
+                $(document).on('click','.cancelBtn', function(){
+
+                    var thisBtn = $(this);
+                    thisBtn.addClass("hide");
+                    thisBtn.siblings(".update").removeClass("hide");
+                    thisBtn.siblings(".editBtn").addClass("hide");
+                    thisBtn.siblings(".cancelBtn").removeClass("hide");
+
+                    thisBtn.parent().siblings(".review-content").find(".review-text-container").addClass("hide");
+                    thisBtn.parent().siblings(".review-content").find(".review-content-p").removeClass("hide");
+                    thisBtn.parent().siblings(".user-info").find(".review-rating").removeClass("hide");
+                })
+
+
+
+
 
 
                 /**
@@ -782,7 +842,7 @@
                 * 리뷰 수정
                 *
                 */
-                $(document).on('click','.updateBtn', function(){
+                $(document).on('click','.editBtn', function(){
 
                     var festivalReviewId = $(this).val();
                     var formId = `#reviewForm_${festivalReviewId}`;

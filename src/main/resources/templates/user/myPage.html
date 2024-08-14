@@ -18,12 +18,6 @@
                 var user = [[${user}]];
 
 
-
-
-
-
-
-
                 //#region 기본정보 입력
 
                 /**
@@ -1876,7 +1870,6 @@
         </div>
 
 
-
         <div id="rightZone">
 
             <div id="leftZone">
@@ -1888,44 +1881,66 @@
                     <br>
 
                     <div>
-                        <label for="uploadFile"><img src="https://img.icons8.com/?size=100&id=67360&format=png&color=000000" alt="User Icon"></label>
+                        <label for="uploadFile"><img
+                                src="https://img.icons8.com/?size=100&id=67360&format=png&color=000000" alt="User Icon"></label>
                         <input name="uploadFile" class="rounded" id="uploadFile" type="file" accept="image/*">
                     </div>
 
                     <div>
-                        <label for="email"><img src="https://img.icons8.com/?size=100&id=8uaNSRthy4ju&format=png&color=000000" alt="Email Icon"></label>
+                        <label for="email"><img
+                                src="https://img.icons8.com/?size=100&id=8uaNSRthy4ju&format=png&color=000000"
+                                alt="Email Icon"></label>
                         <input name="email" class="rounded" id="email" th:value="${user.email}"
-                                   placeholder="${user.email}" required style="background-color: lightblue" pattern="^[a-zA-Z0-9_]{5,}@[a-zA-Z]{3,}\.com$">
+                               placeholder="${user.email}" required style="background-color: lightblue"
+                               pattern="^[a-zA-Z0-9_]{5,}@[a-zA-Z]{3,}\.com$">
                     </div>
 
                     <div>
-                        <label for="password"><img src="https://img.icons8.com/?size=100&id=B9ytemSyoM31&format=png&color=000000" alt="Password Icon"></label>
-                        <input name="password" class="rounded" id="password" type="password" required style="background-color: lightblue" th:value="${user.password}" placeholder="******" pattern="^[a-zA-Z0-9_]{5,}$">
+                        <label for="password"><img
+                                src="https://img.icons8.com/?size=100&id=B9ytemSyoM31&format=png&color=000000"
+                                alt="Password Icon"></label>
+                        <input name="password" class="rounded" id="password" type="password" required
+                               style="background-color: lightblue" th:value="${user.password}" placeholder="******"
+                               pattern="^[a-zA-Z0-9_]{5,}$">
                     </div>
 
                     <div>
-                        <label for="userName"><img src="https://img.icons8.com/?size=100&id=ZuNYjWxqVWsa&format=png&color=000000" alt="userName Icon"></label>
-                        <input name="userName" class="rounded" id="userName" th:value="${user.userName}" placeholder="${user.userName}" pattern="^[a-zA-Z가-힣]{3,}$" style="background-color: lightblue">
+                        <label for="userName"><img
+                                src="https://img.icons8.com/?size=100&id=ZuNYjWxqVWsa&format=png&color=000000"
+                                alt="userName Icon"></label>
+                        <input name="userName" class="rounded" id="userName" th:value="${user.userName}"
+                               placeholder="${user.userName}" pattern="^[a-zA-Z가-힣]{3,}$"
+                               style="background-color: lightblue">
                     </div>
 
                     <div>
-                        <label for="tel"><img src="https://img.icons8.com/?size=100&id=wqTsYydyXBbo&format=png&color=000000" alt="tel Icon"></label>
-                        <input name="tel" class="rounded" id="tel" type="tel" th:value="${user.tel}" placeholder="${user.tel}" pattern="[0-9]{3}-[0-9]{4}-[0-9]{4}">
+                        <label for="tel"><img
+                                src="https://img.icons8.com/?size=100&id=wqTsYydyXBbo&format=png&color=000000"
+                                alt="tel Icon"></label>
+                        <input name="tel" class="rounded" id="tel" type="tel" th:value="${user.tel}"
+                               placeholder="${user.tel}" pattern="[0-9]{3}-[0-9]{4}-[0-9]{4}">
                     </div>
 
                     <div>
-                        <label for="userAge"><img src="https://img.icons8.com/?size=100&id=7zkG0i0pLOGd&format=png&color=000000" alt="userAge Icon"></label>
-                        <input name="userAge" class="rounded" id="userAge" type="number" th:value="${user.userAge}" th:placeholder="${user.userAge}">
+                        <label for="userAge"><img
+                                src="https://img.icons8.com/?size=100&id=7zkG0i0pLOGd&format=png&color=000000"
+                                alt="userAge Icon"></label>
+                        <input name="userAge" class="rounded" id="userAge" type="number" th:value="${user.userAge}"
+                               th:placeholder="${user.userAge}">
                     </div>
 
                     <div>
-                        <label for="gender"><img src="https://img.icons8.com/?size=100&id=33337Z2WxW0x&format=png&color=000000" alt="gender Icon"></label>
+                        <label for="gender"><img
+                                src="https://img.icons8.com/?size=100&id=33337Z2WxW0x&format=png&color=000000"
+                                alt="gender Icon"></label>
                         <select name="gender" class="rounded" id="gender" th:value="${user.gender}">
                         </select>
                     </div>
 
                     <div>
-                        <label for="regionId"><img src="https://img.icons8.com/?size=100&id=43632&format=png&color=000000" alt="region Icon"></label>
+                        <label for="regionId"><img
+                                src="https://img.icons8.com/?size=100&id=43632&format=png&color=000000"
+                                alt="region Icon"></label>
                         <select name="regionId" id="regionId" class="rounded"></select>
                     </div>
 
