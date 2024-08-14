@@ -150,15 +150,15 @@ async function initMap(location) {
 
                           // 상태에 따라 버튼 이미지를 설정
                           if (state === 'like') {
-                              document.getElementById('likeBtn').src = '/img/performance/Like.PNG';
-                              document.getElementById('dislikeBtn').src = '/img/performance/notLikeNo.PNG';
+                              document.getElementById('likeBtn').src = 'https://kr.object.ncloudstorage.com/team3/common/upBlue.png';
+                              document.getElementById('dislikeBtn').src = 'https://kr.object.ncloudstorage.com/team3/common/downNo.png';
                           } else if (state === 'not like') {
-                              document.getElementById('likeBtn').src = '/img/performance/LikeNo.PNG';
-                              document.getElementById('dislikeBtn').src = '/img/performance/notLike.PNG';
+                              document.getElementById('likeBtn').src = 'https://kr.object.ncloudstorage.com/team3/common/upNo.png';
+                              document.getElementById('dislikeBtn').src = 'https://kr.object.ncloudstorage.com/team3/common/downRed.png';
                           } else {
                               // 기본 초기 상태
-                              document.getElementById('likeBtn').src = '/img/performance/LikeNo.PNG';
-                              document.getElementById('dislikeBtn').src = '/img/performance/notLikeNo.PNG';
+                              document.getElementById('likeBtn').src = 'https://kr.object.ncloudstorage.com/team3/common/upNo.png';
+                              document.getElementById('dislikeBtn').src = 'https://kr.object.ncloudstorage.com/team3/common/downNo.png';
                           }
                       })
                       .catch(error => {
@@ -189,12 +189,12 @@ async function initMap(location) {
                       .then(() => {
                           // 상태에 따라 버튼 이미지를 설정하고 알림창 표시
                           if (state === 'like') {
-                              document.getElementById('likeBtn').src = '/img/performance/Like.PNG';
-                              document.getElementById('dislikeBtn').src = '/img/performance/notLikeNo.PNG';
+                              document.getElementById('likeBtn').src = 'https://kr.object.ncloudstorage.com/team3/common/upBlue.png';
+                              document.getElementById('dislikeBtn').src = 'https://kr.object.ncloudstorage.com/team3/common/downNo.png';
                               alert('찜이 추가되었습니다.');
                           } else {
-                              document.getElementById('likeBtn').src = '/img/performance/LikeNo.PNG';
-                              document.getElementById('dislikeBtn').src = '/img/performance/notLike.PNG';
+                              document.getElementById('likeBtn').src = 'https://kr.object.ncloudstorage.com/team3/common/upNo.png';
+                              document.getElementById('dislikeBtn').src = 'https://kr.object.ncloudstorage.com/team3/common/downRed.png';
                               alert('관심없음이 추가되었습니다.');
                           }
                       })
