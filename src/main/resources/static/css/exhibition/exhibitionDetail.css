@@ -181,7 +181,7 @@ header {
     margin-bottom: 20px;
     padding: 10px;
     border: 1px solid #ddd;
-    border-radius: 5px;
+    /*border-radius: 5px;*/
     overflow: hidden; /* 내부 요소가 넘치지 않도록 */
 }
 
@@ -193,6 +193,10 @@ header {
 .analyze-text-content {
     width: 100%;
     flex: 1;
+}
+
+.analyze-text {
+    font-size: 14px;
 }
 
 .analyze-image {
@@ -388,4 +392,18 @@ header {
     cursor: pointer; /* 클릭할 수 있는 커서 */
     pointer-events: auto; /* 클릭 이벤트를 허용 */
 }
+
+.analyze-username {
+    margin: 5px 0;
+    font-size: 14px;
+    color: #666;
+}
+
+.analyze-artwork {
+    margin: 0;
+    font-size: 16px;
+    font-weight: bold
+}
+
+
 

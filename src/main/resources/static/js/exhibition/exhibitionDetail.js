@@ -590,8 +590,8 @@ function renderAnalyze(analyze) {
         <div class="analyze" data-id="${analyze.id}">
             <div class="analyze-content">
                 <div class="analyze-text-content">
-                    <h3>${analyze.name}</h3>
-                    <h4>${analyze.artwork}</h4>
+                    <h3 class="analyze-username">${analyze.name}</h3>
+                    <h4 class="analyze-artwork">${analyze.artwork}</h4>
                     <br>
                     <p class="analyze-text">${analyze.content}</p>
                     ${(analyze.auth) ? '<button class="update-analyze btn btn-outline-secondary">수정</button>' : ''}
