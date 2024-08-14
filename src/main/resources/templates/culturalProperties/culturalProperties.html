@@ -216,46 +216,81 @@ a {
 }
 
 
-
-        .badge-container {
+ .badge-container {
     position: absolute;
     bottom: 10px;
     right: 10px;
-    display: flex;
+    display: none;
     gap: 5px;
-    z-index: 1;
 }
 
-.like-button,
-.dislike-button {
-    width: 30px;
-    height: 30px;
-    background-color: white;
-    background-size: 20px 20px;
-    background-repeat: no-repeat;
-    background-position: center;
+.all-card:hover .badge-container {
+    display: flex;
+}
+
+.interest-button {
     border: none;
-    border-radius: 4px;
-<!--    border-radius: 50%;-->
+    background-color: #fff;
     cursor: pointer;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    padding: 5px;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    opacity: 0.8;
 }
 
-.like-button {
-    background-image: url('https://kr.object.ncloudstorage.com/team3/common/upNo.png');
+.interest-button img {
+    width: 20px;
+    height: 20px;
 }
 
-.like-button.active {
-    background-image: url('https://kr.object.ncloudstorage.com/team3/common/upBlue.png');
-}
 
-.dislike-button {
-    background-image: url('https://kr.object.ncloudstorage.com/team3/common/downNo.png');
-}
 
-.dislike-button.active {
-    background-image: url('https://kr.object.ncloudstorage.com/team3/common/downRed.png');
-}
+<!--.badge-container {-->
+<!--    position: absolute;-->
+<!--    bottom: 10px;-->
+<!--    right: 10px;-->
+<!--    display: none; /* 기본적으로 숨김 */-->
+<!--    gap: 5px;-->
+<!--}-->
+
+<!--.all-card:hover .badge-container {-->
+<!--    display: flex; /* 호버 시 표시 */-->
+<!--}-->
+
+<!--.like-button,-->
+<!--.dislike-button {-->
+<!--    width: 30px;-->
+<!--    height: 30px;-->
+<!--    background-color: transparent;-->
+<!--    border: none;-->
+<!--    cursor: pointer;-->
+<!--    background-size: contain;-->
+<!--    background-repeat: no-repeat;-->
+<!--    background-position: center;-->
+<!--}-->
+
+
+
+
+<!--.like-button {-->
+<!--    background-image: url('https://kr.object.ncloudstorage.com/team3/common/upNo.png');-->
+<!--}-->
+
+<!--.like-button.active {-->
+<!--    background-image: url('https://kr.object.ncloudstorage.com/team3/common/upBlue.png');-->
+<!--}-->
+
+<!--.dislike-button {-->
+<!--    background-image: url('https://kr.object.ncloudstorage.com/team3/common/downNo.png');-->
+<!--}-->
+
+<!--.dislike-button.active {-->
+<!--    background-image: url('https://kr.object.ncloudstorage.com/team3/common/downRed.png');-->
+<!--}-->
+
+
+
+
     </style>
 </head>
 
@@ -339,22 +374,24 @@ a {
 <!--                            <img th:src="${property.mainImgUrl}" th:alt="${property.culturalPropertiesName}">-->
 <!--                        </div>-->
 
-<!--                   뱃지만뜸     -->
-<!--                        <div class="all-card" th:data-cultural-property-id="${property.id}">-->
-<!--                            <img th:src="${property.mainImgUrl}" th:alt="${property.culturalPropertiesName}">-->
-<!--                            <div class="badge-container">-->
-<!--                                <img class="like-badge" src="https://kr.object.ncloudstorage.com/team3/common/upNo.png" alt="찜">-->
-<!--                                <img class="dislike-badge" src="https://kr.object.ncloudstorage.com/team3/common/downNo.png" alt="관심없음">-->
-<!--                            </div>-->
-<!--                        </div>-->
-
 
                         <div class="all-card" th:data-cultural-property-id="${property.id}">
                             <img th:src="${property.mainImgUrl}" th:alt="${property.culturalPropertiesName}">
-<!--                            <div class="badge-container" style="display: none !important;">-->
-<!--                                <button class="like-button" th:classappend="${property.liked} ? 'active' : ''"></button>-->
-<!--                                <button class="dislike-button" th:classappend="${property.disliked} ? 'active' : ''"></button>-->
+
+<!--                            <div class="badge-container">-->
+<!--                                <button class="like-button"></button>-->
+<!--                                <button class="dislike-button"></button>-->
 <!--                            </div>-->
+
+                            <div class="badge-container">
+                                <button class="interest-button like-button">
+                                    <img src="https://kr.object.ncloudstorage.com/team3/common/upNo.png" alt="찜">
+                                </button>
+                                <button class="interest-button dislike-button">
+                                    <img src="https://kr.object.ncloudstorage.com/team3/common/downNo.png" alt="관심없음">
+                                </button>
+                            </div>
+
                         </div>
 
 
