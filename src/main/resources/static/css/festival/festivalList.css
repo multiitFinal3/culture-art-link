@@ -265,12 +265,12 @@
        top: 290px;
        right: 65px;
        background: white;
-
        padding: 5px 10px;
        margin: 0 5px;
        border: none;
        border-radius: 5px;
        cursor: pointer;
+       opacity: 0.8;
    }
 
 
@@ -288,16 +288,16 @@
 
    .whiteHateBtn{
 
-       position: absolute;
-       top: 290px;
-       right: 10px;
-       background: white;
-        padding: 5px 10px;
+      position: absolute;
+      top: 290px;
+      right: 10px;
+      background: white;
+      padding: 5px 10px;
       margin: 0 5px;
       border: none;
       border-radius: 5px;
       cursor: pointer;
-
+      opacity: 0.8;
    }
 
    .hate{
