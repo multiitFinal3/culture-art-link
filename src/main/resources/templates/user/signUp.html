@@ -345,8 +345,6 @@
 
                     formData.append('email', email);
                     formData.append('password', password);
-
-
                     formData.append('userName', userName);
 
                     var tel = $('#tel').val();
@@ -360,6 +358,12 @@
 
                     var regionId = document.getElementById('regionId').options[document.getElementById('regionId').selectedIndex].value;
                     formData.append('regionId', regionId);
+
+                    var festivalSelectKeyword = $('#festivalSelectKeyword').val();
+                    formData.append('festivalSelectKeyword',festivalSelectKeyword);
+
+                    var exhibitionSelectKeyword = $('#exhibitionSelectKeyword').val();
+                    formData.append('exhibitionSelectKeyword',exhibitionSelectKeyword);
 
                     console.log(regionId);
                     console.log(email);
