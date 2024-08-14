@@ -348,6 +348,7 @@ async function loadExhibitionReviews() {
 
 function renderExhibitionDetails(exhibition) {
     $('#exhibitionTitle').text(exhibition.title);
+    $('#exhibitionArtist').text(exhibition.artist);
     $('#exhibitionMuseum').text(exhibition.museum);
     // 날짜 형식 변경
     const formatDate = (dateString) => {
