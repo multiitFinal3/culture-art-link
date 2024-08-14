@@ -215,6 +215,47 @@ a {
     margin-top: 3rem; /* 위쪽 여백을 3줄로 설정 */
 }
 
+
+
+        .badge-container {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    display: flex;
+    gap: 5px;
+    z-index: 1;
+}
+
+.like-button,
+.dislike-button {
+    width: 30px;
+    height: 30px;
+    background-color: white;
+    background-size: 20px 20px;
+    background-repeat: no-repeat;
+    background-position: center;
+    border: none;
+    border-radius: 4px;
+<!--    border-radius: 50%;-->
+    cursor: pointer;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.like-button {
+    background-image: url('https://kr.object.ncloudstorage.com/team3/common/upNo.png');
+}
+
+.like-button.active {
+    background-image: url('https://kr.object.ncloudstorage.com/team3/common/upBlue.png');
+}
+
+.dislike-button {
+    background-image: url('https://kr.object.ncloudstorage.com/team3/common/downNo.png');
+}
+
+.dislike-button.active {
+    background-image: url('https://kr.object.ncloudstorage.com/team3/common/downRed.png');
+}
     </style>
 </head>
 
@@ -294,9 +335,29 @@ a {
             <div class="all-cultural-properties-items" id="gallery-section">
                 <div class="all-cultural-property-item" th:each="property : ${allCulturalProperties}">
                     <a th:href="@{'/cultural-properties/detail/' + ${property.id}}">
-                        <div class="all-card">
+<!--                        <div class="all-card">-->
+<!--                            <img th:src="${property.mainImgUrl}" th:alt="${property.culturalPropertiesName}">-->
+<!--                        </div>-->
+
+<!--                   뱃지만뜸     -->
+<!--                        <div class="all-card" th:data-cultural-property-id="${property.id}">-->
+<!--                            <img th:src="${property.mainImgUrl}" th:alt="${property.culturalPropertiesName}">-->
+<!--                            <div class="badge-container">-->
+<!--                                <img class="like-badge" src="https://kr.object.ncloudstorage.com/team3/common/upNo.png" alt="찜">-->
+<!--                                <img class="dislike-badge" src="https://kr.object.ncloudstorage.com/team3/common/downNo.png" alt="관심없음">-->
+<!--                            </div>-->
+<!--                        </div>-->
+
+
+                        <div class="all-card" th:data-cultural-property-id="${property.id}">
                             <img th:src="${property.mainImgUrl}" th:alt="${property.culturalPropertiesName}">
+<!--                            <div class="badge-container" style="display: none !important;">-->
+<!--                                <button class="like-button" th:classappend="${property.liked} ? 'active' : ''"></button>-->
+<!--                                <button class="dislike-button" th:classappend="${property.disliked} ? 'active' : ''"></button>-->
+<!--                            </div>-->
                         </div>
+
+
                         <div class="all-cultural-property-info">
                             <div class="all-title" th:text="${property.culturalPropertiesName}">문화재명</div>
                             <div class="all-location" th:text="${property.region + ' ' + property.district}">위치</div>

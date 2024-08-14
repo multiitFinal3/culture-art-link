@@ -47,21 +47,21 @@ public class CulturalPropertiesService {
 
 
 
-    public void addInterest(CulturalPropertiesInterestDTO interest) {
-//        interest.setInterestType("LIKE"); // LIKE 유형 설정
+//    public void addInterest(CulturalPropertiesInterestDTO interest) {
+////        interest.setInterestType("LIKE"); // LIKE 유형 설정
+//        culturalPropertiesDAO.addInterest(interest);
+//    }
+
+
+    public void addLike(CulturalPropertiesInterestDTO interest) {
+        interest.setInterestType("LIKE"); // LIKE 유형 설정
         culturalPropertiesDAO.addInterest(interest);
     }
 
-
-//    public void addLike(CulturalPropertiesInterestDTO interest) {
-//        interest.setInterestType("LIKE"); // LIKE 유형 설정
-//        culturalPropertiesDAO.addInterest(interest);
-//    }
-//
-//    public void addDislike(CulturalPropertiesInterestDTO interest) {
-//        interest.setInterestType("DISLIKE"); // DISLIKE 유형 설정
-//        culturalPropertiesDAO.addInterest(interest);
-//    }
+    public void addDislike(CulturalPropertiesInterestDTO interest) {
+        interest.setInterestType("DISLIKE"); // DISLIKE 유형 설정
+        culturalPropertiesDAO.addInterest(interest);
+    }
 
     public void removeInterest(CulturalPropertiesInterestDTO interest) {
         culturalPropertiesDAO.removeInterest(interest);

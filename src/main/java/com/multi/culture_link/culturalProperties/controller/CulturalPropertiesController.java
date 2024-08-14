@@ -99,29 +99,8 @@ public class CulturalPropertiesController {
 	}
 
 
-	@PostMapping("/addInterest")
-	public ResponseEntity<String> addInterest(@RequestParam int culturalPropertiesId) {
-		// 현재 로그인된 사용자 정보를 가져오기
-		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-		if (authentication != null && authentication.getPrincipal() instanceof VWUserRoleDTO) {
-			VWUserRoleDTO vwUserRoleDTO = (VWUserRoleDTO) authentication.getPrincipal();
-			int userId = vwUserRoleDTO.getUserId(); // 사용자 ID 가져오기
-
-			CulturalPropertiesInterestDTO interest = new CulturalPropertiesInterestDTO();
-			interest.setCulturalPropertiesId(culturalPropertiesId);
-			interest.setUserId(userId); // VWUserRoleDTO에서 userId 가져오기
-
-			culturalPropertiesService.addInterest(interest);
-//			return ResponseEntity.ok("찜이 추가되었습니다.");
-		}
-
-		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("로그인이 필요합니다.");
-	}
-
-
-//	@PostMapping("/addLike")
-//	public ResponseEntity<String> addLike(@RequestParam int culturalPropertiesId) {
+//	@PostMapping("/addInterest")
+//	public ResponseEntity<String> addInterest(@RequestParam int culturalPropertiesId) {
 //		// 현재 로그인된 사용자 정보를 가져오기
 //		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 //
@@ -132,36 +111,57 @@ public class CulturalPropertiesController {
 //			CulturalPropertiesInterestDTO interest = new CulturalPropertiesInterestDTO();
 //			interest.setCulturalPropertiesId(culturalPropertiesId);
 //			interest.setUserId(userId); // VWUserRoleDTO에서 userId 가져오기
-//			interest.setInterestType("LIKE");
 //
-//			culturalPropertiesService.addLike(interest);
-//			return ResponseEntity.ok("찜이 추가되었습니다.");
+//			culturalPropertiesService.addInterest(interest);
+////			return ResponseEntity.ok("찜이 추가되었습니다.");
 //		}
 //
 //		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("로그인이 필요합니다.");
 //	}
-//
-//
-//	@PostMapping("/addDislike")
-//	public ResponseEntity<String> addDislike(@RequestParam int culturalPropertiesId) {
-//		// 로그인된 사용자 정보 가져오기
-//		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//		if (authentication != null && authentication.getPrincipal() instanceof VWUserRoleDTO) {
-//			VWUserRoleDTO vwUserRoleDTO = (VWUserRoleDTO) authentication.getPrincipal();
-//			int userId = vwUserRoleDTO.getUserId(); // 사용자 ID 가져오기
-//
-//			CulturalPropertiesInterestDTO interest = new CulturalPropertiesInterestDTO();
-//			interest.setCulturalPropertiesId(culturalPropertiesId);
-//			interest.setUserId(userId); // UserDTO에서 userId 가져오기
-//			interest.setInterestType("DISLIKE"); // 상태 설정
-//
-//			// 서비스 호출하여 관심없음 추가
-//			culturalPropertiesService.addDislike(interest);
-//			return ResponseEntity.ok("관심없음이 추가되었습니다.");
-//		}
-//
-//		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("로그인이 필요합니다.");
-//	}
+
+
+	@PostMapping("/addLike")
+	public ResponseEntity<String> addLike(@RequestParam int culturalPropertiesId) {
+		// 현재 로그인된 사용자 정보를 가져오기
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+		if (authentication != null && authentication.getPrincipal() instanceof VWUserRoleDTO) {
+			VWUserRoleDTO vwUserRoleDTO = (VWUserRoleDTO) authentication.getPrincipal();
+			int userId = vwUserRoleDTO.getUserId(); // 사용자 ID 가져오기
+
+			CulturalPropertiesInterestDTO interest = new CulturalPropertiesInterestDTO();
+			interest.setCulturalPropertiesId(culturalPropertiesId);
+			interest.setUserId(userId); // VWUserRoleDTO에서 userId 가져오기
+			interest.setInterestType("LIKE");
+
+			culturalPropertiesService.addLike(interest);
+			return ResponseEntity.ok("찜이 추가되었습니다.");
+		}
+
+		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("로그인이 필요합니다.");
+	}
+
+
+	@PostMapping("/addDislike")
+	public ResponseEntity<String> addDislike(@RequestParam int culturalPropertiesId) {
+		// 로그인된 사용자 정보 가져오기
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		if (authentication != null && authentication.getPrincipal() instanceof VWUserRoleDTO) {
+			VWUserRoleDTO vwUserRoleDTO = (VWUserRoleDTO) authentication.getPrincipal();
+			int userId = vwUserRoleDTO.getUserId(); // 사용자 ID 가져오기
+
+			CulturalPropertiesInterestDTO interest = new CulturalPropertiesInterestDTO();
+			interest.setCulturalPropertiesId(culturalPropertiesId);
+			interest.setUserId(userId); // UserDTO에서 userId 가져오기
+			interest.setInterestType("DISLIKE"); // 상태 설정
+
+			// 서비스 호출하여 관심없음 추가
+			culturalPropertiesService.addDislike(interest);
+			return ResponseEntity.ok("관심없음이 추가되었습니다.");
+		}
+
+		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("로그인이 필요합니다.");
+	}
 
 
 
