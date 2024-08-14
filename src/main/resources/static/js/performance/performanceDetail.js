@@ -130,3 +130,87 @@ async function initMap(location) {
                 console.error('후기를 제출하는 중 오류가 발생했습니다:', error);
             }
         }
+
+
+
+
+
+
+
+
+
+
+
+              document.addEventListener('DOMContentLoaded', function() {
+                  // 현재 상태 가져오기
+                  axios.get(`/getPerformanceLikeState?userId=${userId}&performanceId=${performanceId}`)
+                      .then(response => {
+                          let state = response.data.state;  // state 변수를 정의합니다.
+                          console.log('Current state:', state);  // 상태값 확인
+
+                          // 상태에 따라 버튼 이미지를 설정
+                          if (state === 'like') {
+                              document.getElementById('likeBtn').src = '/img/performance/Like.PNG';
+                              document.getElementById('dislikeBtn').src = '/img/performance/notLikeNo.PNG';
+                          } else if (state === 'not like') {
+                              document.getElementById('likeBtn').src = '/img/performance/LikeNo.PNG';
+                              document.getElementById('dislikeBtn').src = '/img/performance/notLike.PNG';
+                          } else {
+                              // 기본 초기 상태
+                              document.getElementById('likeBtn').src = '/img/performance/LikeNo.PNG';
+                              document.getElementById('dislikeBtn').src = '/img/performance/notLikeNo.PNG';
+                          }
+                      })
+                      .catch(error => {
+                          console.error('오류 발생:', error);
+                      });
+
+                  // 좋아요 버튼 클릭 이벤트
+                  document.getElementById('likeBtn').addEventListener('click', function() {
+                      updatePerformanceState('like');
+                  });
+
+                  // 싫어요 버튼 클릭 이벤트
+                  document.getElementById('dislikeBtn').addEventListener('click', function() {
+                      updatePerformanceState('not like');
+                  });
+
+                  // 좋아요 또는 싫어요 상태 업데이트 함수
+                  function updatePerformanceState(state) {
+                      axios.post('/performance/updatePerformanceLikeState', {
+                          userId: userId,
+                          performanceId: performanceId,
+                          state: state
+                      }, {
+                          headers: {
+                              'Content-Type': 'application/json'
+                          }
+                      })
+                      .then(() => {
+                          // 상태에 따라 버튼 이미지를 설정하고 알림창 표시
+                          if (state === 'like') {
+                              document.getElementById('likeBtn').src = '/img/performance/Like.PNG';
+                              document.getElementById('dislikeBtn').src = '/img/performance/notLikeNo.PNG';
+                              alert('찜이 추가되었습니다.');
+                          } else {
+                              document.getElementById('likeBtn').src = '/img/performance/LikeNo.PNG';
+                              document.getElementById('dislikeBtn').src = '/img/performance/notLike.PNG';
+                              alert('관심없음이 추가되었습니다.');
+                          }
+                      })
+                      .catch(error => {
+                          console.error('좋아요/싫어요 상태를 업데이트하는 중 오류가 발생했습니다:', error);
+                      });
+                  }
+              });
+
+
+
+
+
+
+
+
+
+
+
