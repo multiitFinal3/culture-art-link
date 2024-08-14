@@ -357,6 +357,49 @@
                     $('#review').addClass("hide");
                     $('#festivalInfo').addClass("hide");
                     $('#recommendCardZone').addClass("hide");
+
+                    //#region 네이버 지도
+
+                    var festival = [[${festival}]];
+                    var latitude = festival.latitude;
+                    var longtitude = festival.longtitude;
+
+                    var position = new naver.maps.LatLng(latitude, longtitude);
+
+                    var map = new naver.maps.Map('map', {
+                        center: position,
+                        zoom: 15
+                    });
+
+                    var marker = new naver.maps.Marker({
+                        position: position,
+                        map: map
+                    });
+
+                    if(latitude==0 || longtitude==0){
+
+                        $('#mapDiv').html("");
+
+                    }
+
+                    var mapWidth = $('#map').width();
+                    console.log("mapWidth");
+                    console.log(mapWidth);
+
+                    function getMapSize() {
+                        var size = new naver.maps.Size(mapWidth, 400);
+
+                        return size;
+                    };
+
+
+                    map.setSize(getMapSize());
+
+
+                    //#endregion
+
+
+
                 })
 
 
@@ -1408,7 +1451,7 @@
                                 +  youtubeId  +
                                 `" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>`;
 
-                                findYoutubePageBtns(5);
+
 
                             }
 
@@ -1422,6 +1465,7 @@
                 }
 
                 findFestivalYoutube(1, formattedStart, festivalName);
+                findYoutubePageBtns(5);
 
                 /**
                 * 유투브 페이지 버튼 추가
@@ -1971,36 +2015,9 @@
 
                 <div id="mapDiv" class="hide" style="width: 100%">
 
-                    <div id="map"></div>
+                    <div id="map" style="width: 100%;height: 400px;position: relative;overflow: hidden;background: rgb(248, 249, 250);"></div>
                     <script th:inline="javascript">
 
-                        //#region 네이버 지도
-
-                            var festival = [[${festival}]];
-                            var latitude = festival.latitude;
-                            var longtitude = festival.longtitude;
-
-                            var position = new naver.maps.LatLng(latitude, longtitude);
-
-                            var map = new naver.maps.Map('map', {
-                                center: position,
-                                zoom: 15
-                            });
-
-                            var marker = new naver.maps.Marker({
-                                position: position,
-                                map: map
-                            });
-
-                            if(latitude==0 || longtitude==0){
-
-                                $('#mapDiv').html("");
-
-                            }
-
-
-
-                            //#endregion
 
 
                     </script>
