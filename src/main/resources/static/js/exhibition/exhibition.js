@@ -71,27 +71,6 @@ async function getExhibitions() {
     filterAndRenderExhibitions();
 }
 
-// async function getExhibitions() {
-//     const response = await axios.get("/exhibition/exhibition");
-//
-//     exhibitions = await Promise.all(response.data.map(async (item) => {
-//         const ratingResponse = await axios.get(`/exhibition/${item.id}/rating`);
-//         return {
-//             id: item.id,
-//             image: item.image,
-//             title: item.title,
-//             artist: item.artist,
-//             museum: item.museum,
-//             startDate: item.startDate ? new Date(item.startDate) : null,
-//             endDate: item.endDate ? new Date(item.endDate) : null,
-//             state: item.state,
-//             averageRating: ratingResponse.data.averageRating
-//         };
-//     }));
-//
-//     filterAndRenderExhibitions();
-// }
-
 // 날짜 기준으로 날짜 필터링
 function filterAndRenderExhibitions() {
     const today = new Date();
@@ -141,16 +120,6 @@ function renderExhibitions(exhibitionsToRender) {
     const $exhibitionList = $(".all-exhibitions-items");
     $exhibitionList.empty();
 
-    // $.each(exhibitionsToRender, function (index, exhibition) {
-    //     const $exhibitionItem = $("<div>").addClass("exhibition-item");
-    //     let interestedSrc = "https://kr.object.ncloudstorage.com/team3/common/upNo.png"
-    //     let notInterestedSrc = "https://kr.object.ncloudstorage.com/team3/common/downNo.png"
-    //     if(exhibition.state === "interested") {
-    //         interestedSrc = "https://kr.object.ncloudstorage.com/team3/common/upBlue.png"
-    //     } else if(exhibition.state === "not_interested") {
-    //         notInterestedSrc = "https://kr.object.ncloudstorage.com/team3/common/downRed.png"
-    //     }
-
     $.each(exhibitionsToRender, function (index, exhibition) {
         const $exhibitionItem = $("<div>").addClass("exhibition-item");
         let interestedSrc = "https://kr.object.ncloudstorage.com/team3/common/upNo.png";
@@ -162,6 +131,15 @@ function renderExhibitions(exhibitionsToRender) {
             notInterestedSrc = "https://kr.object.ncloudstorage.com/team3/common/downRed.png";
         }
 
+        function formatDate(date) {
+            if (!date) return '미정';
+            const d = new Date(date);
+            return `${d.getFullYear()}.${String(d.getMonth() + 1).padStart(2, '0')}.${String(d.getDate()).padStart(2, '0')}`;
+        }
+
+        const startDateFormatted = formatDate(exhibition.startDate);
+        const endDateFormatted = formatDate(exhibition.endDate);
+
         $exhibitionItem.html(`
             <div class="all-card exhibition-content" data-id="${exhibition.id}">
                 <img src="${exhibition.image}" alt="${exhibition.title}">
@@ -169,7 +147,7 @@ function renderExhibitions(exhibitionsToRender) {
             <div class="exhibition-info">
                 <h3 class="all-title">${exhibition.title}</h3>
                 <p class="all-location">${exhibition.museum}</p>
-                <p class="all-date">${exhibition.startDate ? exhibition.startDate.toISOString().split("T")[0] : "미정"} ~ ${exhibition.endDate ? exhibition.endDate.toISOString().split("T")[0] : "미정"}</p>
+                <p class="all-date">${startDateFormatted} - ${endDateFormatted}</p>
                 <p>★ <span class="average-rating">${Number(exhibition?.starsAVG).toFixed(1)}</span></p>
             </div>
             <div class="exhibition-actions">
@@ -181,9 +159,30 @@ function renderExhibitions(exhibitionsToRender) {
                 </button>
             </div>
         `);
+        // $exhibitionItem.html(`
+        //     <div class="all-card exhibition-content" data-id="${exhibition.id}">
+        //         <img src="${exhibition.image}" alt="${exhibition.title}">
+        //     </div>
+        //     <div class="exhibition-info exhibition-content" data-id="${exhibition.id}">
+        //         <h3 class="all-title">${exhibition.title}</h3>
+        //         <p class="all-location">${exhibition.museum}</p>
+        //         <p class="all-date">${startDateFormatted} - ${endDateFormatted}</p>
+        //         <p>★ <span class="average-rating">${Number(exhibition?.starsAVG).toFixed(1)}</span></p>
+        //     </div>
+        //     <div class="exhibition-actions">
+        //         <button class="exhibition-like interested-btn" data-id="${exhibition.id}">
+        //             <img src="${interestedSrc}" alt="">
+        //         </button>
+        //         <button class="exhibition-dislike interested-btn" data-id="${exhibition.id}">
+        //             <img src="${notInterestedSrc}" alt="">
+        //         </button>
+        //     </div>
+        // `);
 
         $exhibitionList.append($exhibitionItem);
     });
+
+
 
     // 클릭하면 상세페이지로 들어감
     $(".exhibition-content").click(function() {
@@ -209,44 +208,6 @@ function renderExhibitions(exhibitionsToRender) {
 }
 
 // 누른 전시를 찾아 관심을 업데이트 해주고 색깔 바로 변하게 설정
-// async function updateInterest(exhibitionId, state) {
-//     console.log('update interest: ',exhibitionId, state)
-//     try {
-//         const response = await axios.post('/exhibition/interested', {
-//             exhibitionId: Number(exhibitionId),
-//             state: state
-//         })
-//         let $downButton = $(`.exhibition-dislike[data-id="${exhibitionId}"] img`);
-//         let downSrc = $downButton.attr('src');
-//
-//         let $upButton = $(`.exhibition-like[data-id="${exhibitionId}"] img`);
-//         let upSrc = $upButton.attr('src');
-//         const baseUrl = 'https://kr.object.ncloudstorage.com/team3/common/';
-//         if (state === 'interested') {
-//             if (upSrc.includes('upBlue.png')) {
-//                 $upButton.attr('src', upSrc.replace('upBlue.png', 'upNo.png'));
-//             } else if (upSrc.includes('upNo.png')) {
-//                 $upButton.attr('src', upSrc.replace('upNo.png', 'upBlue.png'));
-//             }
-//             $downButton.attr('src', baseUrl + 'downNo.png');
-//         }else if(state ==='not_interested') {
-//             if (downSrc.includes('downRed.png')) {
-//                 $downButton.attr('src', downSrc.replace('downRed.png', 'downNo.png'));
-//             } else if (downSrc.includes('downNo.png')) {
-//                 $downButton.attr('src', downSrc.replace('downNo.png', 'downRed.png'));
-//             }
-//             $upButton.attr('src', baseUrl + 'upNo.png');
-//         }
-//
-//
-//
-//     }catch(e) {
-//         console.log('error : ',e)
-//         alert(`${state === 'interested'} ? "찜 설정 실패" : "관심 없음 설정 실패"`)
-//     }
-//
-// }
-
 async function updateInterest(exhibitionId, state) {
     console.log('update interest: ', exhibitionId, state);
     try {
@@ -254,7 +215,7 @@ async function updateInterest(exhibitionId, state) {
             exhibitionId: Number(exhibitionId),
             state: state
         });
-
+        // ?
         let $downButton = $(`.exhibition-dislike[data-id="${exhibitionId}"] img`);
         let $upButton = $(`.exhibition-like[data-id="${exhibitionId}"] img`);
         const baseUrl = 'https://kr.object.ncloudstorage.com/team3/common/';
@@ -264,10 +225,18 @@ async function updateInterest(exhibitionId, state) {
             $downButton.attr('src', baseUrl + 'downNo.png');
             $upButton.attr('src', baseUrl + 'upNo.png');
         } else if (state === 'interested') {
-            $upButton.attr('src', baseUrl + 'upBlue.png');
+            if ($upButton.attr('src').includes('upBlue.png')) {
+                $upButton.attr('src', baseUrl + 'upNo.png');
+            } else {
+                $upButton.attr('src', baseUrl + 'upBlue.png');
+            }
             $downButton.attr('src', baseUrl + 'downNo.png');
         } else if (state === 'not_interested') {
-            $downButton.attr('src', baseUrl + 'downRed.png');
+            if ($downButton.attr('src').includes('downRed.png')) {
+                $downButton.attr('src', baseUrl + 'downNo.png');
+            } else {
+                $downButton.attr('src', baseUrl + 'downRed.png');
+            }
             $upButton.attr('src', baseUrl + 'upNo.png');
         }
 
