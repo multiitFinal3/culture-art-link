@@ -209,14 +209,14 @@ a {
 
 
 
-        .empty-message {
+.empty-message {
     color: #999;
     text-align: center;
     margin-top: 3rem; /* 위쪽 여백을 3줄로 설정 */
 }
 
 
- .badge-container {
+.badge-container {
     position: absolute;
     bottom: 10px;
     right: 10px;
@@ -243,50 +243,6 @@ a {
     height: 20px;
 }
 
-
-
-<!--.badge-container {-->
-<!--    position: absolute;-->
-<!--    bottom: 10px;-->
-<!--    right: 10px;-->
-<!--    display: none; /* 기본적으로 숨김 */-->
-<!--    gap: 5px;-->
-<!--}-->
-
-<!--.all-card:hover .badge-container {-->
-<!--    display: flex; /* 호버 시 표시 */-->
-<!--}-->
-
-<!--.like-button,-->
-<!--.dislike-button {-->
-<!--    width: 30px;-->
-<!--    height: 30px;-->
-<!--    background-color: transparent;-->
-<!--    border: none;-->
-<!--    cursor: pointer;-->
-<!--    background-size: contain;-->
-<!--    background-repeat: no-repeat;-->
-<!--    background-position: center;-->
-<!--}-->
-
-
-
-
-<!--.like-button {-->
-<!--    background-image: url('https://kr.object.ncloudstorage.com/team3/common/upNo.png');-->
-<!--}-->
-
-<!--.like-button.active {-->
-<!--    background-image: url('https://kr.object.ncloudstorage.com/team3/common/upBlue.png');-->
-<!--}-->
-
-<!--.dislike-button {-->
-<!--    background-image: url('https://kr.object.ncloudstorage.com/team3/common/downNo.png');-->
-<!--}-->
-
-<!--.dislike-button.active {-->
-<!--    background-image: url('https://kr.object.ncloudstorage.com/team3/common/downRed.png');-->
-<!--}-->
 
 
 
@@ -377,11 +333,6 @@ a {
 
                         <div class="all-card" th:data-cultural-property-id="${property.id}">
                             <img th:src="${property.mainImgUrl}" th:alt="${property.culturalPropertiesName}">
-
-<!--                            <div class="badge-container">-->
-<!--                                <button class="like-button"></button>-->
-<!--                                <button class="dislike-button"></button>-->
-<!--                            </div>-->
 
                             <div class="badge-container">
                                 <button class="interest-button like-button">

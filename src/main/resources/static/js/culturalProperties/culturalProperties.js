@@ -21,7 +21,6 @@ $(document).ready(function() {
       }
 
 
-
     function renderCulturalProperties(properties) {
         const gallerySection = $('#gallery-section');
         gallerySection.empty();
@@ -183,20 +182,20 @@ $(document).ready(function() {
         });
     }
 
-    // 페이지 로드 시 사용자의 관심 상태 로드
-    function loadUserInterest() {
+    function loadUserInterest(userId) {
         $.ajax({
-            url: '/cultural-properties/getUserInterest',
+            url: '/cultural-properties/getInterest',
             type: 'GET',
+            data: { userId: userId },
             success: function(interests) {
                 interests.forEach(function(interest) {
                     const card = $(`.all-card[data-cultural-property-id="${interest.culturalPropertiesId}"]`);
                     if (interest.interestType === 'LIKE') {
                         card.find('.like-button').addClass('active');
-                        card.find('.like-button img').attr('src', 'https://kr.object.ncloudstorage.com/team3/common/upBlue.png'); // 활성화된 이미지
+                        card.find('.like-button img').attr('src', 'https://kr.object.ncloudstorage.com/team3/common/upBlue.png');
                     } else if (interest.interestType === 'DISLIKE') {
                         card.find('.dislike-button').addClass('active');
-                        card.find('.dislike-button img').attr('src', 'https://kr.object.ncloudstorage.com/team3/common/downRed.png'); // 활성화된 이미지
+                        card.find('.dislike-button img').attr('src', 'https://kr.object.ncloudstorage.com/team3/common/downRed.png');
                     }
                 });
             },
@@ -211,53 +210,35 @@ $(document).ready(function() {
 
 
 
+    function getUserId() {
+        return new Promise((resolve, reject) => {
+            $.ajax({
+                url: '/cultural-properties/getUserId',
+                type: 'GET',
+                success: function(response) {
+                  const userId = response.userId;
+                  console.log('User ID:', userId);
+                  resolve(userId);
+                },
+                error: function(xhr, status, error) {
+                  console.error('사용자 ID 로드 실패:', status, error);
+                  reject(error);
+                }
+            });
+        });
+    }
 
 
 
+    // 페이지가 로드될 때 사용자 ID 요청 및 찜 상태 로드
+    $(document).ready(function() {
+        getUserId().then(userId => {
+            loadUserInterest(userId); // 사용자 ID를 이용해 찜 상태 로드
+        }).catch(error => {
+            console.error('사용자 ID 요청 중 오류 발생:', error);
+        });
+    });
 
-
-      function getUserId() {
-          return new Promise((resolve, reject) => {
-              $.ajax({
-                  url: '/cultural-properties/getUserId',
-                  type: 'GET',
-                  success: function(response) {
-                      const userId = response.userId;
-                      console.log('User ID:', userId);
-                      resolve(userId);
-                  },
-                  error: function(xhr, status, error) {
-                      console.error('사용자 ID 로드 실패:', status, error);
-                      reject(error);
-                  }
-              });
-          });
-      }
-
-//      function loadUserInterest(userId) {
-//          $.ajax({
-//              url: '/cultural-properties/getInterest',
-//              type: 'GET',
-//              data: { userId: userId },
-//              success: function(data) {
-//                  data.forEach(function(item) {
-//                      const card = $(`.card[data-cultural-property-id="${item.culturalPropertiesId}"]`);
-//                      if (card.length) {
-//                          if (item.interestType === 'LIKE') {
-//                              card.css('background-color', '#ffe5ea');
-//                              card.find('.badge.bg-primary').data('liked', true);
-//                          } else if (item.interestType === 'DISLIKE') {
-//                              card.css('background-color', '#dfdfdf');
-//                              card.find('.badge.bg-secondary').data('disliked', true);
-//                          }
-//                      }
-//                  });
-//              },
-//              error: function(xhr, status, error) {
-//                  console.error('찜 정보 로드 실패:', status, error);
-//              }
-//          });
-//      }
 
 
 
@@ -294,127 +275,127 @@ $(document).ready(function() {
         });
     });
 
-      // 초기화 버튼 클릭 이벤트 핸들러
-      $('#resetButton').click(function(e) {
-          e.preventDefault();
-          $('#searchForm')[0].reset();
-          loadAllCulturalProperties();
-      });
+    // 초기화 버튼 클릭 이벤트 핸들러
+    $('#resetButton').click(function(e) {
+        e.preventDefault();
+        $('#searchForm')[0].reset();
+        loadAllCulturalProperties();
+    });
 
 
 
-      const genreItems = document.querySelectorAll('.genre-item');
-      const tabPanes = document.querySelectorAll('.tab-pane');
+    const genreItems = document.querySelectorAll('.genre-item');
+    const tabPanes = document.querySelectorAll('.tab-pane');
 
-      genreItems.forEach(item => {
-          item.addEventListener('click', function() {
-              const target = this.getAttribute('data-target');
+    genreItems.forEach(item => {
+        item.addEventListener('click', function() {
+            const target = this.getAttribute('data-target');
 
-              genreItems.forEach(item => item.classList.remove('active'));
-              this.classList.add('active');
+            genreItems.forEach(item => item.classList.remove('active'));
+            this.classList.add('active');
 
-              tabPanes.forEach(pane => pane.classList.remove('show', 'active'));
-              document.getElementById(target).classList.add('show', 'active');
+            tabPanes.forEach(pane => pane.classList.remove('show', 'active'));
+            document.getElementById(target).classList.add('show', 'active');
 
-              if (target === 'news') {
-                  loadNewsArticles();
-              } else if (target === 'video') {
-                  loadVideos();
-              }
-          });
-      });
+            if (target === 'news') {
+              loadNewsArticles();
+            } else if (target === 'video') {
+              loadVideos();
+            }
+        });
+    });
 
 
 
-      // 뉴스 로드 함수
-      function loadNewsArticles() {
-          $.ajax({
-              url: '/cultural-properties/news',
-              method: 'GET',
-              success: function(data) {
-                  console.log('뉴스 기사를 성공적으로 수신:', data);
-                  renderNewsArticles(data);
-              },
-              error: function(xhr, status, error) {
-                  console.error('AJAX 요청 실패:', status, error);
-              }
-          });
-      }
+    // 뉴스 로드 함수
+    function loadNewsArticles() {
+        $.ajax({
+            url: '/cultural-properties/news',
+            method: 'GET',
+            success: function(data) {
+              console.log('뉴스 기사를 성공적으로 수신:', data);
+              renderNewsArticles(data);
+            },
+            error: function(xhr, status, error) {
+              console.error('AJAX 요청 실패:', status, error);
+            }
+        });
+    }
 
-      // 뉴스 렌더링 함수
-      function renderNewsArticles(articles) {
-          const newsList = $('#news-list');
-          newsList.empty();
+    // 뉴스 렌더링 함수
+    function renderNewsArticles(articles) {
+        const newsList = $('#news-list');
+        newsList.empty();
 
-          if (!Array.isArray(articles) || articles.length === 0) {
-              newsList.append('<li class="list-group-item">등록된 문화재 관련 뉴스가 없습니다.</li>');
-              return;
-          }
+        if (!Array.isArray(articles) || articles.length === 0) {
+            newsList.append('<li class="list-group-item">등록된 문화재 관련 뉴스가 없습니다.</li>');
+            return;
+        }
 
-          articles.forEach(function(article) {
-              const listItem = $('<li>').addClass('list-group-item');
-              if (article.imgUrl) {
-                  const image = $('<img>').attr('src', article.imgUrl).addClass('img-fluid mb-2');
-                  listItem.append(image);
-              }
-              const title = $('<h5>').addClass('mb-1').text(article.title);
-              const content = $('<p>').addClass('mb-1').text(article.content);
-              const date = $('<small>').addClass('text-muted').text(article.date);
-              const link = $('<a>').attr('href', article.link).addClass('btn btn-primary btn-sm mt-2').text('자세히 보기').css('margin-left', '2rem');
+        articles.forEach(function(article) {
+            const listItem = $('<li>').addClass('list-group-item');
+            if (article.imgUrl) {
+              const image = $('<img>').attr('src', article.imgUrl).addClass('img-fluid mb-2');
+              listItem.append(image);
+            }
+            const title = $('<h5>').addClass('mb-1').text(article.title);
+            const content = $('<p>').addClass('mb-1').text(article.content);
+            const date = $('<small>').addClass('text-muted').text(article.date);
+            //              const link = $('<a>').attr('href', article.link).addClass('btn btn-primary btn-sm mt-2').text('자세히 보기').css('margin-left', '2rem');
 
-              listItem.append(title, content, date, link);
-              newsList.append(listItem);
-          });
-      }
+            const link = $('<a>').attr('href', article.link).addClass('btn btn-outline-success').text('자세히 보기').css('margin-left', '2rem');
 
-      // 비디오 로드 함수
-      function loadVideos() {
-          const query = "국가유산";
-          $.ajax({
-              url: '/cultural-properties/videos?query=' + encodeURIComponent(query),
-              type: 'POST',
-              contentType: 'application/x-www-form-urlencoded',
-              success: function(videos) {
-                  console.log('받은 비디오 데이터:', videos);
-                  renderVideos(videos);
-              },
-              error: function(xhr, status, error) {
-                  console.error('비디오 로드 실패:', status, error);
-              }
-          });
-      }
 
-      // 비디오 렌더링 함수
-      function renderVideos(videos) {
-          const videoList = $('#video-list');
-          videoList.empty();
+            listItem.append(title, content, date, link);
+            newsList.append(listItem);
+        });
+    }
 
-          if (!Array.isArray(videos) || videos.length === 0) {
-              videoList.append('<br><p>등록된 영상이 없습니다.</p>');
-              return;
-          }
+    // 비디오 로드 함수
+    function loadVideos() {
+        const query = "국가유산";
+        $.ajax({
+            url: '/cultural-properties/videos?query=' + encodeURIComponent(query),
+            type: 'POST',
+            contentType: 'application/x-www-form-urlencoded',
+            success: function(videos) {
+              console.log('받은 비디오 데이터:', videos);
+              renderVideos(videos);
+            },
+            error: function(xhr, status, error) {
+              console.error('비디오 로드 실패:', status, error);
+            }
+        });
+    }
 
-          videos.forEach(function(video) {
-              const colDiv = $('<div>').addClass('col-md-4 mb-4');
-              const cardDiv = $('<div>').addClass('card');
-              const cardBody = $('<div>').addClass('card-body');
-              const title = $('<h5>').addClass('card-title').html(video.title);
-              const videoId = video.link.split('v=')[1];
-              const iframe = $('<iframe>')
-                  .attr('src', 'https://www.youtube.com/embed/' + videoId)
-                  .attr('class', 'embed-responsive-item')
-                  .attr('allowfullscreen', true)
-                  .css('width', '100%')
-                  .css('height', '250px');
+    // 비디오 렌더링 함수
+    function renderVideos(videos) {
+        const videoList = $('#video-list');
+        videoList.empty();
 
-              cardBody.append(title, iframe);
-              cardDiv.append(cardBody);
-              colDiv.append(cardDiv);
-              videoList.append(colDiv);
-          });
-      }
+        if (!Array.isArray(videos) || videos.length === 0) {
+            videoList.append('<br><p>등록된 영상이 없습니다.</p>');
+            return;
+        }
 
-//      // 페이지 로드 시 뉴스와 비디오 로드
-//      loadNewsArticles();
-//      loadVideos();
-  });
+        videos.forEach(function(video) {
+            const colDiv = $('<div>').addClass('col-md-4 mb-4');
+            const cardDiv = $('<div>').addClass('card');
+            const cardBody = $('<div>').addClass('card-body');
+            const title = $('<h5>').addClass('card-title').html(video.title);
+            const videoId = video.link.split('v=')[1];
+            const iframe = $('<iframe>')
+                .attr('src', 'https://www.youtube.com/embed/' + videoId)
+                .attr('class', 'embed-responsive-item')
+                .attr('allowfullscreen', true)
+                .css('width', '100%')
+                .css('height', '250px');
+
+            cardBody.append(title, iframe);
+            cardDiv.append(cardBody);
+            colDiv.append(cardDiv);
+            videoList.append(colDiv);
+        });
+    }
+
+});

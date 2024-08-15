@@ -5,6 +5,7 @@ $(document).ready(function() {
     const itemsPerPage = 5;
     let currentIndex = 0;
 
+
     function showPage(index) {
         items.hide();
         items.slice(index, index + itemsPerPage).show();
@@ -29,6 +30,7 @@ $(document).ready(function() {
     function loadRecentReviews() {
         const urlParts = window.location.pathname.split('/');
         const culturalPropertiesId = urlParts[urlParts.length - 1];
+
 
         fetch(`/cultural-properties/detail/${culturalPropertiesId}/review`)
             .then(response => {
@@ -81,55 +83,202 @@ $(document).ready(function() {
 
     loadRecentReviews();
 
-    $('#likeButton').click(function() {
-        const culturalPropertiesId = window.location.pathname.split('/').pop();
-        const isLiked = $(this).data('liked');
-        updateInterest(culturalPropertiesId, isLiked ? 'unlike' : 'like');
-    });
 
-    $('#dislikeButton').click(function() {
-        const culturalPropertiesId = window.location.pathname.split('/').pop();
-        const isDisliked = $(this).data('disliked');
-        updateInterest(culturalPropertiesId, isDisliked ? 'undislike' : 'dislike');
-    });
+    function initializeInterestButtons() {
+        const urlParts = window.location.pathname.split('/');
+            const culturalPropertiesId = urlParts[urlParts.length - 1]; // 마지막 부분을 ID로 사용
+        console.log("culturalPropertiesId:"+culturalPropertiesId);
 
-    function updateInterest(culturalPropertiesId, action) {
+            const likeButton = $('.like-button');
+            const dislikeButton = $('.dislike-button');
+
+            likeButton.click(function(e) {
+                e.preventDefault();
+                handleInterestClick(culturalPropertiesId, 'LIKE', $(this), dislikeButton);
+            });
+
+            dislikeButton.click(function(e) {
+                e.preventDefault();
+                handleInterestClick(culturalPropertiesId, 'DISLIKE', $(this), likeButton);
+            });
+
+        getUserId().then(userId => {
+            loadUserInterest(userId);
+//            loadUserInterest(userId, culturalPropertiesId);
+        }).catch(error => {
+            console.error('사용자 ID 요청 중 오류 발생:', error);
+        });
+    }
+
+    function handleInterestClick(culturalPropertiesId, interestType, clickedButton, otherButton) {
+        const isActive = clickedButton.hasClass('active');
+
+        if (isActive) {
+            removeInterest(culturalPropertiesId, interestType, clickedButton);
+        } else {
+            if (interestType === 'LIKE') {
+                addLike(culturalPropertiesId);
+            } else {
+                addDislike(culturalPropertiesId);
+            }
+        }
+
+        // 다른 버튼의 상태 초기화
+        otherButton.removeClass('active');
+        updateButtonImage(otherButton, false);
+    }
+
+    function addLike(culturalPropertiesId) {
         $.ajax({
-            url: `/cultural-properties/updateInterest`,
+            url: '/cultural-properties/addLike',
             type: 'POST',
-            data: { culturalPropertiesId: culturalPropertiesId, action: action },
+            data: { culturalPropertiesId: culturalPropertiesId },
             success: function(response) {
-                if (response.success) {
-                    updateButtonState(action);
-                }
+                console.log('찜 추가 성공:', response);
+                alert('찜이 추가되었습니다.');
+                updateButtonUI('.like-button', true);
+                updateButtonUI('.dislike-button', false);
             },
             error: function(xhr, status, error) {
-                console.error('관심 업데이트 실패:', error);
+                console.error('찜 추가 실패:', status, error);
+                alert('찜 추가 실패: ' + error);
             }
         });
     }
 
-    function updateButtonState(action) {
-        const likeButton = $('#likeButton');
-        const dislikeButton = $('#dislikeButton');
-
-        switch(action) {
-            case 'like':
-                likeButton.data('liked', true).addClass('active');
-                dislikeButton.data('disliked', false).removeClass('active');
-                break;
-            case 'unlike':
-                likeButton.data('liked', false).removeClass('active');
-                break;
-            case 'dislike':
-                dislikeButton.data('disliked', true).addClass('active');
-                likeButton.data('liked', false).removeClass('active');
-                break;
-            case 'undislike':
-                dislikeButton.data('disliked', false).removeClass('active');
-                break;
-        }
+    function addDislike(culturalPropertiesId) {
+        $.ajax({
+            url: '/cultural-properties/addDislike',
+            type: 'POST',
+            data: { culturalPropertiesId: culturalPropertiesId },
+            success: function(response) {
+                console.log('관심없음 추가 성공:', response);
+                alert('관심없음이 추가되었습니다.');
+                updateButtonUI('.dislike-button', true);
+                updateButtonUI('.like-button', false);
+            },
+            error: function(xhr, status, error) {
+                console.error('관심없음 추가 실패:', status, error);
+                alert('관심없음 추가 실패: ' + error);
+            }
+        });
     }
+
+    function removeInterest(culturalPropertiesId, interestType, clickedButton) {
+        $.ajax({
+            url: '/cultural-properties/removeInterest',
+            type: 'POST',
+            data: { culturalPropertiesId: culturalPropertiesId },
+            success: function(response) {
+                console.log(`${interestType} 제거 성공:`, response);
+                alert(`${interestType === 'LIKE' ? '찜이 제거되었습니다.' : '관심없음이 제거되었습니다.'}`);
+                updateButtonUI(clickedButton, false);
+            },
+            error: function(xhr, status, error) {
+                console.error(`${interestType} 제거 실패:`, status, error);
+                alert(`${interestType} 제거 실패: ` + error);
+            }
+        });
+    }
+
+    function updateButtonUI(button, isActive) {
+        const $button = $(button);
+        if (isActive) {
+            $button.addClass('active');
+        } else {
+            $button.removeClass('active');
+        }
+        updateButtonImage($button, isActive);
+    }
+
+    function updateButtonImage($button, isActive) {
+        const isLikeButton = $button.hasClass('like-button');
+        const imagePath = isActive
+            ? (isLikeButton ? 'https://kr.object.ncloudstorage.com/team3/common/upBlue.png' : 'https://kr.object.ncloudstorage.com/team3/common/downRed.png')
+            : (isLikeButton ? 'https://kr.object.ncloudstorage.com/team3/common/upNo.png' : 'https://kr.object.ncloudstorage.com/team3/common/downNo.png');
+        $button.find('img').attr('src', imagePath);
+    }
+
+
+    function getUserId() {
+        return new Promise((resolve, reject) => {
+            $.ajax({
+                url: '/cultural-properties/getUserId',
+                type: 'GET',
+                success: function(response) {
+                    const userId = response.userId;
+                    console.log('User ID:', userId);
+                    resolve(userId);
+                },
+                error: function(xhr, status, error) {
+                    console.error('사용자 ID 로드 실패:', status, error);
+                    reject(error);
+                }
+            });
+        });
+    }
+
+
+    function getUserId() {
+        return new Promise((resolve, reject) => {
+            $.ajax({
+                url: `/cultural-properties/getUserId`,
+                type: 'GET',
+                success: function(response) {
+                    var userId = response.userId; // 사용자 ID 추출
+                    userId1 = response.userId;
+                    console.log('User ID:', userId);
+                    resolve(userId); // ID를 반환
+                },
+                error: function(xhr, status, error) {
+                    console.error('사용자 ID 로드 실패:', status, error);
+                    console.error('서버 응답:', xhr.responseText);
+                    reject(error); // 에러 발생 시 reject
+                }
+            });
+        });
+    }
+
+    $(document).ready(function() {
+        getUserId().then(userId => {
+            loadUserInterest(userId); // 사용자 ID를 이용해 찜 상태 로드
+        }).catch(error => {
+            console.error('사용자 ID 요청 중 오류 발생:', error);
+        });
+    });
+
+
+    function loadUserInterest(userId) {
+        $.ajax({
+            url: '/cultural-properties/getInterest',
+            type: 'GET',
+            data: { userId: userId },
+            success: function(interests) {
+                // 모든 버튼 비활성화
+                updateButtonUI('.like-button', false);
+                updateButtonUI('.dislike-button', false);
+
+                // DB에서 가져온 관심 정보에 따라 버튼 활성화
+                interests.forEach(function(interest) {
+                    if (interest.culturalPropertiesId == culturalPropertiesId) {
+                        if (interest.interestType === 'LIKE') {
+                            updateButtonUI('.like-button', true);
+                        } else if (interest.interestType === 'DISLIKE') {
+                            updateButtonUI('.dislike-button', true);
+                        }
+                    }
+                });
+            },
+            error: function(xhr, status, error) {
+                console.error('Failed to load user interests:', error);
+            }
+        });
+    }
+
+    loadUserInterest();
+    initializeInterestButtons();
+
+
 
 
 
@@ -176,11 +325,20 @@ $(document).ready(function() {
     const reviewButton = document.getElementById('showReviewsBtn');
     const detailInfo = document.getElementById('detailInfo');
     const mapInfo = document.getElementById('mapInfo');
+    const reviewInfo = document.getElementById('reviewInfo');
 
     detailButton.addEventListener('click', function() {
         detailInfo.style.display = 'block';
         mapInfo.style.display = 'none';
         reviewInfo.style.display = 'none';
+
+        // 클릭된 버튼 배경색 변경
+        $(this).css('background-color', '#7f7f7f');
+
+        // 다른 버튼 배경색 원래대로 복원
+        $(mapButton).css('background-color', ''); // 기본 색상으로 복원
+        $(reviewButton).css('background-color', ''); // 기본 색상으로 복원
+
     });
 
     mapButton.addEventListener('click', function() {
@@ -188,12 +346,28 @@ $(document).ready(function() {
         mapInfo.style.display = 'block';
         reviewInfo.style.display = 'none';
         initMap();
+
+        // 클릭된 버튼 배경색 변경
+        $(this).css('background-color', '#7f7f7f');
+
+        // 다른 버튼 배경색 원래대로 복원
+        $(detailButton).css('background-color', ''); // 기본 색상으로 복원
+        $(reviewButton).css('background-color', ''); // 기본 색상으로 복원
+
     });
 
     reviewButton.addEventListener('click', function() {
         detailInfo.style.display = 'none';
         mapInfo.style.display = 'none';
         reviewInfo.style.display = 'block';
+
+        // 클릭된 버튼 배경색 변경
+        $(this).css('background-color', '#7f7f7f');
+
+        // 다른 버튼 배경색 원래대로 복원
+        $(detailButton).css('background-color', ''); // 기본 색상으로 복원
+        $(mapButton).css('background-color', ''); // 기본 색상으로 복원
+
     });
 
 
@@ -284,179 +458,179 @@ $(document).ready(function() {
 
 
 
-const imageButton = document.getElementById('imageButton');
-const videoButton = document.getElementById('videoButton');
-const narrationButton = document.getElementById('narrationButton');
+    const imageButton = document.getElementById('imageButton');
+    const videoButton = document.getElementById('videoButton');
+    const narrationButton = document.getElementById('narrationButton');
 
 
 
-function showImage(imgUrls, imgDescs) {
-    const mediaContent = document.getElementById('mediaContent');
-    mediaContent.innerHTML = '';
-    mediaContent.style.display = 'flex';
-    mediaContent.style.flexDirection = 'column';
-    mediaContent.style.alignItems = 'center';
+    function showImage(imgUrls, imgDescs) {
+        const mediaContent = document.getElementById('mediaContent');
+        mediaContent.innerHTML = '';
+        mediaContent.style.display = 'flex';
+        mediaContent.style.flexDirection = 'column';
+        mediaContent.style.alignItems = 'center';
 
-    imgUrls.forEach((imgUrl, index) => {
-        const imgContainer = document.createElement('div');
-        imgContainer.style.position = 'relative';
-        imgContainer.style.marginBottom = '20px';
-        imgContainer.style.maxWidth = '100%';
+        imgUrls.forEach((imgUrl, index) => {
+            const imgContainer = document.createElement('div');
+            imgContainer.style.position = 'relative';
+            imgContainer.style.marginBottom = '20px';
+            imgContainer.style.maxWidth = '100%';
 
-        const imgElement = document.createElement('img');
-        imgElement.src = imgUrl;
-        imgElement.style.width = '100%';
-        imgElement.style.maxHeight = '500px';
-        imgElement.style.objectFit = 'contain';
+            const imgElement = document.createElement('img');
+            imgElement.src = imgUrl;
+            imgElement.style.width = '100%';
+            imgElement.style.maxHeight = '500px';
+            imgElement.style.objectFit = 'contain';
 
-        imgContainer.appendChild(imgElement);
+            imgContainer.appendChild(imgElement);
 
-        if (index < imgDescs.length) {
-            const descElement = document.createElement('div');
-            descElement.textContent = imgDescs[index];
-            descElement.style.position = 'absolute';
-            descElement.style.top = '10px';
-            descElement.style.left = '10px';
-            descElement.style.backgroundColor = 'rgba(0, 0, 0, 0.7)';
-            descElement.style.color = 'white';
-            descElement.style.padding = '5px 10px';
-            descElement.style.borderRadius = '5px';
-            descElement.style.fontSize = '14px';
-            imgContainer.appendChild(descElement);
-        }
+            if (index < imgDescs.length) {
+                const descElement = document.createElement('div');
+                descElement.textContent = imgDescs[index];
+                descElement.style.position = 'absolute';
+                descElement.style.top = '10px';
+                descElement.style.left = '10px';
+                descElement.style.backgroundColor = 'rgba(0, 0, 0, 0.7)';
+                descElement.style.color = 'white';
+                descElement.style.padding = '5px 10px';
+                descElement.style.borderRadius = '5px';
+                descElement.style.fontSize = '14px';
+                imgContainer.appendChild(descElement);
+            }
 
-        mediaContent.appendChild(imgContainer);
+            mediaContent.appendChild(imgContainer);
 
-        imgElement.onerror = function() {
-            console.error('Image failed to load:', imgUrl);
-            imgContainer.style.display = 'none';
-        };
-    });
+            imgElement.onerror = function() {
+                console.error('Image failed to load:', imgUrl);
+                imgContainer.style.display = 'none';
+            };
+        });
 
-    const mediaModal = new bootstrap.Modal(document.getElementById('mediaModal'));
-    mediaModal.show();
-}
-
-// 이미지 버튼 이벤트 리스너
-if (imageButton) {
-    imageButton.addEventListener('click', function() {
-        const imgUrls = this.dataset.images.split(',').map(url => url.trim());
-        const imgDescs = this.dataset.descriptions.split(',').map(desc => desc.trim());
-        showImage(imgUrls, imgDescs);
-    });
-}
-
-
-function showVideo(videoUrls) {
-    const mediaContent = document.getElementById('mediaContent');
-    mediaContent.innerHTML = '';
-    mediaContent.style.display = 'flex';
-    mediaContent.style.flexDirection = 'column';
-    mediaContent.style.alignItems = 'center';
-
-    videoUrls.forEach((videoUrl, index) => {
-        if (videoUrl && videoUrl.trim() !== '') {
-            const videoContainer = document.createElement('div');
-            videoContainer.style.width = '100%';
-            videoContainer.style.marginBottom = '20px';
-
-            const videoElement = document.createElement('video');
-            videoElement.src = videoUrl;
-            videoElement.controls = true;
-            videoElement.style.width = '100%';
-            videoElement.style.maxHeight = '500px';
-
-            const videoTitle = document.createElement('h4');
-            videoTitle.textContent = `영상 ${index + 1}`;
-            videoTitle.style.marginBottom = '10px';
-
-            videoContainer.appendChild(videoTitle);
-            videoContainer.appendChild(videoElement);
-            mediaContent.appendChild(videoContainer);
-        }
-    });
-
-    if (mediaContent.children.length === 0) {
-        mediaContent.innerHTML = '<p>표시할 수 있는 비디오가 없습니다.</p>';
+        const mediaModal = new bootstrap.Modal(document.getElementById('mediaModal'));
+        mediaModal.show();
     }
 
-    const mediaModal = new bootstrap.Modal(document.getElementById('mediaModal'));
-    mediaModal.show();
-
-    // 모달이 닫힐 때 비디오 중지
-    document.getElementById('mediaModal').addEventListener('hidden.bs.modal', function () {
-        const videos = mediaContent.querySelectorAll('video');
-        videos.forEach(video => {
-            video.pause();
-            video.currentTime = 0;
+    // 이미지 버튼 이벤트 리스너
+    if (imageButton) {
+        imageButton.addEventListener('click', function() {
+            const imgUrls = this.dataset.images.split(',').map(url => url.trim());
+            const imgDescs = this.dataset.descriptions.split(',').map(desc => desc.trim());
+            showImage(imgUrls, imgDescs);
         });
-    });
-}
-
-// 비디오 버튼 이벤트 리스너
-if (videoButton) {
-    videoButton.addEventListener('click', function() {
-        const videoUrls = this.dataset.video.split(',').map(url => url.trim());
-        showVideo(videoUrls);
-        console.log('Video URLs:', videoUrls); // 디버깅용 로그
-    });
-}
-
-
-function showNarration(narrationUrls) {
-    const mediaContent = document.getElementById('mediaContent');
-    mediaContent.innerHTML = '';
-    mediaContent.style.padding = '20px 0';
-
-    const languages = ['한국어', '영어', '일본어', '중국어'];
-
-    narrationUrls.forEach((url, index) => {
-        if (url && url.trim() !== '') {
-            const languageDiv = document.createElement('div');
-            languageDiv.style.display = 'flex';
-            languageDiv.style.alignItems = 'center';
-            languageDiv.style.marginBottom = '20px';
-
-            const languageLabel = document.createElement('span');
-            languageLabel.textContent = languages[index] + ': ';
-            languageLabel.style.width = '60px';
-            languageLabel.style.marginRight = '10px';
-            languageDiv.appendChild(languageLabel);
-
-            const audioElement = document.createElement('audio');
-            audioElement.src = url;
-            audioElement.controls = true;
-            audioElement.style.flex = '1';
-            languageDiv.appendChild(audioElement);
-
-            mediaContent.appendChild(languageDiv);
-        }
-    });
-
-    if (mediaContent.children.length === 0) {
-        mediaContent.innerHTML = '<p>사용 가능한 나레이션이 없습니다.</p>';
     }
 
-    const mediaModal = new bootstrap.Modal(document.getElementById('mediaModal'));
-    mediaModal.show();
 
-    // 모달이 닫힐 때 오디오 중지
-    document.getElementById('mediaModal').addEventListener('hidden.bs.modal', function () {
-        const audioElements = mediaContent.querySelectorAll('audio');
-        audioElements.forEach(audio => {
-            audio.pause();
-            audio.currentTime = 0;
+    function showVideo(videoUrls) {
+        const mediaContent = document.getElementById('mediaContent');
+        mediaContent.innerHTML = '';
+        mediaContent.style.display = 'flex';
+        mediaContent.style.flexDirection = 'column';
+        mediaContent.style.alignItems = 'center';
+
+        videoUrls.forEach((videoUrl, index) => {
+            if (videoUrl && videoUrl.trim() !== '') {
+                const videoContainer = document.createElement('div');
+                videoContainer.style.width = '100%';
+                videoContainer.style.marginBottom = '20px';
+
+                const videoElement = document.createElement('video');
+                videoElement.src = videoUrl;
+                videoElement.controls = true;
+                videoElement.style.width = '100%';
+                videoElement.style.maxHeight = '500px';
+
+                const videoTitle = document.createElement('h4');
+                videoTitle.textContent = `영상 ${index + 1}`;
+                videoTitle.style.marginBottom = '10px';
+
+                videoContainer.appendChild(videoTitle);
+                videoContainer.appendChild(videoElement);
+                mediaContent.appendChild(videoContainer);
+            }
         });
-    });
-}
 
-// 나레이션 버튼 이벤트 리스너
-if (narrationButton) {
-    narrationButton.addEventListener('click', function() {
-        const narrationUrls = this.dataset.narration.split(',');
-        showNarration(narrationUrls);
-    });
-}
+        if (mediaContent.children.length === 0) {
+            mediaContent.innerHTML = '<p>표시할 수 있는 비디오가 없습니다.</p>';
+        }
+
+        const mediaModal = new bootstrap.Modal(document.getElementById('mediaModal'));
+        mediaModal.show();
+
+        // 모달이 닫힐 때 비디오 중지
+        document.getElementById('mediaModal').addEventListener('hidden.bs.modal', function () {
+            const videos = mediaContent.querySelectorAll('video');
+            videos.forEach(video => {
+                video.pause();
+                video.currentTime = 0;
+            });
+        });
+    }
+
+    // 비디오 버튼 이벤트 리스너
+    if (videoButton) {
+        videoButton.addEventListener('click', function() {
+            const videoUrls = this.dataset.video.split(',').map(url => url.trim());
+            showVideo(videoUrls);
+            console.log('Video URLs:', videoUrls); // 디버깅용 로그
+        });
+    }
+
+
+    function showNarration(narrationUrls) {
+        const mediaContent = document.getElementById('mediaContent');
+        mediaContent.innerHTML = '';
+        mediaContent.style.padding = '20px 0';
+
+        const languages = ['한국어', '영어', '일본어', '중국어'];
+
+        narrationUrls.forEach((url, index) => {
+            if (url && url.trim() !== '') {
+                const languageDiv = document.createElement('div');
+                languageDiv.style.display = 'flex';
+                languageDiv.style.alignItems = 'center';
+                languageDiv.style.marginBottom = '20px';
+
+                const languageLabel = document.createElement('span');
+                languageLabel.textContent = languages[index] + ': ';
+                languageLabel.style.width = '60px';
+                languageLabel.style.marginRight = '10px';
+                languageDiv.appendChild(languageLabel);
+
+                const audioElement = document.createElement('audio');
+                audioElement.src = url;
+                audioElement.controls = true;
+                audioElement.style.flex = '1';
+                languageDiv.appendChild(audioElement);
+
+                mediaContent.appendChild(languageDiv);
+            }
+        });
+
+        if (mediaContent.children.length === 0) {
+            mediaContent.innerHTML = '<p>사용 가능한 나레이션이 없습니다.</p>';
+        }
+
+        const mediaModal = new bootstrap.Modal(document.getElementById('mediaModal'));
+        mediaModal.show();
+
+        // 모달이 닫힐 때 오디오 중지
+        document.getElementById('mediaModal').addEventListener('hidden.bs.modal', function () {
+            const audioElements = mediaContent.querySelectorAll('audio');
+            audioElements.forEach(audio => {
+                audio.pause();
+                audio.currentTime = 0;
+            });
+        });
+    }
+
+    // 나레이션 버튼 이벤트 리스너
+    if (narrationButton) {
+        narrationButton.addEventListener('click', function() {
+            const narrationUrls = this.dataset.narration.split(',');
+            showNarration(narrationUrls);
+        });
+    }
 
 
 
@@ -516,7 +690,7 @@ if (narrationButton) {
 
 // URL에서 문화재 ID 추출
     const urlParts = window.location.pathname.split('/');
-    const culturalPropertiesId = urlParts[urlParts.length - 3]; // 문화재 ID를 URL에서 가져옴
+    const culturalPropertiesId = urlParts[urlParts.length - 1]; // 문화재 ID를 URL에서 가져옴
 
     // 리뷰 등록 폼 제출 이벤트 핸들러
     document.getElementById("newReviewForm").addEventListener("submit", function(event) {
@@ -584,10 +758,10 @@ if (narrationButton) {
 
     function loadReviews(page) {
         const urlParts = window.location.pathname.split('/');
-        const culturalPropertiesId = urlParts[urlParts.length - 3];
+        const culturalPropertiesId = urlParts[urlParts.length - 1];
 
         $.ajax({
-            url: `/cultural-properties/detail/${culturalPropertiesId}/review/reviewList?page=${page}`,
+            url: `/cultural-properties/detail/${culturalPropertiesId}/reviewList?page=${page}`,
             method: 'GET',
             success: function(response) {
                 console.log(response); // 응답 데이터 확인
@@ -754,7 +928,8 @@ if (narrationButton) {
                 reviewDiv.find('.review-star').each(function(index) {
                     if (index <= currentStarIndex) {
                         $(this).html('&#9733;'); // 노란색 별로 변경
-                        $(this).css('color', 'gold'); // 노란색으로 설정
+                        $(this).css('color', '#ffc107');
+//                        $(this).css('color', 'gold'); // 노란색으로 설정
                     } else {
                         $(this).html('&#9734;'); // 빈 별로 변경
                         $(this).css('color', 'lightgray'); // 회색으로 설정
@@ -821,7 +996,8 @@ if (narrationButton) {
         reviewDiv.find('.review-star').each(function(index) {
             if (index < starCount) {
                 $(this).html('&#9733;'); // 채워진 별 표시
-                $(this).css('color', 'gold'); // 노란색으로 설정
+                $(this).css('color', '#ffc107');
+//                $(this).css('color', 'gold'); // 노란색으로 설정
             } else {
                 $(this).html('&#9734;'); // 빈 별 표시
                 $(this).css('color', 'lightgray'); // 회색으로 설정

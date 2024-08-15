@@ -99,26 +99,6 @@ public class CulturalPropertiesController {
 	}
 
 
-//	@PostMapping("/addInterest")
-//	public ResponseEntity<String> addInterest(@RequestParam int culturalPropertiesId) {
-//		// 현재 로그인된 사용자 정보를 가져오기
-//		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//
-//		if (authentication != null && authentication.getPrincipal() instanceof VWUserRoleDTO) {
-//			VWUserRoleDTO vwUserRoleDTO = (VWUserRoleDTO) authentication.getPrincipal();
-//			int userId = vwUserRoleDTO.getUserId(); // 사용자 ID 가져오기
-//
-//			CulturalPropertiesInterestDTO interest = new CulturalPropertiesInterestDTO();
-//			interest.setCulturalPropertiesId(culturalPropertiesId);
-//			interest.setUserId(userId); // VWUserRoleDTO에서 userId 가져오기
-//
-//			culturalPropertiesService.addInterest(interest);
-////			return ResponseEntity.ok("찜이 추가되었습니다.");
-//		}
-//
-//		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("로그인이 필요합니다.");
-//	}
-
 
 	@PostMapping("/addLike")
 	public ResponseEntity<String> addLike(@RequestParam int culturalPropertiesId) {
@@ -334,27 +314,15 @@ public class CulturalPropertiesController {
 	}
 
 
+	@GetMapping("/detail/{culturalPropertiesId}/getInterest")
+	public ResponseEntity<List<CulturalPropertiesInterestDTO>> getDetailInterest(@PathVariable int culturalPropertiesId, @RequestParam int userId) {
+		List<CulturalPropertiesInterestDTO> interests = culturalPropertiesService.getDetailInterest(culturalPropertiesId, userId);
+		return ResponseEntity.ok(interests);
+	}
 
 
 
 
-
-
-
-//네모버튼
-//	@PostMapping("/like")
-//	@ResponseBody
-//	public String likeAttraction(@RequestParam int id) {
-//		culturalPropertiesService.likeAttraction(id);
-//		return "success";
-//	}
-//
-//	@PostMapping("/dislike")
-//	@ResponseBody
-//	public String dislikeAttraction(@RequestParam int id) {
-//		culturalPropertiesService.dislikeAttraction(id);
-//		return "success";
-//	}
 
 
 
@@ -371,13 +339,6 @@ public class CulturalPropertiesController {
 
 		return ResponseEntity.ok(response); // 200 OK와 함께 응답 반환
 	}
-
-
-
-
-
-
-
 
 
 
@@ -536,12 +497,25 @@ public class CulturalPropertiesController {
 		return ResponseEntity.ok(response);
 	}
 
+	@GetMapping("/detail/{culturalPropertiesId}/reviewList")
+	public ResponseEntity<Map<String, Object>> getDetailReviewList(
+			@PathVariable int culturalPropertiesId,
+			@RequestParam(value = "page", defaultValue = "0") int page) {
+		// Pageable 객체를 생성합니다.
+		Pageable pageable = PageRequest.of(page, 10, Sort.by(Sort.Direction.DESC, "created_at"));
 
+		// 서비스 호출
+		Page<CulturalPropertiesReviewDTO> reviews = culturalPropertiesService.getReviewsByCulturalPropertiesId(culturalPropertiesId, pageable);
 
+		// 응답에 필요한 정보를 Map으로 만듭니다.
+		Map<String, Object> response = new HashMap<>();
+		response.put("reviews", reviews.getContent());
+		response.put("totalElements", reviews.getTotalElements());
+		response.put("totalPages", reviews.getTotalPages());
+		response.put("currentPage", reviews.getNumber());
 
-
-
-
+		return ResponseEntity.ok(response);
+	}
 
 
 
