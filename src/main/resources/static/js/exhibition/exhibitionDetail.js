@@ -587,21 +587,23 @@ function renderAnalyze(analyze) {
 
 
     const analyzeHtml = pageAnalyze.map(analyze => `
-        <div class="analyze" data-id="${analyze.id}">
+         <div class="analyze" data-id="${analyze.id}">
             <div class="analyze-content">
                 <div class="analyze-text-content">
                     <h3 class="analyze-username">${analyze.name}</h3>
                     <h4 class="analyze-artwork">${analyze.artwork}</h4>
                     <br>
                     <p class="analyze-text">${analyze.content}</p>
-                    ${(analyze.auth) ? '<button class="update-analyze btn btn-outline-secondary">수정</button>' : ''}
-                    ${(analyze.auth) ? '<button class="delete-analyze btn btn-outline-secondary">삭제</button>' : ''}
                 </div>
                 ${analyze.image ? `
                     <div class="analyze-image">
                         <img src="https://kr.object.ncloudstorage.com/team3${analyze.image}" alt="분석 이미지">
                     </div>
                 ` : ''}
+            </div>
+            <div class="analyze-buttons">
+                ${(analyze.auth) ? '<button class="update-analyze btn btn-outline-secondary">수정</button>' : ''}
+                ${(analyze.auth) ? '<button class="delete-analyze btn btn-outline-secondary">삭제</button>' : ''}
             </div>
             <div class="analyze-edit" style="display:none;">
                 <h3>${analyze.artwork}</h3>
@@ -610,7 +612,7 @@ function renderAnalyze(analyze) {
                 <button class="cancel-edit">취소</button>
             </div>
         </div>
-    `).join('');
+`).join('');
     $('#artworkAnalyzeContainer').html(analyzeHtml);
     renderAnalyzePagination(analyze.length, currentAnalyzePage);
 

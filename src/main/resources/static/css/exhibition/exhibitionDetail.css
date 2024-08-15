@@ -181,14 +181,15 @@ header {
     margin-bottom: 20px;
     padding: 10px;
     border: 1px solid #ddd;
-    /*border-radius: 5px;*/
-    overflow: hidden; /* 내부 요소가 넘치지 않도록 */
+    overflow: hidden;
 }
 
 .analyze-content {
     display: flex;
     align-items: flex-start;
+    margin-bottom: 40px; /* 텍스트와 버튼 사이 간격 */
 }
+
 
 .analyze-text-content {
     width: 100%;
@@ -202,7 +203,6 @@ header {
 .analyze-image {
     width: 15%;
     margin-left: 10px; /* 텍스트와 이미지 사이 간격 */
-    float: right; /* 이미지를 오른쪽으로 정렬 */
 }
 
 .analyze-image img {
@@ -234,7 +234,7 @@ header {
 
 #commentTextarea, #analyzeTextarea {
     width: 100%;
-    height: 200px;
+    height: 150px;
     border: 1px solid #ddd;
     border-radius: 5px;
     padding: 10px;
@@ -405,5 +405,28 @@ header {
     font-weight: bold
 }
 
+.analyze-buttons {
+    display: flex;
+    gap: 10px;
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+}
 
+.update-analyze,
+.delete-analyze {
+    /* 버튼 스타일링 */
+}
 
+.analyze-edit {
+    margin-top: 20px;
+}
+
+#writeComment, #writeAnalyze {
+    background-color: #ecf0f1;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+    max-width: 1500px;
+    margin: 0 auto;
+}
