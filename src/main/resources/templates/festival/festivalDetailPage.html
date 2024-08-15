@@ -614,10 +614,10 @@
                                 if(userId == reviewUserId){
                                     actionBtns = `
                                         <div class="review-actions">
-                                            <button class="update" value="${review.festivalReviewId}" type="button">수정</button>
-                                            <button class="deleteBtn" value="${review.festivalReviewId}">삭제</button>
-                                            <button class="editBtn hide" value="${review.festivalReviewId}">저장</button>
-                                            <button class="cancelBtn hide" value="${review.festivalReviewId}">취소</button>
+                                            <button class="update btn btn-outline-success" value="${review.festivalReviewId}" type="button">수정</button>
+                                            <button class="deleteBtn btn btn-outline-success" value="${review.festivalReviewId}">삭제</button>
+                                            <button class="editBtn hide btn btn-outline-success" value="${review.festivalReviewId}">저장</button>
+                                            <button class="cancelBtn hide btn btn-outline-success" value="${review.festivalReviewId}">취소</button>
                                         </div>
                                     `;
                                 }
@@ -2032,10 +2032,10 @@
 
                     <section id="reviewSection">
 
-                        <span>
+                        <span style="margin: 0px;">
                             <!-- https://www.putzisan.com/articles/html-css-star-rating-input-->
                             <form id="reviewForm" encType="multipart/form-data">
-                                <span id="reviewHead1">리뷰 작성</span>
+                                <span id="reviewHead1" style="font-size: 24px;margin-top: 0;color: #2c3e50;margin-right: 755px;margin-left: 0px;margin-bottom: 10px;">리뷰 작성</span>
                                 <span class="star-rating">
                                     <!--                                        FLEX-REVERSE-->
                                     <input type="radio" id="sr-0-5" name="reviewStar" value="5"/>
@@ -2056,10 +2056,10 @@
                                     </textarea>
                                     <div>
                                         <input name="uploadFile" id="uploadFile" type="file" accept="image/*"
-                                               style="width: 90px;">
+                                               style="width: 90px;" class="hide">
                                         <input name="festivalId" type="hidden" th:value="${festival.festivalId}">
                                         <button id="reviewInsertBtn" type="button" class="btn btn-outline-success"
-                                                th:value="${festival.festivalId}" style="width: 92px">리뷰 제출</button>
+                                                th:value="${festival.festivalId}" style="width: 92px; margin-left: 10px;">리뷰 등록</button>
                                     </div>
                                 </div>
 
@@ -2146,15 +2146,15 @@
 
                     <h3>
                         <img src="/img/festival/star.png" alt="이미지 없음" height="50px">
-                        <button class="btn btn-primary" id="regionRecommend" th:value="${festival.regionId}">같은 지역
+                        <button class="btn btn-outline-success" id="regionRecommend" th:value="${festival.regionId}">같은 지역
                         </button>
-                        <button class="btn btn-primary" id="seasonRecommend" th:value="${festival.season}">같은 계절
+                        <button class="btn btn-outline-success" id="seasonRecommend" th:value="${festival.season}">같은 계절
                         </button>
-                        <button class="btn btn-primary" id="manageInstRecommend"
+                        <button class="btn btn-outline-success" id="manageInstRecommend"
                                 th:value="${festival.manageInstitution}">
                             주체기관 동일
                         </button>
-                        <button class="btn btn-primary" id="keywordRecommend" th:value="${festival.festivalId}">키워드 동일
+                        <button class="btn btn-outline-success" id="keywordRecommend" th:value="${festival.festivalId}">키워드 동일
                         </button>
                     </h3>
 

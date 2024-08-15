@@ -280,6 +280,11 @@
     #reviewTextArea{
 
         width: 100%;
+        height: 150px;
+        margin-bottom: 10px;
+        padding: 10px;
+        border: 1px solid #bdc3c7;
+        border-radius: 4px;
 
     }
 
@@ -439,7 +444,6 @@
       justify-content: flex-end;
       display: inline-flex;
       width: 10%;
-      margin-bottom: 15px;
       left: 30px;
     }
 
@@ -454,6 +458,8 @@
       font-size: 24px;
       color: rgba(189, 189, 189, 0.7);
       font-size: 24px;
+      margin-right: 8px;
+      margin-bottom: 0px;
     }
 
     [class^="star-rating"] input:checked ~ label {
@@ -546,7 +552,7 @@
         margin-bottom: 20px;
         max-width: 100%;
         margin: 0 auto;
-
+        padding-top: 5px;
     }
 
 
@@ -671,11 +677,10 @@
         display: flex;
         flex-flow: column;
         align-items: center;
-        justify-content: space-around;
     }
 
 
-    .review-actions button {
+/*    .review-actions button {
         background-color: #3498db;
         color: white;
         border: none;
@@ -684,7 +689,7 @@
         margin-left: 5px;
         cursor: pointer;
         font-size: 12px;
-    }
+    }*/
 
 
     .goldStar{
