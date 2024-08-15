@@ -334,10 +334,13 @@ $(document).ready(function() {
 
         // 클릭된 버튼 배경색 변경
         $(this).css('background-color', '#7f7f7f');
+        $(this).css('color', 'white');
 
         // 다른 버튼 배경색 원래대로 복원
         $(mapButton).css('background-color', ''); // 기본 색상으로 복원
+        $(mapButton).css('color', '');
         $(reviewButton).css('background-color', ''); // 기본 색상으로 복원
+        $(reviewButton).css('color', '');
 
     });
 
@@ -349,10 +352,13 @@ $(document).ready(function() {
 
         // 클릭된 버튼 배경색 변경
         $(this).css('background-color', '#7f7f7f');
+        $(this).css('color', 'white');
 
         // 다른 버튼 배경색 원래대로 복원
         $(detailButton).css('background-color', ''); // 기본 색상으로 복원
+        $(detailButton).css('color', '');
         $(reviewButton).css('background-color', ''); // 기본 색상으로 복원
+        $(reviewButton).css('color', '');
 
     });
 
@@ -363,10 +369,13 @@ $(document).ready(function() {
 
         // 클릭된 버튼 배경색 변경
         $(this).css('background-color', '#7f7f7f');
+        $(this).css('color', 'white');
 
         // 다른 버튼 배경색 원래대로 복원
         $(detailButton).css('background-color', ''); // 기본 색상으로 복원
+        $(detailButton).css('color', '');
         $(mapButton).css('background-color', ''); // 기본 색상으로 복원
+        $(mapButton).css('color', '');
 
     });
 
