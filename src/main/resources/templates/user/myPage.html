@@ -1187,6 +1187,41 @@
 
 
 
+                /**
+                * 전시 관심없음 하기 / 관심없음 취소하기 버튼
+                *
+                */
+                $(document).on('click','.ehate', function(e){
+
+                    e.stopImmediatePropagation();
+                    var img = $(this);
+                    var exhibitionId = img.attr('value');
+                    var state = "not_interested";
+
+                    var rData = {
+                        exhibitionId : exhibitionId,
+                        state : state
+                    };
+
+                    $.ajax({
+                        url: '/exhibition/interested',
+                        method: 'POST',
+                        data: JSON.stringify(rData),
+                        contentType: 'application/json',
+                        success: function(){
+                            $('#hate').click();
+                        },
+                        error: function(xhr, status, error){
+                            alert('error : ',error);
+                        }
+                    })
+
+                })
+
+
+
+
+
 
 
 
