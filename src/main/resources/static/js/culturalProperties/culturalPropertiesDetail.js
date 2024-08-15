@@ -813,7 +813,12 @@ $(document).ready(function() {
                         const reviewHtml = `
                             <div class="review">
                                 <div class="user-info">
-                                    <img src="${review.userProfileImage || '/img/festival/noPhoto.png'}" alt="${review.userName}">
+
+
+
+                                    <img src="${review.userProfileImage ? 'https://kr.object.ncloudstorage.com/team3' + review.userProfileImage : 'https://kr.object.ncloudstorage.com/team3/img/festival/noPhoto.png'}" alt="${review.userName}">
+<!-- <img src="https://kr.object.ncloudstorage.com/team3${review.userProfileImage}" alt="${review.userName}">-->
+
                                     <div class="user-details">
                                     <span>${review.userName}</span>
 
@@ -840,10 +845,10 @@ $(document).ready(function() {
                                         <textarea id="editContent-${review.id}" rows="5" style="display:none;" value="${review.content}">${review.content}</textarea>
                                     </div>
                                 </div>
-                                <div class="review-actions" style="display: ${review.userId == userId1 ? 'block' : 'none'};"> <button type="button" id="edit-btn-${review.id}" data-id="${review.id}">수정</button> <button type="button" id="delete-btn-${review.id}" data-id="${review.id}" data-cultural-id="${review.culturalPropertiesId}">삭제</button>
+                                <div class="review-actions" style="display: ${review.userId == userId1 ? 'block' : 'none'};"> <button type="button" class="btn btn-outline-success" id="edit-btn-${review.id}" data-id="${review.id}">수정</button> <button type="button" class="btn btn-outline-success" id="delete-btn-${review.id}" data-id="${review.id}" data-cultural-id="${review.culturalPropertiesId}">삭제</button>
 
-                                <button type="button" id="save-btn-${review.id}" style="display:none;" data-id="${review.id}" data-cultural-id="${review.culturalPropertiesId}">저장</button>
-                                <button type="button" id="cancel-btn-${review.id}" style="display:none;">취소</button>
+                                <button type="button" id="save-btn-${review.id}" class="btn btn-outline-success" style="display:none;" data-id="${review.id}" data-cultural-id="${review.culturalPropertiesId}">저장</button>
+                                <button type="button" id="cancel-btn-${review.id}" class="btn btn-outline-success" style="display:none;">취소</button>
                                 </div>
                             </div>
                             `;
@@ -851,6 +856,7 @@ $(document).ready(function() {
                     });
 
                     // 총 리뷰 개수 및 페이지 업데이트
+                    $('#totalReviewCount').text(response.totalElements)
                     $('#totalReviewCount span').text(response.totalElements); // 총 리뷰 개수 표시
                     $('#currentPage').text(response.currentPage + 1); // 현재 페이지
                     $('#totalPages').text(response.totalPages); // 총 페이지 수
