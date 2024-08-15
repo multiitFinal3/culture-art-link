@@ -969,6 +969,20 @@
 
                 //#region 상단바 : 전시
 
+                /**
+                 * 전시 카드 클릭 시 상세 페이지로 이동
+                 *
+                 */
+                 $(document).on('click','.ecard',function(){
+
+                    var exhibitionId = $(this).attr('id');
+                    window.location.href='/exhibition/detail/'+exhibitionId;
+
+                })
+
+
+
+
 
                 /**
                  * 전시 찜한 내역을 가져옴
@@ -991,14 +1005,13 @@
 
                             $.each(list, function(index, exhibition){
 
-                                var title = exhibition.title.length > 14?
-                                exhibition.title.substring(0,14) + "..."
-                                : exhibition.title;
+                                var start = exhibition.startDate.length >0?
+                                exhibition.startDate.substring(0,10):
+                                "없음";
 
-
-                                var content = exhibition.description.length > 10?
-                                exhibition.description.substring(0,10) + "..."
-                                : exhibition.description;
+                                var end = exhibition.endDate.length >0?
+                                exhibition.endDate.substring(0,10):
+                                "없음";
 
                                 var firstHtml= ``;
 
@@ -1020,17 +1033,28 @@
 
                                 }
 
+
                                 var secondHtml = `
                                     <div class="card-body">
-                                          <h5 class="card-title">${title}</h5>
-                                          <p class="card-text">${content}</p>
-                                          <img src="https://kr.object.ncloudstorage.com/team3/common/upBlue.png"
-                                               style="width : 30px; height: 30px;" class="heart" value="${festival.festivalId}">
-                                          <img src="https://kr.object.ncloudstorage.com/team3/common/downNo.png"
-                                               style="width : 30px; height: 30px;" class="hate" value="${festival.festivalId}">
+                                          <h5 class="card-title" title="${exhibition.title}">${exhibition.title}</h5>
+                                          <p class="card-text" title="${exhibition.description}">${exhibition.description}</p>
+                                          <p class="card-text">${start} - ${end}</p>
+                                          <div class="buttonZone">
+                                            <button class="whiteHeartBtn">
+                                                <img src="https://kr.object.ncloudstorage.com/team3/common/upBlue.png"
+                                                   style="width : 25px; height: 25px;" class="eheart" value="${festival.festivalId}">
+                                            </button>
+
+                                            <button class="whiteHateBtn">
+                                                <img src="https://kr.object.ncloudstorage.com/team3/common/downNo.png"
+                                                   style="width : 25px; height: 25px;" class="ehate" value="${festival.festivalId}">
+                                            </button>
+                                          </div>
                                     </div>
+
                                 </div>
                                 `;
+
 
                                 var finalHtml = firstHtml + secondHtml;
 
@@ -1065,21 +1089,20 @@
 
                             $.each(list, function(index, exhibition){
 
-                                var title = exhibition.title.length > 14?
-                                exhibition.title.substring(0,14) + "..."
-                                : exhibition.title;
+                                var start = exhibition.startDate.length >0?
+                                exhibition.startDate.substring(0,10):
+                                "없음";
 
-
-                                var content = exhibition.description.length > 10?
-                                exhibition.description.substring(0,10) + "..."
-                                : exhibition.description;
+                                var end = exhibition.endDate.length >0?
+                                exhibition.endDate.substring(0,10):
+                                "없음";
 
                                 var firstHtml= ``;
 
                                 if(! exhibition.image || exhibition.image == ""){
 
                                     firstHtml = `
-                                        <div class="card hasHate ecard" id="${exhibition.id}" data-value="${exhibition.id}">
+                                        <div class="card hasLove ecard" id="${exhibition.id}" data-value="${exhibition.id}">
                                             <img class="card-img-top" src="/img/festival/noPhoto.png" alt="Card image cap">
 
                                     `;
@@ -1087,22 +1110,32 @@
                                 }else{
 
                                     firstHtml = `
-                                        <div class="card hasHate ecard" id="${exhibition.id}" data-value="${exhibition.id}">
+                                        <div class="card hasLove ecard" id="${exhibition.id}" data-value="${exhibition.id}">
                                             <img class="card-img-top" src="${exhibition.image}" alt="Card image cap">
 
                                     `;
 
                                 }
 
+
                                 var secondHtml = `
                                     <div class="card-body">
-                                          <h5 class="card-title">${title}</h5>
-                                          <p class="card-text">${content}</p>
-                                          <img src="https://kr.object.ncloudstorage.com/team3/common/upNo.png"
-                                               style="width : 30px; height: 30px;" class="heart" value="${festival.festivalId}">
-                                          <img src="https://kr.object.ncloudstorage.com/team3/common/downRed.png"
-                                               style="width : 30px; height: 30px;" class="hate" value="${festival.festivalId}">
+                                          <h5 class="card-title" title="${exhibition.title}">${exhibition.title}</h5>
+                                          <p class="card-text" title="${exhibition.description}">${exhibition.description}</p>
+                                          <p class="card-text">${start} - ${end}</p>
+                                          <div class="buttonZone">
+                                            <button class="whiteHeartBtn">
+                                                <img src="https://kr.object.ncloudstorage.com/team3/common/upNo.png"
+                                                   style="width : 25px; height: 25px;" class="eheart" value="${festival.festivalId}">
+                                            </button>
+
+                                            <button class="whiteHateBtn">
+                                                <img src="https://kr.object.ncloudstorage.com/team3/common/downRed.png"
+                                                   style="width : 25px; height: 25px;" class="ehate" value="${festival.festivalId}">
+                                            </button>
+                                          </div>
                                     </div>
+
                                 </div>
                                 `;
 
