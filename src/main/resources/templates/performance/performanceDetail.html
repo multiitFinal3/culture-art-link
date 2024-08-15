@@ -79,7 +79,7 @@
                 <div class="info-section-content">
                     <div class="info-item">
                         <span class="info-label">장소</span>
-                        <span class="info-content" th:text="${performance.location}">공연장소</span>
+                        <span class="info-location" th:text="${performance.location}">공연장소</span>
                     </div>
                     <div class="info-item">
                         <span class="info-label">공연기간</span>
@@ -135,6 +135,7 @@
                     <img class="detailImage" th:src="${performance.imageDetail1}" alt="공연 상세 이미지" />
                 </div>
             </div>
+
 
             <div class="review-section" style="display: none;">
                 <div class="reviews">

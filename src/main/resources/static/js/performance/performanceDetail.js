@@ -203,14 +203,3 @@ async function initMap(location) {
                       });
                   }
               });
-
-
-
-
-
-
-
-
-
-
-
