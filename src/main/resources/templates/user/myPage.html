@@ -235,17 +235,17 @@
 
                 //# region 상단바 : 축제 카테고리별 찜 / 관심없음 / 리뷰 내역
 
-                //# region 카드 클릭 시 상세 페이지로 이동
 
+                /**
+                 * 축제 카드 클릭 시 상세 페이지로 이동
+                 *
+                 */
                 $(document).on('click','.fcard',function(){
 
                     var festivalId = $(this).attr('id');
                     window.location.href='/festival/festival-detail?festivalId='+festivalId;
 
                 })
-                //#endRegion
-
-
 
 
 
@@ -733,11 +733,11 @@
                                         +
 
                                         `<td style="width: 150px;">
-                                            <button class="updateBtn" value="${review.festivalReviewId}">수정</button>
+                                            <button class="updateBtn btn btn-outline-success" value="${review.festivalReviewId}">수정</button>
                                         </td>
 
                                         <td style="width: 150px;">
-                                            <button class="deleteBtn" value="${review.festivalReviewId}">삭제</button>
+                                            <button class="deleteBtn btn btn-outline-success" value="${review.festivalReviewId}">삭제</button>
                                         </td>
 
                                     </tr>
@@ -845,7 +845,7 @@
 
 
 
-                 /**
+                /**
                 * 리뷰 수정
                 *
                 */
@@ -869,11 +869,6 @@
                         }
                     })
                 })
-
-
-
-
-
 
 
 
@@ -1143,7 +1138,7 @@
 
                                         `
                                         <td style="width: 400px;">
-                                            <button class="deleteBtn2" value="${reviewIdPlusExhibitionId}">삭제</button>
+                                            <button class="deleteBtn2 btn btn-outline-success" value="${reviewIdPlusExhibitionId}">삭제</button>
                                         </td>
 
                                     </tr>
@@ -1481,6 +1476,50 @@
                 })
 
 
+
+
+                /**
+                * 찜 키워드 선호키워드 수정버튼 클릭
+                *
+                */
+                $(document).on('click','#keywordCountUpdate', function(){
+
+                    var type = $('#loveOrHate').val();
+                    var formData = new FormData($('#insertUserBigLoveHateKeyword')[0]);
+
+                    $.ajax({
+
+                        url: '/user/insertUserBigLoveHateKeyword',
+                        method: 'POST',
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        success: function(){
+
+                            if(type=="L"){
+                                alert("선호 키워드 수정 성공!!");
+                                $('#loveKeywordList').click();
+                            }else{
+                                alert("비선호 키워드 수정 성공!!");
+                                $('#hateKeywordList').click();
+                            }
+
+                        },
+                        error: function(){
+
+                            alert("선택 키워드 수정 실패")
+
+                        }
+                    })
+                })
+
+
+
+
+
+
+
+
                 //#endregion
 
 
@@ -1679,7 +1718,7 @@
                     var performanceHtml = `
 
                         <div id="performanceKeywordList"></div>
-                        <button id="addPerformanceLoveKeyword" value="1">공연 키워드 추가</button>
+                        <button id="addPerformanceLoveKeyword" value="1" class="btn btn-outline-success">공연 키워드 추가</button>
 
                     `;
 
@@ -1687,7 +1726,7 @@
                     var exhibitionHtml = `
 
                         <div id="exhibitionKeywordList"></div>
-                        <button id="addExhibitionLoveKeyword" value="1">전시 키워드 추가</button>
+                        <button id="addExhibitionLoveKeyword" value="1"class="btn btn-outline-success">전시 키워드 추가</button>
 
                     `;
 
@@ -1695,7 +1734,7 @@
                     var festivalHtml = `
 
                         <div id="festivalKeywordList"></div>
-                        <button id="addFestivalLoveKeyword" value="1">축제 키워드 추가</button>
+                        <button id="addFestivalLoveKeyword" value="1" class="btn btn-outline-success">축제 키워드 추가</button>
 
                     `;
 
@@ -1703,7 +1742,7 @@
                     var culturalPropertiesHtml = `
 
                         <div id="culturalPropertiesKeywordList"></div>
-                        <button id="addCulturalPropertiesLoveKeyword" value="1">문화재 키워드 추가</button>
+                        <button id="addCulturalPropertiesLoveKeyword" value="1" class="btn btn-outline-success">문화재 키워드 추가</button>
 
                     `;
 
@@ -1748,7 +1787,7 @@
                     var performanceHtml = `
 
                         <div id="performanceKeywordList"></div>
-                        <button id="addPerformanceHateKeyword" value="1">공연 키워드 추가</button>
+                        <button id="addPerformanceHateKeyword" value="1" class="btn btn-outline-success">공연 키워드 추가</button>
 
                     `;
 
@@ -1756,7 +1795,7 @@
                     var exhibitionHtml = `
 
                         <div id="exhibitionKeywordList"></div>
-                        <button id="addExhibitionHateKeyword" value="1">전시 키워드 추가</button>
+                        <button id="addExhibitionHateKeyword" value="1" class="btn btn-outline-success">전시 키워드 추가</button>
 
                     `;
 
@@ -1764,7 +1803,7 @@
                     var festivalHtml = `
 
                         <div id="festivalKeywordList"></div>
-                        <button id="addFestivalHateKeyword" value="1">축제 키워드 추가</button>
+                        <button id="addFestivalHateKeyword" value="1" class="btn btn-outline-success">축제 키워드 추가</button>
 
                     `;
 
@@ -1772,7 +1811,7 @@
                     var culturalPropertiesHtml = `
 
                         <div id="culturalPropertiesKeywordList"></div>
-                        <button id="addCulturalPropertiesHateKeyword" value="1">문화재 키워드 추가</button>
+                        <button id="addCulturalPropertiesHateKeyword" value="1" class="btn btn-outline-success">문화재 키워드 추가</button>
 
                     `;
 
@@ -1945,8 +1984,8 @@
                     </div>
 
                     <div>
-                        <button type="submit" id="updateAccount" th:value="${user.userId}">수정</button>
-                        <button type="button" id="deleteAccount" th:value="${user.userId}">탈퇴</button>
+                        <button type="submit" id="updateAccount" class="btn btn-outline-success" th:value="${user.userId}">수정</button>
+                        <button type="button" id="deleteAccount" class="btn btn-outline-success" th:value="${user.userId}">탈퇴</button>
                     </div>
 
                 </form>
@@ -1972,31 +2011,31 @@
                     <div id="performanceZone">
                         <div id="performanceKeywordList">
                         </div>
-                        <button id="addPerformanceLoveKeyword" value="1">공연 키워드 추가</button>
+                        <button id="addPerformanceLoveKeyword" value="1" class="btn btn-outline-success">공연 키워드 추가</button>
                     </div>
                     <div id="exhibitionZone">
                         <div id="exhibitionKeywordList">
                         </div>
-                        <button id="addExhibitionLoveKeyword" value="1">전시 키워드 추가</button>
+                        <button id="addExhibitionLoveKeyword" value="1" class="btn btn-outline-success">전시 키워드 추가</button>
                     </div>
                     <div id="festivalZone">
                         <div id="festivalKeywordList">
                         </div>
-                        <button id="addFestivalLoveKeyword" value="1">축제 키워드 추가</button>
+                        <button id="addFestivalLoveKeyword" value="1" class="btn btn-outline-success">축제 키워드 추가</button>
                     </div>
                     <div id="culturalPropertiesZone">
                         <div id="culturalPropertiesKeywordList">
                         </div>
-                        <button id="addCulturalPropertiesLoveKeyword" value="1">문화재 키워드 추가</button>
+                        <button id="addCulturalPropertiesLoveKeyword" value="1" class="btn btn-outline-success">문화재 키워드 추가</button>
                     </div>
                     <div id="updateBtnZone">
-                        <form th:action="@{/user/insertUserBigLoveHateKeyword}" method="post" style="font-size: 28px;">
+                        <form style="font-size: 28px;" id="insertUserBigLoveHateKeyword">
                             <input type="hidden" id="performanceKeyword" name="performanceKeyword">
                             <input type="hidden" id="exhibitionKeyword" name="exhibitionKeyword">
                             <input type="hidden" id="festivalKeyword" name="festivalKeyword">
                             <input type="hidden" id="culturalPropertiesKeyword" name="culturalPropertiesKeyword">
                             <input type="hidden" id="loveOrHate" name="loveOrHate" value="L">
-                            <button type="submit" id="keywordCountUpdate">선호 키워드 수정</button>
+                            <button type="button" id="keywordCountUpdate" class="btn btn-outline-success">선호 키워드 수정</button>
                         </form>
                     </div>
                 </div>

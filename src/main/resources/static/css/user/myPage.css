@@ -22,7 +22,7 @@
     #rightZone{
 
         padding: 1%;
-        width: 65%;
+        width: 75%;
         display: flex;
         flex-flow: column;
         align-items: center;
@@ -257,7 +257,7 @@
         margin-left: 5%;
         margin-right: 5%;
         flex-wrap: wrap;
-        gap: 10px;
+        gap: 15px;
         padding-top: 5%;
 
     }
@@ -285,7 +285,7 @@
        flex-direction: column;
        align-items: center;
        transition: transform 0.2s;
-       border: 0px;
+       border: 0px !important;
 
     }
 
@@ -340,6 +340,16 @@
 
     }
 
+    input, optgroup, select, textarea {
+        margin: 0;
+        font-family: inherit;
+        font-size: inherit;
+        line-height: inherit;
+        border: 1px solid #ced4da;
+        border-radius: 0px;
+        color: #495057;
+    }
+
 
 
 
@@ -361,11 +371,12 @@
            border: none;
            border-radius: 5px;
            cursor: pointer;
+           opacity: 0.8;
        }
 
     #upperZone .whiteHeartBtn{
 
-      top: 300px;
+      top: 290px;
       right: 60px;
     }
 
@@ -385,21 +396,21 @@
 
    .whiteHateBtn{
 
-       position: absolute;
-       background: white;
-        padding: 5px 10px;
+      position: absolute;
+      background: white;
+      padding: 5px 10px;
       margin: 0 5px;
       border: none;
       border-radius: 5px;
       cursor: pointer;
-
+      opacity: 0.8;
    }
 
 
 
    #upperZone .whiteHateBtn{
 
-       top: 300px;
+       top: 290px;
        right: 10px;
 
    }
@@ -507,7 +518,11 @@
     #addPerformanceLoveKeyword,
     #addExhibitionLoveKeyword,
     #addFestivalLoveKeyword,
-    #addCulturalPropertiesLoveKeyword{
+    #addCulturalPropertiesLoveKeyword,
+    #addPerformanceHateKeyword,
+    #addExhibitionHateKeyword,
+    #addFestivalHateKeyword,
+    #addCulturalPropertiesHateKeyword{
 
         width: 160px;
         height: 45px;
@@ -517,13 +532,13 @@
 
    .bigLove{
 
-        background-color: #ffe5ea;
+        background-color: #cff7d3;
 
    }
 
    .bigHate{
 
-        background-color: #dfdfdf;
+        background-color: #cff7d3;
 
    }
 
@@ -532,6 +547,14 @@
 
        min-width: 150px;
        max-height: 35px;
+       color: #02542d;
+       padding: 8px 15px;
+       border-radius: 15px;
+       font-size: 14px;
+       font-weight: bold;
+       text-decoration: none;
+       border: 0px;
+       margin: 15px;
 
     }
 
@@ -597,8 +620,8 @@
 
     }
 
-    .card:hover {
-        transform: scale(1.05);
+    .card-img-top:hover {
+       transform: scale(1.05);
     }
 
     .none{
@@ -606,3 +629,7 @@
         display: none;
 
     }
+
+    .card:hover .card-body{
+       text-decoration: underline #0b5eb6;
+   }
