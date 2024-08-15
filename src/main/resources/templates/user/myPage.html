@@ -97,11 +97,11 @@
 
                     if(!img || img == "null" || img==""){
                         htmlContent = `
-                            <img class="profileImg" src="/img/festival/noPhoto.png" alt="이미지가 없습니다" style="width:100%;">
+                            <img class="profileImg" src="/img/festival/noPhoto.png" alt="이미지가 없습니다">
                         `;
                     }else{
                         htmlContent = `
-                            <img class="profileImg" src="${img}" alt="이미지가 없습니다" style="width:100%;">
+                            <img class="profileImg" src="${img}" alt="이미지가 없습니다">
                         `;
                     }
 
@@ -132,7 +132,7 @@
                             var htmlContent = ``;
 
                             htmlContent = `
-                                <img class="profileImg" src="${changeSrc}" alt="이미지가 없습니다" style="width:100%;">
+                                <img class="profileImg" src="${changeSrc}" alt="이미지가 없습니다">
                             `;
 
                             $('#profileImg').html(htmlContent);
@@ -207,6 +207,14 @@
                     console.log(regionId);
                     console.log(email);
 
+                    var isEmailValid = validateSameEmail(email);
+
+                     if(!isEmailValid){
+
+                        return;
+
+                     }
+
                     $.ajax({
 
                         url: '/user/updateUserAccount',
@@ -225,6 +233,62 @@
                         }
                     })
                 })
+
+
+
+                /**
+                * 이메일 중복 검증
+                * @param {string} email 검증할 이메일
+                * @returns {boolean} 이메일이 안겹칠경우 true, 겹칠 경우 false
+                *
+                */
+                function validateSameEmail(email){
+                    return new Promise((resolve, reject) => {
+                        $.ajax({
+                            url: '/user/validateSameEmail',
+                            method: 'POST',
+                            data: {
+                                email : email
+                            },
+                            success: function(user){
+
+                                if(user){
+
+                                    alert("이메일이 존재합니다.")
+                                    resolve(false);
+
+                                }else{
+
+                                    alert("중복되지 않는 이메일입니다.")
+                                    resolve(true);
+                                }
+
+                            },
+                            error: function(xhr, status, error){
+
+                                alert('같은 이메일 확인 실패');
+                                return(false);
+
+                            }
+                        })
+                    })
+                }
+
+
+                /**
+                * 이메일 중복 검증 버튼
+                *
+                */
+                $(document).on('click','#emailValidate', function(){
+
+                    event.preventDefault();
+                    var email = $('#email').val();
+                    validateSameEmail(email);
+
+                })
+
+
+
 
                 //#endregion
 
@@ -2141,7 +2205,7 @@
                                 alt="Email Icon"></label>
                         <input name="email" class="rounded" id="email" th:value="${user.email}"
                                placeholder="${user.email}" required style="background-color: lightblue"
-                               pattern="^[a-zA-Z0-9_]{5,}@[a-zA-Z]{3,}\.com$">
+                               pattern="^[a-zA-Z0-9_]{5,}@[a-zA-Z]{3,}\.com$"><button id="emailValidate" type="button" class="btn btn-outline-success">중복확인</button>
                     </div>
 
                     <div>

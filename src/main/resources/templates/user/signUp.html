@@ -37,7 +37,7 @@
                             var htmlContent = ``;
 
                             htmlContent = `
-                                <img class="profileImg round" src="${changeSrc}" alt="이미지가 없습니다" style="width:100%;">
+                                <img class="profileImg round" src="${changeSrc}" alt="이미지가 없습니다">
                             `;
 
                             $('#profileImg').html(htmlContent);
@@ -461,7 +461,7 @@
 
                                 }else{
 
-                                    alert("사용 가능한 이메일입니다.")
+                                    alert("중복되지 않는 이메일입니다.")
                                     resolve(true);
                                 }
 
@@ -529,7 +529,7 @@
                 <input name="uploadFile" class="rounded" id="uploadFile" type="file" accept="image/*"><br>
 
                 <label for="email"><img src="https://img.icons8.com/?size=100&id=8uaNSRthy4ju&format=png&color=000000" alt="Email Icon"></label>
-                <input name="email" id="email" class="rounded" placeholder="dkswldus@gmail.com" required style="background-color: lightblue" pattern="^[a-zA-Z0-9_]{5,}@[a-zA-Z]{3,}\.com$"><button id="emailValidate" type="button">중복확인</button>
+                <input name="email" id="email" class="rounded" placeholder="dkswldus@gmail.com" required style="background-color: lightblue" pattern="^[a-zA-Z0-9_]{5,}@[a-zA-Z]{3,}\.com$"><button id="emailValidate" type="button" class="btn btn-outline-success">중복확인</button>
                 <span id="emailError" class="error"></span><br>
 
                 <label for="password"><img src="https://img.icons8.com/?size=100&id=B9ytemSyoM31&format=png&color=000000" alt="Password Icon"></label>
