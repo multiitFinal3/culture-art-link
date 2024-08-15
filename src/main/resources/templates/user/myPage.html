@@ -704,6 +704,7 @@
 
                                 actionBtns = `
                                     <div class="review-actions">
+                                        <button class="update btn btn-outline-success" onclick="location.href='/festival/festival-detail?festivalId=${review.festivalId}'">상세</button>
                                         <button class="update btn btn-outline-success" value="${review.festivalReviewId}" type="button">수정</button>
                                         <button class="deleteBtn btn btn-outline-success" value="${review.festivalReviewId}">삭제</button>
                                         <button class="editBtn hide btn btn-outline-success" value="${review.festivalReviewId}">저장</button>
@@ -757,7 +758,7 @@
                                             <p class="review-content-p-${review.festivalReviewId} review-content-p">${review.festivalReviewContent}</p>
                                             <div class="review-text-container hide">
                                                 <form id="reviewForm_${review.festivalReviewId}" style="width:100%;">
-                                                    <div class="star-rating2">
+                                                    <div class="star-rating2" style="width:100%;">
                                                         <input type="radio" id="star5_${review.festivalReviewId}" name="reviewStar" value="5" ${review.festivalReviewStar == 5? 'checked' : ''}/>
                                                         <label for="star5_${review.festivalReviewId}">★</label>
                                                         <input type="radio" id="star4_${review.festivalReviewId}" name="reviewStar" value="4" ${review.festivalReviewStar == 4? 'checked' : ''}/>

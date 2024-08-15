@@ -750,3 +750,15 @@
         display: none !important;
 
     }
+
+    .goldStar{
+        font-weight: bold;
+        font-size: 20px;
+        color: #ffc107;
+    }
+
+    .emptyStar{
+        font-weight: bold;
+        font-size: 20px;
+        color: #e0e0e0;
+    }
