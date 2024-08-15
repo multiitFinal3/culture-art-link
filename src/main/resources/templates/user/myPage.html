@@ -643,118 +643,155 @@
                         method: 'POST',
                         contentType: 'application/json',
                         success: function(list){
+
                             $('#upper').html("");
-                            $('#upper').removeClass("scroll")
-                            $('#upper').addClass("page")
+                            $('#upper').removeClass("scroll");
+                            $('#upper').addClass("page");
 
-                            console.log("리뷰" + list)
+                            console.log("리뷰" + list);
 
-                            var reviewHeader = `
 
-                                <table class="table table-striped" id="reviewTable" style="text-align: center;">
+                            var reviewHeadHtml = `
 
-                                    <thead class="table-light">
-                                    <tr style="text-align: center;">
-                                        <th scope="col" style="width: 300px;">#</th>
-                                        <th scope="col" style="width: 900px;">별점 / 내용</th>
-                                        <th scope="col" style="width: 300px;">첨부파일</th>
-                                        <th scope="col" style="width: 150px;">수정</th>
-                                        <th scope="col" style="width: 150px;">삭제</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody id="reviewList">
+                                <div id="reviewListHead">
+
+                                    <div id="leftHead">
+                                        <h2 style="display: inline-block;">리뷰</h2>
+
+                                        <div id="totalReviewCount" class="mt-3" style="display: inline-block; margin-left: 10px;">
+                                            숫자
+                                        </div>
+                                    </div>
+
+                                    <div id="reviewList">
+
+                                    </div>
+
+                                    <div id="reviewPages">
+
+                                    </div>
+
+                                </div>
 
                             `;
 
-                            $('#upper').html(reviewHeader);
+                            $('#upper').append(reviewHeadHtml);
+
 
                             $.each(list, function(index, review){
 
-                                var index1 = (page-1)*5 + index+1;
                                 var reviewHtml = ``;
+                                var profilePic = ``;
                                 var attachment = ``;
+                                var actionBtns = ``;
+                                var reviewStarHtml = ``;
                                 var reviewUserId = review.userId;
-                                var festivalId = review.festivalId;
+                                var reviewStarNum = review.festivalReviewStar;
 
 
-                                if((review.attachment == null) || (review.attachment == "")){
-
-                                    attachment = `
-                                    <td style="width: 300px;">
-                                        <img src="/img/festival/noPhoto.png" style="width:100%;display: block;">
-                                    </td>
-                                    `
-
+                                if((review.userProfilePic == null) || (review.userProfilePic == "")){
+                                    profilePic = `<img src="https://kr.object.ncloudstorage.com/team3/common/noPhoto.png" alt="이미지 없음">`;
                                 }else{
-
-                                    attachment = `
-                                    <td style="width: 300px;">
-                                        <img src="${review.attachment}" alt="사진 없음" style="width:100%;height:100%;display: block;">
-                                    </td>
-                                    `
-
+                                    profilePic = `<img src="${review.userProfilePic}">`;
                                 }
 
-                                 reviewHtml = `
+                                if((review.attachment == null) || (review.attachment == "")){
+                                    attachment = `<img src="https://kr.object.ncloudstorage.com/team3/common/noPhoto.png">`
+                                }else{
+                                    attachment = `<img src="${review.attachment}">`
+                                }
 
-                                    <tr class="reviewRow" id="reviewRow">
 
-                                        <td class="index1" style="width: 300px;">
-                                            ${index1}
-                                        </td>`
+                                actionBtns = `
+                                    <div class="review-actions">
+                                        <button class="update btn btn-outline-success" value="${review.festivalReviewId}" type="button">수정</button>
+                                        <button class="deleteBtn btn btn-outline-success" value="${review.festivalReviewId}">삭제</button>
+                                        <button class="editBtn hide btn btn-outline-success" value="${review.festivalReviewId}">저장</button>
+                                        <button class="cancelBtn hide btn btn-outline-success" value="${review.festivalReviewId}">취소</button>
+                                    </div>
+                                `;
 
-                                        +
 
-                                        `
-                                       <td style="width: 900px">
-                                            <form id="reviewForm_${review.festivalReviewId}" style="width: 100%;display: flex;flex-flow: column;align-items: center;justify-content: center;">
-                                                <div class="star-rating2" style="width: 100%;display: flex;justify-content: center;">
-                                                    <input type="radio" id="star5_${review.festivalReviewId}" name="reviewStar" value="5" ${review.festivalReviewStar == 5? 'checked' : ''}/>
-                                                    <label for="star5_${review.festivalReviewId}">★</label>
-                                                    <input type="radio" id="star4_${review.festivalReviewId}" name="reviewStar" value="4" ${review.festivalReviewStar == 4? 'checked' : ''}/>
-                                                    <label for="star4_${review.festivalReviewId}">★</label>
-                                                    <input type="radio" id="star3_${review.festivalReviewId}" name="reviewStar" value="3" ${review.festivalReviewStar == 3? 'checked' : ''}/>
-                                                    <label for="star3_${review.festivalReviewId}">★</label>
-                                                    <input type="radio" id="star2_${review.festivalReviewId}" name="reviewStar" value="2" ${review.festivalReviewStar == 2? 'checked' : ''}/>
-                                                    <label for="star2_${review.festivalReviewId}">★</label>
-                                                    <input type="radio" id="star1_${review.festivalReviewId}" name="reviewStar" value="1" ${review.festivalReviewStar == 1? 'checked' : ''}/>
-                                                    <label for="star1_${review.festivalReviewId}">★</label>
+                                for(let i = 1; i <= reviewStarNum; i++){
+                                    var append = `
+                                    <label class="goldStar">★</label>
+                                    `;
+                                    reviewStarHtml += append;
+                                }
+
+                                if(reviewStarNum < 5){
+                                    for(let i = reviewStarNum + 1; i <= 5; i++){
+                                        var append = `
+                                        <label class="emptyStar">★</label>
+                                        `;
+                                        reviewStarHtml += append;
+                                    }
+                                }
+
+
+
+                                reviewHtml = `
+
+                                    <div class="review">
+
+                                        <div class="user-info">
+
+                                            ${profilePic}
+
+                                            <div class="user-details">
+
+                                                <span>${review.userName}</span>
+
+                                                <span>2024-08-11 07:02:46</span>
+
+                                                <div class="review-rating" data-rating="${reviewStarNum}">
+                                                    ${reviewStarHtml}
                                                 </div>
-                                                <input type="hidden" value="${review.festivalReviewId}" name="festivalReviewId">
-                                                <input type="hidden" value="${festivalId}" name="festivalId">
-                                                <textarea class="reviewText" rows="2" cols="100" style="text-align: center;" name="reviewText" style="max-width: 100%;">${review.festivalReviewContent}</textarea>
-                                            </form>
-                                            </td>`
 
-                                        +
+                                            </div>
 
-                                        attachment
+                                        </div>
 
-                                        +
 
-                                        `<td style="width: 150px;">
-                                            <button class="updateBtn btn btn-outline-success" value="${review.festivalReviewId}">수정</button>
-                                        </td>
+                                        <div class="review-content">
+                                            <p class="review-content-p-${review.festivalReviewId} review-content-p">${review.festivalReviewContent}</p>
+                                            <div class="review-text-container hide">
+                                                <form id="reviewForm_${review.festivalReviewId}" style="width:100%;">
+                                                    <div class="star-rating2">
+                                                        <input type="radio" id="star5_${review.festivalReviewId}" name="reviewStar" value="5" ${review.festivalReviewStar == 5? 'checked' : ''}/>
+                                                        <label for="star5_${review.festivalReviewId}">★</label>
+                                                        <input type="radio" id="star4_${review.festivalReviewId}" name="reviewStar" value="4" ${review.festivalReviewStar == 4? 'checked' : ''}/>
+                                                        <label for="star4_${review.festivalReviewId}">★</label>
+                                                        <input type="radio" id="star3_${review.festivalReviewId}" name="reviewStar" value="3" ${review.festivalReviewStar == 3? 'checked' : ''}/>
+                                                        <label for="star3_${review.festivalReviewId}">★</label>
+                                                        <input type="radio" id="star2_${review.festivalReviewId}" name="reviewStar" value="2" ${review.festivalReviewStar == 2? 'checked' : ''}/>
+                                                        <label for="star2_${review.festivalReviewId}">★</label>
+                                                        <input type="radio" id="star1_${review.festivalReviewId}" name="reviewStar" value="1" ${review.festivalReviewStar == 1? 'checked' : ''}/>
+                                                        <label for="star1_${review.festivalReviewId}">★</label>
+                                                    </div>
+                                                    <input type="hidden" value="${review.festivalReviewId}" name="festivalReviewId">
+                                                    <input type="hidden" value="${review.festivalId}" name="festivalId">
+                                                    <textarea class="reviewText" name="reviewText" id="editContent-${review.festivalReviewId}" rows="5" value="${review.festivalReviewContent}">${review.festivalReviewContent}</textarea>
+                                                </form>
+                                            </div>
+                                        </div>
 
-                                        <td style="width: 150px;">
-                                            <button class="deleteBtn btn btn-outline-success" value="${review.festivalReviewId}">삭제</button>
-                                        </td>
 
-                                    </tr>
-                                 `;
+                                        ${actionBtns}
 
-                                $('#upper').append(reviewHtml);
+                                    </div>
+
+                                `;
+
+                                $('#reviewList').append(reviewHtml);
 
                             })
 
-                            var reviewFooter =  `</tbody></table>`;
-                            $('#upper').append(reviewFooter);
                             findUserReviewCount();
 
                         }
                     })
                 }
-
 
 
 
@@ -772,15 +809,7 @@
                         contentType: 'application/json',
                         success: function(count){
 
-                            $('#reviewPages').html("");
-
-                            var reviewPagesHtml = `
-
-                                <div id="reviewPages"><div>
-
-                            `;
-
-                            $('#upper').append(reviewPagesHtml);
+                            $('#totalReviewCount').html(count);
 
                             var pages = 0;
 
@@ -816,6 +845,39 @@
                 })
 
 
+                /**
+               * 리뷰 내역을 수정 가능하게 만들기
+               */
+                $(document).on('click','.update', function(){
+
+                    var thisBtn = $(this);
+                    thisBtn.addClass("hide");
+                    thisBtn.siblings(".editBtn").removeClass("hide");
+                    thisBtn.siblings(".cancelBtn").removeClass("hide");
+
+                    thisBtn.parent().siblings(".review-content").find(".review-text-container").removeClass("hide");
+                    thisBtn.parent().siblings(".review-content").find(".review-content-p").addClass("hide");
+                    thisBtn.parent().siblings(".user-info").find(".review-rating").addClass("hide");
+                })
+
+
+
+               /**
+               * 리뷰 내역 수정 취소 버튼
+               */
+                $(document).on('click','.cancelBtn', function(){
+
+                    var thisBtn = $(this);
+                    thisBtn.addClass("hide");
+                    thisBtn.siblings(".update").removeClass("hide");
+                    thisBtn.siblings(".editBtn").addClass("hide");
+                    thisBtn.siblings(".cancelBtn").removeClass("hide");
+
+                    thisBtn.parent().siblings(".review-content").find(".review-text-container").addClass("hide");
+                    thisBtn.parent().siblings(".review-content").find(".review-content-p").removeClass("hide");
+                    thisBtn.parent().siblings(".user-info").find(".review-rating").removeClass("hide");
+                })
+
 
 
 
@@ -849,7 +911,7 @@
                 * 리뷰 수정
                 *
                 */
-                $(document).on('click','.updateBtn', function(){
+                $(document).on('click','.editBtn', function(){
 
                     var festivalReviewId = $(this).val();
                     var formId = `#reviewForm_${festivalReviewId}`;
@@ -865,10 +927,11 @@
                         success: function(res){
 
                             alert("리뷰 수정 성공!!");
-
+                            findFestivalReviewListByPage(1);
                         }
                     })
                 })
+
 
 
 
