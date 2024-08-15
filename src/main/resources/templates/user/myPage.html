@@ -841,8 +841,29 @@
 
                     var page = $(this).text();
                     findFestivalReviewListByPage(page);
-                    findUserReviewCount();
 
+                    setTimeout(function(){
+                      console.log("0.1s");
+                      var btns = $('.pageBtn1');
+
+                      console.log(btns)
+
+                      btns.each(function(){
+
+                            var button = $(this);
+                            console.log(button);
+                            if(button.text()==page){
+                                console.log(button.text());
+                                console.log("same")
+                                button.addClass('activePage');
+
+                            }else{
+                                console.log(button.text());
+                                button.removeClass('activePage');
+
+                            }
+                      })
+                    },100);
                 })
 
 

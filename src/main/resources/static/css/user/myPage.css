@@ -764,3 +764,13 @@
         font-size: 20px;
         color: #e0e0e0;
     }
+
+    .activePage{
+
+        padding: 5px 10px;
+        margin: 0 5px;
+        border: 1px solid #ddd;
+        background-color: #D9D9D9;
+        cursor: pointer;
+
+   }
