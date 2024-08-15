@@ -1042,12 +1042,12 @@
                                           <div class="buttonZone">
                                             <button class="whiteHeartBtn">
                                                 <img src="https://kr.object.ncloudstorage.com/team3/common/upBlue.png"
-                                                   style="width : 25px; height: 25px;" class="eheart" value="${festival.festivalId}">
+                                                   style="width : 25px; height: 25px;" class="eheart" value="${exhibition.id}">
                                             </button>
 
                                             <button class="whiteHateBtn">
                                                 <img src="https://kr.object.ncloudstorage.com/team3/common/downNo.png"
-                                                   style="width : 25px; height: 25px;" class="ehate" value="${festival.festivalId}">
+                                                   style="width : 25px; height: 25px;" class="ehate" value="${exhibition.id}">
                                             </button>
                                           </div>
                                     </div>
@@ -1126,12 +1126,12 @@
                                           <div class="buttonZone">
                                             <button class="whiteHeartBtn">
                                                 <img src="https://kr.object.ncloudstorage.com/team3/common/upNo.png"
-                                                   style="width : 25px; height: 25px;" class="eheart" value="${festival.festivalId}">
+                                                   style="width : 25px; height: 25px;" class="eheart" value="${exhibition.id}">
                                             </button>
 
                                             <button class="whiteHateBtn">
                                                 <img src="https://kr.object.ncloudstorage.com/team3/common/downRed.png"
-                                                   style="width : 25px; height: 25px;" class="ehate" value="${festival.festivalId}">
+                                                   style="width : 25px; height: 25px;" class="ehate" value="${exhibition.id}">
                                             </button>
                                           </div>
                                     </div>
@@ -1149,6 +1149,63 @@
 
                     })
                 }
+
+
+
+                /**
+                * 전시 찜하기 / 찜 취소하기 버튼
+                *
+                */
+                $(document).on('click','.eheart', function(e){
+
+                    e.stopImmediatePropagation();
+                    var img = $(this);
+                    var exhibitionId = img.attr('value');
+                    var state = "interested";
+
+                    var rData = {
+                        exhibitionId : exhibitionId,
+                        state : state
+                    };
+
+                    $.ajax({
+                        url: '/exhibition/interested',
+                        method: 'POST',
+                        data: JSON.stringify(rData),
+                        contentType: 'application/json',
+                        success: function(){
+                            $('#love').click();
+                        },
+                        error: function(xhr, status, error){
+                            alert('error : ',error);
+                        }
+                    })
+
+                })
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
