@@ -133,3 +133,12 @@
         font-weight: bold;
 
     }
+
+
+    #emailValidate {
+        margin: 3%;
+        min-width: 100px;
+        font-family: inherit;
+        font-size: inherit;
+        line-height: inherit;
+    }
