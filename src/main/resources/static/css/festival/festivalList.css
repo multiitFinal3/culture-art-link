@@ -1,3 +1,9 @@
+    body{
+
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+
+    }
+
 
     /* 필터 컨테이너 */
         .filter-container {
