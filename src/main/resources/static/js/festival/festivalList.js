@@ -403,7 +403,7 @@ $(document).ready(
             e.preventDefault();
 
             findDBFestivalByMultiple(1);
-            findDBFestivalMultipleCount();
+//            findDBFestivalMultipleCount();
 
          })
 
@@ -589,7 +589,7 @@ $(document).ready(
 
                     $('#pageNum1').html("");
                     // 상세검색 전으로 돌아가기 버튼
-                    $('#pageNum1').append(`<button class="pageBtn4">전체</button>`);
+                    $('#pageNum1').append(`<button class="pageBtn4 btn btn-outline-success">전체</button>`);
 
                     var page = 0;
 
@@ -601,7 +601,7 @@ $(document).ready(
 
                     for(var p=1; p<=page; p++){
 
-                        $('#pageNum1').append(`<button class="pageBtn3">${p}</button>`)
+                        $('#pageNum1').append(`<button class="pageBtn3 btn btn-outline-success">${p}</button>`)
 
                     }
 
@@ -619,7 +619,7 @@ $(document).ready(
 
             const page = $(this).text();
             findDBFestivalByMultiple(page);
-            findDBFestivalMultipleCount();
+//            findDBFestivalMultipleCount();
 
         })
 
