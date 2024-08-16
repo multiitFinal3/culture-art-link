@@ -279,6 +279,47 @@ public class KeywordExtractService {
 	}
 	
 	
+//	/**
+//	 * 지피티 키워드 5개 뽑기 기능
+//	 *
+//	 * @param allContent
+//	 * @return
+//	 * @throws Exception
+//	 */
+//	public ArrayList<String> getKeywordByGPT(String allContent) throws Exception {
+//
+//		OpenAiChatModel model = OpenAiChatModel.builder()
+//				.apiKey(openAPIKey)
+//				.modelName("gpt-3.5-turbo")
+//				.temperature(0.1)
+//				.build();
+//
+//		GPTAssistance assistance = AiServices.builder(GPTAssistance.class)
+//				.chatLanguageModel(model)
+//				.build();
+//
+//
+//		String answer = assistance.chat(allContent);
+//		System.out.println("GPT answer : " + answer);
+//
+//		String[] list = answer.trim().split(",");
+//
+//		ArrayList<String> list2 = new ArrayList<>();
+//
+//		for (String s : list) {
+//
+//			s = s.trim();
+//			list2.add(s);
+//
+//
+//		}
+//
+//
+//		return list2;
+//	}
+
+
+
 	/**
 	 * 지피티 키워드 5개 뽑기 기능
 	 *
@@ -287,36 +328,37 @@ public class KeywordExtractService {
 	 * @throws Exception
 	 */
 	public ArrayList<String> getKeywordByGPT(String allContent) throws Exception {
-		
+
 		OpenAiChatModel model = OpenAiChatModel.builder()
 				.apiKey(openAPIKey)
 				.modelName("gpt-3.5-turbo")
 				.temperature(0.1)
 				.build();
-		
+
 		GPTAssistance assistance = AiServices.builder(GPTAssistance.class)
 				.chatLanguageModel(model)
 				.build();
-		
-		
-		String answer = assistance.chat(allContent);
+
+
+		String answer = assistance.chat2(allContent);
 		System.out.println("GPT answer : " + answer);
-		
+
 		String[] list = answer.trim().split(",");
-		
+
 		ArrayList<String> list2 = new ArrayList<>();
-		
+
 		for (String s : list) {
-			
+
 			s = s.trim();
 			list2.add(s);
-			
-			
+
+
 		}
-		
-		
+
+
 		return list2;
 	}
+
 
 
 	/**
@@ -328,7 +370,7 @@ public class KeywordExtractService {
 
 
 		OpenAiChatModel model = OpenAiChatModel.builder()
-				.apiKey("직접 넣기")
+				.apiKey("아")
 				.modelName("gpt-3.5-turbo")
 				.temperature(0.1)
 				.build();
@@ -338,14 +380,14 @@ public class KeywordExtractService {
 				.build();
 
 
-		String allContent = "(서울=연합뉴스) 곽민서 기자 = 윤석열 대통령은 27일 2024 파리 올림픽에서 활약하는 국가대표 선수들에게 축하를 보냈다.\n" +
-				"\n" +
-				"윤 대통령은 이날 페이스북 축전을 통해 \"한계를 뛰어넘는 국가대표 여러분의 도전은 계속될 것\"이라며 \"끝까지 국민과 함께 한마음으로 응원하겠다\"고 말했다.\n" +
-				"\n" +
-				"윤 대통령은 강호 독일을 상대로 승리한 여자 핸드볼 국가대표에 \"4골 차를 뒤집고 종료 22초 전 역전에 성공한 투지는 2004년 '우생순(우리 생애 최고의 순간)' 그 자체였다\"며 \"승리 후 모든 선수가 모여 보여준 강강술래 세리머니는 저와 대한민국 국민 모두에게 큰 감동을 줬다\"고 말했다.";
+		String allContent = "조선시대 한양도성의 정문으로 남쪽에 있다고 해서 남대문이라고도 불렀다. 현재 서울에 남아 있는 목조 건물 중 가장 오래된 것으로 태조 5년(1396)에 짓기 시작하여 태조 7년(1398)에 완성하였다. 이 건물은 세종 30년(1448)에 고쳐 지은 것인데 1961∼1963년 해체·수리 때 성종 10년(1479)에도 큰 공사가 있었다는 사실이 밝혀졌다. 이후, 2008년 2월 10일 숭례문 방화 화재로 누각 2층 지붕이 붕괴되고 1층 지붕도 일부 소실되는 등 큰 피해를 입었으며, 5년 2개월에 걸친 복원공사 끝에 2013년 5월 4일 준공되어 일반에 공개되고 있다.\n" +
+				" 이 문은 돌을 높이 쌓아 만든 석축 가운데에 무지개 모양의 홍예문을 두고, 그 위에 앞면 5칸·옆면 2칸 크기로 지은 누각형 2층 건물이다. 지붕은 앞면에서 볼 때 사다리꼴 형태를 하고 있는데, 이러한 지붕을 우진각지붕이라 한다. 지붕 처마를 받치기 위해 기둥 위부분에 장식하여 짠 구조가 기둥 위뿐만 아니라 기둥 사이에도 있는 다포 양식으로, 그 형태가 곡이 심하지 않고 짜임도 건실해 조선 전기의 특징을 잘 보여주고 있다.\n" +
+				" 『지봉유설』의 기록에는 ‘숭례문’이라고 쓴 현판을 양녕대군이 썼다고 한다. 지어진 연대를 정확히 알 수 있는 서울 성곽 중에서 제일 오래된 목조 건축물이다.\n" +
+				"Ο 숭례문 방화 화재(2008.2.10)\n" +
+				"\u00AD\u00AD\u00AD2008년 숭례문 방화 사건(崇禮門放火事件)은 2008년 2월 10일 ~ 2월 11일 숭례문 건물이 방화로 타 무너진 사건이다. 화재는 2008년 2월 10일 오후 8시 40분 전후에 발생하여 다음날인 2008년 2월 11일 오전 0시 40분경 숭례문의 누각 2층 지붕이 붕괴하였고 이어 1층에도 불이 붙어 화재 5시간 만인 오전 1시 55분쯤 석축을 제외한 건물이 훼손되었다..";
 
 
-		String answer = assistance.chat(allContent);
+		String answer = assistance.chat2(allContent);
 		System.out.println("GPT answer : " + answer);
 
 		String[] list = answer.trim().split(",");
@@ -364,6 +406,56 @@ public class KeywordExtractService {
 		return;
 
 	}
+
+
+
+//	/**
+//	 * 지피티 예시
+//	 *
+//	 * @param args
+//	 */
+//	public static void main(String[] args) {
+//
+//
+//		OpenAiChatModel model = OpenAiChatModel.builder()
+//				.apiKey("직접 넣기")
+//				.modelName("gpt-3.5-turbo")
+//				.temperature(0.1)
+//				.build();
+//
+//		GPTAssistance assistance = AiServices.builder(GPTAssistance.class)
+//				.chatLanguageModel(model)
+//				.build();
+//
+//
+//		String allContent = "(서울=연합뉴스) 곽민서 기자 = 윤석열 대통령은 27일 2024 파리 올림픽에서 활약하는 국가대표 선수들에게 축하를 보냈다.\n" +
+//				"\n" +
+//				"윤 대통령은 이날 페이스북 축전을 통해 \"한계를 뛰어넘는 국가대표 여러분의 도전은 계속될 것\"이라며 \"끝까지 국민과 함께 한마음으로 응원하겠다\"고 말했다.\n" +
+//				"\n" +
+//				"윤 대통령은 강호 독일을 상대로 승리한 여자 핸드볼 국가대표에 \"4골 차를 뒤집고 종료 22초 전 역전에 성공한 투지는 2004년 '우생순(우리 생애 최고의 순간)' 그 자체였다\"며 \"승리 후 모든 선수가 모여 보여준 강강술래 세리머니는 저와 대한민국 국민 모두에게 큰 감동을 줬다\"고 말했다.";
+//
+//
+//		String answer = assistance.chat(allContent);
+//		System.out.println("GPT answer : " + answer);
+//
+//		String[] list = answer.trim().split(",");
+//
+//		ArrayList<String> list2 = new ArrayList<>();
+//
+//		for (String s : list) {
+//
+//			s = s.trim();
+//			list2.add(s);
+//
+//		}
+//
+//		System.out.println(list2);
+//
+//		return;
+//
+//	}
+
+
 	
 	/**
 	 * 키워드를 뽑으려하는 전체 작품들의 스트링들을 각각 리스트에 담아 넣으면

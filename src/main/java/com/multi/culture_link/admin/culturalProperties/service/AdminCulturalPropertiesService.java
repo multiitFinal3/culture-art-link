@@ -2,6 +2,8 @@ package com.multi.culture_link.admin.culturalProperties.service;
 
 import com.multi.culture_link.admin.culturalProperties.model.dao.AdminCulturalPropertiesDAO;
 import com.multi.culture_link.admin.culturalProperties.model.dto.CulturalPropertiesDTO;
+import com.multi.culture_link.common.keyword.service.KeywordExtractService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import com.multi.culture_link.admin.culturalProperties.model.dto.PageDTO;
 import org.json.JSONArray;
@@ -21,19 +23,22 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-
+@RequiredArgsConstructor
 @Slf4j
 @Service
 public class AdminCulturalPropertiesService {
 	
 	private final AdminCulturalPropertiesDAO adminCulturalPropertiesDAO;
 	private ArrayList<CulturalPropertiesDTO> list;
+
+	private final KeywordExtractService keywordExtractService;
 	
 	@Autowired
-	public AdminCulturalPropertiesService(AdminCulturalPropertiesDAO adminCulturalPropertiesDAO, ArrayList<CulturalPropertiesDTO> list) {
+	public AdminCulturalPropertiesService(AdminCulturalPropertiesDAO adminCulturalPropertiesDAO, ArrayList<CulturalPropertiesDTO> list, KeywordExtractService keywordExtractService) {
 		this.adminCulturalPropertiesDAO = adminCulturalPropertiesDAO;
 		this.list = list;
-	}
+        this.keywordExtractService = keywordExtractService;
+    }
 	
 	
 	private static final String listApiUrl = "http://www.khs.go.kr/cha/SearchKindOpenapiList.do";

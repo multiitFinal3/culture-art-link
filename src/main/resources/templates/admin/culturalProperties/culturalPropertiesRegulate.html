@@ -132,7 +132,7 @@
         문화재 관리자 페이지 입니다.
 
 
-
+        <h2 class="text-center">문화재 DB 현황</h2>
         <div class="container-fluid">
             <div class="row">
                 <div class="col d-flex justify-content-start align-items-center">
@@ -163,16 +163,27 @@
                         <input type="text" id="searchRegion" maxlength="10" placeholder="지역"/>
                         <input type="text" id="searchDynasty" maxlength="10" placeholder="시대"/>
 
-                        <button id="searchDB" class="btn btn-outline-primary ml-3" >검색</button>
-                        <button id="reset" class="btn btn-outline-primary ml-3" >초기화</button>
+<!--                        <button id="searchDB" class="btn btn-outline-primary ml-3" >검색</button>-->
+<!--                        <button id="reset" class="btn btn-outline-primary ml-3" >초기화</button>-->
+
+<!--                        <button id="searchDB" class="btn btn-primary ml-3" >검색</button>-->
+<!--                        <button id="reset" class="btn btn-primary ml-3" >초기화</button>-->
+
+                        <button id="searchDB" class="btn btn-outline-primary" type="button">
+                            <img src="https://kr.object.ncloudstorage.com/team3/common/search.png" alt="검색" style="width: 20px; height: 20px;">
+                        </button>
+                        <button id="reset" class="btn btn-outline-secondary" type="button" style=" margin-right: 10px;">
+                            <img src="https://kr.object.ncloudstorage.com/team3/common/x.png" alt="초기화" style="width: 20px; height: 20px;">
+                        </button>
                     </div>
 
                 </div>
-                <div class="col d-flex justify-content-center align-items-center">
-                    <h2 class="text-center">문화재 DB 현황</h2>
-                    <button type="button" id="deleteDB" class="btn btn-outline-primary ml-3"> 삭제 </button>
-                </div>
+<!--                <div class="col d-flex justify-content-center align-items-center">-->
+<!--                    <h2 class="text-center">문화재 DB 현황</h2>-->
+<!--                    <button type="button" id="deleteDB" class="btn btn-outline-primary ml-3"> 삭제 </button>-->
+<!--                </div>-->
                 <div class="col d-flex justify-content-end align-items-center">
+                    <button type="button" id="deleteDB" class="btn btn-primary ml-3"> 삭제 </button>
                 </div>
             </div>
         </div>
@@ -217,7 +228,7 @@
         <br><br><br>
 
 
-
+        <h2 class="text-center">전국 문화재 실시간</h2>
         <div class="container-fluid">
             <div class="row">
                 <div class="col d-flex justify-content-start align-items-center">
@@ -253,17 +264,30 @@
                         <input type="text" id="searchRegion2" maxlength="10" placeholder="지역"/>
                         <input type="text" id="searchDynasty2" maxlength="10" placeholder="시대"/>
 
-                        <button id="searchDB2" class="btn btn-outline-primary ml-3" >검색</button>
-                        <button id="reset2" class="btn btn-outline-primary ml-3" >초기화</button>
+<!--                        <button id="searchDB2" class="btn btn-outline-primary ml-3" >검색</button>-->
+<!--                        <button id="reset2" class="btn btn-outline-primary ml-3" >초기화</button>-->
+
+<!--                        <button id="searchDB2" class="btn btn-primary ml-3" >검색</button>-->
+<!--                        <button id="reset2" class="btn btn-primary ml-3" >초기화</button>-->
+
+<!--                        <button id="searchDB2" class="btn-outline-primary" type="button">-->
+                        <button id="searchDB2" class="btn-primary" type="button">
+                            <img src="https://kr.object.ncloudstorage.com/team3/common/search.png" alt="검색" style="width: 20px; height: 20px;">
+                        </button>
+<!--                        <button id="reset2" class="btn btn-outline-secondary" type="button" style=" margin-right: 10px;">-->
+                        <button id="reset2" class="btn btn-secondary" type="button" style=" margin-right: 10px;">
+                            <img src="https://kr.object.ncloudstorage.com/team3/common/x.png" alt="초기화" style="width: 20px; height: 20px;">
+                        </button>
 
                     </div>
 
                 </div>
-                <div class="col d-flex justify-content-center align-items-center">
-                    <h2 class="text-center">전국 문화재 실시간</h2>
-                    <button type="button" id="addDB" class="btn btn-outline-primary ml-3">DB 추가</button>
-                </div>
+<!--                <div class="col d-flex justify-content-center align-items-center">-->
+<!--                    <h2 class="text-center">전국 문화재 실시간</h2>-->
+<!--                    <button type="button" id="addDB" class="btn btn-outline-primary ml-3">DB 추가</button>-->
+<!--                </div>-->
                 <div class="col d-flex justify-content-end align-items-center">
+                    <button type="button" id="addDB" class="btn btn-primary ml-3">DB 추가</button>
                 </div>
             </div>
         </div>

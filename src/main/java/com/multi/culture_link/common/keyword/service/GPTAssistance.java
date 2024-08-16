@@ -8,6 +8,9 @@ public interface GPTAssistance {
 	
 	@SystemMessage("핵심 키워드 5개를 뽑아 ,로 이어서 반환")
 	String chat(@UserMessage String userMessage);
+
+	@SystemMessage("문화재 이름 제외한 핵심 키워드 5개를 뽑아 ,로 이어서 반환")
+	String chat2(@UserMessage String userMessage);
 	
 	
 }
