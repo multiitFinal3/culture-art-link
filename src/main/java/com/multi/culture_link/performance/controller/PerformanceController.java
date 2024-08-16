@@ -5,6 +5,7 @@ import com.multi.culture_link.admin.performance.service.PerformanceDBService;
 import com.multi.culture_link.performance.model.dto.PerformanceAddDTO;
 import com.multi.culture_link.performance.service.PerformanceLocationService;
 import com.multi.culture_link.performance.service.PerformanceRankingService;
+import com.multi.culture_link.performance.service.PerformanceReviewService;
 import com.multi.culture_link.performance.service.PerformanceService;
 import com.multi.culture_link.users.model.dto.VWUserRoleDTO;
 import org.springframework.beans.factory.annotation.Value;
@@ -36,15 +37,20 @@ public class PerformanceController {
     private final PerformanceDBService performanceDBService;
     private final PerformanceService performanceService;
 
+    private final PerformanceReviewService performanceReviewService;
+
 
     public PerformanceController(PerformanceRankingService performanceRankingService,
                                  PerformanceLocationService performanceLocationService,
                                  PerformanceDBService performanceDBService,
-                                 PerformanceService performanceService) {
+                                 PerformanceService performanceService,
+                                 PerformanceReviewService performanceReviewService) {
         this.performanceRankingService = performanceRankingService;
         this.performanceLocationService = performanceLocationService;
         this.performanceDBService = performanceDBService;
         this.performanceService = performanceService;
+        this.performanceReviewService = performanceReviewService;
+
 
 
 
@@ -174,16 +180,6 @@ public class PerformanceController {
     }
 
 
-
-
-
-
-
-
-
-
-
-
     @GetMapping("/performanceLocation")
     public String performanceLocationPage(@AuthenticationPrincipal VWUserRoleDTO user,
                                           @RequestParam(required = false) String locationCode,
@@ -200,8 +196,6 @@ public class PerformanceController {
 
         return "/performance/performanceLocation";
     }
-
-
 
 
     @GetMapping("/performanceDetail")
@@ -244,11 +238,6 @@ public class PerformanceController {
 
 
 
-
-
-
-
-
     @GetMapping("/performanceDetailByTitle")
     public String performanceDetailByTitle(@RequestParam("performanceTitle") String performanceTitle, Model model) {
         // DB에서 공연명을 통해 공연 정보를 검색
@@ -274,13 +263,6 @@ public class PerformanceController {
         response.put("performanceCode", performanceCode);
         return ResponseEntity.ok(response);
     }
-
-
-
-
-
-
-
 
 
     // 좋아요/싫어요 상태 업데이트 메서드
@@ -318,9 +300,6 @@ public class PerformanceController {
         return response;
     }
 
-
-
-
     // 검색
     @GetMapping("/search")
     public String searchPerformances(
@@ -348,6 +327,38 @@ public class PerformanceController {
 
         return "performance/performanceGenre"; // 적절한 템플릿 경로로 변경
     }
+
+
+
+
+
+
+
+
+
+
+    // 리뷰
+    // 공연 리뷰 조회
+//    @GetMapping("/{performanceId}")
+//    public List<PerformanceReviewDTO> getReviews(@PathVariable int performanceId) {
+//        return performanceReviewService.getReviewsByPerformanceId(performanceId);
+//    }
+//
+//    @PostMapping
+//    public void addReview(@RequestBody PerformanceReviewDTO review) {
+//        performanceReviewService.addReview(review);
+//    }
+//
+//    @PutMapping("/{id}")
+//    public void updateReview(@PathVariable int id, @RequestBody PerformanceReviewDTO review) {
+//        review.setId(id);
+//        performanceReviewService.updateReview(review);
+//    }
+//
+//    @DeleteMapping("/{id}")
+//    public void deleteReview(@PathVariable int id) {
+//        performanceReviewService.deleteReview(id);
+//    }
 
 
 
