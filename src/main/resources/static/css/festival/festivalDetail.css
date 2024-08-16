@@ -69,10 +69,9 @@
 
     .info-section-content *{
 
-        font-size: 20px;
+        font-size: 16px;
         font-weight: 300;
         color: black;
-        width: 400px;
 
     }
 
@@ -795,4 +794,19 @@
   #heartHateZone .whiteHateBtn:hover {
       background-color: #e0e0e0;
       transform: translateY(-2px);
+  }
+
+  .info-label {
+      font-weight: bold;
+      color: #555;
+      white-space: nowrap;
+      width: 100px;
+  }
+
+  .info-section-content div{
+
+        display: flex;
+        padding: 5px 0;
+        gap: 10px;
+
   }

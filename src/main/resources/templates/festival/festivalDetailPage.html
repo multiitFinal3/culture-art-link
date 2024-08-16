@@ -1840,37 +1840,36 @@
                 <div class="info-section-content">
 
                     <div th:switch="${festival.manageInstitution}">
-
-                        <p th:case="''"></p>
-                        <p th:case="'null'"></p>
-                        <p th:case="null"></p>
-                        <p th:case="*" th:text="${festival.manageInstitution}"></p>
+                        <span class="info-label">주최기관</span>
+                        <span th:case="''"></span>
+                        <span th:case="'null'"></span>
+                        <span th:case="null"></span>
+                        <span th:case="*" th:text="${festival.manageInstitution}"></span>
 
                     </div>
 
-                    <div>
+                    <div th:switch="${festival.formattedStart}">
 
-                        <p th:switch="${festival.formattedStart}">
-                            <span th:case="''"></span>
-                            <span th:case="'null'"></span>
-                            <span th:case="null"></span>
-                            <span th:case="*"
-                                  th:text="${festival.formattedStart}+' - '+${festival.formattedEnd}"></span>
-                        </p>
+                        <span class="info-label">축제기간</span>
+                        <span th:case="''"></span>
+                        <span th:case="'null'"></span>
+                        <span th:case="null"></span>
+                        <span th:case="*"
+                              th:text="${festival.formattedStart}+' - '+${festival.formattedEnd}"></span>
 
                     </div>
 
                     <div th:switch="${festival.season}">
-
-                        <p th:case="''"></p>
-                        <p th:case="'null'"></p>
-                        <p th:case="null"></p>
-                        <p th:case="*" th:text="${festival.season}"></p>
+                        <span class="info-label">축제기간</span>
+                        <span th:case="''"></span>
+                        <span th:case="'null'"></span>
+                        <span th:case="null"></span>
+                        <span th:case="*" th:text="${festival.season}"></span>
 
                     </div>
 
                     <div th:switch="${festival.homepageUrl}">
-
+                        <span class="info-label">바로가기</span>
                         <a th:case="''"></a>
                         <a th:case="'null'"></a>
                         <a th:case="null"></a>
@@ -1881,8 +1880,9 @@
                     </div>
 
                     <div class="averageRating" th:data-avgRate="${festival.avgRate}">
+                        <span class="info-label">평균별점</span>
                         <span th:text="${festival.avgRate}"></span>
-                        <span class="review-avgstar" id="reviewAvgStar"></span>
+                        <span class="review-avgstar" id="reviewAvgStar" style="width: 400px;"></span>
                     </div>
 
 
