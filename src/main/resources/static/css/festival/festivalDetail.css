@@ -723,15 +723,15 @@
         justify-content: center; /* 가운데 정렬 */
         align-items: center;
         gap: 10px; /* 아이콘 사이의 간격 */
-        /*margin-top: 20px;*/ /* 카드와 버튼 사이에 간격 추가 */
+        margin: 20px 0 30px;
     }
 
     #heartHateZone .whiteHateBtn, #heartHateZone .whiteHeartBtn{
 
         position: relative;
-        background: white;
-        padding: 5px 10px;
-        margin: 5px;
+        background: #f0f0f0;
+        padding: 10px 15px;
+        margin: 5px 0;
         border: none;
         border-radius: 5px;
         cursor: pointer;
