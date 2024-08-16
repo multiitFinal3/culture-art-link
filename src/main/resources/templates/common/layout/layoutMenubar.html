@@ -27,11 +27,24 @@
 <div id="menubar">
 
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <img src="https://img.freepik.com/premium-vector/korean-culture-poster_24877-72504.jpg" alt="로고이미지" width="50px" height="50px">
-        <a class="navbar-brand" href="#">&nbsp;&nbsp;문화이음&nbsp;&nbsp;</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 100" style="width: 300px">
+            <style>
+                .icon { fill: #333333; }
+                .korean { font-family: 'Noto Sans KR', sans-serif; font-weight: 500; }
+                .english { font-family: 'Arial', sans-serif; font-weight: normal; letter-spacing: 2px; }
+            </style>
 
-        </button>
+            <!-- Updated triangle icon -->
+            <g class="icon" transform="translate(0, 20) scale(0.6)">
+                <path d="M0,60 L50,0 L100,60 L75,60 L50,20 L25,60 Z"/>
+            </g>
+
+            <!-- Korean text -->
+            <text x="80" y="50" class="korean" font-size="32" fill="#333333">문 화 이 음</text>
+
+            <!-- English text -->
+            <text x="80" y="80" class="english" font-size="20" fill="#555555">C U L T U R E  L I N K</text>
+        </svg>
 
         <!--메뉴바 링크-->
         <div class="collapse navbar-collapse" id="navbarNavDropdown">

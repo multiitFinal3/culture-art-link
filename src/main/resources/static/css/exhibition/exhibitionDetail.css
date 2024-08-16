@@ -131,6 +131,11 @@ header {
     color: white;
 }
 
+.tab-menu button:hover {
+    background: #E5E5E5;
+}
+
+
 #content {
     padding: 24px;
     background: white;
