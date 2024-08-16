@@ -1,19 +1,65 @@
 $(document).ready(
     function(){
 
-        //# region 카드 클릭 시 상세 페이지로 이동
+        //# region 카드 전체 함수
 
+
+
+       /**
+       * 카드 클릭 시 상세 페이지로 이동
+       *
+       */
         $(document).on('click','.card',function(){
 
             var festivalId = $(this).attr('id');
             window.location.href='/festival/festival-detail?festivalId='+festivalId;
 
         })
+
+
+
+       /**
+       * 카드 호버 시 찜 관심없음 버튼 보임
+       *
+       */
+        $(document).on('mouseover','.card', function(){
+
+            var btns = $(this).find('button');
+            btns.each(function(){
+
+                var btn = $(this);
+                btn.removeClass('none');
+
+            })
+        })
+
+
+       /**
+       * 카드 호버 아닐 시 찜 관심없음 버튼 안보임
+       *
+       */
+        $(document).on('mouseout','.card', function(){
+
+            var btns = $(this).find('button');
+            btns.each(function(){
+
+                var btn = $(this);
+                btn.addClass('none');
+
+            })
+        })
+
+
+
         //#endRegion
 
 
         //#region 키워드 추천 관련 함수
 
+           /**
+           * 키워드 추천 함수
+           *
+           */
             function findKeywordRecommendFestivalList(){
 
                 $('#list2').html("");
@@ -70,12 +116,12 @@ $(document).ready(
 
                                       <div class="buttonZone">
 
-                                        <button class="whiteHeartBtn">
+                                        <button class="whiteHeartBtn none">
                                           <img src="https://kr.object.ncloudstorage.com/team3/common/upNo.png"
                                              style="width : 25px; height: 25px;" class="heart" value="${festival.festivalId}">
                                         </button>
 
-                                        <button class="whiteHateBtn">
+                                        <button class="whiteHateBtn none">
                                           <img src="https://kr.object.ncloudstorage.com/team3/common/downNo.png"
                                              style="width : 25px; height: 25px;" class="hate" value="${festival.festivalId}">
                                         </button>
@@ -168,12 +214,12 @@ $(document).ready(
                                   <p class="card-text t2" style="text-align:center;">★ ${festival.avgRate.toFixed(1)}</p>
                                   <div class="buttonZone">
 
-                                      <button class="whiteHeartBtn">
+                                      <button class="whiteHeartBtn none">
                                         <img src="https://kr.object.ncloudstorage.com/team3/common/upNo.png"
                                            style="width : 25px; height: 25px;" class="heart" value="${festival.festivalId}">
                                       </button>
 
-                                      <button class="whiteHateBtn">
+                                      <button class="whiteHateBtn none">
                                         <img src="https://kr.object.ncloudstorage.com/team3/common/downNo.png"
                                            style="width : 25px; height: 25px;" class="hate" value="${festival.festivalId}">
                                       </button>
@@ -503,12 +549,12 @@ $(document).ready(
                                   <p class="card-text">${start} - ${end}</p>
                                   <p class="card-text t2" style="text-align:center;">★ ${festival.avgRate.toFixed(1)}</p>
                                   <div class="buttonZone">
-                                    <button class="whiteHeartBtn">
+                                    <button class="whiteHeartBtn none">
                                         <img src="https://kr.object.ncloudstorage.com/team3/common/upNo.png"
                                            style="width : 25px; height: 25px;" class="heart" value="${festival.festivalId}">
                                     </button>
 
-                                    <button class="whiteHateBtn">
+                                    <button class="whiteHateBtn none">
                                         <img src="https://kr.object.ncloudstorage.com/team3/common/downNo.png"
                                            style="width : 25px; height: 25px;" class="hate" value="${festival.festivalId}">
                                     </button>
