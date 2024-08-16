@@ -1,72 +1,88 @@
 #exhibitionRegulate {
-  display: flex;
-  flex-flow: column;
-  align-items: center;
-  justify-content: center;
-  margin-top: 8%;
-  margin-left: 6%;
-  margin-right: 5%;
+    display: flex;
+    flex-flow: column;
+    justify-content: center;
+    margin-top: 8%;
+    margin-left: 6%;
+    margin-right: 5%;
 }
 
 table {
-  margin-bottom: 50px;
+    margin-bottom: 50px;
 }
 
 table,
 th,
 td {
-  border: 1px solid black;
-  width: 250px;
+    border: 1px solid black;
+    width: 250px;
 }
 
 th,
 td {
-  text-align: center;
-  width: 250px;
+    text-align: center;
+    width: 250px;
 }
 
 th {
-  background-color: #c6d6ef;
+    background-color: #c6d6ef;
 }
 
 td {
-  background-color: #e7eef9;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+    background-color: #e7eef9;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 td#festivalContent,
 td#festivalName {
-  width: 400px;
+    width: 400px;
 }
 
 .resize-img {
-  width: 150px;
+    width: 150px;
 }
 
 .td-title {
-  max-width: 300px;
+    max-width: 300px;
 }
 
 .td-artist {
-  max-width: 150px;
+    max-width: 150px;
 }
 
 .td-price {
-  max-width: 10px;
-  width: 50px;
+    max-width: 10px;
+    width: 50px;
 }
 
 .td-number,
 .td-index {
-  max-width: 10px;
+    max-width: 10px;
 }
 
 button {
-  margin: 3px;
+    position: relative;
+    display: inline-block;
+    padding: .5rem .75rem;
+    margin-left: -1px;
+    line-height: 1.25;
+    color: #007bff;
+    background-color: #fff;
+    border: 1px solid #dee2e6;
 }
 
-.width-100{
-  width: 100%;
+
+.width-100 {
+    width: 100%;
+}
+
+#searchForm {
+    display: flex;
+}
+
+.page-box {
+    justify-content: center;
+    display: flex;
 }
