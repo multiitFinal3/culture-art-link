@@ -389,7 +389,7 @@
 
     <select id="findDBFestivalAllList" resultType="festivalDTO">
 
-        SELECT * FROM festival
+        SELECT * FROM vw_festival_review_manage_data
         ORDER BY festival_id DESC;
 
     </select>

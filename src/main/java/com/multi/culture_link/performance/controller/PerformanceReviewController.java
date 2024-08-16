@@ -2,12 +2,13 @@ package com.multi.culture_link.performance.controller;
 
 import com.multi.culture_link.performance.model.dto.PerformanceReviewDTO;
 import com.multi.culture_link.performance.service.PerformanceReviewService;
-import com.multi.culture_link.users.model.dto.UserDTO;
-import com.multi.culture_link.users.service.UserService;
+import com.multi.culture_link.users.model.dto.VWUserRoleDTO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-import java.security.Principal;
 import java.util.List;
 
 /**
@@ -18,52 +19,52 @@ import java.util.List;
  * @since : 2024. 8. 7.
  */
 @RestController
-@RequestMapping("/reviews") // 변경된 부분: 기본 경로를 /reviews로 설정
+@RequestMapping("/reviews")
 public class PerformanceReviewController {
 
     private final PerformanceReviewService performanceReviewService;
-    private final UserService userService; // UserService 주입
 
     @Autowired
-    public PerformanceReviewController(PerformanceReviewService performanceReviewService, UserService userService) {
+    public PerformanceReviewController(PerformanceReviewService performanceReviewService) {
         this.performanceReviewService = performanceReviewService;
-        this.userService = userService; // UserService 초기화
     }
 
-    @GetMapping
-    public List<PerformanceReviewDTO> getAllReviews() {
-        return performanceReviewService.getAllReviews();
+    // 공연 리뷰 조회
+    @GetMapping("/{performanceId}")
+    public ResponseEntity<List<PerformanceReviewDTO>> getReviews(@PathVariable int performanceId) {
+        List<PerformanceReviewDTO> reviews = performanceReviewService.getReviewsByPerformanceId(performanceId);
+        return ResponseEntity.ok(reviews);
     }
 
-    @GetMapping("/performance/{performanceId}")
-    public List<PerformanceReviewDTO> getReviewsByPerformanceId(@PathVariable int performanceId) {
-        return performanceReviewService.getReviewsByPerformanceId(performanceId);
-    }
-
-    @PostMapping
-    public void insertReview(@RequestBody PerformanceReviewDTO review, Principal principal) {
-        // 사용자 이름을 기반으로 userId를 가져오는 로직 추가
-        String username = principal.getName();
-        UserDTO userDTO;
+    // 리뷰 추가
+    @PostMapping // 중복된 경로 수정
+    public ResponseEntity<?> addReview(@AuthenticationPrincipal VWUserRoleDTO user, @RequestBody PerformanceReviewDTO review) {
         try {
-            userDTO = userService.findUserByEmail(username);
-        } catch (Exception e) {
-            throw new RuntimeException("User not found");
-        }
+            // 현재 로그인된 사용자의 user_id 설정
+            review.setUserId(user.getUser().getUserId());
 
-        int userId = userDTO.getUserId(); // 사용자 ID를 가져옴
-        review.setUserId(userId);
-        performanceReviewService.insertReview(review);
+            // 리뷰 추가 서비스 호출
+            performanceReviewService.addReview(review);
+
+            return ResponseEntity.ok("Review added successfully.");
+        } catch (Exception e) {
+            // 예외 발생 시 구체적인 메시지를 포함
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to add review: " + e.getMessage());
+        }
     }
 
+    // 리뷰 업데이트
     @PutMapping("/{id}")
-    public void updateReview(@PathVariable int id, @RequestBody PerformanceReviewDTO review) {
+    public ResponseEntity<Void> updateReview(@PathVariable int id, @RequestBody PerformanceReviewDTO review) {
         review.setId(id);
         performanceReviewService.updateReview(review);
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
+    // 리뷰 삭제
     @DeleteMapping("/{id}")
-    public void deleteReview(@PathVariable int id) {
+    public ResponseEntity<Void> deleteReview(@PathVariable int id) {
         performanceReviewService.deleteReview(id);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }

@@ -1,8 +1,9 @@
 package com.multi.culture_link.admin.performance.mapper;
 
 import com.multi.culture_link.admin.performance.model.dto.PerformanceDTO;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
+import com.multi.culture_link.performance.model.dto.PerformanceAddDTO;
+import com.multi.culture_link.performance.model.dto.PerformanceReviewDTO;
+import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
@@ -26,10 +27,51 @@ public interface PerformanceMapper {
 
 
 
-    // 추가: 공연명으로 검색하는 메서드
-    //PerformanceDTO getPerformanceByTitle(String performanceTitle);
+    // 공연명으로 검색하는 메서드
     PerformanceDTO getPerformanceByTitle(@Param("performanceTitle") String performanceTitle);
 
 
 
+
+
+    //
+    PerformanceAddDTO findByUserIdAndPerformanceId(@Param("userId") int userId, @Param("performanceId") int performanceId);
+    void updatePerformanceAdd(PerformanceAddDTO performanceAddDTO);
+    void insertPerformanceAdd(PerformanceAddDTO performanceAddDTO);
+
+    String getPerformanceLikeState(int userId, int performanceId);
+
+
+
+    // 검색
+    // keyword와 genre로 공연 검색
+     List<PerformanceDTO> searchPerformancesByKeywordAndGenre(@Param("keyword") String keyword, @Param("genre") String genre);
+
+
+
+    // 특정 공연의 모든 리뷰를 조회
+    List<PerformanceReviewDTO> findReviewsByPerformanceId(@Param("performanceId") int performanceId);
+
+    // 리뷰를 데이터베이스에 삽입
+
+    void insertReview(PerformanceReviewDTO review);
+
+    // 특정 리뷰를 업데이트
+    void updateReview(PerformanceReviewDTO review);
+
+    // 특정 리뷰를 삭제
+    void deleteReview(@Param("id") int id);
+    // 리뷰 관련 메서드
+
+//    Integer findUserIdByUsername(String username);
+//
+//    List<PerformanceReviewDTO> getAllReviews();
+//
+//    List<PerformanceReviewDTO> getReviewsByPerformanceId(int performanceId);
+//
+//    void insertReview(PerformanceReviewDTO review);
+//
+//    void updateReview(PerformanceReviewDTO review);
+//
+//    void deleteReview(int id);
 }

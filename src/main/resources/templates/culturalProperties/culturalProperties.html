@@ -14,29 +14,6 @@
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
     <style>
 
-        /* 필터 컨테이너 스타일 */
-<!--.filter-container {-->
-<!--    display: flex;-->
-<!--    justify-content: space-between;-->
-<!--    margin-bottom: 20px;-->
-<!--}-->
-
-<!--.category-filter, .extra-filter {-->
-<!--    display: flex;-->
-<!--    gap: 10px;-->
-<!--}-->
-
-<!--.category-item, .extra-item {-->
-<!--    cursor: pointer;-->
-<!--    padding: 5px 10px;-->
-<!--    border: 1px solid #ddd;-->
-<!--    border-radius: 5px;-->
-<!--    transition: background-color 0.3s;-->
-<!--}-->
-
-<!--.category-item:hover, .extra-item:hover {-->
-<!--    background-color: #f0f0f0;-->
-<!--}-->
 
 /* 필터 컨테이너 */
 .filter-container {
@@ -111,7 +88,9 @@
     padding: 5px 10px;
     border: 1px solid #ddd;
     border-radius: 5px;
+
 }
+
 
 /* 랭킹 섹션 스타일 */
 .ranking, .all-cultural-properties {
@@ -197,7 +176,8 @@
 }
 
 .all-location,
-.all-category {
+.all-category,
+.all-dynasty {
     font-size: 14px;
     color: #555;
     white-space: normal; /* 긴 텍스트 줄바꿈 허용 */
@@ -228,18 +208,54 @@ a {
     }
 }
 
+
+
+.empty-message {
+    color: #999;
+    text-align: center;
+    margin-top: 3rem; /* 위쪽 여백을 3줄로 설정 */
+}
+
+
+.badge-container {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    display: none;
+    gap: 5px;
+}
+
+.all-card:hover .badge-container {
+    display: flex;
+}
+
+.interest-button {
+    border: none;
+    background-color: #fff;
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    opacity: 0.8;
+}
+
+.interest-button img {
+    width: 20px;
+    height: 20px;
+}
+
+
+
+
+
     </style>
 </head>
 
 <body>
 <div layout:fragment="content">
 
-    <div class="filter-container"> <!-- 필터 컨테이너 추가 -->
-<!--        <div class="genre-filter">-->
-<!--            <div class="genre-item">전체 문화재 목록</div>-->
-<!--            <div class="genre-item">뉴스 & 소식</div>-->
-<!--            <div class="genre-item">관련 영상</div>-->
-<!--        </div>-->
+    <div class="filter-container">
+
         <div class="genre-filter">
             <div class="genre-item active" data-target="all">전체 문화재 목록</div>
             <div class="genre-item" data-target="news">뉴스 & 소식</div>
@@ -248,7 +264,6 @@ a {
 
         <div class="extra-filter">
 
-            <div class="search-bar mt-3">
                 <form id="searchForm" class="d-flex">
                     <div class="input-group">
                         <select name="category" class="form-select me-2" style="width: 120px;">
@@ -274,20 +289,27 @@ a {
                         <input class="form-control me-2" type="text" name="culturalPropertiesName" placeholder="이름" aria-label="culturalPropertiesName" style="width: 120px;">
                         <input class="form-control me-2" type="text" name="region" placeholder="지역" aria-label="Region" style="width: 120px;">
                         <input class="form-control me-2" type="text" name="dynasty" placeholder="시대" aria-label="dynasty" style="width: 120px;">
-                        <button id="searchButton" class="btn btn-outline-success" type="button">검색</button>
-                        <button id="resetButton" class="btn btn-outline-secondary" type="button">초기화</button>
+
+                        <button id="searchButton" class="btn btn-outline-success" type="button">
+                            <img src="https://kr.object.ncloudstorage.com/team3/common/search.png" alt="검색" style="width: 20px; height: 20px;">
+                        </button>
+                        <button id="resetButton" class="btn btn-outline-secondary" type="button" style=" margin-right: 10px;">
+                            <img src="https://kr.object.ncloudstorage.com/team3/common/x.png" alt="초기화" style="width: 20px; height: 20px;">
+                        </button>
+
+
                     </div>
                 </form>
-            </div>
 
-            <div class="extra-item">
-                <img th:src="@{/img/performance/ranking.png}" alt="랭킹 아이콘" class="filter-icon">
-                랭킹
-            </div>
-            <div class="extra-item">
-                <img th:src="@{/img/performance/map.png}" alt="지역별 아이콘" class="filter-icon">
-                지역별
-            </div>
+
+<!--            <div class="extra-item">-->
+<!--                <img th:src="@{/img/performance/ranking.png}" alt="랭킹 아이콘" class="filter-icon">-->
+<!--                랭킹-->
+<!--            </div>-->
+<!--            <div class="extra-item">-->
+<!--                <img th:src="@{/img/performance/map.png}" alt="지역별 아이콘" class="filter-icon">-->
+<!--                지역별-->
+<!--            </div>-->
         </div>
 
 
@@ -312,13 +334,32 @@ a {
             <div class="all-cultural-properties-items" id="gallery-section">
                 <div class="all-cultural-property-item" th:each="property : ${allCulturalProperties}">
                     <a th:href="@{'/cultural-properties/detail/' + ${property.id}}">
-                        <div class="all-card">
+<!--                        <div class="all-card">-->
+<!--                            <img th:src="${property.mainImgUrl}" th:alt="${property.culturalPropertiesName}">-->
+<!--                        </div>-->
+
+
+                        <div class="all-card" th:data-cultural-property-id="${property.id}">
                             <img th:src="${property.mainImgUrl}" th:alt="${property.culturalPropertiesName}">
+
+                            <div class="badge-container">
+                                <button class="interest-button like-button">
+                                    <img src="https://kr.object.ncloudstorage.com/team3/common/upNo.png" alt="찜">
+                                </button>
+                                <button class="interest-button dislike-button">
+                                    <img src="https://kr.object.ncloudstorage.com/team3/common/downNo.png" alt="관심없음">
+                                </button>
+                            </div>
+
                         </div>
+
+
                         <div class="all-cultural-property-info">
                             <div class="all-title" th:text="${property.culturalPropertiesName}">문화재명</div>
                             <div class="all-location" th:text="${property.region + ' ' + property.district}">위치</div>
-                            <div class="all-category" th:text="${property.categoryName}">카테고리</div>
+                            <div class="all-category" th:text="${property.categoryName}">종목</div>
+                            <div class="all-dynasty" th:text="${property.dynasty}">시대</div>
+
                         </div>
                     </a>
                 </div>
@@ -327,7 +368,6 @@ a {
         </div>
 
 
-<!--        <div class="tab-content mt-5" id="myTabContent">-->
             <div class="tab-pane fade" id="news" role="tabpanel" aria-labelledby="news-tab">
                 <div class="news-articles">
                     <h2>문화재 관련 뉴스</h2>

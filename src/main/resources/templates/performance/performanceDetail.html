@@ -16,9 +16,28 @@
     <script th:src="'https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=' + ${naverClientId} + '&submodules=geocoder'"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
+
+
+    <script>
+        var userId = [[${user.userId}]];
+        var performanceId = [[${performance.id}]];
+    </script>
+
+    <style>
+        .button-box.active {
+            background-color: #7f7f7f;
+            color: white;
+        }
+    </style>
+
+
+
+
+
 </head>
 
 <body>
+
 <div layout:fragment="content">
     <div class="filter-container">
         <!-- 장르 필터 -->
@@ -51,25 +70,59 @@
         <div class="top-section">
             <div class="detail-card">
                 <img class="thumbnail" th:src="${performance.imageMain}" alt="공연 이미지" />
-                <div class="star-icon">★</div>
             </div>
+
+
+
             <div class="info-section">
                 <div class="title" th:text="${performance.title}">공연명</div>
                 <div class="info-section-content">
-                    <div class="info-location" th:text="${performance.location}">공연장소</div>
-                    <div class="info-date" th:text="${performance.formattedDate}">공연기간</div>
-                    <div class="info-runtime" th:text="${performance.runtime}">관람시간</div>
-                    <div class="info-age" th:text="${performance.age}">관람등급</div>
-                    <div class="info-genre" th:text="${performance.genre}">장르</div>
-                    <div class="info-organizer" th:text="${performance.organizer}">기관</div>
-                    <div class="info-producer" th:text="${performance.producer}">주체</div>
-                    <div class="info-price" th:text="${performance.price}">가격</div>
+                    <div class="info-item">
+                        <span class="info-label">장소</span>
+                        <span class="info-location" th:text="${performance.location}">공연장소</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">공연기간</span>
+                        <span class="info-content" th:text="${performance.formattedDate}">공연기간</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">관람시간</span>
+                        <span class="info-content" th:text="${performance.runtime}">관람시간</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">관람연령</span>
+                        <span class="info-content" th:text="${performance.age}">관람등급</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">장르</span>
+                        <span class="info-content" th:text="${performance.genre}">장르</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">기관</span>
+                        <span class="info-content" th:text="${performance.organizer}">기관</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">주체</span>
+                        <span class="info-content" th:text="${performance.producer}">주체</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">가격</span>
+                        <span class="info-content" th:text="${performance.price}">가격</span>
+                    </div>
+
                     <div class="info-ticketbutton">
                         <a th:href="${performance.ticketingUrl}" target="_blank">예매하기</a>
                     </div>
                 </div>
             </div>
         </div>
+
+        <!-- 좋아요 및 싫어요 버튼 -->
+        <div class="like-dislike-container">
+            <img id="likeBtn" src="https://kr.object.ncloudstorage.com/team3/common/upNo.png" alt="Like" class="like-dislike-icon">
+            <img id="dislikeBtn" src="https://kr.object.ncloudstorage.com/team3/common/downNo.png" alt="Dislike" class="like-dislike-icon">
+        </div>
+
         <div class="performance-container">
             <div class="button-box">공연상세</div>
             <div class="button-box" id="showMapBtn">공연장소</div>
@@ -85,7 +138,7 @@
 
             <div class="review-section" style="display: none;">
                 <div class="reviews">
-                    <!-- 후기가 삽입 -->
+                    <!-- 후기가 삽입될 영역 -->
                 </div>
                 <div class="write-review">
                     <h3>후기 작성</h3>
@@ -106,6 +159,7 @@
                 </div>
             </div>
         </div>
+
     </div>
 </div>
 </body>

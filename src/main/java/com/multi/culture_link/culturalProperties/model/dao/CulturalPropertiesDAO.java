@@ -17,7 +17,7 @@ public interface CulturalPropertiesDAO {
     List<CulturalPropertiesDTO> listCulturalProperties(@Param("offset") int offset, @Param("limit") int limit);
     List<CulturalPropertiesDTO> listAllCulturalProperties();
 
-//    int getTotalCount();
+    int getTotalCount();
 
     CulturalPropertiesDTO getCulturalPropertyById(int id);
 
@@ -28,19 +28,6 @@ public interface CulturalPropertiesDAO {
     // 사용자 찜 정보 가져오기
     List<CulturalPropertiesInterestDTO> getInterest(@Param("userId") int userId);
 
-
-//    List<CulturalPropertiesDTO> searchCulturalProperties(@Param("category") String category,
-//                                                    @Param("culturalPropertiesName") String culturalPropertiesName,
-//                                                    @Param("region") String region,
-//                                                    @Param("dynasty") String dynasty,
-//                                                    @Param("offset") int offset,
-//                                                    @Param("pageSize") int pageSize);
-//
-//
-//    long countCulturalProperties(@Param("category") String category,
-//                                 @Param("culturalPropertiesName") String culturalPropertiesName,
-//                                 @Param("region") String region,
-//                                 @Param("dynasty") String dynasty);
 
     List<CulturalPropertiesDTO> searchCulturalProperties(String category, String culturalPropertiesName, String region, String dynasty);
     long countCulturalProperties(String category, String culturalPropertiesName, String region, String dynasty);
@@ -53,22 +40,9 @@ public interface CulturalPropertiesDAO {
 
     List<CulturalPropertiesDTO> getRandomPlace(@Param("region") String region, @Param("id") int id);
 
+    // 사용자 찜 정보 가져오기
+    List<CulturalPropertiesInterestDTO> getDetailInterest(@Param("culturalPropertiesId") int culturalPropertiesId, @Param("userId") int userId);
 
-//    void likeAttraction(int id);
-//    void dislikeAttraction(int id);
-
-//    void insertInterest(@Param("userId") int userId,
-//                     @Param("id") int id,
-//                     @Param("interestType") String interestType);
-//
-//    void deleteInterest(@Param("userId") int userId,
-//                        @Param("id") int id);
-//
-//    boolean isLiked(@Param("userId") int userId,
-//                    @Param("id") int id);
-//
-//    boolean isDisliked(@Param("userId") int userId,
-//                       @Param("id") int id);
 
 
     void addReview(CulturalPropertiesReviewDTO reviewDTO);

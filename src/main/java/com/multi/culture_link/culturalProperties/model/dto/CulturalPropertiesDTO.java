@@ -77,4 +77,18 @@ public class CulturalPropertiesDTO extends PageDTO {
 
 
 
+    // 평균 평점 필드 추가
+    private double averageRating;
+
+
+    public double getAverageRating() {
+        return averageRating;
+    }
+
+    public void setAverageRating(double averageRating) {
+        this.averageRating = averageRating;
+    }
+
+
+
 }
