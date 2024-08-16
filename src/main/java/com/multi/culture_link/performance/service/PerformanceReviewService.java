@@ -1,6 +1,6 @@
 package com.multi.culture_link.performance.service;
 
-import com.multi.culture_link.performance.mapper.PerformanceReviewMapper;
+import com.multi.culture_link.admin.performance.mapper.PerformanceMapper;
 import com.multi.culture_link.performance.model.dto.PerformanceReviewDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,25 +18,25 @@ import java.util.List;
 public class PerformanceReviewService {
 
     @Autowired
-    private PerformanceReviewMapper performanceReviewMapper;
+    private final PerformanceMapper performancMapper;
 
-    public List<PerformanceReviewDTO> getAllReviews() {
-        return performanceReviewMapper.getAllReviews();
+    public PerformanceReviewService(PerformanceMapper performancMapper) {
+        this.performancMapper = performancMapper;
     }
 
     public List<PerformanceReviewDTO> getReviewsByPerformanceId(int performanceId) {
-        return performanceReviewMapper.getReviewsByPerformanceId(performanceId);
+        return performancMapper.findReviewsByPerformanceId(performanceId);
     }
 
-    public void insertReview(PerformanceReviewDTO review) {
-        performanceReviewMapper.insertReview(review);
+    public void addReview(PerformanceReviewDTO review) {
+        performancMapper.insertReview(review);
     }
 
     public void updateReview(PerformanceReviewDTO review) {
-        performanceReviewMapper.updateReview(review);
+        performancMapper.updateReview(review);
     }
 
-    public void deleteReview(int id) {
-        performanceReviewMapper.deleteReview(id);
+    public void deleteReview(int reviewId) {
+        performancMapper.deleteReview(reviewId);
     }
 }

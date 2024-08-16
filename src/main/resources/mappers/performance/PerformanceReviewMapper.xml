@@ -10,30 +10,36 @@
         FROM performance_review
     </select>
 
-    <select id="getReviewsByPerformanceId" parameterType="int" resultType="com.multi.culture_link.performance.model.dto.PerformanceReviewDTO">
+
+
+
+
+
+
+
+
+
+    <select id="findReviewsByPerformanceId" resultType="com.multi.culture_link.performance.model.dto.PerformanceReviewDTO">
         SELECT *
         FROM performance_review
         WHERE performance_id = #{performanceId}
     </select>
 
-    <insert id="insertReview">
-        INSERT INTO performance_review (user_id, performance_id, date_time, star_rating, content, review_date, created_at, updated_at)
-        VALUES (#{userId}, #{performanceId}, #{dateTime}, #{starRating}, #{content}, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
+    <insert id="insertReview" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO performance_review (user_id, performance_id, star_rating, content, review_date, created_at, updated_at)
+        VALUES (#{userId}, #{performanceId}, #{starRating}, #{content}, #{reviewDate}, NOW(), NOW())
     </insert>
 
     <update id="updateReview">
         UPDATE performance_review
-        SET date_time = #{dateTime},
-            star_rating = #{starRating},
-            content = #{content},
-            review_date = #{reviewDate},
-            updated_at = CURRENT_TIMESTAMP
+        SET star_rating = #{starRating},
+        content = #{content},
+        updated_at = NOW()
         WHERE id = #{id}
     </update>
 
-    <delete id="deleteReview" parameterType="int">
-        DELETE FROM performance_review
-        WHERE id = #{id}
+    <delete id="deleteReview">
+        DELETE FROM performance_review WHERE id = #{id}
     </delete>
 
 </mapper>

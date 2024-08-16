@@ -23,6 +23,13 @@
         var performanceId = [[${performance.id}]];
     </script>
 
+    <style>
+        .button-box.active {
+            background-color: #7f7f7f;
+            color: white;
+        }
+    </style>
+
 
 
 
@@ -72,7 +79,7 @@
                 <div class="info-section-content">
                     <div class="info-item">
                         <span class="info-label">장소</span>
-                        <span class="info-content" th:text="${performance.location}">공연장소</span>
+                        <span class="info-location" th:text="${performance.location}">공연장소</span>
                     </div>
                     <div class="info-item">
                         <span class="info-label">공연기간</span>
@@ -112,8 +119,8 @@
 
         <!-- 좋아요 및 싫어요 버튼 -->
         <div class="like-dislike-container">
-            <img id="likeBtn" src="/img/performance/LikeNo.PNG" alt="Like" class="like-dislike-icon">
-            <img id="dislikeBtn" src="/img/performance/notLikeNo.PNG" alt="Dislike" class="like-dislike-icon">
+            <img id="likeBtn" src="https://kr.object.ncloudstorage.com/team3/common/upNo.png" alt="Like" class="like-dislike-icon">
+            <img id="dislikeBtn" src="https://kr.object.ncloudstorage.com/team3/common/downNo.png" alt="Dislike" class="like-dislike-icon">
         </div>
 
         <div class="performance-container">
@@ -131,7 +138,7 @@
 
             <div class="review-section" style="display: none;">
                 <div class="reviews">
-                    <!-- 후기가 삽입 -->
+                    <!-- 후기가 삽입될 영역 -->
                 </div>
                 <div class="write-review">
                     <h3>후기 작성</h3>
@@ -152,6 +159,7 @@
                 </div>
             </div>
         </div>
+
     </div>
 </div>
 </body>
