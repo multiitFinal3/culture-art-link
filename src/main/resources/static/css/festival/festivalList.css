@@ -1,4 +1,54 @@
 
+    /* 필터 컨테이너 */
+        .filter-container {
+            display: flex;
+            justify-content: space-between;
+            margin: 20px 0;
+        }
+
+        /* 장르 필터 */
+        .genre-filter {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* 장르 아이템 스타일 */
+        .genre-item {
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 400;
+            color: #1E1E1E;
+            cursor: pointer;
+            padding: 8px 12px;
+        }
+
+        /* 활성화된 장르 아이템 스타일 */
+        .genre-item.active {
+            background: #F5F5F5;
+            color: #444444;
+        }
+
+
+        .genre-filter ul{
+
+              list-style-type: none;
+              margin: 0;
+              padding: 0;
+              display: flex;
+              flex-flow: row;
+              justify-content: space-around;
+              align-items: center;
+        }
+
+        .genre-filter li {
+          float: left;
+        }
+
+
+
+
+
     #festivalRegulate{
 
         display: flex;
@@ -11,75 +61,83 @@
     }
 
 
-    #festivalRecommendation{
+    #festivalRecommendation,
+    #festivalList
+    {
 
         display: flex;
         flex-flow: column;
         align-items: center;
         justify-content: center;
-        margin-top: 8%;
+        margin-top: 20px;
         margin-left: 5%;
         margin-right: 5%;
 
     }
+
+    #festivalList{
+
+        width: 1400px;
+
+    }
+
+    #festivalList h2{
+
+        font-size: 22px;
+
+    }
+
+
+    #festivalRegulate  h2{
+
+        width: 100%;
+        text-align: center;
+        font-size: 16px;
+        font-weight: 600;
+        margin-bottom: 20px;
+
+    }
+
 
 
     #list2{
 
-        overflow-x: scroll;
-        margin: 3%;
-        text-align: center;
-        display: flex;
-
-
-    }
-
-
-    #festivalList{
-
-        display: flex;
-        width: 100%;
-        flex-flow: column;
-        align-items: center;
-        justify-content: center;
-        margin-top: 8%;
-        margin-left: 5%;
-        margin-right: 5%;
-
-    }
-
-
-    #list1{
-
         display: flex;
         flex-flow: row;
-        flex-wrap: wrap;
+        flex-wrap: no-wrap;
         align-items: center;
         justify-content: center;
-        margin-top: 3%;
         margin-left: 5%;
         margin-right: 5%;
-
-
+        flex-wrap: wrap;
+        gap: 10px;
     }
 
-    .card{
+    #list2 .card{
 
-        margin: 1%;
-        min-width: 400px;
-        max-width: 400px;
-        min-height: 600px;
-        max-height: 600px;
+       min-height: 470px;
+      max-height: 470px;
+      min-width: 249px;
+      max-width: 249px;
+      margin-bottom: 10px;
+      background: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      transition: transform 0.2s;
+      border: 0px;
 
     }
 
 
    .card-img-top{
 
-        margin: 1%;
-        width: 380px;
-        height: 400px;
-
+        max-height: 332px;
+        min-width: 249px;
+        min-height: 332px;
+        max-width: 249px;
+        border-radius: 8px;
+        object-fit: cover;
 
     }
 
@@ -90,6 +148,90 @@
 
     }
 
+
+
+    .card-number {
+        font-size: 60px;
+        font-weight: 700;
+        color: white;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        position: absolute;
+        top: 10px;
+        left: 10px;
+    }
+
+    .card-title{
+
+        font-size: 20px;
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 5px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 230px;
+        text-align:center;
+
+    }
+
+    .card-body p{
+
+        margin-top: 0px;
+        margin-bottom: 0px;
+        font-size: 16px;
+        font-weight: 400;
+        color: #757575;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 200px;
+        text-align:center;
+    }
+
+
+    .card-body .t2{
+        margin-top: 0px;
+        margin-bottom: 20px;
+        text-align:center;
+        color: black;
+    }
+
+
+
+
+    #list1{
+
+        display: flex;
+        flex-flow: row;
+        flex-wrap: no-wrap;
+        align-items: center;
+        justify-content: center;
+        margin-left: 5%;
+        margin-right: 5%;
+        flex-wrap: wrap;
+        gap: 10px;
+
+    }
+
+    #list1 .card{
+
+        min-height: 470px;
+        max-height: 470px;
+        min-width: 249px;
+        max-width: 249px;
+        margin-bottom: 10px;
+        background: white;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        transition: transform 0.2s;
+        border: 0px;
+        text-align:center;
+    }
+
+
+
+
    #pageNum1{
 
        display: flex;
@@ -97,6 +239,7 @@
        width: 30%;
        align-items: center;
        justify-content: center;
+       margin-top: 15px;
 
 
    }
@@ -107,21 +250,145 @@
 
    }
 
-   .hate, .heart{
+   card-body a.btn{
 
-        min-width: 30px;
-        min-height: 30px;
+        width: 20%;
+        height: 30%;
+        text-align: center;
+        display: inline-flex;
+        align-items: center;
 
    }
 
+   .whiteHeartBtn{
+       position: absolute;
+       top: 290px;
+       right: 65px;
+       background: white;
+       padding: 5px 10px;
+       margin: 0 5px;
+       border: none;
+       border-radius: 5px;
+       cursor: pointer;
+       opacity: 0.8;
+   }
+
+
+
+   .heart{
+
+       font-weight: 700;
+       color: white;
+       text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+
+
+   }
+
+
+
+   .whiteHateBtn{
+
+      position: absolute;
+      top: 290px;
+      right: 10px;
+      background: white;
+      padding: 5px 10px;
+      margin: 0 5px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      opacity: 0.8;
+   }
+
+   .hate{
+
+       font-weight: 700;
+       color: white;
+       text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+
+   }
+
+
+
    .hasLove{
 
-        background-color: #ffe5ea;
+
 
    }
 
    .hasHate{
 
-        background-color: #dfdfdf;
+
 
    }
+
+
+   .buttonZone{
+
+     display: flex;
+     flex-flow: row;
+     align-items: center;
+     justify-content: center;
+
+   }
+
+   .card-img-top:hover {
+       transform: scale(1.05);
+   }
+
+   .card:hover .card-body{
+       text-decoration: underline #0b5eb6;
+   }
+
+
+
+    #inputGroup{
+
+        display: flex;
+        flex-flow: row;
+        justify-content: flex-end;
+
+    }
+
+
+    #inputGroup > *{
+
+        margin-right: 5px;
+
+    }
+
+
+
+
+    .none{
+
+        display: none !important;
+
+    }
+
+    .extra-filter {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+    }
+
+    #searchForm select,
+    #searchForm input{
+
+        border: 1px solid #ced4da;
+        border-radius: 0px;
+        color: #495057
+
+    }
+
+
+    .whiteBtn{
+
+        padding: 5px 10px;
+        margin: 0 5px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        background: white;
+
+    }

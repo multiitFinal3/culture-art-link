@@ -1,120 +1,274 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-layout:decorate="~{common/layout/layoutMenubar}">
+      layout:decorate="~{common/layout/layoutMenubar}">
 
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>문화재</title>
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-        <link rel="stylesheet" href="/css/culturalProperties/culturalProperties.css">
-
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-
-<!--        <script src="/js/culturalProperties/culturalPropertiesDetail.js"></script>-->
-
-        <script src="/js/culturalProperties/culturalProperties.js"></script>
-        <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
-
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>문화재</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/culturalProperties/culturalProperties.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/js/culturalProperties/culturalProperties.js"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <style>
 
 
+/* 필터 컨테이너 */
+.filter-container {
+    display: flex;
+    justify-content: space-between;
+    margin: 20px 0;
+}
+
+/* 장르 필터 */
+.genre-filter {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* 장르 아이템 스타일 */
+.genre-item {
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 400;
+    color: #1E1E1E;
+    cursor: pointer;
+}
+
+/* 활성화된 장르 아이템 스타일 */
+.genre-item.active {
+    background: #F5F5F5;
+    color: #444444;
+}
+
+/* 추가 필터 */
+.extra-filter {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+/* 추가 필터 아이템 스타일 */
+.extra-item {
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 400;
+    color: #1E1E1E;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    cursor: pointer;
+}
+
+/* 추가 필터 아이템 내 이미지 스타일 */
+.extra-item img {
+    width: 20px; /* 아이콘 크기 조정 */
+    height: 20px; /* 아이콘 크기 조정 */
+}
+
+/* 검색 바 스타일 */
+.search-bar {
+    margin-bottom: 20px;
+}
+
+.search-bar form {
+    display: flex;
+    gap: 10px;
+}
+
+.search-bar select,
+.search-bar input,
+.search-bar button {
+    padding: 5px 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+
+}
 
 
-        <style>
+/* 랭킹 섹션 스타일 */
+.ranking, .all-cultural-properties {
+    margin-top: 30px;
+}
 
-        .hero-section {
-            position: relative; /* 부모 요소에 상대 위치를 지정 */
-        }
+.ranking h2, .all-cultural-properties h2 {
+    text-align: center;
+    font-size: 22px;
+    font-weight: 600;
+    margin-bottom: 20px;
+}
 
-        .search-bar {
-            position: absolute; /* 절대 위치 지정 */
-            top: 630px; /* 이미지 상단에서의 거리 */
-            left: 50%; /* 이미지의 가로 중앙으로 위치 */
-            transform: translateX(-50%); /* 왼쪽으로 50% 이동하여 중앙 정렬 */
-            width: 80%; /* 검색 바의 너비 */
-            z-index: 10; /* 다른 요소보다 위에 배치 */
-        }
+/* 전체 문화재 목록 컨테이너 스타일 */
+.all-cultural-properties {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.all-cultural-properties-title {
+    width: 100%;
+    text-align: center;
+    font-size: 22px;
+    font-weight: 600;
+    margin-bottom: 20px;
+}
+
+/* 전체 문화재 목록 아이템 컨테이너 */
+.all-cultural-properties-items {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between; /* 양 끝 공간 확보 */
+    gap: 10px; /* 카드 간의 간격 */
+    width: calc(5 * 249px + 4 * 10px); /* 카드 5개와 간격을 고려한 너비 */
+}
+
+/* 각 문화재 아이템 */
+.all-cultural-property-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 249px; /* 고정 너비 */
+    margin-bottom: 20px;
+}
+
+.all-card {
+    width: 249px;
+    height: 332px;
+    background: white;
+    border: 1px solid #D9D9D9;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    transition: transform 0.2s;
+}
+
+.all-card:hover {
+    transform: scale(1.05);
+}
+
+.all-card img {
+    width: 249px;
+    height: 332px;
+    object-fit: cover;
+    object-position: center;
+}
+
+.all-cultural-property-info {
+    padding: 10px;
+    text-align: center;
+    background-color: #fff;
+    width: 249px; /* 카드 너비에 맞춤 */
+}
+
+.all-title {
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 5px;
+    white-space: normal; /* 긴 텍스트 줄바꿈 허용 */
+    overflow-wrap: break-word; /* 긴 단어가 있을 때 줄바꿈 */
+}
+
+.all-location,
+.all-category,
+.all-dynasty {
+    font-size: 14px;
+    color: #555;
+    white-space: normal; /* 긴 텍스트 줄바꿈 허용 */
+    overflow-wrap: break-word; /* 긴 단어가 있을 때 줄바꿈 */
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+/* 반응형 디자인을 위한 미디어 쿼리 */
+@media (max-width: 1300px) {
+    .cultural-properties-grid {
+        justify-content: space-around;
+    }
+}
+
+@media (max-width: 768px) {
+    .cultural-property-item {
+        width: calc(50% - 10px);
+    }
+}
+
+@media (max-width: 480px) {
+    .cultural-property-item {
+        width: 100%;
+    }
+}
 
 
-        .input-group select,
-        .input-group input {
-            height: 80px; /* 모든 입력 필드 및 선택 박스의 높이를 동일하게 설정 */
-            font-size: 16px; /* 폰트 크기 */
-        }
 
-        .search-bar button {
-            height: 50px; /* 버튼의 높이 */
-            width: 80px;
-            font-size: 16px; /* 폰트 크기 */
-        }
-
-        /* 검색 바 배경색 설정 */
-        .input-group {
-            background-color: white; /* 배경색을 흰색으로 설정 */
-            padding: 10px; /* 패딩 추가 */
-            border-radius: 5px; /* 모서리 둥글게 */
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* 약간의 그림자 추가 */
-            align-items: center; /* 수직 중앙 정렬 */
-        }
+.empty-message {
+    color: #999;
+    text-align: center;
+    margin-top: 3rem; /* 위쪽 여백을 3줄로 설정 */
+}
 
 
-        .hero-section img {
-<!--            height: 800px;-->
-            max-height: 400px; /* 최대 높이를 설정하여 비율 줄이기 */
-            width: 100%; /* 너비를 100%로 설정 */
-            object-fit: contain; /* 이미지 비율 유지하면서 전체 보이도록 */
-        }
+.badge-container {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    display: none;
+    gap: 5px;
+}
 
-        .overlay {
-            position: absolute; /* 절대 위치 지정 */
-            top: 0; /* 상단에 배치 */
-            left: 0; /* 좌측에 배치 */
-            width: 100%; /* 너비를 100%로 설정 */
-            height: 100%; /* 높이를 100%로 설정 */
-            background-color: rgba(39, 111, 189, 0.4);
-            z-index: 1; /* 이미지 위에 표시되도록 z-index 설정 */
-        }
+.all-card:hover .badge-container {
+    display: flex;
+}
 
-        .card-img-top {
-            height: 300px;
-            object-fit: cover;
-        }
+.interest-button {
+    border: none;
+    background-color: #fff;
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    opacity: 0.8;
+}
 
-
-        .card {
-            height: 400px; /* 카드의 높이를 350px로 설정 */
-            margin-top: 20px; /* 카드의 위쪽 여백을 20px로 설정 */
-            margin-bottom: 30px; /* 카드의 아래쪽 여백을 20px로 설정 */
-        }
-
-        .card-body {
-            display: flex;
-            flex-direction: column; /* 카드 내용을 수직으로 정렬 */
-            justify-content: space-between; /* 카드 내용을 위쪽과 아래쪽으로 배치 */
-        }
+.interest-button img {
+    width: 20px;
+    height: 20px;
+}
 
 
-        </style>
-    </head>
-    <body>
 
-    <div layout:fragment="content">
 
-    <main class="container mt-4">
-        <section class="hero-section mb-4">
-            <img th:src="@{/img/culturalProperties/mainimg.jpg}" alt="대표 문화재" class="img-fluid w-100">
-            <div class="overlay"></div>
 
-            <div class="search-bar mt-3">
-<!--                <form class="d-flex" th:action="@{/cultural-properties/search}" method="get">-->
+    </style>
+</head>
+
+<body>
+<div layout:fragment="content">
+
+    <div class="filter-container">
+
+        <div class="genre-filter">
+            <div class="genre-item active" data-target="all">전체 문화재 목록</div>
+            <div class="genre-item" data-target="news">뉴스 & 소식</div>
+            <div class="genre-item" data-target="video">관련 영상</div>
+        </div>
+
+        <div class="extra-filter">
+
                 <form id="searchForm" class="d-flex">
                     <div class="input-group">
-                        <select name="category" class="form-select me-2">
+                        <select name="category" class="form-select me-2" style="width: 120px;">
                             <option value="">종목 선택</option>
                             <option value="">전체</option>
-<!--                            <option value="all">전체</option>-->
                             <option value="국보">국보</option>
                             <option value="보물">보물</option>
                             <option value="사적">사적</option>
@@ -131,114 +285,115 @@ layout:decorate="~{common/layout/layoutMenubar}">
                             <option value="문화유산자료">문화유산자료</option>
                             <option value="국가등록유산">국가등록유산</option>
                             <option value="이북5도 무형유산">이북5도 무형유산</option>
-                            <option th:each="category : ${categories}" th:value="${categoryName}" th:text="${categoryName}"></option>
                         </select>
-                        <input class="form-control me-2" type="text" name="culturalPropertiesName" placeholder="이름" aria-label="culturalPropertiesName">
-                        <input class="form-control me-2" type="text" name="region" placeholder="지역" aria-label="Region">
-                        <input class="form-control me-2" type="text" name="dynasty" placeholder="시대" aria-label="dynasty">
-<!--                        <button class="btn btn-outline-success" type="submit">검색</button>-->
-                        <button id="searchButton" class="btn btn-outline-success" type="button">검색</button>
-                        <button id="resetButton" class="btn btn-outline-success" type="button">초기화</button>
+                        <input class="form-control me-2" type="text" name="culturalPropertiesName" placeholder="이름" aria-label="culturalPropertiesName" style="width: 120px;">
+                        <input class="form-control me-2" type="text" name="region" placeholder="지역" aria-label="Region" style="width: 120px;">
+                        <input class="form-control me-2" type="text" name="dynasty" placeholder="시대" aria-label="dynasty" style="width: 120px;">
+
+                        <button id="searchButton" class="btn btn-outline-success" type="button">
+                            <img src="https://kr.object.ncloudstorage.com/team3/common/search.png" alt="검색" style="width: 20px; height: 20px;">
+                        </button>
+                        <button id="resetButton" class="btn btn-outline-secondary" type="button" style=" margin-right: 10px;">
+                            <img src="https://kr.object.ncloudstorage.com/team3/common/x.png" alt="초기화" style="width: 20px; height: 20px;">
+                        </button>
+
+
                     </div>
-<!--                    </div>-->
                 </form>
-            </div>
-
-        </section>
-        <br><br><br>
-
-        <section class="tab-section mb-4">
-            <ul class="nav nav-tabs justify-content-center" id="myTab" role="tablist">
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link active" id="all-tab" data-bs-toggle="tab" data-bs-target="#all" type="button" role="tab" aria-controls="all" aria-selected="true">전체 목록</button>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="news-tab" data-bs-toggle="tab" data-bs-target="#news" type="button" role="tab" aria-controls="news" aria-selected="false">뉴스 & 소식</button>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="video-tab" data-bs-toggle="tab" data-bs-target="#video" type="button" role="tab" aria-controls="video" aria-selected="false">관련 영상</button>
-                </li>
-            </ul>
-
-            <div class="tab-content" id="myTabContent">
-                <div class="tab-pane fade show active" id="all" role="tabpanel" aria-labelledby="all-tab">
-                    <!-- 전체 문화재 내용 -->
-                    <br><br><br>
-
-                    <section class="gallery-section" id="gallery-section">
-                        <div class="row row-cols-1 row-cols-md-3 g-4">
-                            <!-- 문화재 카드가 동적으로 추가됨 -->
-
-                        </div>
-                    </section>
-
-                    <br><br><br>
-
-                    <nav aria-label="Page navigation">
-                        <ul class="pagination justify-content-center" id="pagination">
-                            <li class="page-item" id="prev-btn">
-                                <a class="page-link" href="#" aria-label="Previous">
-                                    <span aria-hidden="true">&laquo;</span>
-                                </a>
-                            </li>
-                            <!-- 페이지 버튼이 동적으로 추가됨 -->
-                            <li class="page-item" id="next-btn">
-                                <a class="page-link" href="#" aria-label="Next">
-                                    <span aria-hidden="true">&raquo;</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </nav>
-
-                    <br><br>
 
 
-                </div>
-                <div class="tab-pane fade" id="news" role="tabpanel" aria-labelledby="news-tab">
-                    <!-- 뉴스 & 소식 내용 -->
-
-                    <br><br>
-
-                    <div class="news-articles">
-                        <h2>문화재 관련 뉴스</h2>
-                        <br><br>
-                        <ul id="news-list" class="list-group">
-                            <!-- 뉴스 기사가 여기에 추가됨 -->
-                        </ul>
-                    </div>
-                    <br><br>
-
-                </div>
-                <div class="tab-pane fade" id="video" role="tabpanel" aria-labelledby="video-tab">
-                    <!-- 관련 영상 내용 -->
-                    <br>
-
-                    <div class="container mt-5">
-                        <h2>관련 영상</h2>
-
-                        <br><br>
-
-                        <div id="video-list" class="row">
-                            <!-- 비디오 리스트가 여기에 렌더링됨 -->
-                        </div>
-                    </div>
+<!--            <div class="extra-item">-->
+<!--                <img th:src="@{/img/performance/ranking.png}" alt="랭킹 아이콘" class="filter-icon">-->
+<!--                랭킹-->
+<!--            </div>-->
+<!--            <div class="extra-item">-->
+<!--                <img th:src="@{/img/performance/map.png}" alt="지역별 아이콘" class="filter-icon">-->
+<!--                지역별-->
+<!--            </div>-->
+        </div>
 
 
-                    <br><br>
-
-
-                </div>
-
-            </div>
-        </section>
-
-    </main>
-
-        <footer class="bg-light text-center text-lg-start mt-4">
-            <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2);">
-                <!-- © 2024 문화재 -->
-            </div>
-        </footer>
     </div>
-    </body>
+
+
+    <div class="container mt-4">
+
+        <div class="tab-content mt-5" id="myTabContent">
+        <div class="tab-pane fade show active" id="all" role="tabpanel">
+        <div class="ranking mt-5">
+            <h2 class="mb-4">카테고리별 랭킹</h2>
+            <div class="row" id="ranking-list">
+                <!-- 랭킹 카드가 여기에 동적으로 추가됩니다 -->
+            </div>
+        </div>
+
+
+
+        <div class="all-cultural-properties">
+            <h2 class="all-cultural-properties-title">전체 문화재 목록</h2>
+            <div class="all-cultural-properties-items" id="gallery-section">
+                <div class="all-cultural-property-item" th:each="property : ${allCulturalProperties}">
+                    <a th:href="@{'/cultural-properties/detail/' + ${property.id}}">
+<!--                        <div class="all-card">-->
+<!--                            <img th:src="${property.mainImgUrl}" th:alt="${property.culturalPropertiesName}">-->
+<!--                        </div>-->
+
+
+                        <div class="all-card" th:data-cultural-property-id="${property.id}">
+                            <img th:src="${property.mainImgUrl}" th:alt="${property.culturalPropertiesName}">
+
+                            <div class="badge-container">
+                                <button class="interest-button like-button">
+                                    <img src="https://kr.object.ncloudstorage.com/team3/common/upNo.png" alt="찜">
+                                </button>
+                                <button class="interest-button dislike-button">
+                                    <img src="https://kr.object.ncloudstorage.com/team3/common/downNo.png" alt="관심없음">
+                                </button>
+                            </div>
+
+                        </div>
+
+
+                        <div class="all-cultural-property-info">
+                            <div class="all-title" th:text="${property.culturalPropertiesName}">문화재명</div>
+                            <div class="all-location" th:text="${property.region + ' ' + property.district}">위치</div>
+                            <div class="all-category" th:text="${property.categoryName}">종목</div>
+                            <div class="all-dynasty" th:text="${property.dynasty}">시대</div>
+
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+        </div>
+
+
+            <div class="tab-pane fade" id="news" role="tabpanel" aria-labelledby="news-tab">
+                <div class="news-articles">
+                    <h2>문화재 관련 뉴스</h2>
+                    <br>
+                    <ul id="news-list" class="list-group mt-3">
+                        <!-- 뉴스 기사가 여기에 추가됨 -->
+                    </ul>
+                    <br><br><br><br>
+                </div>
+            </div>
+
+
+            <div class="tab-pane fade" id="video" role="tabpanel" aria-labelledby="video-tab">
+                <div class="container">
+                    <h2>관련 영상</h2>
+                    <div id="video-list" class="row mt-3">
+                        <!-- 비디오 리스트가 여기에 렌더링됨 -->
+                    </div>
+                </div>
+            </div>
+
+            <br><br><br><br>
+        </div>
+    </div>
+</div>
+
+<script src="/js/culturalProperties/culturalProperties.js"></script>
+</body>
 </html>

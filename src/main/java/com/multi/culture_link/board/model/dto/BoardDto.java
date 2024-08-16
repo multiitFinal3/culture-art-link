@@ -12,5 +12,6 @@ public class BoardDto {
     public String genre;
     public String title;
     public String content;
+    public int commentSize;
     public String createdAt;
 }

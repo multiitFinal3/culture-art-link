@@ -5,6 +5,10 @@ document.addEventListener('DOMContentLoaded', function() {
     const locationItems = document.querySelectorAll('.location-item');
     const currentGenre = new URLSearchParams(window.location.search).get('genre') || '홈';
 
+
+    const selectedGenreInput = document.getElementById('selectedGenre');
+
+
     // 장르 아이템의 활성화 상태 설정
     genreItems.forEach(item => {
         if (item.textContent.trim() === currentGenre) {
@@ -67,9 +71,9 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // 장르별 랭킹에서 공연명 클릭 시 상세페이지로 이동
-    const rankingCards = document.querySelectorAll('.card');
+    const ranking5 = document.querySelectorAll('.card');
 
-    rankingCards.forEach(card => {
+    ranking5.forEach(card => {
         card.addEventListener('click', function() {
             const performanceTitle = this.getAttribute('data-performance-title');
             const source = this.getAttribute('data-source');
@@ -86,6 +90,36 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
         });
     });
+
+
+
+
+
+    // 랭킹 카드 클릭 이벤트 추가 -> 랭킹별 페이지에서 디테일페이지
+        const rankingCards = document.querySelectorAll('.ranking-card');
+
+            rankingCards.forEach(card => {
+                card.addEventListener('click', function() {
+                    const performanceCode = this.getAttribute('data-performance-code');
+                    console.log("Performance Code:", performanceCode); // 디버그용 출력
+                    const source = this.getAttribute('data-source');
+                    if (performanceCode) {
+                        window.location.href = `/performance/performanceDetail?performanceCode=${encodeURIComponent(performanceCode)}&source=${encodeURIComponent(source)}`;
+                    } else {
+                        console.error("Error: Performance code is null");
+                    }
+                });
+            });
+
+
+
+
+
+
+
+
+
+
 
     // 지역별 페이지에서 지역 클릭시
     // 지역 아이템 클릭 시 동작 설정
@@ -113,4 +147,35 @@ document.addEventListener('DOMContentLoaded', function() {
             window.location.href = `/performance/performanceLocation?locationCode=${encodeURIComponent(locationCode)}`;
         });
     });
+
+
+
+
+
+     genreItems.forEach(item => {
+         item.addEventListener('click', function() {
+             const genre = this.getAttribute('th:data-genre');
+             selectedGenreInput.value = genre;
+             document.getElementById('searchForm').submit();
+         });
+     });
+
+
+
+
+    // 검색한 후에 다른 장르페이지 이동이 가능하게
+     genreItems.forEach(item => {
+         item.addEventListener('click', function() {
+             const genre = this.textContent.trim();
+             window.location.href = `/performance/performance-genre?genre=${encodeURIComponent(genre)}&keyword=`;
+         });
+     });
+
+
+
+
+
+
+
+
 });

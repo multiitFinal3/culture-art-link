@@ -1,152 +1,214 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.w3.org/1999/xhtml">
+<html xmlns:layout="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <html layout:decorate="~{common/layout/layoutMenubar}">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>전시 상세 정보</title>
-  <link rel="stylesheet" href="/css/exhibition/exhibitionDetail.css">
-<!--    <script th:inline="javascript" th:src="'https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=' + ${naverClientId}"></script>-->
-    <script th:inline="javascript" th:src="'https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=' + ${naverClientId} + '&submodules=geocoder&callback=initNaverMap'"></script>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>전시 상세 정보</title>
+    <link href="/css/exhibition/exhibitionDetail.css" rel="stylesheet">
+    <!--    <script th:inline="javascript" th:src="'https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=' + ${naverClientId}"></script>-->
+    <script th:inline="javascript"
+            th:src="'https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=' + ${naverClientId} + '&submodules=geocoder&callback=initNaverMap'"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="/js/exhibition/exhibitionDetail.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
 <div layout:fragment="content">
-  <div class="container">
-    <main class="main-content">
-      <section class="left-section">
-        <div class="exhibition-image">
-          <img id="exhibitionImage" alt="전시회 이미지">
-        </div>
-      </section>
-      <section class="right-section">
-        <header>
-            <div class="title-and-buttons">
-                <div id="exhibitionKeyword" class="keyword-container">
-<!--                    <a href="#" class="keyword">#예술</a>-->
-<!--                    <a href="#" class="keyword">#현대미술</a>-->
-<!--                    <a href="#" class="keyword">#전시회</a>-->
+    <div class="container">
+        <main class="main-content">
+            <section class="left-section">
+                <div class="exhibition-image">
+                    <img alt="전시회 이미지" id="exhibitionImage">
                 </div>
-                <div class="action-buttons">
-                    <button id="favoriteBtn" class="action-btn favorite-btn">찜</button>
-                    <button id="notInterestedBtn" class="action-btn not-interested-btn">관심없음</button>
-                </div>
-            </div>
-            <div class="title-and-buttons">
-                <h1 id="exhibitionTitle"></h1>
-            </div>
-            <div class="exhibition-info">
-                <p id="exhibitionMuseum"></p>
-                <p id="exhibitionDate"></p>
-                <p id="exhibitionRating">★ <span id="averageRating"></span></p>
+            </section>
+            <section class="right-section">
+                <header>
+                    <div class="title-and-buttons">
+                        <div class="keyword-container" id="exhibitionKeyword">
+                        </div>
+                        <div class="title-and-buttons">
+                            <h1 id="exhibitionTitle"></h1>
+                        </div>
+                        <div class="exhibition-info">
+                            <p id="exhibitionArtist"></p>
+                            <p id="exhibitionMuseum"></p>
+                            <p id="exhibitionDate"></p>
+                            <p id="exhibitionRating">★ <span id="averageRating"></span></p>
 
-            </div>
-        </header>
-        <div class="map-section">
-          <div id="map"></div>
-        </div>
-      </section>
-    </main>
-
-    <section class="information-section">
-      <div class="tab-menu">
-        <button id="currentBtn" class="active">전시 소개</button>
-        <button id="pastBtn">상세 페이지</button>
-        <button id="futureBtn">관련 소식</button>
-      </div>
-      <div id="content">
-        <div id="exhibitionDescription" class="content-section active">
-          <h3>전시 소개</h3>
-          <p id="description">전시 소개 내용이 여기에 들어갑니다.</p>
-          <br>
-          <br>
-          <br>
-
-        </div>
-        <div id="exhibitionInformation" class="content-section">
-<!--          <iframe id="detailFrame" width="100%" height="600px" frameborder="0"></iframe>-->
-<!--          <div id="detailContent"></div>-->
-<!--          <iframe id="detailFrame" sandbox="allow-scripts allow-same-origin"></iframe>-->
-<!--          <object id="detailFrame" type="text/html"></object>-->
-          <h3>부가 정보</h3>
-          <p id="subDescription">추가 전시 소개 내용이 여기에 들어갑니다.</p>
-          <br>
-              <br>
-              <h3>상세 사이트</h3>
-          <a id="url" href="" target="_blank">url이 여기에 들어갑니다.</a>
-        </div>
-        <div id="exhibitionNews" class="content-section">
-          <p id="news">관련 소식 내용이 여기에 들어갑니다.</p>
-          <section class="video-section">
-            <div id="videoContainer"></div>
-          </section>
-        </div>
-      </div>
-    </section>
-
-
-
-    <section class="reviews-section">
-        <h2>후기</h2>
-        <div id="exhibitionCommentKeyword" class="keyword-container">
-            <!--                    <a href="#" class="keyword">#예술</a>-->
-            <!--                    <a href="#" class="keyword">#현대미술</a>-->
-            <!--                    <a href="#" class="keyword">#전시회</a>-->
-        </div>
-        <div id="reviewsContainer">
-
-        </div>
-        <div id="reviewPagination" class="pagination"></div>
-        <div class="display-flex">
-            <div style="float: left">
-                후기 작성하기
-            </div>
-            <div>
-                <div class="star-rating" data-rating="0">
-                    <span class="star" data-value="1"></span>
-                    <span class="star" data-value="2"></span>
-                    <span class="star" data-value="3"></span>
-                    <span class="star" data-value="4"></span>
-                    <span class="star" data-value="5"></span>
-                </div>
-                <textarea id="commentTextarea" placeholder="후기를 입력해주세요."></textarea>
-            </div>
-            <div>
-                <button id="saveCommentBtn" style="float:right">확인</button>
-            </div>
-        </div>
-    </section>
-    <footer>
-        <section class="artwork-analyze">
-            <h2>작품 개인 분석</h2>
-            <div id="artworkAnalyzeContainer">
-                <!-- 개별 분석들이 여기에 동적으로 삽입됩니다 -->
-            </div>
-            <div id="analyzePagination" class="pagination"></div>
-            <div class="display-flex">
-                <div style="float: left">
-                    분석 작성하기
-                </div>
-                <div>
-                    <input id="artworkTextarea" placeholder="작품명">
-                    <textarea id="analyzeTextarea" placeholder="작품에 대한 개인적인 분석을 입력해주세요."></textarea>
-                    <input type="file" id="imageInput" accept="image/*" style="display: none;">
-                    <button id="imageUploadBtn">이미지 첨부</button>
-                    <div id="imagePreview" style="display: none; margin-top: 10px;">
-                        <img id="previewImage" src="" alt="이미지 미리보기" style="max-width: 200px; max-height: 200px;">
-                        <button id="removeImageBtn">이미지 제거</button>
+                        </div>
+                        <!--                        <div class="action-buttons">-->
+                        <!--                            <button class="action-btn favorite-btn" id="favoriteBtn">-->
+                        <!--                                <img alt="" class="interested-img" src="">-->
+                        <!--                            </button>-->
+                        <!--                            <button class="action-btn not-interested-btn" id="notInterestedBtn">-->
+                        <!--                                <img alt="" class="interested-img" src="">-->
+                        <!--                            </button>-->
+                        <!--                        </div>-->
                     </div>
+
+                </header>
+
+            </section>
+        </main>
+        <div class="like-dislike-container">
+            <button class="whiteHeartBtn action-btn favorite-btn " id="favoriteBtn">
+                <img class="heart like-dislike-icon "
+                     src="https://kr.object.ncloudstorage.com/team3/common/upNo.png"
+                     style="width : 25px; height: 25px; background: white;"
+                >
+            </button>
+
+            <button class="action-btn not-interested-btn whiteHateBtn" id="notInterestedBtn">
+                <img class="hate like-dislike-icon"
+                     src="https://kr.object.ncloudstorage.com/team3/common/downNo.png"
+                     style="width : 25px; height: 25px; background: white;"
+                >
+            </button>
+        </div>
+
+        <section class="information-section">
+            <div class="tab-menu">
+                <!-- 이름 수정 필요 -->
+                <button class="active" id="currentBtn">전시 상세</button>
+                <button id="pastBtn">전시 장소</button>
+                <button id="futureBtn">관련 소식</button>
+                <button id="commentBtn">전시 후기</button>
+                <button id="AnalyzeBtn">작품 분석</button>
+            </div>
+            <div id="content">
+                <div class="content-section active" id="exhibitionDescription">
+                    <h4>전시 상세</h4>
+                    <p id="description">전시 상세 내용이 여기에 들어갑니다.</p>
+                    <br>
+                    <br>
+                    <h4>부가 정보</h4>
+                    <p id="subDescription">추가 전시 소개 내용이 여기에 들어갑니다.</p>
+                    <br>
+                    <h4>상세 사이트</h4>
+                    <a href="" id="url" target="_blank">url이 여기에 들어갑니다.</a>
                 </div>
-                <div>
-                    <button id="saveAnalyzeBtn" style="float:right">확인</button>
+                <div class="content-section" id="exhibitionInformation">
+                    <div id="map" style="width: 100%; height: 400px;"></div>
+                </div>
+                <div class="content-section" id="exhibitionNews">
+                    <section class="video-section">
+                        <div id="videoContainer"></div>
+                    </section>
+                </div>
+                <div class="content-section" id="exhibitionComment">
+                    <section class="reviews-section">
+                        <div class="display-flex" id="writeComment">
+                            <div style="float: left">
+                                <h2 style="margin-right: 20px;">리뷰 작성</h2>
+                            </div>
+                            <div>
+                                <div class="star-rating" data-rating="0">
+                                    <span class="star" data-value="1"></span>
+                                    <span class="star" data-value="2"></span>
+                                    <span class="star" data-value="3"></span>
+                                    <span class="star" data-value="4"></span>
+                                    <span class="star" data-value="5"></span>
+                                </div>
+                                <textarea id="commentTextarea" placeholder="후기를 입력해주세요."></textarea>
+                                <button class="btn btn-outline-success" id="saveCommentBtn" style="float:right">확인
+                                </button>
+                            </div>
+                            <!--                            <div>-->
+                            <!--                                <button class="btn btn-outline-success" id="saveCommentBtn" style="float:right">확인-->
+                            <!--                                </button>-->
+                            <!--                            </div>-->
+                        </div>
+                        <br>
+                        <br>
+                        <br>
+                        <h4>후기</h4>
+                        <div class="keyword-container" id="exhibitionCommentKeyword">
+                        </div>
+                        <div id="reviewsContainer">
+
+                        </div>
+                        <div class="pagination" id="reviewPagination"></div>
+                    </section>
+                </div>
+                <div class="content-section" id="exhibitionAnalyze">
+                    <section class="artwork-analyze">
+                        <div class="display-flex" id="writeAnalyze">
+                            <div style="float: left">
+                                <h4>분석 작성하기</h4>
+                            </div>
+                            <br>
+                            <br>
+                            <div>
+                                <input id="artworkTextarea" placeholder="작품명">
+                                <textarea id="analyzeTextarea" placeholder="작품에 대한 개인적인 분석을 입력해주세요."></textarea>
+                                <input accept="image/*" id="imageInput" style="display: none;" type="file">
+                                <div id="imagePreview" style="display: none; margin-top: 10px;">
+                                    <img alt="이미지 미리보기" id="previewImage" src=""
+                                         style="max-width: 200px; max-height: 200px;">
+                                    <button class="btn btn-outline-secondary" id="removeImageBtn">이미지 제거</button>
+                                </div>
+                            </div>
+                            <div>
+                                <button class="btn btn-outline-success" id="saveAnalyzeBtn" style="float:right">확인
+                                </button>
+                                <button class="btn btn-outline-success" id="imageUploadBtn"
+                                        style="float:right; margin:10px;">
+                                    📷
+                                </button>
+                            </div>
+                        </div>
+                        <br>
+                        <br>
+                        <br>
+                        <br>
+                        <h4>작품 개인 분석</h4>
+                        <div id="artworkAnalyzeContainer">
+                            <!-- 개별 분석들이 여기에 동적으로 삽입됩니다 -->
+                        </div>
+                        <div class="pagination" id="analyzePagination"></div>
+
+                    </section>
+
+                    <!--                    <section class="artwork-analyze">-->
+                    <!--                        <div class="display-flex">-->
+                    <!--                            <div style="float: left">-->
+                    <!--                                <h4>분석 작성하기</h4>-->
+                    <!--                            </div>-->
+                    <!--                            <div>-->
+                    <!--                                <input id="artworkTextarea" placeholder="작품명">-->
+                    <!--                                <textarea id="analyzeTextarea" placeholder="작품에 대한 개인적인 분석을 입력해주세요."></textarea>-->
+                    <!--                                <input accept="image/*" id="imageInput" style="display: none;" type="file">-->
+                    <!--                                <div id="imagePreview" style="display: none; margin-top: 10px;">-->
+                    <!--                                    <img alt="이미지 미리보기" id="previewImage" src=""-->
+                    <!--                                         style="max-width: 200px; max-height: 200px;">-->
+                    <!--                                    <button class="btn btn-outline-secondary" id="removeImageBtn">이미지 제거</button>-->
+                    <!--                                </div>-->
+                    <!--                            </div>-->
+                    <!--                            <div>-->
+                    <!--                                <button class="btn btn-outline-success" id="saveAnalyzeBtn" style="float:right">확인-->
+                    <!--                                </button>-->
+                    <!--                                <button class="btn btn-outline-success" id="imageUploadBtn"-->
+                    <!--                                        style="float:right; margin:10px;">-->
+                    <!--                                    📷-->
+                    <!--                                </button>-->
+                    <!--                            </div>-->
+                    <!--                        </div>-->
+                    <!--                        <br>-->
+                    <!--                        <br>-->
+                    <!--                        <br>-->
+                    <!--                        <h4>작품 개인 분석</h4>-->
+                    <!--                        <div id="artworkAnalyzeContainer">-->
+                    <!--                            &lt;!&ndash; 개별 분석들이 여기에 동적으로 삽입됩니다 &ndash;&gt;-->
+                    <!--                        </div>-->
+                    <!--                        <div class="pagination" id="analyzePagination"></div>-->
+                    <!--                    </section>-->
                 </div>
             </div>
         </section>
-    </footer>
-  </div>
+
+    </div>
 </div>
 </body>
 </html>

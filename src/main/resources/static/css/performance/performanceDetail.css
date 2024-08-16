@@ -5,7 +5,7 @@
 }
 .top-section {
     display: flex;
-    gap: 20px;
+    gap: 35px;
 }
 
 .detail-card {
@@ -27,6 +27,39 @@
 }
 
 
+
+
+.like-dislike-container {
+    display: flex;
+    justify-content: center; /* 가운데 정렬 */
+    align-items: center;
+    gap: 10px; /* 아이콘 사이의 간격 */
+    margin-top: 20px; /* 카드와 버튼 사이에 간격 추가 */
+}
+
+.like-dislike-icon {
+    width: 30px;  /* 이미지 너비 */
+    height: 30px; /* 이미지 높이 */
+    cursor: pointer; /* 클릭할 수 있는 커서 */
+    pointer-events: auto; /* 클릭 이벤트를 허용 */
+    background-color: white;
+    background-size: 40px 40px;
+    border: 2px solid black;
+    border-radius: 20%;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
 .title {
     color: #1E1E1E;
     font-size: 24px;
@@ -38,11 +71,62 @@
     align-self: flex-end;
 }
 
+
+
+
 .info-section {
+/*    display: flex; */
+/*    flex-direction: column;
+    gap: 16px;
+    position: relative; */
+
+ position: relative;
+        width: 200%;
+        height: 300px; /* 섹션의 높이를 고정 */
+
+}
+
+.info-section-content {
+    position: absolute;
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 10px; /* 항목 간의 간격 */
+    font-family: Arial, sans-serif;
+    font-size: 16px;
+    color: #333;
+
+    width: 650px;
+    height: 150px; /* 섹션의 높이를 고정 */
 }
+
+.info-item {
+    display: flex;
+/*     justify-content: space-between;
+/*    border-bottom: 1px solid #ddd;  각 항목 하단의 구분선 */
+    padding: 5px 0; /* 항목의 위아래 패딩 */
+    gap: 10px;
+}
+
+.info-label {
+    font-weight: bold;
+    color: #555;
+ /*    margin-right: 50px; /* info-label과 info-content 사이의 간격 설정 */
+    white-space: nowrap; /* 줄바꿈 없이 한 줄로 표시 */
+    width: 100px;
+
+}
+
+.info-content {
+    text-align: left;
+    color: #000;
+    flex-grow: 1; /* label과 content 간의 간격을 유지하는 데 도움이 됨 */
+}
+
+
+
+
+
+
 
 .calendar-header {
     font-size: 24px;
@@ -103,22 +187,19 @@
     gap: 8px;
 }
 
-.info-location, .info-date, .info-runtime, .info-age, .info-genre, .info-organizer, .info-producer, .info-price{
-    font-size: 20px;
-    font-weight: 300;
-    color: black;
-}
+
 
 .info-ticketbutton {
-    width: 229px;
-    height: 56px;
-    border-radius: 100px;
+    width: 120px;
+    height: 50px;
+    border-radius: 5px;
     border: 1px #45414A solid;
     display: flex;
     justify-content: center;
     align-items: center;
     cursor: pointer;
     margin-bottom: 16px;
+
 }
 
 .info-ticketbutton a {
@@ -126,6 +207,7 @@
     color: blue;
     font-weight: 600;
 }
+
 
 
 .book-button {

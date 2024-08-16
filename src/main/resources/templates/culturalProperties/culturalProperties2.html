@@ -1,0 +1,244 @@
+<!--<!DOCTYPE html>-->
+<!--<html lang="ko" xmlns:th="http://www.thymeleaf.org"-->
+<!--      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"-->
+<!--      layout:decorate="~{common/layout/layoutMenubar}">-->
+
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <meta name="viewport" content="width=device-width, initial-scale=1.0">-->
+<!--    <title>문화재</title>-->
+<!--    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">-->
+<!--    <link rel="stylesheet" href="/css/culturalProperties/culturalProperties.css">-->
+
+<!--    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>-->
+
+<!--    &lt;!&ndash;        <script src="/js/culturalProperties/culturalPropertiesDetail.js"></script>&ndash;&gt;-->
+
+<!--    <script src="/js/culturalProperties/culturalProperties.js"></script>-->
+<!--    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>-->
+
+<!--    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>-->
+
+
+
+
+<!--    <style>-->
+
+<!--        .hero-section {-->
+<!--            position: relative; /* 부모 요소에 상대 위치를 지정 */-->
+<!--        }-->
+
+<!--        .search-bar {-->
+<!--            position: absolute; /* 절대 위치 지정 */-->
+<!--            top: 630px; /* 이미지 상단에서의 거리 */-->
+<!--            left: 50%; /* 이미지의 가로 중앙으로 위치 */-->
+<!--            transform: translateX(-50%); /* 왼쪽으로 50% 이동하여 중앙 정렬 */-->
+<!--            width: 80%; /* 검색 바의 너비 */-->
+<!--            z-index: 10; /* 다른 요소보다 위에 배치 */-->
+<!--        }-->
+
+
+<!--        .input-group select,-->
+<!--        .input-group input {-->
+<!--            height: 80px; /* 모든 입력 필드 및 선택 박스의 높이를 동일하게 설정 */-->
+<!--            font-size: 16px; /* 폰트 크기 */-->
+<!--        }-->
+
+<!--        .search-bar button {-->
+<!--            height: 50px; /* 버튼의 높이 */-->
+<!--            width: 80px;-->
+<!--            font-size: 16px; /* 폰트 크기 */-->
+<!--        }-->
+
+<!--        /* 검색 바 배경색 설정 */-->
+<!--        .input-group {-->
+<!--            background-color: white; /* 배경색을 흰색으로 설정 */-->
+<!--            padding: 10px; /* 패딩 추가 */-->
+<!--            border-radius: 5px; /* 모서리 둥글게 */-->
+<!--            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* 약간의 그림자 추가 */-->
+<!--            align-items: center; /* 수직 중앙 정렬 */-->
+<!--        }-->
+
+
+<!--        .hero-section img {-->
+<!--&lt;!&ndash;            height: 800px;&ndash;&gt;-->
+<!--            max-height: 400px; /* 최대 높이를 설정하여 비율 줄이기 */-->
+<!--            width: 100%; /* 너비를 100%로 설정 */-->
+<!--            object-fit: contain; /* 이미지 비율 유지하면서 전체 보이도록 */-->
+<!--        }-->
+
+<!--        .overlay {-->
+<!--            position: absolute; /* 절대 위치 지정 */-->
+<!--            top: 0; /* 상단에 배치 */-->
+<!--            left: 0; /* 좌측에 배치 */-->
+<!--            width: 100%; /* 너비를 100%로 설정 */-->
+<!--            height: 100%; /* 높이를 100%로 설정 */-->
+<!--            background-color: rgba(39, 111, 189, 0.4);-->
+<!--            z-index: 1; /* 이미지 위에 표시되도록 z-index 설정 */-->
+<!--        }-->
+
+<!--        .card-img-top {-->
+<!--            height: 300px;-->
+<!--            object-fit: cover;-->
+<!--        }-->
+
+
+<!--        .card {-->
+<!--            height: 400px; /* 카드의 높이를 350px로 설정 */-->
+<!--            margin-top: 20px; /* 카드의 위쪽 여백을 20px로 설정 */-->
+<!--            margin-bottom: 30px; /* 카드의 아래쪽 여백을 20px로 설정 */-->
+<!--        }-->
+
+<!--        .card-body {-->
+<!--            display: flex;-->
+<!--            flex-direction: column; /* 카드 내용을 수직으로 정렬 */-->
+<!--            justify-content: space-between; /* 카드 내용을 위쪽과 아래쪽으로 배치 */-->
+<!--        }-->
+
+
+<!--    </style>-->
+<!--</head>-->
+<!--<body>-->
+
+<!--<div layout:fragment="content">-->
+
+<!--    <main class="container mt-4">-->
+<!--        <section class="hero-section mb-4">-->
+<!--            <img th:src="@{/img/culturalProperties/mainimg.jpg}" alt="대표 문화재" class="img-fluid w-100">-->
+<!--            <div class="overlay"></div>-->
+
+<!--            <div class="search-bar mt-3">-->
+<!--                &lt;!&ndash;                <form class="d-flex" th:action="@{/cultural-properties/search}" method="get">&ndash;&gt;-->
+<!--                <form id="searchForm" class="d-flex">-->
+<!--                    <div class="input-group">-->
+<!--                        <select name="category" class="form-select me-2">-->
+<!--                            <option value="">종목 선택</option>-->
+<!--                            <option value="">전체</option>-->
+<!--                            &lt;!&ndash;                            <option value="all">전체</option>&ndash;&gt;-->
+<!--                            <option value="국보">국보</option>-->
+<!--                            <option value="보물">보물</option>-->
+<!--                            <option value="사적">사적</option>-->
+<!--                            <option value="사적및명승">사적및명승</option>-->
+<!--                            <option value="명승">명승</option>-->
+<!--                            <option value="천연기념물">천연기념물</option>-->
+<!--                            <option value="국가무형유산">국가무형유산</option>-->
+<!--                            <option value="국가민속문화유산">국가민속문화유산</option>-->
+<!--                            <option value="시도유형문화유산">시도유형문화유산</option>-->
+<!--                            <option value="시도무형유산">시도무형유산</option>-->
+<!--                            <option value="시도기념물">시도기념물</option>-->
+<!--                            <option value="시도민속문화유산">시도민속문화유산</option>-->
+<!--                            <option value="시도등록유산">시도등록유산</option>-->
+<!--                            <option value="문화유산자료">문화유산자료</option>-->
+<!--                            <option value="국가등록유산">국가등록유산</option>-->
+<!--                            <option value="이북5도 무형유산">이북5도 무형유산</option>-->
+<!--                            <option th:each="category : ${categories}" th:value="${categoryName}" th:text="${categoryName}"></option>-->
+<!--                        </select>-->
+<!--                        <input class="form-control me-2" type="text" name="culturalPropertiesName" placeholder="이름" aria-label="culturalPropertiesName">-->
+<!--                        <input class="form-control me-2" type="text" name="region" placeholder="지역" aria-label="Region">-->
+<!--                        <input class="form-control me-2" type="text" name="dynasty" placeholder="시대" aria-label="dynasty">-->
+<!--                        &lt;!&ndash;                        <button class="btn btn-outline-success" type="submit">검색</button>&ndash;&gt;-->
+<!--                        <button id="searchButton" class="btn btn-outline-success" type="button">검색</button>-->
+<!--                        <button id="resetButton" class="btn btn-outline-success" type="button">초기화</button>-->
+<!--                    </div>-->
+<!--                    &lt;!&ndash;                    </div>&ndash;&gt;-->
+<!--                </form>-->
+<!--            </div>-->
+
+<!--        </section>-->
+<!--        <br><br><br>-->
+
+<!--        <section class="tab-section mb-4">-->
+<!--            <ul class="nav nav-tabs justify-content-center" id="myTab" role="tablist">-->
+<!--                <li class="nav-item" role="presentation">-->
+<!--                    <button class="nav-link active" id="all-tab" data-bs-toggle="tab" data-bs-target="#all" type="button" role="tab" aria-controls="all" aria-selected="true">전체 목록</button>-->
+<!--                </li>-->
+<!--                <li class="nav-item" role="presentation">-->
+<!--                    <button class="nav-link" id="news-tab" data-bs-toggle="tab" data-bs-target="#news" type="button" role="tab" aria-controls="news" aria-selected="false">뉴스 & 소식</button>-->
+<!--                </li>-->
+<!--                <li class="nav-item" role="presentation">-->
+<!--                    <button class="nav-link" id="video-tab" data-bs-toggle="tab" data-bs-target="#video" type="button" role="tab" aria-controls="video" aria-selected="false">관련 영상</button>-->
+<!--                </li>-->
+<!--            </ul>-->
+
+<!--            <div class="tab-content" id="myTabContent">-->
+<!--                <div class="tab-pane fade show active" id="all" role="tabpanel" aria-labelledby="all-tab">-->
+<!--                    &lt;!&ndash; 전체 문화재 내용 &ndash;&gt;-->
+<!--                    <br><br><br>-->
+
+<!--                    <section class="gallery-section" id="gallery-section">-->
+<!--                        <div class="row row-cols-1 row-cols-md-3 g-4">-->
+<!--                            &lt;!&ndash; 문화재 카드가 동적으로 추가됨 &ndash;&gt;-->
+
+<!--                        </div>-->
+<!--                    </section>-->
+
+<!--                    <br><br><br>-->
+
+<!--                    <nav aria-label="Page navigation">-->
+<!--                        <ul class="pagination justify-content-center" id="pagination">-->
+<!--                            <li class="page-item" id="prev-btn">-->
+<!--                                <a class="page-link" href="#" aria-label="Previous">-->
+<!--                                    <span aria-hidden="true">&laquo;</span>-->
+<!--                                </a>-->
+<!--                            </li>-->
+<!--                            &lt;!&ndash; 페이지 버튼이 동적으로 추가됨 &ndash;&gt;-->
+<!--                            <li class="page-item" id="next-btn">-->
+<!--                                <a class="page-link" href="#" aria-label="Next">-->
+<!--                                    <span aria-hidden="true">&raquo;</span>-->
+<!--                                </a>-->
+<!--                            </li>-->
+<!--                        </ul>-->
+<!--                    </nav>-->
+
+<!--                    <br><br>-->
+
+
+<!--                </div>-->
+<!--                <div class="tab-pane fade" id="news" role="tabpanel" aria-labelledby="news-tab">-->
+<!--                    &lt;!&ndash; 뉴스 & 소식 내용 &ndash;&gt;-->
+
+<!--                    <br><br>-->
+
+<!--                    <div class="news-articles">-->
+<!--                        <h2>문화재 관련 뉴스</h2>-->
+<!--                        <br><br>-->
+<!--                        <ul id="news-list" class="list-group">-->
+<!--                            &lt;!&ndash; 뉴스 기사가 여기에 추가됨 &ndash;&gt;-->
+<!--                        </ul>-->
+<!--                    </div>-->
+<!--                    <br><br>-->
+
+<!--                </div>-->
+<!--                <div class="tab-pane fade" id="video" role="tabpanel" aria-labelledby="video-tab">-->
+<!--                    &lt;!&ndash; 관련 영상 내용 &ndash;&gt;-->
+<!--                    <br>-->
+
+<!--                    <div class="container mt-5">-->
+<!--                        <h2>관련 영상</h2>-->
+
+<!--                        <br><br>-->
+
+<!--                        <div id="video-list" class="row">-->
+<!--                            &lt;!&ndash; 비디오 리스트가 여기에 렌더링됨 &ndash;&gt;-->
+<!--                        </div>-->
+<!--                    </div>-->
+
+
+<!--                    <br><br>-->
+
+
+<!--                </div>-->
+
+<!--            </div>-->
+<!--        </section>-->
+
+<!--    </main>-->
+
+<!--    <footer class="bg-light text-center text-lg-start mt-4">-->
+<!--        <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2);">-->
+<!--            &lt;!&ndash; © 2024 문화재 &ndash;&gt;-->
+<!--        </div>-->
+<!--    </footer>-->
+<!--</div>-->
+<!--</body>-->
+<!--</html>-->

@@ -80,7 +80,7 @@
                 AND dynasty LIKE CONCAT('%', #{dynasty}, '%')
             </if>
         </where>
-        LIMIT #{offset}, #{pageSize}
+<!--        LIMIT #{offset}, #{pageSize}-->
     </select>
 
     <select id="countCulturalProperties" resultType="long">
@@ -122,32 +122,15 @@
     </select>
 
 
+    <select id="getDetailInterest" resultType="CulturalPropertiesInterestDTO">
+        SELECT c1.id AS culturalPropertiesId, c2.user_id, c2.interest_type
+        FROM cultural_properties c1
+        LEFT JOIN cultural_properties_interest c2 ON c1.id = c2.cultural_properties_id
+        WHERE c2.user_id = #{userId}
+        ORDER BY c1.created_at DESC
+    </select>
 
 
-<!--    <insert id="insertInterest">-->
-<!--        INSERT INTO cultural_properties_interest (cultural_properties_id, user_id, interest_type)-->
-<!--        VALUES (#{id}, #{userId}, #{interestType})-->
-<!--        ON DUPLICATE KEY UPDATE interest_type = #{interestType}-->
-<!--    </insert>-->
-
-<!--    <delete id="deleteInterest">-->
-<!--        DELETE FROM cultural_properties_interest-->
-<!--        WHERE cultural_properties_id = #{id} AND user_id = #{userId}-->
-<!--    </delete>-->
-
-<!--    <select id="isLiked" resultType="boolean">-->
-<!--        SELECT COUNT(*) > 0 FROM cultural_properties_interest-->
-<!--        WHERE cultural_properties_id = #{id} AND user_id = #{userId} AND interest_type = 'LIKE'-->
-<!--    </select>-->
-
-<!--    <select id="isDisliked" resultType="boolean">-->
-<!--        SELECT COUNT(*) > 0 FROM cultural_properties_interest-->
-<!--        WHERE cultural_properties_id = #{id} AND user_id = #{userId} AND interest_type = 'DISLIKE'-->
-<!--    </select>-->
-
-<!--    <select id="getReview" resultType="com.example.demo.model.Review">-->
-<!--        SELECT * FROM reviews WHERE property_id = #{propertyId} LIMIT 5-->
-<!--    </select>-->
 
     <insert id="addReview" parameterType="CulturalPropertiesReviewDTO">
         INSERT INTO cultural_properties_review (cultural_properties_id, user_id, star, content)
@@ -185,7 +168,7 @@
 
 
 
-    <select id="getReview" parameterType="map" resultType="CulturalPropertiesReviewDTO">
+    <select id="getReviewList" parameterType="map" resultType="CulturalPropertiesReviewDTO">
         SELECT r.id, r.cultural_properties_id, r.user_id, r.star, r.content, r.created_at, r.updated_at,
         u.user_name, u.user_profile_pic AS userProfileImage
         FROM cultural_properties_review r
@@ -212,6 +195,17 @@
 
 
 
+
+
+
+    <select id="getRecentReview" parameterType="int" resultType="culturalPropertiesReviewDTO">
+        SELECT r.*, u.user_name
+        FROM cultural_properties_review r
+        JOIN user u ON r.user_id = u.user_id
+        WHERE r.cultural_properties_id = #{culturalPropertiesId}
+        ORDER BY r.created_at DESC
+        LIMIT 3
+    </select>
 
 
 

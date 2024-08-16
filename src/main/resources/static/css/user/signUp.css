@@ -1,63 +1,79 @@
 
     #realContent{
 
-        width: 100vw;
+        width: 100%;
         height: 100vh;
         display: flex;
-        flex-flow: row;
+        flex-flow: column;
+        align-items: center;
 
 
     }
-
-    #welcome{
-
-        width: 30%;
-
-    }
-
-    #welcome img{
-
-        width: 100%;
-
-    }
-
 
     #signUp{
 
-        padding: 5%;
-        width: 70%;
+        width: 75%;
+        display: flex;
+        flex-flow: column;
+        align-items: center;
+        justify-content: center;
+        background: beige;
+        border-radius: 60px;
+        margin-top: 5%;
+
+    }
+
+
+
+    #profileImg{
+
+        overflow: hidden;
+        display: flex;
+        flex-flow: row;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        margin: 0px;
 
     }
 
 
     .round{
-
-        padding: 10px;
+        height: 500px;
+        width: 500px;
         border-radius: 50%;
-        width: 200px;
-        margin: 1%;
     }
 
-    button, input, optgroup, select, textarea {
-        margin: 1%;
-        min-width: 100px;
+    #basicForm{
+
+        margin-top: 100px;
+        margin-bottom: 100px;
+
+    }
+
+
+
+    input, optgroup, select, textarea {
+        margin: 0;
         font-family: inherit;
         font-size: inherit;
         line-height: inherit;
+        border: 1px solid #ced4da;
+        border-radius: 0px;
+        color: #495057;
     }
 
-    #festivalKeywordBtns{
+
+
+    #festivalKeywordBtns,
+    #exhibitionKeywordBtns
+    {
         font-size: 20px;
         overflow-x: scroll;
         margin: 3%;
         text-align: center;
         display: flex;
-
-    }
-
-    .hasLove{
-
-        background-color: #ffe5ea;
+        max-width: 650px;
 
     }
 
@@ -65,4 +81,64 @@
 
         color: red;
 
+    }
+
+    label{
+
+        width: 150px;
+        margin-bottom: 60px;
+
+    }
+
+    input{
+
+        width: 300px;
+
+    }
+
+    select{
+
+        width: 300px;
+
+    }
+
+    .festivalKeywordBtn,
+    .exhibitionKeywordBtn{
+
+       min-width: 150px;
+       max-height: 35px;
+       color: #02542d;
+       padding: 8px 15px;
+       border-radius: 15px;
+       font-size: 14px;
+       font-weight: bold;
+       text-decoration: none;
+       border: 0px;
+       margin: 15px;
+
+    }
+
+
+    button.hasLove{
+
+       background-color: #cff7d3;
+
+    }
+
+
+    #signUp h1{
+
+        margin-top: 9%;
+        font-size: 50px;
+        font-weight: bold;
+
+    }
+
+
+    #emailValidate {
+        margin: 3%;
+        min-width: 100px;
+        font-family: inherit;
+        font-size: inherit;
+        line-height: inherit;
     }

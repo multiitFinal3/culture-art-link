@@ -16,144 +16,28 @@
     <script th:src="'https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=' + ${naverClientId} + '&submodules=geocoder'"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
-   <!-- <script>
-        async function initMap(location) {
-            console.log('Location:', location); // 위치 정보 로깅
 
-            const mapOptions = {
-                center: new naver.maps.LatLng(37.3595704, 127.105399),
-                zoom: 15
-            };
-            const mapElement = document.getElementById('map');
-            if (!mapElement) {
-                console.error("Container map not found.");
-                return;
-            }
 
-            const map = new naver.maps.Map(mapElement, mapOptions);
+    <script>
+        var userId = [[${user.userId}]];
+        var performanceId = [[${performance.id}]];
+    </script>
 
-            if (!location || location.trim() === '') {
-                console.log('No location provided');
-                mapElement.innerHTML = "위치 정보가 없습니다.";
-                return;
-            }
-
-            // 위치 정보 가져오기
-            try {
-                const response = await axios.get(`/map/naver?query=${location}`);
-                console.log('Response data:', response.data); // 응답 데이터 로깅
-                const locationInfo = response?.data?.items[0];
-
-                if (!locationInfo) {
-                    console.error('No results found for location:', location);
-                    mapElement.innerHTML = "해당 위치를 찾을 수 없습니다.";
-                    return;
-                }
-
-                const address = locationInfo.address;
-
-                // 주소를 좌표로 변환
-                naver.maps.Service.geocode({ address: address }, function(status, response) {
-                    if (status !== naver.maps.Service.Status.OK) {
-                        console.error('Geocoding error:', status);
-                        mapElement.innerHTML = "좌표 변환에 실패했습니다.";
-                        return;
-                    }
-
-                    const latlng = response.result.items[0].point;
-
-                    // 좌표로 이동
-                    map.setCenter(latlng);
-
-                    // 해당 좌표에 마크 설정
-                    new naver.maps.Marker({
-                        position: latlng,
-                        map: map
-                    });
-                });
-
-            } catch (error) {
-                console.error('Error fetching location data:', error);
-                mapElement.innerHTML = "위치 정보를 가져오는 중 오류가 발생했습니다.";
-            }
+    <style>
+        .button-box.active {
+            background-color: #7f7f7f;
+            color: white;
         }
+    </style>
 
-        function showMap() {
-            const locationElement = document.querySelector('.info-location');
-            const location = locationElement ? locationElement.innerText.trim() : 'default location'; // 공연 장소 정보를 가져옴
-            console.log('Place name to search:', location);
-            const largeCard = document.querySelector('.large-card .related-info .content');
-            largeCard.innerHTML = '<div id="map" style="width: 100%; height: 400px;"></div>';
-            initMap(location);
-        }
 
-        document.addEventListener("DOMContentLoaded", function() {
-            document.getElementById("showMapBtn").addEventListener("click", function() {
-                showMap();
-            });
 
-            document.getElementById("showReviewsBtn").addEventListener("click", function() {
-                showReviews();
-            });
 
-            document.getElementById("reviewForm").addEventListener("submit", async function(event) {
-                event.preventDefault();
-                await submitReview();
-            });
-        });
 
-        async function showReviews() {
-            const performanceId = parseInt(document.getElementById("performanceId").value, 10);
-            const largeCard = document.querySelector('.large-card .related-info .content');
-            largeCard.innerHTML = ''; // 기존 내용을 비웁니다
-
-            try {
-                const response = await axios.get(`/reviews/performance/${performanceId}`);
-                const reviews = response.data;
-
-                if (reviews.length === 0) {
-                    largeCard.innerHTML = "<p>아직 후기가 없습니다. 첫 후기를 작성해보세요!</p>";
-                } else {
-                    reviews.forEach(review => {
-                        const reviewElement = document.createElement('div');
-                        reviewElement.classList.add('review');
-                        reviewElement.innerHTML = `
-                            <p><strong>별점:</strong> ${'★'.repeat(review.starRating)}${'☆'.repeat(5 - review.starRating)}</p>
-                            <p>${review.content}</p>
-                            <p><em>${new Date(review.reviewDate).toLocaleDateString()}</em></p>
-                        `;
-                        largeCard.appendChild(reviewElement);
-                    });
-                }
-            } catch (error) {
-                console.error('후기를 가져오는 중 오류가 발생했습니다:', error);
-                largeCard.innerHTML = "<p>후기를 불러오는 데 실패했습니다.</p>";
-            }
-
-            document.querySelector('.review-section').style.display = 'block';
-        }
-
-        async function submitReview() {
-            const performanceId = parseInt(document.getElementById("performanceId").value, 10);
-            const starRating = document.querySelector('input[name="starRating"]:checked').value;
-            const content = document.getElementById("reviewContent").value;
-
-            try {
-                await axios.post('/reviews', {
-                    performanceId: performanceId,
-                    starRating: starRating,
-                    content: content,
-                });
-                showReviews(); // 후기를 제출한 후 후기를 다시 불러옵니다
-            } catch (error) {
-                console.error('후기를 제출하는 중 오류가 발생했습니다:', error);
-            }
-        }
-
-    </script> -->
 </head>
 
 <body>
+
 <div layout:fragment="content">
     <div class="filter-container">
         <!-- 장르 필터 -->
@@ -186,25 +70,59 @@
         <div class="top-section">
             <div class="detail-card">
                 <img class="thumbnail" th:src="${performance.imageMain}" alt="공연 이미지" />
-                <div class="star-icon">★</div>
             </div>
+
+
+
             <div class="info-section">
                 <div class="title" th:text="${performance.title}">공연명</div>
                 <div class="info-section-content">
-                    <div class="info-location" th:text="${performance.location}">공연장소</div>
-                    <div class="info-date" th:text="${performance.formattedDate}">공연기간</div>
-                    <div class="info-runtime" th:text="${performance.runtime}">관람시간</div>
-                    <div class="info-age" th:text="${performance.age}">관람등급</div>
-                    <div class="info-genre" th:text="${performance.genre}">장르</div>
-                    <div class="info-organizer" th:text="${performance.organizer}">기관</div>
-                    <div class="info-producer" th:text="${performance.producer}">주체</div>
-                    <div class="info-price" th:text="${performance.price}">가격</div>
+                    <div class="info-item">
+                        <span class="info-label">장소</span>
+                        <span class="info-location" th:text="${performance.location}">공연장소</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">공연기간</span>
+                        <span class="info-content" th:text="${performance.formattedDate}">공연기간</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">관람시간</span>
+                        <span class="info-content" th:text="${performance.runtime}">관람시간</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">관람연령</span>
+                        <span class="info-content" th:text="${performance.age}">관람등급</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">장르</span>
+                        <span class="info-content" th:text="${performance.genre}">장르</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">기관</span>
+                        <span class="info-content" th:text="${performance.organizer}">기관</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">주체</span>
+                        <span class="info-content" th:text="${performance.producer}">주체</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">가격</span>
+                        <span class="info-content" th:text="${performance.price}">가격</span>
+                    </div>
+
                     <div class="info-ticketbutton">
                         <a th:href="${performance.ticketingUrl}" target="_blank">예매하기</a>
                     </div>
                 </div>
             </div>
         </div>
+
+        <!-- 좋아요 및 싫어요 버튼 -->
+        <div class="like-dislike-container">
+            <img id="likeBtn" src="https://kr.object.ncloudstorage.com/team3/common/upNo.png" alt="Like" class="like-dislike-icon">
+            <img id="dislikeBtn" src="https://kr.object.ncloudstorage.com/team3/common/downNo.png" alt="Dislike" class="like-dislike-icon">
+        </div>
+
         <div class="performance-container">
             <div class="button-box">공연상세</div>
             <div class="button-box" id="showMapBtn">공연장소</div>
@@ -220,7 +138,7 @@
 
             <div class="review-section" style="display: none;">
                 <div class="reviews">
-                    <!-- 후기가 삽입 -->
+                    <!-- 후기가 삽입될 영역 -->
                 </div>
                 <div class="write-review">
                     <h3>후기 작성</h3>
@@ -241,6 +159,7 @@
                 </div>
             </div>
         </div>
+
     </div>
 </div>
 </body>

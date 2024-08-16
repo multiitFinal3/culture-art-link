@@ -77,6 +77,8 @@ public class PerformanceRankingService {
                 dto.setTitle(getTagValue("prfnm", performance));
                 dto.setLocation(getTagValue("prfplcnm", performance));
 
+                dto.setCode(getTagValue("mt20id", performance));
+
                 String[] period = getTagValue("prfpd", performance).split("~");
                 LocalDateTime startDate = LocalDate.parse(period[0].trim(), inputFormatter).atStartOfDay();
                 LocalDateTime endDate = LocalDate.parse(period[1].trim(), inputFormatter).atTime(23, 59, 59);

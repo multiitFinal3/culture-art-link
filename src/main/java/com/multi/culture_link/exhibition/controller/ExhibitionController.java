@@ -90,8 +90,6 @@ public class ExhibitionController {
             @AuthenticationPrincipal VWUserRoleDTO currentUser,
             @RequestBody ExhibitionInterestDto data
             ) {
-//        System.out.println("컨트롤러");
-//        System.out.println("1: " + currentUser + " 2: " +  data.getExhibitionId()  + " 3: " + data.getState());
         exhibitionService.setInterested(currentUser.getUserId(), data.getExhibitionId(), data.getState());
     }
 
@@ -253,6 +251,7 @@ public class ExhibitionController {
             @RequestParam(defaultValue = "") String cursor,
             @RequestParam(defaultValue = "5") int size
     ) {
+        System.out.println("result : " + exhibitionService.getAllKeyword(cursor, size));
         return exhibitionService.getAllKeyword(cursor, size);
     }
 }

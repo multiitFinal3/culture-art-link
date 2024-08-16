@@ -137,3 +137,30 @@
     color: #757575;
     white-space: normal; /* 긴 텍스트 줄바꿈 허용 */
 }
+
+
+/* 검색 바 스타일 */
+.search-bar {
+    margin-bottom: 20px;
+}
+
+.search-bar form {
+    display: flex;
+    gap: 10px;
+}
+
+
+.search-bar input,
+.search-bar button {
+    padding: 5px 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.input-group {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap; // For form validation feedback
+  align-items: stretch;
+  width: 100%;
+  gap: 7px;

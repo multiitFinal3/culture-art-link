@@ -9,6 +9,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
     <link rel="stylesheet" th:href="@{/css/user/signUp.css}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <script>
 
         $(document).ready(
@@ -36,7 +37,7 @@
                             var htmlContent = ``;
 
                             htmlContent = `
-                                <img class="profileImg round" src="${changeSrc}" alt="이미지가 없습니다" style="width:100%;">
+                                <img class="profileImg round" src="${changeSrc}" alt="이미지가 없습니다">
                             `;
 
                             $('#profileImg').html(htmlContent);
@@ -91,7 +92,7 @@
                 //#endregion
 
 
-                //#region 선호도 입력 부분
+                //#region 선호도 입력 부분 - 축제
 
 
                  /**
@@ -160,7 +161,7 @@
 
                     }
 
-                    var btns = document.querySelectorAll('button.hasLove');
+                    var btns = document.querySelectorAll('button.festivalKeywordBtn.hasLove');
 
                     var concat = '';
 
@@ -181,6 +182,111 @@
 
 
 
+                //#region 선호도 입력 부분 - 전시
+
+
+                 /**
+                 * 전시 키워드를 frequency가 높은 순으로 5개씩 가져옴
+                 *
+                 */
+                function findPopularExhibitionKeyword(cursor){
+                    console.log("first cursor : ")
+                    console.log(cursor);
+                    cursor = cursor.toString().padStart(20,'0');
+                    console.log(cursor);
+
+                    $.ajax({
+
+                        url: '/exhibition/exhibition/keyword?',
+                        method: 'GET',
+                        data: {
+
+                            cursor : cursor
+
+                        },
+                        contentType: 'application/json',
+                        success: function(result){
+
+                            var keywords = result.data;
+                            var nextCursor = result.nextCursor;
+                            console.log("nextCursor");
+                            console.log(nextCursor);
+                            $('#addExhibitionKeyword').val(nextCursor);
+
+                            $.each(keywords, function(index, keyword){
+
+                                var htmlContent = `<button value="${keyword.keyword}" class="exhibitionKeywordBtn">${keyword.keyword}</button>`;
+
+                                $('#exhibitionKeywordBtns').append(htmlContent);
+
+
+                            })
+
+                        }
+
+                    })
+
+                }
+
+                findPopularExhibitionKeyword("");
+
+
+
+                /**
+                * 전시 키워드 추가 버튼
+                *
+                */
+                $(document).on('click','#addExhibitionKeyword', function(){
+                    event.preventDefault();
+                    var cursor = parseInt($(this).val());
+                    findPopularExhibitionKeyword(cursor);
+
+                })
+
+
+                /**
+                * 전시 키워드 선택 시 색 변화 버튼
+                *
+                */
+                $(document).on('click','.exhibitionKeywordBtn', function(){
+
+                    event.preventDefault();
+
+                    if($(this).hasClass('hasLove')){
+
+                        $(this).removeClass('hasLove');
+
+                    }else{
+
+                        $(this).addClass('hasLove');
+
+                    }
+
+                    var btns = document.querySelectorAll('button.exhibitionKeywordBtn.hasLove');
+
+                    var concat = '';
+
+                    btns.forEach(function(btn){
+
+                        concat += (btn.value+" ");
+
+                    })
+
+                    $('#exhibitionSelectKeyword').val(concat.trim());
+
+
+
+                })
+
+
+                //#endregion
+
+
+
+
+
+
+
                 //#region 회원가입
 
 
@@ -196,7 +302,7 @@
 
                     $('#emailError').text("");
                     $('#passwordError').text("");
-                    $('#userError').text("");
+                    $('#nameError').text("");
 
                      var email = $('#email').val();
                      var password = $('#password').val();
@@ -221,21 +327,15 @@
 
                      }
 
-                     validateSameEmail(email)
-                        .then(isUnique =>{
 
-                            if(!isUnique){
+                     var isEmailValid = validateSameEmail(email);
 
-                                $('#emailError').text("존재하는 이메일입니다.");
-                                return;
+                     if(!isEmailValid){
 
-                            }
-                        })
-                        .catch(error => {
+                        return;
 
-                            console.log("중복 이메일 검증 중 에러 발생.")
+                     }
 
-                        })
 
                     var formData = new FormData();
 
@@ -246,8 +346,6 @@
 
                     formData.append('email', email);
                     formData.append('password', password);
-
-
                     formData.append('userName', userName);
 
                     var tel = $('#tel').val();
@@ -261,6 +359,12 @@
 
                     var regionId = document.getElementById('regionId').options[document.getElementById('regionId').selectedIndex].value;
                     formData.append('regionId', regionId);
+
+                    var festivalSelectKeyword = $('#festivalSelectKeyword').val();
+                    formData.append('festivalSelectKeyword',festivalSelectKeyword);
+
+                    var exhibitionSelectKeyword = $('#exhibitionSelectKeyword').val();
+                    formData.append('exhibitionSelectKeyword',exhibitionSelectKeyword);
 
                     console.log(regionId);
                     console.log(email);
@@ -298,7 +402,6 @@
                     const emailPattern = /^[a-zA-Z0-9_]{5,}@[a-zA-Z]{3,}\.com$/;
                     console.log(emailPattern.test(email))
                     return emailPattern.test(email);
-
                 }
 
 
@@ -342,9 +445,7 @@
                 *
                 */
                 function validateSameEmail(email){
-
-                    return new Promise((resolve, reject)=>{
-
+                    return new Promise((resolve, reject) => {
                         $.ajax({
                             url: '/user/validateSameEmail',
                             method: 'POST',
@@ -355,32 +456,39 @@
 
                                 if(user){
 
+                                    alert("이메일이 존재합니다.")
                                     resolve(false);
 
                                 }else{
 
+                                    alert("중복되지 않는 이메일입니다.")
                                     resolve(true);
-
                                 }
 
                             },
                             error: function(xhr, status, error){
 
                                 alert('같은 이메일 확인 실패');
-                                reject(false);
+                                return(false);
 
                             }
                         })
-
                     })
-
                 }
 
 
 
+                /**
+                * 이메일 중복 검증 버튼
+                *
+                */
+                $(document).on('click','#emailValidate', function(){
 
+                    event.preventDefault();
+                    var email = $('#email').val();
+                    validateSameEmail(email);
 
-
+                })
 
                 //#endregion
 
@@ -406,44 +514,49 @@
 
     <div id="realContent">
 
-        <div id="welcome">
-
-            <img src="/img/user/welcome.png">
-
-        </div>
-
-
         <div id="signUp">
 
-            <h1 style="font-size: 5rem;">계정을 등록하세요</h1><br><br>
+            <h1>Registration Form</h1><br><br>
 
-            <div id="profileImg" style="width: 300px;">
+            <div id="profileImg">
 
-                <img class="profileImg round" src="/img/festival/noPhoto.png" alt="이미지가 없습니다" style="width:100%;">
+                <img class="profileImg round" src="/img/festival/noPhoto.png" alt="이미지가 없습니다">
 
             </div><br>
 
             <form id="basicForm" method="post" style="font-size: 28px;" encType="multipart/form-data">
+                <label for="uploadFile"><img src="https://img.icons8.com/?size=100&id=67360&format=png&color=000000" alt="User Icon"></label>
+                <input name="uploadFile" class="rounded" id="uploadFile" type="file" accept="image/*"><br>
 
-                프로필 사진 <input name="uploadFile" class="rounded" id="uploadFile" type="file" accept="image/*"><br>
+                <label for="email"><img src="https://img.icons8.com/?size=100&id=8uaNSRthy4ju&format=png&color=000000" alt="Email Icon"></label>
+                <input name="email" id="email" class="rounded" placeholder="dkswldus@gmail.com" required style="background-color: lightblue" pattern="^[a-zA-Z0-9_]{5,}@[a-zA-Z]{3,}\.com$"><button id="emailValidate" type="button" class="btn btn-outline-success">중복확인</button>
+                <span id="emailError" class="error"></span><br>
 
-                이메일  <input name="email" id="email" class="rounded" placeholder="dkswldus@gmail.com" required style="background-color: lightblue">
-                        <span id="emailError" class="error"></span><br>
+                <label for="password"><img src="https://img.icons8.com/?size=100&id=B9ytemSyoM31&format=png&color=000000" alt="Password Icon"></label>
+                <input name="password" id="password" class="rounded" type="password" placeholder="*****" required style="background-color: lightblue" pattern="^[a-zA-Z0-9_]{5,}$">
+                <span id="passwordError" class="error"></span><br>
 
-                비밀번호  <input name="password" id="password" class="rounded" type="password" placeholder="*****" required style="background-color: lightblue">
-                        <span id="passwordError" class="error"></span><br>
-
-                이름  <input name="userName" id="userName" class="rounded" placeholder="안지연" style="width:100px; background-color: lightblue" required>
+                <label for="userName"><img src="https://img.icons8.com/?size=100&id=ZuNYjWxqVWsa&format=png&color=000000" alt="userName Icon"></label>
+                <input name="userName" id="userName" class="rounded" placeholder="안지연" style="background-color: lightblue" required pattern="^[a-zA-Z가-힣]{3,}$">
                 <span id="nameError" class="error"></span><br>
 
-                전화번호  <input name="tel" id="tel" class="rounded" placeholder="010-0000-1234" type="tel"><br>
-                나이 <input name="userAge" id="userAge" class="rounded" placeholder="12" type="number" style="width:80px;"><br>
-                성별
-                <select name="gender" id="gender" class="rounded" style="width:80px;">
+                <label for="tel"><img src="https://img.icons8.com/?size=100&id=wqTsYydyXBbo&format=png&color=000000" alt="tel Icon"></label>
+                <input name="tel" id="tel" class="rounded" placeholder="010-0000-1234" type="tel" pattern="[0-9]{3}-[0-9]{4}-[0-9]{4}"><br>
+
+                <label for="userAge"><img src="https://img.icons8.com/?size=100&id=7zkG0i0pLOGd&format=png&color=000000" alt="userAge Icon"></label>
+                <input name="userAge" id="userAge" class="rounded" placeholder="12" type="number" min="0" max="100" value="12"><br>
+
+                <label for="gender"><img src="https://img.icons8.com/?size=100&id=33337Z2WxW0x&format=png&color=000000" alt="gender Icon"></label>
+                <select name="gender" id="gender" class="rounded">
                     <option value="남">남</option>
                     <option value="여">여</option>
                 </select><br>
-                지역 <select name="regionId" id="regionId" class="rounded" style="width:100px;"></select><br><br>
+
+
+                <label for="regionId"><img src="https://img.icons8.com/?size=100&id=43632&format=png&color=000000" alt="region Icon"></label>
+                <select name="regionId" id="regionId" class="rounded"></select><br><br>
+
+
                 카테고리별 키워드
                 <div id="festivalKeywordZone">
 
@@ -453,13 +566,26 @@
 
                     </div>
 
-                    <button id="addFestivalKeyword" value="1">축제 키워드 추가</button>
+                    <button id="addFestivalKeyword" class="btn btn-outline-success" value="1">축제 키워드 추가</button>
+
+
+                </div>
+
+                <div id="exhibitionKeywordZone">
+
+                    <input type="hidden" id="exhibitionSelectKeyword" name="exhibitionSelectKeyword" value="">
+
+                    <div id="exhibitionKeywordBtns">
+
+                    </div>
+
+                    <button id="addExhibitionKeyword" class="btn btn-outline-success" value="0">전시 키워드 추가</button>
 
 
                 </div>
 
 
-                <button type="submit">제출</button>
+                <button type="submit" class="btn btn-outline-success">제출</button>
 
             </form>
 

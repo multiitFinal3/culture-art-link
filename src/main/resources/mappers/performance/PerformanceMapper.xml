@@ -47,4 +47,78 @@
 
 
 
+
+
+
+    <!-- 좋아요 싫어요 -->
+    <select id="findByUserIdAndPerformanceId" parameterType="map" resultType="com.multi.culture_link.performance.model.dto.PerformanceAddDTO">
+        SELECT * FROM performance_add WHERE user_id = #{userId} AND performance_id = #{performanceId}
+    </select>
+
+    <update id="updatePerformanceAdd" parameterType="com.multi.culture_link.performance.model.dto.PerformanceAddDTO">
+        UPDATE performance_add
+        SET state = #{state}, updated_at = NOW()
+        WHERE id = #{id}
+    </update>
+
+    <insert id="insertPerformanceAdd" parameterType="com.multi.culture_link.performance.model.dto.PerformanceAddDTO" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO performance_add (user_id, performance_id, state, created_at, updated_at)
+        VALUES (#{userId}, #{performanceId}, #{state}, NOW(), NOW())
+    </insert>
+
+    <select id="getPerformanceLikeState" parameterType="map" resultType="String">
+        SELECT state FROM performance_add WHERE user_id = #{userId} AND performance_id = #{performanceId}
+    </select>
+
+
+
+
+
+
+    <!--  keyword와 genre로 공연 검색 -->
+    <select id="searchPerformancesByKeywordAndGenre" resultType="com.multi.culture_link.admin.performance.model.dto.PerformanceDTO">
+        SELECT *
+        FROM performance_info
+        WHERE (title LIKE CONCAT('%', #{keyword}, '%')
+        OR location LIKE CONCAT('%', #{keyword}, '%'))
+        AND genre = #{genre}
+    </select>
+
+
+
+
+
+
+
+    <select id="findReviewsByPerformanceId" resultType="com.multi.culture_link.performance.model.dto.PerformanceReviewDTO">
+        SELECT *
+        FROM performance_review
+        WHERE performance_id = #{performanceId}
+    </select>
+
+    <insert id="insertReview" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO performance_review (user_id, performance_id, star_rating, content, review_date, created_at, updated_at)
+        VALUES (#{userId}, #{performanceId}, #{starRating}, #{content}, #{reviewDate}, NOW(), NOW())
+    </insert>
+
+    <update id="updateReview">
+        UPDATE performance_review
+        SET star_rating = #{starRating},
+        content = #{content},
+        updated_at = NOW()
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteReview">
+        DELETE FROM performance_review WHERE id = #{id}
+    </delete>
+
+
+
+
+
+
+
+
+
 </mapper>

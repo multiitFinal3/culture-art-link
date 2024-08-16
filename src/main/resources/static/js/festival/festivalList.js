@@ -1,44 +1,32 @@
 $(document).ready(
     function(){
 
+        //# region 카드 클릭 시 상세 페이지로 이동
 
-        //#region
+        $(document).on('click','.card',function(){
+
+            var festivalId = $(this).attr('id');
+            window.location.href='/festival/festival-detail?festivalId='+festivalId;
+
+        })
+        //#endRegion
+
+
+        //#region 키워드 추천 관련 함수
 
             function findKeywordRecommendFestivalList(){
 
                 $('#list2').html("");
-                console.log("들어옴")
-
                 $.ajax({
 
                     url: '/festival/findKeywordRecommendFestivalList',
                     method: 'POST',
                     contentType: 'application/json',
                     success: function(list){
-                        console.log("추천 들어옴")
-                        console.log(list);
                         $.each(list, function(index, festival){
 
-                            var content = festival.festivalContent.length > 30?
-                            festival.festivalContent.substring(0,30) + "..."
-                            : festival.festivalContent;
 
-                            var inst1 = festival.manageInstitution.length > 15?
-                            festival.manageInstitution.substring(0,15) + "..."
-                            : festival.manageInstitution;
-
-                            var inst2 = festival.hostInstitution.length > 15?
-                            festival.hostInstitution.substring(0,15) + "..."
-                            : festival.hostInstitution;
-
-                            var inst3 = festival.sponserInstitution.length > 15?
-                            festival.sponserInstitution.substring(0,15) + "..."
-                            : festival.sponserInstitution;
-
-
-                            console.log("축제 날짜")
-                            console.log(festival.startDate);
-                            console.log(festival.endDate);
+                            var indexNew = index + 1;
 
                             var start = festival.startDate.length >0?
                             festival.startDate.substring(0,10):
@@ -48,24 +36,23 @@ $(document).ready(
                             festival.endDate.substring(0,10):
                             "없음";
 
-
-
-
                             var firstHtml= ``;
 
                             if(! festival.imgUrl || festival.imgUrl == "null"){
 
                                 firstHtml = `
-                                    <div class="card" style="width: 18rem;" id="${festival.festivalId}">
-                                        <img class="card-img-top" src="/img/festival/noPhoto.png" alt="Card image cap" style="min-width: 380px; min-height: 400px;">
+                                    <div class="card" id="${festival.festivalId}">
+                                        <div class="card-number">${indexNew}</div>
+                                        <img class="card-img-top" src="/img/festival/noPhoto.png" alt="Card image cap">
 
                                 `;
 
                             }else{
 
                                 firstHtml = `
-                                    <div class="card" style="width: 18rem;" id="${festival.festivalId}">
-                                        <img class="card-img-top" src="${festival.imgUrl}" alt="Card image cap" style="min-width: 380px; min-height: 400px;">
+                                    <div class="card" id="${festival.festivalId}">
+                                        <div class="card-number">${indexNew}</div>
+                                        <img class="card-img-top" src="${festival.imgUrl}" alt="Card image cap">
 
                                 `;
 
@@ -75,20 +62,27 @@ $(document).ready(
 
                             var secondHtml = `
                                 <div class="card-body">
-                                      <h5 class="card-title">${festival.festivalName}</h5>
-                                      <p class="card-text">${content}</p>
-                                      <a href="/festival/festival-detail?festivalId=${festival.festivalId}" class="btn btn-primary">자세히</a>
-                                      <button class="btn btn-primary heart" type="button" style="margin:0px" value="${festival.festivalId}">
-                                          <img src="/img/festival/heart.png"
-                                               style="width : 20px; height: 20px;">
-                                      </button>
-                                      <button class="btn btn-primary hate" type="button" style="margin:0px" value="${festival.festivalId}">
-                                            <img src="/img/festival/trash.png"
-                                                 style="width : 20px; height: 20px;">
-                                      </button>
-                                </div>
+                                      <h5 class="card-title" title="${festival.festivalName}">${festival.festivalName}</h5>
+                                      <p class="card-text" title="${festival.festivalContent}">${festival.festivalContent}</p>
+                                      <p class="card-text">${start} - ${end}</p>
+                                      <p class="card-text t2" style="text-align:center;">★ ${festival.avgRate.toFixed(1)}</p>
 
-                            </div>
+
+                                      <div class="buttonZone">
+
+                                        <button class="whiteHeartBtn">
+                                          <img src="https://kr.object.ncloudstorage.com/team3/common/upNo.png"
+                                             style="width : 25px; height: 25px;" class="heart" value="${festival.festivalId}">
+                                        </button>
+
+                                        <button class="whiteHateBtn">
+                                          <img src="https://kr.object.ncloudstorage.com/team3/common/downNo.png"
+                                             style="width : 25px; height: 25px;" class="hate" value="${festival.festivalId}">
+                                        </button>
+
+                                     </div>
+
+                                </div>
                             `;
 
 
@@ -101,8 +95,8 @@ $(document).ready(
 
 
 
-
                         })
+
 
                     }
 
@@ -117,6 +111,104 @@ $(document).ready(
 
 
         //#region festivalList 관련 함수
+
+
+        /**
+       * DB 전체 리스트 페이지 없이 전부 조회 기능
+       *
+       */
+        function findDBFestivalAllList(){
+
+            $('#list1').html("");
+            $('#pageNum1').html("");
+
+            $.ajax({
+
+                url: '/admin/festival-regulate/findDBFestivalAllList',
+                method: 'POST',
+                contentType: 'application/json',
+                success: function(list){
+
+                    $.each(list, function(index, festival){
+
+                        var start = festival.startDate.length >0?
+                        festival.startDate.substring(0,10):
+                        "없음";
+
+                        var end = festival.endDate.length >0?
+                        festival.endDate.substring(0,10):
+                        "없음";
+
+                        var firstHtml= ``;
+
+                        if(! festival.imgUrl || festival.imgUrl == "null"){
+
+                            firstHtml = `
+                                <div class="card" id="${festival.festivalId}">
+                                    <img class="card-img-top" src="/img/festival/noPhoto.png" alt="Card image cap">
+
+                            `;
+
+                        }else{
+
+                            firstHtml = `
+                                <div class="card" id="${festival.festivalId}">
+                                    <img class="card-img-top" src="${festival.imgUrl}" alt="Card image cap">
+
+                            `;
+
+                        }
+
+
+                        var secondHtml = `
+                            <div class="card-body">
+                                  <h5 class="card-title" title="${festival.festivalName}">${festival.festivalName}</h5>
+                                  <p class="card-text" title="${festival.festivalContent}">${festival.festivalContent}</p>
+                                  <p class="card-text">${start} - ${end}</p>
+                                  <p class="card-text t2" style="text-align:center;">★ ${festival.avgRate.toFixed(1)}</p>
+                                  <div class="buttonZone">
+
+                                      <button class="whiteHeartBtn">
+                                        <img src="https://kr.object.ncloudstorage.com/team3/common/upNo.png"
+                                           style="width : 25px; height: 25px;" class="heart" value="${festival.festivalId}">
+                                      </button>
+
+                                      <button class="whiteHateBtn">
+                                        <img src="https://kr.object.ncloudstorage.com/team3/common/downNo.png"
+                                           style="width : 25px; height: 25px;" class="hate" value="${festival.festivalId}">
+                                      </button>
+
+                                  </div>
+                            </div>
+
+                        </div>
+                        `;
+
+
+                        var finalHtml = firstHtml + secondHtml;
+
+                        $('#list1').append(finalHtml);
+
+                        findLoveList();
+                        findHateList();
+
+                    })
+
+
+                }
+
+            })
+        }
+
+        findDBFestivalAllList();
+        $('#festivalList').removeClass('none');
+        $('#festivalRecommendation').addClass('none');
+        $('#allList').closest('.genre-item').addClass('active');
+        $('#love').closest('.genre-item').removeClass('active');
+
+
+
+
 
         /**
        * DB 전체 리스트 페이지별 조회 기능
@@ -134,31 +226,9 @@ $(document).ready(
                 contentType: 'application/json',
                 success: function(list){
 
-                    console.log(list);
                     $.each(list, function(index, festival){
 
                         var index1 = (index + 1) + (page-1)*5;
-
-                        var content = festival.festivalContent.length > 30?
-                        festival.festivalContent.substring(0,30) + "..."
-                        : festival.festivalContent;
-
-                        var inst1 = festival.manageInstitution.length > 15?
-                        festival.manageInstitution.substring(0,15) + "..."
-                        : festival.manageInstitution;
-
-                        var inst2 = festival.hostInstitution.length > 15?
-                        festival.hostInstitution.substring(0,15) + "..."
-                        : festival.hostInstitution;
-
-                        var inst3 = festival.sponserInstitution.length > 15?
-                        festival.sponserInstitution.substring(0,15) + "..."
-                        : festival.sponserInstitution;
-
-
-                        console.log("축제 날짜")
-                        console.log(festival.startDate);
-                        console.log(festival.endDate);
 
                         var start = festival.startDate.length >0?
                         festival.startDate.substring(0,10):
@@ -176,36 +246,38 @@ $(document).ready(
                         if(! festival.imgUrl || festival.imgUrl == "null"){
 
                             firstHtml = `
-                                <div class="card" style="width: 18rem;" id="${festival.festivalId}">
-                                    <img class="card-img-top" src="/img/festival/noPhoto.png" alt="Card image cap" style="min-width: 380px; min-height: 400px;">
+                                <div class="card" id="${festival.festivalId}">
+                                    <img class="card-img-top" src="/img/festival/noPhoto.png" alt="Card image cap">
 
                             `;
 
                         }else{
 
                             firstHtml = `
-                                <div class="card" style="width: 18rem;" id="${festival.festivalId}">
-                                    <img class="card-img-top" src="${festival.imgUrl}" alt="Card image cap" style="min-width: 380px; min-height: 400px;">
+                                <div class="card" id="${festival.festivalId}">
+                                    <img class="card-img-top" src="${festival.imgUrl}" alt="Card image cap">
 
                             `;
 
                         }
 
 
-
                         var secondHtml = `
                             <div class="card-body">
-                                  <h5 class="card-title">${festival.festivalName}</h5>
-                                  <p class="card-text">${content}</p>
-                                  <a href="/festival/festival-detail?festivalId=${festival.festivalId}" class="btn btn-primary">자세히</a>
-                                  <button class="btn btn-primary heart" type="button" style="margin:0px" value="${festival.festivalId}">
+                                  <h5 class="card-title" title="${festival.festivalName}">${festival.festivalName}</h5>
+                                  <p class="card-text" title="${festival.festivalContent}">${festival.festivalContent}</p>
+                                  <p class="card-text">${start} - ${end}</p>
+                                  <p class="card-text t2" style="text-align:center;">★ ${festival.avgRate.toFixed(1)}</p>
+                                  <div class="buttonZone">
+                                    <button class="btn btn-primary heart" type="button" value="${festival.festivalId}">
                                       <img src="/img/festival/heart.png"
-                                           style="width : 20px; height: 20px;">
-                                  </button>
-                                  <button class="btn btn-primary hate" type="button" style="margin:0px" value="${festival.festivalId}">
-                                        <img src="/img/festival/trash.png"
-                                             style="width : 20px; height: 20px;">
-                                  </button>
+                                           style="width : 100%; height: 100%;">
+                                      </button>
+                                      <button class="btn btn-primary hate" type="button" value="${festival.festivalId}">
+                                            <img src="/img/festival/trash.png"
+                                                 style="width : 100%; height: 100%;">
+                                      </button>
+                                  </div>
                             </div>
                             
                         </div>
@@ -227,8 +299,8 @@ $(document).ready(
             })
         }
 
-        // 1페이지 호출
-        findDBFestivalList(1);
+        // 1페이지 호출 : 전체 리스트 불러오는 방식으로 변경하여 주석 처리함
+//        findDBFestivalList(1);
 
         /**
        * DB 전체 갯수를 알아와 페이지 버튼 추가 기능
@@ -243,8 +315,6 @@ $(document).ready(
                 success: function(count){
 
                     $('#pageNum1').html("");
-                    console.log("카운트는...")
-                    console.log(count)
 
                     var page = 0;
 
@@ -268,8 +338,8 @@ $(document).ready(
 
         }
 
-        // 버튼 붙히기
-        findDBFestivalCount();
+        // 버튼 붙히기 : 전체를 불러오는 방식으로 변경함
+//        findDBFestivalCount();
 
         /**
        * DB 페이지 버튼에 해당 페이지의 순서에 해당하는 데이터 보이는 클릭 이벤트 추가
@@ -283,9 +353,9 @@ $(document).ready(
 
 
         /**
-       * db 다중조건 검색 모달 클릭
+       * db 다중조건 지역 시간 넣기
        */
-         $(document).on('click','#search1', function(){
+         function findAllRegionAndTime(){
 
             $.ajax({
 
@@ -297,23 +367,22 @@ $(document).ready(
                     var list1 = map.regionList;
                     var list2 = map.timeList;
 
-                    $('#searchRegion1').html("");
-                    $('#searchRegion1').append(`<option value="">선택안함</option>`);
-
+                    $('#searchRegion').html("");
+                    $('#searchRegion').append(`<option value="" selected>지역</option>`);
                     $.each(list1, function(index, region){
 
                         var htmlContent = `<option value="${region.regionId}">${region.regionName}</option>`;
-                        $('#searchRegion1').append(htmlContent);
+                        $('#searchRegion').append(htmlContent);
 
                     })
 
-                    $('#searchTime1').html("");
-                    $('#searchTime1').append(`<option value="">선택 안함</option>`);
+                    $('#searchTime').html("");
+                    $('#searchTime').append(`<option value="" selected>시간대</option>`);
 
                     $.each(list2, function(index, time){
 
                         var htmlContent = `<option value="${time.timeId}">${time.timeDescription}</option>`;
-                        $('#searchTime1').append(htmlContent);
+                        $('#searchTime').append(htmlContent);
 
                     })
 
@@ -321,76 +390,82 @@ $(document).ready(
 
             })
 
-        })
+        }
+
+
+        findAllRegionAndTime();
 
         /**
        * db 다중조건을 이용힌 검색 버튼 클릭
        */
-         $(document).on('click','#searchBtn1', function(){
+         $(document).on('click','#searchBtn1', function(e){
 
-            var data = $("#searchForm1").serializeArray();
+            e.preventDefault();
 
-            console.log("폼 : ");
-
-            console.log(data);
-
-
-            findDBFestivalByMultiple(data,1);
-            findDBFestivalMultipleCount(data);
-
-            // 다중 조건 검색 모달 닫기
-            $('#close1').click();
+            findDBFestivalByMultiple(1);
+            findDBFestivalMultipleCount();
 
          })
 
         /**
        * 다중 조건을 담은 폼 데이터 보내기
        * @param {int} page 페이지
-       * @param {Array<{name: string, value: string}>} data1 직렬화 된 폼 데이터
+       *
        */
-         function findDBFestivalByMultiple(data1, page){
+         function findDBFestivalByMultiple(page1){
+
+            console.log("findDBFestivalByMultiple(page)");
+            console.log(page1);
+
+            var regionId = document.getElementById('searchRegion').options[document.getElementById('searchRegion').selectedIndex].value;
+            console.log(regionId);
+            var timeId = document.getElementById('searchTime').options[document.getElementById('searchTime').selectedIndex].value;
+            console.log(timeId);
+            var festivalName = $('#festivalName').val();
+            var festivalContent = $('#festivalContent').val();
+            var manageInstitution = $('#manageInstitution').val();
+            var hostInstitution = $('#hostInstitution').val();
+            var tel = $('#tel').val();
+            var place = $('#place').val();
+            var formattedStart = $('#formattedStart').val();
+            var formattedEnd = $('#formattedEnd').val();
+            var avgRate = $('#avgRate').val();
+            console.log(avgRate);
+            var season = document.getElementById('searchSeason1').options[document.getElementById('searchSeason1').selectedIndex].value;
 
 
-            console.log(data1);
+            console.log(season)
+
+            var data = {
+
+                    regionId : regionId,
+                    timeId : timeId,
+                    festivalName : festivalName,
+                    festivalContent : festivalContent,
+                    manageInstitution : manageInstitution,
+                    hostInstitution : hostInstitution,
+                    tel : tel,
+                    place : place,
+                    formattedStart : formattedStart,
+                    formattedEnd : formattedEnd,
+                    avgRate : avgRate,
+                    season : season,
+                    page : page1
+
+                };
+
 
             $.ajax({
 
-                url: '/admin/festival-regulate/findDBFestivalByMultiple?page=' + page,
+                url: '/admin/festival-regulate/findDBFestivalByMultiple',
                 method: 'POST',
                 contentType: 'application/json',
-                data: JSON.stringify(data1),
+                data : JSON.stringify(data),
                 success: function(list){
-
-                    $('#close1').click();
 
                     $('#list1').html("");
 
-
                     $.each(list, function(index, festival){
-
-                        console.log(festival);
-                        var index1 = (index + 1) + (page-1)*5;
-
-                        var content = festival.festivalContent.length > 30?
-                        festival.festivalContent.substring(0,30) + "..."
-                        : festival.festivalContent;
-
-                        var inst1 = festival.manageInstitution.length > 15?
-                        festival.manageInstitution.substring(0,15) + "..."
-                        : festival.manageInstitution;
-
-                        var inst2 = festival.hostInstitution.length > 15?
-                        festival.hostInstitution.substring(0,15) + "..."
-                        : festival.hostInstitution;
-
-                        var inst3 = festival.sponserInstitution.length > 15?
-                        festival.sponserInstitution.substring(0,15) + "..."
-                        : festival.sponserInstitution;
-
-
-                        console.log("축제 날짜")
-                        console.log(festival.startDate);
-                        console.log(festival.endDate);
 
                         var start = festival.startDate.length >0?
                         festival.startDate.substring(0,10):
@@ -400,42 +475,44 @@ $(document).ready(
                         festival.endDate.substring(0,10):
                         "없음";
 
-
                         var firstHtml= ``;
 
                         if(! festival.imgUrl || festival.imgUrl == "null"){
 
                             firstHtml = `
-                                <div class="card" style="width: 18rem;" id="${festival.festivalId}">
-                                    <img class="card-img-top" src="/img/festival/noPhoto.png" alt="Card image cap" style="min-width: 380px; min-height: 400px;">
+                                <div class="card" id="${festival.festivalId}">
+                                    <img class="card-img-top" src="/img/festival/noPhoto.png" alt="Card image cap">
 
                             `;
 
                         }else{
 
                             firstHtml = `
-                                <div class="card" style="width: 18rem;" id="${festival.festivalId}">
-                                    <img class="card-img-top" src="${festival.imgUrl}" alt="Card image cap" style="min-width: 380px; min-height: 400px;">
+                                <div class="card" id="${festival.festivalId}">
+                                    <img class="card-img-top" src="${festival.imgUrl}" alt="Card image cap">
 
                             `;
 
                         }
 
 
-
                         var secondHtml = `
                             <div class="card-body">
-                                  <h5 class="card-title">${festival.festivalName}</h5>
-                                  <p class="card-text">${content}</p>
-                                  <a href="/festival/festival-detail?festivalId=${festival.festivalId}" class="btn btn-primary">자세히</a>
-                                  <button class="btn btn-primary heart" type="button" style="margin:0px" value="${festival.festivalId}">
-                                      <img src="/img/festival/heart.png"
-                                           style="width : 20px; height: 20px;">
-                                  </button>
-                                  <button class="btn btn-primary hate" type="button" style="margin:0px" value="${festival.festivalId}">
-                                        <img src="/img/festival/trash.png"
-                                             style="width : 20px; height: 20px;">
-                                  </button>
+                                  <h5 class="card-title" title="${festival.festivalName}">${festival.festivalName}</h5>
+                                  <p class="card-text" title="${festival.festivalContent}">${festival.festivalContent}</p>
+                                  <p class="card-text">${start} - ${end}</p>
+                                  <p class="card-text t2" style="text-align:center;">★ ${festival.avgRate.toFixed(1)}</p>
+                                  <div class="buttonZone">
+                                    <button class="whiteHeartBtn">
+                                        <img src="https://kr.object.ncloudstorage.com/team3/common/upNo.png"
+                                           style="width : 25px; height: 25px;" class="heart" value="${festival.festivalId}">
+                                    </button>
+
+                                    <button class="whiteHateBtn">
+                                        <img src="https://kr.object.ncloudstorage.com/team3/common/downNo.png"
+                                           style="width : 25px; height: 25px;" class="hate" value="${festival.festivalId}">
+                                    </button>
+                                  </div>
                             </div>
 
                         </div>
@@ -448,7 +525,6 @@ $(document).ready(
 
                         findLoveList();
                         findHateList();
-
 
                     })
 
@@ -463,23 +539,57 @@ $(document).ready(
         * 다중 조건 검색에 해당하는 전체 갯수를 구하고 그 수만큼 페이지 버튼 붙히기
         * @param {Array<{name: string, value: string}>} data1 직렬화 된 폼 데이터
         */
-         function findDBFestivalMultipleCount(data1){
+         function findDBFestivalMultipleCount(){
+
+            console.log("findDBFestivalMultipleCount()");
+            var regionId = document.getElementById('searchRegion').options[document.getElementById('searchRegion').selectedIndex].value;
+            console.log(regionId);
+            var timeId = document.getElementById('searchTime').options[document.getElementById('searchTime').selectedIndex].value;
+            console.log(timeId);
+            var festivalName = $('#festivalName').val();
+            var festivalContent = $('#festivalContent').val();
+            var manageInstitution = $('#manageInstitution').val();
+            var hostInstitution = $('#hostInstitution').val();
+            var tel = $('#tel').val();
+            var place = $('#place').val();
+            var formattedStart = $('#formattedStart').val();
+            var formattedEnd = $('#formattedEnd').val();
+            var avgRate = $('#avgRate').val();
+            console.log(avgRate);
+            var season = document.getElementById('searchSeason1').options[document.getElementById('searchSeason1').selectedIndex].value;
+
+
+            console.log(season)
+
+            var data = {
+
+                    regionId : regionId,
+                    timeId : timeId,
+                    festivalName : festivalName,
+                    festivalContent : festivalContent,
+                    manageInstitution : manageInstitution,
+                    hostInstitution : hostInstitution,
+                    tel : tel,
+                    place : place,
+                    formattedStart : formattedStart,
+                    formattedEnd : formattedEnd,
+                    avgRate : avgRate,
+                    season : season
+
+                };
+
 
             $.ajax({
 
                 url: '/admin/festival-regulate/findDBFestivalMultipleCount',
                 method: 'POST',
-                data: JSON.stringify(data1),
                 contentType: 'application/json',
+                data : JSON.stringify(data),
                 success: function(count){
 
                     $('#pageNum1').html("");
                     // 상세검색 전으로 돌아가기 버튼
                     $('#pageNum1').append(`<button class="pageBtn4">전체</button>`);
-
-
-                    console.log("카운트는...")
-                    console.log(count)
 
                     var page = 0;
 
@@ -495,12 +605,7 @@ $(document).ready(
 
                     }
 
-                    $(document).on('click','.pageBtn3', function(){
 
-                        const page = $(this).text();
-                        findDBFestivalByMultiple(data1, page);
-
-                    })
 
                 }
 
@@ -510,6 +615,18 @@ $(document).ready(
         }
 
 
+        $(document).on('click','.pageBtn3', function(){
+
+            const page = $(this).text();
+            findDBFestivalByMultiple(page);
+            findDBFestivalMultipleCount();
+
+        })
+
+
+
+
+
         /**
         * 상세 조건 검색에서 전체검색으로 돌아가기 버튼
         *
@@ -517,9 +634,20 @@ $(document).ready(
         $(document).on('click','.pageBtn4', function(){
 
             $('#list1').html("");
-            findDBFestivalList(1);
-            findDBFestivalCount();
+            window.location.href='/festival/festival-list';
 
+        })
+
+
+
+        /**
+        * 상세 조건 검색에서 초기화 버튼으로 돌아가기 버튼
+        *
+        */
+        $(document).on('click','#resetBtn1', function(){
+
+            $('#list1').html("");
+             window.location.href='/festival/festival-list';
         })
 
 
@@ -529,12 +657,15 @@ $(document).ready(
         * 찜하기 / 찜 취소하기 버튼
         *
         */
-        $(document).on('click','.heart', function(){
+        $(document).on('click','.heart', function(e){
 
-            var button = $(this);
-            var festivalId = $(this).val();
+            e.stopImmediatePropagation();
 
-            if(button.closest(".card").hasClass("hasLove")){
+
+            var img = $(this);
+            var festivalId = img.attr('value');
+
+            if(img.closest(".card").hasClass("hasLove")){
 
                 $.ajax({
 
@@ -543,7 +674,8 @@ $(document).ready(
                     contentType: 'application/json',
                     success: function(res){
                         alert(res);
-                        button.closest('.card').removeClass("hasLove");
+                        img.closest('.card').removeClass("hasLove");
+                        findLoveList();
                     },
                     error: function(xhr, status, error){
 
@@ -554,8 +686,8 @@ $(document).ready(
 
             }else{
 
-                if(button.closest(".card").hasClass("hasHate")){
-                    button.closest(".card").find(".hate").click();
+                if(img.closest(".card").hasClass("hasHate")){
+                    img.closest(".card").find(".hate").click();
                 }
 
 
@@ -567,8 +699,8 @@ $(document).ready(
                     success: function(res){
 
                         alert(res);
-                        button.closest(".card").addClass("hasLove");
-                        console.log("addClass('hasLove');")
+                        img.closest(".card").addClass("hasLove");
+                        findLoveList();
 
 
                     },
@@ -591,7 +723,7 @@ $(document).ready(
 
 
         /**
-        * 찜 리스트 찾아서 색 바꾸기
+        * 찜 리스트 찾아서 up 이미지 색 바꾸기
         *
         */
         function findLoveList(){
@@ -605,11 +737,7 @@ $(document).ready(
                 contentType: 'application/json',
                 success: function(list){
 
-                    console.log(list);
                     $.each(cardList, function(index, card){
-
-                        console.log("card.getAttribute('id')")
-                        console.log(card.getAttribute('id'));
 
                         var cardString = card.getAttribute('id');
                         var cardInt = parseInt(cardString, 10);
@@ -617,7 +745,13 @@ $(document).ready(
                         if(list.includes(cardInt)){
 
                             $(card).addClass("hasLove");
+                            var heartImg = $(card).find('.heart');
+                            heartImg.attr('src','https://kr.object.ncloudstorage.com/team3/common/upBlue.png')
 
+                        }else{
+
+                            var heartImg = $(card).find('.heart');
+                            heartImg.attr('src','https://kr.object.ncloudstorage.com/team3/common/upNo.png');
                         }
                     })
                 }
@@ -634,12 +768,14 @@ $(document).ready(
         * 관심없음 하기 / 관심없음 취소하기 버튼
         *
         */
-        $(document).on('click','.hate', function(){
+        $(document).on('click','.hate', function(e){
 
-            var button = $(this);
-            var festivalId = $(this).val();
+            e.stopImmediatePropagation();
 
-            if(button.closest(".card").hasClass("hasHate")){
+            var img = $(this);
+            var festivalId = img.attr('value');
+
+            if(img.closest(".card").hasClass("hasHate")){
 
                 $.ajax({
 
@@ -648,7 +784,8 @@ $(document).ready(
                     contentType: 'application/json',
                     success: function(res){
                         alert(res);
-                        button.closest('.card').removeClass("hasHate");
+                        img.closest('.card').removeClass("hasHate");
+                        findHateList();
                     },
                     error: function(xhr, status, error){
 
@@ -659,8 +796,8 @@ $(document).ready(
 
             }else{
 
-                if(button.closest(".card").hasClass("hasLove")){
-                    button.closest(".card").find(".heart").click();
+                if(img.closest(".card").hasClass("hasLove")){
+                    img.closest(".card").find(".heart").click();
                 }
 
                 $.ajax({
@@ -671,8 +808,8 @@ $(document).ready(
                     success: function(res){
 
                         alert(res);
-                        button.closest(".card").addClass("hasHate");
-                        console.log("addClass('hasHate');")
+                        img.closest(".card").addClass("hasHate");
+                        findHateList();
 
 
                     },
@@ -687,15 +824,11 @@ $(document).ready(
 
             }
 
-
-
-
-
         })
 
 
         /**
-        * 관심없음 리스트 찾아서 색 바꾸기
+        * 관심없음 리스트 찾아서 down 이미지 색 바꾸기
         *
         */
         function findHateList(){
@@ -709,11 +842,7 @@ $(document).ready(
                 contentType: 'application/json',
                 success: function(list){
 
-                    console.log(list);
                     $.each(cardList, function(index, card){
-
-                        console.log("card.getAttribute('id')")
-                        console.log(card.getAttribute('id'));
 
                         var cardString = card.getAttribute('id');
                         var cardInt = parseInt(cardString, 10);
@@ -721,8 +850,15 @@ $(document).ready(
                         if(list.includes(cardInt)){
 
                             $(card).addClass("hasHate");
+                            var heartImg = $(card).find('.hate');
+                            heartImg.attr('src','https://kr.object.ncloudstorage.com/team3/common/downRed.png')
 
+                        }else{
+
+                            var heartImg = $(card).find('.hate');
+                            heartImg.attr('src','https://kr.object.ncloudstorage.com/team3/common/downNo.png');
                         }
+
                     })
                 }
             })
@@ -731,11 +867,44 @@ $(document).ready(
 
 
 
-
-
-
-
         //#endregion
+
+
+
+        //#region 상단바 클릭 이벤트
+
+        /**
+        * 전체 클릭 시
+        *
+        */
+        $(document).on('click','#allList', function(){
+
+            $('#festivalList').removeClass('none');
+            $('#festivalRecommendation').addClass('none');
+            $('.extra-filter').removeClass('none');
+
+            $('#allList').closest('.genre-item').addClass('active');
+            $('#keywordList').closest('.genre-item').removeClass('active');
+
+        })
+
+        /**
+        * 키워드 추천 클릭 시
+        *
+        */
+        $(document).on('click','#keywordList', function(){
+
+            $('#festivalList').addClass('none');
+            $('#festivalRecommendation').removeClass('none');
+            $('.extra-filter').addClass('none');
+
+            $('#allList').closest('.genre-item').removeClass('active');
+            $('#keywordList').closest('.genre-item').addClass('active');
+
+        })
+
+
+        //#endRegion
 
 
 

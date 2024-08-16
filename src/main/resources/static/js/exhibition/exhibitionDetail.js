@@ -3,7 +3,7 @@ const analysesPerPage = 3;
 let currentReviewPage = 1;
 let currentAnalyzePage = 1;
 
-$(document).ready(function() {
+$(document).ready(function () {
     const exhibitionId = getExhibitionIdFromUrl();
     loadExhibitionDetails(exhibitionId);
 
@@ -15,14 +15,14 @@ $(document).ready(function() {
     btnEvent()
 
     buttons.forEach(button => {
-        button.addEventListener('click', function() {
+        button.addEventListener('click', function () {
             buttons.forEach(btn => btn.classList.remove('active'));
             this.classList.add('active');
 
             contentSections.forEach(section => section.classList.remove('active'));
 
             let targetId;
-            switch(this.id) {
+            switch (this.id) {
                 case 'currentBtn':
                     targetId = 'exhibitionDescription';
                     break;
@@ -31,6 +31,12 @@ $(document).ready(function() {
                     break;
                 case 'futureBtn':
                     targetId = 'exhibitionNews';
+                    break;
+                case 'commentBtn':
+                    targetId = 'exhibitionComment';
+                    break;
+                case 'AnalyzeBtn':
+                    targetId = 'exhibitionAnalyze';
                     break;
             }
             document.getElementById(targetId).classList.add('active');
@@ -71,7 +77,7 @@ function btnEvent() {
     stars.forEach(star => {
         star.addEventListener('click', () => {
             const value = star.getAttribute('data-value');
-            if(!starContainer) {
+            if (!starContainer) {
                 console.log('not found start container');
                 starContainer = document.querySelector('.star-rating');
             }
@@ -92,12 +98,12 @@ function btnEvent() {
         saveAnalyze(exhibitionId);
     });
 
-    $('#imageUploadBtn').on('click', function() {
+    $('#imageUploadBtn').on('click', function () {
         $('#imageInput').click();
     });
 
 // 파일 선택 시 이벤트
-    $('#imageInput').on('change', function(event) {
+    $('#imageInput').on('change', function (event) {
         const file = event.target.files[0];
         if (file) {
             // 파일 선택됨을 사용자에게 알림
@@ -105,7 +111,7 @@ function btnEvent() {
 
             // 이미지 미리보기
             const reader = new FileReader();
-            reader.onload = function(e) {
+            reader.onload = function (e) {
                 $('#previewImage').attr('src', e.target.result);
                 $('#imagePreview').show();
             }
@@ -114,7 +120,7 @@ function btnEvent() {
     });
 
 // 이미지 제거 버튼 이벤트 리스너
-    $('#removeImageBtn').on('click', function() {
+    $('#removeImageBtn').on('click', function () {
         $('#imageInput').val('');
         $('#imagePreview').hide();
         $('#imageUploadBtn').text('이미지 첨부');
@@ -141,15 +147,27 @@ async function saveComment(exhibitionId) {
         const stars = starContainer.getAttribute('data-rating');
         const data = {
             stars,
-            content:comment.value
+            content: comment.value
         }
 
-        console.log('save comment : ',data)
+        console.log('save comment : ', data)
         const response = await axios.post(`/exhibition/exhibition/${exhibitionId}/comment`, data)
 
+
         loadExhibitionReviews()
-    }catch(e) {
-        console.log('error : ',e)
+
+
+        $("#commentTextarea").val('')
+        starContainer.setAttribute('data-rating', 0);
+
+
+        const $stars = starContainer.querySelectorAll('.star');
+        updateStars(starContainer, $stars);
+
+        alert('작성 완료');
+
+    } catch (e) {
+        console.log('error : ', e)
     }
 }
 
@@ -162,7 +180,7 @@ async function saveAnalyze(exhibitionId) {
 
         let imagePath = null;
 
-        console.log('imageFile, imagePath : ',imageFile, imagePath)
+        console.log('imageFile, imagePath : ', imageFile, imagePath)
         if (imageFile) {
             const timestamp = new Date().getTime();
             imagePath = `/exhibition/${exhibitionId}/analyze/${timestamp}.png`;
@@ -171,17 +189,23 @@ async function saveAnalyze(exhibitionId) {
 
 
         const data = {
-            artwork:artwork.value,
-            content:analyze.value,
+            artwork: artwork.value,
+            content: analyze.value,
             image: imagePath
         }
 
-        console.log('save analyze : ',data)
+        console.log('save analyze : ', data)
         const response = await axios.post(`/exhibition/exhibition/${exhibitionId}/analyze`, data)
 
         loadExhibitionAnalyze()
-    }catch(e) {
-        console.log('error : ',e)
+
+        alert('작성 완료');
+        $("#artworkTextarea").val('')
+        $("#analyzeTextarea").val('')
+        $("#imageInput").val('')
+        $("#previewImage").val('')
+    } catch (e) {
+        console.log('error : ', e)
     }
 }
 
@@ -198,38 +222,76 @@ async function uploadImageToBucket(file, path) {
     });
 }
 
+// function setInterestedBtn(state) {
+//     let $downButton = $(`#notInterestedBtn img`);
+//     let $upButton = $(`#favoriteBtn img`);
+//     const baseUrl = 'https://kr.object.ncloudstorage.com/team3/common/';
+//
+//     $downButton.attr('src', baseUrl + 'downNo.png');
+//     $upButton.attr('src', baseUrl + 'upNo.png');
+//
+//     let downSrc = $downButton.attr('src');
+//     let upSrc = $upButton.attr('src');
+//     console.log('setInterestedBtn : ', state)
+//
+//     if (state === 'interested') {
+//         if (upSrc.includes('upBlue.png')) {
+//             $upButton.attr('src', upSrc.replace('upBlue.png', 'upNo.png'));
+//         } else if (upSrc.includes('upNo.png')) {
+//             console.log('no')
+//             $upButton.attr('src', upSrc.replace('upNo.png', 'upBlue.png'));
+//         }
+//         $downButton.attr('src', baseUrl + 'downNo.png');
+//     }else if(state ==='not_interested') {
+//         if (downSrc.includes('downRed.png')) {
+//             $downButton.attr('src', downSrc.replace('downRed.png', 'downNo.png'));
+//         } else if (downSrc.includes('downNo.png')) {
+//             $downButton.attr('src', downSrc.replace('downNo.png', 'downRed.png'));
+//         }
+//         $upButton.attr('src', baseUrl + 'upNo.png');
+//     }
+// }
+
+function setInterestedBtn(state) {
+    let $downButton = $(`#notInterestedBtn img`);
+    let $upButton = $(`#favoriteBtn img`);
+    const baseUrl = 'https://kr.object.ncloudstorage.com/team3/common/';
+    if (!$downButton.attr('src') && !$upButton.attr('src')) {
+        $downButton.attr('src', baseUrl + 'downNo.png');
+        $upButton.attr('src', baseUrl + 'upNo.png');
+    }
+    if (state === 'interested') {
+        if ($upButton.attr('src').includes('upBlue.png')) {
+            $upButton.attr('src', baseUrl + 'upNo.png');
+        } else {
+            $upButton.attr('src', baseUrl + 'upBlue.png');
+        }
+        $downButton.attr('src', baseUrl + 'downNo.png');
+    } else if (state === 'not_interested') {
+        if ($downButton.attr('src').includes('downRed.png')) {
+            $downButton.attr('src', baseUrl + 'downNo.png');
+        } else {
+            $downButton.attr('src', baseUrl + 'downRed.png');
+        }
+        $upButton.attr('src', baseUrl + 'upNo.png');
+    }
+}
+
+
 async function updateInterest(exhibitionId, state) {
-    console.log('update interest: ',exhibitionId, state)
+    console.log('update interest: ', exhibitionId, state);
     try {
         const response = await axios.post('/exhibition/interested', {
             exhibitionId: Number(exhibitionId),
             state: state
-        })
-
-        renderViewBackground(state)
-    }catch(e) {
-        console.log('error : ',e)
-        alert(`${state === 'interested'} ? "찜 설정 실패" : "관심 없음 설정 실패"`)
-    }
-
-}
-
-function renderViewBackground(state) {
-    const contentDiv = document.querySelector(`.container`)
-
-    console.log("dom : ",contentDiv)
-    if (state === 'interested') {
-        contentDiv.classList.add('background-pink')
-        if (contentDiv.classList.contains('background-gray')) {
-            contentDiv.classList.remove('background-gray');
-        }
-    }else if (state === 'not_interested') {
-        contentDiv.classList.add('background-gray')
-        if (contentDiv.classList.contains('background-pink')) {
-            contentDiv.classList.remove('background-pink');
-        }
+        });
+        setInterestedBtn(state);
+    } catch (e) {
+        console.log('error : ', e);
+        alert(state === 'interested' ? "찜 설정 실패" : "관심 없음 설정 실패");
     }
 }
+
 
 function getExhibitionIdFromUrl() {
     const urlParts = window.location.pathname.split('/');
@@ -243,8 +305,8 @@ async function loadExhibitionDetails(exhibitionId) {
         const data = await response.json();
         console.log(data);
 
-        data.startDate = data.startDate?.substring(0,10) || "미정";
-        data.endDate = data.endDate?.substring(0,10) || "미정";
+        data.startDate = data.startDate?.substring(0, 10) || "미정";
+        data.endDate = data.endDate?.substring(0, 10) || "미정";
         await loadExhibitionReviews();
         await loadExhibitionAnalyze();
 
@@ -278,7 +340,7 @@ function renderPagination(totalItems, currentPage, containerId, loadPageFunction
 
     $(`#${containerId}`).html(paginationHtml);
 
-    $(`.${containerId}-btn`).on('click', function() {
+    $(`.${containerId}-btn`).on('click', function () {
         const page = $(this).data('page');
         loadPageFunction(page);
     });
@@ -299,7 +361,7 @@ async function loadExhibitionReviews() {
         const exhibitionId = getExhibitionIdFromUrl()
         const response = await fetch(`/exhibition/exhibition/${exhibitionId}/comment`);
         const data = await response.json();
-        console.log("loadExhibitionReviews : ",data);
+        console.log("loadExhibitionReviews : ", data);
         renderReviews(data)
     } catch (error) {
         console.error('Failed to load exhibition details:', error);
@@ -308,15 +370,26 @@ async function loadExhibitionReviews() {
 
 function renderExhibitionDetails(exhibition) {
     $('#exhibitionTitle').text(exhibition.title);
+    $('#exhibitionArtist').text(exhibition.artist);
     $('#exhibitionMuseum').text(exhibition.museum);
-    $('#exhibitionDate').text(`${exhibition.startDate} ~ ${exhibition.endDate}`);
+    // 날짜 형식 변경
+    const formatDate = (dateString) => {
+        if (dateString === "미정") return "미정";
+        const date = new Date(dateString);
+        return `${date.getFullYear()}.${String(date.getMonth() + 1).padStart(2, '0')}.${String(date.getDate()).padStart(2, '0')}`;
+    };
+
+    const startDate = formatDate(exhibition.startDate);
+    const endDate = formatDate(exhibition.endDate);
+    $('#exhibitionDate').text(`${startDate} - ${endDate}`);
     $('#exhibitionImage').attr('src', exhibition.image);
+
 
     initMap(exhibition.museum);
     renderInformation(exhibition)
-    renderViewBackground(exhibition?.state)
     // searchYoutubeVideos(exhibition.title, exhibition.museum);
     searchYoutubeVideos(exhibition.title);
+    setInterestedBtn(exhibition.state)
 }
 
 // async function searchYoutubeVideos(title, museum) {
@@ -334,7 +407,7 @@ function renderExhibitionDetails(exhibition) {
 async function searchYoutubeVideos(query) {
     try {
         const response = await axios.post('/exhibition/videos', null, {
-            params: { query }
+            params: {query}
         });
         const videos = response.data;
         renderVideos(videos);
@@ -356,7 +429,6 @@ function renderVideos(videos) {
 }
 
 
-
 async function initMap(location) {
     console.log('Location:', location); // 위치 정보 로깅
 
@@ -364,19 +436,24 @@ async function initMap(location) {
         center: new naver.maps.LatLng(37.3595704, 127.105399),
         zoom: 15
     };
-    const map = new naver.maps.Map('map', mapOptions);
 
+    const mapDiv = document.getElementById('map');
+    const map = new naver.maps.Map(mapDiv, mapOptions);
+
+
+    console.log('mapDiv : ', mapDiv)
+    console.log('map : ', map)
     if (!location) {
         console.log('No location provided');
         $('#mapDiv').html("위치 정보가 없습니다.");
         return;
     }
-    
+
     // 위치 정보 가져오기 
     const response = await axios.get(`/map/naver?query=${location}`);
     const locationInfo = response?.data?.items[0]
 
-    if(!locationInfo) {
+    if (!locationInfo) {
         console.error('No results found for location:', location);
         $('#mapDiv').html("해당 위치를 찾을 수 없습니다.");
         return;
@@ -388,10 +465,14 @@ async function initMap(location) {
     // 좌표로 이동
     map.setCenter(point);
     // 해당 좌표에 마크 설정
-    new naver.maps.Marker({
+    await new naver.maps.Marker({
         position: point,
         map: map
     });
+
+    setTimeout(function () {
+        window.dispatchEvent(new Event('resize'));
+    }, 600);
 }
 
 function renderInformation(exhibition) {
@@ -416,11 +497,17 @@ function renderReviews(reviews) {
 
     const reviewsHtml = pageReviews.map(review => `
         <div class="review" data-id="${review.id}">
-            <div class="review-content">
-                <h3>${review.name}</h3>
+            <div class="review-top">
+                <img src="https://kr.object.ncloudstorage.com/team3${review.profileImage}" alt="프로필 이미지" class="profile-image">
+                <div class="review-info">
+                    <h3 class="review-name">${review.name}</h3>
+                    <p class="review-date">${review.createdAt}</p>
+                    <div class="review-rating">${'★'.repeat(review.stars)}${'☆'.repeat(5 - review.stars)}</div>
+                </div>
+                ${(review.auth) ? '<button class="delete-review btn btn-outline-secondary">삭제</button>' : ''}
+            </div>
+            <div class="review-bottom">
                 <p class="review-text">${review.content}</p>
-                <div class="review-rating">${'★'.repeat(review.stars)}${'☆'.repeat(5-review.stars)}</div>
-                ${(review.auth) ? '<button class="delete-review" style="position: absolute; top: 5px; right: 5px;">삭제</button>' : ''}
             </div>
         </div>
     `).join('');
@@ -429,7 +516,7 @@ function renderReviews(reviews) {
     renderReviewPagination(reviews.length, currentReviewPage);
 
 
-    $('.delete-review').on('click', function() {
+    $('.delete-review').on('click', function () {
         const reviewId = $(this).closest('.review').data('id');
         deleteReview(reviewId);
     });
@@ -440,7 +527,7 @@ async function deleteReview(reviewId) {
         const exhibitionId = getExhibitionIdFromUrl();
         const response = await axios.delete(`/exhibition/exhibition/${exhibitionId}/comment`,
             {
-                data:{
+                data: {
                     id: reviewId
                 }
             });
@@ -460,7 +547,7 @@ async function loadExhibitionKeyword() {
         const exhibitionId = getExhibitionIdFromUrl()
         const response = await fetch(`/exhibition/exhibition/${exhibitionId}/keyword`);
         const data = await response.json();
-        console.log("loadExhibitionKeyword : ",data);
+        console.log("loadExhibitionKeyword : ", data);
         renderkeyword(data)
     } catch (error) {
         console.error('Failed to load exhibition details:', error);
@@ -470,8 +557,8 @@ async function loadExhibitionKeyword() {
 
 function renderkeyword(keyword) {
 
-    for(const key of Object.keys(keyword)) {
-        const keywordHtml = keyword[key].slice(0, 3).map(data => `
+    for (const key of Object.keys(keyword)) {
+        const keywordHtml = keyword[key].slice(0, 5).map(data => `
         <a href="#" class="keyword">${data.keyword}</a>
     `).join('');
 
@@ -486,7 +573,7 @@ async function loadExhibitionAnalyze() {
         const exhibitionId = getExhibitionIdFromUrl()
         const response = await fetch(`/exhibition/exhibition/${exhibitionId}/analyze`);
         const data = await response.json();
-        console.log("loadExhibitionAnalyze : ",data);
+        console.log("loadExhibitionAnalyze : ", data);
         renderAnalyze(data)
     } catch (error) {
         console.error('Failed to load exhibition details:', error);
@@ -500,19 +587,23 @@ function renderAnalyze(analyze) {
 
 
     const analyzeHtml = pageAnalyze.map(analyze => `
-        <div class="analyze" data-id="${analyze.id}">
+         <div class="analyze" data-id="${analyze.id}">
             <div class="analyze-content">
                 <div class="analyze-text-content">
-                    <h3>${analyze.artwork}</h3>
+                    <h3 class="analyze-username">${analyze.name}</h3>
+                    <h4 class="analyze-artwork">${analyze.artwork}</h4>
+                    <br>
                     <p class="analyze-text">${analyze.content}</p>
-                    ${(analyze.auth) ? '<button class="update-analyze">수정</button>' : ''}
-                    ${(analyze.auth) ? '<button class="delete-analyze">삭제</button>' : ''}
                 </div>
                 ${analyze.image ? `
                     <div class="analyze-image">
                         <img src="https://kr.object.ncloudstorage.com/team3${analyze.image}" alt="분석 이미지">
                     </div>
                 ` : ''}
+            </div>
+            <div class="analyze-buttons">
+                ${(analyze.auth) ? '<button class="update-analyze btn btn-outline-secondary">수정</button>' : ''}
+                ${(analyze.auth) ? '<button class="delete-analyze btn btn-outline-secondary">삭제</button>' : ''}
             </div>
             <div class="analyze-edit" style="display:none;">
                 <h3>${analyze.artwork}</h3>
@@ -521,24 +612,24 @@ function renderAnalyze(analyze) {
                 <button class="cancel-edit">취소</button>
             </div>
         </div>
-    `).join('');
+`).join('');
     $('#artworkAnalyzeContainer').html(analyzeHtml);
     renderAnalyzePagination(analyze.length, currentAnalyzePage);
 
 
-    $('.update-analyze').on('click', function() {
+    $('.update-analyze').on('click', function () {
         const analyzeDiv = $(this).closest('.analyze');
         analyzeDiv.find('.analyze-content').hide();
         analyzeDiv.find('.analyze-edit').show();
     });
 
-    $('.cancel-edit').on('click', function() {
+    $('.cancel-edit').on('click', function () {
         const analyzeDiv = $(this).closest('.analyze');
         analyzeDiv.find('.analyze-edit').hide();
         analyzeDiv.find('.analyze-content').show();
     });
 
-    $('.save-edit').on('click', function() {
+    $('.save-edit').on('click', function () {
         const analyzeDiv = $(this).closest('.analyze');
         const analyzeId = analyzeDiv.data('id');
         const newArtwork = analyzeDiv.find('.edit-artwork').val();
@@ -546,7 +637,7 @@ function renderAnalyze(analyze) {
         updateAnalyze(analyzeId, newArtwork, newContent);
     });
 
-    $('.delete-analyze').on('click', function() {
+    $('.delete-analyze').on('click', function () {
         const analyzeId = $(this).closest('.analyze').data('id');
         deleteAnalyze(analyzeId);
     });
@@ -577,7 +668,7 @@ async function deleteAnalyze(analyzeId) {
         const exhibitionId = getExhibitionIdFromUrl();
         const response = await axios.delete(`/exhibition/exhibition/${exhibitionId}/analyze`,
             {
-                data:{
+                data: {
                     id: analyzeId
                 }
             });

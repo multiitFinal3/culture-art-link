@@ -319,51 +319,51 @@ public class KeywordExtractService {
 	}
 
 
-//	/**
-//	 * 지피티 예시
-//	 *
-//	 * @param args
-//	 */
-//	public static void main(String[] args) {
-//
-//
-//		OpenAiChatModel model = OpenAiChatModel.builder()
-//				.apiKey("직접넣기")
-//				.modelName("gpt-3.5-turbo")
-//				.temperature(0.1)
-//				.build();
-//
-//		GPTAssistance assistance = AiServices.builder(GPTAssistance.class)
-//				.chatLanguageModel(model)
-//				.build();
-//
-//
-//		String allContent = "(서울=연합뉴스) 곽민서 기자 = 윤석열 대통령은 27일 2024 파리 올림픽에서 활약하는 국가대표 선수들에게 축하를 보냈다.\n" +
-//				"\n" +
-//				"윤 대통령은 이날 페이스북 축전을 통해 \"한계를 뛰어넘는 국가대표 여러분의 도전은 계속될 것\"이라며 \"끝까지 국민과 함께 한마음으로 응원하겠다\"고 말했다.\n" +
-//				"\n" +
-//				"윤 대통령은 강호 독일을 상대로 승리한 여자 핸드볼 국가대표에 \"4골 차를 뒤집고 종료 22초 전 역전에 성공한 투지는 2004년 '우생순(우리 생애 최고의 순간)' 그 자체였다\"며 \"승리 후 모든 선수가 모여 보여준 강강술래 세리머니는 저와 대한민국 국민 모두에게 큰 감동을 줬다\"고 말했다.";
-//
-//
-//		String answer = assistance.chat(allContent);
-//		System.out.println("GPT answer : " + answer);
-//
-//		String[] list = answer.trim().split(",");
-//
-//		ArrayList<String> list2 = new ArrayList<>();
-//
-//		for (String s : list) {
-//
-//			s = s.trim();
-//			list2.add(s);
-//
-//		}
-//
-//		System.out.println(list2);
-//
-//		return;
-//
-//	}
+	/**
+	 * 지피티 예시
+	 *
+	 * @param args
+	 */
+	public static void main(String[] args) {
+
+
+		OpenAiChatModel model = OpenAiChatModel.builder()
+				.apiKey("직접 넣기")
+				.modelName("gpt-3.5-turbo")
+				.temperature(0.1)
+				.build();
+
+		GPTAssistance assistance = AiServices.builder(GPTAssistance.class)
+				.chatLanguageModel(model)
+				.build();
+
+
+		String allContent = "(서울=연합뉴스) 곽민서 기자 = 윤석열 대통령은 27일 2024 파리 올림픽에서 활약하는 국가대표 선수들에게 축하를 보냈다.\n" +
+				"\n" +
+				"윤 대통령은 이날 페이스북 축전을 통해 \"한계를 뛰어넘는 국가대표 여러분의 도전은 계속될 것\"이라며 \"끝까지 국민과 함께 한마음으로 응원하겠다\"고 말했다.\n" +
+				"\n" +
+				"윤 대통령은 강호 독일을 상대로 승리한 여자 핸드볼 국가대표에 \"4골 차를 뒤집고 종료 22초 전 역전에 성공한 투지는 2004년 '우생순(우리 생애 최고의 순간)' 그 자체였다\"며 \"승리 후 모든 선수가 모여 보여준 강강술래 세리머니는 저와 대한민국 국민 모두에게 큰 감동을 줬다\"고 말했다.";
+
+
+		String answer = assistance.chat(allContent);
+		System.out.println("GPT answer : " + answer);
+
+		String[] list = answer.trim().split(",");
+
+		ArrayList<String> list2 = new ArrayList<>();
+
+		for (String s : list) {
+
+			s = s.trim();
+			list2.add(s);
+
+		}
+
+		System.out.println(list2);
+
+		return;
+
+	}
 	
 	/**
 	 * 키워드를 뽑으려하는 전체 작품들의 스트링들을 각각 리스트에 담아 넣으면
@@ -374,6 +374,8 @@ public class KeywordExtractService {
 	 * @throws Exception
 	 */
 	public Map<Integer, ArrayList<String>> getKeywordByCombineVector(ArrayList<String> allContentList) throws Exception {
+		
+		long beforeTime = System.currentTimeMillis();
 		
 		// 해당 카테고리(예시 : 축제)의 분류(예시 : 리뷰)에서 키워드를 뽑을 스트링을 모든 작품에 대해 순서대로 리스트에 담아 파라미터로 전달
 		
@@ -419,7 +421,7 @@ public class KeywordExtractService {
 		// 특정 단어의 유사도 벡터를 만드는 Word2Vec 설정.
 		Word2Vec word2Vec = new Word2Vec.Builder()
 				.minWordFrequency(1) // 최소 한번이라도 등장한 단어는 모두 학습
-				.layerSize(5) // 각 단어는 5차원의 벡터로 표현 [0,12, 0.1.....]
+				.layerSize(5) // 각 단어는 100차원의 벡터로 표현 [0,12, 0.1.....]
 				.seed(42) // 랜덤 시드 결정으로 랜덤하지 않고 결과가 재현됨을 의미
 				.windowSize(5) // 컨텍스트 윈도우 크기로 좌우 5개의 단어를 고려해 관계를 학습함
 				.iterate(collectionSentenceIterator) // 하나의 작품당 이터레이트하며 학습
@@ -451,7 +453,7 @@ public class KeywordExtractService {
 		
 		writer.close();
 		
-		
+		// 주석처리해도 똑같은 결과가 잘 나오는데 주석처리 하면 조금 더 느린 것 같긴 하다
 		IndexReader reader = DirectoryReader.open(index);
 		IndexSearcher searcher = new IndexSearcher(reader);
 		
@@ -522,7 +524,18 @@ public class KeywordExtractService {
 				System.out.println("tfidVector : " + tfidVector);
 				
 				// 두 벡터를 합함(TF-IDF 기반 키워드 추출에서의 의미적 요소 반영을 위한 결합벡터 제안 논문 참고함)
-				INDArray combinedVector = wordVector.mul(tfidVector);
+				
+				INDArray combinedVector = null;
+				
+				if (tfIdf < 0) {
+					
+					combinedVector = wordVector;
+					
+				} else {
+					
+					combinedVector = wordVector.mul(tfidVector);
+				}
+				
 				
 				// 맵에 넣음
 				combinedVectors.put((String) term, combinedVector);
@@ -574,6 +587,12 @@ public class KeywordExtractService {
 		// 인덱스 리더 닫기
 		reader.close();
 		
+		long afterTime = System.currentTimeMillis();
+		
+		long diffTime = (afterTime - beforeTime) / 1000;
+		System.out.println("인덱스 사용 시 시간 차이 : " + diffTime + "s");
+
+		
 		return returnMap;
 		
 	}
@@ -586,6 +605,8 @@ public class KeywordExtractService {
 	 */
 //	public static void main(String[] args) throws Exception {
 //
+//		long beforeTime = System.currentTimeMillis();
+//
 //		ArrayList<String> allContentList = new ArrayList<>();
 //		allContentList.add("박주언 문화복지위원장 “문화예술이 경쟁력”\n" +
 //				"제12대 후반기 원구성 이후 첫 현지의정활동에 나선 경남도의회 문화복지위원회가 비회기 중에도 활발한 의정활동을 하고 있다.\n" +
@@ -595,6 +616,44 @@ public class KeywordExtractService {
 //		allContentList.add("거창=뉴시스] 서희원 기자 = 경남 거창군은 결혼·출산·육아에 대한 관심을 유도하고 가족 친화적인 사회 분위기를 조성하는 등 저출산 극복에 대한 사회적 공감대를 형성하기 위해 ‘2024년 제4회 거창군 가족사진 공모전’을 개최한다고 23일 밝혔다.\n" +
 //				"\n" +
 //				"이번 공모전의 주제는 ‘가족과 함께하는 모든 날, 모든 순간을 담아요’로, 공모대상은 ▲사랑스러운 아이의 출생, 성장 모습을 담은 사진 ▲다양한 형태의 행복한 가족의 사진 ▲다자녀, 다세대가 함께하는 행복한 가족사진 ▲거창의 명승지를 배경으로 찍은 가족사진 등이다.\n");
+//
+//		allContentList.add("<앵커>\n" +
+//				"한여름, 시원한 물놀이와 연극을 동시에 즐길 수 있었던 거창국제연극제가 내일(9) 막을 내립니다.\n" +
+//				"\n" +
+//				"무더위를 날리고 국내외 다양한 연극을 즐길 수 있는 올해 연극제에는 2만 여명이 다녀갈 정도로 성황을 이뤘습니다.\n" +
+//				"\n" +
+//				"이태훈 기자가 다녀왔습니다.\n" +
+//				"\n" +
+//				"<기자>\n" +
+//				"서원과 배롱나무를 배경으로, 묘기에 가까운 줄타기 공연이 이어집니다.\n" +
+//				"\n" +
+//				"줄을 타는 사람은 영화 왕의 남자에서 광대 대역으로 출연했습니다.\n" +
+//				"\n" +
+//				"남사당놀이 줄타기는 거창국제연극제의 공식 참가 공연으로, 유네스코 인류무형문화유산이기도 합니다.\n" +
+//				"\n" +
+//				"재미는 물론이고, 관객과 대화를 주고 받는 소통 예술 공연입니다.\n" +
+//				"\n" +
+//				"{이라온 정용상/거창읍/\"처음보는 거라서 아저씨가 좀 넘어질까봐 걱정되기도 했지만 재밌었어요.\"}\n" +
+//				"\n" +
+//				"밤이 되자, 인극 무대에서는 연극 공연이 이어집니다.\n" +
+//				"\n" +
+//				"1925년, 폴란드 초등학교를 배경으로 아이들이 전쟁과 이념의 갈등을 겪게되는 이야기입니다.\n" +
+//				"\n" +
+//				"{김업순 황성문 박미진/거창읍/\"연기하시는 분의 생동감 넘치는 연기를 직접 볼 수 있어서 너무 좋았습니다.\"}\n" +
+//				"\n" +
+//				"올해로 34회째를 맞은 거창국제연극제에서는 7개 나라, 51개 작품이 공연됐습니다.\n" +
+//				"\n" +
+//				"거창국제연극제는 낮에는 수승대 계곡에서 물놀이를 즐기고 밤에는 야외에서 연극을 즐길 수 있는게 특징입니다.\n" +
+//				"\n" +
+//				"올해 연극제 기간에는 무려 2만 여명이 다녀갔습니다.\n" +
+//				"\n" +
+//				"거창국제연극제는 프랑스 아비뇽페스티벌과 영국 에딘버러페스티벌과 함께 세계 3대 야외공연축제로 거듭나는게 목표입니다.\n" +
+//				"\n" +
+//				"{황국재/거창국제연극제 예술감독/\"야외공연 연극제라고 보시면 되겠습니다. 지금 인터뷰하는 공간도 저희들이 무대 세트를 따로 만든게 아니라 자연스럽게 고가를 배경으로 하는 이런 공연들을 하고 있습니다.\"}\n" +
+//				"\n" +
+//				"2주간의 일정을 뒤로 한 거창국제연극제는 내년 새로운 작품들과 함께 다시 찾아올 예정입니다.\n" +
+//				"\n" +
+//				"KNN 이태훈입니다.");
 //
 //		// 해당 카테고리(예시 : 축제)의 분류(예시 : 리뷰)에서 키워드를 뽑을 스트링을 모든 작품에 대해 순서대로 리스트에 담아 파라미터로 전달
 //
@@ -672,7 +731,7 @@ public class KeywordExtractService {
 //
 //		writer.close();
 //
-//
+//		// 주석처리해도 똑같은 결과가 잘 나오는데 주석처리 하면 조금 더 느린 것 같긴 하다
 //		IndexReader reader = DirectoryReader.open(index);
 //		IndexSearcher searcher = new IndexSearcher(reader);
 //
@@ -746,7 +805,7 @@ public class KeywordExtractService {
 //
 //				INDArray combinedVector = null;
 //
-//				if (tfIdf <= 0) {
+//				if (tfIdf < 0) {
 //
 //					combinedVector = wordVector;
 //
@@ -806,10 +865,14 @@ public class KeywordExtractService {
 //		// 인덱스 리더 닫기
 //		reader.close();
 //
+//		long afterTime = System.currentTimeMillis();
+//
+//		long diffTime = (afterTime - beforeTime) / 1000;
+//		System.out.println("인덱스 사용 시 시간 차이 : " + diffTime + "s");
 //
 //		return;
 //	}
-	
+
 	
 }
 	
