@@ -10,24 +10,12 @@
         VALUES (#{userId}, #{data.genre}, #{data.title}, #{data.content})
     </insert>
 
-<!--    <select id="getBoardList" resultType="com.multi.culture_link.board.model.dto.BoardDto">-->
-<!--        SELECT *, u.user_name AS author-->
-<!--        FROM board b left join user u on b.user_id = u.user_id-->
-<!--        <where>-->
-<!--            <if test="genre != null and genre != 'all'">-->
-<!--                AND genre = #{genre}-->
-<!--            </if>-->
-<!--            <if test="query != null and query != ''">-->
-<!--                AND title LIKE CONCAT('%', #{query}, '%')-->
-<!--            </if>-->
-<!--        </where>-->
-<!--        ORDER BY b.created_at DESC-->
-<!--    </select>-->
-
-<!--    <delete id="deleteBoard">-->
-<!--        DELETE FROM board-->
-<!--        WHERE user_id = #{userId} AND id = #{data.id}-->
-<!--    </delete>-->
+    <delete id="deleteBoard">
+        DELETE
+        FROM board
+        WHERE user_id = #{userId}
+          AND id = #{data.id}
+    </delete>
 
 
     <select id="getBoardList" resultType="com.multi.culture_link.board.model.dto.BoardDto">
@@ -50,8 +38,10 @@
 
     <update id="updateBoard" parameterType="com.multi.culture_link.board.model.dto.BoardDto">
         UPDATE board
-        SET content = #{data.content}
-        WHERE user_id = #{userId} AND id=#{data.id}
+        SET title   = #{data.title},
+            content = #{data.content}
+        WHERE user_id = #{userId}
+          AND id = #{data.id}
     </update>
 
     <select id="getBoardDetail" resultType="com.multi.culture_link.board.model.dto.BoardDto">
@@ -60,12 +50,9 @@
                    WHEN user_id = #{userId} THEN true
                    ELSE false
                    END AS isAuth
-           FROM board WHERE id = #{boardId}
+        FROM board
+        WHERE id = #{boardId}
     </select>
-
-
-
-
 
 
 </mapper>

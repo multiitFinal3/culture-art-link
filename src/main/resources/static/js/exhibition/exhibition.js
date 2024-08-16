@@ -1,6 +1,6 @@
 let exhibitions = [];
 let viewStatus = "all"; // pre, current, future, unknown 어떤 버튼 눌렀는지
-let searchParams = { title: "", artist: "", museum: "" }; // 검색 조건 초기화
+let searchParams = {title: "", artist: "", museum: ""}; // 검색 조건 초기화
 
 // 첫 실행 함수
 $(document).ready(function () {
@@ -10,7 +10,7 @@ $(document).ready(function () {
     const genreItems = document.querySelectorAll('.genre-item');
 
     genreItems.forEach(item => {
-        item.addEventListener('click', function() {
+        item.addEventListener('click', function () {
             // 모든 genre-item에서 active 클래스 제거
             genreItems.forEach(el => {
                 el.classList.remove('active');
@@ -43,6 +43,14 @@ $(document).on('click', "#searchButton", function () {
 });
 
 
+$(document).on('click', "#initSearchButton", function () {
+    $("#searchTitle").val('');
+    $("#searchArtist").val('');
+    $("#searchMuseum").val('');
+    viewStatus = "all"
+    searchExhibitions();
+});
+
 // 뷰 상태를 바꾼 다음에 렌더링
 function changeViewStatus(status) {
     viewStatus = status;
@@ -55,6 +63,7 @@ async function getExhibitions() {
         "/exhibition/exhibition"
     );
 
+    console.log('response : ', response)
     // 배열 돌며 규격에 맞게 넣어줌
     exhibitions = response.data.map((item) => ({
         id: item.id,
@@ -65,7 +74,7 @@ async function getExhibitions() {
         startDate: item.startDate ? new Date(item.startDate) : null,
         endDate: item.endDate ? new Date(item.endDate) : null,
         state: item.state,
-        starsAVG:item.starsAVG
+        starsAVG: item.starsAVG
     }));
 
     filterAndRenderExhibitions();
@@ -140,6 +149,9 @@ function renderExhibitions(exhibitionsToRender) {
         const startDateFormatted = formatDate(exhibition.startDate);
         const endDateFormatted = formatDate(exhibition.endDate);
 
+
+        $exhibitionItem.data("id", exhibition.id);
+
         $exhibitionItem.html(`
             <div class="all-card exhibition-content" data-id="${exhibition.id}">
                 <img src="${exhibition.image}" alt="${exhibition.title}">
@@ -182,27 +194,32 @@ function renderExhibitions(exhibitionsToRender) {
         $exhibitionList.append($exhibitionItem);
     });
 
+    // 클릭하면 상세페이지로 들어감
+    // $(".exhibition-content").click(function() {
+    //     const exhibitionId = $(this).data("id");
+    //     window.location.href = `/exhibition/detail/${exhibitionId}`;
+    // });
 
 
     // 클릭하면 상세페이지로 들어감
-    $(".exhibition-content").click(function() {
+    $(".exhibition-item").click(function () {
         const exhibitionId = $(this).data("id");
         window.location.href = `/exhibition/detail/${exhibitionId}`;
     });
 
     // 찜 버튼 클릭 이벤트
-    $(".exhibition-like").click(function(e) {
+    $(".exhibition-like").click(function (e) {
         e.stopPropagation();
         const exhibitionId = $(this).data("id");
-        console.log("exhibition-like btn : ",exhibitionId)
+        console.log("exhibition-like btn : ", exhibitionId)
         updateInterest(exhibitionId, 'interested');
     });
 
     // 관심없음 버튼 클릭 이벤트
-    $(".exhibition-dislike").click(function(e) {
+    $(".exhibition-dislike").click(function (e) {
         e.stopPropagation();
         const exhibitionId = $(this).data("id");
-        console.log("exhibition-dislike btn : ",exhibitionId)
+        console.log("exhibition-dislike btn : ", exhibitionId)
         updateInterest(exhibitionId, 'not_interested');
     });
 }
@@ -246,7 +263,7 @@ async function updateInterest(exhibitionId, state) {
             exhibitions[exhibitionIndex].state = response.data === 'removed' ? null : state;
         }
 
-    } catch(e) {
+    } catch (e) {
         console.log('error : ', e);
         alert(state === 'interested' ? "찜 설정 실패" : "관심 없음 설정 실패");
     }

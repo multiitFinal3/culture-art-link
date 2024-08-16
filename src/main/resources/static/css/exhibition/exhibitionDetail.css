@@ -4,7 +4,10 @@
 /*    margin: 0;*/
 /*    padding: 0;*/
 /*}*/
-
+p {
+    width: 100%;
+    word-wrap: break-word;
+}
 
 body {
     margin: 0;
@@ -88,7 +91,7 @@ header {
     position: relative;
     top: 95px;
     right: 157px;
-    opacity : 0.8;
+    opacity: 0.8;
 
 }
 
@@ -124,7 +127,7 @@ header {
 }
 
 .tab-menu button.active {
-    background-color: #ffb5b5;
+    background-color: #7f7f7f;
     color: white;
 }
 
@@ -178,23 +181,28 @@ header {
     margin-bottom: 20px;
     padding: 10px;
     border: 1px solid #ddd;
-    border-radius: 5px;
-    overflow: hidden; /* 내부 요소가 넘치지 않도록 */
+    overflow: hidden;
 }
 
 .analyze-content {
     display: flex;
     align-items: flex-start;
+    margin-bottom: 40px; /* 텍스트와 버튼 사이 간격 */
 }
 
+
 .analyze-text-content {
+    width: 100%;
     flex: 1;
+}
+
+.analyze-text {
+    font-size: 14px;
 }
 
 .analyze-image {
     width: 15%;
     margin-left: 10px; /* 텍스트와 이미지 사이 간격 */
-    float: right; /* 이미지를 오른쪽으로 정렬 */
 }
 
 .analyze-image img {
@@ -226,23 +234,23 @@ header {
 
 #commentTextarea, #analyzeTextarea {
     width: 100%;
-    height: 200px;
+    height: 150px;
     border: 1px solid #ddd;
     border-radius: 5px;
     padding: 10px;
     margin-top: 10px;
 }
 
-#artworkTextarea{
+#artworkTextarea {
     margin-top: 10px;
     border: 1px solid #ddd;
     border-radius: 5px;
 }
 
 #saveCommentBtn, #saveAnalyzeBtn {
-    background-color: #ffb5b5;
-    color: white;
-    border: none;
+    /*background-color: #ffb5b5;*/
+    /*color: white;*/
+    /*border: none;*/
     padding: 10px 20px;
     border-radius: 5px;
     cursor: pointer;
@@ -265,9 +273,6 @@ header {
     font-weight: bold;
     text-decoration: none;
 }
-
-
-
 
 
 .review {
@@ -327,25 +332,25 @@ header {
     position: absolute;
     top: 0;
     right: 0;
-    background-color: #ffb5b5;
-    color: white;
-    border: none;
+    /*background-color: #ffb5b5;*/
+    /*color: white;*/
+    /*border: none;*/
     padding: 5px 10px;
     cursor: pointer;
     font-size: 12px;
 }
 
 #imageUploadBtn {
-    background-color: #ffb5b5;
-    color: white;
-    border: none;
+    /*background-color: #ffb5b5;*/
+    /*color: white;*/
+    /*border: none;*/
     padding: 10px 20px;
     border-radius: 5px;
     cursor: pointer;
     margin-top: 10px;
 }
 
-.interested-img{
+.interested-img {
     width: 100%;
 }
 
@@ -360,4 +365,68 @@ header {
     border: 1px solid #ddd;
     background-color: white;
     cursor: pointer;
+}
+
+/*.페이징 색깔*/
+.page-btn.active {
+    background: #D9D9D9;
+}
+
+/*.pagination.active {*/
+/*    background-color: #7f7f7f;*/
+/*    color: white;*/
+/*}*/
+
+
+.like-dislike-container {
+    display: flex;
+    justify-content: center; /* 가운데 정렬 */
+    align-items: center;
+    gap: 10px; /* 아이콘 사이의 간격 */
+    margin-top: 20px; /* 카드와 버튼 사이에 간격 추가 */
+}
+
+.like-dislike-icon {
+    width: 30px; /* 이미지 너비 */
+    height: 30px; /* 이미지 높이 */
+    cursor: pointer; /* 클릭할 수 있는 커서 */
+    pointer-events: auto; /* 클릭 이벤트를 허용 */
+}
+
+.analyze-username {
+    margin: 5px 0;
+    font-size: 14px;
+    color: #666;
+}
+
+.analyze-artwork {
+    margin: 0;
+    font-size: 16px;
+    font-weight: bold
+}
+
+.analyze-buttons {
+    display: flex;
+    gap: 10px;
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+}
+
+.update-analyze,
+.delete-analyze {
+    /* 버튼 스타일링 */
+}
+
+.analyze-edit {
+    margin-top: 20px;
+}
+
+#writeComment, #writeAnalyze {
+    background-color: #ecf0f1;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+    max-width: 1500px;
+    margin: 0 auto;
 }
