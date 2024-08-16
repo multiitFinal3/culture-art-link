@@ -3,6 +3,23 @@ const analysesPerPage = 3;
 let currentReviewPage = 1;
 let currentAnalyzePage = 1;
 
+const $window = $(window);
+
+
+let naverMap = null
+
+function getMapSize() {
+
+    const $content = $("#content");
+    const size = new naver.maps.Size($content.width() - 15, 444);
+
+    return size;
+}
+
+$window.on('resize', function () {
+    naverMap.setSize(getMapSize());
+});
+
 $(document).ready(function () {
     const exhibitionId = getExhibitionIdFromUrl();
     loadExhibitionDetails(exhibitionId);
@@ -438,11 +455,11 @@ async function initMap(location) {
     };
 
     const mapDiv = document.getElementById('map');
-    const map = new naver.maps.Map(mapDiv, mapOptions);
+    naverMap = new naver.maps.Map(mapDiv, mapOptions);
 
 
     console.log('mapDiv : ', mapDiv)
-    console.log('map : ', map)
+    console.log('map : ', naverMap)
     if (!location) {
         console.log('No location provided');
         $('#mapDiv').html("위치 정보가 없습니다.");
@@ -463,11 +480,11 @@ async function initMap(location) {
     const point = new naver.maps.LatLng(locationInfo.mapy / 10000000, locationInfo.mapx / 10000000);
 
     // 좌표로 이동
-    map.setCenter(point);
+    naverMap.setCenter(point);
     // 해당 좌표에 마크 설정
     await new naver.maps.Marker({
         position: point,
-        map: map
+        map: naverMap
     });
 
     setTimeout(function () {
@@ -495,13 +512,27 @@ function renderReviews(reviews) {
     const endIndex = startIndex + reviewsPerPage;
     const pageReviews = reviews.slice(startIndex, endIndex);
 
+    const formatDate = (dateString) => {
+        const date = new Date(dateString);
+        const year = date.getFullYear();
+        const month = date.getMonth() + 1;
+        const day = date.getDate();
+        const hours = date.getHours();
+        const minutes = date.getMinutes();
+        const seconds = date.getSeconds();
+        const ampm = hours >= 12 ? '오후' : '오전';
+        const formattedHours = hours % 12 || 12;
+
+        return `${year}. ${month}. ${day}. ${ampm} ${formattedHours}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+    };
+
     const reviewsHtml = pageReviews.map(review => `
         <div class="review" data-id="${review.id}">
             <div class="review-top">
                 <img src="https://kr.object.ncloudstorage.com/team3${review.profileImage}" alt="프로필 이미지" class="profile-image">
                 <div class="review-info">
                     <h3 class="review-name">${review.name}</h3>
-                    <p class="review-date">${review.createdAt}</p>
+                    <p class="review-date">${formatDate(review.createdAt)}</p>
                     <div class="review-rating">${'★'.repeat(review.stars)}${'☆'.repeat(5 - review.stars)}</div>
                 </div>
                 ${(review.auth) ? '<button class="delete-review btn btn-outline-secondary">삭제</button>' : ''}
@@ -515,12 +546,44 @@ function renderReviews(reviews) {
     $('#reviewsContainer').html(reviewsHtml);
     renderReviewPagination(reviews.length, currentReviewPage);
 
-
     $('.delete-review').on('click', function () {
         const reviewId = $(this).closest('.review').data('id');
         deleteReview(reviewId);
     });
 }
+
+// function renderReviews(reviews) {
+//     const startIndex = (currentReviewPage - 1) * reviewsPerPage;
+//     const endIndex = startIndex + reviewsPerPage;
+//     const pageReviews = reviews.slice(startIndex, endIndex);
+//
+//
+//     const reviewsHtml = pageReviews.map(review => `
+//         <div class="review" data-id="${review.id}">
+//             <div class="review-top">
+//                 <img src="https://kr.object.ncloudstorage.com/team3${review.profileImage}" alt="프로필 이미지" class="profile-image">
+//                 <div class="review-info">
+//                     <h3 class="review-name">${review.name}</h3>
+//                     <p class="review-date">${review.createdAt}</p>
+//                     <div class="review-rating">${'★'.repeat(review.stars)}${'☆'.repeat(5 - review.stars)}</div>
+//                 </div>
+//                 ${(review.auth) ? '<button class="delete-review btn btn-outline-secondary">삭제</button>' : ''}
+//             </div>
+//             <div class="review-bottom">
+//                 <p class="review-text">${review.content}</p>
+//             </div>
+//         </div>
+//     `).join('');
+//
+//     $('#reviewsContainer').html(reviewsHtml);
+//     renderReviewPagination(reviews.length, currentReviewPage);
+//
+//
+//     $('.delete-review').on('click', function () {
+//         const reviewId = $(this).closest('.review').data('id');
+//         deleteReview(reviewId);
+//     });
+// }
 
 async function deleteReview(reviewId) {
     try {
