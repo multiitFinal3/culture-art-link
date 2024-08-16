@@ -365,7 +365,7 @@
                                           <h5 class="card-title" title="${festival.festivalName}">${festival.festivalName}</h5>
                                           <p class="card-text" title="${festival.festivalContent}">${festival.festivalContent}</p>
                                           <p class="card-text">${start} - ${end}</p>
-                                          <p class="card-text t2" style="text-align:center;">★ ${festival.avgRate.toFixed(1)}</p>
+<!--                                          <p class="card-text t2" style="text-align:center;">★ ${festival.avgRate.toFixed(1)}</p>-->
                                           <div class="buttonZone">
                                             <button class="whiteHeartBtn">
                                                 <img src="https://kr.object.ncloudstorage.com/team3/common/upNo.png"
@@ -455,7 +455,7 @@
                                           <h5 class="card-title" title="${festival.festivalName}">${festival.festivalName}</h5>
                                           <p class="card-text" title="${festival.festivalContent}">${festival.festivalContent}</p>
                                           <p class="card-text">${start} - ${end}</p>
-                                          <p class="card-text t2" style="text-align:center;">★ ${festival.avgRate.toFixed(1)}</p>
+<!--                                          <p class="card-text t2" style="text-align:center;">★ ${festival.avgRate.toFixed(1)}</p>-->
                                           <div class="buttonZone">
                                             <button class="whiteHeartBtn">
                                                 <img src="https://kr.object.ncloudstorage.com/team3/common/upNo.png"
@@ -1283,174 +1283,96 @@
                 })
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                  /**
                  * 전체 전시 리뷰 내역을 가져옴(페이지 별로)
                  *
                  */
-                function findExhibitionReviewListByPage(page){
+<!--                function findExhibitionReviewListByPage(page){-->
 
-                    console.log("findExhibitionReviewListByPage");
+<!--                    console.log("findExhibitionReviewListByPage");-->
 
-                    $.ajax({
+<!--                    $.ajax({-->
 
-                        url: '/exhibition/user-comment',
-                        method: 'GET',
-                        contentType: 'application/json',
-                        success: function(list){
-                            $('#upper').html("");
-                            $('#upper').removeClass("scroll")
-                            $('#upper').addClass("page")
+<!--                        url: '/exhibition/user-comment',-->
+<!--                        method: 'GET',-->
+<!--                        contentType: 'application/json',-->
+<!--                        success: function(list){-->
+<!--                            $('#upper').html("");-->
+<!--                            $('#upper').removeClass("scroll")-->
+<!--                            $('#upper').addClass("page")-->
 
-                            console.log("리뷰" + list)
+<!--                            console.log("리뷰" + list)-->
 
-                            var reviewHeader = `
+<!--                            var reviewHeader = `-->
 
-                                <table class="table table-striped" id="reviewTable" style="text-align: center;">
+<!--                                <div id="reviewListHead">-->
 
-                                    <thead class="table-light">
-                                    <tr style="text-align: center;">
-                                        <th scope="col" style="width: 400px;">#</th>
-                                        <th scope="col" style="width: 400px;">별점</th>
-                                        <th scope="col" style="width: 400px;">내용</th>
-                                        <th scope="col" style="width: 400px;">삭제</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody id="reviewList">
+<!--                                    <div id="leftHead">-->
 
-                            `;
+<!--                                        <h2 style="display: inline-block;">리뷰</h2>-->
 
-                            $('#upper').html(reviewHeader);
+<!--                                        <div id="totalReviewCount" class="mt-3" style="display: inline-block; margin-left: 10px;">-->
+<!--                                            숫자-->
+<!--                                        </div>-->
 
-                            var startIndex = (page -1)*5 + 1;
-                            var endIndex = (page)*5;
-                            var sliceList = list.slice(startIndex-1, endIndex);
+<!--                                    </div>-->
 
+<!--                                    <div id="reviewList">-->
 
-                            console.log("sliceList");
-                            console.log(sliceList);
-                            $.each(sliceList, function(index, review){
-                                var reviewIdPlusExhibitionId = review.id + "," + review.exhibitionId;
-                                var index1 = (page-1)*5 + index+1;
-                                var reviewHtml = ``;
+<!--                                    </div>-->
 
-                                var content = review.content.length > 10?
-                                review.content.substring(0,10) + "..."
-                                : review.content;
+<!--                                    <div id="reviewPages">-->
 
-                                var reviewStarNum = parseInt(review.stars);
-                                var reviewStarHtml = ``;
+<!--                                    </div>-->
 
-                                for(let i = 1; i <= reviewStarNum; i++){
-                                    var append = `
-                                    <label style="color: #f6d74d;">★</label>
-                                    `;
-                                    reviewStarHtml += append;
-                                }
+<!--                                </div>-->
 
-                                if(reviewStarNum < 5){
+<!--                            `;-->
 
-                                    for(let i = reviewStarNum + 1; i <= 5; i++){
+<!--                            $('#upper').html(reviewHeader);-->
 
-                                        var append = `
-                                        <label>★</label>
-                                        `;
-                                        reviewStarHtml += append;
-
-                                    }
-                                }
+<!--                            var startIndex = (page -1)*5 + 1;-->
+<!--                            var endIndex = (page)*5;-->
+<!--                            var sliceList = list.slice(startIndex-1, endIndex);-->
 
 
-                                 reviewHtml = `
+<!--                            console.log("sliceList");-->
+<!--                            console.log(sliceList);-->
 
-                                    <tr class="reviewRow" id="reviewRow" style="width: 100%;">
+<!--                            $.each(sliceList, function(index, review){-->
+<!--                                var reviewIdPlusExhibitionId = review.id + "," + review.exhibitionId;-->
+<!--                                var reviewHtml = ``;-->
+<!--                                var profilePic = ``;-->
+<!--                                var attachment = ``;-->
+<!--                                var actionBtns = ``;-->
+<!--                                var reviewStarHtml = ``;-->
+<!--                                var reviewUserId = review.userId;-->
+<!--                                var reviewStarNum = review.festivalReviewStar;-->
 
-                                        <td class="index1" style="width: 400px;">
-                                            ${index1}
-                                        </td>`
+<!--                                if((review.userProfilePic == null) || (review.userProfilePic == "")){-->
+<!--                                    profilePic = `<img src="https://kr.object.ncloudstorage.com/team3/common/noPhoto.png" alt="이미지 없음">`;-->
+<!--                                }else{-->
+<!--                                    profilePic = `<img src="${review.userProfilePic}">`;-->
+<!--                                }-->
 
-                                        +
+<!--                                if((review.attachment == null) || (review.attachment == "")){-->
+<!--                                    attachment = `<img src="https://kr.object.ncloudstorage.com/team3/common/noPhoto.png">`-->
+<!--                                }else{-->
+<!--                                    attachment = `<img src="${review.attachment}">`-->
+<!--                                }-->
 
-                                        `<td style="width: 400px;">
-                                            <div class="star">`
 
-                                                 + reviewStarHtml +
 
-                                            `</div>
-                                        </td>`
-                                        +
 
-                                        `<td style="width: 400px;">
-                                            ${content}
-                                        </td>`
 
-                                        +
 
-                                        `
-                                        <td style="width: 400px;">
-                                            <button class="deleteBtn2 btn btn-outline-success" value="${reviewIdPlusExhibitionId}">삭제</button>
-                                        </td>
+<!--                            })-->
 
-                                    </tr>
-                                 `;
 
-                                $('#upper').append(reviewHtml);
 
-                            })
-
-                            var reviewFooter =  `</tbody></table>`;
-                            $('#upper').append(reviewFooter);
-
-                            var count = list.length;
-                            $('#reviewPages').html("");
-
-                            var reviewPagesHtml = `
-                                <div id="reviewPages"><div>
-                            `;
-
-                            $('#upper').append(reviewPagesHtml);
-
-                            var pages = 0;
-
-                            if(count % 5 == 0){
-                                pages = count / 5;
-                            }else{
-                                pages = count / 5 + 1;
-                            }
-
-                            for(var p=1; p<=pages; p++){
-
-                                $('#reviewPages').append(`<button class="pageBtn2" style="font-size: 20px; margin: 0.5%">${p}</button>`)
-
-                            }
-
-                        }
-                    })
-                }
+<!--                        }-->
+<!--                    })-->
+<!--                }-->
 
 
                /**
