@@ -237,8 +237,6 @@ public class CulturalPropertiesController {
 			}
 
 
-
-
 			model.addAttribute("newsArticles", articles);
 		} catch (IOException e) {
 			e.printStackTrace();
