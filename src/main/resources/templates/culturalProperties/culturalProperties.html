@@ -88,6 +88,7 @@
     padding: 5px 10px;
     border: 1px solid #ddd;
     border-radius: 5px;
+
 }
 
 
@@ -209,53 +210,44 @@ a {
 
 
 
-        .empty-message {
+.empty-message {
     color: #999;
     text-align: center;
     margin-top: 3rem; /* 위쪽 여백을 3줄로 설정 */
 }
 
 
-
-        .badge-container {
+.badge-container {
     position: absolute;
     bottom: 10px;
     right: 10px;
-    display: flex;
+    display: none;
     gap: 5px;
-    z-index: 1;
 }
 
-.like-button,
-.dislike-button {
-    width: 30px;
-    height: 30px;
-    background-color: white;
-    background-size: 20px 20px;
-    background-repeat: no-repeat;
-    background-position: center;
+.all-card:hover .badge-container {
+    display: flex;
+}
+
+.interest-button {
     border: none;
-    border-radius: 4px;
-<!--    border-radius: 50%;-->
+    background-color: #fff;
     cursor: pointer;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    padding: 5px;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    opacity: 0.8;
 }
 
-.like-button {
-    background-image: url('https://kr.object.ncloudstorage.com/team3/common/upNo.png');
+.interest-button img {
+    width: 20px;
+    height: 20px;
 }
 
-.like-button.active {
-    background-image: url('https://kr.object.ncloudstorage.com/team3/common/upBlue.png');
-}
 
-.dislike-button {
-    background-image: url('https://kr.object.ncloudstorage.com/team3/common/downNo.png');
-}
 
-.dislike-button.active {
-    background-image: url('https://kr.object.ncloudstorage.com/team3/common/downRed.png');
-}
+
+
     </style>
 </head>
 
@@ -297,20 +289,27 @@ a {
                         <input class="form-control me-2" type="text" name="culturalPropertiesName" placeholder="이름" aria-label="culturalPropertiesName" style="width: 120px;">
                         <input class="form-control me-2" type="text" name="region" placeholder="지역" aria-label="Region" style="width: 120px;">
                         <input class="form-control me-2" type="text" name="dynasty" placeholder="시대" aria-label="dynasty" style="width: 120px;">
-                        <button id="searchButton" class="btn btn-outline-success" type="button">검색</button>
-                        <button id="resetButton" class="btn btn-outline-secondary" type="button">초기화</button>
+
+                        <button id="searchButton" class="btn btn-outline-success" type="button">
+                            <img src="https://kr.object.ncloudstorage.com/team3/common/search.png" alt="검색" style="width: 20px; height: 20px;">
+                        </button>
+                        <button id="resetButton" class="btn btn-outline-secondary" type="button" style=" margin-right: 10px;">
+                            <img src="https://kr.object.ncloudstorage.com/team3/common/x.png" alt="초기화" style="width: 20px; height: 20px;">
+                        </button>
+
+
                     </div>
                 </form>
 
 
-            <div class="extra-item">
-                <img th:src="@{/img/performance/ranking.png}" alt="랭킹 아이콘" class="filter-icon">
-                랭킹
-            </div>
-            <div class="extra-item">
-                <img th:src="@{/img/performance/map.png}" alt="지역별 아이콘" class="filter-icon">
-                지역별
-            </div>
+<!--            <div class="extra-item">-->
+<!--                <img th:src="@{/img/performance/ranking.png}" alt="랭킹 아이콘" class="filter-icon">-->
+<!--                랭킹-->
+<!--            </div>-->
+<!--            <div class="extra-item">-->
+<!--                <img th:src="@{/img/performance/map.png}" alt="지역별 아이콘" class="filter-icon">-->
+<!--                지역별-->
+<!--            </div>-->
         </div>
 
 
@@ -339,22 +338,19 @@ a {
 <!--                            <img th:src="${property.mainImgUrl}" th:alt="${property.culturalPropertiesName}">-->
 <!--                        </div>-->
 
-<!--                   뱃지만뜸     -->
-<!--                        <div class="all-card" th:data-cultural-property-id="${property.id}">-->
-<!--                            <img th:src="${property.mainImgUrl}" th:alt="${property.culturalPropertiesName}">-->
-<!--                            <div class="badge-container">-->
-<!--                                <img class="like-badge" src="https://kr.object.ncloudstorage.com/team3/common/upNo.png" alt="찜">-->
-<!--                                <img class="dislike-badge" src="https://kr.object.ncloudstorage.com/team3/common/downNo.png" alt="관심없음">-->
-<!--                            </div>-->
-<!--                        </div>-->
-
 
                         <div class="all-card" th:data-cultural-property-id="${property.id}">
                             <img th:src="${property.mainImgUrl}" th:alt="${property.culturalPropertiesName}">
-<!--                            <div class="badge-container" style="display: none !important;">-->
-<!--                                <button class="like-button" th:classappend="${property.liked} ? 'active' : ''"></button>-->
-<!--                                <button class="dislike-button" th:classappend="${property.disliked} ? 'active' : ''"></button>-->
-<!--                            </div>-->
+
+                            <div class="badge-container">
+                                <button class="interest-button like-button">
+                                    <img src="https://kr.object.ncloudstorage.com/team3/common/upNo.png" alt="찜">
+                                </button>
+                                <button class="interest-button dislike-button">
+                                    <img src="https://kr.object.ncloudstorage.com/team3/common/downNo.png" alt="관심없음">
+                                </button>
+                            </div>
+
                         </div>
 
 

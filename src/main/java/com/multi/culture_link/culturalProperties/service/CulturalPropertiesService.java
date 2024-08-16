@@ -31,9 +31,12 @@ public class CulturalPropertiesService {
 	@Autowired
 	private CulturalPropertiesDAO culturalPropertiesDAO;
 
-//    public int getTotalCount() {
-//        return culturalPropertiesDAO.getTotalCount();
-//    }
+
+    public int getTotalCount() {
+        return culturalPropertiesDAO.getTotalCount();
+    }
+
+   
 
     public List<CulturalPropertiesDTO> getAllCulturalProperties() {
         return culturalPropertiesDAO.listAllCulturalProperties();
@@ -44,13 +47,6 @@ public class CulturalPropertiesService {
         System.out.println("디테일 아이디 서비스 "+ id);
         return culturalPropertiesDAO.getCulturalPropertyById(id);
     }
-
-
-
-//    public void addInterest(CulturalPropertiesInterestDTO interest) {
-////        interest.setInterestType("LIKE"); // LIKE 유형 설정
-//        culturalPropertiesDAO.addInterest(interest);
-//    }
 
 
     public void addLike(CulturalPropertiesInterestDTO interest) {
@@ -79,7 +75,7 @@ public class CulturalPropertiesService {
         long total = culturalPropertiesDAO.countCulturalProperties(category, culturalPropertiesName, region, dynasty); // 총 개수 조회
         List<CulturalPropertiesDTO> properties = culturalPropertiesDAO.searchCulturalProperties(category, culturalPropertiesName, region, dynasty);
 
-        // 필요시 total을 이용해 추가적인 로직 구현 가능
+
         return properties; // 검색된 문화재 목록 반환
     }
 
@@ -110,44 +106,13 @@ public class CulturalPropertiesService {
         return nearbyPlaces;
     }
 
-////네모버튼
-//    public void likeAttraction(int id) {
-//        culturalPropertiesDAO.likeAttraction(id);
-//    }
-//
-//    public void dislikeAttraction(int id) {
-//        culturalPropertiesDAO.dislikeAttraction(id);
-//    }
-//}
+
+    // 사용자 찜 정보 가져오기
+    public List<CulturalPropertiesInterestDTO> getDetailInterest(int culturalPropertiesId, int userId) {
+        return culturalPropertiesDAO.getDetailInterest(culturalPropertiesId, userId);
+    }
 
 
-
-
-//    public boolean isPropertyLikedByUser(int propertyId, int userId) {
-//        // DB에서 해당 사용자의 찜 여부를 체크하는 로직
-//    }
-//
-//    public boolean isPropertyDislikedByUser(int propertyId, int userId) {
-//        // DB에서 해당 사용자의 관심 없음 여부를 체크하는 로직
-//    }
-
-
-
-//    public void addInterest(int userId, int id, String interestType) {
-//        culturalPropertiesDAO.insertInterest(userId, id, interestType);
-//    }
-//
-//    public void deleteInterest(int userId, int id) {
-//        culturalPropertiesDAO.deleteInterest(userId, id);
-//    }
-//
-//    public boolean isLiked(int userId, int id) {
-//        return culturalPropertiesDAO.isLiked(userId, id);
-//    }
-//
-//    public boolean isDisliked(int userId, int id) {
-//        return culturalPropertiesDAO.isDisliked(userId, id);
-//    }
 
     public void addReview(CulturalPropertiesReviewDTO reviewDTO) {
         System.out.println("리뷰 DTO: " + reviewDTO);
