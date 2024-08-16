@@ -100,6 +100,7 @@ public class CulturalPropertiesController {
 
 
 
+
 	@PostMapping("/addLike")
 	public ResponseEntity<String> addLike(@RequestParam int culturalPropertiesId) {
 		// 현재 로그인된 사용자 정보를 가져오기
@@ -235,6 +236,7 @@ public class CulturalPropertiesController {
 			if (articles.size() > 10) {
 				articles = articles.subList(0, 10);
 			}
+
 
 
 			model.addAttribute("newsArticles", articles);
@@ -514,6 +516,8 @@ public class CulturalPropertiesController {
 
 		return ResponseEntity.ok(response);
 	}
+
+
 
 
 

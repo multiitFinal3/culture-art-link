@@ -80,20 +80,59 @@ public class ExhibitionService {
 //            exhibitionKeywordDao.updateUserKeyword(userId, keyword, countChange);
 //        }
 //    }
-    public void setInterested(int userId, int exhibitionId, String newState) {
+//
+    @Transactional
+    public void setInterested(int userId, int exhibitionId, String newState){
+        // 현재 상태 확인
         String currentState = exhibitionDao.getInterestState(userId, exhibitionId);
 
+        List<String> keywords = exhibitionKeywordDao.getExhibitionKeywordById(exhibitionId);
+
+        // 키워드 업데이트
+        int countChange = 0;
         if (currentState == null) {
             // 현재 상태가 없으면 새로운 상태를 설정
+            countChange = "interested".equals(newState) ? 1 : -1;
             exhibitionDao.setInterested(userId, exhibitionId, newState);
         } else if (currentState.equals(newState)) {
             // 현재 상태와 새로운 상태가 같으면 관심 상태를 제거
+            countChange = "interested".equals(currentState) ? -1 : 1;
             exhibitionDao.removeInterest(userId, exhibitionId);
         } else {
             // 현재 상태와 새로운 상태가 다르면 상태를 업데이트
+            countChange = "interested".equals(currentState) ? -2 : 2;
             exhibitionDao.setInterested(userId, exhibitionId, newState);
         }
+
+//        for (String keyword : keywords) {
+//            exhibitionKeywordDao.updateUserKeyword(userId, keyword, countChange);
+//        }
+        saveKeyword(keywords, userId, countChange);
     }
+
+    public void saveKeyword(List<String> keywords,int userId, int countChange) {
+        System.out.println("keywords : "+ keywords);
+
+        for (String keyword : keywords) {
+            exhibitionKeywordDao.updateUserKeyword(userId, keyword, countChange);
+        }
+    }
+
+//    public void setInterested(int userId, int exhibitionId, String newState) {
+//        String currentState = exhibitionDao.getInterestState(userId, exhibitionId);
+//
+//        if (currentState == null) {
+//            // 현재 상태가 없으면 새로운 상태를 설정
+//            exhibitionDao.setInterested(userId, exhibitionId, newState);
+//        } else if (currentState.equals(newState)) {
+//            // 현재 상태와 새로운 상태가 같으면 관심 상태를 제거
+//            exhibitionDao.removeInterest(userId, exhibitionId);
+//        } else {
+//            // 현재 상태와 새로운 상태가 다르면 상태를 업데이트
+//            exhibitionDao.setInterested(userId, exhibitionId, newState);
+//        }
+//
+//    }
 
 
     public List<ExhibitionDto> getExhibition(int userId){

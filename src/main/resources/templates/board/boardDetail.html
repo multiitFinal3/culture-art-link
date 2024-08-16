@@ -1,35 +1,34 @@
 <!DOCTYPE html>
 <html
-        xmlns:th="http://www.thymeleaf.org"
         xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-        xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
 >
 <html layout:decorate="~{common/layout/layoutMenubar}">
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <title>게시글 상세</title>
-    <link rel="stylesheet" href="/css/board/boardDetail.css">
+    <link href="/css/board/boardDetail.css" rel="stylesheet">
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="/js/board/boardDetail.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
 <div layout:fragment="content">
     <div class="container">
         <h1 id="postTitle"></h1>
-        <div id="postContent" class="post-content"></div>
+        <div class="post-content" id="postContent"></div>
         <div class="button-group">
-            <button id="editBtn" class="btn-detail">글 수정</button>
-            <button id="deleteBtn" class="btn-detail">삭제</button>
+            <button class="btn-detail btn btn-outline-success" id="editBtn">글 수정</button>
+            <button class="btn-detail btn btn-outline-secondary" id="deleteBtn">삭제</button>
         </div>
         <div class="comments-section">
             <h2>댓글</h2>
             <div id="commentsList"></div>
             <form id="commentForm">
                 <textarea id="newComment" placeholder="댓글을 입력하세요."></textarea>
-                <button type="submit" class="btn-detail">댓글 작성하기</button>
+                <button class="btn-detail btn btn-outline-success" type="submit">댓글 작성하기</button>
             </form>
         </div>
     </div>

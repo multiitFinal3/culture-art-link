@@ -98,11 +98,11 @@ $(document).ready(
                             htmlContent2= `
                             <td class="imgUrl"></td>
                             <td class="buttonHead">
-                                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalLong" id="dbUpdateBtn" value="${festival.festivalId}">상세수정</button><br><hr>
-                                <button type="button" class="btn btn-primary contentKeywordInsertBtn" value="${festival.festivalId}">내용</button>
-                                <button type="button" class="btn btn-primary naverArticleKeywordInsertBtn" value="${festival.festivalId}">기사</button><br><br>
-                                <button type="button" class="btn btn-primary naverBlogKeywordInsertBtn" value="${festival.festivalId}">블로그</button>
-                                <button type="button" class="btn btn-primary reviewKeywordInsertBtn" value="${festival.festivalId}">리뷰</button><br>
+                                <button type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#exampleModalLong" id="dbUpdateBtn" value="${festival.festivalId}">상세수정</button><br><hr>
+                                <button type="button" class="btn btn-outline-success contentKeywordInsertBtn" value="${festival.festivalId}">내용</button>
+                                <button type="button" class="btn btn-outline-success naverArticleKeywordInsertBtn" value="${festival.festivalId}">기사</button><br><br>
+                                <button type="button" class="btn btn-outline-success naverBlogKeywordInsertBtn" value="${festival.festivalId}">블로그</button>
+                                <button type="button" class="btn btn-outline-success reviewKeywordInsertBtn" value="${festival.festivalId}">리뷰</button><br>
                             </td>
                             </tr>
                             `
@@ -113,11 +113,11 @@ $(document).ready(
                              <td class="imgUrl" style="min-width: 150px;"><img src="${festival.imgUrl}" alt="이미지 없음" style="width: 100%;
                              height: 150px"></td>
                              <td class="buttonHead">
-                                 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalLong" id="dbUpdateBtn" value="${festival.festivalId}">상세수정</button><br><hr>
-                                 <button type="button" class="btn btn-primary contentKeywordInsertBtn" value="${festival.festivalId}">내용</button>
-                                 <button type="button" class="btn btn-primary naverArticleKeywordInsertBtn" value="${festival.festivalId}">기사</button><br><br>
-                                 <button type="button" class="btn btn-primary naverBlogKeywordInsertBtn" value="${festival.festivalId}">블로그</button>
-                                 <button type="button" class="btn btn-primary reviewKeywordInsertBtn" value="${festival.festivalId}">리뷰</button><br>
+                                 <button type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#exampleModalLong" id="dbUpdateBtn" value="${festival.festivalId}">상세수정</button><br><hr>
+                                 <button type="button" class="btn btn-outline-success contentKeywordInsertBtn" value="${festival.festivalId}">내용</button>
+                                 <button type="button" class="btn btn-outline-success naverArticleKeywordInsertBtn" value="${festival.festivalId}">기사</button><br><br>
+                                 <button type="button" class="btn btn-outline-success naverBlogKeywordInsertBtn" value="${festival.festivalId}">블로그</button>
+                                 <button type="button" class="btn btn-outline-success reviewKeywordInsertBtn" value="${festival.festivalId}">리뷰</button><br>
                              </td>
                              </tr>
                             `
@@ -395,7 +395,7 @@ $(document).ready(
                                 <img src="${festival.imgUrl}" width="400px" alt="이미지 없음"><br>
                                 이미지 소스:  <input class="autoWidth" name="imgUrl" type="text" value="${festival.imgUrl}"><br><br>
 
-                                <button type="submit" id="updateSubmitBtn">수정내용 제출</button>
+                                <button type="submit" id="updateSubmitBtn" class="btn btn-outline-success">수정내용 제출</button>
 
                             </form>
 
@@ -603,11 +603,11 @@ $(document).ready(
                             htmlContent2= `
                             <td class="imgUrl"></td>
                             <td class="buttonHead">
-                                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalLong" id="dbUpdateBtn" value="${festival.festivalId}">상세수정</button><br><hr>
-                                <button type="button" class="btn btn-primary contentKeywordInsertBtn" value="${festival.festivalId}">내용</button>
-                                <button type="button" class="btn btn-primary naverArticleKeywordInsertBtn" value="${festival.festivalId}">기사</button><br><br>
-                                <button type="button" class="btn btn-primary naverBlogKeywordInsertBtn" value="${festival.festivalId}">블로그</button>
-                                <button type="button" class="btn btn-primary reviewKeywordInsertBtn" value="${festival.festivalId}">리뷰</button><br>
+                                <button type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#exampleModalLong" id="dbUpdateBtn" value="${festival.festivalId}">상세수정</button><br><hr>
+                                <button type="button" class="btn btn-outline-success contentKeywordInsertBtn" value="${festival.festivalId}">내용</button>
+                                <button type="button" class="btn btn-outline-success naverArticleKeywordInsertBtn" value="${festival.festivalId}">기사</button><br><br>
+                                <button type="button" class="btn btn-outline-success naverBlogKeywordInsertBtn" value="${festival.festivalId}">블로그</button>
+                                <button type="button" class="btn btn-outline-success reviewKeywordInsertBtn" value="${festival.festivalId}">리뷰</button><br>
                             </td>
                             </tr>
                             `
@@ -617,11 +617,11 @@ $(document).ready(
                              htmlContent2 = `
                              <td class="imgUrl" style="min-width: 150px;"><img src="${festival.imgUrl}" alt="이미지 없음" style="width: 100%;height:150px"></td>
                              <td class="buttonHead">
-                                 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalLong" id="dbUpdateBtn" value="${festival.festivalId}">상세수정</button><br><hr>
-                                 <button type="button" class="btn btn-primary contentKeywordInsertBtn" value="${festival.festivalId}">내용</button>
-                                 <button type="button" class="btn btn-primary naverArticleKeywordInsertBtn" value="${festival.festivalId}">기사</button><br><br>
-                                 <button type="button" class="btn btn-primary naverBlogKeywordInsertBtn" value="${festival.festivalId}">블로그</button>
-                                 <button type="button" class="btn btn-primary reviewKeywordInsertBtn" value="${festival.festivalId}">리뷰</button><br>
+                                 <button type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#exampleModalLong" id="dbUpdateBtn" value="${festival.festivalId}">상세수정</button><br><hr>
+                                 <button type="button" class="btn btn-outline-success contentKeywordInsertBtn" value="${festival.festivalId}">내용</button>
+                                 <button type="button" class="btn btn-outline-success naverArticleKeywordInsertBtn" value="${festival.festivalId}">기사</button><br><br>
+                                 <button type="button" class="btn btn-outline-success naverBlogKeywordInsertBtn" value="${festival.festivalId}">블로그</button>
+                                 <button type="button" class="btn btn-outline-success reviewKeywordInsertBtn" value="${festival.festivalId}">리뷰</button><br>
                              </td>
                              </tr>
                             `

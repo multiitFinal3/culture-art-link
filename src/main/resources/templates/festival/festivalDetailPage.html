@@ -7,6 +7,7 @@
     <title>Title</title>
     <link rel="stylesheet" th:href="@{/css/festival/festivalDetail.css}">
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
     <script th:inline="javascript">
 
@@ -282,6 +283,12 @@
                 */
                 $(document).on('click','#detailBtn', function(){
 
+                    $('#detailBtn').addClass("activeGray");
+                    $('#mapBtn').removeClass("activeGray");
+                    $('#reviewBtn').removeClass("activeGray");
+                    $('#relatedInfo').removeClass("activeGray");
+                    $('#similarFestival').removeClass("activeGray");
+
                     $('#detailDescripZone').removeClass("hide");
                     $('#mapDiv').addClass("hide");
                     $('#review').addClass("hide");
@@ -297,6 +304,12 @@
                 */
                 $(document).on('click','#reviewBtn', function(){
 
+                    $('#detailBtn').removeClass("activeGray");
+                    $('#mapBtn').removeClass("activeGray");
+                    $('#reviewBtn').addClass("activeGray");
+                    $('#relatedInfo').removeClass("activeGray");
+                    $('#similarFestival').removeClass("activeGray");
+
                     $('#detailDescripZone').addClass("hide");
                     $('#mapDiv').addClass("hide");
                     $('#review').removeClass("hide");
@@ -310,6 +323,13 @@
                 *
                 */
                 $(document).on('click','#relatedInfo', function(){
+
+                    $('#detailBtn').removeClass("activeGray");
+                    $('#mapBtn').removeClass("activeGray");
+                    $('#reviewBtn').removeClass("activeGray");
+                    $('#relatedInfo').addClass("activeGray");
+                    $('#similarFestival').removeClass("activeGray");
+
 
                     $('#detailDescripZone').addClass("hide");
                     $('#mapDiv').addClass("hide");
@@ -326,11 +346,60 @@
                 */
                 $(document).on('click','#mapBtn', function(){
 
+                    $('#detailBtn').removeClass("activeGray");
+                    $('#mapBtn').addClass("activeGray");
+                    $('#reviewBtn').removeClass("activeGray");
+                    $('#relatedInfo').removeClass("activeGray");
+                    $('#similarFestival').removeClass("activeGray");
+
                     $('#detailDescripZone').addClass("hide");
                     $('#mapDiv').removeClass("hide");
                     $('#review').addClass("hide");
                     $('#festivalInfo').addClass("hide");
                     $('#recommendCardZone').addClass("hide");
+
+                    //#region 네이버 지도
+
+                    var festival = [[${festival}]];
+                    var latitude = festival.latitude;
+                    var longtitude = festival.longtitude;
+
+                    var position = new naver.maps.LatLng(latitude, longtitude);
+
+                    var map = new naver.maps.Map('map', {
+                        center: position,
+                        zoom: 15
+                    });
+
+                    var marker = new naver.maps.Marker({
+                        position: position,
+                        map: map
+                    });
+
+                    if(latitude==0 || longtitude==0){
+
+                        $('#mapDiv').html("");
+
+                    }
+
+                    var mapWidth = $('#map').width();
+                    console.log("mapWidth");
+                    console.log(mapWidth);
+
+                    function getMapSize() {
+                        var size = new naver.maps.Size(mapWidth, 400);
+
+                        return size;
+                    };
+
+
+                    map.setSize(getMapSize());
+
+
+                    //#endregion
+
+
+
                 })
 
 
@@ -341,6 +410,12 @@
                 *
                 */
                 $(document).on('click','#similarFestival', function(){
+
+                    $('#detailBtn').removeClass("activeGray");
+                    $('#mapBtn').removeClass("activeGray");
+                    $('#reviewBtn').removeClass("activeGray");
+                    $('#relatedInfo').removeClass("activeGray");
+                    $('#similarFestival').addClass("activeGray");
 
                     $('#detailDescripZone').addClass("hide");
                     $('#mapDiv').addClass("hide");
@@ -515,183 +590,108 @@
 
                             $.each(list, function(index, review){
 
-                                var index1 = (index + 1) + (page-1)*5;
-
                                 var reviewHtml = ``;
                                 var profilePic = ``;
                                 var attachment = ``;
-
+                                var actionBtns = ``;
+                                var reviewStarHtml = ``;
                                 var reviewUserId = review.userId;
+                                var reviewStarNum = review.festivalReviewStar;
+
 
                                 if((review.userProfilePic == null) || (review.userProfilePic == "")){
-
-                                     profilePic = `
-                                     <td class="userProfilePic">
-                                        <img src="/img/festival/noPhoto.png">
-                                     </td>
-                                    `
-
-
+                                    profilePic = `<img src="https://kr.object.ncloudstorage.com/team3/common/noPhoto.png" alt="이미지 없음">`;
                                 }else{
-
-                                    profilePic = `
-                                    <td class="userProfilePic">
-                                        <img src="${review.userProfilePic}">
-                                    </td>
-                                    `
+                                    profilePic = `<img src="${review.userProfilePic}">`;
                                 }
-
-
 
                                 if((review.attachment == null) || (review.attachment == "")){
-
-                                    attachment = `
-                                    <td>
-                                        <img src="/img/festival/noPhoto.png">
-                                    </td>
-                                    `
-
+                                    attachment = `<img src="https://kr.object.ncloudstorage.com/team3/common/noPhoto.png">`
                                 }else{
-
-                                    attachment = `
-                                    <td>
-                                        <img src="${review.attachment}">
-                                    </td>
-                                    `
-
+                                    attachment = `<img src="${review.attachment}">`
                                 }
 
-
                                 if(userId == reviewUserId){
+                                    actionBtns = `
+                                        <div class="review-actions">
+                                            <button class="update btn btn-outline-success" value="${review.festivalReviewId}" type="button">수정</button>
+                                            <button class="deleteBtn btn btn-outline-success" value="${review.festivalReviewId}">삭제</button>
+                                            <button class="editBtn hide btn btn-outline-success" value="${review.festivalReviewId}">저장</button>
+                                            <button class="cancelBtn hide btn btn-outline-success" value="${review.festivalReviewId}">취소</button>
+                                        </div>
+                                    `;
+                                }
 
-                                     reviewHtml = `
+                                for(let i = 1; i <= reviewStarNum; i++){
+                                    var append = `
+                                    <label class="goldStar">★</label>
+                                    `;
+                                    reviewStarHtml += append;
+                                }
 
-                                        <tr class="reviewRow" id="review.festivalReviewId">
-
-                                            <td class="index1">
-                                                ${index1}
-                                            </td>` +
-
-                                            profilePic
-
-                                            +
-
-                                            `<td class="reviewUserName">
-                                                ${review.userName}
-                                            </td>
-
-
-                                            <td>
-                                            <form id="reviewForm_${review.festivalReviewId}">
-                                                <div class="star-rating2">
-                                                    <input type="radio" id="star5_${review.festivalReviewId}" name="reviewStar" value="5" ${review.festivalReviewStar == 5? 'checked' : ''}/>
-                                                    <label for="star5_${review.festivalReviewId}">★</label>
-                                                    <input type="radio" id="star4_${review.festivalReviewId}" name="reviewStar" value="4" ${review.festivalReviewStar == 4? 'checked' : ''}/>
-                                                    <label for="star4_${review.festivalReviewId}">★</label>
-                                                    <input type="radio" id="star3_${review.festivalReviewId}" name="reviewStar" value="3" ${review.festivalReviewStar == 3? 'checked' : ''}/>
-                                                    <label for="star3_${review.festivalReviewId}">★</label>
-                                                    <input type="radio" id="star2_${review.festivalReviewId}" name="reviewStar" value="2" ${review.festivalReviewStar == 2? 'checked' : ''}/>
-                                                    <label for="star2_${review.festivalReviewId}">★</label>
-                                                    <input type="radio" id="star1_${review.festivalReviewId}" name="reviewStar" value="1" ${review.festivalReviewStar == 1? 'checked' : ''}/>
-                                                    <label for="star1_${review.festivalReviewId}">★</label>
-                                                </div>
-                                                <input type="hidden" value="${review.festivalReviewId}" name="festivalReviewId">
-                                                <input type="hidden" value="${festivalId}" name="festivalId">
-                                                <textarea class="reviewText" rows="2" cols="60" name="reviewText">${review.festivalReviewContent}</textarea>
-                                            </form>
-                                            </td>`
-
-                                            +
-
-                                            attachment
-
-                                            +
-
-                                            `<td>
-                                                <button class="updateBtn" value="${review.festivalReviewId}" type="button">수정</button>
-                                            </td>
-
-
-                                            <td>
-                                                <button class="deleteBtn" value="${review.festivalReviewId}">삭제</button>
-                                            </td>
-
-                                        </tr>
-                                     `;
-
-                                }else{
-
-                                    var reviewStarNum = review.festivalReviewStar;
-                                    var reviewStarHtml = ``;
-
-                                    for(let i = 1; i <= reviewStarNum; i++){
-
+                                if(reviewStarNum < 5){
+                                    for(let i = reviewStarNum + 1; i <= 5; i++){
                                         var append = `
-                                        <label style="color: #f6d74d;">★</label>
+                                        <label class="emptyStar">★</label>
                                         `;
                                         reviewStarHtml += append;
                                     }
-
-                                    if(reviewStarNum < 5){
-
-                                        for(let i = reviewStarNum + 1; i <= 5; i++){
-
-                                            var append = `
-                                            <label>★</label>
-                                            `;
-                                            reviewStarHtml += append;
-
-                                        }
-                                    }
-
-
-
-                                    reviewHtml = `
-
-                                        <tr class="reviewRow" id="review.festivalReviewId">
-
-                                            <td class="index1" style="width: 15px">
-                                                ${index1}
-                                            </td>`
-
-                                            +
-
-                                            profilePic
-
-                                            +
-
-                                            `<td class="reviewUserName" style="width: 50px">
-                                                ${review.userName}
-                                            </td>
-
-                                            <td>
-                                                <div class="star" style="width: 100%">`
-
-                                                 + reviewStarHtml +
-
-                                                `</div>
-
-
-
-                                                <p class="reviewText" rows="2" cols="100">${review.festivalReviewContent}</p>
-                                            </td>`
-
-                                            +
-
-                                            attachment
-
-                                            +
-
-                                            `<td>
-                                            </td>
-
-                                            <td>
-                                            </td>
-
-                                        </tr>
-                                     `;
-
                                 }
+
+
+
+                                reviewHtml = `
+
+                                    <div class="review">
+
+                                        <div class="user-info">
+
+                                            ${profilePic}
+
+                                            <div class="user-details">
+
+                                                <span>${review.userName}</span>
+
+                                                <span>2024-08-11 07:02:46</span>
+
+                                                <div class="review-rating" data-rating="${reviewStarNum}">
+                                                    ${reviewStarHtml}
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+
+
+                                        <div class="review-content">
+                                            <p class="review-content-p-${review.festivalReviewId} review-content-p">${review.festivalReviewContent}</p>
+                                            <div class="review-text-container hide">
+                                                <form id="reviewForm_${review.festivalReviewId}" style="width:100%;">
+                                                    <div class="star-rating2">
+                                                        <input type="radio" id="star5_${review.festivalReviewId}" name="reviewStar" value="5" ${review.festivalReviewStar == 5? 'checked' : ''}/>
+                                                        <label for="star5_${review.festivalReviewId}">★</label>
+                                                        <input type="radio" id="star4_${review.festivalReviewId}" name="reviewStar" value="4" ${review.festivalReviewStar == 4? 'checked' : ''}/>
+                                                        <label for="star4_${review.festivalReviewId}">★</label>
+                                                        <input type="radio" id="star3_${review.festivalReviewId}" name="reviewStar" value="3" ${review.festivalReviewStar == 3? 'checked' : ''}/>
+                                                        <label for="star3_${review.festivalReviewId}">★</label>
+                                                        <input type="radio" id="star2_${review.festivalReviewId}" name="reviewStar" value="2" ${review.festivalReviewStar == 2? 'checked' : ''}/>
+                                                        <label for="star2_${review.festivalReviewId}">★</label>
+                                                        <input type="radio" id="star1_${review.festivalReviewId}" name="reviewStar" value="1" ${review.festivalReviewStar == 1? 'checked' : ''}/>
+                                                        <label for="star1_${review.festivalReviewId}">★</label>
+                                                    </div>
+                                                    <input type="hidden" value="${review.festivalReviewId}" name="festivalReviewId">
+                                                    <input type="hidden" value="${festivalId}" name="festivalId">
+                                                    <textarea class="reviewText" name="reviewText" id="editContent-${review.festivalReviewId}" rows="5" value="${review.festivalReviewContent}">${review.festivalReviewContent}</textarea>
+                                                </form>
+                                            </div>
+                                        </div>
+
+
+                                        ${actionBtns}
+
+                                    </div>
+
+                                `;
 
                                 $('#reviewList').append(reviewHtml);
 
@@ -720,6 +720,8 @@
                         contentType: 'application/json',
                         success: function(count){
 
+                            $('#totalReviewCount').html(count);
+
                             $('#reviewPages').html("");
 
                             var pages = 0;
@@ -746,10 +748,60 @@
                 findFestivalReviewCountByVWUserReviewDTO(festivalId);
 
 
+
+
+               /**
+               * 리뷰 내역을 수정 가능하게 만들기
+               */
+                $(document).on('click','.update', function(){
+
+                    var thisBtn = $(this);
+                    thisBtn.addClass("hide");
+                    thisBtn.siblings(".editBtn").removeClass("hide");
+                    thisBtn.siblings(".cancelBtn").removeClass("hide");
+
+                    thisBtn.parent().siblings(".review-content").find(".review-text-container").removeClass("hide");
+                    thisBtn.parent().siblings(".review-content").find(".review-content-p").addClass("hide");
+                    thisBtn.parent().siblings(".user-info").find(".review-rating").addClass("hide");
+                })
+
+
+
+               /**
+               * 리뷰 내역 수정 취소 버튼
+               */
+                $(document).on('click','.cancelBtn', function(){
+
+                    var thisBtn = $(this);
+                    thisBtn.addClass("hide");
+                    thisBtn.siblings(".update").removeClass("hide");
+                    thisBtn.siblings(".editBtn").addClass("hide");
+                    thisBtn.siblings(".cancelBtn").removeClass("hide");
+
+                    thisBtn.parent().siblings(".review-content").find(".review-text-container").addClass("hide");
+                    thisBtn.parent().siblings(".review-content").find(".review-content-p").removeClass("hide");
+                    thisBtn.parent().siblings(".user-info").find(".review-rating").removeClass("hide");
+                })
+
+
+
+
+
+
                 /**
                * 리뷰 페이지 버튼에 해당 페이지의 순서에 해당하는 데이터 보이는 클릭 이벤트 추가
                */
                 $(document).on('click','.pageBtn1', function(){
+
+                    var btns = document.querySelectorAll('.pageBtn1');
+
+                    btns.forEach(function(button){
+
+                        button.classList.remove('activePage');
+
+                    })
+
+                    $(this).addClass('activePage');
 
                     const page = $(this).text();
                     findFestivalReviewListByVWUserReviewDTO(festivalId, userId, page);
@@ -823,7 +875,7 @@
                         }
                     })
 
-                    insertReviewAvg();;
+                    insertReviewAvg();
                 })
 
 
@@ -833,7 +885,7 @@
                 * 리뷰 수정
                 *
                 */
-                $(document).on('click','.updateBtn', function(){
+                $(document).on('click','.editBtn', function(){
 
                     var festivalReviewId = $(this).val();
                     var formId = `#reviewForm_${festivalReviewId}`;
@@ -1399,7 +1451,7 @@
                                 +  youtubeId  +
                                 `" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>`;
 
-                                findYoutubePageBtns(5);
+
 
                             }
 
@@ -1413,6 +1465,7 @@
                 }
 
                 findFestivalYoutube(1, formattedStart, festivalName);
+                findYoutubePageBtns(5);
 
                 /**
                 * 유투브 페이지 버튼 추가
@@ -1437,6 +1490,16 @@
                 *
                 */
                 $(document).on('click','.youtubeBtn', function(){
+
+                    var btns = document.querySelectorAll('.youtubeBtn');
+
+                    btns.forEach(function(button){
+
+                        button.classList.remove('activePage');
+
+                    })
+
+                    $(this).addClass('activePage');
 
                     var page = $(this).text();
                     findFestivalYoutube(page, formattedStart, festivalName);
@@ -1535,10 +1598,20 @@
 
 
                 /**
-                * 같은 주체기관 추천 리스트 버튼 클릭 이벤트 함수
+                * 기사 페이지 버튼 클릭 이벤트
                 *
                 */
                 $(document).on('click','.articleBtn', function(){
+
+                    var btns = document.querySelectorAll('.articleBtn');
+
+                    btns.forEach(function(button){
+
+                        button.classList.remove('activePage');
+
+                    });
+
+                    $(this).addClass('activePage');
 
                     var page = $(this).text();
                     findFestivalNaverArticle(page, festivalId);
@@ -1674,6 +1747,16 @@
                 */
                 $(document).on('click','.blogBtn', function(){
 
+                    var btns = document.querySelectorAll('.blogBtn');
+
+                    btns.forEach(function(button){
+
+                        button.classList.remove('activePage');
+
+                    })
+
+                    $(this).addClass('activePage');
+
                     var page = $(this).text();
                     findFestivalNaverBlog(page, formattedStart, festivalName);
 
@@ -1741,19 +1824,12 @@
                 <img th:case="null" src="/img/festival/noPhoto.png" alt="이미지가 없습니다">
                 <img th:case="*" th:src="@{${festival.imgUrl}}" alt="이미지가 없습니다">
 
-                <button class="whiteHeartBtn">
-                    <img src="https://kr.object.ncloudstorage.com/team3/common/upNo.png"
-                         style="width : 25px; height: 25px; background: white;" class="heart" th:value="${festival.festivalId}">
-                </button>
-
-                <button class="whiteHateBtn">
-                    <img src="https://kr.object.ncloudstorage.com/team3/common/downNo.png"
-                         style="width : 25px; height: 25px; background: white;" class="hate" th:value="${festival.festivalId}">
-                </button>
-
             </div>
 
             <div id="detailCardZone">
+
+                <div id="contentKeyword" style="width:100%">
+                </div>
 
                 <div class="title">
 
@@ -1817,6 +1893,22 @@
 
         </div>
 
+        <div id="heartHateZone" class="card" th:data-value="${festival.festivalId}">
+
+            <button class="whiteHeartBtn">
+                <img src="https://kr.object.ncloudstorage.com/team3/common/upNo.png"
+                     style="width : 30px; height: 30px; background: white;" class="heart"
+                     th:value="${festival.festivalId}">
+            </button>
+
+            <button class="whiteHateBtn">
+                <img src="https://kr.object.ncloudstorage.com/team3/common/downNo.png"
+                     style="width : 30px; height: 30px; background: white;" class="hate"
+                     th:value="${festival.festivalId}">
+            </button>
+
+        </div>
+
         <div id="contentBtnZone">
 
             <button id="detailBtn">축제상세</button>
@@ -1832,9 +1924,6 @@
             <div class="card-body" style="width:100%">
 
                 <div id="detailDescripZone">
-
-                    <div id="contentKeyword" style="width:100%">
-                    </div>
 
                     <div th:switch="${festival.detailAddress}">
 
@@ -1926,36 +2015,9 @@
 
                 <div id="mapDiv" class="hide" style="width: 100%">
 
-                    <div id="map"></div>
+                    <div id="map" style="width: 100%;height: 400px;position: relative;overflow: hidden;background: rgb(248, 249, 250);"></div>
                     <script th:inline="javascript">
 
-                        //#region 네이버 지도
-
-                            var festival = [[${festival}]];
-                            var latitude = festival.latitude;
-                            var longtitude = festival.longtitude;
-
-                            var position = new naver.maps.LatLng(latitude, longtitude);
-
-                            var map = new naver.maps.Map('map', {
-                                center: position,
-                                zoom: 15
-                            });
-
-                            var marker = new naver.maps.Marker({
-                                position: position,
-                                map: map
-                            });
-
-                            if(latitude==0 || longtitude==0){
-
-                                $('#mapDiv').html("");
-
-                            }
-
-
-
-                            //#endregion
 
 
                     </script>
@@ -1970,10 +2032,10 @@
 
                     <section id="reviewSection">
 
-                        <span>
+                        <span style="margin: 0px;">
                             <!-- https://www.putzisan.com/articles/html-css-star-rating-input-->
                             <form id="reviewForm" encType="multipart/form-data">
-                                <span id="reviewHead1">리뷰 작성</span>
+                                <span id="reviewHead1" style="font-size: 24px;margin-top: 0;color: #2c3e50;margin-right: 755px;margin-left: 0px;margin-bottom: 10px;">리뷰 작성</span>
                                 <span class="star-rating">
                                     <!--                                        FLEX-REVERSE-->
                                     <input type="radio" id="sr-0-5" name="reviewStar" value="5"/>
@@ -1988,13 +2050,18 @@
                                     <label for="sr-0-1">★</label>
                                 </span>
 
-                                <textarea name="reviewTextArea" id="reviewTextArea" rows="4" cols="150"
-                                          placeholder="리뷰를 입력하세요">
-                                </textarea>
-
-                                <input name="uploadFile" id="uploadFile" type="file" accept="image/*">
-                                <input name="festivalId" type="hidden" th:value="${festival.festivalId}">
-                                <button id="reviewInsertBtn" type="button" th:value="${festival.festivalId}">리뷰 제출</button>
+                                <div>
+                                    <textarea name="reviewTextArea" id="reviewTextArea" rows="4" cols="150"
+                                              placeholder="리뷰를 입력하세요">
+                                    </textarea>
+                                    <div>
+                                        <input name="uploadFile" id="uploadFile" type="file" accept="image/*"
+                                               style="width: 90px;" class="hide">
+                                        <input name="festivalId" type="hidden" th:value="${festival.festivalId}">
+                                        <button id="reviewInsertBtn" type="button" class="btn btn-outline-success"
+                                                th:value="${festival.festivalId}" style="width: 92px; margin-left: 10px;">리뷰 등록</button>
+                                    </div>
+                                </div>
 
                             </form>
 
@@ -2003,32 +2070,26 @@
 
                     </section>
 
+                    <br>
 
-                    <br><br>
                     <div id="reviewListHead">
 
-                        <table class="table table-striped" id="reviewTable" style="text-align: center;">
+                        <h2 style="display: inline-block;">리뷰</h2>
 
-                            <thead class="table-light">
-                            <tr style="text-align: center;">
-                                <th scope="col">#</th>
-                                <th scope="col">프로필</th>
-                                <th scope="col">이름</th>
-                                <th scope="col">별점 / 내용</th>
-                                <th scope="col">첨부파일</th>
-                                <th scope="col">수정</th>
-                                <th scope="col">삭제</th>                            </tr>
-                            </thead>
-                            <tbody id="reviewList">
+                        <div id="totalReviewCount" class="mt-3" style="display: inline-block; margin-left: 10px;">
+                            숫자
+                        </div>
 
-                            </tbody>
+                        <div id="reviewList">
+                            여기에 넣을 것
+                        </div>
 
-                        </table>
-                    </div>
+                        <div id="reviewPages">
 
-                    <div id="reviewPages">
+                        </div>
 
                     </div>
+
 
                 </div>
 
@@ -2085,15 +2146,15 @@
 
                     <h3>
                         <img src="/img/festival/star.png" alt="이미지 없음" height="50px">
-                        <button class="btn btn-primary" id="regionRecommend" th:value="${festival.regionId}">같은 지역
+                        <button class="btn btn-outline-success" id="regionRecommend" th:value="${festival.regionId}">같은 지역
                         </button>
-                        <button class="btn btn-primary" id="seasonRecommend" th:value="${festival.season}">같은 계절
+                        <button class="btn btn-outline-success" id="seasonRecommend" th:value="${festival.season}">같은 계절
                         </button>
-                        <button class="btn btn-primary" id="manageInstRecommend"
+                        <button class="btn btn-outline-success" id="manageInstRecommend"
                                 th:value="${festival.manageInstitution}">
                             주체기관 동일
                         </button>
-                        <button class="btn btn-primary" id="keywordRecommend" th:value="${festival.festivalId}">키워드 동일
+                        <button class="btn btn-outline-success" id="keywordRecommend" th:value="${festival.festivalId}">키워드 동일
                         </button>
                     </h3>
 

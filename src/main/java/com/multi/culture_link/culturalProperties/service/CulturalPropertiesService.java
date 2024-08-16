@@ -31,9 +31,12 @@ public class CulturalPropertiesService {
 	@Autowired
 	private CulturalPropertiesDAO culturalPropertiesDAO;
 
+
     public int getTotalCount() {
         return culturalPropertiesDAO.getTotalCount();
     }
+
+   
 
     public List<CulturalPropertiesDTO> getAllCulturalProperties() {
         return culturalPropertiesDAO.listAllCulturalProperties();
@@ -44,8 +47,6 @@ public class CulturalPropertiesService {
         System.out.println("디테일 아이디 서비스 "+ id);
         return culturalPropertiesDAO.getCulturalPropertyById(id);
     }
-
-
 
 
     public void addLike(CulturalPropertiesInterestDTO interest) {

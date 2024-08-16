@@ -1,10 +1,10 @@
 let boardId;
 
-document.addEventListener('DOMContentLoaded', async function() {
+document.addEventListener('DOMContentLoaded', async function () {
     const pathSegments = window.location.pathname.split('/');
     boardId = pathSegments[pathSegments.length - 1];
 
-    console.log('boardId  :',boardId)
+    console.log('boardId  :', boardId)
 
     if (boardId) {
         await loadPostDetails();
@@ -21,9 +21,9 @@ async function loadPostDetails() {
         const response = await axios.get(`/board/${boardId}`);
         const post = response.data;
 
-        console.log('post : ',post)
+        console.log('post : ', post)
 
-        if(!post.auth) {
+        if (!post.auth) {
             $(".button-group").hide();
         }
         document.getElementById('postTitle').textContent = post.title;
@@ -45,7 +45,7 @@ async function loadComments() {
             commentDiv.innerHTML = `
                 <p class="comment-content">${comment.author}</p>
                 <p>${comment.content}</p>
-                <button class="delete-comment-btn" data-comment-id="${comment.id}">삭제</button>
+                <button class="delete-comment-btn btn btn-outline-secondary" data-comment-id="${comment.id}">삭제</button>
             `;
             commentsList.appendChild(commentDiv);
 
@@ -63,7 +63,7 @@ async function loadComments() {
 async function deleteComment(commentId) {
     if (confirm('정말로 이 댓글을 삭제하시겠습니까?')) {
         try {
-            await axios.delete(`/board/${boardId}/comment`, { data: { id: commentId } });
+            await axios.delete(`/board/${boardId}/comment`, {data: {id: commentId}});
             await loadComments(); // 댓글 목록 새로고침
             alert('댓글이 삭제되었습니다.');
         } catch (error) {
@@ -80,7 +80,7 @@ async function editPost() {
 async function deletePost() {
     if (confirm("정말로 이 글을 삭제하시겠습니까?")) {
         try {
-            await axios.delete('/board', { data: { id: boardId } });
+            await axios.delete('/board', {data: {id: boardId}});
             alert("글이 삭제되었습니다.");
             window.location.href = '/board/view'; // 게시판 목록으로 리다이렉트
         } catch (error) {
@@ -93,7 +93,7 @@ async function submitComment(event) {
     event.preventDefault();
     const commentContent = document.getElementById('newComment').value;
     try {
-        await axios.post(`/board/${boardId}/comment`, { content: commentContent });
+        await axios.post(`/board/${boardId}/comment`, {content: commentContent});
         document.getElementById('newComment').value = '';
         await loadComments();
     } catch (error) {
