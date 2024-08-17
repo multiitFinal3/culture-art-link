@@ -86,3 +86,18 @@ button {
     justify-content: center;
     display: flex;
 }
+
+/* 검색 바 스타일 */
+.search-bar {
+    margin-bottom: 20px;
+}
+
+.search-bar form {
+    display: flex;
+    gap: 10px;
+}
+
+#searchButtonDB {
+    margin-right: 100px;
+    margin-left: -1px;
+}
