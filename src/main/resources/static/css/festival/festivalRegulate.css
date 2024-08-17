@@ -16,7 +16,9 @@
 
     table{
 
-        margin-bottom: 50px;
+        width: 77vw !important;
+        align-self: flex-start;
+        margin-left: 5%;
     }
 
 
