@@ -938,6 +938,7 @@ $(document).ready(
 
 
         var findAPIFestivalNumPage = 0;
+        var current = 1;
         /**
          * 전체 API리스트의 페이지 갯수를 결정 후 페이지 버튼 추가
          * @param {int} page 페이지
@@ -980,7 +981,7 @@ $(document).ready(
 
                         }
 
-                        $('#pageNum2').append(`<button class="pageBtn8" value="1">다음</button>`)
+                        $('#pageNum2').append(`<button class="pageBtn8">다음</button>`)
                         $('#pageNum2').append(`<button class="pageBtn9" value="20">마지막</button>`)
 
                         resolve();
@@ -1015,6 +1016,8 @@ $(document).ready(
          *
          */
         $(document).on('click','.pageBtn7', function(){
+
+            current = 1;
 
             findAPIFestivalList(1)
             .then(()=>{
@@ -1054,6 +1057,8 @@ $(document).ready(
                 num = parseInt((lastPage / 10) + 1);
             }
 
+            current = num;
+
             console.log("num");
             console.log(num);
 
@@ -1068,6 +1073,39 @@ $(document).ready(
                     let btns = document.querySelectorAll('.pageBtn2');
                     btns.forEach(function(btn){
                         if(btn.textContent == lastPage){
+                            btn.classList.add('active');
+                        }else{
+                            btn.classList.remove('active');
+                        }
+                    })
+                })
+                .catch((error)=>{
+                    alert("api 오류")
+                })
+
+        })
+
+
+
+        /**
+         * API리스트의 다음 페이지 버튼 클릭 이벤트
+         *
+         */
+
+        $(document).on('click','.pageBtn8', function(){
+
+            current = current + 1;
+            var thisFirstPage = (current-1) * 10 + 1;
+
+            findAPIFestivalList(thisFirstPage)
+                .then(()=>{
+                return addShowingBtns(findAPIFestivalCount, current, '.pageBtn2');
+                })
+                .then(()=>{
+
+                    let btns = document.querySelectorAll('.pageBtn2');
+                    btns.forEach(function(btn){
+                        if(btn.textContent == thisFirstPage){
                             btn.classList.add('active');
                         }else{
                             btn.classList.remove('active');
