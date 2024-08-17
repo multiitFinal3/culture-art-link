@@ -46,7 +46,7 @@
 
     <!-- 사용자가 작성한 모든 댓글 조회 -->
     <select id="getUserComment" resultType="com.multi.culture_link.exhibition.model.dto.ExhibitionCommentDto">
-        SELECT ec.*, e.title as exhibitionTitle, u.user_profile_pic as profileImage
+        SELECT ec.*, e.title as exhibitionTitle, u.user_profile_pic as profileImage, u.user_name as userName
         FROM exhibition_comment ec
                  INNER JOIN exhibition e ON ec.exhibition_id = e.id
                  INNER JOIN user u ON ec.user_id = u.user_id
