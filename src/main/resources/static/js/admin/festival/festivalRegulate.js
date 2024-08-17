@@ -747,13 +747,6 @@ $(document).ready(
                     // 상세검색 전으로 돌아가기 버튼
                     $('#pageNum1').append(`<button class="pageBtn4">전체</button>`);
 
-                    $(document).on('click','.pageBtn4', function(){
-
-                        findDBFestivalList(1);
-                        findDBFestivalCount();
-
-                    })
-
                     var page = 0;
 
                     if(count % 5 ==0){
@@ -793,6 +786,13 @@ $(document).ready(
 
             document.getElementById('searchForm1').reset();
 
+
+        })
+
+        $(document).on('click','.pageBtn4', function(){
+
+            findDBFestivalList(1);
+            addShowingBtns(findDBFestivalCount, 1, '.pageBtn1');
 
         })
 
