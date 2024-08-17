@@ -751,7 +751,7 @@
                                 var reviewStarHtml = ``;
                                 var reviewUserId = review.userId;
                                 var reviewStarNum = review.festivalReviewStar;
-
+                                var time = review.updatedAt.replace("T"," ").slice(0,19);
 
                                 if((review.userProfilePic == null) || (review.userProfilePic == "")){
                                     profilePic = `<img src="https://kr.object.ncloudstorage.com/team3/common/noPhoto.png" alt="이미지 없음">`;
@@ -807,7 +807,7 @@
 
                                                 <span>${review.userName}</span>
 
-                                                <span>2024-08-11 07:02:46</span>
+                                                <span>${time}</span>
 
                                                 <div class="review-rating" data-rating="${reviewStarNum}">
                                                     ${reviewStarHtml}
