@@ -22,8 +22,6 @@ $(document).ready(
 
                     $.each(list, function(index, festival){
 
-                        console.log(festival);
-
                         var index1 = (index + 1) + (page-1)*5;
 
                         var start = festival.startDate.length >0?
@@ -154,8 +152,6 @@ $(document).ready(
                     success: function(count){
 
                         $('#pageNum1').html("");
-                        console.log("카운트는...")
-                        console.log(count)
 
                         var page = 0;
 
@@ -171,12 +167,10 @@ $(document).ready(
 
                         }
 
-                        console.log("뭐여");
 
                         resolve();
                     },
                     error: function(error){
-                        console.log(error);
                         reject(error);
 
                     }
@@ -233,7 +227,7 @@ $(document).ready(
                 console.log("????")
                 await countFun();
                 console.log("구냥")
-                let btns = document.querySelectorAll('.pageBtn1');
+                let btns = document.querySelectorAll(className);
                 console.log(btns);
                 showCurrentPage(num, className);
             } catch(error){
@@ -384,11 +378,9 @@ $(document).ready(
 
 
                 checks.push($(item).val());
-                console.log($(item).val());
 
             })
 
-            console.log(checks)
 
             $.ajax({
 
@@ -415,11 +407,6 @@ $(document).ready(
         $(document).on('click','#dbUpdateBtn', function(){
 
             var festivalId = $(this).val();
-            console.log("festivalId : ")
-            console.log(festivalId)
-            console.log("#dbUpdateBtn")
-
-
 
             $.ajax({
 
@@ -551,13 +538,8 @@ $(document).ready(
       */
         function findDBFestivalByMultiple(page){
 
-           console.log("findDBFestivalByMultiple(page)");
-           console.log(page);
-
            var regionId = document.getElementById('searchRegion1').options[document.getElementById('searchRegion1').selectedIndex].value;
-           console.log(regionId);
            var timeId = document.getElementById('searchTime1').options[document.getElementById('searchTime1').selectedIndex].value;
-           console.log(timeId);
            var festivalName = $('#festivalName1').val();
            var festivalContent = $('#festivalContent1').val();
            var manageInstitution = $('#manageInstitution1').val();
@@ -567,11 +549,7 @@ $(document).ready(
            var formattedStart = $('#formattedStart1').val();
            var formattedEnd = $('#formattedEnd1').val();
            var avgRate = $('#avgRate1').val();
-           console.log(avgRate);
            var season = document.getElementById('searchSeason1').options[document.getElementById('searchSeason1').selectedIndex].value;
-
-
-           console.log(season)
 
            var data = {
 
@@ -608,8 +586,6 @@ $(document).ready(
                     var slicedList = list.slice(startIndex, endIndex+1);
 
                     $.each(slicedList, function(index, festival){
-
-                        console.log(festival)
 
                         var index1 = (index + 1) + (page-1)*5;
 
@@ -729,12 +705,8 @@ $(document).ready(
          function findDBFestivalMultipleCount(){
 
 
-           console.log("findDBFestivalByMultipleCount()");
-
            var regionId = document.getElementById('searchRegion1').options[document.getElementById('searchRegion1').selectedIndex].value;
-           console.log(regionId);
            var timeId = document.getElementById('searchTime1').options[document.getElementById('searchTime1').selectedIndex].value;
-           console.log(timeId);
            var festivalName = $('#festivalName1').val();
            var festivalContent = $('#festivalContent1').val();
            var manageInstitution = $('#manageInstitution1').val();
@@ -744,11 +716,8 @@ $(document).ready(
            var formattedStart = $('#formattedStart1').val();
            var formattedEnd = $('#formattedEnd1').val();
            var avgRate = $('#avgRate1').val();
-           console.log(avgRate);
            var season = document.getElementById('searchSeason1').options[document.getElementById('searchSeason1').selectedIndex].value;
 
-
-           console.log(season)
 
            var data = {
 
@@ -784,9 +753,6 @@ $(document).ready(
                         findDBFestivalCount();
 
                     })
-
-                    console.log("카운트는...")
-                    console.log(count)
 
                     var page = 0;
 
@@ -844,118 +810,132 @@ $(document).ready(
          * 전체 API리스트를 페이지 번호에 따라 가져옴
          * @param {int} page 페이지
          */
+
         function findAPIFestivalList(page){
 
-            $('#list2').html("");
+            return new Promise((resolve, reject)=>{
 
-            $.ajax({
+                $('#list2').html("");
 
-                url: '/admin/festival-regulate/findAPIFestivalList?page=' + page,
-                method: 'POST',
-                contentType: 'application/json',
-                success: function(list){
+                $.ajax({
 
-                    $('#list2').html("");
+                    url: '/admin/festival-regulate/findAPIFestivalList?page=' + page,
+                    method: 'POST',
+                    contentType: 'application/json',
+                    success: function(list){
 
-                    $.each(list, function(index, festival){
+                        $('#list2').html("");
 
-                        var index1 = (index + 1) + (page-1)*5;
-                        var indexFromZero = index1 - 1;
+                        $.each(list, function(index, festival){
 
-                        var start = festival.startDate.length >0?
-                        festival.startDate.substring(0,10):
-                        "링크없음";
+                            var index1 = (index + 1) + (page-1)*5;
+                            var indexFromZero = index1 - 1;
 
-                        var end = festival.endDate.length >0?
-                        festival.endDate.substring(0,10):
-                        "링크없음";
+                            var start = festival.startDate.length >0?
+                            festival.startDate.substring(0,10):
+                            "링크없음";
 
-
-                        var htmlCheck = ``;
-
-                        if(festival.exist=="Y"){
-
-                            htmlCheck= `<tr>
-                                <td>DB<br>존재</td>`
+                            var end = festival.endDate.length >0?
+                            festival.endDate.substring(0,10):
+                            "링크없음";
 
 
-                        }else{
+                            var htmlCheck = ``;
 
-                             htmlCheck = `<tr>
-                                <td><input class="check2" type="checkbox" name="index" value="${indexFromZero}"/></td>`
-                        }
+                            if(festival.exist=="Y"){
 
-                        var htmlContent11 =`
-                                <td class="index1">${index1}</td>
-                                <td class="regionId">${festival.regionId}</td>
-                                <td class="timeId" title="${festival.timeId}">${festival.timeId}</td>
-                                <td class="festivalName" title="${festival.festivalName}">${festival.festivalName}</td>
-                                <td class="festivalContent" title="${festival.festivalContent}">${festival.festivalContent}</td>
-                                <td class="manageInstitution" title="${festival.manageInstitution}">${festival.manageInstitution}</td>
-                                <td class="tel" title="${festival.tel}">${festival.tel}</td>`;
-
-                        var htmlContent12 =``;
+                                htmlCheck= `<tr>
+                                    <td>DB<br>존재</td>`
 
 
-                        if(! festival.homepageUrl || festival.homepageUrl == "null" || festival.homepageUrl == ""){
+                            }else{
 
-                            htmlContent12 = `
+                                 htmlCheck = `<tr>
+                                    <td><input class="check2" type="checkbox" name="index" value="${indexFromZero}"/></td>`
+                            }
 
-                                <td class="homepageUrl"></td>
-                                <td class="detailAddress" title="${festival.detailAddress}">${festival.detailAddress}</td>
-                                <td class="place" title="${festival.place}">${festival.place}</td>
-                                <td class="startDate" title="${festival.formattedStart}">${festival.formattedStart}</td>
-                                <td class="endDate" title="${festival.formattedEnd}">${festival.formattedEnd}</td>
-                                <td class="season" title="${festival.season}">${festival.season}</td>
+                            var htmlContent11 =`
+                                    <td class="index1">${index1}</td>
+                                    <td class="regionId">${festival.regionId}</td>
+                                    <td class="timeId" title="${festival.timeId}">${festival.timeId}</td>
+                                    <td class="festivalName" title="${festival.festivalName}">${festival.festivalName}</td>
+                                    <td class="festivalContent" title="${festival.festivalContent}">${festival.festivalContent}</td>
+                                    <td class="manageInstitution" title="${festival.manageInstitution}">${festival.manageInstitution}</td>
+                                    <td class="tel" title="${festival.tel}">${festival.tel}</td>`;
 
-
-                            `;
-
-                        }else{
-
-                            htmlContent12 = `
-
-                                <td class="homepageUrl" title="${festival.homepageUrl}"><a href="${festival.homepageUrl}">클릭!</a></td>
-                                <td class="detailAddress" title="${festival.detailAddress}">${festival.detailAddress}</td>
-                                <td class="place" title="${festival.place}">${festival.place}</td>
-                                <td class="startDate" title="${festival.formattedStart}">${festival.formattedStart}</td>
-                                <td class="endDate" title="${festival.formattedEnd}">${festival.formattedEnd}</td>
-                                <td class="season" title="${festival.season}">${festival.season}</td>
+                            var htmlContent12 =``;
 
 
-                            `;
+                            if(! festival.homepageUrl || festival.homepageUrl == "null" || festival.homepageUrl == ""){
 
-                        }
+                                htmlContent12 = `
 
-    //                        var htmlContent2 = ``;
-
-    //                        if(! festival.imgUrl || festival.imgUrl == "null"){
-    //
-    //                            htmlContent2= `
-    //                            <td class="imgUrl"></td></tr>
-    //                            `
-    //
-    //
-    //                        }else{
-    //
-    //                             htmlContent2 = `
-    //                             <td class="imgUrl"><img src="${festival.imgUrl}" width="40px"></td></tr>
-    //                            `
-    //                        }
+                                    <td class="homepageUrl"></td>
+                                    <td class="detailAddress" title="${festival.detailAddress}">${festival.detailAddress}</td>
+                                    <td class="place" title="${festival.place}">${festival.place}</td>
+                                    <td class="startDate" title="${festival.formattedStart}">${festival.formattedStart}</td>
+                                    <td class="endDate" title="${festival.formattedEnd}">${festival.formattedEnd}</td>
+                                    <td class="season" title="${festival.season}">${festival.season}</td>
 
 
+                                `;
 
-                        var finalHtml = htmlCheck + htmlContent11 + htmlContent12;
+                            }else{
 
-                        $('#list2').append(finalHtml);
+                                htmlContent12 = `
 
-                    })
+                                    <td class="homepageUrl" title="${festival.homepageUrl}"><a href="${festival.homepageUrl}">클릭!</a></td>
+                                    <td class="detailAddress" title="${festival.detailAddress}">${festival.detailAddress}</td>
+                                    <td class="place" title="${festival.place}">${festival.place}</td>
+                                    <td class="startDate" title="${festival.formattedStart}">${festival.formattedStart}</td>
+                                    <td class="endDate" title="${festival.formattedEnd}">${festival.formattedEnd}</td>
+                                    <td class="season" title="${festival.season}">${festival.season}</td>
 
 
-                }
+                                `;
+
+                            }
+
+        //                        var htmlContent2 = ``;
+
+        //                        if(! festival.imgUrl || festival.imgUrl == "null"){
+        //
+        //                            htmlContent2= `
+        //                            <td class="imgUrl"></td></tr>
+        //                            `
+        //
+        //
+        //                        }else{
+        //
+        //                             htmlContent2 = `
+        //                             <td class="imgUrl"><img src="${festival.imgUrl}" width="40px"></td></tr>
+        //                            `
+        //                        }
+
+
+
+                            var finalHtml = htmlCheck + htmlContent11 + htmlContent12;
+
+                            $('#list2').append(finalHtml);
+
+                        })
+
+                        resolve();
+
+                    }
+
+                })
+
+
+
+
 
             })
+
+
         }
+
+
 
 
         /**
@@ -964,22 +944,51 @@ $(document).ready(
          */
         function findAPIFestivalCount(){
 
-            console.log("들어와..")
+            console.log("들어와22..")
 
             return new Promise((resolve, reject)=>{
 
-                $('#pageNum2').html("");
-                console.log("page");
-               for(var p=1; p<=20; p++){
+                $.ajax({
 
-                    $('#pageNum2').append(`<button class="pageBtn2 none">${p}</button>`)
+                    url: '/admin/festival-regulate/findAPIFestivalCount',
+                    method: 'POST',
+                    contentType: 'application/json',
+                    success: function(count){
 
-                }
+                        findAPIFestivalNum = count;
+                        console.log("api 전체 갯수")
+                        console.log(count);
 
-                resolve();
+                        $('#pageNum2').html("");
+                        console.log("page");
+                        $('#pageNum2').append(`<button class="pageBtn7" value="1">처음</button>`)
+
+                        var page = 0;
+
+                        if(count%5==0){
+                            page = count / 5;
+                        }else{
+                            page = count / 5 + 1;
+                        }
+
+
+
+                       for(var p=1; p<=page; p++){
+
+                            $('#pageNum2').append(`<button class="pageBtn2 none">${p}</button>`)
+
+                        }
+
+                        $('#pageNum2').append(`<button class="pageBtn8" value="1">다음</button>`)
+                        $('#pageNum2').append(`<button class="pageBtn9" value="20">마지막</button>`)
+
+                        resolve();
+
+
+                    }
+                })
+
             })
-
-
         }
 
         $(document).on('click','.pageBtn2', function(){
@@ -998,10 +1007,16 @@ $(document).ready(
 
 
         // 처음 들어가면 1페이지 불러옴
-        findAPIFestivalList(1);
+        findAPIFestivalList(1)
+            .then(()=>{
+                // 처음 들어가면 api 페이지 버튼 생성
+                addShowingBtns(findAPIFestivalCount, 1, '.pageBtn2');
+            })
+            .catch((error)=>{
+                alert("api 오류")
+            })
 
-        // 처음 들어가면 페이지 버튼 20개 생성
-        addShowingBtns(findAPIFestivalCount, 1, '.pageBtn2');
+
 
 
 
@@ -1018,11 +1033,8 @@ $(document).ready(
 
 
                 checks.push($(item).val());
-                console.log($(item).val());
 
             })
-
-            console.log(checks)
 
             $.ajax({
 
@@ -1093,9 +1105,6 @@ $(document).ready(
                    formattedStart : formattedStart,
                    formattedEnd : formattedEnd
            };
-
-            console.log("폼 : ");
-            console.log(data);
 
             findAPIFestivalByMultiple(data,1);
             findAPIFestivalMultipleCount(data);

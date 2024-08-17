@@ -94,7 +94,11 @@
     .pageBtn3,
     .pageBtn4,
     .pageBtn5,
-    .pageBtn6{
+    .pageBtn6,
+    .pageBtn7,
+    .pageBtn8,
+    .pageBtn9
+    {
         position: relative;
         display: inline-block;
         padding: .5rem .75rem;

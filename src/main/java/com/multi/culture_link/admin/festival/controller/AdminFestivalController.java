@@ -170,6 +170,26 @@ public class AdminFestivalController {
 	}
 	
 	/**
+	 * 요구되는 페이지의 축제 api의 db에 없는 전체 갯수 정보를 반환
+	 */
+	@PostMapping("/findAPIFestivalCount")
+	@ResponseBody
+	public int findAPIFestivalCount() {
+		
+		int count = 0;
+		try {
+			count = adminFestivalService.findAPIFestivalCount();
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+		
+		System.out.println("api 갯수 : " + count);
+		
+		return count;
+		
+	}
+	
+	/**
 	 * api 리스트에서 체크된 부분을 DB에 저장
 	 *
 	 * @param checks 체크된 숫자 번호로 서비스단에 저장된 리스트의 순서 번호와 일치
@@ -508,7 +528,7 @@ public class AdminFestivalController {
 			
 		}
 		
-		if (!festivalDTO.getPlace().isEmpty()){
+		if (!festivalDTO.getPlace().isEmpty()) {
 			
 			try {
 				stringBuilder.append("&opar=").append(URLEncoder.encode(festivalDTO.getPlace(), "UTF-8"));
@@ -518,10 +538,11 @@ public class AdminFestivalController {
 			
 		}
 		
-		if (!festivalDTO.getFormattedStart().equals("")){
+		if (!festivalDTO.getFormattedStart().equals("")) {
 			
 			try {
-				stringBuilder.append("&fstvlStartDate=").append(URLEncoder.encode(String.valueOf(festivalDTO.getFormattedStart()), "UTF-8"));;
+				stringBuilder.append("&fstvlStartDate=").append(URLEncoder.encode(String.valueOf(festivalDTO.getFormattedStart()), "UTF-8"));
+				;
 			} catch (UnsupportedEncodingException e) {
 				throw new RuntimeException(e);
 			}
@@ -529,7 +550,7 @@ public class AdminFestivalController {
 		}
 		
 		
-		if (!festivalDTO.getFormattedEnd().equals("")){
+		if (!festivalDTO.getFormattedEnd().equals("")) {
 			
 			try {
 				stringBuilder.append("&fstvlEndDate=").append(URLEncoder.encode(String.valueOf(festivalDTO.getFormattedEnd()), "UTF-8"));
@@ -538,7 +559,7 @@ public class AdminFestivalController {
 			}
 			
 		}
-
+		
 		
 		String urls = stringBuilder.toString();
 		System.out.println("urls : " + urls);
@@ -564,7 +585,6 @@ public class AdminFestivalController {
 	
 	/**
 	 * API 데이터에서 다중조건을 적용한 결과 갯수
-	 *
 	 *
 	 * @return 갯수
 	 */
@@ -596,7 +616,7 @@ public class AdminFestivalController {
 			
 		}
 		
-		if (!festivalDTO.getPlace().isEmpty()){
+		if (!festivalDTO.getPlace().isEmpty()) {
 			
 			try {
 				stringBuilder.append("&opar=").append(URLEncoder.encode(festivalDTO.getPlace(), "UTF-8"));
@@ -606,10 +626,11 @@ public class AdminFestivalController {
 			
 		}
 		
-		if (!festivalDTO.getFormattedStart().equals("")){
+		if (!festivalDTO.getFormattedStart().equals("")) {
 			
 			try {
-				stringBuilder.append("&fstvlStartDate=").append(URLEncoder.encode(String.valueOf(festivalDTO.getFormattedStart()), "UTF-8"));;
+				stringBuilder.append("&fstvlStartDate=").append(URLEncoder.encode(String.valueOf(festivalDTO.getFormattedStart()), "UTF-8"));
+				;
 			} catch (UnsupportedEncodingException e) {
 				throw new RuntimeException(e);
 			}
@@ -617,7 +638,7 @@ public class AdminFestivalController {
 		}
 		
 		
-		if (!festivalDTO.getFormattedEnd().equals("")){
+		if (!festivalDTO.getFormattedEnd().equals("")) {
 			
 			try {
 				stringBuilder.append("&fstvlEndDate=").append(URLEncoder.encode(String.valueOf(festivalDTO.getFormattedEnd()), "UTF-8"));
@@ -631,7 +652,7 @@ public class AdminFestivalController {
 		String urls = stringBuilder.toString();
 		System.out.println("urls : " + urls);
 		
-	
+		
 		System.out.println("findAPIFestivalByMultiple 정보가 담긴 축제 : " + festivalDTO.toString());
 		
 		int count = 0;
