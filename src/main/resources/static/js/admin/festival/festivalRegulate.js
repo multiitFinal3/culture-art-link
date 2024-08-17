@@ -193,7 +193,8 @@ $(document).ready(
             let btns = document.querySelectorAll(className);
             var start = (num-1)*10 + 1;
             var end = (num)*10;
-            console.log(btns);
+
+
             btns.forEach(function(btn){
 
                 var btnNum = parseInt(btn.textContent);
@@ -205,11 +206,15 @@ $(document).ready(
 
 
                 }else{
-
                     btn.classList.add('none');
-
                 }
             })
+
+            console.log("showCurrentPage")
+            console.log(num);
+            console.log(start);
+            console.log(end);
+
         }
 
 
@@ -224,16 +229,11 @@ $(document).ready(
         async function addShowingBtns(countFun , num, className){
 
             try{
-                console.log("????")
                 await countFun();
-                console.log("구냥")
                 let btns = document.querySelectorAll(className);
-                console.log(btns);
                 showCurrentPage(num, className);
             } catch(error){
-
                 console.error(error);
-
             }
         }
 
@@ -937,7 +937,7 @@ $(document).ready(
 
 
 
-
+        var findAPIFestivalNumPage = 0;
         /**
          * 전체 API리스트의 페이지 갯수를 결정 후 페이지 버튼 추가
          * @param {int} page 페이지
@@ -971,6 +971,7 @@ $(document).ready(
                             page = count / 5 + 1;
                         }
 
+                        findAPIFestivalNumPage = page;
 
 
                        for(var p=1; p<=page; p++){
@@ -991,6 +992,11 @@ $(document).ready(
             })
         }
 
+
+        /**
+         * 전체 API리스트의 페이지 클릭 이벤트
+         *
+         */
         $(document).on('click','.pageBtn2', function(){
 
             let btns = document.querySelectorAll('.pageBtn2');
@@ -1004,7 +1010,10 @@ $(document).ready(
 
         })
 
-
+        /**
+         * API리스트의 처음페이지 버튼 클릭 이벤트
+         *
+         */
         $(document).on('click','.pageBtn7', function(){
 
             findAPIFestivalList(1)
@@ -1027,6 +1036,53 @@ $(document).ready(
                 alert("api 오류")
             })
         })
+
+
+
+        /**
+         * API리스트의 마지막 페이지 버튼 클릭 이벤트
+         *
+         */
+        $(document).on('click','.pageBtn9', function(){
+
+            var num = 0;
+            var lastPage = parseInt(findAPIFestivalNumPage);
+
+            if(lastPage%10==0){
+                num = (lastPage / 10);
+            }else{
+                num = parseInt((lastPage / 10) + 1);
+            }
+
+            console.log("num");
+            console.log(num);
+
+
+
+            findAPIFestivalList(lastPage)
+                .then(()=>{
+                return addShowingBtns(findAPIFestivalCount, num, '.pageBtn2');
+                })
+                .then(()=>{
+
+                    let btns = document.querySelectorAll('.pageBtn2');
+                    btns.forEach(function(btn){
+                        if(btn.textContent == lastPage){
+                            btn.classList.add('active');
+                        }else{
+                            btn.classList.remove('active');
+                        }
+                    })
+                })
+                .catch((error)=>{
+                    alert("api 오류")
+                })
+
+        })
+
+
+
+
 
 
 
