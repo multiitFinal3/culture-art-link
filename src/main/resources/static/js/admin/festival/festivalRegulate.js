@@ -140,50 +140,126 @@ $(document).ready(
 
         /**
        * DB 전체 갯수를 알아와 페이지 버튼 추가 기능
+       * @returns {Promise} 순서대로 이행하기 위해 프로미스로 반환
        */
         function findDBFestivalCount(){
 
-            $.ajax({
+            return new Promise((resolve, reject)=>{
 
-                url: '/admin/festival-regulate/findDBFestivalCount',
-                method: 'POST',
-                contentType: 'application/json',
-                success: function(count){
+                $.ajax({
 
-                    $('#pageNum1').html("");
-                    console.log("카운트는...")
-                    console.log(count)
+                    url: '/admin/festival-regulate/findDBFestivalCount',
+                    method: 'POST',
+                    contentType: 'application/json',
+                    success: function(count){
 
-                    var page = 0;
+                        $('#pageNum1').html("");
+                        console.log("카운트는...")
+                        console.log(count)
 
-                    if(count % 5 ==0){
-                        page = count/5;
-                    }else{
-                        page = count/5 +1;
+                        var page = 0;
+
+                        if(count % 5 ==0){
+                            page = count/5;
+                        }else{
+                            page = count/5 +1;
+                        }
+
+                        for(var p=1; p<=page; p++){
+
+                            $('#pageNum1').append(`<button class="pageBtn1 none">${p}</button>`)
+
+                        }
+
+                        console.log("뭐여");
+
+                        resolve();
+                    },
+                    error: function(error){
+                        console.log(error);
+                        reject(error);
+
                     }
 
-                    for(var p=1; p<=page; p++){
+                })
 
-                        $('#pageNum1').append(`<button class="pageBtn1">${p}</button>`)
-
-                    }
-
-
-                }
 
             })
 
-
         }
 
-        // 버튼 붙히기
-        findDBFestivalCount();
+
+        /**
+       * 현재 보여야하는 버튼만 보이게 함
+       * @param {number} num 10개씩 보이게 하기 위한 숫자. 1이면 1~10
+       * @param {string} className 보이게 할 버튼 클래스
+       */
+        function showCurrentPage(num, className){
+
+            let btns = document.querySelectorAll(className);
+            var start = (num-1)*10 + 1;
+            var end = (num)*10;
+            console.log(btns);
+            btns.forEach(function(btn){
+
+                var btnNum = parseInt(btn.textContent);
+                console.log("버튼")
+                console.log(btnNum);
+                if((btnNum >= start) && (btnNum <= end)){
+
+                    btn.classList.remove('none');
+
+
+                }else{
+
+                    btn.classList.add('none');
+
+                }
+            })
+        }
+
+
+
+
+        /**
+       * 현재 보여야하는 버튼만 보이게 함
+       * @param {Function} countFun 전체 갯수를 세 페이지 갯수를 정하는 함수
+       * @param {number} num 10개씩 보이게 하기 위한 숫자. 1이면 1~10
+       * @param {string} className 보이게 할 버튼 클래스
+       */
+        async function addShowingBtns(countFun , num, className){
+
+            try{
+                console.log("????")
+                await countFun();
+                console.log("구냥")
+                let btns = document.querySelectorAll('.pageBtn1');
+                console.log(btns);
+                showCurrentPage(num, className);
+            } catch(error){
+
+                console.error(error);
+
+            }
+        }
+
+        addShowingBtns(findDBFestivalCount, 1, '.pageBtn1');
+
 
         /**
        * DB 페이지 버튼에 해당 페이지의 순서에 해당하는 데이터 보이는 클릭 이벤트 추가
        */
         $(document).on('click','.pageBtn1', function(){
 
+            let btns = document.querySelectorAll('.pageBtn1');
+
+            btns.forEach(function(btn){
+
+                btn.classList.remove('active');
+
+            })
+
+            $(this).addClass('active');
             const page = $(this).text();
             $('#list1').html("");
             findDBFestivalList(page);
