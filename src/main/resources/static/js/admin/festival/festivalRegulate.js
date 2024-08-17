@@ -962,29 +962,48 @@ $(document).ready(
          * 전체 API리스트의 페이지 갯수를 결정 후 페이지 버튼 추가
          * @param {int} page 페이지
          */
-        function findAPIFestivalCount(page){
+        function findAPIFestivalCount(){
 
-            $('#pageNum2').html("");
+            console.log("들어와..")
 
-           for(var p=1; p<=page; p++){
+            return new Promise((resolve, reject)=>{
 
-            $('#pageNum2').append(`<button class="pageBtn2">${p}</button>`)
+                $('#pageNum2').html("");
+                console.log("page");
+               for(var p=1; p<=20; p++){
 
-            }
+                    $('#pageNum2').append(`<button class="pageBtn2 none">${p}</button>`)
 
-            $(document).on('click','.pageBtn2', function(){
+                }
 
-                const page = $(this).text();
-                findAPIFestivalList(page);
-
+                resolve();
             })
+
+
         }
+
+        $(document).on('click','.pageBtn2', function(){
+
+            let btns = document.querySelectorAll('.pageBtn2');
+            btns.forEach(function(btn){
+                btn.classList.remove('active');
+            })
+
+            $(this).addClass('active');
+            const page = $(this).text();
+            findAPIFestivalList(page);
+
+        })
+
+
 
         // 처음 들어가면 1페이지 불러옴
         findAPIFestivalList(1);
 
         // 처음 들어가면 페이지 버튼 20개 생성
-        findAPIFestivalCount(20);
+        addShowingBtns(findAPIFestivalCount, 1, '.pageBtn2');
+
+
 
         /**
          * 체크된 API 리스트의 축제들을 DB에 저장함
