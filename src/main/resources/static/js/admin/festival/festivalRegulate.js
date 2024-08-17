@@ -13,7 +13,6 @@ $(document).ready(
 
             $('#list1').html("");
 
-
             $.ajax({
 
                 url: '/admin/festival-regulate/findDBFestivalList?page=' + page,
@@ -23,7 +22,7 @@ $(document).ready(
 
                     $.each(list, function(index, festival){
 
-                        console.log(festival)
+                        console.log(festival);
 
                         var index1 = (index + 1) + (page-1)*5;
 
@@ -186,6 +185,7 @@ $(document).ready(
         $(document).on('click','.pageBtn1', function(){
 
             const page = $(this).text();
+            $('#list1').html("");
             findDBFestivalList(page);
 
         })
@@ -515,6 +515,9 @@ $(document).ready(
 
                };
 
+           var startIndex = (page-1)*5+1;
+           var endIndex = (page)*5;
+
 
            $.ajax({
 
@@ -526,8 +529,9 @@ $(document).ready(
 
                     $('#list1').html("");
 
+                    var slicedList = list.slice(startIndex, endIndex+1);
 
-                    $.each(list, function(index, festival){
+                    $.each(slicedList, function(index, festival){
 
                         console.log(festival)
 
@@ -725,7 +729,7 @@ $(document).ready(
 
 
                     $(document).on('click','.pageBtn3', function(){
-
+                        $('#list1').html("");
                         const page = $(this).text();
                         findDBFestivalByMultiple(page);
 
