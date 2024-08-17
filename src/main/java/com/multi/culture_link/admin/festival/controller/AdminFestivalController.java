@@ -484,11 +484,9 @@ public class AdminFestivalController {
 		pageDTO.setPage(page);
 		pageDTO.setStartEnd(pageDTO.getPage());
 		festivalDTO.setPageDTO(pageDTO);
-		
-		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		StringBuilder stringBuilder = new StringBuilder();
 		
-		
+		System.out.println("findAPIFestivalByMultiple : " + festivalDTO);
 		
 		if (!festivalDTO.getFestivalName().isEmpty()) {
 			
@@ -520,48 +518,30 @@ public class AdminFestivalController {
 			
 		}
 		
-		if (festivalDTO.getStartDate()!=null){
+		if (!festivalDTO.getFormattedStart().equals("")){
 			
 			try {
-				Date startDate = simpleDateFormat.parse(festivalDTO.getFormattedStart());
-				festivalDTO.setStartDate(startDate);
-				
-			} catch (ParseException e) {
-				System.out.println(e);
-			}
-			
-			
-			
-			try {
-				stringBuilder.append("&fstvlStartDate=").append(URLEncoder.encode(String.valueOf(festivalDTO.getStartDate()), "UTF-8"));
+				stringBuilder.append("&fstvlStartDate=").append(URLEncoder.encode(String.valueOf(festivalDTO.getFormattedStart()), "UTF-8"));;
 			} catch (UnsupportedEncodingException e) {
 				throw new RuntimeException(e);
 			}
-		
+			
 		}
 		
 		
-		if (festivalDTO.getEndDate()!=null){
-			
-			
-			try {
-				Date endDate = simpleDateFormat.parse(festivalDTO.getFormattedEnd());
-				festivalDTO.setEndDate(endDate);
-				
-			} catch (ParseException e) {
-				System.out.println(e);
-			}
+		if (!festivalDTO.getFormattedEnd().equals("")){
 			
 			try {
-				stringBuilder.append("&fstvlEndDate=").append(URLEncoder.encode(String.valueOf(festivalDTO.getEndDate()), "UTF-8"));
+				stringBuilder.append("&fstvlEndDate=").append(URLEncoder.encode(String.valueOf(festivalDTO.getFormattedEnd()), "UTF-8"));
 			} catch (UnsupportedEncodingException e) {
 				throw new RuntimeException(e);
 			}
-		
+			
 		}
 
 		
 		String urls = stringBuilder.toString();
+		System.out.println("urls : " + urls);
 		
 		ArrayList<FestivalDTO> list = null;
 		try {
@@ -593,11 +573,8 @@ public class AdminFestivalController {
 	public int findAPIFestivalMultipleCount(@RequestBody FestivalDTO festivalDTO) {
 		
 		
-		
-		
-		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		StringBuilder stringBuilder = new StringBuilder();
-		
+		System.out.println("findAPIFestivalByMultipleCount : " + festivalDTO);
 		
 		if (!festivalDTO.getFestivalName().isEmpty()) {
 			
@@ -629,19 +606,10 @@ public class AdminFestivalController {
 			
 		}
 		
-		if (festivalDTO.getStartDate()!=null){
+		if (!festivalDTO.getFormattedStart().equals("")){
 			
 			try {
-				Date startDate = simpleDateFormat.parse(festivalDTO.getFormattedStart());
-				festivalDTO.setStartDate(startDate);
-				
-			} catch (ParseException e) {
-				System.out.println(e);
-			}
-			
-			
-			try {
-				stringBuilder.append("&fstvlStartDate=").append(URLEncoder.encode(String.valueOf(festivalDTO.getStartDate()), "UTF-8"));
+				stringBuilder.append("&fstvlStartDate=").append(URLEncoder.encode(String.valueOf(festivalDTO.getFormattedStart()), "UTF-8"));;
 			} catch (UnsupportedEncodingException e) {
 				throw new RuntimeException(e);
 			}
@@ -649,19 +617,10 @@ public class AdminFestivalController {
 		}
 		
 		
-		if (festivalDTO.getEndDate()!=null){
+		if (!festivalDTO.getFormattedEnd().equals("")){
 			
 			try {
-				
-				Date endDate = simpleDateFormat.parse(festivalDTO.getFormattedEnd());
-				festivalDTO.setEndDate(endDate);
-				
-			} catch (ParseException e) {
-				System.out.println(e);
-			}
-			
-			try {
-				stringBuilder.append("&fstvlEndDate=").append(URLEncoder.encode(String.valueOf(festivalDTO.getEndDate()), "UTF-8"));
+				stringBuilder.append("&fstvlEndDate=").append(URLEncoder.encode(String.valueOf(festivalDTO.getFormattedEnd()), "UTF-8"));
 			} catch (UnsupportedEncodingException e) {
 				throw new RuntimeException(e);
 			}
@@ -670,6 +629,7 @@ public class AdminFestivalController {
 		
 		
 		String urls = stringBuilder.toString();
+		System.out.println("urls : " + urls);
 		
 	
 		System.out.println("findAPIFestivalByMultiple 정보가 담긴 축제 : " + festivalDTO.toString());
