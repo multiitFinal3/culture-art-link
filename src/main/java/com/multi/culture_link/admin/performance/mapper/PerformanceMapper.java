@@ -50,6 +50,8 @@ public interface PerformanceMapper {
 
 
     // 특정 공연의 모든 리뷰를 조회
+    // 특정 공연의 모든 리뷰를 조회
+
     List<PerformanceReviewDTO> findReviewsByPerformanceId(@Param("performanceId") int performanceId);
 
     // 리뷰를 데이터베이스에 삽입
@@ -63,15 +65,5 @@ public interface PerformanceMapper {
     void deleteReview(@Param("id") int id);
     // 리뷰 관련 메서드
 
-//    Integer findUserIdByUsername(String username);
-//
-//    List<PerformanceReviewDTO> getAllReviews();
-//
-//    List<PerformanceReviewDTO> getReviewsByPerformanceId(int performanceId);
-//
-//    void insertReview(PerformanceReviewDTO review);
-//
-//    void updateReview(PerformanceReviewDTO review);
-//
-//    void deleteReview(int id);
+
 }
