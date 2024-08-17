@@ -331,7 +331,6 @@ async function loadExhibitionDetails(exhibitionId) {
 
         // const ratingResponse = await fetch(`/exhibition/${exhibitionId}/rating`);
         // const ratingData = await ratingResponse.json();
-        $('#averageRating').text(Number(data?.starsAVG).toFixed(1));
 
         renderExhibitionDetails(data);
     } catch (error) {
@@ -378,6 +377,9 @@ async function loadExhibitionReviews() {
         const exhibitionId = getExhibitionIdFromUrl()
         const response = await fetch(`/exhibition/exhibition/${exhibitionId}/comment`);
         const data = await response.json();
+        const count = data.length;
+        const $commentBtn = $("#commentBtn");
+        $commentBtn.text($commentBtn.text() + ' ' + count);
         console.log("loadExhibitionReviews : ", data);
         renderReviews(data)
     } catch (error) {
@@ -386,10 +388,7 @@ async function loadExhibitionReviews() {
 }
 
 function renderExhibitionDetails(exhibition) {
-    $('#exhibitionTitle').text(exhibition.title);
-    $('#exhibitionArtist').text(exhibition.artist);
-    $('#exhibitionMuseum').text(exhibition.museum);
-    // 날짜 형식 변경
+
     const formatDate = (dateString) => {
         if (dateString === "미정") return "미정";
         const date = new Date(dateString);
@@ -398,9 +397,56 @@ function renderExhibitionDetails(exhibition) {
 
     const startDate = formatDate(exhibition.startDate);
     const endDate = formatDate(exhibition.endDate);
-    $('#exhibitionDate').text(`${startDate} - ${endDate}`);
     $('#exhibitionImage').attr('src', exhibition.image);
 
+    $('#averageStar').html();
+    $('#averageRating').text();
+
+    const $info = $(".exhibition-info")
+    $info.html(`
+        ${(exhibition.artist) ? `
+        <div class="info-item">
+            <span class="info-label">
+                작가
+            </span>
+            <span class="info-data">
+                ${exhibition.artist}
+            </span>
+        </div>
+        ` : ''}
+        ${(exhibition.museum) ? `
+        <div class="info-item">
+            <span class="info-label">
+                장소
+            </span>
+            <span class="info-data">
+                ${exhibition.museum}
+            </span>
+        </div>
+        ` : ''}
+        
+        <div class="info-item">
+            <span class="info-label">
+                기간
+            </span>
+            <span class="info-data">
+                ${startDate} - ${endDate}
+            </span>
+        </div>
+        
+        <div class="info-item">
+            <span class="info-label">
+                별점
+            </span>
+            <span class="info-data">
+                ${Number(exhibition?.starsAVG).toFixed(1)} 
+                <span id="averageStar">
+                    ${'★'.repeat(Math.round(exhibition.starsAVG))}${'☆'.repeat(5 - Math.round(exhibition.starsAVG))}
+                </span>
+            </span>
+        </div>
+        
+    `)
 
     initMap(exhibition.museum);
     renderInformation(exhibition)
@@ -636,6 +682,9 @@ async function loadExhibitionAnalyze() {
         const exhibitionId = getExhibitionIdFromUrl()
         const response = await fetch(`/exhibition/exhibition/${exhibitionId}/analyze`);
         const data = await response.json();
+        const count = data.length;
+        const $AnalyzeBtn = $("#AnalyzeBtn");
+        $AnalyzeBtn.text($AnalyzeBtn.text() + ' ' + count);
         console.log("loadExhibitionAnalyze : ", data);
         renderAnalyze(data)
     } catch (error) {
