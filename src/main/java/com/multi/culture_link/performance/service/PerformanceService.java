@@ -45,6 +45,9 @@ public class PerformanceService {
         // MyBatis를 통해 데이터베이스에서 상태를 조회
         String state = performanceMapper.getPerformanceLikeState(userId, performanceId);
 
+        System.out.println("getPerformanceLikeState result: " + state);
+
+
         // 상태가 null인 경우 "none"을 반환하여 기본 상태로 설정
         if (state == null) {
             state = "none";

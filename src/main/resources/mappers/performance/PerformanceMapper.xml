@@ -90,11 +90,7 @@
 
 
 
-<!--    <select id="findReviewsByPerformanceId" resultType="com.multi.culture_link.performance.model.dto.PerformanceReviewDTO">-->
-<!--        SELECT *-->
-<!--        FROM performance_review-->
-<!--        WHERE performance_id = #{performanceId}-->
-<!--    </select>-->
+
 
 
     <select id="findReviewsByPerformanceId" resultType="com.multi.culture_link.performance.model.dto.PerformanceReviewDTO">

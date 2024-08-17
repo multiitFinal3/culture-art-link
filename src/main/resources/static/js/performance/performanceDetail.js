@@ -271,11 +271,10 @@ document.addEventListener("DOMContentLoaded", function() {
     // 좋아요/싫어요 상태 확인 함수
     async function checkLikeState() {
         try {
-            const response = await axios.get(`/getPerformanceLikeState?userId=${userId}&performanceId=${performanceId}`);
-            const state = response.data.state;  // state 변수를 정의합니다.
-            console.log('Current state:', state);  // 상태값 확인
+            const response = await axios.get(`/performance/getPerformanceLikeState?userId=${userId}&performanceId=${performanceId}`);
+            const state = response.data.state;
+            console.log('Current state:', state);
 
-            // 상태에 따라 버튼 이미지를 설정
             const likeBtn = document.getElementById('likeBtn');
             const dislikeBtn = document.getElementById('dislikeBtn');
 
@@ -286,7 +285,6 @@ document.addEventListener("DOMContentLoaded", function() {
                 likeBtn.src = 'https://kr.object.ncloudstorage.com/team3/common/upNo.png';
                 dislikeBtn.src = 'https://kr.object.ncloudstorage.com/team3/common/downRed.png';
             } else {
-                // 기본 초기 상태
                 likeBtn.src = 'https://kr.object.ncloudstorage.com/team3/common/upNo.png';
                 dislikeBtn.src = 'https://kr.object.ncloudstorage.com/team3/common/downNo.png';
             }
@@ -294,6 +292,7 @@ document.addEventListener("DOMContentLoaded", function() {
             console.error('오류 발생:', error);
         }
     }
+
 
     // 좋아요 또는 싫어요 상태 업데이트 함수
     async function updatePerformanceState(state) {

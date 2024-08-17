@@ -328,39 +328,4 @@ public class PerformanceController {
         return "performance/performanceGenre"; // 적절한 템플릿 경로로 변경
     }
 
-
-
-
-
-
-
-
-
-
-    // 리뷰
-    // 공연 리뷰 조회
-//    @GetMapping("/{performanceId}")
-//    public List<PerformanceReviewDTO> getReviews(@PathVariable int performanceId) {
-//        return performanceReviewService.getReviewsByPerformanceId(performanceId);
-//    }
-//
-//    @PostMapping
-//    public void addReview(@RequestBody PerformanceReviewDTO review) {
-//        performanceReviewService.addReview(review);
-//    }
-//
-//    @PutMapping("/{id}")
-//    public void updateReview(@PathVariable int id, @RequestBody PerformanceReviewDTO review) {
-//        review.setId(id);
-//        performanceReviewService.updateReview(review);
-//    }
-//
-//    @DeleteMapping("/{id}")
-//    public void deleteReview(@PathVariable int id) {
-//        performanceReviewService.deleteReview(id);
-//    }
-
-
-
-
 }
