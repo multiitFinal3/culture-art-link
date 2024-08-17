@@ -1045,7 +1045,10 @@ $(document).ready(
                 success: function(response){
 
                     alert(response);
-                    window.location.href='/admin/festival-regulate';
+                    setTimeout(function(){
+                        window.location.href='/admin/festival-regulate';
+                    },1000)
+
 
                 }
 

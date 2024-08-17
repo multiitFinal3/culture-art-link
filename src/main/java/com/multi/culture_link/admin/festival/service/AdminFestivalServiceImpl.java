@@ -89,9 +89,9 @@ public class AdminFestivalServiceImpl implements AdminFestivalService {
 					.build();
 			
 			OkHttpClient client1 = new OkHttpClient.Builder()
-					.connectTimeout(20, TimeUnit.SECONDS)
-					.writeTimeout(20,TimeUnit.SECONDS)
-					.readTimeout(20,TimeUnit.SECONDS)
+					.connectTimeout(40, TimeUnit.SECONDS)
+					.writeTimeout(40,TimeUnit.SECONDS)
+					.readTimeout(40,TimeUnit.SECONDS)
 					.build();
 			
 			
@@ -112,7 +112,7 @@ public class AdminFestivalServiceImpl implements AdminFestivalService {
 				
 				FestivalDTO festivalDTO = new FestivalDTO();
 				
-				String festivalName = item.get("fstvlNm").getAsString();
+				String festivalName = item.get("fstvlNm").getAsString().trim();
 				festivalDTO.setFestivalName(festivalName);
 				
 				String place = item.get("opar").getAsString();
@@ -330,16 +330,6 @@ public class AdminFestivalServiceImpl implements AdminFestivalService {
 				
 				festivalDTO.setAvgRate(0);
 				
-				FestivalDTO festivalExist = adminFestivalMapper.findDBFestivalByFestival(festivalDTO);
-				
-				if (festivalExist != null) {
-					/*System.out.println("리스트에서 제외 : " + festivalExist.toString());*/
-					/*festivalDTO.setExist("Y");*/
-					continue;
-					
-				}
-				
-				
 				list.add(festivalDTO);
 				
 			}
@@ -348,17 +338,29 @@ public class AdminFestivalServiceImpl implements AdminFestivalService {
 			
 		}
 		
+		ArrayList<FestivalDTO> nowList = (ArrayList<FestivalDTO>) this.list.clone();
+		
+		for(FestivalDTO festivalDTO : nowList){
+			
+			FestivalDTO festivalExist = adminFestivalMapper.findDBFestivalByFestival(festivalDTO);
+			
+			if (festivalExist != null) {
+				System.out.println("존재 " + festivalDTO);
+				this.list.remove(festivalDTO);
+			}
+		}
+
 		ArrayList<FestivalDTO> list2 = new ArrayList<FestivalDTO>();
 		
-		int realEnd = list.size() > end ? end : list.size();
+		int realEnd = this.list.size() > end ? end : this.list.size();
 		
-		apiAllListSize = list.size();
+		apiAllListSize = this.list.size();
 		
-		if (list.size() > 0) {
+		if (this.list.size() > 0) {
 			
 			for (int i = start - 1; i <= realEnd - 1; i++) {
 				
-				list2.add(list.get(i));
+				list2.add(this.list.get(i));
 				
 			}
 			
