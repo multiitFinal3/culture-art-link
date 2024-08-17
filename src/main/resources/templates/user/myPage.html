@@ -1287,7 +1287,6 @@
                  * 전체 전시 리뷰 내역을 가져옴(페이지 별로)
                  *
                  */
-                 var eReviewCount = 0;
                 function findExhibitionReviewListByPage(page){
 
                     console.log("findExhibitionReviewListByPage");
@@ -1436,10 +1435,39 @@
 
                             })
 
+
+                            findUserEReviewCount(size);
+
                         }
 
                     })
                 }
+
+
+                /**
+                * 유저별 전체 리뷰 페이지 버튼 만들기
+                *
+                *
+                */
+                function findUserEReviewCount(count){
+
+                    var pages = 0;
+
+                    if(count % 5 == 0){
+                        pages = count / 5;
+                    }else{
+                        pages = count / 5 + 1;
+                    }
+
+                    for(var p=1; p<=pages; p++){
+                        $('#reviewPages').append(`<button class="pageBtn2" style="font-size: 20px; margin: 0.5%">${p}</button>`)
+                    }
+
+                }
+
+
+
+
 
 
                /**
@@ -1449,6 +1477,31 @@
                 $(document).on('click','.pageBtn2', function(){
                     var page = $(this).text();
                     findExhibitionReviewListByPage(page);
+
+                    setTimeout(function(){
+                          console.log("0.1s");
+                          var btns = $('.pageBtn2');
+
+                          console.log(btns)
+
+                          btns.each(function(){
+
+                                var button = $(this);
+                                console.log(button);
+                                if(button.text()==page){
+                                    console.log(button.text());
+                                    console.log("same")
+                                    button.addClass('activePage');
+
+                                }else{
+                                    console.log(button.text());
+                                    button.removeClass('activePage');
+
+                                }
+                          })
+                    },100);
+
+
                 })
 
 

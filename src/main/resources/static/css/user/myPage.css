@@ -606,7 +606,8 @@
 
 
 
-   .pageBtn1{
+   .pageBtn1,
+   .pageBtn2{
 
         width: 45px;
         text-align: center;
