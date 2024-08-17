@@ -152,6 +152,56 @@
 
     </style>
 
+    <style>
+
+        .bg-light {
+    <!--        background-color: black !important;-->
+        }
+
+        .navbar-light .navbar-nav .nav-link {
+            color: rgba(0, 0, 0, .5);
+    <!--        color: #174D1C;-->
+        }
+
+
+
+        .navbar-light .navbar-nav .nav-link:focus,
+        .navbar-light .navbar-nav .nav-link.active {
+
+            font-size: larger;
+            font-weight: bold;
+        }
+
+        .navbar-brand{
+            font-size: 2.7rem !important;
+        }
+
+
+
+
+    </style>
+
+    <script>
+        $(document).ready(function() {
+            // 페이지 로드 시, 저장된 링크에 포커스 적용
+            const activeLink = sessionStorage.getItem('activeLink');
+            if (activeLink) {
+                $(`.nav-link[href='${activeLink}']`).addClass('active');
+            }
+
+            // 링크 클릭 시, 해당 링크를 저장하고 포커스 적용
+            $('.nav-link').on('click', function() {
+                // 모든 링크의 active 클래스를 제거
+                $('.nav-link').removeClass('active');
+                // 클릭한 링크에 active 클래스 추가
+                $(this).addClass('active');
+
+                // 클릭한 링크의 href를 저장
+                sessionStorage.setItem('activeLink', $(this).attr('href'));
+            });
+        });
+    </script>
+
 </head>
 
 

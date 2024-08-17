@@ -86,14 +86,98 @@
     </select>
 
 
+<!--    <select id="findDBFestivalByMultiple" parameterType="festivalDTO" resultType="festivalDTO">-->
+
+<!--        SELECT *-->
+
+<!--        FROM (-->
+
+<!--        SELECT ROW_NUMBER() OVER(ORDER BY festival_id DESC) AS rownum, f3.*-->
+<!--        FROM (-->
+
+<!--        SELECT * FROM vw_festival_review_manage_data-->
+
+<!--        <where>-->
+
+<!--            <if test="regionId !=null and !regionId.equals('') and !regionId.equals('0') and regionId!=0">-->
+<!--                AND region_id = #{regionId}-->
+<!--            </if>-->
+
+
+<!--            <if test="timeId !=null and !timeId.equals('')">-->
+<!--                AND time_id = #{timeId}-->
+<!--            </if>-->
+
+
+<!--            <if test="festivalName !=null and !festivalName.equals('')">-->
+<!--                AND festival_name LIKE CONCAT ('%', #{festivalName}, '%')-->
+<!--            </if>-->
+
+
+<!--            <if test="festivalContent !=null and !festivalContent.equals('')">-->
+<!--                AND festival_content LIKE CONCAT ('%', #{festivalContent}, '%')-->
+<!--            </if>-->
+
+
+<!--            <if test="manageInstitution !=null and !manageInstitution.equals('')">-->
+<!--                AND manage_institution LIKE CONCAT ('%', #{manageInstitution}, '%')-->
+<!--            </if>-->
+
+
+<!--            <if test="hostInstitution !=null and !hostInstitution.equals('')">-->
+<!--                AND host_institution LIKE CONCAT ('%', #{hostInstitution}, '%')-->
+<!--            </if>-->
+
+
+<!--            <if test="sponserInstitution !=null and !sponserInstitution.equals('')">-->
+<!--                AND sponser_institution LIKE CONCAT ('%', #{sponserInstitution}, '%')-->
+<!--            </if>-->
+
+
+<!--            <if test="tel !=null and !tel.equals('')">-->
+<!--                AND tel LIKE CONCAT ('%', #{tel}, '%')-->
+<!--            </if>-->
+
+
+<!--            <if test="place !=null and !place.equals('')">-->
+<!--                AND place LIKE CONCAT ('%', #{place}, '%')-->
+<!--            </if>-->
+
+
+<!--            <if test="startDate !=null">-->
+<!--                AND start_date &gt;= #{startDate}-->
+<!--            </if>-->
+
+
+<!--            <if test="endDate !=null">-->
+<!--                AND end_date &lt;= #{endDate}-->
+<!--            </if>-->
+
+
+<!--            <if test="avgRate !=null and !avgRate.equals('') and !avgRate.equals('0') and avgRate!=0">-->
+<!--                AND avg_rate &gt;= #{avgRate}-->
+<!--            </if>-->
+
+
+<!--            <if test="season !=null and !season.equals('')">-->
+<!--                AND season = #{season}-->
+<!--            </if>-->
+
+<!--        </where>-->
+
+<!--        ) f3-->
+
+<!--        ) f2-->
+
+<!--        WHERE-->
+
+<!--        f2.rownum BETWEEN #{pageDTO.start} AND #{pageDTO.end};-->
+
+
+<!--    </select>-->
+
+
     <select id="findDBFestivalByMultiple" parameterType="festivalDTO" resultType="festivalDTO">
-
-        SELECT *
-
-        FROM (
-
-        SELECT ROW_NUMBER() OVER(ORDER BY festival_id DESC) AS rownum, f3.*
-        FROM (
 
         SELECT * FROM vw_festival_review_manage_data
 
@@ -165,13 +249,8 @@
 
         </where>
 
-        ) f3
+        ORDER BY festival_id DESC;
 
-        ) f2
-
-        WHERE
-
-        f2.rownum BETWEEN #{pageDTO.start} AND #{pageDTO.end};
 
 
     </select>
