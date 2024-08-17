@@ -172,5 +172,9 @@ public class CulturalPropertiesService {
         return culturalPropertiesDAO.countReview(culturalPropertiesId); // 총 리뷰 수를 반환하는 DAO 메서드
     }
 
+    public List<String> getKeywordsByCulturalPropertyId(int culturalPropertiesId) {
+        return culturalPropertiesDAO.getKeywordsByCulturalPropertyId(culturalPropertiesId);
+    }
+
 
 }

@@ -11,6 +11,10 @@
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 
+    <script th:src="@{/js/culturalProperties/culturalProperties.js}"></script>
+<!--    <script th:src="@{/js/culturalProperties/culturalPropertiesDetail.js}"></script>-->
+
+<!--    <script src="/js/culturalProperties/culturalProperties.js"></script>-->
     <script src="/js/culturalProperties/culturalPropertiesDetail.js"></script>
 
     <script type="text/javascript" th:src="'https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=' + ${naverClientId}"></script>
@@ -639,6 +643,38 @@
 
 
 
+        .keywords {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 16px;
+}
+
+.keyword {
+    padding: 4px 8px;
+    background-color: #f1f1f1;
+    border-radius: 4px;
+    font-size: 14px;
+    color: #333;
+}
+
+
+        .tab-content {
+        display: none;
+        width: 100%;
+        min-height: calc(100vh - 100px); /* 필터 컨테이너 높이를 뺀 전체 높이 */
+        padding: 20px;
+    }
+
+    .tab-content.active {
+        display: block;
+    }
+
+    .news-articles,
+    .video-container {
+    margin: 50px 54.600px 0 54.600px;
+    padding: 0 12px 0 12px;
+    }
 
     </style>
 </head>
@@ -650,9 +686,18 @@
 
         <div class="genre-filter">
             <div class="genre-item" data-target="all" th:onclick="|location.href='@{/cultural-properties}'|">전체 문화재 목록</div>
-            <div class="genre-item" data-target="news" th:onclick="|location.href='@{/cultural-properties/news}'|">뉴스 & 소식</div>
-            <div class="genre-item" data-target="video" th:onclick="|location.href='@{/cultural-properties/videos}'|">관련 영상</div>
+
+            <div class="genre-item" data-target="news">뉴스 & 소식</div>
+            <div class="genre-item" data-target="video">관련 영상</div>
+
         </div>
+
+
+
+
+
+
+
         <div class="extra-filter">
 <!--            <div class="extra-item">-->
 <!--                <img th:src="@{/img/performance/ranking.png}" alt="랭킹 아이콘" class="filter-icon">-->
@@ -668,6 +713,30 @@
     </div>
 
 
+
+    <div class="tab-pane fade" id="news" role="tabpanel" aria-labelledby="news-tab">
+        <div class="news-articles">
+            <h2>문화재 관련 뉴스</h2>
+            <br>
+            <ul id="news-list" class="list-group mt-3">
+                <!-- 뉴스 기사가 여기에 추가됨 -->
+            </ul>
+            <br><br><br><br>
+        </div>
+    </div>
+
+
+    <div class="tab-pane fade" id="video" role="tabpanel" aria-labelledby="video-tab">
+        <div class="video-container">
+            <h2>관련 영상</h2>
+            <div id="video-list" class="row mt-3">
+                <!-- 비디오 리스트가 여기에 렌더링됨 -->
+            </div>
+        </div>
+    </div>
+
+
+
     <div class="container">
         <div class="top-section">
             <div class="detail-card">
@@ -675,6 +744,10 @@
 
             </div>
             <div class="info-section">
+
+                <div class="keywords">
+                    <span th:each="keyword : ${keywords}" th:text="${keyword}" class="keyword"></span>
+                </div>
 
                 <div class="info-category" th:text="${property.categoryName}">종목</div>
                 <div class="title" th:text="${property.culturalPropertiesName}">문화재명</div>
@@ -914,7 +987,6 @@
                 </div>
             </div>
         </div>
-
 
 
 

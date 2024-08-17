@@ -119,4 +119,91 @@
 
     </select>
 
+
+
+
+    <select id="selectById" parameterType="int" resultType="culturalPropertiesDTO">
+        SELECT *
+        FROM cultural_properties
+        WHERE id = #{id}
+    </select>
+
+    <update id="updateDB" parameterType="culturalPropertiesDTO">
+        UPDATE cultural_properties
+        SET
+        category_code = #{categoryCode},
+        management_number = #{managementNumber},
+        city_code = #{cityCode},
+        category_name = #{categoryName},
+        cultural_properties_name = #{culturalPropertiesName},
+        address = #{address},
+        region = #{region},
+        district = #{district},
+        dynasty = #{dynasty},
+        registration_date = #{registrationDate},
+        longitude = #{longitude},
+        latitude = #{latitude},
+        classify_a = #{classifyA},
+        classify_b = #{classifyB},
+        classify_c = #{classifyC},
+        classify_d = #{classifyD},
+        content = #{content},
+        main_img_url = #{mainImgUrl},
+        img_url = #{imgUrl},
+        img_desc = #{imgDesc},
+        video_url = #{videoUrl},
+        narration_url = #{narrationUrl}
+
+        WHERE
+        id = #{id}
+    </update>
+
+<!--    <insert id="insertDB" parameterType="culturalPropertiesDTO" useGeneratedKeys="true" keyProperty="id">-->
+<!--        INSERT INTO cultural_properties (-->
+<!--        category_code, management_number, city_code, category_name, cultural_properties_name,-->
+<!--        address, region, district, dynasty, registration_date, longitude, latitude,-->
+<!--        classify_a, classify_b, classify_c, classify_d, content, main_img_url, img_url,-->
+<!--        img_desc, video_url, narration_url-->
+<!--        )-->
+<!--        VALUES (-->
+<!--        #{categoryCode}, #{managementNumber}, #{cityCode}, #{categoryName}, #{culturalPropertiesName},-->
+<!--        #{address}, #{region}, #{district}, #{dynasty}, #{registrationDate}, #{longitude}, #{latitude},-->
+<!--        #{classifyA}, #{classifyB}, #{classifyC}, #{classifyD}, #{content}, #{mainImgUrl}, #{imgUrl},-->
+<!--        #{imgDesc}, #{videoUrl}, #{narrationUrl}-->
+<!--        )-->
+<!--    </insert>-->
+
+    <select id="findAll" resultType="culturalPropertiesDTO">
+        SELECT *
+        FROM cultural_properties
+    </select>
+
+    <delete id="deleteDBDataAndKeywords">
+        DELETE cp, cpk
+        FROM cultural_properties cp
+        LEFT JOIN cultural_properties_content_keyword cpk ON cp.id = cpk.cultural_properties_id
+        WHERE cp.id IN
+        <foreach item="id" collection="list" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+<!--    <delete id="deleteDBDataAndKeywords">-->
+<!--        DELETE FROM cultural_properties_content_keyword-->
+<!--        WHERE cultural_properties_id IN-->
+<!--        <foreach item="id" collection="list" open="(" separator="," close=")">-->
+<!--            #{id}-->
+<!--        </foreach>;-->
+
+<!--        DELETE FROM cultural_properties-->
+<!--        WHERE id IN-->
+<!--        <foreach item="id" collection="list" open="(" separator="," close=")">-->
+<!--            #{id}-->
+<!--        </foreach>;-->
+<!--    </delete>-->
+
+
+
+
+
 </mapper>

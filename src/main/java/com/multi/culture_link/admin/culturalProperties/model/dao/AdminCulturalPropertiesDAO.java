@@ -33,4 +33,15 @@ public interface AdminCulturalPropertiesDAO {
 	
 	
 	ArrayList<CulturalPropertiesDTO> findtotalDBData();
+
+//    CulturalPropertiesDTO selectById(int id);
+//
+//    void updateDB(CulturalPropertiesDTO culturalPropertiesDTO);
+
+//    int insertDB2(CulturalPropertiesDTO culturalPropertiesDTO);
+
+
+    List<CulturalPropertiesDTO> findAll();
+
+    void deleteDBDataAndKeywords(@Param("list") List<Integer> id);
 }

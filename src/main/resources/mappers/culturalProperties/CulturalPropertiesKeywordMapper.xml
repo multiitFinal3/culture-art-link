@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.multi.culture_link.admin.culturalProperties.model.dao.CulturalPropertiesKeywordDAO">
+
+    <insert id="save" parameterType="culturalPropertiesKeywordDTO">
+        INSERT INTO cultural_properties_content_keyword (cultural_properties_id, keyword)
+        VALUES (#{culturalPropertiesId}, #{keyword})
+    </insert>
+
+    <insert id="saveAll" parameterType="java.util.List">
+        INSERT INTO cultural_properties_content_keyword (cultural_properties_id, keyword)
+        VALUES
+        <foreach item="keyword" collection="list" separator=",">
+            (#{keyword.culturalPropertiesId}, #{keyword.keyword})
+        </foreach>
+    </insert>
+
+    <select id="existsByCulturalPropertiesId" parameterType="int" resultType="boolean">
+        SELECT EXISTS (
+        SELECT 1
+        FROM cultural_properties_content_keyword
+        WHERE cultural_properties_id = #{culturalPropertiesId}
+        )
+    </select>
+
+
+
+
+
+</mapper>
