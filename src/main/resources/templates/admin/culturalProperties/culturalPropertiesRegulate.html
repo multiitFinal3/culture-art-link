@@ -10,6 +10,7 @@
     <!-- Bootstrap JavaScript -->
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
+
     <style>
         #culturalPropertiesRegulate {
             display: flex;
@@ -87,32 +88,107 @@
     }
 
 
-        /* 버튼 스타일링 */
-    .search-btn btn-lg {
-        background-color: #007bff;
-        color: white;
-        border: none;
-        padding: 10px 20px;
-        font-size: 25px;
-        cursor: pointer;
-        border-radius: 5px;
-        transition: background-color 0.3s ease;
-    }
 
-    /* 버튼에 호버 효과 추가 */
-    .search-btn:hover {
-        background-color: #0056b3;
-    }
 
-    /* 검색 옵션 패널 스타일 */
+        .search-options {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    background: none;
+    border: none;
+    padding: 0;
+    box-shadow: none;
+}
+
+.search-options select,
+.search-options input {
+    padding: 5px 10px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+
+}
+
+.search-options select {
+    width: 150px;
+}
+
+.search-options input {
+    width: 120px;
+}
+
+
+/* 열 스타일 제거 */
+.col {
+    padding: 0;
+}
+
+/* 반응형 디자인을 위한 미디어 쿼리 */
+@media (max-width: 768px) {
     .search-options {
-        display: none; /* 초기에는 숨김 */
-        background-color: #f8f9fa;
-        padding: 10px;
-        border: 1px solid #ccc;
-        border-radius: 5px;
-        margin-top: 10px;
+        flex-wrap: wrap;
     }
+
+    .search-options select,
+    .search-options input,
+    .search-options button {
+        flex: 1 0 auto;
+        margin-bottom: 10px;
+    }
+}
+
+        .search-options select:focus,
+.search-options input:focus {
+    border-color: #007bff; /* 파란색 테두리 */
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25); /* 부드러운 그림자 효과 */
+    outline: none; /* 기본 포커스 아웃라인 제거 */
+}
+
+        .button-group {
+    display: flex;
+}
+
+.button-group button {
+    border-radius: 0;
+}
+
+.button-group button:first-child {
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
+}
+
+.button-group button:last-child {
+    border-top-right-radius: 4px;
+    border-bottom-right-radius: 4px;
+}
+
+        .search-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    margin-top: 30px;
+}
+#searchPage2 {
+    width: 200px;
+
+}
+
+        #searchPageBtn{
+        padding: 6px 12px 6px 12px;
+        cursor: pointer;
+        }
+
+         #searchPageBtn:focus {
+    border-color: #007bff; /* 파란색 테두리 */
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25); /* 부드러운 그림자 효과 */
+    outline: none; /* 기본 포커스 아웃라인 제거 */
+}
+
+#reset2 {
+    border-top-right-radius: 4px;
+    border-bottom-right-radius: 4px;
+}
 
 
     </style>
@@ -133,13 +209,14 @@
 
 
         <h2 class="text-center">문화재 DB 현황</h2>
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col d-flex justify-content-start align-items-center">
-                    <button class="search-btn btn-lg" id="toggleOptionsBtn">🔍</button>
+<!--        <div class="container-fluid">-->
+<!--            <div class="row">-->
+<!--                <div class="col d-flex justify-content-start align-items-center">-->
+<!--&lt;!&ndash;                    <button class="search-btn btn-lg" id="toggleOptionsBtn">🔍</button>&ndash;&gt;-->
 
+        <div class="search-container">
                     <div class="search-options" id="searchOptions">
-                        <label>종목:</label>
+<!--                        <label>종목:</label>-->
                         <select id="categoryFilter">
                             <option value="all">전체</option>
                             <option value="국보">국보</option>
@@ -163,29 +240,20 @@
                         <input type="text" id="searchRegion" maxlength="10" placeholder="지역"/>
                         <input type="text" id="searchDynasty" maxlength="10" placeholder="시대"/>
 
-<!--                        <button id="searchDB" class="btn btn-outline-primary ml-3" >검색</button>-->
-<!--                        <button id="reset" class="btn btn-outline-primary ml-3" >초기화</button>-->
-
-<!--                        <button id="searchDB" class="btn btn-primary ml-3" >검색</button>-->
-<!--                        <button id="reset" class="btn btn-primary ml-3" >초기화</button>-->
-
+                        <div class="button-group">
                         <button id="searchDB" class="btn btn-outline-primary" type="button">
                             <img src="https://kr.object.ncloudstorage.com/team3/common/search.png" alt="검색" style="width: 20px; height: 20px;">
                         </button>
                         <button id="reset" class="btn btn-outline-secondary" type="button" style=" margin-right: 10px;">
                             <img src="https://kr.object.ncloudstorage.com/team3/common/x.png" alt="초기화" style="width: 20px; height: 20px;">
                         </button>
+                        </div>
                     </div>
 
-                </div>
-<!--                <div class="col d-flex justify-content-center align-items-center">-->
-<!--                    <h2 class="text-center">문화재 DB 현황</h2>-->
-<!--                    <button type="button" id="deleteDB" class="btn btn-outline-primary ml-3"> 삭제 </button>-->
+<!--                <div class="col d-flex justify-content-end align-items-center">-->
+                    <button type="button" id="deleteDB" class="btn btn-primary ml-3" style="margin-top: 10px;"> 삭제 </button>
 <!--                </div>-->
-                <div class="col d-flex justify-content-end align-items-center">
-                    <button type="button" id="deleteDB" class="btn btn-primary ml-3"> 삭제 </button>
-                </div>
-            </div>
+<!--            </div>-->
         </div>
 
         <table class="table table-striped" id="culturalPropertiesDB">
@@ -229,69 +297,76 @@
 
 
         <h2 class="text-center">전국 문화재 실시간</h2>
-        <div class="container-fluid">
-            <div class="row">
+        <div class="search-container">
+<!--        <div class="container-fluid">-->
+<!--            <div class="row">-->
                 <div class="col d-flex justify-content-start align-items-center">
-                    <button class="search-btn btn-lg" id="toggleOptionsBtn2">🔍</button>
+<!--                    <button class="search-btn btn-lg" id="toggleOptionsBtn2">🔍</button>-->
 
                     <div class="search-options" id="searchOptions2">
                         <input type="text" id="searchPage2" maxlength="10" placeholder="페이지 검색 (1 - 1716)"/>
-                        <button id="searchPageBtn" class="btn btn-outline-primary ml-3" >검색</button>
-                        <br>
-
-                        <label>종목:</label>
-                        <select id="categoryFilter2">
-                            <option value="전체">전체</option>
-                            <option value="category1">국보</option>
-                            <option value="category2">보물</option>
-                            <option value="category3">사적</option>
-                            <option value="category4">사적및명승</option>
-                            <option value="category5">명승</option>
-                            <option value="category6">천연기념물</option>
-                            <option value="category7">국가무형유산</option>
-                            <option value="category8">국가민속문화유산</option>
-                            <option value="category9">시도유형문화유산</option>
-                            <option value="category10">시도무형유산</option>
-                            <option value="category11">시도기념물</option>
-                            <option value="category12">시도민속문화유산</option>
-                            <option value="category13">시도등록유산</option>
-                            <option value="category14">문화유산자료</option>
-                            <option value="category15">국가등록유산</option>
-                            <option value="category16">이북5도 무형유산</option>
-                        </select>
-
-                        <input type="text" id="searchName2" maxlength="20" placeholder="문화재 이름" />
-                        <input type="text" id="searchRegion2" maxlength="10" placeholder="지역"/>
-                        <input type="text" id="searchDynasty2" maxlength="10" placeholder="시대"/>
-
-<!--                        <button id="searchDB2" class="btn btn-outline-primary ml-3" >검색</button>-->
-<!--                        <button id="reset2" class="btn btn-outline-primary ml-3" >초기화</button>-->
-
-<!--                        <button id="searchDB2" class="btn btn-primary ml-3" >검색</button>-->
-<!--                        <button id="reset2" class="btn btn-primary ml-3" >초기화</button>-->
-
-<!--                        <button id="searchDB2" class="btn-outline-primary" type="button">-->
-                        <button id="searchDB2" class="btn-primary" type="button">
+<!--                        <button id="searchPageBtn" class="btn btn-outline-primary ml-3" >검색</button>-->
+                        <div class="button-group">
+                        <button id="searchPageBtn" class="btn-outline-primary" type="button">
                             <img src="https://kr.object.ncloudstorage.com/team3/common/search.png" alt="검색" style="width: 20px; height: 20px;">
                         </button>
-<!--                        <button id="reset2" class="btn btn-outline-secondary" type="button" style=" margin-right: 10px;">-->
-                        <button id="reset2" class="btn btn-secondary" type="button" style=" margin-right: 10px;">
+
+                        <button id="reset2" class="btn btn-outline-secondary" type="button" style=" margin-right: 10px;">
                             <img src="https://kr.object.ncloudstorage.com/team3/common/x.png" alt="초기화" style="width: 20px; height: 20px;">
                         </button>
+                        <br>
+                        </div>
+
+<!--                        <label>종목:</label>-->
+<!--                        <select id="categoryFilter2">-->
+<!--                            <option value="전체">전체</option>-->
+<!--                            <option value="category1">국보</option>-->
+<!--                            <option value="category2">보물</option>-->
+<!--                            <option value="category3">사적</option>-->
+<!--                            <option value="category4">사적및명승</option>-->
+<!--                            <option value="category5">명승</option>-->
+<!--                            <option value="category6">천연기념물</option>-->
+<!--                            <option value="category7">국가무형유산</option>-->
+<!--                            <option value="category8">국가민속문화유산</option>-->
+<!--                            <option value="category9">시도유형문화유산</option>-->
+<!--                            <option value="category10">시도무형유산</option>-->
+<!--                            <option value="category11">시도기념물</option>-->
+<!--                            <option value="category12">시도민속문화유산</option>-->
+<!--                            <option value="category13">시도등록유산</option>-->
+<!--                            <option value="category14">문화유산자료</option>-->
+<!--                            <option value="category15">국가등록유산</option>-->
+<!--                            <option value="category16">이북5도 무형유산</option>-->
+<!--                        </select>-->
+
+<!--                        <input type="text" id="searchName2" maxlength="20" placeholder="문화재 이름" />-->
+<!--                        <input type="text" id="searchRegion2" maxlength="10" placeholder="지역"/>-->
+<!--                        <input type="text" id="searchDynasty2" maxlength="10" placeholder="시대"/>-->
+
+<!--&lt;!&ndash;                        <button id="searchDB2" class="btn btn-outline-primary ml-3" >검색</button>&ndash;&gt;-->
+<!--&lt;!&ndash;                        <button id="reset2" class="btn btn-outline-primary ml-3" >초기화</button>&ndash;&gt;-->
+
+<!--&lt;!&ndash;                        <button id="searchDB2" class="btn btn-primary ml-3" >검색</button>&ndash;&gt;-->
+<!--&lt;!&ndash;                        <button id="reset2" class="btn btn-primary ml-3" >초기화</button>&ndash;&gt;-->
+
+<!--&lt;!&ndash;                        <button id="searchDB2" class="btn-outline-primary" type="button">&ndash;&gt;-->
+<!--                        <button id="searchDB2" class="btn-primary" type="button">-->
+<!--                            <img src="https://kr.object.ncloudstorage.com/team3/common/search.png" alt="검색" style="width: 20px; height: 20px;">-->
+<!--                        </button>-->
+<!--&lt;!&ndash;                        <button id="reset2" class="btn btn-outline-secondary" type="button" style=" margin-right: 10px;">&ndash;&gt;-->
+<!--                        <button id="reset2" class="btn btn-secondary" type="button" style=" margin-right: 10px;">-->
+<!--                            <img src="https://kr.object.ncloudstorage.com/team3/common/x.png" alt="초기화" style="width: 20px; height: 20px;">-->
+<!--                        </button>-->
 
                     </div>
 
                 </div>
-<!--                <div class="col d-flex justify-content-center align-items-center">-->
-<!--                    <h2 class="text-center">전국 문화재 실시간</h2>-->
-<!--                    <button type="button" id="addDB" class="btn btn-outline-primary ml-3">DB 추가</button>-->
-<!--                </div>-->
-                <div class="col d-flex justify-content-end align-items-center">
-                    <button type="button" id="addDB" class="btn btn-primary ml-3">DB 추가</button>
-                </div>
-            </div>
-        </div>
 
+                <div class="col d-flex justify-content-end align-items-center">
+                    <button type="button" id="addDB" class="btn btn-primary ml-3" style="margin-top: 10px;">DB 추가</button>
+                </div>
+<!--            </div>-->
+<!--        </div>-->
+        </div>
 
         <table class="table table-striped" id="culturalPropertiesAPI">
 
