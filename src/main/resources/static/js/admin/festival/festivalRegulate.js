@@ -1005,6 +1005,30 @@ $(document).ready(
         })
 
 
+        $(document).on('click','.pageBtn7', function(){
+
+            findAPIFestivalList(1)
+            .then(()=>{
+                // 1~10까지 보여줌
+                return addShowingBtns(findAPIFestivalCount, 1, '.pageBtn2');
+            })
+            .then(()=>{
+
+                let btns = document.querySelectorAll('.pageBtn2');
+                btns.forEach(function(btn){
+                    if(btn.textContent == "1"){
+                        btn.classList.add('active');
+                    }else{
+                        btn.classList.remove('active');
+                    }
+                })
+            })
+            .catch((error)=>{
+                alert("api 오류")
+            })
+        })
+
+
 
         // 처음 들어가면 1페이지 불러옴
         findAPIFestivalList(1)
