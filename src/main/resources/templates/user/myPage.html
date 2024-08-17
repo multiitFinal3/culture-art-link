@@ -1287,92 +1287,158 @@
                  * 전체 전시 리뷰 내역을 가져옴(페이지 별로)
                  *
                  */
-<!--                function findExhibitionReviewListByPage(page){-->
+                 var eReviewCount = 0;
+                function findExhibitionReviewListByPage(page){
 
-<!--                    console.log("findExhibitionReviewListByPage");-->
+                    console.log("findExhibitionReviewListByPage");
 
-<!--                    $.ajax({-->
+                    $.ajax({
 
-<!--                        url: '/exhibition/user-comment',-->
-<!--                        method: 'GET',-->
-<!--                        contentType: 'application/json',-->
-<!--                        success: function(list){-->
-<!--                            $('#upper').html("");-->
-<!--                            $('#upper').removeClass("scroll")-->
-<!--                            $('#upper').addClass("page")-->
+                        url: '/exhibition/user-comment',
+                        method: 'GET',
+                        contentType: 'application/json',
+                        success: function(list){
+                            $('#upper').html("");
+                            $('#upper').removeClass("scroll")
+                            $('#upper').addClass("page")
 
-<!--                            console.log("리뷰" + list)-->
+                            console.log("리뷰" + list)
 
-<!--                            var reviewHeader = `-->
+                            var reviewHeader = `
 
-<!--                                <div id="reviewListHead">-->
+                                <div id="reviewListHead">
 
-<!--                                    <div id="leftHead">-->
+                                    <div id="leftHead">
 
-<!--                                        <h2 style="display: inline-block;">리뷰</h2>-->
+                                        <h2 style="display: inline-block;">리뷰</h2>
 
-<!--                                        <div id="totalReviewCount" class="mt-3" style="display: inline-block; margin-left: 10px;">-->
-<!--                                            숫자-->
-<!--                                        </div>-->
+                                        <div id="totalReviewCount" class="mt-3" style="display: inline-block; margin-left: 10px;">
+                                            숫자
+                                        </div>
 
-<!--                                    </div>-->
+                                    </div>
 
-<!--                                    <div id="reviewList">-->
+                                    <div id="reviewList">
 
-<!--                                    </div>-->
+                                    </div>
 
-<!--                                    <div id="reviewPages">-->
+                                    <div id="reviewPages">
 
-<!--                                    </div>-->
+                                    </div>
 
-<!--                                </div>-->
+                                </div>
 
-<!--                            `;-->
+                            `;
 
-<!--                            $('#upper').html(reviewHeader);-->
+                            $('#upper').html(reviewHeader);
 
-<!--                            var startIndex = (page -1)*5 + 1;-->
-<!--                            var endIndex = (page)*5;-->
-<!--                            var sliceList = list.slice(startIndex-1, endIndex);-->
+                            var startIndex = (page -1)*5 + 1;
+                            var endIndex = (page)*5;
+                            var sliceList = list.slice(startIndex-1, endIndex);
 
+                            console.log("sliceList");
+                            console.log(sliceList);
 
-<!--                            console.log("sliceList");-->
-<!--                            console.log(sliceList);-->
+                            $.each(sliceList, function(index, review){
 
-<!--                            $.each(sliceList, function(index, review){-->
-<!--                                var reviewIdPlusExhibitionId = review.id + "," + review.exhibitionId;-->
-<!--                                var reviewHtml = ``;-->
-<!--                                var profilePic = ``;-->
-<!--                                var attachment = ``;-->
-<!--                                var actionBtns = ``;-->
-<!--                                var reviewStarHtml = ``;-->
-<!--                                var reviewUserId = review.userId;-->
-<!--                                var reviewStarNum = review.festivalReviewStar;-->
-
-<!--                                if((review.userProfilePic == null) || (review.userProfilePic == "")){-->
-<!--                                    profilePic = `<img src="https://kr.object.ncloudstorage.com/team3/common/noPhoto.png" alt="이미지 없음">`;-->
-<!--                                }else{-->
-<!--                                    profilePic = `<img src="${review.userProfilePic}">`;-->
-<!--                                }-->
-
-<!--                                if((review.attachment == null) || (review.attachment == "")){-->
-<!--                                    attachment = `<img src="https://kr.object.ncloudstorage.com/team3/common/noPhoto.png">`-->
-<!--                                }else{-->
-<!--                                    attachment = `<img src="${review.attachment}">`-->
-<!--                                }-->
+                                var reviewIdPlusExhibitionId = review.id + "," + review.exhibitionId;
+                                var reviewHtml = ``;
+                                var profilePic = ``;
+                                var actionBtns = ``;
+                                var reviewStarHtml = ``;
+                                var reviewStarNum = parseInt(review.stars);
+                                var time = review.updatedAt.replace("T"," ");
 
 
+                                if((review.profileImage == null) || (review.profileImage == "")){
+                                    profilePic = `<img src="https://kr.object.ncloudstorage.com/team3/common/noPhoto.png" alt="이미지 없음">`;
+                                }else{
+                                    profilePic = `<img src="${review.userProfilePic}">`;
+                                }
 
 
+                                actionBtns = `
+                                    <div class="review-actions">
+                                        <button class="update btn btn-outline-success" onclick="location.href='/exhibition/detail/${review.exhibitionId}'">상세</button>
+                                        <button class="deleteBtn2 btn btn-outline-success" value="${reviewIdPlusExhibitionId}">삭제</button>
+                                    </div>
+                                `;
+
+                                for(let i = 1; i <= reviewStarNum; i++){
+                                    var append = `
+                                    <label class="goldStar">★</label>
+                                    `;
+                                    reviewStarHtml += append;
+                                }
+
+                                if(reviewStarNum < 5){
+                                    for(let i = reviewStarNum + 1; i <= 5; i++){
+                                        var append = `
+                                        <label class="emptyStar">★</label>
+                                        `;
+                                        reviewStarHtml += append;
+                                    }
+                                }
 
 
-<!--                            })-->
+                                reviewHtml = `
+
+                                    <div class="review">
+
+                                        <div class="user-info">
+
+                                            ${profilePic}
+
+                                            <div class="user-details">
+
+                                                <span>${review.name}</span>
+
+                                                <span>${time}</span>
+
+                                                <div class="review-rating" data-rating="${reviewStarNum}">
+                                                    ${reviewStarHtml}
+                                                </div>
+
+                                            </div>
+
+                                        </div>
 
 
+                                        <div class="review-content">
+                                            <p class="review-content-p-${review.id} review-content-p">${review.content}</p>
+                                            <div class="review-text-container hide">
+                                                <form id="reviewForm_${review.id}" style="width:100%;">
+                                                    <div class="star-rating2" style="width:100%;">
+                                                        <input type="radio" id="star5_${review.id}" name="reviewStar" value="5" ${review.reviewStarNum == 5? 'checked' : ''}/>
+                                                        <label for="star5_${review.festivalReviewId}">★</label>
+                                                        <input type="radio" id="star4_${review.festivalReviewId}" name="reviewStar" value="4" ${review.reviewStarNum == 4? 'checked' : ''}/>
+                                                        <label for="star4_${review.id}">★</label>
+                                                        <input type="radio" id="star3_${review.id}" name="reviewStar" value="3" ${review.reviewStarNum == 3? 'checked' : ''}/>
+                                                        <label for="star3_${review.id}">★</label>
+                                                        <input type="radio" id="star2_${review.id}" name="reviewStar" value="2" ${review.reviewStarNum == 2? 'checked' : ''}/>
+                                                        <label for="star2_${review.id}">★</label>
+                                                        <input type="radio" id="star1_${review.id}" name="reviewStar" value="1" ${review.reviewStarNum == 1? 'checked' : ''}/>
+                                                        <label for="star1_${review.id}">★</label>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
 
-<!--                        }-->
-<!--                    })-->
-<!--                }-->
+
+                                        ${actionBtns}
+
+                                    </div>
+
+                                `;
+
+                                $('#reviewList').append(reviewHtml);
+
+                            })
+
+                        }
+
+                    })
+                }
 
 
                /**
@@ -1415,7 +1481,7 @@
                         success: function(){
 
                             alert("전시 댓글 삭제 성공");
-                            findFestivalReviewListByPage(1);
+                            $("#review").click()
 
                         },
                         error: function(error){
