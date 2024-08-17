@@ -739,6 +739,17 @@ $(document).ready(
 
         }
 
+        /**
+        * DB 상세 조건 검색에서 초기화 버튼으로 돌아가기 버튼
+        *
+        */
+        $(document).on('click','#resetBtn1', function(){
+
+            document.getElementById('searchForm1').reset();
+
+
+        })
+
 
 
         //#endregion
@@ -1175,6 +1186,21 @@ $(document).ready(
             findAPIFestivalCount(20);
 
         })
+
+
+
+        /**
+        * api 상세 조건 검색에서 초기화 버튼으로 돌아가기 버튼
+        *
+        */
+        $(document).on('click','#resetBtn2', function(){
+
+            document.getElementById('searchForm2').reset();
+
+
+        })
+
+
 
 
         //#endregion
