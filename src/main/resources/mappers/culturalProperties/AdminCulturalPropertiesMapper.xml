@@ -44,44 +44,55 @@
 
 
 
-    <!-- 문화재 db검색 -->
     <select id="searchDBCulturalProperties" resultType="culturalPropertiesDTO">
         SELECT *
         FROM cultural_properties
-        WHERE
-        <if test="category != null and !category.equals('all')">
-            category_name = #{category}
-        </if>
-        <if test="name != null and !name.equals('')">
-            AND cultural_properties_name LIKE CONCAT('%', #{name}, '%')
-        </if>
-        <if test="region != null and !region.equals('')">
-            AND region LIKE CONCAT('%', #{region}, '%')
-        </if>
-        <if test="dynasty != null and !dynasty.equals('')">
-            AND dynasty LIKE CONCAT('%', #{dynasty}, '%')
-        </if>
+        <where>
+            <if test="category != null and category != '' and category != 'all'">
+                category_name = #{category}
+            </if>
+            <if test="name != null and name != ''">
+                <if test="category == null or category == '' or category == 'all'">
+                    cultural_properties_name LIKE CONCAT('%', #{name}, '%')
+                </if>
+                <if test="category != null and category != '' and category != 'all'">
+                    AND cultural_properties_name LIKE CONCAT('%', #{name}, '%')
+                </if>
+            </if>
+            <if test="region != null and region != ''">
+                AND region LIKE CONCAT('%', #{region}, '%')
+            </if>
+            <if test="dynasty != null and dynasty != ''">
+                AND dynasty LIKE CONCAT('%', #{dynasty}, '%')
+            </if>
+        </where>
         LIMIT #{start}, #{end}
     </select>
 
-    <!-- 문화재 db검색 결과의 총 개수 조회 -->
     <select id="searchCountCulturalProperties" resultType="int">
         SELECT COUNT(*)
         FROM cultural_properties
-        WHERE
-        <if test="category != null and !category.equals('all')">
-            category_name = #{category}
-        </if>
-        <if test="name != null and !name.equals('')">
-            AND cultural_properties_name LIKE CONCAT('%', #{name}, '%')
-        </if>
-        <if test="region != null and !region.equals('')">
-            AND region LIKE CONCAT('%', #{region}, '%')
-        </if>
-        <if test="dynasty != null and !dynasty.equals('')">
-            AND dynasty LIKE CONCAT('%', #{dynasty}, '%')
-        </if>
+        <where>
+            <if test="category != null and category != '' and category != 'all'">
+                category_name = #{category}
+            </if>
+            <if test="name != null and name != ''">
+                <if test="category == null or category == '' or category == 'all'">
+                    cultural_properties_name LIKE CONCAT('%', #{name}, '%')
+                </if>
+                <if test="category != null and category != '' and category != 'all'">
+                    AND cultural_properties_name LIKE CONCAT('%', #{name}, '%')
+                </if>
+            </if>
+            <if test="region != null and region != ''">
+                AND region LIKE CONCAT('%', #{region}, '%')
+            </if>
+            <if test="dynasty != null and dynasty != ''">
+                AND dynasty LIKE CONCAT('%', #{dynasty}, '%')
+            </if>
+        </where>
     </select>
+
 
 
 

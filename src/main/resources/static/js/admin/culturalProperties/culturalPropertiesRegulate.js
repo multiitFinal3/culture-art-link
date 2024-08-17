@@ -56,6 +56,12 @@ $(document).ready(function() {
     function renderPagination1(currentPage1, totalPages1) {
         $('#paginationSection1').empty(); // 기존 버튼 제거
 
+        // 처음 버튼
+        var firstHtml = '<li class="page-item ' + (currentPage1 == 1 ? 'disabled' : '') + '">' +
+            '<a class="page-link first-link" href="#" data-page="1">처음</a>' +
+            '</li>';
+        $('#paginationSection1').append(firstHtml);
+
         // 이전 버튼
         var prevHtml = '<li class="page-item ' + (currentPage1 == 1 ? 'disabled' : '') + '">' +
             '<a class="page-link prev-link" href="#" data-page="' + (currentPage1 - 1) + '">이전</a>' +
@@ -79,6 +85,12 @@ $(document).ready(function() {
             '</li>';
         $('#paginationSection1').append(nextHtml);
 
+        // 마지막 버튼
+        var lastHtml = '<li class="page-item ' + (currentPage1 >= totalPages1 ? 'disabled' : '') + '">' +
+            '<a class="page-link last-link" href="#" data-page="' + totalPages1 + '">마지막</a>' +
+            '</li>';
+        $('#paginationSection1').append(lastHtml);
+
         // 페이지 번호 클릭 이벤트 처리
         $('.page-link').on('click', function(e) {
             e.preventDefault();
@@ -99,6 +111,13 @@ $(document).ready(function() {
     // 페이지 버튼 생성 함수
     function renderPagination2() {
         $('#paginationSection2').empty(); // 기존 버튼 제거
+
+
+         // 처음 버튼
+        var firstHtml = '<li class="page-item ' + (currentPage2 == 1 ? 'disabled' : '') + '">' +
+            '<a class="page-link first-link" href="#" data-page="1">처음</a>' +
+            '</li>';
+        $('#paginationSection2').append(firstHtml);
 
         // 이전 버튼
         var prevHtml = '<li class="page-item ' + (currentPage2 == 1 ? 'disabled' : '') + '">' +
@@ -123,8 +142,18 @@ $(document).ready(function() {
             '</li>';
         $('#paginationSection2').append(nextHtml);
 
+
+        // 마지막 버튼
+        var lastHtml = '<li class="page-item ' + (currentPage2 >= totalPages2 ? 'disabled' : '') + '">' +
+            '<a class="page-link last-link" href="#" data-page="' + totalPages2 + '">마지막</a>' +
+            '</li>';
+        $('#paginationSection2').append(lastHtml);
+
+
+
         // 데이터가 있는 페이지의 체크박스 비활성화 처리
         disableCheckboxes();
+
     }
 
     // Ajax를 통해 API 데이터 불러오기
@@ -321,15 +350,14 @@ $(document).ready(function() {
         });
     }
 
-
-
     // 페이지 버튼 클릭 이벤트
-    $(document).on('click', '.page-num2, .prev-link, .next-link', function(e) {
+    $(document).on('click', '.page-num2, .prev-link, .next-link, .first-link, .last-link', function(e) {
         e.preventDefault();
         var pageIndex = parseInt($(this).attr('data-page'));
-        currentPage2 = pageIndex; // 클릭된 페이지를 현재 페이지로 설정
-        fetchApiData(pageIndex); // 데이터 불러오기
-
+        if (!isNaN(pageIndex) && pageIndex !== currentPage2) {
+            currentPage2 = pageIndex; // 클릭된 페이지를 현재 페이지로 설정
+            fetchApiData(pageIndex); // 데이터 불러오기
+        }
     });
 
     // 전체 선택 체크박스 클릭 이벤트 (DB 현황)
@@ -911,15 +939,17 @@ $(document).ready(function() {
     $('#reset').on('click', function() {
         // 검색 필터 초기화
         $('#categoryFilter').val('all');
+//        $('#categoryFilter').val('');
         $('#searchName').val('');
         $('#searchRegion').val('');
         $('#searchDynasty').val('');
 
-        // 기본 데이터 로드
-        findListPage(currentPage, 10);
 
-        renderPagination1(currentPage, totalPages);
-        getDBData(1);
+        currentPage = 1;
+
+        getDBData(currentPage);
+        findListPage(currentPage, 10);
+        renderPagination1(currentPage1, totalPages1);
 
 
     });
@@ -929,7 +959,8 @@ $(document).ready(function() {
             url: '/admin/cultural-properties-regulate/searchDB',
             method: 'POST',
             data: {
-                category: category,
+//                category: category,
+                category: category === 'all' ? '' : category,
                 name: name,
                 region: region,
                 dynasty: dynasty,
@@ -1031,12 +1062,14 @@ $(document).ready(function() {
     $('#reset').on('click', function() {
         // 검색 필터 초기화
         $('#categoryFilter').val('all');
+//        $('#categoryFilter').val('');
         $('#searchName').val('');
         $('#searchRegion').val('');
         $('#searchDynasty').val('');
 
         // 첫 페이지 로드
         searchDBCulturalProperties('all', '', '', '', 1, 0); // totalCount가 0이어도 처리할 수 있어야 함
+//        searchDBCulturalProperties('', '', '', '', 1, 0);
     });
 
 
