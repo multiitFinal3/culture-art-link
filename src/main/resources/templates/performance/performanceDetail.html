@@ -242,18 +242,23 @@
                                 <span th:text="${review.userName}"></span>
                                 <!-- 작성 날짜 표시 -->
                                 <span class="review-date" style="font-size: 12px; color: #757575;" th:text="${#dates.format(review.reviewDate, 'yyyy-MM-dd')}"></span>
-                                <div class="review-rating">
-                                    <span class="review-star" th:each="i : ${#numbers.sequence(1, review.starRating)}">&#9733;</span>
-                                    <span class="review-star empty" th:each="i : ${#numbers.sequence(review.starRating + 1, 5)}">&#9734;</span>
+
+                                <div class="review-rating" th:attr="data-rating=${review.starRating}">
+                                    <!-- 별점 표시 -->
+                                    <span th:each="i : ${#numbers.sequence(1, 5)}"
+                                          th:text="${i <= review.starRating ? '★' : '☆'}"
+                                          th:classappend="${i <= review.starRating ? 'review-star' : 'review-star empty'}"></span>
                                 </div>
                             </div>
                         </div>
+
+
                         <div class="review-content">
                             <p th:text="${review.content}" class="review-text"></p>
                             <div class="review-text-container">
                                 <textarea th:id="'editContent-' + ${review.id}" rows="5" style="display:none;" th:text="${review.content}"></textarea>
                             </div>
-                            <input type="number" th:id="'editStar-' + ${review.id}" min="1" max="5" style="display:none;" th:value="${review.star}" />
+                            <input type="number" th:id="'editStar-' + ${review.id}" min="1" max="5" style="display:none;" th:value="${review.starRating}" />
                         </div>
                         <div class="review-actions" th:if="${review.userId == userId}">
                             <button type="button" class="btn btn-outline-success" th:id="'edit-btn-' + ${review.id}" th:data-id="${review.id}" th:data-cultural-id="${review.performanceId}">수정</button>
@@ -261,7 +266,10 @@
                             <button type="button" class="btn btn-outline-success" th:id="'save-btn-' + ${review.id}" style="display:none;" th:data-id="${review.id}" th:data-cultural-id="${review.performanceId}">저장</button>
                             <button type="button" class="btn btn-outline-success" th:id="'cancel-btn-' + ${review.id}" style="display:none;">취소</button>
                         </div>
+
+
                     </div>
+
                 </div>
             </div>
         </div>

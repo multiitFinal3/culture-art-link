@@ -1,29 +1,35 @@
 document.addEventListener("DOMContentLoaded", function() {
-        loadReviews(); // 페이지 로드 시 리뷰 로드
-        setupEventListeners(); // 이벤트 리스너 설정
-        checkLikeState(); // 초기 좋아요/싫어요 상태 확인
+    loadReviews(); // 페이지 로드 시 리뷰 로드
+    setupEventListeners(); // 이벤트 리스너 설정
+    checkLikeState(); // 초기 좋아요/싫어요 상태 확인
 
-        // 별점 선택 이벤트 설정
-        document.querySelectorAll('.star-rating .star').forEach(star => {
-            star.addEventListener('click', function() {
-                // 모든 별의 'selected' 클래스를 제거
-                document.querySelectorAll('.star-rating .star').forEach(s => {
-                    s.classList.remove('selected');
-                });
+    // 별점 선택 이벤트 설정
+    document.querySelectorAll('.star-rating .star').forEach(star => {
+        star.addEventListener('click', function() {
+            const ratingValue = parseInt(this.getAttribute('data-value')); // 선택한 별의 값을 가져옴
 
-                // 선택된 별까지 'selected' 클래스를 추가
-                this.classList.add('selected');
-                let previousStar = this.previousElementSibling;
-                while (previousStar) {
-                    previousStar.classList.add('selected');
-                    previousStar = previousStar.previousElementSibling;
-                }
-
-                // 선택된 별의 값을 hidden input에 설정
-                document.getElementById('selectedRating').value = this.getAttribute('data-value');
+            // 모든 별의 'selected' 클래스를 제거
+            document.querySelectorAll('.star-rating .star').forEach(s => {
+                s.classList.remove('selected');
             });
+
+            // 선택된 별까지 'selected' 클래스를 추가 (왼쪽에서 오른쪽으로)
+            let currentStar = this;
+            while (currentStar) {
+                currentStar.classList.add('selected');
+                currentStar = currentStar.nextElementSibling; // 이전 별로 이동
+            }
+
+            // 선택된 별의 값을 hidden input에 설정 (반전 값 저장)
+            document.getElementById('selectedRating').value = 6 - ratingValue;
         });
     });
+});
+
+
+
+
+
 
     // 지도 초기화 함수
     async function initMap(location) {
@@ -108,14 +114,18 @@ document.addEventListener("DOMContentLoaded", function() {
                     reviewElement.classList.add("review");
                     reviewElement.setAttribute("data-id", review.id);  // data-id 속성 추가
 
+
+                    console.log("Review ID:", review.id, "Star:", review.starRating);
+                        // 여기서 `review.star` 데이터가 제대로 로딩되고 있는지 확인합니다.
+
                     reviewElement.innerHTML = `
                         <div class="user-info">
-                            <img src="${review.userProfileImage ? `/img/user/userProfile/${review.userProfileImage}` : '/img/festival/noPhoto.png'}" alt="${review.userName}">
+                            <img src="${review.userProfileImage ? 'https://kr.object.ncloudstorage.com/team3' + review.userProfileImage : 'https://kr.object.ncloudstorage.com/team3/img/festival/noPhoto.png'}" alt="${review.userName}">
                             <div class="user-details">
                                 <span>${review.userName}</span>
                                 <span class="review-date" style="font-size: 12px; color: #757575;">${new Date(review.createdAt).toLocaleDateString()}</span>
-                                <div class="review-rating" data-rating="${review.star}">
-                                    ${"&#9733;".repeat(review.star)}${"&#9734;".repeat(5 - review.star)}
+                                <div class="review-rating" data-rating="${review.starRating}">
+                                    ${"&#9733;".repeat(review.starRating)}${"&#9734;".repeat(5 - review.starRating)}
                                 </div>
                             </div>
                         </div>
@@ -124,7 +134,7 @@ document.addEventListener("DOMContentLoaded", function() {
                             <div class="review-text-container">
                                 <textarea id="editContent-${review.id}" rows="5" style="display:none;">${review.content}</textarea>
                             </div>
-                            <input type="number" id="editStar-${review.id}" min="1" max="5" style="display:none;" value="${review.star}" />
+                            <input type="number" id="editStar-${review.id}" min="1" max="5" style="display:none;" value="${review.starRating}" />
                         </div>
                         ${review.userId === userId ? `
                         <div class="review-actions">
@@ -134,6 +144,7 @@ document.addEventListener("DOMContentLoaded", function() {
                             <button id="cancel-btn-${review.id}" style="display:none;" onclick="cancelEdit(${review.id})">취소</button>
                         </div>` : ''}
                     `;
+
 
                     reviewsContainer.appendChild(reviewElement);
                 });
