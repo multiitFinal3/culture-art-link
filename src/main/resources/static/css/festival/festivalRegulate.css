@@ -12,8 +12,6 @@
         align-items: center;
         justify-content: center;
         margin-top: 8%;
-        margin-left: 5%;
-        margin-right: 5%;
     }
 
     table{
@@ -26,7 +24,6 @@
     table, th, td{
 
         border: 1px solid black;
-        width: 100px;
 
 
     }
@@ -36,7 +33,8 @@
 
     th, td{
         text-align : center;
-        width: 150px;
+        min-width: 50px;
+        max-width: 100px;
     }
 
 
@@ -53,13 +51,11 @@
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
-        max-width: 100px;
     }
 
 
     td#festivalContent, td#festivalName{
 
-        width: 400px;
 
     }
 
@@ -94,6 +90,7 @@
     .pageBtn1,
     .pageBtn2,
     .pageBtn3,
+    .pageBtn4,
     .pageBtn5,
     .pageBtn6{
         width: 45px;
@@ -119,7 +116,7 @@
     .pageBtn4, .pageBtn6{
         margin: 0.9%;
         color: black;
-        width: 60px;
+        width: 80px;
 
     }
 
@@ -145,13 +142,13 @@
 
     .checkHead{
 
-        width: 50px;
+
 
     }
 
     .buttonHead{
 
-        max-width: 300px;
+
 
 
     }
@@ -163,15 +160,42 @@
 
     }
 
-    input, optgroup, select, textarea {
-        margin: 0;
-        font-family: inherit;
-        font-size: inherit;
-        line-height: inherit;
+
+   /* 필터 컨테이너 */
+   .filter-container {
+       display: flex;
+       justify-content: space-between;
+       margin: 20px 0;
+   }
+
+
+    select,input{
+
+        max-width: 100px;
         border: 1px solid #ced4da;
         border-radius: 0px;
         color: #495057;
+        height: 40px;
+
     }
 
+    input.check1,
+    input.check2{
 
+        width: 13px;
+
+    }
+
+    .imgUrl,
+    .buttonHead{
+
+        min-width: 150px;
+
+    }
+
+    .filter-container {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
 

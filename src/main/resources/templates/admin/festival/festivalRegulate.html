@@ -13,79 +13,79 @@
 <body>
 <div layout:fragment="content2">
 
-
-
     <div id="festivalRegulate">
+
         <!-- Modal : db 상세 검색 -->
-        <div class="modal fade" id="searchModal1" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLongTitle1">검색 조건</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
+<!--        <div class="modal fade" id="searchModal1" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">-->
+<!--            <div class="modal-dialog modal-dialog-centered" role="document">-->
+<!--                <div class="modal-content">-->
+<!--                    <div class="modal-header">-->
+<!--                        <h5 class="modal-title" id="exampleModalLongTitle1">검색 조건</h5>-->
+<!--                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">-->
+<!--                            <span aria-hidden="true">&times;</span>-->
+<!--                        </button>-->
+<!--                    </div>-->
+<!--                    <div class="modal-body">-->
+
+<!--                        -->
+
+
+
+<!--                    </div>-->
+<!--                    <div class="modal-footer">-->
+<!--                        <button id="close1" type="button" class="btn btn-outline-secondary" data-dismiss="modal">Close</button>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+        <h2>축제 DB 현황</h2>
+
+            <div>
+
+                <form id="searchForm1" name="searchForm1">
+
+                    <div id="inputGroup1" class="filter-container">
+
+                        <select name="regionId" id="searchRegion1"></select>
+                        <select name="timeId" id="searchTime1"></select>
+                        <input name="festivalName" id="festivalName1" type="text" placeholder="축제 이름">
+                        <input name="festivalContent" id="festivalContent1" cols="55" rows="10" placeholder="내용 키워드">
+                        <input class="autoWidth" name="manageInstitution" id="manageInstitution1" type="text" placeholder="주체기관">
+                         <input name="place" id="place1" type="text" placeholder="장소">
+                        <input name="formattedStart" id="formattedStart1" type="date" placeholder="시작일">
+                        <input name="formattedEnd" id="formattedEnd1" type="date" placeholder="종료일">
+                        <input name="avgRate" id="avgRate1" type="number" step="0.1" placeholder="최소 별점">
+                        <select name="season" id="searchSeason1">
+                        <option value="">계절</option>
+                        <option value="봄">봄</option>
+                        <option value="여름">여름</option>
+                        <option value="가을">가을</option>
+                        <option value="겨울">겨울</option>
+                                </select>
+
+                        <button type="button" id="searchBtn1" class="btn btn-outline-primary ml-3"><img src="https://kr.object.ncloudstorage.com/team3/common/search.png" style="width : 20px; height: 20px;"></button>
+                        <button id="dbDeleteBtn" class="btn btn-primary">삭제</button>
+
                     </div>
-                    <div class="modal-body">
 
-                        <form id="searchForm1" name="searchForm1">
+                </form>
 
-                            지역 번호 : <select name="regionId" id="searchRegion1">
-                                        </select><br><br>
-                            시간대 : <select name="timeId" id="searchTime1">
-                                    </select><br><br>
-                            축제 이름 : <input name="festivalName" id="festivalName1" type="text"><br><br>
-                            내용 키워드<br><textarea name="festivalContent" id="festivalContent1" cols="55" rows="10"></textarea><br><br>
-                            주체기관 : <input class="autoWidth" name="manageInstitution" id="manageInstitution1" type="text"><br><br>
-                            주관기관 : <input class="autoWidth" name="hostInstitution" id="hostInstitution1" type="text"><br><br>
-                            후원기관 : <input class="autoWidth" name="sponserInstitution" id="sponserInstitution1" type="text"><br><br>
-                            전화번호 : <input name="tel" id="tel1" type="text"><br><br>
-                            장소 : <input name="place" id="place1" type="text"><br><br>
-                            시작일 : <input name="formattedStart" id="formattedStart1" type="date"><br><br>
-                            종료일 : <input name="formattedEnd" id="formattedEnd1" type="date"><br><br>
-                            최소 별점 : <input name="avgRate" id="avgRate1" type="number" step="0.1"><br><br>
-                            계절: <select name="season" id="searchSeason1">
-                                    <option value="">선택안함</option>
-                                    <option value="봄">봄</option>
-                                    <option value="여름">여름</option>
-                                    <option value="가을">가을</option>
-                                    <option value="겨울">겨울</option>
-                                 </select><br><br>
-
-                            <button type="button" id="searchBtn1" class="btn btn-outline-primary ml-3">검색</button>
-
-                        </form>
-
-
-
-                    </div>
-                    <div class="modal-footer">
-                        <button id="close1" type="button" class="btn btn-outline-secondary" data-dismiss="modal">Close</button>
-                    </div>
-                </div>
             </div>
-        </div>
-        <h2>축제 DB 현황
-            <button id="search1" type="button" class="btn btn-outline-primary ml-3" data-toggle="modal" data-target="#searchModal1">
-                <img src="https://kr.object.ncloudstorage.com/team3/common/search.png" style="width : 20px; height: 20px;">
-            </button>
-            <button id="dbDeleteBtn" class="btn btn-primary">삭제</button></h2>
+
         <table class="table table-striped" id="festivalDB">
 
             <thead class="table-light">
             <tr>
                 <th scope="col" class="checkHead">체크</th>
                 <th scope="col">#</th>
-                <th scope="col">DB번호</th>
+                <th scope="col">DB</th>
                 <th scope="col">지역</th>
                 <th scope="col">시간</th>
                 <th scope="col">이름</th>
                 <th scope="col">설명</th>
                 <th scope="col">주관</th>
-                <th scope="col">주체</th>
-                <th scope="col">후원</th>
                 <th scope="col">번호</th>
-                <th scope="col">홈페이지</th>
+                <th scope="col">홈</th>
                 <th scope="col">주소</th>
                 <th scope="col">장소</th>
                 <th scope="col">시작</th>
@@ -103,7 +103,6 @@
         </table>
         <div id="pageNum1"></div>
 
-
         <!-- Modal -->
         <div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
             <div class="modal-dialog" role="document">
@@ -118,52 +117,53 @@
                         ...
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-outline-success" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Close</button>
                     </div>
                 </div>
             </div>
         </div>
 
-
-        <br><br><br><br><br><br>
+        <br><br><br><br>
         <!-- 전국축제 api 실시간 검색 조건 Modal -->
-        <div class="modal fade" id="searchModal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLongTitle2">실시간 축제 검색조건</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <form id="searchForm2" name="searchForm2">
-                            <h3>입력값 정확 일치</h3>
-                            축제 이름 : <input name="festivalName" type="text"><br><br>
-                            주체기관 : <input class="autoWidth" name="manageInstitution" type="text"><br><br>
-                            주관기관 : <input class="autoWidth" name="hostInstitution" type="text"><br><br>
-                            후원기관 : <input class="autoWidth" name="sponserInstitution" type="text"><br><br>
-                            전화번호 : <input name="tel" type="text"><br><br>
-                            장소 : <input name="place" type="text"><br><br>
-                            시작일 : <input name="formattedStart" type="date"><br><br>
-                            종료일 : <input name="formattedEnd" type="date"><br><br>
+<!--        <div class="modal fade" id="searchModal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">-->
+<!--            <div class="modal-dialog modal-dialog-centered" role="document">-->
+<!--                <div class="modal-content">-->
+<!--                    <div class="modal-header">-->
+<!--                        <h5 class="modal-title" id="exampleModalLongTitle2">실시간 축제 검색조건</h5>-->
+<!--                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">-->
+<!--                            <span aria-hidden="true">&times;</span>-->
+<!--                        </button>-->
+<!--                    </div>-->
+<!--                    <div class="modal-body">-->
+<!--                       -->
+<!--                    </div>-->
+<!--                    <div class="modal-footer">-->
+<!--                        <button id="close2" type="button" class="btn btn-outline-secondary" data-dismiss="modal">Close</button>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+    <h2>전국 축제 실시간</h2>
+        <div>
 
-                            <button type="button" id="searchBtn2" class="btn btn-outline-primary ml-3">검색</button>
+            <form id="searchForm2" name="searchForm2">
+                <div id="inputGroup2" class="filter-container">
 
-                        </form>
-                    </div>
-                    <div class="modal-footer">
-                        <button id="close2" type="button" class="btn btn-outline-secondary" data-dismiss="modal">Close</button>
-                    </div>
+                    <input name="festivalName" type="text" placeholder="축제 이름">
+                    <input class="autoWidth" name="manageInstitution" type="text" placeholder="주관기관">
+                    <input name="place" type="text" placeholder="장소">
+                    <input name="formattedStart" type="date">
+                    <input name="formattedEnd" type="date">
+
+                    <button type="button" id="searchBtn2" class="btn btn-outline-primary ml-3"><img src="https://kr.object.ncloudstorage.com/team3/common/search.png" style="width : 20px; height: 20px;"></button>
+                    <button id="apiInsertBtn" class="btn btn-primary">추가</button>
+
                 </div>
-            </div>
-        </div>
-        <h2>전국 축제 실시간
+            </form>
 
-            <button id="search2" type="button" class="btn btn-outline-primary ml-3" data-toggle="modal" data-target="#searchModal2">
-                <img src="https://kr.object.ncloudstorage.com/team3/common/search.png" style="width : 20px; height: 20px;">
-            </button>
-            <button id="apiInsertBtn" class="btn btn-primary">추가</button></h2>
+        </div>
+
+
         <table class="table table-striped" id="festivalAPI">
 
             <thead class="table-light">
@@ -175,8 +175,6 @@
                 <th scope="col">이름</th>
                 <th scope="col">설명</th>
                 <th scope="col">주관</th>
-                <th scope="col">주체</th>
-                <th scope="col">후원</th>
                 <th scope="col">번호</th>
                 <th scope="col">홈페이지</th>
                 <th scope="col">주소</th>

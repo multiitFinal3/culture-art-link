@@ -40,7 +40,7 @@ $(document).ready(
 
                             <tr>
 
-                                <td class="buttonHead">
+                                <td class="checkHead">
                                     <input class="check1" type="checkbox" name="index" value="${festival.festivalId}"/><br>
                                 </td>
                                 <td class="index1" style="width : 20px; height: 20px;">${index1}</td>
@@ -50,8 +50,6 @@ $(document).ready(
                                 <td class="festivalName" title="${festival.festivalName}">${festival.festivalName}</td>
                                 <td class="festivalContent" title="${festival.festivalContent}">${festival.festivalContent}</td>
                                 <td class="manageInstitution" title="${festival.manageInstitution}">${festival.manageInstitution}</td>
-                                <td class="hostInstitution" title="${festival.hostInstitution}">${festival.hostInstitution}</td>
-                                <td class="sponserInstitution" title="${festival.sponserInstitution}">${festival.sponserInstitution}</td>
                                 <td class="tel" title="${festival.tel}">${festival.tel}</td>`;
 
                         var htmlContent12 =``;
@@ -98,11 +96,11 @@ $(document).ready(
                             htmlContent2= `
                             <td class="imgUrl"></td>
                             <td class="buttonHead">
-                                <button type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#exampleModalLong" id="dbUpdateBtn" value="${festival.festivalId}">상세수정</button><br><hr>
-                                <button type="button" class="btn btn-outline-success contentKeywordInsertBtn" value="${festival.festivalId}">내용</button>
-                                <button type="button" class="btn btn-outline-success naverArticleKeywordInsertBtn" value="${festival.festivalId}">기사</button><br><br>
-                                <button type="button" class="btn btn-outline-success naverBlogKeywordInsertBtn" value="${festival.festivalId}">블로그</button>
-                                <button type="button" class="btn btn-outline-success reviewKeywordInsertBtn" value="${festival.festivalId}">리뷰</button><br>
+                                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalLong" id="dbUpdateBtn" value="${festival.festivalId}">상세수정</button><br><hr>
+                                <button type="button" class="btn btn-primary contentKeywordInsertBtn" value="${festival.festivalId}">내용</button>
+                                <button type="button" class="btn btn-primary naverArticleKeywordInsertBtn" value="${festival.festivalId}">기사</button><br><br>
+                                <button type="button" class="btn btn-primary naverBlogKeywordInsertBtn" value="${festival.festivalId}">블로그</button>
+                                <button type="button" class="btn btn-primary reviewKeywordInsertBtn" value="${festival.festivalId}">리뷰</button><br>
                             </td>
                             </tr>
                             `
@@ -110,14 +108,14 @@ $(document).ready(
                         }else{
 
                              htmlContent2 = `
-                             <td class="imgUrl" style="min-width: 150px;"><img src="${festival.imgUrl}" alt="이미지 없음" style="width: 100%;
+                             <td class="imgUrl"><img src="${festival.imgUrl}" alt="이미지 없음" style="width: 100%;
                              height: 150px"></td>
                              <td class="buttonHead">
-                                 <button type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#exampleModalLong" id="dbUpdateBtn" value="${festival.festivalId}">상세수정</button><br><hr>
-                                 <button type="button" class="btn btn-outline-success contentKeywordInsertBtn" value="${festival.festivalId}">내용</button>
-                                 <button type="button" class="btn btn-outline-success naverArticleKeywordInsertBtn" value="${festival.festivalId}">기사</button><br><br>
-                                 <button type="button" class="btn btn-outline-success naverBlogKeywordInsertBtn" value="${festival.festivalId}">블로그</button>
-                                 <button type="button" class="btn btn-outline-success reviewKeywordInsertBtn" value="${festival.festivalId}">리뷰</button><br>
+                                 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalLong" id="dbUpdateBtn" value="${festival.festivalId}">상세수정</button><br><hr>
+                                 <button type="button" class="btn btn-primary contentKeywordInsertBtn" value="${festival.festivalId}">내용</button>
+                                 <button type="button" class="btn btn-primary naverArticleKeywordInsertBtn" value="${festival.festivalId}">기사</button><br><br>
+                                 <button type="button" class="btn btn-primary naverBlogKeywordInsertBtn" value="${festival.festivalId}">블로그</button>
+                                 <button type="button" class="btn btn-primary reviewKeywordInsertBtn" value="${festival.festivalId}">리뷰</button><br>
                              </td>
                              </tr>
                             `
@@ -395,7 +393,7 @@ $(document).ready(
                                 <img src="${festival.imgUrl}" width="400px" alt="이미지 없음"><br>
                                 이미지 소스:  <input class="autoWidth" name="imgUrl" type="text" value="${festival.imgUrl}"><br><br>
 
-                                <button type="submit" id="updateSubmitBtn" class="btn btn-outline-success">수정내용 제출</button>
+                                <button type="submit" id="updateSubmitBtn" class="btn btn-outline-primary ml-3">수정내용 제출</button>
 
                             </form>
 
@@ -411,10 +409,11 @@ $(document).ready(
 
         })
 
-        /**
-       * db 다중조건 검색 모달 클릭
-       */
-         $(document).on('click','#search1', function(){
+       /**
+      * 검색 인풋값 가져오기
+      *
+      */
+       function findAllRegionAndTime(){
 
             $.ajax({
 
@@ -427,7 +426,7 @@ $(document).ready(
                     var list2 = map.timeList;
 
                     $('#searchRegion1').html("");
-                    $('#searchRegion1').append(`<option value="">선택안함</option>`);
+                    $('#searchRegion1').append(`<option value="">지역</option>`);
 
                     $.each(list1, function(index, region){
 
@@ -437,7 +436,7 @@ $(document).ready(
                     })
 
                     $('#searchTime1').html("");
-                    $('#searchTime1').append(`<option value="">선택 안함</option>`);
+                    $('#searchTime1').append(`<option value="">시간대</option>`);
 
                     $.each(list2, function(index, time){
 
@@ -450,7 +449,9 @@ $(document).ready(
 
             })
 
-        })
+       }
+
+       findAllRegionAndTime();
 
         /**
        * db 다중조건을 이용힌 검색 버튼 클릭
@@ -545,7 +546,7 @@ $(document).ready(
 
                             <tr>
 
-                                <td class="buttonHead">
+                                <td class="checkHead">
                                     <input class="check1" type="checkbox" name="index" value="${festival.festivalId}"/><br>
                                 </td>
                                 <td class="index1" style="width : 20px; height: 20px;">${index1}</td>
@@ -555,8 +556,6 @@ $(document).ready(
                                 <td class="festivalName" title="${festival.festivalName}">${festival.festivalName}</td>
                                 <td class="festivalContent" title="${festival.festivalContent}">${festival.festivalContent}</td>
                                 <td class="manageInstitution" title="${festival.manageInstitution}">${festival.manageInstitution}</td>
-                                <td class="hostInstitution" title="${festival.hostInstitution}">${festival.hostInstitution}</td>
-                                <td class="sponserInstitution" title="${festival.sponserInstitution}">${festival.sponserInstitution}</td>
                                 <td class="tel" title="${festival.tel}">${festival.tel}</td>`;
 
                         var htmlContent12 =``;
@@ -617,7 +616,7 @@ $(document).ready(
                              htmlContent2 = `
                              <td class="imgUrl" style="min-width: 150px;"><img src="${festival.imgUrl}" alt="이미지 없음" style="width: 100%;height:150px"></td>
                              <td class="buttonHead">
-                                 <button type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#exampleModalLong" id="dbUpdateBtn" value="${festival.festivalId}">상세수정</button><br><hr>
+                                 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalLong" id="dbUpdateBtn" value="${festival.festivalId}">상세수정</button><br><hr>
                                  <button type="button" class="btn btn-primary contentKeywordInsertBtn" value="${festival.festivalId}">내용</button>
                                  <button type="button" class="btn btn-primary naverArticleKeywordInsertBtn" value="${festival.festivalId}">기사</button><br><br>
                                  <button type="button" class="btn btn-primary naverBlogKeywordInsertBtn" value="${festival.festivalId}">블로그</button>
@@ -686,12 +685,6 @@ $(document).ready(
                    avgRate : avgRate,
                    season : season
            };
-
-
-
-
-
-
 
             $.ajax({
 
@@ -808,8 +801,6 @@ $(document).ready(
                                 <td class="festivalName" title="${festival.festivalName}">${festival.festivalName}</td>
                                 <td class="festivalContent" title="${festival.festivalContent}">${festival.festivalContent}</td>
                                 <td class="manageInstitution" title="${festival.manageInstitution}">${festival.manageInstitution}</td>
-                                <td class="hostInstitution" title="${festival.hostInstitution}">${festival.hostInstitution}</td>
-                                <td class="sponserInstitution" title="${festival.sponserInstitution}">${festival.sponserInstitution}</td>
                                 <td class="tel" title="${festival.tel}">${festival.tel}</td>`;
 
                         var htmlContent12 =``;
@@ -978,19 +969,26 @@ $(document).ready(
           */
          $(document).on('click','#searchBtn2', function(){
 
-            var data = $("#searchForm2").serializeArray();
+           var festivalName = $('#festivalName').val();
+           var manageInstitution = $('#manageInstitution').val();
+           var place = $('#place').val();
+           var formattedStart = $('#formattedStart').val();
+           var formattedEnd = $('#formattedEnd').val();
+
+           var data = {
+
+                   festivalName : festivalName,
+                   manageInstitution : manageInstitution,
+                   place : place,
+                   formattedStart : formattedStart,
+                   formattedEnd : formattedEnd
+           };
 
             console.log("폼 : ");
-
             console.log(data);
-
 
             findAPIFestivalByMultiple(data,1);
             findAPIFestivalMultipleCount(data);
-
-            // 다중 조건 검색 모달 닫기
-            $('#close2').click();
-
          })
 
 
@@ -1049,8 +1047,6 @@ $(document).ready(
                                 <td class="festivalName" title="${festival.festivalName}">${festival.festivalName}</td>
                                 <td class="festivalContent" title="${festival.festivalContent}">${festival.festivalContent}</td>
                                 <td class="manageInstitution" title="${festival.manageInstitution}">${festival.manageInstitution}</td>
-                                <td class="hostInstitution" title="${festival.hostInstitution}">${festival.hostInstitution}</td>
-                                <td class="sponserInstitution" title="${festival.sponserInstitution}">${festival.sponserInstitution}</td>
                                 <td class="tel" title="${festival.tel}">${festival.tel}</td>`;
 
                         var htmlContent12 =``;
