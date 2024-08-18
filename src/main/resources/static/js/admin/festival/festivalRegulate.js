@@ -13,7 +13,6 @@ $(document).ready(
 
             $('#list1').html("");
 
-
             $.ajax({
 
                 url: '/admin/festival-regulate/findDBFestivalList?page=' + page,
@@ -22,8 +21,6 @@ $(document).ready(
                 success: function(list){
 
                     $.each(list, function(index, festival){
-
-                        console.log(festival)
 
                         var index1 = (index + 1) + (page-1)*5;
 
@@ -40,7 +37,7 @@ $(document).ready(
 
                             <tr>
 
-                                <td class="buttonHead">
+                                <td class="checkHead">
                                     <input class="check1" type="checkbox" name="index" value="${festival.festivalId}"/><br>
                                 </td>
                                 <td class="index1" style="width : 20px; height: 20px;">${index1}</td>
@@ -50,8 +47,6 @@ $(document).ready(
                                 <td class="festivalName" title="${festival.festivalName}">${festival.festivalName}</td>
                                 <td class="festivalContent" title="${festival.festivalContent}">${festival.festivalContent}</td>
                                 <td class="manageInstitution" title="${festival.manageInstitution}">${festival.manageInstitution}</td>
-                                <td class="hostInstitution" title="${festival.hostInstitution}">${festival.hostInstitution}</td>
-                                <td class="sponserInstitution" title="${festival.sponserInstitution}">${festival.sponserInstitution}</td>
                                 <td class="tel" title="${festival.tel}">${festival.tel}</td>`;
 
                         var htmlContent12 =``;
@@ -98,11 +93,11 @@ $(document).ready(
                             htmlContent2= `
                             <td class="imgUrl"></td>
                             <td class="buttonHead">
-                                <button type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#exampleModalLong" id="dbUpdateBtn" value="${festival.festivalId}">상세수정</button><br><hr>
-                                <button type="button" class="btn btn-outline-success contentKeywordInsertBtn" value="${festival.festivalId}">내용</button>
-                                <button type="button" class="btn btn-outline-success naverArticleKeywordInsertBtn" value="${festival.festivalId}">기사</button><br><br>
-                                <button type="button" class="btn btn-outline-success naverBlogKeywordInsertBtn" value="${festival.festivalId}">블로그</button>
-                                <button type="button" class="btn btn-outline-success reviewKeywordInsertBtn" value="${festival.festivalId}">리뷰</button><br>
+                                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalLong" id="dbUpdateBtn" value="${festival.festivalId}">상세수정</button><br><hr>
+                                <button type="button" class="btn btn-primary contentKeywordInsertBtn" value="${festival.festivalId}">내용</button>
+                                <button type="button" class="btn btn-primary naverArticleKeywordInsertBtn" value="${festival.festivalId}">기사</button><br><br>
+                                <button type="button" class="btn btn-primary naverBlogKeywordInsertBtn" value="${festival.festivalId}">블로그</button>
+                                <button type="button" class="btn btn-primary reviewKeywordInsertBtn" value="${festival.festivalId}">리뷰</button><br>
                             </td>
                             </tr>
                             `
@@ -110,14 +105,14 @@ $(document).ready(
                         }else{
 
                              htmlContent2 = `
-                             <td class="imgUrl" style="min-width: 150px;"><img src="${festival.imgUrl}" alt="이미지 없음" style="width: 100%;
+                             <td class="imgUrl"><img src="${festival.imgUrl}" alt="이미지 없음" style="width: 100%;
                              height: 150px"></td>
                              <td class="buttonHead">
-                                 <button type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#exampleModalLong" id="dbUpdateBtn" value="${festival.festivalId}">상세수정</button><br><hr>
-                                 <button type="button" class="btn btn-outline-success contentKeywordInsertBtn" value="${festival.festivalId}">내용</button>
-                                 <button type="button" class="btn btn-outline-success naverArticleKeywordInsertBtn" value="${festival.festivalId}">기사</button><br><br>
-                                 <button type="button" class="btn btn-outline-success naverBlogKeywordInsertBtn" value="${festival.festivalId}">블로그</button>
-                                 <button type="button" class="btn btn-outline-success reviewKeywordInsertBtn" value="${festival.festivalId}">리뷰</button><br>
+                                 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalLong" id="dbUpdateBtn" value="${festival.festivalId}">상세수정</button><br><hr>
+                                 <button type="button" class="btn btn-primary contentKeywordInsertBtn" value="${festival.festivalId}">내용</button>
+                                 <button type="button" class="btn btn-primary naverArticleKeywordInsertBtn" value="${festival.festivalId}">기사</button><br><br>
+                                 <button type="button" class="btn btn-primary naverBlogKeywordInsertBtn" value="${festival.festivalId}">블로그</button>
+                                 <button type="button" class="btn btn-primary reviewKeywordInsertBtn" value="${festival.festivalId}">리뷰</button><br>
                              </td>
                              </tr>
                             `
@@ -143,51 +138,124 @@ $(document).ready(
 
         /**
        * DB 전체 갯수를 알아와 페이지 버튼 추가 기능
+       * @returns {Promise} 순서대로 이행하기 위해 프로미스로 반환
        */
         function findDBFestivalCount(){
 
-            $.ajax({
+            return new Promise((resolve, reject)=>{
 
-                url: '/admin/festival-regulate/findDBFestivalCount',
-                method: 'POST',
-                contentType: 'application/json',
-                success: function(count){
+                $.ajax({
 
-                    $('#pageNum1').html("");
-                    console.log("카운트는...")
-                    console.log(count)
+                    url: '/admin/festival-regulate/findDBFestivalCount',
+                    method: 'POST',
+                    contentType: 'application/json',
+                    success: function(count){
 
-                    var page = 0;
+                        $('#pageNum1').html("");
 
-                    if(count % 5 ==0){
-                        page = count/5;
-                    }else{
-                        page = count/5 +1;
+                        var page = 0;
+
+                        if(count % 5 ==0){
+                            page = count/5;
+                        }else{
+                            page = count/5 +1;
+                        }
+
+                        for(var p=1; p<=page; p++){
+
+                            $('#pageNum1').append(`<button class="pageBtn1 none">${p}</button>`)
+
+                        }
+
+
+                        resolve();
+                    },
+                    error: function(error){
+                        reject(error);
+
                     }
 
-                    for(var p=1; p<=page; p++){
+                })
 
-                        $('#pageNum1').append(`<button class="pageBtn1">${p}</button>`)
-
-                    }
-
-
-                }
 
             })
 
+        }
+
+
+        /**
+       * 현재 보여야하는 버튼만 보이게 함
+       * @param {number} num 10개씩 보이게 하기 위한 숫자. 1이면 1~10
+       * @param {string} className 보이게 할 버튼 클래스
+       */
+        function showCurrentPage(num, className){
+
+            let btns = document.querySelectorAll(className);
+            var start = (num-1)*10 + 1;
+            var end = (num)*10;
+
+
+            btns.forEach(function(btn){
+
+                var btnNum = parseInt(btn.textContent);
+                console.log("버튼")
+                console.log(btnNum);
+                if((btnNum >= start) && (btnNum <= end)){
+
+                    btn.classList.remove('none');
+
+
+                }else{
+                    btn.classList.add('none');
+                }
+            })
+
+            console.log("showCurrentPage")
+            console.log(num);
+            console.log(start);
+            console.log(end);
 
         }
 
-        // 버튼 붙히기
-        findDBFestivalCount();
+
+
+
+        /**
+       * 현재 보여야하는 버튼만 보이게 함
+       * @param {Function} countFun 전체 갯수를 세 페이지 갯수를 정하는 함수
+       * @param {number} num 10개씩 보이게 하기 위한 숫자. 1이면 1~10
+       * @param {string} className 보이게 할 버튼 클래스
+       */
+        async function addShowingBtns(countFun , num, className){
+
+            try{
+                await countFun();
+                let btns = document.querySelectorAll(className);
+                showCurrentPage(num, className);
+            } catch(error){
+                console.error(error);
+            }
+        }
+
+        addShowingBtns(findDBFestivalCount, 1, '.pageBtn1');
+
 
         /**
        * DB 페이지 버튼에 해당 페이지의 순서에 해당하는 데이터 보이는 클릭 이벤트 추가
        */
         $(document).on('click','.pageBtn1', function(){
 
+            let btns = document.querySelectorAll('.pageBtn1');
+
+            btns.forEach(function(btn){
+
+                btn.classList.remove('active');
+
+            })
+
+            $(this).addClass('active');
             const page = $(this).text();
+            $('#list1').html("");
             findDBFestivalList(page);
 
         })
@@ -310,11 +378,9 @@ $(document).ready(
 
 
                 checks.push($(item).val());
-                console.log($(item).val());
 
             })
 
-            console.log(checks)
 
             $.ajax({
 
@@ -341,11 +407,6 @@ $(document).ready(
         $(document).on('click','#dbUpdateBtn', function(){
 
             var festivalId = $(this).val();
-            console.log("festivalId : ")
-            console.log(festivalId)
-            console.log("#dbUpdateBtn")
-
-
 
             $.ajax({
 
@@ -395,7 +456,7 @@ $(document).ready(
                                 <img src="${festival.imgUrl}" width="400px" alt="이미지 없음"><br>
                                 이미지 소스:  <input class="autoWidth" name="imgUrl" type="text" value="${festival.imgUrl}"><br><br>
 
-                                <button type="submit" id="updateSubmitBtn" class="btn btn-outline-success">수정내용 제출</button>
+                                <button type="submit" id="updateSubmitBtn" class="btn btn-outline-primary ml-3">수정내용 제출</button>
 
                             </form>
 
@@ -411,10 +472,11 @@ $(document).ready(
 
         })
 
-        /**
-       * db 다중조건 검색 모달 클릭
-       */
-         $(document).on('click','#search1', function(){
+       /**
+      * 검색 인풋값 가져오기
+      *
+      */
+       function findAllRegionAndTime(){
 
             $.ajax({
 
@@ -427,7 +489,7 @@ $(document).ready(
                     var list2 = map.timeList;
 
                     $('#searchRegion1').html("");
-                    $('#searchRegion1').append(`<option value="">선택안함</option>`);
+                    $('#searchRegion1').append(`<option value="">지역</option>`);
 
                     $.each(list1, function(index, region){
 
@@ -437,7 +499,7 @@ $(document).ready(
                     })
 
                     $('#searchTime1').html("");
-                    $('#searchTime1').append(`<option value="">선택 안함</option>`);
+                    $('#searchTime1').append(`<option value="">시간대</option>`);
 
                     $.each(list2, function(index, time){
 
@@ -450,7 +512,9 @@ $(document).ready(
 
             })
 
-        })
+       }
+
+       findAllRegionAndTime();
 
         /**
        * db 다중조건을 이용힌 검색 버튼 클릭
@@ -474,13 +538,8 @@ $(document).ready(
       */
         function findDBFestivalByMultiple(page){
 
-           console.log("findDBFestivalByMultiple(page)");
-           console.log(page);
-
            var regionId = document.getElementById('searchRegion1').options[document.getElementById('searchRegion1').selectedIndex].value;
-           console.log(regionId);
            var timeId = document.getElementById('searchTime1').options[document.getElementById('searchTime1').selectedIndex].value;
-           console.log(timeId);
            var festivalName = $('#festivalName1').val();
            var festivalContent = $('#festivalContent1').val();
            var manageInstitution = $('#manageInstitution1').val();
@@ -490,11 +549,7 @@ $(document).ready(
            var formattedStart = $('#formattedStart1').val();
            var formattedEnd = $('#formattedEnd1').val();
            var avgRate = $('#avgRate1').val();
-           console.log(avgRate);
            var season = document.getElementById('searchSeason1').options[document.getElementById('searchSeason1').selectedIndex].value;
-
-
-           console.log(season)
 
            var data = {
 
@@ -514,6 +569,9 @@ $(document).ready(
 
                };
 
+           var startIndex = (page-1)*5+1;
+           var endIndex = (page)*5;
+
 
            $.ajax({
 
@@ -525,10 +583,9 @@ $(document).ready(
 
                     $('#list1').html("");
 
+                    var slicedList = list.slice(startIndex, endIndex+1);
 
-                    $.each(list, function(index, festival){
-
-                        console.log(festival)
+                    $.each(slicedList, function(index, festival){
 
                         var index1 = (index + 1) + (page-1)*5;
 
@@ -545,7 +602,7 @@ $(document).ready(
 
                             <tr>
 
-                                <td class="buttonHead">
+                                <td class="checkHead">
                                     <input class="check1" type="checkbox" name="index" value="${festival.festivalId}"/><br>
                                 </td>
                                 <td class="index1" style="width : 20px; height: 20px;">${index1}</td>
@@ -555,8 +612,6 @@ $(document).ready(
                                 <td class="festivalName" title="${festival.festivalName}">${festival.festivalName}</td>
                                 <td class="festivalContent" title="${festival.festivalContent}">${festival.festivalContent}</td>
                                 <td class="manageInstitution" title="${festival.manageInstitution}">${festival.manageInstitution}</td>
-                                <td class="hostInstitution" title="${festival.hostInstitution}">${festival.hostInstitution}</td>
-                                <td class="sponserInstitution" title="${festival.sponserInstitution}">${festival.sponserInstitution}</td>
                                 <td class="tel" title="${festival.tel}">${festival.tel}</td>`;
 
                         var htmlContent12 =``;
@@ -603,11 +658,11 @@ $(document).ready(
                             htmlContent2= `
                             <td class="imgUrl"></td>
                             <td class="buttonHead">
-                                <button type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#exampleModalLong" id="dbUpdateBtn" value="${festival.festivalId}">상세수정</button><br><hr>
-                                <button type="button" class="btn btn-outline-success contentKeywordInsertBtn" value="${festival.festivalId}">내용</button>
-                                <button type="button" class="btn btn-outline-success naverArticleKeywordInsertBtn" value="${festival.festivalId}">기사</button><br><br>
-                                <button type="button" class="btn btn-outline-success naverBlogKeywordInsertBtn" value="${festival.festivalId}">블로그</button>
-                                <button type="button" class="btn btn-outline-success reviewKeywordInsertBtn" value="${festival.festivalId}">리뷰</button><br>
+                                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalLong" id="dbUpdateBtn" value="${festival.festivalId}">상세수정</button><br><hr>
+                                <button type="button" class="btn btn-primary contentKeywordInsertBtn" value="${festival.festivalId}">내용</button>
+                                <button type="button" class="btn btn-primary naverArticleKeywordInsertBtn" value="${festival.festivalId}">기사</button><br><br>
+                                <button type="button" class="btn btn-primary naverBlogKeywordInsertBtn" value="${festival.festivalId}">블로그</button>
+                                <button type="button" class="btn btn-primary reviewKeywordInsertBtn" value="${festival.festivalId}">리뷰</button><br>
                             </td>
                             </tr>
                             `
@@ -617,11 +672,11 @@ $(document).ready(
                              htmlContent2 = `
                              <td class="imgUrl" style="min-width: 150px;"><img src="${festival.imgUrl}" alt="이미지 없음" style="width: 100%;height:150px"></td>
                              <td class="buttonHead">
-                                 <button type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#exampleModalLong" id="dbUpdateBtn" value="${festival.festivalId}">상세수정</button><br><hr>
-                                 <button type="button" class="btn btn-outline-success contentKeywordInsertBtn" value="${festival.festivalId}">내용</button>
-                                 <button type="button" class="btn btn-outline-success naverArticleKeywordInsertBtn" value="${festival.festivalId}">기사</button><br><br>
-                                 <button type="button" class="btn btn-outline-success naverBlogKeywordInsertBtn" value="${festival.festivalId}">블로그</button>
-                                 <button type="button" class="btn btn-outline-success reviewKeywordInsertBtn" value="${festival.festivalId}">리뷰</button><br>
+                                 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalLong" id="dbUpdateBtn" value="${festival.festivalId}">상세수정</button><br><hr>
+                                 <button type="button" class="btn btn-primary contentKeywordInsertBtn" value="${festival.festivalId}">내용</button>
+                                 <button type="button" class="btn btn-primary naverArticleKeywordInsertBtn" value="${festival.festivalId}">기사</button><br><br>
+                                 <button type="button" class="btn btn-primary naverBlogKeywordInsertBtn" value="${festival.festivalId}">블로그</button>
+                                 <button type="button" class="btn btn-primary reviewKeywordInsertBtn" value="${festival.festivalId}">리뷰</button><br>
                              </td>
                              </tr>
                             `
@@ -650,12 +705,8 @@ $(document).ready(
          function findDBFestivalMultipleCount(){
 
 
-           console.log("findDBFestivalByMultipleCount()");
-
            var regionId = document.getElementById('searchRegion1').options[document.getElementById('searchRegion1').selectedIndex].value;
-           console.log(regionId);
            var timeId = document.getElementById('searchTime1').options[document.getElementById('searchTime1').selectedIndex].value;
-           console.log(timeId);
            var festivalName = $('#festivalName1').val();
            var festivalContent = $('#festivalContent1').val();
            var manageInstitution = $('#manageInstitution1').val();
@@ -665,11 +716,8 @@ $(document).ready(
            var formattedStart = $('#formattedStart1').val();
            var formattedEnd = $('#formattedEnd1').val();
            var avgRate = $('#avgRate1').val();
-           console.log(avgRate);
            var season = document.getElementById('searchSeason1').options[document.getElementById('searchSeason1').selectedIndex].value;
 
-
-           console.log(season)
 
            var data = {
 
@@ -687,12 +735,6 @@ $(document).ready(
                    season : season
            };
 
-
-
-
-
-
-
             $.ajax({
 
                 url: '/admin/festival-regulate/findDBFestivalMultipleCount',
@@ -704,16 +746,6 @@ $(document).ready(
                     $('#pageNum1').html("");
                     // 상세검색 전으로 돌아가기 버튼
                     $('#pageNum1').append(`<button class="pageBtn4">전체</button>`);
-
-                    $(document).on('click','.pageBtn4', function(){
-
-                        findDBFestivalList(1);
-                        findDBFestivalCount();
-
-                    })
-
-                    console.log("카운트는...")
-                    console.log(count)
 
                     var page = 0;
 
@@ -732,7 +764,7 @@ $(document).ready(
 
 
                     $(document).on('click','.pageBtn3', function(){
-
+                        $('#list1').html("");
                         const page = $(this).text();
                         findDBFestivalByMultiple(page);
 
@@ -745,6 +777,24 @@ $(document).ready(
 
 
         }
+
+        /**
+        * DB 상세 조건 검색에서 초기화 버튼으로 돌아가기 버튼
+        *
+        */
+        $(document).on('click','#resetBtn1', function(){
+
+            document.getElementById('searchForm1').reset();
+
+
+        })
+
+        $(document).on('click','.pageBtn4', function(){
+
+            findDBFestivalList(1);
+            addShowingBtns(findDBFestivalCount, 1, '.pageBtn1');
+
+        })
 
 
 
@@ -760,149 +810,333 @@ $(document).ready(
          * 전체 API리스트를 페이지 번호에 따라 가져옴
          * @param {int} page 페이지
          */
+
         function findAPIFestivalList(page){
 
-            $('#list2').html("");
+            return new Promise((resolve, reject)=>{
 
-            $.ajax({
+                $('#list2').html("");
 
-                url: '/admin/festival-regulate/findAPIFestivalList?page=' + page,
-                method: 'POST',
-                contentType: 'application/json',
-                success: function(list){
+                $.ajax({
 
-                    $('#list2').html("");
+                    url: '/admin/festival-regulate/findAPIFestivalList?page=' + page,
+                    method: 'POST',
+                    contentType: 'application/json',
+                    success: function(list){
 
-                    $.each(list, function(index, festival){
+                        $('#list2').html("");
 
-                        var index1 = (index + 1) + (page-1)*5;
-                        var indexFromZero = index1 - 1;
+                        $.each(list, function(index, festival){
 
-                        var start = festival.startDate.length >0?
-                        festival.startDate.substring(0,10):
-                        "링크없음";
+                            var index1 = (index + 1) + (page-1)*5;
+                            var indexFromZero = index1 - 1;
 
-                        var end = festival.endDate.length >0?
-                        festival.endDate.substring(0,10):
-                        "링크없음";
+                            var start = festival.startDate.length >0?
+                            festival.startDate.substring(0,10):
+                            "링크없음";
 
-
-                        var htmlCheck = ``;
-
-                        if(festival.exist=="Y"){
-
-                            htmlCheck= `<tr>
-                                <td>DB<br>존재</td>`
+                            var end = festival.endDate.length >0?
+                            festival.endDate.substring(0,10):
+                            "링크없음";
 
 
+                            var htmlCheck = ``;
+
+                            if(festival.exist=="Y"){
+
+                                htmlCheck= `<tr>
+                                    <td>DB<br>존재</td>`
+
+
+                            }else{
+
+                                 htmlCheck = `<tr>
+                                    <td><input class="check2" type="checkbox" name="index" value="${indexFromZero}"/></td>`
+                            }
+
+                            var htmlContent11 =`
+                                    <td class="index1">${index1}</td>
+                                    <td class="regionId">${festival.regionId}</td>
+                                    <td class="timeId" title="${festival.timeId}">${festival.timeId}</td>
+                                    <td class="festivalName" title="${festival.festivalName}">${festival.festivalName}</td>
+                                    <td class="festivalContent" title="${festival.festivalContent}">${festival.festivalContent}</td>
+                                    <td class="manageInstitution" title="${festival.manageInstitution}">${festival.manageInstitution}</td>
+                                    <td class="tel" title="${festival.tel}">${festival.tel}</td>`;
+
+                            var htmlContent12 =``;
+
+
+                            if(! festival.homepageUrl || festival.homepageUrl == "null" || festival.homepageUrl == ""){
+
+                                htmlContent12 = `
+
+                                    <td class="homepageUrl"></td>
+                                    <td class="detailAddress" title="${festival.detailAddress}">${festival.detailAddress}</td>
+                                    <td class="place" title="${festival.place}">${festival.place}</td>
+                                    <td class="startDate" title="${festival.formattedStart}">${festival.formattedStart}</td>
+                                    <td class="endDate" title="${festival.formattedEnd}">${festival.formattedEnd}</td>
+                                    <td class="season" title="${festival.season}">${festival.season}</td>
+
+
+                                `;
+
+                            }else{
+
+                                htmlContent12 = `
+
+                                    <td class="homepageUrl" title="${festival.homepageUrl}"><a href="${festival.homepageUrl}">클릭!</a></td>
+                                    <td class="detailAddress" title="${festival.detailAddress}">${festival.detailAddress}</td>
+                                    <td class="place" title="${festival.place}">${festival.place}</td>
+                                    <td class="startDate" title="${festival.formattedStart}">${festival.formattedStart}</td>
+                                    <td class="endDate" title="${festival.formattedEnd}">${festival.formattedEnd}</td>
+                                    <td class="season" title="${festival.season}">${festival.season}</td>
+
+
+                                `;
+
+                            }
+
+        //                        var htmlContent2 = ``;
+
+        //                        if(! festival.imgUrl || festival.imgUrl == "null"){
+        //
+        //                            htmlContent2= `
+        //                            <td class="imgUrl"></td></tr>
+        //                            `
+        //
+        //
+        //                        }else{
+        //
+        //                             htmlContent2 = `
+        //                             <td class="imgUrl"><img src="${festival.imgUrl}" width="40px"></td></tr>
+        //                            `
+        //                        }
+
+
+
+                            var finalHtml = htmlCheck + htmlContent11 + htmlContent12;
+
+                            $('#list2').append(finalHtml);
+
+                        })
+
+                        resolve();
+
+                    }
+
+                })
+
+
+
+
+
+            })
+
+
+        }
+
+
+
+        var findAPIFestivalNumPage = 0;
+        var current = 1;
+        /**
+         * 전체 API리스트의 페이지 갯수를 결정 후 페이지 버튼 추가
+         * @param {int} page 페이지
+         */
+        function findAPIFestivalCount(){
+
+            console.log("들어와22..")
+
+            return new Promise((resolve, reject)=>{
+
+                $.ajax({
+
+                    url: '/admin/festival-regulate/findAPIFestivalCount',
+                    method: 'POST',
+                    contentType: 'application/json',
+                    success: function(count){
+
+                        findAPIFestivalNum = count;
+                        console.log("api 전체 갯수")
+                        console.log(count);
+
+                        $('#pageNum2').html("");
+                        console.log("page");
+                        $('#pageNum2').append(`<button class="pageBtn7" value="1">처음</button>`)
+
+                        var page = 0;
+
+                        if(count%5==0){
+                            page = count / 5;
                         }else{
-
-                             htmlCheck = `<tr>
-                                <td><input class="check2" type="checkbox" name="index" value="${indexFromZero}"/></td>`
+                            page = count / 5 + 1;
                         }
 
-                        var htmlContent11 =`
-                                <td class="index1">${index1}</td>
-                                <td class="regionId">${festival.regionId}</td>
-                                <td class="timeId" title="${festival.timeId}">${festival.timeId}</td>
-                                <td class="festivalName" title="${festival.festivalName}">${festival.festivalName}</td>
-                                <td class="festivalContent" title="${festival.festivalContent}">${festival.festivalContent}</td>
-                                <td class="manageInstitution" title="${festival.manageInstitution}">${festival.manageInstitution}</td>
-                                <td class="hostInstitution" title="${festival.hostInstitution}">${festival.hostInstitution}</td>
-                                <td class="sponserInstitution" title="${festival.sponserInstitution}">${festival.sponserInstitution}</td>
-                                <td class="tel" title="${festival.tel}">${festival.tel}</td>`;
-
-                        var htmlContent12 =``;
+                        findAPIFestivalNumPage = page;
 
 
-                        if(! festival.homepageUrl || festival.homepageUrl == "null" || festival.homepageUrl == ""){
+                       for(var p=1; p<=page; p++){
 
-                            htmlContent12 = `
-
-                                <td class="homepageUrl"></td>
-                                <td class="detailAddress" title="${festival.detailAddress}">${festival.detailAddress}</td>
-                                <td class="place" title="${festival.place}">${festival.place}</td>
-                                <td class="startDate" title="${festival.formattedStart}">${festival.formattedStart}</td>
-                                <td class="endDate" title="${festival.formattedEnd}">${festival.formattedEnd}</td>
-                                <td class="season" title="${festival.season}">${festival.season}</td>
-
-
-                            `;
-
-                        }else{
-
-                            htmlContent12 = `
-
-                                <td class="homepageUrl" title="${festival.homepageUrl}"><a href="${festival.homepageUrl}">클릭!</a></td>
-                                <td class="detailAddress" title="${festival.detailAddress}">${festival.detailAddress}</td>
-                                <td class="place" title="${festival.place}">${festival.place}</td>
-                                <td class="startDate" title="${festival.formattedStart}">${festival.formattedStart}</td>
-                                <td class="endDate" title="${festival.formattedEnd}">${festival.formattedEnd}</td>
-                                <td class="season" title="${festival.season}">${festival.season}</td>
-
-
-                            `;
+                            $('#pageNum2').append(`<button class="pageBtn2 none">${p}</button>`)
 
                         }
 
-    //                        var htmlContent2 = ``;
+                        $('#pageNum2').append(`<button class="pageBtn8">다음</button>`)
+                        $('#pageNum2').append(`<button class="pageBtn9" value="20">마지막</button>`)
 
-    //                        if(! festival.imgUrl || festival.imgUrl == "null"){
-    //
-    //                            htmlContent2= `
-    //                            <td class="imgUrl"></td></tr>
-    //                            `
-    //
-    //
-    //                        }else{
-    //
-    //                             htmlContent2 = `
-    //                             <td class="imgUrl"><img src="${festival.imgUrl}" width="40px"></td></tr>
-    //                            `
-    //                        }
+                        resolve();
 
 
-
-                        var finalHtml = htmlCheck + htmlContent11 + htmlContent12;
-
-                        $('#list2').append(finalHtml);
-
-                    })
-
-
-                }
+                    }
+                })
 
             })
         }
 
 
         /**
-         * 전체 API리스트의 페이지 갯수를 결정 후 페이지 버튼 추가
-         * @param {int} page 페이지
+         * 전체 API리스트의 페이지 클릭 이벤트
+         *
          */
-        function findAPIFestivalCount(page){
+        $(document).on('click','.pageBtn2', function(){
 
-            $('#pageNum2').html("");
+            let btns = document.querySelectorAll('.pageBtn2');
+            btns.forEach(function(btn){
+                btn.classList.remove('active');
+            })
 
-           for(var p=1; p<=page; p++){
+            $(this).addClass('active');
+            const page = $(this).text();
+            findAPIFestivalList(page);
 
-            $('#pageNum2').append(`<button class="pageBtn2">${p}</button>`)
+        })
 
+        /**
+         * API리스트의 처음페이지 버튼 클릭 이벤트
+         *
+         */
+        $(document).on('click','.pageBtn7', function(){
+
+            current = 1;
+
+            findAPIFestivalList(1)
+            .then(()=>{
+                // 1~10까지 보여줌
+                return addShowingBtns(findAPIFestivalCount, 1, '.pageBtn2');
+            })
+            .then(()=>{
+
+                let btns = document.querySelectorAll('.pageBtn2');
+                btns.forEach(function(btn){
+                    if(btn.textContent == "1"){
+                        btn.classList.add('active');
+                    }else{
+                        btn.classList.remove('active');
+                    }
+                })
+            })
+            .catch((error)=>{
+                alert("api 오류")
+            })
+        })
+
+
+
+        /**
+         * API리스트의 마지막 페이지 버튼 클릭 이벤트
+         *
+         */
+        $(document).on('click','.pageBtn9', function(){
+
+            var num = 0;
+            var lastPage = parseInt(findAPIFestivalNumPage);
+
+            if(lastPage%10==0){
+                num = (lastPage / 10);
+            }else{
+                num = parseInt((lastPage / 10) + 1);
             }
 
-            $(document).on('click','.pageBtn2', function(){
+            current = num;
 
-                const page = $(this).text();
-                findAPIFestivalList(page);
+            console.log("num");
+            console.log(num);
 
-            })
-        }
+
+
+            findAPIFestivalList(lastPage)
+                .then(()=>{
+                return addShowingBtns(findAPIFestivalCount, num, '.pageBtn2');
+                })
+                .then(()=>{
+
+                    let btns = document.querySelectorAll('.pageBtn2');
+                    btns.forEach(function(btn){
+                        if(btn.textContent == lastPage){
+                            btn.classList.add('active');
+                        }else{
+                            btn.classList.remove('active');
+                        }
+                    })
+                })
+                .catch((error)=>{
+                    alert("api 오류")
+                })
+
+        })
+
+
+
+        /**
+         * API리스트의 다음 페이지 버튼 클릭 이벤트
+         *
+         */
+
+        $(document).on('click','.pageBtn8', function(){
+
+            current = current + 1;
+            var thisFirstPage = (current-1) * 10 + 1;
+
+            findAPIFestivalList(thisFirstPage)
+                .then(()=>{
+                return addShowingBtns(findAPIFestivalCount, current, '.pageBtn2');
+                })
+                .then(()=>{
+
+                    let btns = document.querySelectorAll('.pageBtn2');
+                    btns.forEach(function(btn){
+                        if(btn.textContent == thisFirstPage){
+                            btn.classList.add('active');
+                        }else{
+                            btn.classList.remove('active');
+                        }
+                    })
+                })
+                .catch((error)=>{
+                    alert("api 오류")
+                })
+
+        })
+
+
+
+
+
+
 
         // 처음 들어가면 1페이지 불러옴
-        findAPIFestivalList(1);
+        findAPIFestivalList(1)
+            .then(()=>{
+                // 처음 들어가면 api 페이지 버튼 생성
+                addShowingBtns(findAPIFestivalCount, 1, '.pageBtn2');
+            })
+            .catch((error)=>{
+                alert("api 오류")
+            })
 
-        // 처음 들어가면 페이지 버튼 20개 생성
-        findAPIFestivalCount(20);
+
+
+
 
         /**
          * 체크된 API 리스트의 축제들을 DB에 저장함
@@ -917,11 +1151,8 @@ $(document).ready(
 
 
                 checks.push($(item).val());
-                console.log($(item).val());
 
             })
-
-            console.log(checks)
 
             $.ajax({
 
@@ -932,7 +1163,10 @@ $(document).ready(
                 success: function(response){
 
                     alert(response);
-                    window.location.href='/admin/festival-regulate';
+                    setTimeout(function(){
+                        window.location.href='/admin/festival-regulate';
+                    },1000)
+
 
                 }
 
@@ -978,19 +1212,23 @@ $(document).ready(
           */
          $(document).on('click','#searchBtn2', function(){
 
-            var data = $("#searchForm2").serializeArray();
+           var festivalName = $('#festivalName').val();
+           var manageInstitution = $('#manageInstitution').val();
+           var place = $('#place').val();
+           var formattedStart = $('#formattedStart').val();
+           var formattedEnd = $('#formattedEnd').val();
 
-            console.log("폼 : ");
+           var data = {
 
-            console.log(data);
-
+                   festivalName : festivalName,
+                   manageInstitution : manageInstitution,
+                   place : place,
+                   formattedStart : formattedStart,
+                   formattedEnd : formattedEnd
+           };
 
             findAPIFestivalByMultiple(data,1);
             findAPIFestivalMultipleCount(data);
-
-            // 다중 조건 검색 모달 닫기
-            $('#close2').click();
-
          })
 
 
@@ -1049,8 +1287,6 @@ $(document).ready(
                                 <td class="festivalName" title="${festival.festivalName}">${festival.festivalName}</td>
                                 <td class="festivalContent" title="${festival.festivalContent}">${festival.festivalContent}</td>
                                 <td class="manageInstitution" title="${festival.manageInstitution}">${festival.manageInstitution}</td>
-                                <td class="hostInstitution" title="${festival.hostInstitution}">${festival.hostInstitution}</td>
-                                <td class="sponserInstitution" title="${festival.sponserInstitution}">${festival.sponserInstitution}</td>
                                 <td class="tel" title="${festival.tel}">${festival.tel}</td>`;
 
                         var htmlContent12 =``;
@@ -1174,11 +1410,44 @@ $(document).ready(
         $(document).on('click','.pageBtn6', function(){
 
             $('#list2').html("");
-            console.log("pageBtn6")
-            findAPIFestivalList(1);
-            findAPIFestivalCount(20);
+            console.log("pageBtn6");
+            current = 1;
+            findAPIFestivalList(1)
+            .then(()=>{
+                // 1~10까지 보여줌
+                return addShowingBtns(findAPIFestivalCount, 1, '.pageBtn2');
+            })
+            .then(()=>{
+
+                let btns = document.querySelectorAll('.pageBtn2');
+                btns.forEach(function(btn){
+                    if(btn.textContent == "1"){
+                        btn.classList.add('active');
+                    }else{
+                        btn.classList.remove('active');
+                    }
+                })
+            })
+            .catch((error)=>{
+                alert("api 오류")
+            })
 
         })
+
+
+
+        /**
+        * api 상세 조건 검색에서 초기화 버튼으로 돌아가기 버튼
+        *
+        */
+        $(document).on('click','#resetBtn2', function(){
+
+            document.getElementById('searchForm2').reset();
+
+
+        })
+
+
 
 
         //#endregion

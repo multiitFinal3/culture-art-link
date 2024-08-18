@@ -170,6 +170,26 @@ public class AdminFestivalController {
 	}
 	
 	/**
+	 * 요구되는 페이지의 축제 api의 db에 없는 전체 갯수 정보를 반환
+	 */
+	@PostMapping("/findAPIFestivalCount")
+	@ResponseBody
+	public int findAPIFestivalCount() {
+		
+		int count = 0;
+		try {
+			count = adminFestivalService.findAPIFestivalCount();
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+		
+		System.out.println("api 갯수 : " + count);
+		
+		return count;
+		
+	}
+	
+	/**
 	 * api 리스트에서 체크된 부분을 DB에 저장
 	 *
 	 * @param checks 체크된 숫자 번호로 서비스단에 저장된 리스트의 순서 번호와 일치
@@ -371,52 +391,54 @@ public class AdminFestivalController {
 	
 	/**
 	 * DB 데이터를 다중 조건을 가공 및 적용해 반환함
+	 * <p>
+	 * //	 *
 	 *
-//	 *
 	 * @return
 	 */
 	@PostMapping("/findDBFestivalByMultiple")
 	@ResponseBody
 	public ArrayList<FestivalDTO> findDBFestivalByMultiple(@RequestBody FestivalDTO festivalDTO) {
 		
-
+		
 		System.out.println("findDBFestivalByMultiple 정보가 담긴 축제 : " + festivalDTO.toString());
-
+		
 		PageDTO pageDTO = new PageDTO();
 		pageDTO.setStartEnd(festivalDTO.getPage());
 		festivalDTO.setPageDTO(pageDTO);
-
-
+		
+		
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		try {
 			Date startDate = simpleDateFormat.parse(festivalDTO.getFormattedStart());
 			festivalDTO.setStartDate(startDate);
-
+			
 			Date endDate = simpleDateFormat.parse(festivalDTO.getFormattedEnd());
 			festivalDTO.setEndDate(endDate);
-
+			
 		} catch (ParseException e) {
-			System.out.println(e);;
+			System.out.println(e);
+			;
 		}
-
+		
 		ArrayList<FestivalDTO> list = null;
 		try {
 			list = adminFestivalService.findDBFestivalByMultiple(festivalDTO);
 		} catch (Exception e) {
 			System.out.println(e);
 		}
-
+		
 		System.out.println("받아온 리스트 : " + list);
 		for (FestivalDTO festivalDTO1 : list) {
-
+			
 			double avgRate1 = Math.round(festivalDTO1.getAvgRate() * 100) / 100.0;
 			festivalDTO1.setAvgRate(avgRate1);
-
+			
 			festivalDTO1.setFormattedStart(simpleDateFormat.format(festivalDTO1.getStartDate()));
 			festivalDTO1.setFormattedEnd(simpleDateFormat.format(festivalDTO1.getEndDate()));
-
+			
 			System.out.println(festivalDTO1.toString());
-
+			
 		}
 		
 		return list;
@@ -424,8 +446,6 @@ public class AdminFestivalController {
 	
 	/**
 	 * DB 데이터에 다중 조건을 적용한 총 숫자
-	 *
-	 *
 	 */
 	@PostMapping("/findDBFestivalMultipleCount")
 	@ResponseBody
@@ -443,7 +463,8 @@ public class AdminFestivalController {
 			festivalDTO.setEndDate(endDate);
 			
 		} catch (ParseException e) {
-			System.out.println(e);;
+			System.out.println(e);
+			;
 		}
 		
 		
@@ -469,147 +490,79 @@ public class AdminFestivalController {
 	/**
 	 * API 데이터에서 다중조건을 적용한 결과
 	 *
-	 * @param mapList 다중 조건
-	 * @param page    요구되는 페이지 숫자
+	 * @param festivalDTO
+	 * @param page        요구되는 페이지 숫자
 	 * @return 페스티벌 DTO 리스트
 	 */
 	@PostMapping("/findAPIFestivalByMultiple")
 	@ResponseBody
 	public ArrayList<FestivalDTO> findAPIFestivalByMultiple(
-			@RequestBody ArrayList<HashMap<String, String>> mapList,
+			@RequestBody FestivalDTO festivalDTO,
 			@RequestParam("page") int page) {
 		
-		FestivalDTO festivalDTO = new FestivalDTO();
 		PageDTO pageDTO = new PageDTO();
 		pageDTO.setPage(page);
 		pageDTO.setStartEnd(pageDTO.getPage());
 		festivalDTO.setPageDTO(pageDTO);
-		
-		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-		
 		StringBuilder stringBuilder = new StringBuilder();
 		
+		System.out.println("findAPIFestivalByMultiple : " + festivalDTO);
 		
-		// 받아온 정보를 깔끔하게 바꾸기
-		for (int i = 0; i < mapList.size(); i++) {
+		if (!festivalDTO.getFestivalName().isEmpty()) {
 			
-			String value = mapList.get(i).get("value");
-			
-			if (!value.isEmpty()) {
-				
-				switch (i) {
-					
-					case 0:
-						festivalDTO.setFestivalName(value);
-						try {
-							stringBuilder.append("&fstvlNm=").append(URLEncoder.encode(value, "UTF-8"));
-						} catch (UnsupportedEncodingException e) {
-							throw new RuntimeException(e);
-						}
-						break;
-					
-					case 1:
-						festivalDTO.setManageInstitution(value);
-						try {
-							stringBuilder.append("&mnnstNm=").append(URLEncoder.encode(value, "UTF-8"));
-						} catch (UnsupportedEncodingException e) {
-							throw new RuntimeException(e);
-						}
-						break;
-					
-					case 2:
-						festivalDTO.setHostInstitution(value);
-						try {
-							stringBuilder.append("&auspcInsttNm=").append(URLEncoder.encode(value, "UTF-8"));
-						} catch (UnsupportedEncodingException e) {
-							throw new RuntimeException(e);
-						}
-						break;
-					
-					
-					case 3:
-						festivalDTO.setSponserInstitution(value);
-						try {
-							stringBuilder.append("&suprtInsttNm=").append(URLEncoder.encode(value, "UTF-8"));
-						} catch (UnsupportedEncodingException e) {
-							throw new RuntimeException(e);
-						}
-						break;
-					
-					
-					case 4:
-						
-						String tel = value.replace("-", "").trim();
-						
-						tel = tel.substring(0, 3) + "-" + tel.substring(3, 6) + "-" + tel.substring(6);
-						
-						festivalDTO.setSponserInstitution(value);
-						try {
-							stringBuilder.append("&phoneNumber=").append(URLEncoder.encode(value, "UTF-8"));
-						} catch (UnsupportedEncodingException e) {
-							throw new RuntimeException(e);
-						}
-						break;
-					
-					
-					case 5:
-						
-						try {
-							stringBuilder.append("&opar=").append(URLEncoder.encode(value, "UTF-8"));
-						} catch (UnsupportedEncodingException e) {
-							throw new RuntimeException(e);
-						}
-						break;
-					
-					
-					case 6:
-						String date1 = value;
-						Date date = null;
-						try {
-							date = simpleDateFormat.parse(date1);
-						} catch (ParseException e) {
-							throw new RuntimeException(e);
-						}
-						festivalDTO.setStartDate(date);
-						festivalDTO.setFormattedStart(date1);
-						
-						try {
-							stringBuilder.append("&fstvlStartDate=").append(URLEncoder.encode(date1, "UTF-8"));
-						} catch (UnsupportedEncodingException e) {
-							throw new RuntimeException(e);
-						}
-						
-						break;
-					
-					
-					case 7:
-						String date2 = value;
-						Date dateEnd = null;
-						try {
-							dateEnd = simpleDateFormat.parse(date2);
-						} catch (ParseException e) {
-							throw new RuntimeException(e);
-						}
-						festivalDTO.setEndDate(dateEnd);
-						festivalDTO.setFormattedEnd(date2);
-						
-						try {
-							stringBuilder.append("&fstvlEndDate=").append(URLEncoder.encode(date2, "UTF-8"));
-						} catch (UnsupportedEncodingException e) {
-							throw new RuntimeException(e);
-						}
-						
-						break;
-					
-					
-				}
-				
-				
+			try {
+				stringBuilder.append("&fstvlNm=").append(URLEncoder.encode(festivalDTO.getFestivalName(), "UTF-8"));
+			} catch (UnsupportedEncodingException e) {
+				throw new RuntimeException(e);
 			}
 			
 		}
 		
+		if (!festivalDTO.getManageInstitution().isEmpty()) {
+			
+			try {
+				stringBuilder.append("&mnnstNm=").append(URLEncoder.encode(festivalDTO.getManageInstitution(), "UTF-8"));
+			} catch (UnsupportedEncodingException e) {
+				throw new RuntimeException(e);
+			}
+			
+		}
+		
+		if (!festivalDTO.getPlace().isEmpty()) {
+			
+			try {
+				stringBuilder.append("&opar=").append(URLEncoder.encode(festivalDTO.getPlace(), "UTF-8"));
+			} catch (UnsupportedEncodingException e) {
+				throw new RuntimeException(e);
+			}
+			
+		}
+		
+		if (!festivalDTO.getFormattedStart().equals("")) {
+			
+			try {
+				stringBuilder.append("&fstvlStartDate=").append(URLEncoder.encode(String.valueOf(festivalDTO.getFormattedStart()), "UTF-8"));
+				;
+			} catch (UnsupportedEncodingException e) {
+				throw new RuntimeException(e);
+			}
+			
+		}
+		
+		
+		if (!festivalDTO.getFormattedEnd().equals("")) {
+			
+			try {
+				stringBuilder.append("&fstvlEndDate=").append(URLEncoder.encode(String.valueOf(festivalDTO.getFormattedEnd()), "UTF-8"));
+			} catch (UnsupportedEncodingException e) {
+				throw new RuntimeException(e);
+			}
+			
+		}
+		
+		
 		String urls = stringBuilder.toString();
+		System.out.println("urls : " + urls);
 		
 		ArrayList<FestivalDTO> list = null;
 		try {
@@ -633,142 +586,74 @@ public class AdminFestivalController {
 	/**
 	 * API 데이터에서 다중조건을 적용한 결과 갯수
 	 *
-	 * @param mapList 다중 조건
 	 * @return 갯수
 	 */
 	@PostMapping("/findAPIFestivalMultipleCount")
 	@ResponseBody
-	public int findAPIFestivalMultipleCount(@RequestBody ArrayList<HashMap<String, String>> mapList) {
+	public int findAPIFestivalMultipleCount(@RequestBody FestivalDTO festivalDTO) {
 		
-		FestivalDTO festivalDTO = new FestivalDTO();
-		
-		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		
 		StringBuilder stringBuilder = new StringBuilder();
+		System.out.println("findAPIFestivalByMultipleCount : " + festivalDTO);
 		
-		
-		// 받아온 정보를 깔끔하게 바꾸기
-		for (int i = 0; i < mapList.size(); i++) {
+		if (!festivalDTO.getFestivalName().isEmpty()) {
 			
-			String value = mapList.get(i).get("value");
-			
-			if (!value.isEmpty()) {
-				
-				switch (i) {
-					
-					case 0:
-						festivalDTO.setFestivalName(value);
-						try {
-							stringBuilder.append("&fstvlNm=").append(URLEncoder.encode(value, "UTF-8"));
-						} catch (UnsupportedEncodingException e) {
-							throw new RuntimeException(e);
-						}
-						break;
-					
-					case 1:
-						festivalDTO.setManageInstitution(value);
-						try {
-							stringBuilder.append("&mnnstNm=").append(URLEncoder.encode(value, "UTF-8"));
-						} catch (UnsupportedEncodingException e) {
-							throw new RuntimeException(e);
-						}
-						break;
-					
-					case 2:
-						festivalDTO.setHostInstitution(value);
-						try {
-							stringBuilder.append("&auspcInsttNm=").append(URLEncoder.encode(value, "UTF-8"));
-						} catch (UnsupportedEncodingException e) {
-							throw new RuntimeException(e);
-						}
-						break;
-					
-					
-					case 3:
-						festivalDTO.setSponserInstitution(value);
-						try {
-							stringBuilder.append("&suprtInsttNm=").append(URLEncoder.encode(value, "UTF-8"));
-						} catch (UnsupportedEncodingException e) {
-							throw new RuntimeException(e);
-						}
-						break;
-					
-					
-					case 4:
-						
-						String tel = value.replace("-", "").trim();
-						
-						tel = tel.substring(0, 3) + "-" + tel.substring(3, 6) + "-" + tel.substring(6);
-						
-						festivalDTO.setSponserInstitution(value);
-						try {
-							stringBuilder.append("&phoneNumber=").append(URLEncoder.encode(value, "UTF-8"));
-						} catch (UnsupportedEncodingException e) {
-							throw new RuntimeException(e);
-						}
-						break;
-					
-					
-					case 5:
-						
-						try {
-							stringBuilder.append("&opar=").append(URLEncoder.encode(value, "UTF-8"));
-						} catch (UnsupportedEncodingException e) {
-							throw new RuntimeException(e);
-						}
-						break;
-					
-					
-					case 6:
-						String date1 = value;
-						Date date = null;
-						try {
-							date = simpleDateFormat.parse(date1);
-						} catch (ParseException e) {
-							throw new RuntimeException(e);
-						}
-						festivalDTO.setStartDate(date);
-						festivalDTO.setFormattedStart(date1);
-						
-						try {
-							stringBuilder.append("&fstvlStartDate=").append(URLEncoder.encode(date1, "UTF-8"));
-						} catch (UnsupportedEncodingException e) {
-							throw new RuntimeException(e);
-						}
-						
-						break;
-					
-					
-					case 7:
-						String date2 = value;
-						Date dateEnd = null;
-						try {
-							dateEnd = simpleDateFormat.parse(date2);
-						} catch (ParseException e) {
-							throw new RuntimeException(e);
-						}
-						festivalDTO.setEndDate(dateEnd);
-						festivalDTO.setFormattedEnd(date2);
-						
-						try {
-							stringBuilder.append("&fstvlEndDate=").append(URLEncoder.encode(date2, "UTF-8"));
-						} catch (UnsupportedEncodingException e) {
-							throw new RuntimeException(e);
-						}
-						
-						break;
-					
-					
-				}
-				
-				
+			try {
+				stringBuilder.append("&fstvlNm=").append(URLEncoder.encode(festivalDTO.getFestivalName(), "UTF-8"));
+			} catch (UnsupportedEncodingException e) {
+				throw new RuntimeException(e);
 			}
+			
+		}
+		
+		if (!festivalDTO.getManageInstitution().isEmpty()) {
+			
+			try {
+				stringBuilder.append("&mnnstNm=").append(URLEncoder.encode(festivalDTO.getManageInstitution(), "UTF-8"));
+			} catch (UnsupportedEncodingException e) {
+				throw new RuntimeException(e);
+			}
+			
+		}
+		
+		if (!festivalDTO.getPlace().isEmpty()) {
+			
+			try {
+				stringBuilder.append("&opar=").append(URLEncoder.encode(festivalDTO.getPlace(), "UTF-8"));
+			} catch (UnsupportedEncodingException e) {
+				throw new RuntimeException(e);
+			}
+			
+		}
+		
+		if (!festivalDTO.getFormattedStart().equals("")) {
+			
+			try {
+				stringBuilder.append("&fstvlStartDate=").append(URLEncoder.encode(String.valueOf(festivalDTO.getFormattedStart()), "UTF-8"));
+				;
+			} catch (UnsupportedEncodingException e) {
+				throw new RuntimeException(e);
+			}
+			
 		}
 		
 		
-		System.out.println("findAPIFestivalByMultiple 정보가 담긴 축제 : " + festivalDTO.toString());
+		if (!festivalDTO.getFormattedEnd().equals("")) {
+			
+			try {
+				stringBuilder.append("&fstvlEndDate=").append(URLEncoder.encode(String.valueOf(festivalDTO.getFormattedEnd()), "UTF-8"));
+			} catch (UnsupportedEncodingException e) {
+				throw new RuntimeException(e);
+			}
+			
+		}
+		
 		
 		String urls = stringBuilder.toString();
+		System.out.println("urls : " + urls);
+		
+		
+		System.out.println("findAPIFestivalByMultiple 정보가 담긴 축제 : " + festivalDTO.toString());
 		
 		int count = 0;
 		try {

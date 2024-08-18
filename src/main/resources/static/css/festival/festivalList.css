@@ -5,7 +5,7 @@
     }
 
 
-    /* 필터 컨테이너 */
+       /* 필터 컨테이너 */
         .filter-container {
             display: flex;
             justify-content: space-between;
@@ -380,7 +380,7 @@
 
     #searchForm select,
     #searchForm input{
-
+        width: 120px;
         border: 1px solid #ced4da;
         border-radius: 0px;
         color: #495057

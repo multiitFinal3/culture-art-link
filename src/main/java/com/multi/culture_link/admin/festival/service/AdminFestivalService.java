@@ -60,4 +60,6 @@ public interface AdminFestivalService {
 	ArrayList<FestivalContentReviewNaverKeywordMapDTO> findExistingFestivalContentReviewNaverKeywordMapList(FestivalContentReviewNaverKeywordMapDTO mapDTO) throws Exception;
 	
 	ArrayList<FestivalDTO> findDBFestivalAllList() throws Exception;
+	
+	int findAPIFestivalCount() throws Exception;
 }
