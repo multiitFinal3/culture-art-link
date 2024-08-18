@@ -6,12 +6,98 @@
     <meta charset="UTF-8">
     <title>Title</title>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <link rel="stylesheet" th:href="@{/css/main/main.css}">
+    <script th:src="@{/js/main/main.js}"></script>
+    <script th:inline="javascript">
+
+        $(document).ready(
+            function(){
+
+
+                //# region 추천 리스트 존
+
+
+
+                //#region 키워드 추천 관련 함수
+
+               /**
+               * 축제 키워드 추천 함수
+               *
+               */
+                function findKeywordRecommendFestivalList(){
+
+                    $('#list2').html("");
+                    $.ajax({
+
+                        url: '/festival/findKeywordRecommendFestivalList',
+                        method: 'POST',
+                        contentType: 'application/json',
+                        success: function(list){
+
+                            $("#fList").html("");
+                            var list2 = list.slice(0,4);
+                            var imgHtml = ``;
+
+                            $.each(list2, function(index, festival){
+                                if(! festival.imgUrl || festival.imgUrl == "null"){
+                                    imgHtml = `
+                                            <img class="card-img-top" src="https://kr.object.ncloudstorage.com/team3/common/noPhoto.png" alt="Card image cap">
+                                    `;
+                                }else{
+                                    imgHtml = `
+                                            <img class="card-img-top" src="${festival.imgUrl}" alt="Card image cap">
+                                    `;
+                                }
+
+                                var cardHtml = `
+                                    <div class="card" id="${festival.festivalId}">
+                                        ${imgHtml}
+                                        <div class="card-body">
+                                            <p class="card-title" title="${festival.festivalName}">${festival.festivalName}</p>
+                                        </div>
+                                    </div>
+                                `;
+
+                                $('#fList').append(cardHtml);
+
+                            })
+                        }
+                    })
+                }
+
+
+                findKeywordRecommendFestivalList();
+
+
+
+
+
+
+
+
+
+                //#endregion
+
+
+
+
+
+
+
+
+
+
+
+            }
+        )
+    </script>
+
 </head>
 <body>
 
 <div layout:fragment="content">
 
-    <div>
+    <div id="contentZone">
 
         <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
             <div class="carousel-indicators">
@@ -40,25 +126,178 @@
             </button>
         </div>
 
+        <th:block sec:authorize="hasAnyAuthority('ROLE_USERS','ROLE_ADMIN')">
 
+            <div id="recommendZone">
+
+                <div id="pZone">
+                    <div>
+
+                        <h3>공연</h3>
+
+                    </div>
+
+                    <div id="pList" class="listZone">
+
+                        <div class="card">
+                            <img src="https://kr.object.ncloudstorage.com/team3/common/noPhoto.png" class="card-img-top" alt="...">
+                            <div class="card-body">
+                                <p class="card-text">Some</p>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <img src="https://kr.object.ncloudstorage.com/team3/common/noPhoto.png" class="card-img-top" alt="...">
+                            <div class="card-body">
+                                <p class="card-text">some</p>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <img src="https://kr.object.ncloudstorage.com/team3/common/noPhoto.png" class="card-img-top" alt="...">
+                            <div class="card-body">
+                                <p class="card-text">Some</p>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <img src="https://kr.object.ncloudstorage.com/team3/common/noPhoto.png" class="card-img-top" alt="...">
+                            <div class="card-body">
+                                <p class="card-text">Some</p>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div id="eZone">
+                    <div>
+
+                        <h3>박물관 전시</h3>
+
+                    </div>
+
+                    <div id="eList" class="listZone">
+
+                        <div class="card">
+                            <img src="https://kr.object.ncloudstorage.com/team3/common/noPhoto.png" class="card-img-top" alt="...">
+                            <div class="card-body">
+                                <p class="card-text">Some</p>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <img src="https://kr.object.ncloudstorage.com/team3/common/noPhoto.png" class="card-img-top" alt="...">
+                            <div class="card-body">
+                                <p class="card-text">Some</p>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <img src="https://kr.object.ncloudstorage.com/team3/common/noPhoto.png" class="card-img-top" alt="...">
+                            <div class="card-body">
+                                <p class="card-text">Some</p>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <img src="https://kr.object.ncloudstorage.com/team3/common/noPhoto.png" class="card-img-top" alt="...">
+                            <div class="card-body">
+                                <p class="card-text">Some</p>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+
+                <div id="fZone">
+                    <div>
+
+                        <h3>축제</h3>
+
+                    </div>
+
+                    <div id="fList" class="listZone">
+
+                        <div class="card">
+                            <img src="https://kr.object.ncloudstorage.com/team3/common/noPhoto.png" class="card-img-top" alt="...">
+                            <div class="card-body">
+                                <p class="card-text">Some</p>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <img src="https://kr.object.ncloudstorage.com/team3/common/noPhoto.png" class="card-img-top" alt="...">
+                            <div class="card-body">
+                                <p class="card-text">Some</p>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <img src="https://kr.object.ncloudstorage.com/team3/common/noPhoto.png" class="card-img-top" alt="...">
+                            <div class="card-body">
+                                <p class="card-text">Some</p>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <img src="https://kr.object.ncloudstorage.com/team3/common/noPhoto.png" class="card-img-top" alt="...">
+                            <div class="card-body">
+                                <p class="card-text">Some</p>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+
+                <div id="cZone">
+                    <div>
+
+                        <h3>문화재</h3>
+
+                    </div>
+
+                    <div id="cList" class="listZone">
+
+                        <div class="card">
+                            <img src="https://kr.object.ncloudstorage.com/team3/common/noPhoto.png" class="card-img-top" alt="...">
+                            <div class="card-body">
+                                <p class="card-text">Some</p>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <img src="https://kr.object.ncloudstorage.com/team3/common/noPhoto.png" class="card-img-top" alt="...">
+                            <div class="card-body">
+                                <p class="card-text">Some</p>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <img src="https://kr.object.ncloudstorage.com/team3/common/noPhoto.png" class="card-img-top" alt="...">
+                            <div class="card-body">
+                                <p class="card-text">Some</p>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <img src="https://kr.object.ncloudstorage.com/team3/common/noPhoto.png" class="card-img-top" alt="...">
+                            <div class="card-body">
+                                <p class="card-text">Some</p>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+
+        </th:block>
+
+
+
+        <div id="searchZone">
+
+            ss
 
         </div>
-            dkdkdk
-        <div>
 
-
-
+        <div id="mapAndCalenderZone">
+            sss
+            <div id="mapZone"></div>
+            <div id="calenderZone"></div>
         </div>
-            djkdkdkd
-        <div>
-
-
-
-        </div>
-            dkdkdk
-        <div>
-
-
 
     </div>
 
