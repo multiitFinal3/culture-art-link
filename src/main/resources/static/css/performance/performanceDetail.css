@@ -34,20 +34,39 @@
     justify-content: center; /* 가운데 정렬 */
     align-items: center;
     gap: 10px; /* 아이콘 사이의 간격 */
-    margin-top: 20px; /* 카드와 버튼 사이에 간격 추가 */
+    margin-top: 5px 0; /* 카드와 버튼 사이에 간격 추가 */
+    padding: 10px 15px;
+    border-radius: 5px
+
+
 }
 
 .like-dislike-icon {
-    width: 30px;  /* 이미지 너비 */
-    height: 30px; /* 이미지 높이 */
+    width: 60px;  /* 부모 요소의 너비 */
+    height: 50px; /* 부모 요소의 높이 */
     cursor: pointer; /* 클릭할 수 있는 커서 */
     pointer-events: auto; /* 클릭 이벤트를 허용 */
-    background-color: white;
-    background-size: 40px 40px;
-    border: 2px solid black;
+    background: #f0f0f0;
+    background-size: 60px 50px;
     border-radius: 20%;
+    padding: 10px; /* 내부 여백 추가 */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    display: flex; /* 내부 요소 가운데 정렬을 위해 플렉스 박스 사용 */
+    justify-content: center;
+    align-items: center;
 }
 
+.like-dislike-container .like-dislike-icon img{
+    width: 30px !important;  /* 이미지 너비 */
+    height: 30px !important; /* 이미지 높이 */
+    vertical-align: middle;
+}
+
+/* 아이콘에 커서를 올렸을 때의 스타일 */
+.like-dislike-icon:hover {
+    background: #e0e0e0; /* 배경색을 #e0e0e0으로 변경 */
+transform: translateY(-2px);}
 
 
 
