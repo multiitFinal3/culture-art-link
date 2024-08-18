@@ -8,6 +8,8 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
     <link rel="stylesheet" th:href="@{/css/main/main.css}">
     <script th:src="@{/js/main/main.js}"></script>
+    <script th:inline="javascript"
+            th:src="'https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=' + ${naverClientId}"></script>
     <script th:inline="javascript">
 
         $(document).ready(
@@ -206,6 +208,77 @@
 
 
 
+                //#region 네이버 지도 존
+
+
+                /**
+               * 지도 드랍다운에 지역 넣기
+               */
+                 function findAllRegion(){
+
+                    $.ajax({
+
+                        url: '/admin/festival-regulate/findAllRegionAndTime',
+                        method: 'POST',
+                        contentType: 'application/json',
+                        success: function(map){
+
+                            var list1 = map.regionList;
+                            console.log(list1);
+
+                            $('#dropdownContent2').html("");
+                            $.each(list1, function(index, region){
+
+                                var htmlContent = `<a id="${region.regionName}" value="${region.regionId}" class="region">${region.regionName}</a>`;
+
+                                $('#dropdownContent2').append(htmlContent);
+
+                            })
+
+
+                        }
+
+                    })
+
+                }
+
+
+                findAllRegion();
+
+
+                var currentRegion="서울";
+                /**
+                * 카테고리 드롭다운 클릭 시 텍스트를 가져옴
+                *
+                */
+                $(document).on('click','.region', function(){
+
+                    var regionText = $(this).text();
+                    currentRegion = regionText;
+                    $('#region').text(currentRegion);
+
+                    var regionId = $(this).val();
+
+                    findAllCategoryByRegion(regionId)
+
+                })
+
+
+
+                /**
+                * 지역에 따른 모든 카테고리의 위치를 다중 마커로 표시
+                *
+                */
+                function findAllCategoryByRegion(regionId){
+
+
+
+
+
+
+                }
+
+                findAllCategoryByRegion(11);
 
 
 
@@ -473,9 +546,60 @@
         </th:block>
 
         <div id="mapAndCalenderZone">
-            sss
-            <div id="mapZone"></div>
-            <div id="calenderZone"></div>
+
+            <div id="mapZone">
+
+                <div class="dropdown btn btn-outline-success" id="searchDrop2">
+
+                    <a href="javascript:void(0)" class="dropbtn" id="region" style="color: #28a745;">서울</a>
+                    <div class="dropdown-content" id="dropdownContent2">
+<!--                        <a id="all" class="category">전체</a>-->
+<!--                        <a id="performance" class="category">공연</a>-->
+<!--                        <a id="exhibition" class="category">전시</a>-->
+<!--                        <a id="festival" class="category">축제</a>-->
+<!--                        <a id="culturalPro" class="category">문화재</a>-->
+                    </div>
+
+                </div>
+
+                <div id="map" style="width: 100%;height: 500px;position: relative;overflow: hidden;background: rgb(248, 249, 250);">
+
+
+                </div>
+
+                <div>
+
+                    <a href="/mapDetail" style="text-align: right;width: 100%;display: block;">지도 더 보기</a>
+
+                </div>
+
+            </div>
+
+
+            <div id="calendarZone">
+
+                <div class="dropdown btn btn-outline-success" id="hiddenArea">
+
+                    <a href="javascript:void(0)" class="hidden" id="hidden" style="color: #28a745;">서울</a>
+                    <div class="dropdown-content" id="hiddenContent">
+                    </div>
+
+                </div>
+
+                <div id="calendar" style="width: 100%;height: 500px;position: relative;overflow: hidden;background: rgb(248, 249, 250);">
+
+
+                </div>
+
+                <div>
+
+                    <a href="/calendar" style="text-align: right;width: 100%;display: block;">일정 더 보기</a>
+
+                </div>
+
+
+            </div>
+
         </div>
 
     </div>
