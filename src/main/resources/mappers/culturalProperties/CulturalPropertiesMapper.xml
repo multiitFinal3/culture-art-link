@@ -215,6 +215,13 @@
     </select>
 
 
+    <select id="getReviewKeywordsByCulturalPropertyId" resultType="string">
+        SELECT keyword
+        FROM cultural_properties_review_keyword
+        WHERE cultural_properties_id = #{culturalPropertiesId}
+    </select>
+
+
 
 
 </mapper>

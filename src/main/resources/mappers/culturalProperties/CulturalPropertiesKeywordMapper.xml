@@ -27,6 +27,58 @@
     </select>
 
 
+    <select id="getReviewContentsByCulturalPropertiesId" parameterType="int" resultType="string">
+        SELECT content
+        FROM cultural_properties_review
+        WHERE cultural_properties_id = #{culturalPropertiesId}
+    </select>
+
+
+    <select id="existsByReviewCulturalPropertiesId" parameterType="int" resultType="boolean">
+        SELECT EXISTS (
+        SELECT 1
+        FROM cultural_properties_review_keyword
+        WHERE cultural_properties_id = #{culturalPropertiesId}
+        )
+    </select>
+
+
+
+
+    <select id="getExistingKeywordIds" resultType="int">
+        SELECT id
+        FROM cultural_properties_review_keyword
+        WHERE cultural_properties_id = #{culturalPropertiesId}
+        ORDER BY id
+        LIMIT 5
+    </select>
+
+    <update id="updateExistingKeywords">
+        UPDATE cultural_properties_review_keyword
+        SET
+        keyword = CASE id
+        <foreach collection="keywordList" item="item">
+            WHEN #{item.id} THEN #{item.keyword}
+        </foreach>
+        END,
+        updated_at = CURRENT_TIMESTAMP
+        WHERE id IN
+        <foreach collection="keywordList" item="item" open="(" separator="," close=")">
+            #{item.id}
+        </foreach>
+    </update>
+
+    <insert id="insertNewKeywords">
+        INSERT INTO cultural_properties_review_keyword
+        (cultural_properties_id, keyword)
+        VALUES
+        <foreach collection="keywords" item="keyword" separator=",">
+            (#{culturalPropertiesId}, #{keyword})
+        </foreach>
+    </insert>
+
+
+
 
 
 

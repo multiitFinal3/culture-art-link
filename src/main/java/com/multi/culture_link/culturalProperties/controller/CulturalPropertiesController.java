@@ -305,11 +305,15 @@ public class CulturalPropertiesController {
 		// 키워드 목록 가져오기
 		List<String> keywords = culturalPropertiesService.getKeywordsByCulturalPropertyId(id);
 
+		// 리뷰 키워드 가져오기 (새로 추가)
+		List<String> reviewKeywords = culturalPropertiesService.getReviewKeywordsByCulturalPropertyId(id);
+
 		System.out.println("디테일 아이디 "+ id);
 		model.addAttribute("property", property);
 		model.addAttribute("getNearbyPlace", culturalPropertiesService.getNearbyPlace(property.getRegion(), property.getDistrict(), id));
 		model.addAttribute("reviews", reviews);
 		model.addAttribute("keywords", keywords);
+		model.addAttribute("reviewKeywords", reviewKeywords);
 
 		System.out.println("Reviews: " + reviews);
 //		System.out.println("근처 문화재 수: " + nearbyPlaces.size());

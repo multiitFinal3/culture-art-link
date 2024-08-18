@@ -66,4 +66,5 @@ public interface CulturalPropertiesDAO {
 
     List<String> getKeywordsByCulturalPropertyId(int culturalPropertiesId);
 
+    List<String> getReviewKeywordsByCulturalPropertyId(int culturalPropertiesId);
 }
