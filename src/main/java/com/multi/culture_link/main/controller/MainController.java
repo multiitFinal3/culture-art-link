@@ -80,11 +80,11 @@ public class MainController {
 	public HashMap<String, ArrayList> findAllCultureCategoryByRegion(@RequestParam("regionId") int regionId){
 		
 		HashMap<String, ArrayList> categoryMap = null;
-//		try {
-//			categoryMap = mainService.findAllCultureCategoryByRegion(regionId);
-//		} catch (Exception e) {
-//			throw new RuntimeException(e);
-//		}
+		try {
+			categoryMap = mainService.findAllCultureCategoryByRegion(regionId);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
 		
 		return categoryMap;
 	}

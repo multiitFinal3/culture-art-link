@@ -286,15 +286,102 @@
                                 contentType: 'application/json',
                                 success: function(pos){
 
+                                    // 중심좌표 잡기
                                     console.log("position");
                                     console.log(pos);
 
-                                    var position = new naver.maps.LatLng(pos.latitude, pos.longtitude);
+                                    var position = new naver.maps.LatLng(parseFloat(pos.longtitude), parseFloat(pos.latitude));
 
                                     var map = new naver.maps.Map('map', {
                                         center: position,
-                                        zoom: 15
+                                        zoom: 11
                                     });
+
+                                    var fList = categoryMap.festivalList;
+                                    console.log(fList);
+
+                                    let fMarkers = new Array();
+                                    let fInfoWindows = new Array();
+
+
+                                    $.each(fList, function(index, festival){
+
+                                        var realLat = festival.latitude;
+                                        var realLong = festival.longtitude;
+
+                                        console.log("realLat")
+                                        console.log(realLat)
+
+
+                                        var marker = new naver.maps.Marker({
+                                            position: new naver.maps.LatLng(realLat, realLong),
+                                            title: festival.festivalName,
+                                            map: map,
+                                            icon: {
+                                                url: 'https://kr.object.ncloudstorage.com/team3/common/festi.png',
+                                                size: new naver.maps.Size(22, 35),
+                                                origin: new naver.maps.Point(0, 0),
+                                                anchor: new naver.maps.Point(11, 35)
+                                            }
+                                        });
+
+                                        var infoWindow = new naver.maps.InfoWindow({
+
+                                            content : `<div style="width:200px;text-align:center;padding:5px;">
+                                                <a href="/festival/festival-detail?festivalId=${festival.festivalId}">
+                                                    ${festival.festivalName}
+                                                </a>
+                                            </div>`
+
+                                        });
+
+                                        fMarkers.push(marker);
+                                        console.log(marker);
+                                        fInfoWindows.push(infoWindow);
+                                        console.log(infoWindow);
+                                    })
+
+
+                                    function fgetClickHandler(seq){
+
+                                        return function(e){
+
+                                            var marker = fMarkers[seq];
+                                            var infoWindow = fInfoWindows[seq];
+
+                                            if(infoWindow.getMap()){
+
+                                                infoWindow.close();
+
+                                            }else{
+
+                                                infoWindow.open(map, marker);
+
+                                            }
+
+                                        }
+
+                                    }
+
+                                     for (var i=0, ii=fMarkers.length; i<ii; i++) {
+                                        console.log(fMarkers[i] , fgetClickHandler(i));
+                                        naver.maps.Event.addListener(fMarkers[i], 'click', fgetClickHandler(i));
+                                    }
+
+
+                                    var mapWidth = $('#map').width();
+                                    console.log("mapWidth");
+                                    console.log(mapWidth);
+
+                                    function getMapSize() {
+                                        var size = new naver.maps.Size(mapWidth, 500);
+
+                                        return size;
+                                    };
+
+
+                                    map.setSize(getMapSize());
+
 
 
 
@@ -306,6 +393,14 @@
                         }
 
                     })
+
+
+
+
+
+
+
+
 
                 }
 

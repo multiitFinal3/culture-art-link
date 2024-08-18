@@ -3,12 +3,15 @@ package com.multi.culture_link.main.service;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.multi.culture_link.festival.model.dto.FestivalDTO;
+import com.multi.culture_link.festival.service.FestivalService;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 @Service
@@ -16,6 +19,7 @@ public class MainServiceImpl implements MainService {
 	
 	private OkHttpClient client;
 	private Gson gson;
+	private FestivalService festivalService;
 	
 	@Value("${API-KEY.naverClientId}")
 	private String naverClientId;
@@ -23,10 +27,12 @@ public class MainServiceImpl implements MainService {
 	@Value("${API-KEY.naverClientSecret}")
 	private String naverClientSecret;
 	
-	public MainServiceImpl(OkHttpClient client, Gson gson) {
+	public MainServiceImpl(OkHttpClient client, Gson gson, FestivalService festivalService) {
 		this.client = client;
 		this.gson = gson;
+		this.festivalService = festivalService;
 	}
+	
 	
 	@Override
 	public HashMap<String, Double> findCenterPositionByRegion(String regionName) throws Exception {
@@ -67,6 +73,22 @@ public class MainServiceImpl implements MainService {
 		return position;
 		
 		
+	}
+	
+	@Override
+	public HashMap<String, ArrayList> findAllCultureCategoryByRegion(int regionId) throws Exception {
+		
+		HashMap<String, ArrayList> categoryMap = new HashMap<>();
+		
+		FestivalDTO festivalDTO = new FestivalDTO();
+		festivalDTO.setRegionId(regionId);
+		festivalDTO.setFestivalId(-1);
+		
+		ArrayList<FestivalDTO> flist	= festivalService.findSameRegionFestivalByRegionId(festivalDTO);
+		
+		categoryMap.put("festivalList", flist);
+		
+		return categoryMap;
 	}
 	
 	
