@@ -18,14 +18,20 @@
         <result property="narrationUrl" column="narration_url" jdbcType="VARCHAR"/>
     </resultMap>
 
-    <insert id="insertDB" parameterType="culturalPropertiesDTO">
-        INSERT INTO cultural_properties (id, category_code, management_number, city_code, cultural_properties_name,
-        category_name, region, district, dynasty, address, registration_date, classify_a, classify_b, classify_c,
-        classify_d, content, main_img_url, img_url, img_desc, video_url, narration_url, longitude, latitude)
-        VALUES (#{id}, #{categoryCode}, #{managementNumber}, #{cityCode}, #{culturalPropertiesName}, #{categoryName},
-        #{region}, #{district}, #{dynasty}, #{address}, #{registrationDate}, #{classifyA}, #{classifyB}, #{classifyC},
-        #{classifyD}, #{content}, #{mainImgUrl}, #{imgUrl}, #{imgDesc}, #{videoUrl}, #{narrationUrl}, #{longitude},
-        #{latitude})
+
+    <insert id="insertDB" parameterType="culturalPropertiesDTO" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO cultural_properties (
+        category_code, management_number, city_code, category_name, cultural_properties_name,
+        address, region, district, dynasty, registration_date, longitude, latitude,
+        classify_a, classify_b, classify_c, classify_d, content, main_img_url, img_url,
+        img_desc, video_url, narration_url
+        )
+        VALUES (
+        #{categoryCode}, #{managementNumber}, #{cityCode}, #{categoryName}, #{culturalPropertiesName},
+        #{address}, #{region}, #{district}, #{dynasty}, #{registrationDate}, #{longitude}, #{latitude},
+        #{classifyA}, #{classifyB}, #{classifyC}, #{classifyD}, #{content}, #{mainImgUrl}, #{imgUrl},
+        #{imgDesc}, #{videoUrl}, #{narrationUrl}
+        )
     </insert>
 
 
@@ -169,20 +175,6 @@
         id = #{id}
     </update>
 
-<!--    <insert id="insertDB" parameterType="culturalPropertiesDTO" useGeneratedKeys="true" keyProperty="id">-->
-<!--        INSERT INTO cultural_properties (-->
-<!--        category_code, management_number, city_code, category_name, cultural_properties_name,-->
-<!--        address, region, district, dynasty, registration_date, longitude, latitude,-->
-<!--        classify_a, classify_b, classify_c, classify_d, content, main_img_url, img_url,-->
-<!--        img_desc, video_url, narration_url-->
-<!--        )-->
-<!--        VALUES (-->
-<!--        #{categoryCode}, #{managementNumber}, #{cityCode}, #{categoryName}, #{culturalPropertiesName},-->
-<!--        #{address}, #{region}, #{district}, #{dynasty}, #{registrationDate}, #{longitude}, #{latitude},-->
-<!--        #{classifyA}, #{classifyB}, #{classifyC}, #{classifyD}, #{content}, #{mainImgUrl}, #{imgUrl},-->
-<!--        #{imgDesc}, #{videoUrl}, #{narrationUrl}-->
-<!--        )-->
-<!--    </insert>-->
 
     <select id="findAll" resultType="culturalPropertiesDTO">
         SELECT *
@@ -199,19 +191,6 @@
         </foreach>
     </delete>
 
-<!--    <delete id="deleteDBDataAndKeywords">-->
-<!--        DELETE FROM cultural_properties_content_keyword-->
-<!--        WHERE cultural_properties_id IN-->
-<!--        <foreach item="id" collection="list" open="(" separator="," close=")">-->
-<!--            #{id}-->
-<!--        </foreach>;-->
-
-<!--        DELETE FROM cultural_properties-->
-<!--        WHERE id IN-->
-<!--        <foreach item="id" collection="list" open="(" separator="," close=")">-->
-<!--            #{id}-->
-<!--        </foreach>;-->
-<!--    </delete>-->
 
 
 

@@ -327,24 +327,12 @@ public class AdminCulturalPropertiesService {
 			adminCulturalPropertiesDAO.insertDB(culturalPropertiesDTO);
 
 
-//			// 기존에 저장된 문화재인지 확인
-//			CulturalPropertiesDTO existingDTO = adminCulturalPropertiesDAO.selectById(culturalPropertiesDTO.getId());
-//
-//			if (existingDTO == null) {
-//				// 새로운 문화재인 경우 저장 및 키워드 추출
-//				adminCulturalPropertiesDAO.insertDB(culturalPropertiesDTO);
-//				extractAndSaveKeywords(culturalPropertiesDTO.getId(), culturalPropertiesDTO.getContent());
-//			} else {
-//				// 기존에 저장된 문화재인 경우 업데이트
-//				adminCulturalPropertiesDAO.updateDB(culturalPropertiesDTO);
-//			}
+			// 키워드 추출 및 저장
+			int culturalPropertiesId = culturalPropertiesDTO.getId();
+			String content = culturalPropertiesDTO.getContent();
+			extractAndSaveKeywords(culturalPropertiesId, content);
 
-//			// 문화재 데이터 저장
-//			int culturalPropertiesId = adminCulturalPropertiesDAO.insertDB2(culturalPropertiesDTO);
-//
-//			// 키워드 추출 및 저장
-//			extractAndSaveKeywords(culturalPropertiesId, culturalPropertiesDTO.getContent());
-			
+
 		}
 	
 	}
@@ -452,75 +440,6 @@ public class AdminCulturalPropertiesService {
 
 
 
-//	public void extractAndSaveKeywords(int culturalPropertiesId, String content) {
-//		try {
-//			ArrayList<String> extractedKeywords = keywordExtractService.getKeywordByGPT(content);
-//
-//			List<CulturalPropertiesKeywordDTO> keywordDTOList = new ArrayList<>();
-//			for (String keyword : extractedKeywords) {
-//				CulturalPropertiesKeywordDTO keywordDTO = new CulturalPropertiesKeywordDTO();
-//				keywordDTO.setCulturalPropertiesId(culturalPropertiesId);
-//				keywordDTO.setKeyword(keyword);
-//				keywordDTOList.add(keywordDTO);
-//			}
-//
-//			culturalPropertiesKeywordDAO.saveAll(keywordDTOList);
-//		} catch (Exception e) {
-//			// 예외 처리
-//			e.printStackTrace();
-//			// 또는 예외를 throw하여 상위로 전파
-//			// throw new RuntimeException("Failed to extract and save keywords", e);
-//		}
-//	}
-
-//	public void extractAndSaveKeywords(int culturalPropertiesId, String content) {
-//		try {
-//			ArrayList<String> extractedKeywords = keywordExtractService.getKeywordByGPT(content);
-//
-//			System.out.println("Extracted Keywords for Cultural Properties ID " + culturalPropertiesId + ":");
-//			for (String keyword : extractedKeywords) {
-//				System.out.println(keyword);
-//			}
-//
-//			List<CulturalPropertiesKeywordDTO> keywordDTOList = new ArrayList<>();
-//			for (String keyword : extractedKeywords) {
-//				CulturalPropertiesKeywordDTO keywordDTO = new CulturalPropertiesKeywordDTO();
-//				keywordDTO.setCulturalPropertiesId(culturalPropertiesId);
-//				keywordDTO.setKeyword(keyword);
-//				keywordDTOList.add(keywordDTO);
-//			}
-//
-//			culturalPropertiesKeywordDAO.saveAll(keywordDTOList);
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-//	}
-
-//
-//	public void extractAndSaveKeywords(int culturalPropertiesId, String content) {
-//		try {
-//			ArrayList<String> extractedKeywords = keywordExtractService.getKeywordByGPT(content);
-//
-//			System.out.println("Extracted Keywords for Cultural Properties ID " + culturalPropertiesId + ":");
-//			for (String keyword : extractedKeywords) {
-//				System.out.println(keyword);
-//			}
-//
-//			List<CulturalPropertiesKeywordDTO> keywordDTOList = new ArrayList<>();
-//			for (String keyword : extractedKeywords) {
-//				CulturalPropertiesKeywordDTO keywordDTO = new CulturalPropertiesKeywordDTO();
-//				keywordDTO.setCulturalPropertiesId(culturalPropertiesId);
-//				keywordDTO.setKeyword(keyword);
-//				keywordDTOList.add(keywordDTO);
-//			}
-//
-//			System.out.println("Saving keywords for Cultural Properties ID: " + culturalPropertiesId);
-//			culturalPropertiesKeywordDAO.saveAll(keywordDTOList);
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-//	}
-
 
 	@PostConstruct
 	public void initializeKeywords() {
@@ -542,25 +461,33 @@ public class AdminCulturalPropertiesService {
 	}
 
 
+
 	public void extractAndSaveKeywords(int culturalPropertiesId, String content) {
 		try {
-			ArrayList<String> extractedKeywords = keywordExtractService.getKeywordByGPT(content);
+			// culturalPropertiesId에 해당하는 문화재 데이터 존재 여부 확인
+			CulturalPropertiesDTO existingCulturalProperties = adminCulturalPropertiesDAO.selectById(culturalPropertiesId);
 
-			System.out.println("Extracted Keywords for Cultural Properties ID " + culturalPropertiesId + ":");
-			for (String keyword : extractedKeywords) {
-				System.out.println(keyword);
+			if (existingCulturalProperties != null) {
+				ArrayList<String> extractedKeywords = keywordExtractService.getKeywordByGPT(content);
+
+				System.out.println("Extracted Keywords for Cultural Properties ID " + culturalPropertiesId + ":");
+				for (String keyword : extractedKeywords) {
+					System.out.println(keyword);
+				}
+
+				List<CulturalPropertiesKeywordDTO> keywordDTOList = new ArrayList<>();
+				for (String keyword : extractedKeywords) {
+					CulturalPropertiesKeywordDTO keywordDTO = new CulturalPropertiesKeywordDTO();
+					keywordDTO.setCulturalPropertiesId(culturalPropertiesId);
+					keywordDTO.setKeyword(keyword);
+					keywordDTOList.add(keywordDTO);
+				}
+
+				System.out.println("Saving keywords for Cultural Properties ID: " + culturalPropertiesId);
+				culturalPropertiesKeywordDAO.saveAll(keywordDTOList);
+			} else {
+				System.out.println("Cultural Properties ID " + culturalPropertiesId + " does not exist. Skipping keyword extraction and saving.");
 			}
-
-			List<CulturalPropertiesKeywordDTO> keywordDTOList = new ArrayList<>();
-			for (String keyword : extractedKeywords) {
-				CulturalPropertiesKeywordDTO keywordDTO = new CulturalPropertiesKeywordDTO();
-				keywordDTO.setCulturalPropertiesId(culturalPropertiesId);
-				keywordDTO.setKeyword(keyword);
-				keywordDTOList.add(keywordDTO);
-			}
-
-			System.out.println("Saving keywords for Cultural Properties ID: " + culturalPropertiesId);
-			culturalPropertiesKeywordDAO.saveAll(keywordDTOList);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
