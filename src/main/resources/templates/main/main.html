@@ -121,6 +121,20 @@
                 })
 
 
+                /**
+               *  검색존의 축제 카드 클릭 시 상세 페이지로 이동
+               *
+               */
+                $(document).on('click','#fsList .card', function(){
+
+                    var festivalId = $(this).attr('id');
+                    window.location.href='/festival/festival-detail?festivalId='+festivalId;
+
+                })
+
+
+
+
 
                 /**
                 * 검색 버튼 클릭 시
