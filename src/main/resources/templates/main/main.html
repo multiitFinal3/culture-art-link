@@ -77,16 +77,118 @@
 
                 findKeywordRecommendFestivalList();
 
-
-
-
-
-
-
-
-
                 //#endregion
 
+
+                // #region 검색 존
+
+
+                var selectedCategory = "전체";
+                /**
+                * 카테고리 드롭다운 클릭 시 텍스트를 가져옴
+                *
+                */
+                $(document).on('click','.category', function(){
+
+                    var categoryText = $(this).text();
+                    selectedCategory = categoryText;
+                    $('#category').text(categoryText);
+
+                    if(categoryText=="전체"){
+
+                    }else if(categoryText=="공연"){
+
+                    }else if(categoryText=="전시"){
+
+                    }else if(categoryText=="축제"){
+
+                    }else if(categoryText=="문화재"){
+
+                    }
+
+
+                })
+
+
+                /**
+                * 검색에서 초기화 버튼으로 돌아가기 버튼
+                *
+                */
+                $(document).on('click','#resetBtn1', function(){
+
+                    document.getElementById('searchForm').reset();
+
+                })
+
+
+
+                /**
+                * 검색 버튼 클릭 시
+                *
+                */
+                $(document).on('click','#searchBtn1', function(){
+
+                    if(selectedCategory == "전체"){
+
+                    }else if(selectedCategory=="공연"){
+
+                    }else if(selectedCategory=="전시"){
+
+                    }else if(selectedCategory=="축제"){
+
+                        var festivalText = $('#keyword').val();
+
+                        $.ajax({
+
+                            url: '/festival/findDBFestivalByText?text='+festivalText,
+                            method: 'POST',
+                            contentType: 'application/json',
+                            success: function(list){
+
+                                $('#fsList').html("");
+
+                                $.each(list, function(index, festival){
+
+                                    var imgHtml = ``;
+
+                                    if(! festival.imgUrl || festival.imgUrl == "null"){
+                                        imgHtml = `
+                                                <img class="card-img-top" src="https://kr.object.ncloudstorage.com/team3/common/noPhoto.png" alt="Card image cap">
+                                        `;
+                                    }else{
+                                        imgHtml = `
+                                                <img class="card-img-top" src="${festival.imgUrl}" alt="Card image cap">
+                                        `;
+                                    }
+
+                                    var cardHtml = `
+                                        <div class="card" id="${festival.festivalId}">
+                                            ${imgHtml}
+                                            <div class="card-body">
+                                                <p class="card-title" title="${festival.festivalName}">${festival.festivalName}</p>
+                                            </div>
+                                        </div>
+                                    `;
+
+                                    $('#fsList').append(cardHtml);
+
+                                })
+                            }
+                        })
+
+
+
+
+
+                    }else if(selectedCategory=="문화재"){
+
+                    }
+
+
+
+
+
+                })
 
 
 
@@ -301,16 +403,17 @@
 
                 <div id="searchBar" class="extra-filter">
 
-                    <div class="dropdown" id="searchDrop">
-                        <button class="btn btn-outline-success" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                            검색범위
-                        </button>
-                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                            <li><a class="dropdown-item">공연</a></li>
-                            <li><a class="dropdown-item">전시</a></li>
-                            <li><a class="dropdown-item">축제</a></li>
-                            <li><a class="dropdown-item">문화재</a></li>
-                        </ul>
+                    <div class="dropdown btn btn-outline-success" id="searchDrop">
+
+                        <a href="javascript:void(0)" class="dropbtn" id="category" style="color: #28a745;">전체</a>
+                        <div class="dropdown-content">
+                            <a id="all" class="category">전체</a>
+                            <a id="performance" class="category">공연</a>
+                            <a id="exhibition" class="category">전시</a>
+                            <a id="festival" class="category">축제</a>
+                            <a id="culturalPro" class="category">문화재</a>
+                        </div>
+
                     </div>
 
                     <div id="searchFormDiv">
@@ -332,7 +435,6 @@
                 <div id="searchListZone">
 
                     <div id="psList">
-                                    sdsd
 
                     </div>
 

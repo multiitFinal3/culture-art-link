@@ -1303,4 +1303,36 @@ public class FestivalController {
 	}
 	
 	
+	
+	
+	
+	/**
+	 * 어떤 속성이든 하나의 텍스트를 포함하는 축제 모두를 반환
+	 * @param text
+	 * @return
+	 */
+	@PostMapping("/findDBFestivalByText")
+	@ResponseBody
+	public ArrayList<FestivalDTO> findDBFestivalByText(@RequestParam String text) {
+		
+		System.out.println("text : " + text);
+		ArrayList<FestivalDTO> list = null;
+		try {
+			
+			FestivalDTO festivalDTO = new FestivalDTO();
+			festivalDTO.setFestivalName(text);
+			
+			list = festivalService.findDBFestivalByText(text);
+			System.out.println("findDBFestivalByText list : " + list);
+			
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+		
+		return list;
+	}
+	
+	
+	
+	
 }

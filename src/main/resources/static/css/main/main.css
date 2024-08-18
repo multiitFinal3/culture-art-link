@@ -87,6 +87,14 @@ h3{
 
 }
 
+.card-img-top:hover {
+   transform: scale(1.05);
+}
+
+.card:hover .card-body{
+   text-decoration: underline #0b5eb6;
+}
+
 
 #searchZone{
 
@@ -137,6 +145,56 @@ h3{
 
 }
 
+#searchDrop{
+
+    display: inline-block;
+    position: relative;
+
+}
+
+#searchDrop:hover{
+
+    background-color:transparent;
+    color: #28a745;
+
+}
+
+.dropdown-content {
+      display: none;
+      position: absolute;
+      min-width: 160px;
+      box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+      z-index: 5;
+      background-color: transparent;
+      color: #786b6b;
+}
+
+.dropbtn:after {
+  content: "▼";
+  margin-left: 10px;
+  font-size: 10px;
+}
+
+
+.dropdown-content a {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+  text-align: left;
+}
+
+.dropdown-content a:hover {
+    display: block;
+
+}
+
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+
+
 #resetBtn1{
 
     border-top-right-radius: 5px;
@@ -149,14 +207,14 @@ h3{
     display: flex;
     flex-flow: column;
     align-items: center;
-
+    width: 100%;
 }
 
 #searchListZone > div{
 
     display: flex;
     flex-flow: row;
-    flex-wrap: no-wrap;
+    flex-wrap: wrap !important;
     align-items: center;
     justify-content: center;
     margin-left: 5%;
@@ -165,3 +223,16 @@ h3{
     gap: 10px;
 
 }
+
+
+#searchListZone .card{
+
+    margin: 1%;
+    min-width: 12%;
+    max-width: 12%;
+    border: 0px;
+}
+
+
+
+
