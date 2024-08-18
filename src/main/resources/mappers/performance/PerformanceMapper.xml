@@ -103,12 +103,12 @@
         pr.review_date AS reviewDate,
         pr.created_at AS createdAt,
         pr.updated_at AS updatedAt,
-        u.user_name AS userName,  <!-- 수정: userName 필드 -->
-        u.user_profile_pic AS userProfileImage  <!-- 수정: userProfilePic 필드 -->
+        u.user_name AS userName,
+        u.user_profile_pic AS userProfileImage
         FROM
         performance_review pr
         JOIN
-        user u ON pr.user_id = u.user_id  <!-- 수정: user_id 필드 -->
+        user u ON pr.user_id = u.user_id
         WHERE
         pr.performance_id = #{performanceId}
     </select>
@@ -139,14 +139,16 @@
 
 
     <!--추천-->
-    <!-- 사용자가 찜한 공연의 위치나 캐스팅과 유사한 공연을 추천 -->
     <select id="findRecommendedPerformances" resultType="com.multi.culture_link.admin.performance.model.dto.PerformanceDTO">
         SELECT
         p.id, p.code, p.title, p.location, p.casting, p.genre, p.image_main, p.start_date, p.end_date
         FROM
         performance_info p
         WHERE
-        (p.location IN (
+        p.start_date > NOW()
+        AND p.genre = #{genre}
+        AND (
+        p.location IN (
         SELECT DISTINCT pi.location
         FROM performance_add pa
         JOIN performance_info pi ON pa.performance_id = pi.id
@@ -157,15 +159,18 @@
         FROM performance_add pa
         JOIN performance_info pi ON pa.performance_id = pi.id
         WHERE pa.user_id = #{userId} AND pa.state = 'like'
-        ))
+        )
+        )
         AND p.id NOT IN (
         SELECT pa.performance_id
         FROM performance_add pa
         WHERE pa.user_id = #{userId}
         )
-        ORDER BY RAND()
-        LIMIT 15
+        ORDER BY RAND() -- 무작위로 선택
+        LIMIT 3 -- 각 장르에서 최대 3개 선택
     </select>
+
+
 
 
 

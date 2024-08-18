@@ -6,7 +6,11 @@ import com.multi.culture_link.performance.model.dto.PerformanceAddDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Please explain the class!!
@@ -75,18 +79,25 @@ public class PerformanceService {
 
 
 
-
-    // 추천 목록
-//    public List<PerformanceDTO> getRecommendedPerformances(int userId) {
-//        return performanceMapper.findRecommendedPerformances(userId);
-//    }
-
     public List<PerformanceDTO> getRecommendedPerformances(int userId) {
-        System.out.println("getRecommendedPerformances 메서드 호출됨");  // 확인용 로그
-        List<PerformanceDTO> recommendedPerformances = performanceMapper.findRecommendedPerformances(userId);
-        System.out.println("추천 공연 목록: " + recommendedPerformances);  // 추천 목록 로그
-        return recommendedPerformances;
+        List<PerformanceDTO> recommendedPerformances = new ArrayList<>();
+
+        // 특정 장르 리스트 정의
+        List<String> genres = Arrays.asList("연극", "뮤지컬", "무용", "대중무용", "서양음악(클래식)",
+                "한국음악(국악)", "대중음악", "복합", "서커스/마술");
+
+        for (String genre : genres) {
+            List<PerformanceDTO> performances = performanceMapper.findRecommendedPerformances(userId, genre);
+            // 무작위로 섞은 후 최대 3개 선택
+            Collections.shuffle(performances);
+            recommendedPerformances.addAll(performances.stream().limit(3).collect(Collectors.toList()));
+        }
+
+        // 최종 결과를 무작위로 섞기
+        Collections.shuffle(recommendedPerformances);
+        return recommendedPerformances.stream().limit(15).collect(Collectors.toList());
     }
+
 
 
 }
