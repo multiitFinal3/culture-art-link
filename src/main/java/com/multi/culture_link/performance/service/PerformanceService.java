@@ -71,5 +71,23 @@ public class PerformanceService {
     public PerformanceDTO getPerformanceByTitle(String title) {
         return performanceMapper.getPerformanceByTitle(title);
     }
+
+
+
+
+
+    // 추천 목록
+//    public List<PerformanceDTO> getRecommendedPerformances(int userId) {
+//        return performanceMapper.findRecommendedPerformances(userId);
+//    }
+
+    public List<PerformanceDTO> getRecommendedPerformances(int userId) {
+        System.out.println("getRecommendedPerformances 메서드 호출됨");  // 확인용 로그
+        List<PerformanceDTO> recommendedPerformances = performanceMapper.findRecommendedPerformances(userId);
+        System.out.println("추천 공연 목록: " + recommendedPerformances);  // 추천 목록 로그
+        return recommendedPerformances;
+    }
+
+
 }
 

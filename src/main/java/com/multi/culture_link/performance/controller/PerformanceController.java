@@ -7,6 +7,7 @@ import com.multi.culture_link.performance.service.PerformanceLocationService;
 import com.multi.culture_link.performance.service.PerformanceRankingService;
 import com.multi.culture_link.performance.service.PerformanceReviewService;
 import com.multi.culture_link.performance.service.PerformanceService;
+import com.multi.culture_link.users.model.dto.UserDTO;
 import com.multi.culture_link.users.model.dto.VWUserRoleDTO;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -51,9 +52,6 @@ public class PerformanceController {
         this.performanceService = performanceService;
         this.performanceReviewService = performanceReviewService;
 
-
-
-
     }
 
     /**
@@ -63,11 +61,27 @@ public class PerformanceController {
      * @param model the model
      * @return 공연 홈페이지
      */
+//    @GetMapping("/performance-home")
+//    public String performanceHomePage(@AuthenticationPrincipal VWUserRoleDTO user, Model model) {
+//        model.addAttribute("user", user.getUser());
+//        return "/performance/performanceHome";
+//    }
+
     @GetMapping("/performance-home")
     public String performanceHomePage(@AuthenticationPrincipal VWUserRoleDTO user, Model model) {
         model.addAttribute("user", user.getUser());
+
+        // 추천 공연 목록 가져오기
+        List<PerformanceDTO> recommendedPerformances = performanceService.getRecommendedPerformances(user.getUserId());
+        if (recommendedPerformances == null || recommendedPerformances.isEmpty()) {
+            model.addAttribute("message", "추천 공연이 없습니다.");
+        } else {
+            model.addAttribute("recommends", recommendedPerformances);
+        }
+
         return "/performance/performanceHome";
     }
+
 
     /**
      * 공연 장르 페이지 매핑 -> 5위까지 performanceGenre.html
@@ -81,10 +95,14 @@ public class PerformanceController {
     public String performanceGenrePage(@AuthenticationPrincipal VWUserRoleDTO user,
                                        @RequestParam("genre") String genre,
                                        Model model) {
-        String date = "20240816"; // 일간 데이터 날짜
+
+        if ("홈".equals(genre)) {
+            return "redirect:/performance/performance-home";
+        }
+
+        String date = "20240817"; // 일간 데이터 날짜
         List<PerformanceDTO> rankingData = performanceRankingService.fetchGenreRanking(genre, date, 5);
         System.out.println("Fetched Data: " + rankingData); // 로그 추가
-
 
 
         // 장르에 따른 전체 공연 목록 추가
@@ -138,7 +156,7 @@ public class PerformanceController {
      */
     @GetMapping("/genre-rankings")
     public ResponseEntity<List<PerformanceDTO>> getPerformanceGenreRankings(@RequestParam String genre) {
-        String date = "20240816"; // 일간 데이터 날짜
+        String date = "20240817"; // 일간 데이터 날짜
         List<PerformanceDTO> rankingData;
 
         if (genre.equals("전체")) {
@@ -165,7 +183,7 @@ public class PerformanceController {
     public String performanceRankingPage(@AuthenticationPrincipal VWUserRoleDTO user, Model model,
                                          @RequestParam(required = false) String genre) {
         model.addAttribute("user", user.getUser());
-        String date = "20240816"; // 일간 데이터 날짜
+        String date = "20240817"; // 일간 데이터 날짜
         List<PerformanceDTO> rankingData;
 
         if (genre == null || genre.isEmpty() || genre.equals("전체")) {
@@ -184,8 +202,8 @@ public class PerformanceController {
     public String performanceLocationPage(@AuthenticationPrincipal VWUserRoleDTO user,
                                           @RequestParam(required = false) String locationCode,
                                           Model model) {
-        String stdate = "20240816"; // 시작 날짜
-        String eddate = "20240916"; // 종료 날짜
+        String stdate = "20240817"; // 시작 날짜
+        String eddate = "20240917"; // 종료 날짜
 
         System.out.println("Received locationCode: " + locationCode); // Debug line
 
@@ -307,8 +325,6 @@ public class PerformanceController {
             @RequestParam(value = "genre", required = false) String genre,
             Model model) {
 
-
-
         List<PerformanceDTO> performances = performanceService.searchPerformances(keyword, genre);
         model.addAttribute("allPerformances", performances);
         model.addAttribute("selectedGenre", genre);
@@ -327,5 +343,43 @@ public class PerformanceController {
 
         return "performance/performanceGenre"; // 적절한 템플릿 경로로 변경
     }
+
+
+
+
+
+
+    // 추천 목록
+//    @GetMapping("/recommendations")
+//    public String showRecommendations(@AuthenticationPrincipal UserDTO user, Model model) {
+//        int userId = user.getUserId(); // UserDTO에서 사용자 ID를 가져옴
+//
+//        List<PerformanceDTO> recommendedPerformances = performanceService.getRecommendedPerformances(userId);
+//        model.addAttribute("recommends", recommendedPerformances);
+//        model.addAttribute("user", user);
+//        return "performance/performanceHome"; // 추천 목록을 보여줄 Thymeleaf 템플릿 이름
+//    }
+
+
+
+    @GetMapping("/recommendations")
+    public String showRecommendations(@AuthenticationPrincipal UserDTO user, Model model) {
+        System.out.println("showRecommendations 메서드 호출됨");  // 확인용 로그
+        int userId = user.getUserId(); // UserDTO에서 사용자 ID를 가져옴
+
+        List<PerformanceDTO> recommendedPerformances = performanceService.getRecommendedPerformances(userId);
+        System.out.println("추천 공연 목록 크기: " + recommendedPerformances.size());  // 추천 목록의 크기 확인
+
+        if (recommendedPerformances == null || recommendedPerformances.isEmpty()) {
+            model.addAttribute("message", "추천 공연이 없습니다.");
+        } else {
+            model.addAttribute("recommends", recommendedPerformances);
+        }
+
+        model.addAttribute("user", user);
+        return "performance/performanceHome"; // 추천 목록을 보여줄 Thymeleaf 템플릿 이름
+    }
+
+
 
 }

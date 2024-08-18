@@ -6,6 +6,13 @@
     margin-top: 20px;
 }
 
+.recommend {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+}
+
 .all-performances-title {
     width: 100%;
     text-align: center;
@@ -16,6 +23,14 @@
 
 /* 전체 공연 목록 아이템 컨테이너 */
 .all-performances-items {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between; /* 양 끝 공간 확보 */
+    gap: 10px; /* 카드 간의 간격 */
+    width: calc(5 * 249px + 4 * 10px); /* 카드 5개와 간격을 고려한 너비 */
+}
+
+.recommend-items {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between; /* 양 끝 공간 확보 */

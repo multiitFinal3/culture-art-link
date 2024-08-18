@@ -138,4 +138,41 @@
 
 
 
+    <!--추천-->
+    <!-- 사용자가 찜한 공연의 위치나 캐스팅과 유사한 공연을 추천 -->
+    <select id="findRecommendedPerformances" resultType="com.multi.culture_link.admin.performance.model.dto.PerformanceDTO">
+        SELECT
+        p.id, p.code, p.title, p.location, p.casting, p.genre, p.image_main, p.start_date, p.end_date
+        FROM
+        performance_info p
+        WHERE
+        (p.location IN (
+        SELECT DISTINCT pi.location
+        FROM performance_add pa
+        JOIN performance_info pi ON pa.performance_id = pi.id
+        WHERE pa.user_id = #{userId} AND pa.state = 'like'
+        )
+        OR p.casting IN (
+        SELECT DISTINCT pi.casting
+        FROM performance_add pa
+        JOIN performance_info pi ON pa.performance_id = pi.id
+        WHERE pa.user_id = #{userId} AND pa.state = 'like'
+        ))
+        AND p.id NOT IN (
+        SELECT pa.performance_id
+        FROM performance_add pa
+        WHERE pa.user_id = #{userId}
+        )
+        ORDER BY RAND()
+        LIMIT 15
+    </select>
+
+
+
+
+
+
+
+
+
 </mapper>

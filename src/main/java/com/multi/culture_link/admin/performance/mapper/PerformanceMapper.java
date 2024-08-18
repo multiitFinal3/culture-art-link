@@ -82,4 +82,14 @@ String getPerformanceLikeState(@Param("userId") int userId, @Param("performanceI
     // 리뷰 관련 메서드
 
 
+
+
+
+
+
+    // 추천관련 메서드
+    List<PerformanceDTO> findRecommendedPerformances(@Param("userId") int userId);
+
+
+
 }
