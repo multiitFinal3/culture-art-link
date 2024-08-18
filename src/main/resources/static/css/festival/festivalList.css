@@ -365,6 +365,26 @@
 
 
 
+    #inputGroup > select:first-child{
+
+        border-top-left-radius: 5px;
+        border-bottom-left-radius: 5px;
+        border-top-right-radius: 0px;
+        border-bottom-right-radius: 0px;
+
+
+    }
+
+    #resetBtn1{
+
+        border-top-right-radius: 5px;
+        border-bottom-right-radius: 5px;
+
+    }
+
+
+
+
 
     .none{
 

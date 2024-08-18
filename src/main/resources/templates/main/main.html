@@ -180,7 +180,7 @@
                 <div id="eZone">
                     <div>
 
-                        <h3>박물관 전시</h3>
+                        <h3>전시</h3>
 
                     </div>
 
@@ -296,9 +296,62 @@
 
 
         <th:block sec:authorize="hasAnyAuthority('ROLE_USERS','ROLE_ADMIN')">
+
             <div id="searchZone">
 
-                ss
+                <div id="searchBar" class="extra-filter">
+
+                    <div class="dropdown" id="searchDrop">
+                        <button class="btn btn-outline-success" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                            검색범위
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                            <li><a class="dropdown-item">공연</a></li>
+                            <li><a class="dropdown-item">전시</a></li>
+                            <li><a class="dropdown-item">축제</a></li>
+                            <li><a class="dropdown-item">문화재</a></li>
+                        </ul>
+                    </div>
+
+                    <div id="searchFormDiv">
+                        <form id="searchForm" name="searchForm1" method="post" class="d-flex">
+                            <div id="inputGroup">
+
+                                <input  type="text" name="text" id="keyword" placeholder="키워드를 입력하세요" aria-label="festivalName" class="form-control me-2">
+                                <button id="searchBtn1"  type="button" class="btn btn-outline-success" style="margin-right: 0px;margin-left: 5px;
+                        border-radius: 0px;margin-top: 0px;margin-bottom: 0px;"><img src="https://kr.object.ncloudstorage.com/team3/common/search.png" style="width: 20px;height: 20px;"></button>
+                                <button id="resetBtn1"  type="button" class="btn btn-outline-secondary" style="margin-right: 0px;margin-left: -1px;margin-top: 0px;margin-bottom: 0px;"><img src="https://kr.object.ncloudstorage.com/team3/common/x.png" style="width: 20px;height: 20px;"></button>
+
+                            </div>
+                        </form>
+                    </div>
+
+                </div>
+
+
+                <div id="searchListZone">
+
+                    <div id="psList">
+                                    sdsd
+
+                    </div>
+
+                    <div id="esList">
+
+
+                    </div>
+
+                    <div id="fsList">
+
+
+                    </div>
+
+                    <div id="csList">
+
+
+                    </div>
+
+                </div>
 
             </div>
         </th:block>

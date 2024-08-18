@@ -5,6 +5,12 @@ body{
 
 }
 
+h3{
+
+    color: #5d5959;
+
+}
+
 #contentZone{
 
 
@@ -33,6 +39,13 @@ body{
 
     margin: 1%;
     width: 23%;
+
+}
+
+#recommendZone > div > div:first-child{
+
+    border-bottom: 3px solid #c9c3c3;
+    margin-bottom: 10px;
 
 }
 
@@ -71,5 +84,84 @@ body{
     text-overflow: ellipsis;
     max-width: 230px;
     text-align:center;
+
+}
+
+
+#searchZone{
+
+    display: flex;
+    flex-flow: column;
+    min-height: 200px;
+    margin-top: 80px;
+}
+
+
+#searchBar{
+
+    display: flex;
+    flex-flow: row;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+
+#searchFormDiv{
+
+    display: flex;
+    flex-flow: row;
+    width: 60%;
+
+}
+
+#searchForm{
+
+    width: 100%;
+
+}
+
+#inputGroup{
+
+    display: flex;
+    width: 100%;
+}
+
+#keyword{
+
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+    border-top-right-radius: 0px;
+    border-bottom-right-radius: 0px;
+
+}
+
+#resetBtn1{
+
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+
+
+#searchListZone{
+
+    display: flex;
+    flex-flow: column;
+    align-items: center;
+
+}
+
+#searchListZone > div{
+
+    display: flex;
+    flex-flow: row;
+    flex-wrap: no-wrap;
+    align-items: center;
+    justify-content: center;
+    margin-left: 5%;
+    margin-right: 5%;
+    flex-wrap: wrap;
+    gap: 10px;
 
 }
