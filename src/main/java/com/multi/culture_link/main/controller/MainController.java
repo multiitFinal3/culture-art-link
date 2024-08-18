@@ -90,6 +90,37 @@ public class MainController {
 	}
 	
 	
+	/**
+	 *
+	 * 지도화면으로 이동
+	 * @return
+	 */
+	@GetMapping("/main/mapDetail")
+	public String mapDetail(Model model) {
+		
+		model.addAttribute("naverClientId", naverClientId);
+		model.addAttribute("naverClientSecret", naverClientSecret);
+		
+		return "main/mapDetail";
+		
+	}
+	
+	
+	/**
+	 *
+	 * 달력화면으로 이동
+	 * @return
+	 */
+	@GetMapping("/main/calendar")
+	public String calendar(Model model) {
+		
+		model.addAttribute("naverClientId", naverClientId);
+		model.addAttribute("naverClientSecret", naverClientSecret);
+		
+		return "main/calendar";
+		
+	}
+	
 	
 	
 	
