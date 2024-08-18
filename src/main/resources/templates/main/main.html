@@ -10,6 +10,7 @@
     <script th:src="@{/js/main/main.js}"></script>
     <script th:inline="javascript"
             th:src="'https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=' + ${naverClientId}"></script>
+
     <script th:inline="javascript">
 
         $(document).ready(
@@ -229,7 +230,7 @@
                             $('#dropdownContent2').html("");
                             $.each(list1, function(index, region){
 
-                                var htmlContent = `<a id="${region.regionName}" value="${region.regionId}" class="region">${region.regionName}</a>`;
+                                var htmlContent = `<a id="${region.regionName}" data-region-id="${region.regionId}" class="region">${region.regionName}</a>`;
 
                                 $('#dropdownContent2').append(htmlContent);
 
@@ -257,28 +258,58 @@
                     currentRegion = regionText;
                     $('#region').text(currentRegion);
 
-                    var regionId = $(this).val();
+                    var regionId = $(this).data('region-id');
 
-                    findAllCategoryByRegion(regionId)
+                    findAllCultureCategoryByRegion(regionId)
 
                 })
 
 
 
                 /**
-                * 지역에 따른 모든 카테고리의 위치를 다중 마커로 표시
+                * 지역에 따른 모든 카테고리의 위치를 다중 마커로 표시 후 지도에 표시, 클릭 시 상세페이지 이동
                 *
                 */
-                function findAllCategoryByRegion(regionId){
+                function findAllCultureCategoryByRegion(regionId){
+
+                    $.ajax({
+
+                        url: '/main/findAllCultureCategoryByRegion?regionId='+regionId,
+                        method: 'POST',
+                        contentType: 'application/json',
+                        success: function(categoryMap){
+
+                            $.ajax({
+
+                                url: '/main/findCenterPositionByRegion?regionName='+currentRegion,
+                                method: 'POST',
+                                contentType: 'application/json',
+                                success: function(pos){
+
+                                    console.log("position");
+                                    console.log(pos);
+
+                                    var position = new naver.maps.LatLng(pos.latitude, pos.longtitude);
+
+                                    var map = new naver.maps.Map('map', {
+                                        center: position,
+                                        zoom: 15
+                                    });
 
 
 
 
+                                }
 
+                            })
+
+                        }
+
+                    })
 
                 }
 
-                findAllCategoryByRegion(11);
+                findAllCultureCategoryByRegion(11);
 
 
 
@@ -289,6 +320,7 @@
             }
         )
     </script>
+
 
 </head>
 <body>
@@ -563,6 +595,7 @@
                 </div>
 
                 <div id="map" style="width: 100%;height: 500px;position: relative;overflow: hidden;background: rgb(248, 249, 250);">
+
 
 
                 </div>
