@@ -57,6 +57,7 @@ body{
     border-top-left-radius: calc(.25rem - 1px);
     border-top-right-radius: calc(.25rem - 1px);
     border: 0.1px solid #e3d9d9;
+    border-radius: 5px;
 }
 
 .card-title{

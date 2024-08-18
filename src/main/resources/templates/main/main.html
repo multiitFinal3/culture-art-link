@@ -16,9 +16,18 @@
 
                 //# region 추천 리스트 존
 
+                /**
+               *  축제 카드 클릭 시 상세 페이지로 이동
+               *
+               */
+                $(document).on('click','#fList .card', function(){
+
+                    var festivalId = $(this).attr('id');
+                    window.location.href='/festival/festival-detail?festivalId='+festivalId;
+
+                })
 
 
-                //#region 키워드 추천 관련 함수
 
                /**
                * 축제 키워드 추천 함수
@@ -286,12 +295,13 @@
         </th:block>
 
 
+        <th:block sec:authorize="hasAnyAuthority('ROLE_USERS','ROLE_ADMIN')">
+            <div id="searchZone">
 
-        <div id="searchZone">
+                ss
 
-            ss
-
-        </div>
+            </div>
+        </th:block>
 
         <div id="mapAndCalenderZone">
             sss
