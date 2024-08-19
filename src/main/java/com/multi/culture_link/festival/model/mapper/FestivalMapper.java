@@ -73,4 +73,6 @@ public interface FestivalMapper {
 	ArrayList<FestivalContentReviewNaverKeywordMapDTO> findFestivalSmallLoveHateKeyword(UserFestivalLoveHateMapDTO mapDTO) throws Exception;
 	
 	void deleteAllUserSelectFestivalKeyword(UserFestivalLoveHateMapDTO mapDTO) throws Exception;
+	
+	ArrayList<FestivalDTO> findDBFestivalByText(String text) throws Exception;
 }

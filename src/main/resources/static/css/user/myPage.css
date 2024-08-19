@@ -283,8 +283,8 @@
 
     .card{
 
-       min-height: 470px;
-       max-height: 470px;
+       min-height: 440px;
+       max-height: 440px;
        min-width: 249px;
        max-width: 249px;
        margin-bottom: 10px;
@@ -606,7 +606,8 @@
 
 
 
-   .pageBtn1{
+   .pageBtn1,
+   .pageBtn2{
 
         width: 45px;
         text-align: center;
@@ -623,7 +624,6 @@
 
    #reviewListHead{
 
-        margin-top: 30px;
         padding: 20px;
         background-color: #ffffff;
         border-radius: 8px;
@@ -796,3 +796,4 @@
 
 
    }
+
