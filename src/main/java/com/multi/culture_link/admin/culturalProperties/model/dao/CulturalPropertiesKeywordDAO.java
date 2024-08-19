@@ -59,4 +59,6 @@ public interface CulturalPropertiesKeywordDAO {
 
     List<String> getDistinctCategories();
 
+    void saveUserKeyword(@Param("userId") int userId, @Param("keyword") String keyword, @Param("selectCount") int selectCount);
+
 }

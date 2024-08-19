@@ -587,5 +587,15 @@ public class AdminCulturalPropertiesService {
 	}
 
 
+	@Transactional
+	public void saveKeyword(List<KeywordDTO> keywords, int userId, int selectCount) {
+		System.out.println("keywords : " + keywords);
+
+		for (KeywordDTO keywordDTO : keywords) {
+			culturalPropertiesKeywordDAO.saveUserKeyword(userId, keywordDTO.getKeyword(), selectCount);
+		}
+	}
+
+
 
 }

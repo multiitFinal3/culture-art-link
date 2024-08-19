@@ -167,6 +167,12 @@
     </select>
 
 
+    <insert id="saveUserKeyword" parameterType="map">
+        INSERT INTO user_keywords (user_id, keyword, select_count)
+        VALUES (#{userId}, #{keyword}, #{selectCount})
+    </insert>
+
+
 
 
 
