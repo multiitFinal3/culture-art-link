@@ -352,6 +352,42 @@ $(document).ready(
         })
 
 
+        /**
+         * db리스트의 다음 페이지 버튼 클릭 이벤트
+         *
+         */
+
+        $(document).on('click','.pageBtn11', function(){
+
+            currentDBNum = currentDBNum + 1;
+            var thisFirstPage = (currentDBNum-1) * 10 + 1;
+
+            findDBFestivalList(thisFirstPage)
+                .then(()=>{
+                return addShowingBtns(findDBFestivalCount, currentDBNum, '.pageBtn1');
+                })
+                .then(()=>{
+
+                    let btns = document.querySelectorAll('.pageBtn1');
+                    btns.forEach(function(btn){
+                        if(btn.textContent == thisFirstPage){
+                            btn.classList.add('active');
+                        }else{
+                            btn.classList.remove('active');
+                        }
+                    })
+                })
+                .catch((error)=>{
+                    alert("api 오류")
+                })
+
+        })
+
+
+
+
+
+
 
 
 
