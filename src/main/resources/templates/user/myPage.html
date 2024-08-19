@@ -1832,17 +1832,93 @@
 
 
 
-
-
-
-
                 //#endregion
 
 
 
 
+                //#region 하단바 : 전시의 찜키워드 , 관심없음 키워드
 
 
+                 /**
+                 * 전시 찜 키워드를 가져옴
+                 *
+                 */
+                function findExhibitionLoveKeyword(){
+
+                    var currentCursor = $("#addExhibitionLoveKeyword").val();
+
+                    var isUserSelected = 0;
+                    var limit = 0;
+
+                    if(currentCursor==""){
+                        isUserSelected = true;
+                        limit= 999;
+                    }else{
+                        isUserSelected = false;
+                        limit = 5;
+                    }
+
+
+                    $.ajax({
+
+                        url: '/exhibition/exhibition/keyword/user',
+                        method: 'GET',
+                        data: {
+
+                            isUserSelected : isUserSelected,
+                            cursor : currentCursor,
+                            limit : limit
+                        },
+                        contentType: 'application/json',
+                        success: function(list){
+
+                            console.log("findExhibitionBigLoveKeyword()")
+                            console.log(list);
+                            $('#exhibitionKeywordList').html("");
+                            var concat = '';
+                            $.each(list, function(index, keyword){
+
+                                $("#addExhibitionLoveKeyword").val(keyword.nextCursor);
+
+                                var htmlContent = ``;
+
+                                if(currentCursor==""){
+
+                                    htmlContent = `<button value="${keyword.keyword}" class="exhibitionLoveKeywordBtn bigLove">${keyword.keyword}</button>`;
+
+                                }else{
+
+                                    htmlContent = `<button value="${keyword.keyword}" class="exhibitionLoveKeywordBtn">${keyword.keyword}</button>`;
+
+                                }
+
+                                $('#exhibitionKeywordList').append(htmlContent);
+
+                                concat += keyword.keyword + " ";
+
+                            })
+
+                            $('#exhibitionKeyword').val(concat.trim()+" ");
+
+
+                        }
+
+                    })
+
+                }
+
+                findExhibitionLoveKeyword();
+
+
+
+
+
+
+
+
+
+                //#endregion
 
 
 
@@ -2334,7 +2410,7 @@
                     <div id="exhibitionZone">
                         <div id="exhibitionKeywordList">
                         </div>
-                        <button id="addExhibitionLoveKeyword" value="1" class="btn btn-outline-success">전시 키워드 추가</button>
+                        <button id="addExhibitionLoveKeyword" value="" class="btn btn-outline-success">전시 키워드 추가</button>
                     </div>
                     <div id="festivalZone">
                         <div id="festivalKeywordList">
