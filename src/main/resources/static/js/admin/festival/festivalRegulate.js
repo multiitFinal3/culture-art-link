@@ -11,130 +11,139 @@ $(document).ready(
        */
         function findDBFestivalList(page){
 
-            $('#list1').html("");
+            return new Promise((resolve, reject)=>{
 
-            $.ajax({
+                $('#list1').html("");
 
-                url: '/admin/festival-regulate/findDBFestivalList?page=' + page,
-                method: 'POST',
-                contentType: 'application/json',
-                success: function(list){
+                $.ajax({
 
-                    $.each(list, function(index, festival){
+                    url: '/admin/festival-regulate/findDBFestivalList?page=' + page,
+                    method: 'POST',
+                    contentType: 'application/json',
+                    success: function(list){
 
-                        var index1 = (index + 1) + (page-1)*5;
+                        $.each(list, function(index, festival){
 
-                        var start = festival.startDate.length >0?
-                        festival.startDate.substring(0,10):
-                        "없음";
+                            var index1 = (index + 1) + (page-1)*5;
 
-                        var end = festival.endDate.length >0?
-                        festival.endDate.substring(0,10):
-                        "없음";
+                            var start = festival.startDate.length >0?
+                            festival.startDate.substring(0,10):
+                            "없음";
+
+                            var end = festival.endDate.length >0?
+                            festival.endDate.substring(0,10):
+                            "없음";
 
 
-                        var htmlContent11 =`
+                            var htmlContent11 =`
 
-                            <tr>
+                                <tr>
 
-                                <td class="checkHead">
-                                    <input class="check1" type="checkbox" name="index" value="${festival.festivalId}"/><br>
+                                    <td class="checkHead">
+                                        <input class="check1" type="checkbox" name="index" value="${festival.festivalId}"/><br>
+                                    </td>
+                                    <td class="index1" style="width : 20px; height: 20px;">${index1}</td>
+                                    <td class="festivalId" title="${festival.festivalId}">${festival.festivalId}</td>
+                                    <td class="regionId" title="${festival.regionId}">${festival.regionId}</td>
+                                    <td class="timeId" title="${festival.timeId}">${festival.timeId}</td>
+                                    <td class="festivalName" title="${festival.festivalName}">${festival.festivalName}</td>
+                                    <td class="festivalContent" title="${festival.festivalContent}">${festival.festivalContent}</td>
+                                    <td class="manageInstitution" title="${festival.manageInstitution}">${festival.manageInstitution}</td>
+                                    <td class="tel" title="${festival.tel}">${festival.tel}</td>`;
+
+                            var htmlContent12 =``;
+
+                            if(! festival.homepageUrl || festival.homepageUrl == "null" || festival.homepageUrl == ""){
+
+                                htmlContent12 = `
+
+                                    <td class="homepageUrl"></td>
+                                    <td class="detailAddress" title="${festival.detailAddress}">${festival.detailAddress}</td>
+
+                                    <td class="place" title="${festival.place}">${festival.place}</td>
+                                    <td class="formattedStart" title="${festival.formattedStart}">${festival.formattedStart}</td>
+                                    <td class="formattedEnd" title="${festival.formattedEnd}">${festival.formattedEnd}</td>
+                                    <td class="avgRate" title="${festival.avgRate}">${festival.avgRate}</td>
+                                    <td class="season" title="${festival.season}">${festival.season}</td>
+
+
+                                `;
+
+                            }else{
+
+                               htmlContent12 = `
+
+                                    <td class="homepageUrl" title="${festival.homepageUrl}"><a href="${festival.homepageUrl}">클릭!</a></td>
+                                    <td class="detailAddress" title="${festival.detailAddress}">${festival.detailAddress}</td>
+
+                                    <td class="place" title="${festival.place}">${festival.place}</td>
+                                    <td class="formattedStart" title="${festival.formattedStart}">${festival.formattedStart}</td>
+                                    <td class="formattedEnd" title="${festival.formattedEnd}">${festival.formattedEnd}</td>
+                                    <td class="avgRate" title="${festival.avgRate}">${festival.avgRate}</td>
+                                    <td class="season" title="${festival.season}">${festival.season}</td>
+
+                                `;
+
+
+                            }
+
+
+                            var htmlContent2 = ``;
+
+                            if(! festival.imgUrl || festival.imgUrl == "null"){
+
+                                htmlContent2= `
+                                <td class="imgUrl"></td>
+                                <td class="buttonHead">
+                                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalLong" id="dbUpdateBtn" value="${festival.festivalId}">상세수정</button><br><hr>
+                                    <button type="button" class="btn btn-primary contentKeywordInsertBtn" value="${festival.festivalId}">내용</button>
+                                    <button type="button" class="btn btn-primary naverArticleKeywordInsertBtn" value="${festival.festivalId}">기사</button><br><br>
+                                    <button type="button" class="btn btn-primary naverBlogKeywordInsertBtn" value="${festival.festivalId}">블로그</button>
+                                    <button type="button" class="btn btn-primary reviewKeywordInsertBtn" value="${festival.festivalId}">리뷰</button><br>
                                 </td>
-                                <td class="index1" style="width : 20px; height: 20px;">${index1}</td>
-                                <td class="festivalId" title="${festival.festivalId}">${festival.festivalId}</td>
-                                <td class="regionId" title="${festival.regionId}">${festival.regionId}</td>
-                                <td class="timeId" title="${festival.timeId}">${festival.timeId}</td>
-                                <td class="festivalName" title="${festival.festivalName}">${festival.festivalName}</td>
-                                <td class="festivalContent" title="${festival.festivalContent}">${festival.festivalContent}</td>
-                                <td class="manageInstitution" title="${festival.manageInstitution}">${festival.manageInstitution}</td>
-                                <td class="tel" title="${festival.tel}">${festival.tel}</td>`;
+                                </tr>
+                                `
 
-                        var htmlContent12 =``;
+                            }else{
 
-                        if(! festival.homepageUrl || festival.homepageUrl == "null" || festival.homepageUrl == ""){
-
-                            htmlContent12 = `
-
-                                <td class="homepageUrl"></td>
-                                <td class="detailAddress" title="${festival.detailAddress}">${festival.detailAddress}</td>
-
-                                <td class="place" title="${festival.place}">${festival.place}</td>
-                                <td class="formattedStart" title="${festival.formattedStart}">${festival.formattedStart}</td>
-                                <td class="formattedEnd" title="${festival.formattedEnd}">${festival.formattedEnd}</td>
-                                <td class="avgRate" title="${festival.avgRate}">${festival.avgRate}</td>
-                                <td class="season" title="${festival.season}">${festival.season}</td>
+                                 htmlContent2 = `
+                                 <td class="imgUrl"><img src="${festival.imgUrl}" alt="이미지 없음" style="width: 100%;
+                                 height: 150px"></td>
+                                 <td class="buttonHead">
+                                     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalLong" id="dbUpdateBtn" value="${festival.festivalId}">상세수정</button><br><hr>
+                                     <button type="button" class="btn btn-primary contentKeywordInsertBtn" value="${festival.festivalId}">내용</button>
+                                     <button type="button" class="btn btn-primary naverArticleKeywordInsertBtn" value="${festival.festivalId}">기사</button><br><br>
+                                     <button type="button" class="btn btn-primary naverBlogKeywordInsertBtn" value="${festival.festivalId}">블로그</button>
+                                     <button type="button" class="btn btn-primary reviewKeywordInsertBtn" value="${festival.festivalId}">리뷰</button><br>
+                                 </td>
+                                 </tr>
+                                `
+                            }
 
 
-                            `;
+                            var finalHtml = htmlContent11 + htmlContent12 + htmlContent2;
 
-                        }else{
-
-                           htmlContent12 = `
-
-                                <td class="homepageUrl" title="${festival.homepageUrl}"><a href="${festival.homepageUrl}">클릭!</a></td>
-                                <td class="detailAddress" title="${festival.detailAddress}">${festival.detailAddress}</td>
-
-                                <td class="place" title="${festival.place}">${festival.place}</td>
-                                <td class="formattedStart" title="${festival.formattedStart}">${festival.formattedStart}</td>
-                                <td class="formattedEnd" title="${festival.formattedEnd}">${festival.formattedEnd}</td>
-                                <td class="avgRate" title="${festival.avgRate}">${festival.avgRate}</td>
-                                <td class="season" title="${festival.season}">${festival.season}</td>
-
-                            `;
-
-
-                        }
-
-
-                        var htmlContent2 = ``;
-
-                        if(! festival.imgUrl || festival.imgUrl == "null"){
-
-                            htmlContent2= `
-                            <td class="imgUrl"></td>
-                            <td class="buttonHead">
-                                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalLong" id="dbUpdateBtn" value="${festival.festivalId}">상세수정</button><br><hr>
-                                <button type="button" class="btn btn-primary contentKeywordInsertBtn" value="${festival.festivalId}">내용</button>
-                                <button type="button" class="btn btn-primary naverArticleKeywordInsertBtn" value="${festival.festivalId}">기사</button><br><br>
-                                <button type="button" class="btn btn-primary naverBlogKeywordInsertBtn" value="${festival.festivalId}">블로그</button>
-                                <button type="button" class="btn btn-primary reviewKeywordInsertBtn" value="${festival.festivalId}">리뷰</button><br>
-                            </td>
-                            </tr>
-                            `
-
-                        }else{
-
-                             htmlContent2 = `
-                             <td class="imgUrl"><img src="${festival.imgUrl}" alt="이미지 없음" style="width: 100%;
-                             height: 150px"></td>
-                             <td class="buttonHead">
-                                 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalLong" id="dbUpdateBtn" value="${festival.festivalId}">상세수정</button><br><hr>
-                                 <button type="button" class="btn btn-primary contentKeywordInsertBtn" value="${festival.festivalId}">내용</button>
-                                 <button type="button" class="btn btn-primary naverArticleKeywordInsertBtn" value="${festival.festivalId}">기사</button><br><br>
-                                 <button type="button" class="btn btn-primary naverBlogKeywordInsertBtn" value="${festival.festivalId}">블로그</button>
-                                 <button type="button" class="btn btn-primary reviewKeywordInsertBtn" value="${festival.festivalId}">리뷰</button><br>
-                             </td>
-                             </tr>
-                            `
-                        }
-
-
-                        var finalHtml = htmlContent11 + htmlContent12 + htmlContent2;
-
-                        $('#list1').append(finalHtml);
+                            $('#list1').append(finalHtml);
 
 
 
-                    })
+                        })
+
+                        resolve();
 
 
-                }
+                    }
+
+                })
 
             })
         }
 
         // 1페이지 호출
         findDBFestivalList(1);
+
+
+        var DBLastPage = 0;
 
         /**
        * DB 전체 갯수를 알아와 페이지 버튼 추가 기능
@@ -152,6 +161,7 @@ $(document).ready(
                     success: function(count){
 
                         $('#pageNum1').html("");
+                        $('#pageNum1').append(`<button class="pageBtn10" value="1">처음</button>`);
 
                         var page = 0;
 
@@ -161,12 +171,16 @@ $(document).ready(
                             page = count/5 +1;
                         }
 
+                        DBLastPage = page;
+
                         for(var p=1; p<=page; p++){
 
                             $('#pageNum1').append(`<button class="pageBtn1 none">${p}</button>`)
 
                         }
 
+                        $('#pageNum1').append(`<button class="pageBtn11">다음</button>`);
+                        $('#pageNum1').append(`<button class="pageBtn12">마지막</button>`);
 
                         resolve();
                     },
@@ -237,6 +251,7 @@ $(document).ready(
             }
         }
 
+
         addShowingBtns(findDBFestivalCount, 1, '.pageBtn1');
 
 
@@ -259,6 +274,84 @@ $(document).ready(
             findDBFestivalList(page);
 
         })
+
+
+
+        var currentDBNum = 1;
+
+
+
+        /**
+       * 처음으로 돌아가기
+       */
+        $(document).on('click','.pageBtn10', function(){
+
+            $('#list1').html("");
+            currentDBNum = 1;
+
+            findDBFestivalList(1)
+            .then(()=>{
+                // 1~10까지 보여줌
+                return addShowingBtns(findDBFestivalCount, currentDBNum, '.pageBtn1');
+            })
+            .then(()=>{
+
+                let btns = document.querySelectorAll('.pageBtn1');
+                btns.forEach(function(btn){
+                    if(btn.textContent == "1"){
+                        btn.classList.add('active');
+                    }else{
+                        btn.classList.remove('active');
+                    }
+                })
+            })
+            .catch((error)=>{
+                alert("api 오류")
+            })
+
+        })
+
+
+
+        /**
+       * 마지막으로 가기
+       */
+        $(document).on('click','.pageBtn12', function(){
+
+            $('#list1').html("");
+
+            var num = 0;
+
+            if(DBLastPage%10==0){
+                num = (DBLastPage / 10);
+            }else{
+                num = parseInt((DBLastPage / 10) + 1);
+            }
+
+            currentDBNum = num;
+
+            findDBFestivalList(DBLastPage)
+            .then(()=>{
+                return addShowingBtns(findDBFestivalCount, currentDBNum, '.pageBtn1');
+            })
+            .then(()=>{
+
+                let btns = document.querySelectorAll('.pageBtn1');
+                btns.forEach(function(btn){
+                    if(btn.textContent == DBLastPage){
+                        btn.classList.add('active');
+                    }else{
+                        btn.classList.remove('active');
+                    }
+                })
+            })
+            .catch((error)=>{
+                alert("api 오류")
+            })
+
+        })
+
+
 
 
 

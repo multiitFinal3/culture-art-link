@@ -97,7 +97,10 @@
     .pageBtn6,
     .pageBtn7,
     .pageBtn8,
-    .pageBtn9
+    .pageBtn9,
+    .pageBtn10,
+    .pageBtn11,
+    .pageBtn12
     {
         position: relative;
         display: inline-block;
@@ -220,3 +223,44 @@
         display: none;
 
     }
+
+    #searchForm1{
+
+        display: flex;
+        flex-flow: row;
+        align-items: center;
+        width: 95vw;
+
+    }
+
+
+    #inputGroup1{
+
+        margin-left: 5%;
+
+    }
+
+    #deleteZone{
+
+        width: calc(1519px - 1069px);
+        display: flex;
+        justify-content: end;
+
+    }
+
+    #searchForm2{
+
+        margin-left: 5%;
+
+    }
+
+
+    #insertZone{
+
+        width: calc(1504.880px - 632px);
+        display: flex;
+        justify-content: end;
+
+    }
+
+
