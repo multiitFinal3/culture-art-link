@@ -567,6 +567,31 @@ public class AdminCulturalPropertiesService {
 	}
 
 
+//	@Transactional
+//	public void saveUserSelectedKeywords(String keywordsString, int userId, int count) {
+//		if (keywordsString == null || keywordsString.isEmpty()) {
+//			return;
+//		}
+//
+//		String[] keywords = keywordsString.split(",");
+//		for (String keyword : keywords) {
+//			culturalPropertiesKeywordDAO.saveUserKeyword(userId, keyword, count);
+//		}
+//	}
+
+	@Transactional
+	public void saveUserSelectedKeywords(String keywordsString, int userId, int count) {
+		if (keywordsString == null || keywordsString.trim().isEmpty()) {
+			return;
+		}
+
+		String[] keywords = keywordsString.trim().split(",");
+		for (String keyword : keywords) {
+			culturalPropertiesKeywordDAO.saveUserKeyword(userId, keyword.trim(), count);
+		}
+	}
+
+
 
 
 }

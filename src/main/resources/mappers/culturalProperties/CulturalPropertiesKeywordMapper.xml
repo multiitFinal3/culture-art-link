@@ -121,6 +121,14 @@
 
 
 
+    <insert id="saveUserKeyword">
+        INSERT INTO cultural_properties_user_select_keyword (user_id, keyword, count)
+        VALUES (#{userId}, #{keyword}, #{count})
+        ON DUPLICATE KEY UPDATE count = #{count}
+    </insert>
+
+
+
 
 
 

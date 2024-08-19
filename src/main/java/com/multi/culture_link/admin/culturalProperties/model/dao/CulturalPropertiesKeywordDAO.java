@@ -31,4 +31,6 @@ public interface CulturalPropertiesKeywordDAO {
 
     List<KeywordDTO> getKeywords(@Param("excludedKeywordIds") List<Integer> excludedKeywordIds, @Param("limit") int limit);
 
+    void saveUserKeyword(@Param("userId") int userId, @Param("keyword") String keyword, @Param("count") int count);
+
 }
