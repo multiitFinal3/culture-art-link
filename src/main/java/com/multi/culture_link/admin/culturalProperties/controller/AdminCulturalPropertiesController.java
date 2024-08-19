@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 
 @Controller
@@ -248,62 +249,16 @@ public class AdminCulturalPropertiesController {
 
 
 
-//	@GetMapping("/keywords")
-//	public ResponseEntity<List<KeywordDTO>> getKeywords(
-//			@RequestParam(defaultValue = "0") int offset,
-//			@RequestParam(defaultValue = "5") int limit) {
-//		List<KeywordDTO> keywords = adminCulturalPropertiesService.getKeywords(offset, limit);
-//		System.out.println("키워드keywords"+keywords);
-//		return ResponseEntity.ok(keywords);
-//	}
-
-	//이거 순서대로 5개 가져옴
-//	@GetMapping("/keywords")
-//	public ResponseEntity<List<KeywordDTO>> getKeywords(
-//			@RequestParam(defaultValue = "0") int offset,
-//			@RequestParam(defaultValue = "5") int limit) {
-//		List<KeywordDTO> keywords = adminCulturalPropertiesService.getKeywords(offset, limit);
-//		return ResponseEntity.ok(keywords);
-//	}
-
-//	//카테고리 앞에 있고 순서대로 5개
-//	@GetMapping("/keywords")
-//	public ResponseEntity<List<KeywordDTO>> getKeywords(
-//			@RequestParam(defaultValue = "0") int offset,
-//			@RequestParam(defaultValue = "5") int limit,
-//			@RequestParam String keywordType) {
-//		List<KeywordDTO> keywords = adminCulturalPropertiesService.getKeywords(offset, limit, keywordType);
-//		return ResponseEntity.ok(keywords);
-//	}
-
-
-	@PostMapping("/keywords/select")
-	public ResponseEntity<Void> selectKeyword(@RequestParam Long keywordId, @RequestParam String keywordType) {
-		adminCulturalPropertiesService.incrementKeywordSelectCount(keywordId, keywordType);
-		return ResponseEntity.ok().build();
-	}
-//
-//	@GetMapping("/categories")
-//	public ResponseEntity<List<String>> getDistinctCategories() {
-//		List<String> categories = adminCulturalPropertiesService.getDistinctCategories();
-//		return ResponseEntity.ok(categories);
-//	}
 
 	@GetMapping("/keywords")
 	public ResponseEntity<List<KeywordDTO>> getKeywords(
-			@RequestParam(defaultValue = "0") int offset,
 			@RequestParam(defaultValue = "5") int limit,
-			@RequestParam String keywordType,
-			@RequestParam(defaultValue = "1") int keywordIndex) {
-		List<KeywordDTO> keywords = adminCulturalPropertiesService.getKeywords(offset, limit, keywordType, keywordIndex);
+			@RequestParam(required = false) List<Integer> excludedKeywordIds) {
+		List<KeywordDTO> keywords = adminCulturalPropertiesService.getKeywords(excludedKeywordIds, limit);
 		return ResponseEntity.ok(keywords);
 	}
 
-	@GetMapping("/categories")
-	public ResponseEntity<List<String>> getDistinctCategories() {
-		List<String> categories = adminCulturalPropertiesService.getDistinctCategories();
-		return ResponseEntity.ok(categories);
-	}
+
 
 
 

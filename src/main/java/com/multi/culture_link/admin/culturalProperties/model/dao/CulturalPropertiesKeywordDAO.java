@@ -27,38 +27,8 @@ public interface CulturalPropertiesKeywordDAO {
 
 
 
-//    List<KeywordDTO> getKeywords(@Param("offset") int offset, @Param("limit") int limit);
-//    void incrementKeywordSelectCount(@Param("keywordId") Long keywordId, @Param("keywordType") String keywordType);
+//    List<KeywordDTO> getInitialKeywords();
 
-    /**
-     * 문화재 키워드를 가져오는 메서드
-     * @param offset 페이지 시작 위치
-     * @param limit  페이지당 키워드 수
-     * @param keywordType 키워드 유형
-     * @return 키워드 목록
-     */
-//    List<KeywordDTO> getKeywords(@Param("offset") int offset, @Param("limit") int limit, @Param("keywordType") String keywordType);
-
-    /**
-     * 키워드 선택 카운트를 증가시키는 메서드
-     * @param keywordId 키워드 ID
-     * @param keywordType 키워드 유형
-     */
-    void incrementKeywordSelectCount(@Param("keywordId") Long keywordId, @Param("keywordType") String keywordType);
-
-
-    /**
-     * 카테고리 목록을 가져오는 메서드
-     * @return 카테고리 이름 목록
-     */
-//    List<String> getDistinctCategories();
-
-    List<KeywordDTO> getKeywords(@Param("offset") int offset, @Param("limit") int limit,
-                                 @Param("keywordType") String keywordType,
-                                 @Param("keywordIndex") int keywordIndex);
-
-    List<String> getDistinctCategories();
-
-    void saveUserKeyword(@Param("userId") int userId, @Param("keyword") String keyword, @Param("selectCount") int selectCount);
+    List<KeywordDTO> getKeywords(@Param("excludedKeywordIds") List<Integer> excludedKeywordIds, @Param("limit") int limit);
 
 }

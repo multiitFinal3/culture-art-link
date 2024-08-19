@@ -80,47 +80,6 @@
 
 
 
-
-<!--    <select id="getKeywords" resultType="com.multi.culture_link.admin.culturalProperties.model.dto.KeywordDTO">-->
-<!--        SELECT DISTINCT-->
-<!--        category_name AS categoryName,-->
-<!--        keyword,-->
-<!--        keyword_type AS keywordType,-->
-<!--        select_count AS selectCount-->
-<!--        FROM vw_cultural_properties_combined_keyword_total-->
-<!--        ORDER BY category_name,-->
-<!--        CASE WHEN keyword_type = 'content' THEN 0 ELSE 1 END,-->
-<!--        select_count DESC-->
-<!--        LIMIT #{offset}, #{limit}-->
-<!--    </select>-->
-
-<!--    <select id="getKeywords" resultType="com.multi.culture_link.admin.culturalProperties.model.dto.KeywordDTO">-->
-<!--        SELECT DISTINCT-->
-<!--        category_name AS categoryName,-->
-<!--        keyword,-->
-<!--        keyword_type AS keywordType,-->
-<!--        select_count AS selectCount-->
-<!--        FROM vw_cultural_properties_combined_keyword_total-->
-<!--        ORDER BY category_name,-->
-<!--        CASE WHEN keyword_type = 'content' THEN 0 ELSE 1 END,-->
-<!--        select_count DESC-->
-<!--        LIMIT #{offset}, #{limit}-->
-<!--    </select>-->
-
-<!--    <select id="getKeywords" resultType="com.multi.culture_link.admin.culturalProperties.model.dto.KeywordDTO">-->
-<!--        SELECT DISTINCT-->
-<!--        category_name AS categoryName,-->
-<!--        keyword,-->
-<!--        keyword_type AS keywordType,-->
-<!--        select_count AS selectCount-->
-<!--        FROM vw_cultural_properties_combined_keyword_total-->
-<!--        WHERE keyword_type = #{keywordType}-->
-<!--        ORDER BY category_name,-->
-<!--        CASE WHEN keyword_type = 'content' THEN 0 ELSE 1 END,-->
-<!--        select_count DESC-->
-<!--        LIMIT #{offset}, #{limit}-->
-<!--    </select>-->
-
     <update id="incrementKeywordSelectCount">
         UPDATE
         <choose>
@@ -135,42 +94,30 @@
         WHERE id = #{keywordId}
     </update>
 
-<!--    <select id="getDistinctCategories" resultType="String">-->
-<!--        SELECT DISTINCT category_name-->
-<!--        FROM vw_cultural_properties_combined_keyword_total-->
-<!--        ORDER BY category_name-->
-<!--    </select>-->
 
+    <!-- 랜덤으로 5개 키워드를 선택하는 쿼리 -->
+    <select id="getInitialKeywords" resultType="com.multi.culture_link.admin.culturalProperties.model.dto.KeywordDTO">
+        SELECT keyword_id, keyword
+        FROM vw_cultural_properties_combined_keyword_unique4
+        ORDER BY RAND()
+        LIMIT 5
+    </select>
 
+    <!-- 제외할 키워드 ID를 기반으로 랜덤으로 5개 키워드를 선택하는 쿼리 -->
     <select id="getKeywords" resultType="com.multi.culture_link.admin.culturalProperties.model.dto.KeywordDTO">
-        SELECT DISTINCT
-        id,
-        category_name AS categoryName,
-        keyword,
-        keyword_type AS keywordType,
-        select_count AS selectCount
-        FROM (
-        SELECT *,
-        ROW_NUMBER() OVER (PARTITION BY cultural_properties_id ORDER BY id) as rn
-        FROM vw_cultural_properties_combined_keyword_total
-        WHERE keyword_type = #{keywordType}
-        ) ranked
-        WHERE rn = #{keywordIndex}
-        ORDER BY category_name, select_count DESC
-        LIMIT #{offset}, #{limit}
+        SELECT keyword_id, keyword
+        FROM vw_cultural_properties_combined_keyword_unique4
+        <where>
+            <if test="excludedKeywordIds != null and excludedKeywordIds.size() > 0">
+                AND keyword_id NOT IN
+                <foreach item="id" collection="excludedKeywordIds" open="(" separator="," close=")">
+                    #{id}
+                </foreach>
+            </if>
+        </where>
+        ORDER BY RAND()
+        LIMIT #{limit}
     </select>
-
-    <select id="getDistinctCategories" resultType="String">
-        SELECT DISTINCT category_name
-        FROM vw_cultural_properties_combined_keyword_total
-        ORDER BY category_name
-    </select>
-
-
-    <insert id="saveUserKeyword" parameterType="map">
-        INSERT INTO vw_cultural_properties_combined_keyword_total (user_id, keyword, select_count)
-        VALUES (#{userId}, #{keyword}, #{selectCount})
-    </insert>
 
 
 

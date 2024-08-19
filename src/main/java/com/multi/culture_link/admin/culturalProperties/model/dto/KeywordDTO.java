@@ -8,8 +8,15 @@ public class KeywordDTO {
 
     private int id;
     private String keyword;
-    private String categoryName;
-    private String keywordType;  // 'content' or 'review'
-    private int selectCount;
+//    private String categoryName;
+//    private String keywordType;  // 'content' or 'review'
+//    private int selectCount;
+
+    private int culturalPropertiesId;
+    private int keywordId;
+//    private String keyword;
+
+    private int rn;
+
 
 }

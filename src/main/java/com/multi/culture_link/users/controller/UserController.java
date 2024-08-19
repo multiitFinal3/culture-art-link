@@ -214,24 +214,24 @@ public class UserController {
 		}
 
 
-		if (culturalPropertiesSelectKeyword != null) {
-			// 키워드 문자열을 분리하여 배열로 변환
-			String[] array = culturalPropertiesSelectKeyword.trim().split(" ");
-
-			// KeywordDTO 객체 리스트 생성
-			List<KeywordDTO> list = new ArrayList<>();
-
-			// 배열의 각 요소를 KeywordDTO로 변환하여 리스트에 추가
-			for (String keyword : array) {
-				KeywordDTO keywordDTO = new KeywordDTO();
-				keywordDTO.setKeyword(keyword);
-				keywordDTO.setSelectCount(15); // countChange 값을 여기에 설정
-				list.add(keywordDTO);
-			}
-
-			// adminCulturalPropertiesService에 리스트 전달
-			adminCulturalPropertiesService.saveKeyword(list, userId, 15);
-		}
+//		if (culturalPropertiesSelectKeyword != null) {
+//			// 키워드 문자열을 분리하여 배열로 변환
+//			String[] array = culturalPropertiesSelectKeyword.trim().split(" ");
+//
+//			// KeywordDTO 객체 리스트 생성
+//			List<KeywordDTO> list = new ArrayList<>();
+//
+//			// 배열의 각 요소를 KeywordDTO로 변환하여 리스트에 추가
+//			for (String keyword : array) {
+//				KeywordDTO keywordDTO = new KeywordDTO();
+//				keywordDTO.setKeyword(keyword);
+//				keywordDTO.setSelectCount(15); // countChange 값을 여기에 설정
+//				list.add(keywordDTO);
+//			}
+//
+//			// adminCulturalPropertiesService에 리스트 전달
+//			adminCulturalPropertiesService.saveKeyword(list, userId, 15);
+//		}
 		
 		System.out.println("회원가입 성공");
 		

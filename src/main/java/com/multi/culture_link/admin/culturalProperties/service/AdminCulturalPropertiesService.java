@@ -15,8 +15,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.client.RestTemplate;
 
 
@@ -555,46 +559,13 @@ public class AdminCulturalPropertiesService {
 
 
 
-
-
-//	public List<KeywordDTO> getKeywords(int offset, int limit) {
-//		return culturalPropertiesKeywordDAO.getKeywords(offset, limit);
-//	}
-//
-//
-//	public void incrementKeywordSelectCount(Long keywordId, String keywordType) {
-//		culturalPropertiesKeywordDAO.incrementKeywordSelectCount(keywordId, keywordType);
-//	}
-
-//	public List<KeywordDTO> getKeywords(int offset, int limit, String keywordType) {
-//		return culturalPropertiesKeywordDAO.getKeywords(offset, limit, keywordType);
-//	}
-
-	public void incrementKeywordSelectCount(Long keywordId, String keywordType) {
-		culturalPropertiesKeywordDAO.incrementKeywordSelectCount(keywordId, keywordType);
-	}
-
-//	public List<String> getDistinctCategories() {
-//		return culturalPropertiesKeywordDAO.getDistinctCategories();
-//	}
-
-	public List<KeywordDTO> getKeywords(int offset, int limit, String keywordType, int keywordIndex) {
-		return culturalPropertiesKeywordDAO.getKeywords(offset, limit, keywordType, keywordIndex);
-	}
-
-	public List<String> getDistinctCategories() {
-		return culturalPropertiesKeywordDAO.getDistinctCategories();
-	}
-
-
-	@Transactional
-	public void saveKeyword(List<KeywordDTO> keywords, int userId, int selectCount) {
-		System.out.println("keywords : " + keywords);
-
-		for (KeywordDTO keywordDTO : keywords) {
-			culturalPropertiesKeywordDAO.saveUserKeyword(userId, keywordDTO.getKeyword(), selectCount);
+	public List<KeywordDTO> getKeywords(List<Integer> excludedKeywordIds, int limit) {
+		if (excludedKeywordIds == null) {
+			excludedKeywordIds = new ArrayList<>();
 		}
+		return culturalPropertiesKeywordDAO.getKeywords(excludedKeywordIds, limit);
 	}
+
 
 
 
