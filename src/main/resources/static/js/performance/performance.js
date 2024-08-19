@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const genreItems = document.querySelectorAll('.genre-item');
     const genreItems2 = document.querySelectorAll('.genre-item2');
     const locationItems = document.querySelectorAll('.location-item');
-    const currentGenre = new URLSearchParams(window.location.search).get('genre') || '홈';
+    const currentGenre = new URLSearchParams(window.location.search).get('genre') || '추천';
 
 
     const selectedGenreInput = document.getElementById('selectedGenre');

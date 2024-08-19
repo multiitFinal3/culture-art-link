@@ -97,7 +97,7 @@ public class PerformanceController {
                                        @RequestParam("genre") String genre,
                                        Model model) {
 
-        if ("홈".equals(genre)) {
+        if ("추천".equals(genre)) {
             return "redirect:/performance/performance-home";
         }
 
