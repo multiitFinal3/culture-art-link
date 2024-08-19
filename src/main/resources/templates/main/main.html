@@ -1,13 +1,17 @@
+<!--메인-->
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.w3.org/1999/xhtml">
 <html layout:decorate="~{common/layout/layoutMenubar}">
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>메인</title>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
     <link rel="stylesheet" th:href="@{/css/main/main.css}">
     <script th:src="@{/js/main/main.js}"></script>
+
+<!--    <script th:src="@{/js/performance/performance.js}"></script>-->
+
     <script th:inline="javascript"
             th:src="'https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=' + ${naverClientId}"></script>
 
@@ -409,6 +413,59 @@
     </script>
 
 
+
+
+    <script th:inline="javascript">
+        $(document).ready(function() {
+            // 공연 추천 목록 랜덤으로 섞기 및 상위 4개만 표시
+            const recommendContainer = document.querySelector('#pList');
+
+            if (recommendContainer) {
+                const recommendItems = Array.from(recommendContainer.querySelectorAll('.card'));
+
+                if (recommendItems.length > 0) {
+                    // Fisher-Yates Shuffle 알고리즘을 사용하여 추천 목록을 섞음
+                    for (let i = recommendItems.length - 1; i > 0; i--) {
+                        const j = Math.floor(Math.random() * (i + 1));
+                        [recommendItems[i], recommendItems[j]] = [recommendItems[j], recommendItems[i]];
+                    }
+
+                    // 섞인 목록에서 상위 4개만 표시
+                    const maxDisplay = 4;
+                    recommendContainer.innerHTML = ''; // 기존 목록 비우기
+
+                    recommendItems.slice(0, maxDisplay).forEach(item => {
+                        recommendContainer.appendChild(item);
+                    });
+                }
+            }
+
+            // 공연 상세 페이지로 이동하는 코드
+            recommendContainer.addEventListener('click', function(event) {
+                const card = event.target.closest('.card');
+                console.log('Clicked card:', card); // 카드 요소를 출력
+                if (card) {
+                    const performanceCode = card.getAttribute('data-performance-code');
+                    const source = card.getAttribute('data-source') || 'default';
+
+                    console.log('Performance code:', performanceCode); // performanceCode 값 출력
+                    console.log('Source:', source); // source 값 출력
+
+                    if (performanceCode && performanceCode !== 'undefined') {
+                        window.location.href = `/performance/performanceDetail?performanceCode=${encodeURIComponent(performanceCode)}&source=${encodeURIComponent(source)}`;
+                    } else {
+                        console.error('Performance code not found or invalid on the clicked card.');
+                    }
+                }
+            });
+
+        });
+    </script>
+
+
+
+
+
 </head>
 <body>
 
@@ -449,38 +506,18 @@
 
                 <div id="pZone">
                     <div>
-
                         <h3>공연</h3>
-
                     </div>
 
                     <div id="pList" class="listZone">
-
-                        <div class="card">
-                            <img src="https://kr.object.ncloudstorage.com/team3/common/noPhoto.png" class="card-img-top" alt="...">
+                        <div th:each="performance : ${recommendedPerformances}" class="card"
+                             th:data-performance-code="${performance.code}"
+                             th:data-source="db">
+                            <img th:src="${performance.imageMain != null} ? ${performance.imageMain} : 'https://kr.object.ncloudstorage.com/team3/common/noPhoto.png'" class="card-img-top" alt="공연 이미지">
                             <div class="card-body">
-                                <p class="card-text">Some</p>
+                                <p class="card-text" th:text="${performance.title}">공연명</p>
                             </div>
                         </div>
-                        <div class="card">
-                            <img src="https://kr.object.ncloudstorage.com/team3/common/noPhoto.png" class="card-img-top" alt="...">
-                            <div class="card-body">
-                                <p class="card-text">some</p>
-                            </div>
-                        </div>
-                        <div class="card">
-                            <img src="https://kr.object.ncloudstorage.com/team3/common/noPhoto.png" class="card-img-top" alt="...">
-                            <div class="card-body">
-                                <p class="card-text">Some</p>
-                            </div>
-                        </div>
-                        <div class="card">
-                            <img src="https://kr.object.ncloudstorage.com/team3/common/noPhoto.png" class="card-img-top" alt="...">
-                            <div class="card-body">
-                                <p class="card-text">Some</p>
-                            </div>
-                        </div>
-
                     </div>
 
                 </div>
