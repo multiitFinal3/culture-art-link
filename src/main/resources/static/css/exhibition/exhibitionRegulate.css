@@ -98,7 +98,6 @@ button {
 }
 
 #searchButtonDB {
-    margin-right: 100px;
     margin-left: -1px;
 }
 
@@ -133,7 +132,8 @@ button {
 }
 
 .search-bar button {
-    padding: 5px 10px;
+    background-color: white;
+    /*padding: 5px 10px;*/
     height: 36.23px;
     vertical-align: baseline;
     border-radius: 0;
@@ -144,9 +144,9 @@ button {
     border-bottom-right-radius: 0.25rem;
 }
 
-#searchButtonDB {
-    border-right: none;
-}
+/*#searchButtonDB {*/
+/*    border-right: none;*/
+/*}*/
 
 
 .search-bar button img {

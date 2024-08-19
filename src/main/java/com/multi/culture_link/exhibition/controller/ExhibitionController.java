@@ -38,7 +38,6 @@ public class ExhibitionController {
     private final ExhibitionAnalyzeService exhibitionAnalyzeService;
 
 
-    
     // 상세 검색
     @GetMapping("/search-exhibition")
     public List<ExhibitionApiDto> searchExhibition(
@@ -59,7 +58,7 @@ public class ExhibitionController {
     public ExhibitionDto getExhibitionDetail(
             @AuthenticationPrincipal VWUserRoleDTO currentUser,
             @PathVariable int exhibitionId
-    ){
+    ) {
 //        System.out.println("exhibition: " + exhibitionService.getExhibitionById(currentUser.getUserId(), exhibitionId));
         return exhibitionService.getExhibitionById(currentUser.getUserId(), exhibitionId);
     }
@@ -89,7 +88,7 @@ public class ExhibitionController {
     public void setInterested(
             @AuthenticationPrincipal VWUserRoleDTO currentUser,
             @RequestBody ExhibitionInterestDto data
-            ) {
+    ) {
         exhibitionService.setInterested(currentUser.getUserId(), data.getExhibitionId(), data.getState());
     }
 
@@ -97,7 +96,7 @@ public class ExhibitionController {
     @GetMapping("/exhibition")
     public List<ExhibitionDto> getDbExhibitions(
             @AuthenticationPrincipal VWUserRoleDTO currentUser
-    ){
+    ) {
         return exhibitionService.getExhibition(currentUser.getUserId());
     }
 
@@ -116,9 +115,6 @@ public class ExhibitionController {
     ) {
         return exhibitionService.getUnlikeExhibition(currentUser.getUserId());
     }
-
-
-
 
 
     // 댓글 목록 가져오기
@@ -143,7 +139,7 @@ public class ExhibitionController {
         data.setExhibitionId(exhibitionId);
         data.setUserId(currentUser.getUserId());
 
-        System.out.println("data : "+ data);
+        System.out.println("data : " + data);
         exhibitionCommentService.createComment(data);
     }
 
@@ -154,7 +150,7 @@ public class ExhibitionController {
             @PathVariable int exhibitionId,
             @RequestBody ExhibitionCommentDto data
 
-            ) {
+    ) {
         data.setExhibitionId(exhibitionId);
         data.setUserId(currentUser.getUserId());
         exhibitionCommentService.deleteComment(data);
@@ -221,7 +217,6 @@ public class ExhibitionController {
     }
 
 
-
     @PostMapping("/videos")
     public List<Video> getVideos(@RequestParam String query) {
 //        String query = title + " " + museum;
@@ -232,10 +227,9 @@ public class ExhibitionController {
     @PostMapping("/exhibition/{exhibitionId}/rating")
     public double getAverageRating(
             @PathVariable int exhibitionId
-     ) {
+    ) {
         return exhibitionCommentService.getAverageRating(exhibitionId);
-    };
-
+    }
 
 
     @GetMapping("/exhibition/{exhibitionId}/keyword")
@@ -243,7 +237,7 @@ public class ExhibitionController {
             @PathVariable int exhibitionId
     ) {
         return exhibitionService.getKeyword(exhibitionId);
-    };
+    }
 
     @GetMapping("/exhibition/keyword")
     public PageResponseDto<ExhibitionKeywordPageDto> getAllKeyword(
@@ -253,5 +247,24 @@ public class ExhibitionController {
     ) {
         System.out.println("result : " + exhibitionService.getAllKeyword(cursor, size));
         return exhibitionService.getAllKeyword(cursor, size);
+    }
+
+
+    @GetMapping("/exhibition/keyword/user")
+    public PageResponseDto<ExhibitionKeywordPageDto> getAllKeywordByUser(
+            // cursor : 다음 값을 가져올 수 있도록 알려주는 값, 넘버링
+            @AuthenticationPrincipal VWUserRoleDTO currentUser,
+            @RequestParam(defaultValue = "") Boolean isUserSelected,
+            @RequestParam(defaultValue = "") String cursor,
+            @RequestParam(defaultValue = "5") int size
+    ) {
+        return exhibitionService.getAllKeywordByUser(cursor, size, currentUser, isUserSelected);
+    }
+
+    @GetMapping("/exhibition/recommend")
+    public List<ExhibitionDto> recommend(
+            @AuthenticationPrincipal VWUserRoleDTO currentUser
+    ) {
+        return exhibitionService.getUserRecommend(currentUser.getUserId());
     }
 }
