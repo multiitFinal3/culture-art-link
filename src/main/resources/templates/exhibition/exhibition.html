@@ -16,6 +16,8 @@
 
     <div class="filter-container">
         <div class="tab-menu">
+            <div class="genre-item" id="recommendBtn">추천</div>
+            <div class="genre-item" id="allBtn">전체</div>
             <div class="genre-item" id="currentBtn">현재 전시</div>
             <div class="genre-item" id="pastBtn">지난 전시</div>
             <div class="genre-item" id="futureBtn">예정 전시</div>
@@ -37,7 +39,8 @@
 
 
     <div class="all-exhibitions">
-        <h2 class="all-exhibitions-title">전체 전시 목록</h2>
+        <h2 class="all-exhibitions-title" id="exhibitionTitle">전체 전시 목록</h2>
+        <span id="userName" style="display: none" th:text="${userName}"></span>
         <div class="all-exhibitions-items">
             <!-- This will be populated by JavaScript -->
         </div>
