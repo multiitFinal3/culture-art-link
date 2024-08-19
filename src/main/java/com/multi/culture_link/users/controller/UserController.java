@@ -3,6 +3,7 @@ package com.multi.culture_link.users.controller;
 
 import com.multi.culture_link.common.region.model.dto.RegionDTO;
 import com.multi.culture_link.common.region.service.RegionService;
+import com.multi.culture_link.culturalProperties.model.dto.CulturalPropertiesDTO;
 import com.multi.culture_link.exhibition.service.ExhibitionService;
 import com.multi.culture_link.festival.model.dto.UserFestivalLoveHateMapDTO;
 import com.multi.culture_link.festival.service.FestivalService;
@@ -36,6 +37,8 @@ public class UserController {
 	private final BCryptPasswordEncoder bCryptPasswordEncoder;
 	private final FileController fileController;
 	
+	private ArrayList<CulturalPropertiesDTO> list;
+	
 	@Value("${cloud.aws.s3.endpoint}")
 	private String endPoint;
 	
@@ -64,6 +67,8 @@ public class UserController {
 	 */
 	@GetMapping("/signUp")
 	public String signUp() {
+		
+		
 		
 		return "/user/signUp";
 	}
@@ -194,9 +199,7 @@ public class UserController {
 					throw new RuntimeException(e);
 				}
 				
-				
 			}
-			
 			
 		}
 

@@ -196,10 +196,27 @@
 
     <select id="findPopularFestivalKeyword" parameterType="festivalContentReviewNaverKeywordMapping">
 
-        SELECT * FROM (
+<!--        SELECT * FROM (-->
 
-        SELECT ROW_NUMBER() OVER (ORDER BY tf_idf DESC) AS rownum, topten.*
-        FROM vw_festival_keyword_tf_idf_top10_data topten
+<!--        SELECT ROW_NUMBER() OVER (ORDER BY tf_idf DESC) AS rownum, topten.*-->
+<!--        FROM vw_festival_keyword_tf_idf_top10_data topten-->
+
+<!--        ) f1-->
+
+<!--        WHERE f1.rownum BETWEEN #{pageDTO.start} AND #{pageDTO.end};-->
+
+        WITH DistinctKeywords AS (
+
+            SELECT festival_keyword_id, MAX(tf_idf) AS max_tf_idf
+            FROM vw_festival_keyword_tf_idf_top10_data
+            GROUP BY festival_keyword_id
+        )
+
+        SELECT festival_keyword_id
+        FROM (
+
+            SELECT festival_keyword_id, ROW_NUMBER() OVER (ORDER BY max_tf_idf DESC) AS rownum
+            FROM DistinctKeywords
 
         ) f1
 
