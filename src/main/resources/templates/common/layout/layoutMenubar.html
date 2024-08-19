@@ -14,6 +14,61 @@
 
     <!--jquery-->
     <script src="https://code.jquery.com/jquery-3.5.1.min.js" crossorigin="anonymous"></script>
+
+
+    <style>
+
+        .bg-light {
+    <!--        background-color: black !important;-->
+        }
+
+        .navbar-light .navbar-nav .nav-link {
+            color: rgba(0, 0, 0, .5);
+    <!--        color: #174D1C;-->
+        }
+
+
+
+        .navbar-light .navbar-nav .nav-link:focus,
+        .navbar-light .navbar-nav .nav-link.active {
+
+            font-size: larger;
+            font-weight: bold;
+        }
+
+        .navbar-brand{
+            font-size: 2.7rem !important;
+        }
+
+
+
+
+
+    </style>
+
+    <script>
+        $(document).ready(function() {
+            // 페이지 로드 시, 저장된 링크에 포커스 적용
+            const activeLink = sessionStorage.getItem('activeLink');
+            if (activeLink) {
+                $(`.nav-link[href='${activeLink}']`).addClass('active');
+            }
+
+            // 링크 클릭 시, 해당 링크를 저장하고 포커스 적용
+            $('.nav-link').on('click', function() {
+                // 모든 링크의 active 클래스를 제거
+                $('.nav-link').removeClass('active');
+                // 클릭한 링크에 active 클래스 추가
+                $(this).addClass('active');
+
+                // 클릭한 링크의 href를 저장
+                sessionStorage.setItem('activeLink', $(this).attr('href'));
+            });
+        });
+    </script>
+
+
+
 </head>
 
     <!--css 파일-->
@@ -27,11 +82,24 @@
 <div id="menubar">
 
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <img src="https://img.freepik.com/premium-vector/korean-culture-poster_24877-72504.jpg" alt="로고이미지" width="50px" height="50px">
-        <a class="navbar-brand" href="#">&nbsp;&nbsp;문화이음&nbsp;&nbsp;</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 100" style="width: 300px">
+            <style>
+                .icon { fill: #333333; }
+                .korean { font-family: 'Noto Sans KR', sans-serif; font-weight: 500; }
+                .english { font-family: 'Arial', sans-serif; font-weight: normal; letter-spacing: 2px; }
+            </style>
 
-        </button>
+            <!-- Updated triangle icon -->
+            <g class="icon" transform="translate(0, 20) scale(0.6)">
+                <path d="M0,60 L50,0 L100,60 L75,60 L50,20 L25,60 Z"/>
+            </g>
+
+            <!-- Korean text -->
+            <text x="80" y="50" class="korean" font-size="32" fill="#333333">문 화 이 음</text>
+
+            <!-- English text -->
+            <text x="80" y="80" class="english" font-size="20" fill="#555555">C U L T U R E  L I N K</text>
+        </svg>
 
         <!--메뉴바 링크-->
         <div class="collapse navbar-collapse" id="navbarNavDropdown">

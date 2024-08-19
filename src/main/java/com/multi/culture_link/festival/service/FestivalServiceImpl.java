@@ -836,4 +836,18 @@ public class FestivalServiceImpl implements FestivalService {
 		
 	}
 	
+	/**
+	 * 어떤 속성이든 하나의 텍스트를 포함하는 축제 모두를 반환
+	 * @param text
+	 * @return
+	 * @throws Exception
+	 */
+	@Override
+	public ArrayList<FestivalDTO> findDBFestivalByText(String text) throws Exception {
+		
+		ArrayList<FestivalDTO> list = festivalMapper.findDBFestivalByText(text);
+		
+		return list;
+	}
+	
 }

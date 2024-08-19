@@ -90,10 +90,27 @@
 
 
 
+
+
+
     <select id="findReviewsByPerformanceId" resultType="com.multi.culture_link.performance.model.dto.PerformanceReviewDTO">
-        SELECT *
-        FROM performance_review
-        WHERE performance_id = #{performanceId}
+        SELECT
+        pr.id,
+        pr.performance_id AS performanceId,
+        pr.user_id AS userId,
+        pr.star_rating AS starRating,
+        pr.content,
+        pr.review_date AS reviewDate,
+        pr.created_at AS createdAt,
+        pr.updated_at AS updatedAt,
+        u.user_name AS userName,
+        u.user_profile_pic AS userProfileImage
+        FROM
+        performance_review pr
+        JOIN
+        user u ON pr.user_id = u.user_id
+        WHERE
+        pr.performance_id = #{performanceId}
     </select>
 
     <insert id="insertReview" useGeneratedKeys="true" keyProperty="id">
@@ -112,6 +129,48 @@
     <delete id="deleteReview">
         DELETE FROM performance_review WHERE id = #{id}
     </delete>
+
+
+
+
+
+
+
+
+
+    <!--추천-->
+    <select id="findRecommendedPerformances" resultType="com.multi.culture_link.admin.performance.model.dto.PerformanceDTO">
+        SELECT
+        p.id, p.code, p.title, p.location, p.casting, p.genre, p.image_main, p.start_date, p.end_date
+        FROM
+        performance_info p
+        WHERE
+        p.start_date > NOW()
+        AND p.genre = #{genre}
+        AND (
+        p.location IN (
+        SELECT DISTINCT pi.location
+        FROM performance_add pa
+        JOIN performance_info pi ON pa.performance_id = pi.id
+        WHERE pa.user_id = #{userId} AND pa.state = 'like'
+        )
+        OR p.casting IN (
+        SELECT DISTINCT pi.casting
+        FROM performance_add pa
+        JOIN performance_info pi ON pa.performance_id = pi.id
+        WHERE pa.user_id = #{userId} AND pa.state = 'like'
+        )
+        )
+        AND p.id NOT IN (
+        SELECT pa.performance_id
+        FROM performance_add pa
+        WHERE pa.user_id = #{userId}
+        )
+        ORDER BY RAND() -- 무작위로 선택
+        LIMIT 3 -- 각 장르에서 최대 3개 선택
+    </select>
+
+
 
 
 

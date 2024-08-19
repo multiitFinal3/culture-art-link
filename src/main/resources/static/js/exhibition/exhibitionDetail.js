@@ -3,6 +3,23 @@ const analysesPerPage = 3;
 let currentReviewPage = 1;
 let currentAnalyzePage = 1;
 
+const $window = $(window);
+
+
+let naverMap = null
+
+function getMapSize() {
+
+    const $content = $("#content");
+    const size = new naver.maps.Size($content.width() - 15, 444);
+
+    return size;
+}
+
+$window.on('resize', function () {
+    naverMap.setSize(getMapSize());
+});
+
 $(document).ready(function () {
     const exhibitionId = getExhibitionIdFromUrl();
     loadExhibitionDetails(exhibitionId);
@@ -314,7 +331,6 @@ async function loadExhibitionDetails(exhibitionId) {
 
         // const ratingResponse = await fetch(`/exhibition/${exhibitionId}/rating`);
         // const ratingData = await ratingResponse.json();
-        $('#averageRating').text(Number(data?.starsAVG).toFixed(1));
 
         renderExhibitionDetails(data);
     } catch (error) {
@@ -361,6 +377,9 @@ async function loadExhibitionReviews() {
         const exhibitionId = getExhibitionIdFromUrl()
         const response = await fetch(`/exhibition/exhibition/${exhibitionId}/comment`);
         const data = await response.json();
+        const count = data.length;
+        const $commentBtn = $("#commentBtn");
+        $commentBtn.text($commentBtn.text() + ' ' + count);
         console.log("loadExhibitionReviews : ", data);
         renderReviews(data)
     } catch (error) {
@@ -369,10 +388,7 @@ async function loadExhibitionReviews() {
 }
 
 function renderExhibitionDetails(exhibition) {
-    $('#exhibitionTitle').text(exhibition.title);
-    $('#exhibitionArtist').text(exhibition.artist);
-    $('#exhibitionMuseum').text(exhibition.museum);
-    // 날짜 형식 변경
+
     const formatDate = (dateString) => {
         if (dateString === "미정") return "미정";
         const date = new Date(dateString);
@@ -381,9 +397,56 @@ function renderExhibitionDetails(exhibition) {
 
     const startDate = formatDate(exhibition.startDate);
     const endDate = formatDate(exhibition.endDate);
-    $('#exhibitionDate').text(`${startDate} - ${endDate}`);
     $('#exhibitionImage').attr('src', exhibition.image);
 
+    $('#averageStar').html();
+    $('#averageRating').text();
+
+    const $info = $(".exhibition-info")
+    $info.html(`
+        ${(exhibition.artist) ? `
+        <div class="info-item">
+            <span class="info-label">
+                작가
+            </span>
+            <span class="info-data">
+                ${exhibition.artist}
+            </span>
+        </div>
+        ` : ''}
+        ${(exhibition.museum) ? `
+        <div class="info-item">
+            <span class="info-label">
+                장소
+            </span>
+            <span class="info-data">
+                ${exhibition.museum}
+            </span>
+        </div>
+        ` : ''}
+        
+        <div class="info-item">
+            <span class="info-label">
+                기간
+            </span>
+            <span class="info-data">
+                ${startDate} - ${endDate}
+            </span>
+        </div>
+        
+        <div class="info-item">
+            <span class="info-label">
+                별점
+            </span>
+            <span class="info-data">
+                ${Number(exhibition?.starsAVG).toFixed(1)} 
+                <span id="averageStar">
+                    ${'★'.repeat(Math.round(exhibition.starsAVG))}${'☆'.repeat(5 - Math.round(exhibition.starsAVG))}
+                </span>
+            </span>
+        </div>
+        
+    `)
 
     initMap(exhibition.museum);
     renderInformation(exhibition)
@@ -438,11 +501,11 @@ async function initMap(location) {
     };
 
     const mapDiv = document.getElementById('map');
-    const map = new naver.maps.Map(mapDiv, mapOptions);
+    naverMap = new naver.maps.Map(mapDiv, mapOptions);
 
 
     console.log('mapDiv : ', mapDiv)
-    console.log('map : ', map)
+    console.log('map : ', naverMap)
     if (!location) {
         console.log('No location provided');
         $('#mapDiv').html("위치 정보가 없습니다.");
@@ -463,11 +526,11 @@ async function initMap(location) {
     const point = new naver.maps.LatLng(locationInfo.mapy / 10000000, locationInfo.mapx / 10000000);
 
     // 좌표로 이동
-    map.setCenter(point);
+    naverMap.setCenter(point);
     // 해당 좌표에 마크 설정
     await new naver.maps.Marker({
         position: point,
-        map: map
+        map: naverMap
     });
 
     setTimeout(function () {
@@ -495,13 +558,27 @@ function renderReviews(reviews) {
     const endIndex = startIndex + reviewsPerPage;
     const pageReviews = reviews.slice(startIndex, endIndex);
 
+    const formatDate = (dateString) => {
+        const date = new Date(dateString);
+        const year = date.getFullYear();
+        const month = date.getMonth() + 1;
+        const day = date.getDate();
+        const hours = date.getHours();
+        const minutes = date.getMinutes();
+        const seconds = date.getSeconds();
+        const ampm = hours >= 12 ? '오후' : '오전';
+        const formattedHours = hours % 12 || 12;
+
+        return `${year}. ${month}. ${day}. ${ampm} ${formattedHours}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+    };
+
     const reviewsHtml = pageReviews.map(review => `
         <div class="review" data-id="${review.id}">
             <div class="review-top">
                 <img src="https://kr.object.ncloudstorage.com/team3${review.profileImage}" alt="프로필 이미지" class="profile-image">
                 <div class="review-info">
                     <h3 class="review-name">${review.name}</h3>
-                    <p class="review-date">${review.createdAt}</p>
+                    <p class="review-date">${formatDate(review.createdAt)}</p>
                     <div class="review-rating">${'★'.repeat(review.stars)}${'☆'.repeat(5 - review.stars)}</div>
                 </div>
                 ${(review.auth) ? '<button class="delete-review btn btn-outline-secondary">삭제</button>' : ''}
@@ -515,12 +592,44 @@ function renderReviews(reviews) {
     $('#reviewsContainer').html(reviewsHtml);
     renderReviewPagination(reviews.length, currentReviewPage);
 
-
     $('.delete-review').on('click', function () {
         const reviewId = $(this).closest('.review').data('id');
         deleteReview(reviewId);
     });
 }
+
+// function renderReviews(reviews) {
+//     const startIndex = (currentReviewPage - 1) * reviewsPerPage;
+//     const endIndex = startIndex + reviewsPerPage;
+//     const pageReviews = reviews.slice(startIndex, endIndex);
+//
+//
+//     const reviewsHtml = pageReviews.map(review => `
+//         <div class="review" data-id="${review.id}">
+//             <div class="review-top">
+//                 <img src="https://kr.object.ncloudstorage.com/team3${review.profileImage}" alt="프로필 이미지" class="profile-image">
+//                 <div class="review-info">
+//                     <h3 class="review-name">${review.name}</h3>
+//                     <p class="review-date">${review.createdAt}</p>
+//                     <div class="review-rating">${'★'.repeat(review.stars)}${'☆'.repeat(5 - review.stars)}</div>
+//                 </div>
+//                 ${(review.auth) ? '<button class="delete-review btn btn-outline-secondary">삭제</button>' : ''}
+//             </div>
+//             <div class="review-bottom">
+//                 <p class="review-text">${review.content}</p>
+//             </div>
+//         </div>
+//     `).join('');
+//
+//     $('#reviewsContainer').html(reviewsHtml);
+//     renderReviewPagination(reviews.length, currentReviewPage);
+//
+//
+//     $('.delete-review').on('click', function () {
+//         const reviewId = $(this).closest('.review').data('id');
+//         deleteReview(reviewId);
+//     });
+// }
 
 async function deleteReview(reviewId) {
     try {
@@ -573,6 +682,9 @@ async function loadExhibitionAnalyze() {
         const exhibitionId = getExhibitionIdFromUrl()
         const response = await fetch(`/exhibition/exhibition/${exhibitionId}/analyze`);
         const data = await response.json();
+        const count = data.length;
+        const $AnalyzeBtn = $("#AnalyzeBtn");
+        $AnalyzeBtn.text($AnalyzeBtn.text() + ' ' + count);
         console.log("loadExhibitionAnalyze : ", data);
         renderAnalyze(data)
     } catch (error) {

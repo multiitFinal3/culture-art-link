@@ -1,5 +1,11 @@
+    body{
 
-    /* 필터 컨테이너 */
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+
+    }
+
+
+       /* 필터 컨테이너 */
         .filter-container {
             display: flex;
             justify-content: space-between;
@@ -359,6 +365,26 @@
 
 
 
+    #inputGroup > select:first-child{
+
+        border-top-left-radius: 5px;
+        border-bottom-left-radius: 5px;
+        border-top-right-radius: 0px;
+        border-bottom-right-radius: 0px;
+
+
+    }
+
+    #resetBtn1{
+
+        border-top-right-radius: 5px;
+        border-bottom-right-radius: 5px;
+
+    }
+
+
+
+
 
     .none{
 
@@ -374,7 +400,7 @@
 
     #searchForm select,
     #searchForm input{
-
+        width: 120px;
         border: 1px solid #ced4da;
         border-radius: 0px;
         color: #495057

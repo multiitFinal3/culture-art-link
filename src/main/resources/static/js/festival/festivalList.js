@@ -1,19 +1,65 @@
 $(document).ready(
     function(){
 
-        //# region 카드 클릭 시 상세 페이지로 이동
+        //# region 카드 전체 함수
 
+
+
+       /**
+       * 카드 클릭 시 상세 페이지로 이동
+       *
+       */
         $(document).on('click','.card',function(){
 
             var festivalId = $(this).attr('id');
             window.location.href='/festival/festival-detail?festivalId='+festivalId;
 
         })
+
+
+
+//       /**
+//       * 카드 호버 시 찜 관심없음 버튼 보임
+//       *
+//       */
+//        $(document).on('mouseover','.card', function(){
+//
+//            var btns = $(this).find('button');
+//            btns.each(function(){
+//
+//                var btn = $(this);
+//                btn.removeClass('none');
+//
+//            })
+//        })
+//
+//
+//       /**
+//       * 카드 호버 아닐 시 찜 관심없음 버튼 안보임
+//       *
+//       */
+//        $(document).on('mouseout','.card', function(){
+//
+//            var btns = $(this).find('button');
+//            btns.each(function(){
+//
+//                var btn = $(this);
+//                btn.addClass('none');
+//
+//            })
+//        })
+
+
+
         //#endRegion
 
 
         //#region 키워드 추천 관련 함수
 
+           /**
+           * 키워드 추천 함수
+           *
+           */
             function findKeywordRecommendFestivalList(){
 
                 $('#list2').html("");
@@ -403,7 +449,7 @@ $(document).ready(
             e.preventDefault();
 
             findDBFestivalByMultiple(1);
-            findDBFestivalMultipleCount();
+//            findDBFestivalMultipleCount();
 
          })
 
@@ -589,7 +635,7 @@ $(document).ready(
 
                     $('#pageNum1').html("");
                     // 상세검색 전으로 돌아가기 버튼
-                    $('#pageNum1').append(`<button class="pageBtn4">전체</button>`);
+                    $('#pageNum1').append(`<button class="pageBtn4 btn btn-outline-success">전체</button>`);
 
                     var page = 0;
 
@@ -601,7 +647,7 @@ $(document).ready(
 
                     for(var p=1; p<=page; p++){
 
-                        $('#pageNum1').append(`<button class="pageBtn3">${p}</button>`)
+                        $('#pageNum1').append(`<button class="pageBtn3 btn btn-outline-success">${p}</button>`)
 
                     }
 
@@ -619,7 +665,7 @@ $(document).ready(
 
             const page = $(this).text();
             findDBFestivalByMultiple(page);
-            findDBFestivalMultipleCount();
+//            findDBFestivalMultipleCount();
 
         })
 

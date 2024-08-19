@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 
 /**
@@ -34,6 +35,7 @@ public class AdminFestivalServiceImpl implements AdminFestivalService {
 	private final OkHttpClient client;
 	private final Gson gson;
 	private final KeywordExtractService keywordExtractService;
+	private int apiAllListSize;
 	
 	@Value("${API-KEY.naverArticleClientId}")
 	private String clientId;
@@ -53,7 +55,7 @@ public class AdminFestivalServiceImpl implements AdminFestivalService {
 	 * @param adminFestivalMapper   페스티벌 관리자 매퍼
 	 * @param keywordExtractService 키워드 추출 서비스
 	 */
-	public AdminFestivalServiceImpl(OkHttpClient client, Gson gson, OkHttpClient client1, AdminFestivalMapper adminFestivalMapper, FestivalService festivalService, KeywordExtractService keywordExtractService) {
+	public AdminFestivalServiceImpl(OkHttpClient client, Gson gson, AdminFestivalMapper adminFestivalMapper, FestivalService festivalService, KeywordExtractService keywordExtractService) {
 		this.client = client;
 		this.gson = gson;
 		this.adminFestivalMapper = adminFestivalMapper;
@@ -72,285 +74,299 @@ public class AdminFestivalServiceImpl implements AdminFestivalService {
 	@Override
 	public ArrayList<FestivalDTO> findAPIFestivalList(int page) throws Exception {
 		
-		Request request = new Request.Builder()
-				.url("http://api.data.go.kr/openapi/tn_pubr_public_cltur_fstvl_api?serviceKey=chNg8jx96krRfOCTvGcO2PvBKnrCrH0Qm6/JmV1TOw/Yu1T0x3jy0fHM8SOcZFnJIxdc7oqyM03PVmMA9UFOsA==&pageNo=1&numOfRows=100&type=json")
-				.addHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36")
-				.addHeader("Connection", "keep-alive")
-				.get()
-				.build();
-		
-		
-		Response response = client.newCall(request).execute();
-		String responseBody = response.body().string();
-		JsonObject json = gson.fromJson(responseBody, JsonObject.class);
-		JsonObject response1 = json.getAsJsonObject("response");
-		JsonObject body1 = response1.getAsJsonObject("body");
-		JsonArray items = body1.getAsJsonArray("items");
-		/*System.out.println("items : " + items);*/
-		
-		ArrayList<FestivalDTO> list = new ArrayList<>();
-		
 		PageDTO pageDTO = new PageDTO();
 		pageDTO.setStartEnd(page);
 		int start = pageDTO.getStart();
 		int end = pageDTO.getEnd();
 		
-		for (int i = 0; i < items.size(); i++) {
+		if(this.list.isEmpty()){
 			
-			JsonObject item = items.get(i).getAsJsonObject();
+			Request request = new Request.Builder()
+					.url("http://api.data.go.kr/openapi/tn_pubr_public_cltur_fstvl_api?serviceKey=chNg8jx96krRfOCTvGcO2PvBKnrCrH0Qm6/JmV1TOw/Yu1T0x3jy0fHM8SOcZFnJIxdc7oqyM03PVmMA9UFOsA==&pageNo=1&numOfRows=1400&type=json")
+					.addHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36")
+					.addHeader("Connection", "keep-alive")
+					.get()
+					.build();
 			
-			FestivalDTO festivalDTO = new FestivalDTO();
-			
-			String festivalName = item.get("fstvlNm").getAsString();
-			festivalDTO.setFestivalName(festivalName);
-			
-			String place = item.get("opar").getAsString();
-			festivalDTO.setPlace(place);
-			
-			String detailAddress = item.get("lnmadr").getAsString().trim();
-			festivalDTO.setDetailAddress(detailAddress);
-			
-			String firstAddress = detailAddress.split(" ")[0];
-			
-			int regionId = 66;
-			
-			switch (firstAddress) {
-				
-				case "서울특별시":
-					regionId = 11;
-					break;
-				
-				case "부산광역시":
-					regionId = 21;
-					break;
-				
-				case "대구광역시":
-					regionId = 21;
-					break;
-				
-				case "인천광역시":
-					regionId = 23;
-					break;
-				
-				case "광주광역시":
-					regionId = 24;
-					break;
-				
-				case "대전광역시":
-					regionId = 25;
-					break;
-				
-				case "울산광역시":
-					regionId = 26;
-					break;
-				
-				case "경기도":
-					regionId = 31;
-					break;
-				
-				case "강원특별자치도":
-					regionId = 32;
-					break;
-				
-				case "충청북도":
-					regionId = 33;
-					break;
-				
-				case "충청남도":
-					regionId = 34;
-					break;
-				
-				case "전북특별자치도":
-					regionId = 35;
-					break;
-				
-				case "전라남도":
-					regionId = 36;
-					break;
-				
-				case "경상북도":
-					regionId = 37;
-					break;
-				
-				
-				case "경상남도":
-					regionId = 38;
-					break;
-				
-				
-				case "세종특별자치시":
-					regionId = 45;
-					break;
-				
-				
-				case "제주특별자치도":
-					regionId = 50;
-					break;
-				
-				
-			}
-			
-			festivalDTO.setRegionId(regionId);
-			
-			String startD = item.get("fstvlStartDate").getAsString();
-			String endD = item.get("fstvlEndDate").getAsString();
-			
-			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-			
-			Date startDate = null;
-			Date endDate = null;
-			String timeId = "";
-			String timeDescription = "";
-			
-			try {
-				startDate = format.parse(startD);
-				endDate = format.parse(endD);
-			} catch (ParseException e) {
-				throw new RuntimeException(e);
-			}
-			
-			festivalDTO.setStartDate(startDate);
-			festivalDTO.setEndDate(endDate);
+			OkHttpClient client1 = new OkHttpClient.Builder()
+					.connectTimeout(40, TimeUnit.SECONDS)
+					.writeTimeout(40,TimeUnit.SECONDS)
+					.readTimeout(40,TimeUnit.SECONDS)
+					.build();
 			
 			
-			int diffDays = (int) ((endDate.getTime() - startDate.getTime()) / (1000 * 24 * 60 * 60));
+			Response response = client1.newCall(request).execute();
+			String responseBody = response.body().string();
+			JsonObject json = gson.fromJson(responseBody, JsonObject.class);
+			JsonObject response1 = json.getAsJsonObject("response");
+			JsonObject body1 = response1.getAsJsonObject("body");
+			JsonArray items = body1.getAsJsonArray("items");
+			/*System.out.println("items : " + items);*/
+			
+			ArrayList<FestivalDTO> list = new ArrayList<>();
 			
 			
-			Calendar calendar1 = Calendar.getInstance();
-			calendar1.setTime(startDate);
-			int startMonth = calendar1.get(Calendar.MONTH) + 1;
-			
-			Calendar calendar2 = Calendar.getInstance();
-			calendar2.setTime(endDate);
-			int endMonth = calendar2.get(Calendar.MONTH) + 1;
-			
-			
-			String season = "";
-			
-			if ((startMonth == 12) || (startMonth == 1) || (startMonth == 2)) {
+			for (int i = 0; i < items.size(); i++) {
 				
-				season = "겨울";
+				JsonObject item = items.get(i).getAsJsonObject();
 				
-			} else if ((startMonth == 3) || (startMonth == 4) || (startMonth == 5)) {
+				FestivalDTO festivalDTO = new FestivalDTO();
 				
-				season = "봄";
+				String festivalName = item.get("fstvlNm").getAsString().trim();
+				festivalDTO.setFestivalName(festivalName);
 				
-			} else if ((startMonth == 6) || (startMonth == 7) || (startMonth == 8)) {
+				String place = item.get("opar").getAsString();
+				festivalDTO.setPlace(place);
 				
-				season = "여름";
+				String detailAddress = item.get("lnmadr").getAsString().trim();
+				festivalDTO.setDetailAddress(detailAddress);
 				
-			} else {
+				String firstAddress = detailAddress.split(" ")[0];
 				
-				season = "가을";
+				int regionId = 66;
 				
-			}
-			
-			festivalDTO.setSeason(season);
-			
-			ArrayList<Integer> days = new ArrayList<Integer>();
-			
-			for (int j = 0; j < diffDays + 1; j++) {
-				
-				/*System.out.println("축제 기간 : " + (diffDays + 1));*/
-				Calendar calendar = Calendar.getInstance();
-				calendar.setTime(startDate);
-				calendar.add(Calendar.DATE, j);
-				
-				/*System.out.println("calendar.get(Calendar.DAY_OF_WEEK) : " + calendar.get(Calendar.DAY_OF_WEEK));*/
-				days.add(calendar.get(Calendar.DAY_OF_WEEK));
-				
-			}
-			
-			if (((days.contains(1)) || (days.contains(7)))) {
-				
-				if ((days.contains(2)) || (days.contains(3)) || (days.contains(4)) || (days.contains(5)) || (days.contains(6))) {
+				switch (firstAddress) {
 					
-					timeId = "A";
-					timeDescription = "평일 , 주말 전부 포함";
+					case "서울특별시":
+						regionId = 11;
+						break;
 					
-				} else {
+					case "부산광역시":
+						regionId = 21;
+						break;
 					
-					timeId = "WE";
-					timeDescription = "토~ 일 사이";
+					case "대구광역시":
+						regionId = 21;
+						break;
+					
+					case "인천광역시":
+						regionId = 23;
+						break;
+					
+					case "광주광역시":
+						regionId = 24;
+						break;
+					
+					case "대전광역시":
+						regionId = 25;
+						break;
+					
+					case "울산광역시":
+						regionId = 26;
+						break;
+					
+					case "경기도":
+						regionId = 31;
+						break;
+					
+					case "강원특별자치도":
+						regionId = 32;
+						break;
+					
+					case "충청북도":
+						regionId = 33;
+						break;
+					
+					case "충청남도":
+						regionId = 34;
+						break;
+					
+					case "전북특별자치도":
+						regionId = 35;
+						break;
+					
+					case "전라남도":
+						regionId = 36;
+						break;
+					
+					case "경상북도":
+						regionId = 37;
+						break;
+					
+					
+					case "경상남도":
+						regionId = 38;
+						break;
+					
+					
+					case "세종특별자치시":
+						regionId = 45;
+						break;
+					
+					
+					case "제주특별자치도":
+						regionId = 50;
+						break;
+					
 					
 				}
 				
-			} else {
+				festivalDTO.setRegionId(regionId);
 				
-				timeId = "WD";
-				timeDescription = "월 ~ 금 사이";
+				String startD = item.get("fstvlStartDate").getAsString();
+				String endD = item.get("fstvlEndDate").getAsString();
+				
+				SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+				
+				Date startDate = null;
+				Date endDate = null;
+				String timeId = "";
+				String timeDescription = "";
+				
+				try {
+					startDate = format.parse(startD);
+					endDate = format.parse(endD);
+				} catch (ParseException e) {
+					throw new RuntimeException(e);
+				}
+				
+				festivalDTO.setStartDate(startDate);
+				festivalDTO.setEndDate(endDate);
+				
+				
+				int diffDays = (int) ((endDate.getTime() - startDate.getTime()) / (1000 * 24 * 60 * 60));
+				
+				
+				Calendar calendar1 = Calendar.getInstance();
+				calendar1.setTime(startDate);
+				int startMonth = calendar1.get(Calendar.MONTH) + 1;
+				
+				Calendar calendar2 = Calendar.getInstance();
+				calendar2.setTime(endDate);
+				int endMonth = calendar2.get(Calendar.MONTH) + 1;
+				
+				
+				String season = "";
+				
+				if ((startMonth == 12) || (startMonth == 1) || (startMonth == 2)) {
+					
+					season = "겨울";
+					
+				} else if ((startMonth == 3) || (startMonth == 4) || (startMonth == 5)) {
+					
+					season = "봄";
+					
+				} else if ((startMonth == 6) || (startMonth == 7) || (startMonth == 8)) {
+					
+					season = "여름";
+					
+				} else {
+					
+					season = "가을";
+					
+				}
+				
+				festivalDTO.setSeason(season);
+				
+				ArrayList<Integer> days = new ArrayList<Integer>();
+				
+				for (int j = 0; j < diffDays + 1; j++) {
+					
+					/*System.out.println("축제 기간 : " + (diffDays + 1));*/
+					Calendar calendar = Calendar.getInstance();
+					calendar.setTime(startDate);
+					calendar.add(Calendar.DATE, j);
+					
+					/*System.out.println("calendar.get(Calendar.DAY_OF_WEEK) : " + calendar.get(Calendar.DAY_OF_WEEK));*/
+					days.add(calendar.get(Calendar.DAY_OF_WEEK));
+					
+				}
+				
+				if (((days.contains(1)) || (days.contains(7)))) {
+					
+					if ((days.contains(2)) || (days.contains(3)) || (days.contains(4)) || (days.contains(5)) || (days.contains(6))) {
+						
+						timeId = "A";
+						timeDescription = "평일 , 주말 전부 포함";
+						
+					} else {
+						
+						timeId = "WE";
+						timeDescription = "토~ 일 사이";
+						
+					}
+					
+				} else {
+					
+					timeId = "WD";
+					timeDescription = "월 ~ 금 사이";
+					
+				}
+				
+				
+				festivalDTO.setTimeId(timeId);
+				festivalDTO.setTimeDescription(timeDescription);
+				
+				
+				String content1 = item.get("fstvlCo").getAsString().replace("+", ", ") + ". ";
+				
+				
+				festivalDTO.setFestivalContent(content1);
+				
+				String manageInstitution = item.get("mnnstNm").getAsString().replace("+", ", ");
+				String hostInstitution = item.get("auspcInsttNm").getAsString().replace("+", ", ");
+				String sponserInstitution = item.get("suprtInsttNm").getAsString().replace("+", ", ");
+				
+				festivalDTO.setManageInstitution(manageInstitution);
+				festivalDTO.setHostInstitution(hostInstitution);
+				festivalDTO.setSponserInstitution(sponserInstitution);
+				
+				festivalDTO.setTel(item.get("phoneNumber").getAsString());
+				festivalDTO.setHomepageUrl(item.get("homepageUrl").getAsString());
+				
+				
+				double lat = item.get("latitude") == null ? 0.0
+						: item.get("latitude").getAsString().equals("") ? 0.0
+						: item.get("latitude").getAsDouble();
+				
+				
+				double longi = item.get("longitude") == null ? 0.0
+						: item.get("longitude").getAsString().equals("") ? 0.0
+						: item.get("longitude").getAsDouble();
+				
+				
+				festivalDTO.setLatitude(lat);
+				festivalDTO.setLongtitude(longi);
+				
+				festivalDTO.setAvgRate(0);
+				
+				list.add(festivalDTO);
 				
 			}
 			
+			this.list = list;
 			
-			festivalDTO.setTimeId(timeId);
-			festivalDTO.setTimeDescription(timeDescription);
-			
-			
-			String content1 = item.get("fstvlCo").getAsString().replace("+", ", ") + ". ";
-			
-			
-			festivalDTO.setFestivalContent(content1);
-			
-			String manageInstitution = item.get("mnnstNm").getAsString().replace("+", ", ");
-			String hostInstitution = item.get("auspcInsttNm").getAsString().replace("+", ", ");
-			String sponserInstitution = item.get("suprtInsttNm").getAsString().replace("+", ", ");
-			
-			festivalDTO.setManageInstitution(manageInstitution);
-			festivalDTO.setHostInstitution(hostInstitution);
-			festivalDTO.setSponserInstitution(sponserInstitution);
-			
-			festivalDTO.setTel(item.get("phoneNumber").getAsString());
-			festivalDTO.setHomepageUrl(item.get("homepageUrl").getAsString());
-			
-			
-			double lat = item.get("latitude") == null ? 0.0
-					: item.get("latitude").getAsString().equals("") ? 0.0
-					: item.get("latitude").getAsDouble();
-			
-			
-			double longi = item.get("longitude") == null ? 0.0
-					: item.get("longitude").getAsString().equals("") ? 0.0
-					: item.get("longitude").getAsDouble();
-			
-			
-			festivalDTO.setLatitude(lat);
-			festivalDTO.setLongtitude(longi);
-			
-			festivalDTO.setAvgRate(0);
+		}
+		
+		ArrayList<FestivalDTO> nowList = (ArrayList<FestivalDTO>) this.list.clone();
+		
+		for(FestivalDTO festivalDTO : nowList){
 			
 			FestivalDTO festivalExist = adminFestivalMapper.findDBFestivalByFestival(festivalDTO);
 			
 			if (festivalExist != null) {
-				/*System.out.println("리스트에서 제외 : " + festivalExist.toString());*/
-				/*festivalDTO.setExist("Y");*/
-				continue;
-				
+				System.out.println("존재 " + festivalDTO);
+				this.list.remove(festivalDTO);
 			}
-			
-			
-			list.add(festivalDTO);
-			
 		}
-		
-		this.list = list;
-		
+
 		ArrayList<FestivalDTO> list2 = new ArrayList<FestivalDTO>();
 		
-		int realEnd = list.size() > end ? end : list.size();
+		int realEnd = this.list.size() > end ? end : this.list.size();
 		
-		if (list.size() > 0) {
+		apiAllListSize = this.list.size();
+		
+		if (this.list.size() > 0) {
 			
 			for (int i = start - 1; i <= realEnd - 1; i++) {
 				
-				list2.add(list.get(i));
+				list2.add(this.list.get(i));
 				
 			}
 			
 		}
 		
 		return list2;
-		
 		
 	}
 	
@@ -1320,6 +1336,11 @@ public class AdminFestivalServiceImpl implements AdminFestivalService {
 	public ArrayList<FestivalDTO> findDBFestivalAllList() throws Exception {
 		ArrayList<FestivalDTO> list = adminFestivalMapper.findDBFestivalAllList();
 		return list;
+	}
+	
+	@Override
+	public int findAPIFestivalCount() throws Exception {
+		return apiAllListSize;
 	}
 	
 	

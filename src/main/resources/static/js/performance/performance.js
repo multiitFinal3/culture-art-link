@@ -178,4 +178,33 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 
+
+
+
+
+
+
+
+     // 추가 코드: 추천 공연 목록 처리
+         const recommendationContainer = document.querySelector('.recommend-items');
+
+         if (recommendationContainer) {
+             const recommendationCards = recommendationContainer.querySelectorAll('.all-card');
+
+             recommendationCards.forEach(card => {
+                 card.addEventListener('click', function() {
+                     const performanceCode = this.getAttribute('data-performance-code');
+                     console.log("Recommendation card clicked:", performanceCode);  // 로그 추가
+                     window.location.href = `/performance/performanceDetail?performanceCode=${encodeURIComponent(performanceCode)}&source=db`;
+                 });
+             });
+         }
+
+
+
+
+
+
+
+
 });

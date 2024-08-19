@@ -1,3 +1,11 @@
+    body{
+
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+
+    }
+
+
+
     .container {
         max-width: 1400px;
         margin: 0 auto;
@@ -61,7 +69,7 @@
 
     .info-section-content *{
 
-        font-size: 20px;
+        font-size: 16px;
         font-weight: 300;
         color: black;
 
@@ -715,21 +723,21 @@
         justify-content: center; /* 가운데 정렬 */
         align-items: center;
         gap: 10px; /* 아이콘 사이의 간격 */
-        /*margin-top: 20px;*/ /* 카드와 버튼 사이에 간격 추가 */
+        margin: 20px 0 30px;
     }
 
     #heartHateZone .whiteHateBtn, #heartHateZone .whiteHeartBtn{
 
         position: relative;
-        background: white;
-        padding: 5px 10px;
-        margin: 5px;
+        background: #f0f0f0;
+        padding: 10px 15px;
+        margin: 5px 0;
         border: none;
         border-radius: 5px;
         cursor: pointer;
         opacity: 0.8;
         height: 50px;
-
+        transition: all 0.3s ease;
     }
 
     #heartHateZone.card{
@@ -743,7 +751,7 @@
    #contentBtnZone button.activeGray{
 
      background-color: #7f7f7f;
-
+     color: white;
    }
 
 
@@ -770,3 +778,35 @@
         cursor: pointer;
 
    }
+
+
+   #detailBtn:hover,
+   #mapBtn:hover,
+   #reviewBtn:hover,
+   #relatedInfo:hover,
+   #similarFestival:hover{
+
+        background: #E5E5E5;
+
+   }
+
+  #heartHateZone .whiteHeartBtn:hover,
+  #heartHateZone .whiteHateBtn:hover {
+      background-color: #e0e0e0;
+      transform: translateY(-2px);
+  }
+
+  .info-label {
+      font-weight: bold;
+      color: #555;
+      white-space: nowrap;
+      width: 100px;
+  }
+
+  .info-section-content div{
+
+        display: flex;
+        padding: 5px 0;
+        gap: 10px;
+
+  }

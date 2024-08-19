@@ -1,110 +1,130 @@
 <!DOCTYPE html>
 <html
-  xmlns:th="http://www.thymeleaf.org"
-  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
-  layout:decorate="~{/common/layout/layoutAdminPage}"
+        layout:decorate="~{/common/layout/layoutAdminPage}"
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        xmlns:th="http://www.thymeleaf.org"
 >
-  <head>
+<head>
     <link
-      rel="stylesheet"
-      th:href="@{/css/exhibition/exhibitionRegulate.css}"
+            rel="stylesheet"
+            th:href="@{/css/exhibition/exhibitionRegulate.css}"
     />
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="/js/admin/exhibition/adminExhibition.js"></script>
-  </head>
-  <body>
-    <div layout:fragment="content2">
-      <div id="exhibitionRegulate" style="width: 90%">
-        <h2>
-          전시 DB 현황
-          <button id="dbUpdateBtn" class="btn btn-primary">수정 반영</button
-          ><button id="dbDeleteBtn" class="btn btn-primary">삭제</button>
-        </h2>
+</head>
+<body>
+<div layout:fragment="content2">
+    <div id="exhibitionRegulate" style="width: 90%">
+        <div style="margin: 0 auto;  text-align: center;">
+            <h2>
+                전시 DB 현황
+            </h2>
+        </div>
 
         <div id="searchForm">
-          <input
-            type="text"
-            id="searchTitleDB"
-            maxlength="20"
-            placeholder="전시 이름"
-          />
+            <div class="search-bar" style="text-align: left;">
+                <input
+                        id="searchTitleDB"
+                        maxlength="20"
+                        placeholder="전시 이름"
+                        type="text"
+                />
 
-          <input
-            type="text"
-            id="searchArtistDB"
-            maxlength="10"
-            placeholder="작가"
-          />
+                <input
+                        id="searchArtistDB"
+                        maxlength="10"
+                        placeholder="작가"
+                        type="text"
+                />
 
-          <input
-            type="text"
-            id="searchMuseumDB"
-            maxlength="20"
-            placeholder="미술관"
-          />
-
-          <button id="searchButtonDB" class="btn btn-primary">검색</button>
+                <input
+                        id="searchMuseumDB"
+                        maxlength="20"
+                        placeholder="미술관"
+                        type="text"
+                />
+                <button class="btn btn-primary" id="searchButtonDB">검색</button>
+            </div>
+            <div style="margin-left: auto;">
+                <button class="btn btn-primary" id="dbUpdateBtn">수정 반영</button>
+                <button class="btn btn-primary" id="dbDeleteBtn">삭제</button>
+            </div>
         </div>
 
         <table class="table table-striped" id="exhibitionDB">
-          <thead class="table-light">
+            <thead class="table-light">
             <tr>
-              <th scope="col">체크</th>
-              <th scope="col">#</th>
-              <th scope="col">전시이름</th>
-              <th scope="col">작가</th>
-              <th scope="col">미술관</th>
-              <th scope="col">시작일</th>
-              <th scope="col">종료일</th>
-              <th scope="col">요금</th>
-              <th scope="col">이미지</th>
+                <th scope="col">체크</th>
+                <th scope="col">#</th>
+                <th scope="col">전시이름</th>
+                <th scope="col">작가</th>
+                <th scope="col">미술관</th>
+                <th scope="col">시작일</th>
+                <th scope="col">종료일</th>
+                <th scope="col">요금</th>
+                <th scope="col">이미지</th>
+                <th scope="col"></th>
             </tr>
-          </thead>
-          <tbody id="list1"></tbody>
+            </thead>
+            <tbody id="list1"></tbody>
         </table>
-        <div id="pageNum1"></div>
+        <div class="page-box" id="pageNum1"></div>
 
-        <br /><br /><br /><br /><br /><br />
+        <br/><br/><br/><br/><br/><br/>
 
+
+        <div style="margin: 0 auto;  text-align: center;">
+            <h2>
+                전시 실시간
+            </h2>
+        </div>
         <h2>
-          전시 실시간<button id="apiInsertBtn" class="btn btn-primary">
-            DB에 추가
-          </button>
+
+
         </h2>
 
-        <div id="searchForm2">
-          <input
-            type="text"
-            maxlength="20"
-            id="searchTitle"
-            placeholder="전시 이름"
-          />
-          <input
-            type="text"
-            maxlength="20"
-            id="searchMuseum"
-            placeholder="미술관"
-          />
-          <button id="searchButton" class="btn btn-primary">검색</button>
+        <div id="searchForm2" style="display: flex">
+            <div>
+
+                <input
+                        id="searchTitle"
+                        maxlength="20"
+                        placeholder="전시 이름"
+                        type="text"
+                />
+                <input
+                        id="searchMuseum"
+                        maxlength="20"
+                        placeholder="미술관"
+                        type="text"
+                />
+                <button class="btn btn-primary" id="searchButton">검색</button>
+
+            </div>
+
+            <div style="margin-left: auto;">
+                <button class="btn btn-primary" id="apiInsertBtn">
+                    DB에 추가
+                </button>
+            </div>
         </div>
 
         <table class="table table-striped" id="exhibitionAPI">
-          <thead class="table-light">
+            <thead class="table-light">
             <tr>
-              <th scope="col">체크</th>
-              <th scope="col">#</th>
-              <th scope="col">전시이름</th>
-              <th scope="col">미술관</th>
-              <th scope="col">시작일</th>
-              <th scope="col">종료일</th>
+                <th scope="col">체크</th>
+                <th scope="col">#</th>
+                <th scope="col">전시이름</th>
+                <th scope="col">미술관</th>
+                <th scope="col">시작일</th>
+                <th scope="col">종료일</th>
             </tr>
-          </thead>
-          <tbody id="list2"></tbody>
+            </thead>
+            <tbody id="list2"></tbody>
         </table>
-        <div id="pageNum2"></div>
-      </div>
+        <div class="page-box" id="pageNum2"></div>
     </div>
-  </body>
+</div>
+</body>
 </html>

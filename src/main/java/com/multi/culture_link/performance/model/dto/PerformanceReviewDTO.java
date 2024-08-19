@@ -22,4 +22,9 @@ public class PerformanceReviewDTO {
     private LocalDateTime reviewDate;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+
+    private String userName;
+    private String userProfileImage;
+
+    private double averageRating;
 }

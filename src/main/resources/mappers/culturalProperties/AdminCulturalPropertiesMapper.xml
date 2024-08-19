@@ -18,14 +18,20 @@
         <result property="narrationUrl" column="narration_url" jdbcType="VARCHAR"/>
     </resultMap>
 
-    <insert id="insertDB" parameterType="culturalPropertiesDTO">
-        INSERT INTO cultural_properties (id, category_code, management_number, city_code, cultural_properties_name,
-        category_name, region, district, dynasty, address, registration_date, classify_a, classify_b, classify_c,
-        classify_d, content, main_img_url, img_url, img_desc, video_url, narration_url, longitude, latitude)
-        VALUES (#{id}, #{categoryCode}, #{managementNumber}, #{cityCode}, #{culturalPropertiesName}, #{categoryName},
-        #{region}, #{district}, #{dynasty}, #{address}, #{registrationDate}, #{classifyA}, #{classifyB}, #{classifyC},
-        #{classifyD}, #{content}, #{mainImgUrl}, #{imgUrl}, #{imgDesc}, #{videoUrl}, #{narrationUrl}, #{longitude},
-        #{latitude})
+
+    <insert id="insertDB" parameterType="culturalPropertiesDTO" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO cultural_properties (
+        category_code, management_number, city_code, category_name, cultural_properties_name,
+        address, region, district, dynasty, registration_date, longitude, latitude,
+        classify_a, classify_b, classify_c, classify_d, content, main_img_url, img_url,
+        img_desc, video_url, narration_url
+        )
+        VALUES (
+        #{categoryCode}, #{managementNumber}, #{cityCode}, #{categoryName}, #{culturalPropertiesName},
+        #{address}, #{region}, #{district}, #{dynasty}, #{registrationDate}, #{longitude}, #{latitude},
+        #{classifyA}, #{classifyB}, #{classifyC}, #{classifyD}, #{content}, #{mainImgUrl}, #{imgUrl},
+        #{imgDesc}, #{videoUrl}, #{narrationUrl}
+        )
     </insert>
 
 
@@ -44,44 +50,55 @@
 
 
 
-    <!-- 문화재 db검색 -->
     <select id="searchDBCulturalProperties" resultType="culturalPropertiesDTO">
         SELECT *
         FROM cultural_properties
-        WHERE
-        <if test="category != null and !category.equals('all')">
-            category_name = #{category}
-        </if>
-        <if test="name != null and !name.equals('')">
-            AND cultural_properties_name LIKE CONCAT('%', #{name}, '%')
-        </if>
-        <if test="region != null and !region.equals('')">
-            AND region LIKE CONCAT('%', #{region}, '%')
-        </if>
-        <if test="dynasty != null and !dynasty.equals('')">
-            AND dynasty LIKE CONCAT('%', #{dynasty}, '%')
-        </if>
+        <where>
+            <if test="category != null and category != '' and category != 'all'">
+                category_name = #{category}
+            </if>
+            <if test="name != null and name != ''">
+                <if test="category == null or category == '' or category == 'all'">
+                    cultural_properties_name LIKE CONCAT('%', #{name}, '%')
+                </if>
+                <if test="category != null and category != '' and category != 'all'">
+                    AND cultural_properties_name LIKE CONCAT('%', #{name}, '%')
+                </if>
+            </if>
+            <if test="region != null and region != ''">
+                AND region LIKE CONCAT('%', #{region}, '%')
+            </if>
+            <if test="dynasty != null and dynasty != ''">
+                AND dynasty LIKE CONCAT('%', #{dynasty}, '%')
+            </if>
+        </where>
         LIMIT #{start}, #{end}
     </select>
 
-    <!-- 문화재 db검색 결과의 총 개수 조회 -->
     <select id="searchCountCulturalProperties" resultType="int">
         SELECT COUNT(*)
         FROM cultural_properties
-        WHERE
-        <if test="category != null and !category.equals('all')">
-            category_name = #{category}
-        </if>
-        <if test="name != null and !name.equals('')">
-            AND cultural_properties_name LIKE CONCAT('%', #{name}, '%')
-        </if>
-        <if test="region != null and !region.equals('')">
-            AND region LIKE CONCAT('%', #{region}, '%')
-        </if>
-        <if test="dynasty != null and !dynasty.equals('')">
-            AND dynasty LIKE CONCAT('%', #{dynasty}, '%')
-        </if>
+        <where>
+            <if test="category != null and category != '' and category != 'all'">
+                category_name = #{category}
+            </if>
+            <if test="name != null and name != ''">
+                <if test="category == null or category == '' or category == 'all'">
+                    cultural_properties_name LIKE CONCAT('%', #{name}, '%')
+                </if>
+                <if test="category != null and category != '' and category != 'all'">
+                    AND cultural_properties_name LIKE CONCAT('%', #{name}, '%')
+                </if>
+            </if>
+            <if test="region != null and region != ''">
+                AND region LIKE CONCAT('%', #{region}, '%')
+            </if>
+            <if test="dynasty != null and dynasty != ''">
+                AND dynasty LIKE CONCAT('%', #{dynasty}, '%')
+            </if>
+        </where>
     </select>
+
 
 
 
@@ -118,5 +135,65 @@
         SELECT * FROM cultural_properties;
 
     </select>
+
+
+
+
+    <select id="selectById" parameterType="int" resultType="culturalPropertiesDTO">
+        SELECT *
+        FROM cultural_properties
+        WHERE id = #{id}
+    </select>
+
+    <update id="updateDB" parameterType="culturalPropertiesDTO">
+        UPDATE cultural_properties
+        SET
+        category_code = #{categoryCode},
+        management_number = #{managementNumber},
+        city_code = #{cityCode},
+        category_name = #{categoryName},
+        cultural_properties_name = #{culturalPropertiesName},
+        address = #{address},
+        region = #{region},
+        district = #{district},
+        dynasty = #{dynasty},
+        registration_date = #{registrationDate},
+        longitude = #{longitude},
+        latitude = #{latitude},
+        classify_a = #{classifyA},
+        classify_b = #{classifyB},
+        classify_c = #{classifyC},
+        classify_d = #{classifyD},
+        content = #{content},
+        main_img_url = #{mainImgUrl},
+        img_url = #{imgUrl},
+        img_desc = #{imgDesc},
+        video_url = #{videoUrl},
+        narration_url = #{narrationUrl}
+
+        WHERE
+        id = #{id}
+    </update>
+
+
+    <select id="findAll" resultType="culturalPropertiesDTO">
+        SELECT *
+        FROM cultural_properties
+    </select>
+
+    <delete id="deleteDBDataAndKeywords">
+        DELETE cp, cpk
+        FROM cultural_properties cp
+        LEFT JOIN cultural_properties_content_keyword cpk ON cp.id = cpk.cultural_properties_id
+        WHERE cp.id IN
+        <foreach item="id" collection="list" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+
+
+
+
 
 </mapper>
