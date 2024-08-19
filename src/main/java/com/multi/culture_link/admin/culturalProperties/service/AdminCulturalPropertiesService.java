@@ -2,14 +2,11 @@ package com.multi.culture_link.admin.culturalProperties.service;
 
 import com.multi.culture_link.admin.culturalProperties.model.dao.AdminCulturalPropertiesDAO;
 import com.multi.culture_link.admin.culturalProperties.model.dao.CulturalPropertiesKeywordDAO;
-import com.multi.culture_link.admin.culturalProperties.model.dto.CulturalPropertiesDTO;
-import com.multi.culture_link.admin.culturalProperties.model.dto.CulturalPropertiesKeywordDTO;
-import com.multi.culture_link.admin.culturalProperties.model.dto.CulturalPropertiesReviewKeywordDTO;
+import com.multi.culture_link.admin.culturalProperties.model.dto.*;
 import com.multi.culture_link.common.keyword.service.KeywordExtractService;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import com.multi.culture_link.admin.culturalProperties.model.dto.PageDTO;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.XML;
@@ -554,6 +551,31 @@ public class AdminCulturalPropertiesService {
 			e.printStackTrace();
 			throw new RuntimeException("Failed to update review keywords", e);
 		}
+	}
+
+
+	public List<KeywordDTO> getKeywords(int offset, int limit) {
+		List<KeywordDTO> contentKeywords = culturalPropertiesKeywordDAO.getContentKeywords(offset, limit);
+
+		if (contentKeywords.size() < limit) {
+			int remainingLimit = limit - contentKeywords.size();
+			int reviewOffset = Math.max(0, offset - culturalPropertiesKeywordDAO.getContentKeywordCount());
+			List<KeywordDTO> reviewKeywords = culturalPropertiesKeywordDAO.getReviewKeywords(reviewOffset, remainingLimit);
+			contentKeywords.addAll(reviewKeywords);
+		}
+
+		return removeDuplicateCategories(contentKeywords);
+	}
+
+	private List<KeywordDTO> removeDuplicateCategories(List<KeywordDTO> keywords) {
+		Map<String, KeywordDTO> uniqueKeywords = new LinkedHashMap<>();
+		for (KeywordDTO keyword : keywords) {
+			String key = keyword.getKeyword() + "|" + keyword.getCategoryName();
+			if (!uniqueKeywords.containsKey(key)) {
+				uniqueKeywords.put(key, keyword);
+			}
+		}
+		return new ArrayList<>(uniqueKeywords.values());
 	}
 
 

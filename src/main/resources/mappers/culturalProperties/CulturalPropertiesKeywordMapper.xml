@@ -79,6 +79,41 @@
 
 
 
+    <select id="getContentKeywords" resultType="KeywordDTO">
+        SELECT
+        keyword,
+        category_name as categoryName,
+        SUM(total_frequency) as totalFrequency,
+        'content' as sources
+        FROM vw_cultural_properties_combined_keyword_data3
+        WHERE sources LIKE '%content%'
+        GROUP BY keyword, category_name
+        ORDER BY totalFrequency DESC
+        LIMIT #{limit} OFFSET #{offset}
+    </select>
+
+    <select id="getReviewKeywords" resultType="KeywordDTO">
+        SELECT
+        keyword,
+        category_name as categoryName,
+        SUM(total_frequency) as totalFrequency,
+        'review' as sources
+        FROM vw_cultural_properties_combined_keyword_data3
+        WHERE sources LIKE '%review%'
+        AND keyword NOT IN (SELECT keyword FROM vw_cultural_properties_combined_keyword_data2 WHERE sources LIKE '%content%')
+        GROUP BY keyword, category_name
+        ORDER BY totalFrequency DESC
+        LIMIT #{limit} OFFSET #{offset}
+    </select>
+
+    <select id="getContentKeywordCount" resultType="int">
+        SELECT COUNT(DISTINCT keyword)
+        FROM vw_cultural_properties_combined_keyword_data3
+        WHERE sources LIKE '%content%'
+    </select>
+
+
+
 
 
 

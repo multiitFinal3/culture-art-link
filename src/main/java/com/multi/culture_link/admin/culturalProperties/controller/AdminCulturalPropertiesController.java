@@ -2,6 +2,7 @@ package com.multi.culture_link.admin.culturalProperties.controller;
 
 
 import com.multi.culture_link.admin.culturalProperties.model.dto.CulturalPropertiesDTO;
+import com.multi.culture_link.admin.culturalProperties.model.dto.KeywordDTO;
 import com.multi.culture_link.admin.culturalProperties.model.dto.PageDTO;
 import com.multi.culture_link.admin.culturalProperties.service.AdminCulturalPropertiesService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +11,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 @Controller
@@ -234,6 +237,28 @@ public class AdminCulturalPropertiesController {
 		
 		return list;
 		
+	}
+
+
+	@GetMapping("/keywords")
+	public String getKeywords(Model model) {
+		List<KeywordDTO> keywords = adminCulturalPropertiesService.getKeywords(0, 5);
+		model.addAttribute("keywords", keywords);
+		model.addAttribute("currentPage", 0);
+		return "admin/culturalProperties/keywords";
+	}
+
+	@GetMapping("/keywords/load-more")
+	@ResponseBody
+	public Map<String, Object> loadMoreKeywords(@RequestParam int page) {
+		List<KeywordDTO> keywords = adminCulturalPropertiesService.getKeywords(page * 5, 5);
+		boolean hasMore = keywords.size() == 5;
+
+		Map<String, Object> response = new HashMap<>();
+		response.put("keywords", keywords);
+		response.put("hasMore", hasMore);
+
+		return response;
 	}
 
 }
