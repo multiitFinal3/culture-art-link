@@ -168,7 +168,7 @@
 
 
     <insert id="saveUserKeyword" parameterType="map">
-        INSERT INTO user_keywords (user_id, keyword, select_count)
+        INSERT INTO vw_cultural_properties_combined_keyword_total (user_id, keyword, select_count)
         VALUES (#{userId}, #{keyword}, #{selectCount})
     </insert>
 
