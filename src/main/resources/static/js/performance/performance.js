@@ -59,7 +59,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // 공연목록에서 상세페이지로 이동
     // 공연 카드 클릭 이벤트 추가
-    const allPerformanceCards = document.querySelectorAll('.all-card');
+    const allPerformanceCards = document.querySelectorAll('.all-card', 'listZone');
 
     allPerformanceCards.forEach(card => {
         card.addEventListener('click', function() {
@@ -69,6 +69,9 @@ document.addEventListener('DOMContentLoaded', function() {
             window.location.href = `/performance/performanceDetail?performanceCode=${encodeURIComponent(performanceCode)}&source=${encodeURIComponent(source)}`;
         });
     });
+
+
+
 
     // 장르별 랭킹에서 공연명 클릭 시 상세페이지로 이동
     const ranking5 = document.querySelectorAll('.card');
