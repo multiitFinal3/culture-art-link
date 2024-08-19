@@ -1086,4 +1086,144 @@ $(document).ready(function() {
         }
     }
 
+
+
+
+    const genreItems = document.querySelectorAll('.genre-item');
+    const detailContent = document.querySelector('.container');
+    const newsContent = document.getElementById('news');
+    const videoContent = document.getElementById('video');
+
+    // 초기 상태 설정
+    detailContent.style.display = 'block';
+    newsContent.style.display = 'none';
+    videoContent.style.display = 'none';
+
+    genreItems.forEach(item => {
+        item.addEventListener('click', function(e) {
+            const target = this.getAttribute('data-target');
+
+            // "전체 문화재 목록" 링크 처리
+            if (target === 'all') {
+                // 기본 동작 유지 (페이지 이동)
+                return;
+            }
+
+            e.preventDefault(); // 다른 탭에 대해서는 기본 동작 방지
+
+            // 모든 탭에서 active 클래스 제거
+            genreItems.forEach(item => item.classList.remove('active'));
+            // 클릭된 탭에 active 클래스 추가
+            this.classList.add('active');
+
+            // 모든 콘텐츠 숨기기
+            detailContent.style.display = 'none';
+            newsContent.style.display = 'none';
+            videoContent.style.display = 'none';
+
+            // 선택된 콘텐츠만 표시
+            if (target === 'news') {
+                newsContent.style.display = 'block';
+                loadNewsArticles();
+            } else if (target === 'video') {
+                videoContent.style.display = 'block';
+                loadVideos();
+            }
+        });
+    });
+
+
+    // 뉴스 로드 함수
+    function loadNewsArticles() {
+        $.ajax({
+            url: '/cultural-properties/news',
+            method: 'GET',
+            success: function(data) {
+              console.log('뉴스 기사를 성공적으로 수신:', data);
+              renderNewsArticles(data);
+            },
+            error: function(xhr, status, error) {
+              console.error('AJAX 요청 실패:', status, error);
+            }
+        });
+    }
+
+    // 뉴스 렌더링 함수
+    function renderNewsArticles(articles) {
+        const newsList = $('#news-list');
+        newsList.empty();
+
+        if (!Array.isArray(articles) || articles.length === 0) {
+            newsList.append('<li class="list-group-item">등록된 문화재 관련 뉴스가 없습니다.</li>');
+            return;
+        }
+
+        articles.forEach(function(article) {
+            const listItem = $('<li>').addClass('list-group-item');
+            if (article.imgUrl) {
+              const image = $('<img>').attr('src', article.imgUrl).addClass('img-fluid mb-2');
+              listItem.append(image);
+            }
+            const title = $('<h5>').addClass('mb-1').text(article.title);
+            const content = $('<p>').addClass('mb-1').text(article.content);
+            const date = $('<small>').addClass('text-muted').text(article.date);
+            //              const link = $('<a>').attr('href', article.link).addClass('btn btn-primary btn-sm mt-2').text('자세히 보기').css('margin-left', '2rem');
+
+//            const link = $('<a>').attr('href', article.link).addClass('btn btn-outline-success').text('자세히 보기').css('margin-left', '2rem');
+
+            const link = $('<a>').attr('href', article.link).addClass('btn btn-success').text('자세히 보기').css('margin-left', '2rem');
+
+
+            listItem.append(title, content, date, link);
+            newsList.append(listItem);
+        });
+    }
+
+    // 비디오 로드 함수
+    function loadVideos() {
+        const query = "국가유산";
+        $.ajax({
+            url: '/cultural-properties/videos?query=' + encodeURIComponent(query),
+            type: 'POST',
+            contentType: 'application/x-www-form-urlencoded',
+            success: function(videos) {
+              console.log('받은 비디오 데이터:', videos);
+              renderVideos(videos);
+            },
+            error: function(xhr, status, error) {
+              console.error('비디오 로드 실패:', status, error);
+            }
+        });
+    }
+
+    // 비디오 렌더링 함수
+    function renderVideos(videos) {
+        const videoList = $('#video-list');
+        videoList.empty();
+
+        if (!Array.isArray(videos) || videos.length === 0) {
+            videoList.append('<br><p>등록된 영상이 없습니다.</p>');
+            return;
+        }
+
+        videos.forEach(function(video) {
+            const colDiv = $('<div>').addClass('col-md-4 mb-4');
+            const cardDiv = $('<div>').addClass('card');
+            const cardBody = $('<div>').addClass('card-body');
+            const title = $('<h5>').addClass('card-title').html(video.title);
+            const videoId = video.link.split('v=')[1];
+            const iframe = $('<iframe>')
+                .attr('src', 'https://www.youtube.com/embed/' + videoId)
+                .attr('class', 'embed-responsive-item')
+                .attr('allowfullscreen', true)
+                .css('width', '100%')
+                .css('height', '250px');
+
+            cardBody.append(title, iframe);
+            cardDiv.append(cardBody);
+            colDiv.append(cardDiv);
+            videoList.append(colDiv);
+        });
+    }
+
 });

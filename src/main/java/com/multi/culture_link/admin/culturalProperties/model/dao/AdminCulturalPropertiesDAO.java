@@ -11,7 +11,7 @@ import java.util.List;
 @Mapper
 public interface AdminCulturalPropertiesDAO {
 
-    void insertDB(CulturalPropertiesDTO culturalPropertiesDTO);
+//    void insertDB(CulturalPropertiesDTO culturalPropertiesDTO);
 
     List<CulturalPropertiesDTO> selectDB(PageDTO pageDto);
 
@@ -33,4 +33,13 @@ public interface AdminCulturalPropertiesDAO {
 	
 	
 	ArrayList<CulturalPropertiesDTO> findtotalDBData();
+
+
+    List<CulturalPropertiesDTO> findAll();
+
+    void deleteDBDataAndKeywords(@Param("list") List<Integer> id);
+
+    int insertDB(CulturalPropertiesDTO culturalPropertiesDTO);
+
+    CulturalPropertiesDTO selectById(int id);
 }
