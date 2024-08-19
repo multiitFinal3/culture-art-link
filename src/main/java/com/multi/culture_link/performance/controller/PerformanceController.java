@@ -280,31 +280,31 @@ public class PerformanceController {
 
 
 
-//    @GetMapping("/performanceDetailByTitle")
-//    public String performanceDetailByTitle(@RequestParam("performanceTitle") String performanceTitle, Model model) {
-//        // DB에서 공연명을 통해 공연 정보를 검색
-//        PerformanceDTO performance = performanceDBService.getPerformanceByTitle(performanceTitle);
-//
-//        if (performance == null) {
-//            model.addAttribute("error", "해당 공연명을 가진 공연을 찾을 수 없습니다.");
-//            return "/performance/performanceDetail";
-//        }
-//
-//        // 공연 디테일 페이지에 정보를 전달
-//        model.addAttribute("performance", performance);
-//        model.addAttribute("naverClientId", naverClientId);
-//        return "/performance/performanceDetail";
-//    }
+    @GetMapping("/performanceDetailByTitle")
+    public String performanceDetailByTitle(@RequestParam("performanceTitle") String performanceTitle, Model model) {
+        // DB에서 공연명을 통해 공연 정보를 검색
+        PerformanceDTO performance = performanceDBService.getPerformanceByTitle(performanceTitle);
+
+        if (performance == null) {
+            model.addAttribute("error", "해당 공연명을 가진 공연을 찾을 수 없습니다.");
+            return "/performance/performanceDetail";
+        }
+
+        // 공연 디테일 페이지에 정보를 전달
+        model.addAttribute("performance", performance);
+        model.addAttribute("naverClientId", naverClientId);
+        return "/performance/performanceDetail";
+    }
 
 
 
-//    @GetMapping("/getPerformanceCode")
-//    public ResponseEntity<Map<String, String>> getPerformanceCode(@RequestParam("performanceTitle") String performanceTitle) {
-//        String performanceCode = performanceDBService.getPerformanceCodeByTitle(performanceTitle);
-//        Map<String, String> response = new HashMap<>();
-//        response.put("performanceCode", performanceCode);
-//        return ResponseEntity.ok(response);
-//    }
+    @GetMapping("/getPerformanceCode")
+    public ResponseEntity<Map<String, String>> getPerformanceCode(@RequestParam("performanceTitle") String performanceTitle) {
+        String performanceCode = performanceDBService.getPerformanceCodeByTitle(performanceTitle);
+        Map<String, String> response = new HashMap<>();
+        response.put("performanceCode", performanceCode);
+        return ResponseEntity.ok(response);
+    }
 
 
     // 좋아요/싫어요 상태 업데이트 메서드
