@@ -23,6 +23,15 @@ $(document).ready(function () {
 
 
     // 전시 여부 버튼 할당
+    $("#recommendBtn").click(function () {
+        viewStatus = "recommend";
+        $(".search-bar").hide();
+        $("#exhibitionTitle").text($("#userName").text() + "님 이런 작품은 어때요?")
+        getRecommendExhibitions()
+    });
+    $("#allBtn").click(function () {
+        changeViewStatus("all");
+    });
     $("#currentBtn").click(function () {
         changeViewStatus("current");
     });
@@ -51,10 +60,53 @@ $(document).on('click', "#initSearchButton", function () {
     searchExhibitions();
 });
 
+function getRandomItems(array, maxItems = 15) {
+    // 배열의 길이와 maxItems 중 작은 값을 선택
+    const itemsToSelect = Math.min(array.length, maxItems);
+
+    // 원본 배열을 복사
+    const shuffled = array.slice();
+
+    // Fisher-Yates 셔플 알고리즘
+    for (let i = shuffled.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+
+    // 앞에서부터 필요한 만큼만 잘라서 반환
+    return shuffled.slice(0, itemsToSelect);
+}
+
 // 뷰 상태를 바꾼 다음에 렌더링
 function changeViewStatus(status) {
     viewStatus = status;
-    filterAndRenderExhibitions();
+    $("#exhibitionTitle").text("전체 전시 목록")
+
+    $(".search-bar").show();
+    getExhibitions();
+}
+
+async function getRecommendExhibitions() {
+    const response = await axios.get(
+        "/exhibition/exhibition/recommend"
+    );
+
+    console.log('getRecommendExhibitions : ', response)
+    // 배열 돌며 규격에 맞게 넣어줌
+    exhibitions = response.data.map((item) => ({
+        id: item.id,
+        image: item.image,
+        title: item.title,
+        artist: item.artist,
+        museum: item.museum,
+        startDate: item.startDate ? new Date(item.startDate) : null,
+        endDate: item.endDate ? new Date(item.endDate) : null,
+        state: item.state,
+        starsAVG: item.starsAVG
+    }));
+
+    exhibitions = getRandomItems(exhibitions)
+    renderExhibitions(exhibitions);
 }
 
 // 데이터 가져오기
@@ -128,6 +180,8 @@ function searchExhibitions() {
 function renderExhibitions(exhibitionsToRender) {
     const $exhibitionList = $(".all-exhibitions-items");
     $exhibitionList.empty();
+
+    console.log('exhibitionsToRender : ',)
 
     $.each(exhibitionsToRender, function (index, exhibition) {
         const $exhibitionItem = $("<div>").addClass("exhibition-item");

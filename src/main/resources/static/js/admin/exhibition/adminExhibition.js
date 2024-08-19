@@ -219,6 +219,19 @@ function goToPage(page, allData, targetId) {
     renderData(allData, targetId, true);
 }
 
+async function initBtn(type) {
+    if (type === 'DB') {
+        $("#searchTitleDB").val('')
+        $("#searchMuseumDB").val('')
+        $("#searchArtistDB").val('')
+        search('DB')
+    } else {
+        $("#searchTitle").val('')
+        $("#searchMuseum").val('')
+        search('API')
+    }
+}
+
 // 검색 함수, db 데이터 검색인지 api 데이터 검색인지 확인하고 검색조건의 데이터를 가져와 검색
 async function search(type) {
     const title = $(`#searchTitle${type === "DB" ? "DB" : ""}`).val();
@@ -326,6 +339,14 @@ function registerEventListeners() {
     document
         .getElementById("searchButton")
         .addEventListener("click", () => search("API"));
+
+
+    document
+        .getElementById("initSearchButtonDB")
+        .addEventListener("click", () => initBtn("DB"));
+    document
+        .getElementById("initSearchButton")
+        .addEventListener("click", () => initBtn("API"));
 }
 
 // 체크된 데이터 목록 가져오기

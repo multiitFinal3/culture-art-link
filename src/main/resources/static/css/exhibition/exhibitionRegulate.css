@@ -98,6 +98,71 @@ button {
 }
 
 #searchButtonDB {
-    margin-right: 100px;
     margin-left: -1px;
+}
+
+/**/
+
+.search-bar {
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+}
+
+.search-bar input,
+.search-bar button {
+    border: 1px solid #ced4da;
+}
+
+.search-bar input {
+    border-radius: 0;
+}
+
+.search-bar input:first-of-type {
+    border-top-left-radius: 0.25rem;
+    border-bottom-left-radius: 0.25rem;
+}
+
+
+.search-bar select,
+.search-bar input {
+    margin-right: 10px;
+    padding: 5px;
+    width: 120px;
+}
+
+.search-bar button {
+    background-color: white;
+    /*padding: 5px 10px;*/
+    height: 36.23px;
+    vertical-align: baseline;
+    border-radius: 0;
+}
+
+.search-bar button:last-of-type {
+    border-top-right-radius: 0.25rem;
+    border-bottom-right-radius: 0.25rem;
+}
+
+/*#searchButtonDB {*/
+/*    border-right: none;*/
+/*}*/
+
+
+.search-bar button img {
+    height: 100%;
+}
+
+.search-options select:focus,
+.search-options input:focus {
+    border-color: #007bff; /* 파란색 테두리 */
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25); /* 부드러운 그림자 효과 */
+    outline: none; /* 기본 포커스 아웃라인 제거 */
+}
+
+table, th, td {
+
+    border: 1px solid #dee2e6;
+
+
 }
