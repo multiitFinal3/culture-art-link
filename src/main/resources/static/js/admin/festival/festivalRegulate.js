@@ -1489,6 +1489,8 @@ $(document).ready(
 
         })
 
+        var mulData = 0;
+
 
          /**
           * api 다중조건 검색 버튼 클릭
@@ -1510,6 +1512,8 @@ $(document).ready(
                    formattedEnd : formattedEnd
            };
 
+           mulData = data;
+
             findAPIFestivalByMultiple(data,1);
             findAPIFestivalMultipleCount(data);
          })
@@ -1523,116 +1527,121 @@ $(document).ready(
            */
          function findAPIFestivalByMultiple(data2, page){
 
-            console.log(data2);
+            return new Promise((resolve, reject)=>{
 
-            $.ajax({
+                console.log(data2);
 
-                url: '/admin/festival-regulate/findAPIFestivalByMultiple?page=' + page,
-                method: 'POST',
-                contentType: 'application/json',
-                data: JSON.stringify(data2),
-                success: function(list){
+                $.ajax({
 
-                    $('#list2').html("");
+                    url: '/admin/festival-regulate/findAPIFestivalByMultiple?page=' + page,
+                    method: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify(data2),
+                    success: function(list){
 
-                    $.each(list, function(index, festival){
+                        $('#list2').html("");
 
-                        var index1 = (index + 1) + (page-1)*5;
-                        var indexFromZero = index1 - 1;
+                        $.each(list, function(index, festival){
 
-                        var start = festival.startDate.length >0?
-                        festival.startDate.substring(0,10):
-                        "링크없음";
+                            var index1 = (index + 1) + (page-1)*5;
+                            var indexFromZero = index1 - 1;
 
-                        var end = festival.endDate.length >0?
-                        festival.endDate.substring(0,10):
-                        "링크없음";
+                            var start = festival.startDate.length >0?
+                            festival.startDate.substring(0,10):
+                            "링크없음";
 
-
-                        var htmlCheck = ``;
-
-                        if(festival.exist=="Y"){
-
-                            htmlCheck= `<tr>
-                                <td>DB<br>존재</td>`
+                            var end = festival.endDate.length >0?
+                            festival.endDate.substring(0,10):
+                            "링크없음";
 
 
-                        }else{
+                            var htmlCheck = ``;
 
-                             htmlCheck = `<tr>
-                                <td><input class="check2" type="checkbox" name="index" value="${indexFromZero}"/></td>`
-                        }
+                            if(festival.exist=="Y"){
 
-                        var htmlContent11 =`
-                                <td class="index1">${index1}</td>
-                                <td class="regionId">${festival.regionId}</td>
-                                <td class="timeId" title="${festival.timeId}">${festival.timeId}</td>
-                                <td class="festivalName" title="${festival.festivalName}">${festival.festivalName}</td>
-                                <td class="festivalContent" title="${festival.festivalContent}">${festival.festivalContent}</td>
-                                <td class="manageInstitution" title="${festival.manageInstitution}">${festival.manageInstitution}</td>
-                                <td class="tel" title="${festival.tel}">${festival.tel}</td>`;
-
-                        var htmlContent12 =``;
+                                htmlCheck= `<tr>
+                                    <td>DB<br>존재</td>`
 
 
-                        if(! festival.homepageUrl || festival.homepageUrl == "null" || festival.homepageUrl == ""){
+                            }else{
 
-                            htmlContent12 = `
+                                 htmlCheck = `<tr>
+                                    <td><input class="check2" type="checkbox" name="index" value="${indexFromZero}"/></td>`
+                            }
 
-                                <td class="homepageUrl"></td>
-                                <td class="detailAddress" title="${festival.detailAddress}">${festival.detailAddress}</td>
-                                <td class="place" title="${festival.place}">${festival.place}</td>
-                                <td class="startDate" title="${festival.formattedStart}">${festival.formattedStart}</td>
-                                <td class="endDate" title="${festival.formattedEnd}">${festival.formattedEnd}</td>
-                                <td class="season" title="${festival.season}">${festival.season}</td>
+                            var htmlContent11 =`
+                                    <td class="index1">${index1}</td>
+                                    <td class="regionId">${festival.regionId}</td>
+                                    <td class="timeId" title="${festival.timeId}">${festival.timeId}</td>
+                                    <td class="festivalName" title="${festival.festivalName}">${festival.festivalName}</td>
+                                    <td class="festivalContent" title="${festival.festivalContent}">${festival.festivalContent}</td>
+                                    <td class="manageInstitution" title="${festival.manageInstitution}">${festival.manageInstitution}</td>
+                                    <td class="tel" title="${festival.tel}">${festival.tel}</td>`;
 
-
-                            `;
-
-                        }else{
-
-                            htmlContent12 = `
-
-                                <td class="homepageUrl" title="${festival.homepageUrl}"><a href="${festival.homepageUrl}">클릭!</a></td>
-                                <td class="detailAddress" title="${festival.detailAddress}">${festival.detailAddress}</td>
-                                <td class="place" title="${festival.place}">${festival.place}</td>
-                                <td class="startDate" title="${festival.formattedStart}">${festival.formattedStart}</td>
-                                <td class="endDate" title="${festival.formattedEnd}">${festival.formattedEnd}</td>
-                                <td class="season" title="${festival.season}">${festival.season}</td>
+                            var htmlContent12 =``;
 
 
-                            `;
+                            if(! festival.homepageUrl || festival.homepageUrl == "null" || festival.homepageUrl == ""){
 
-                        }
+                                htmlContent12 = `
 
-    //                        var htmlContent2 = ``;
+                                    <td class="homepageUrl"></td>
+                                    <td class="detailAddress" title="${festival.detailAddress}">${festival.detailAddress}</td>
+                                    <td class="place" title="${festival.place}">${festival.place}</td>
+                                    <td class="startDate" title="${festival.formattedStart}">${festival.formattedStart}</td>
+                                    <td class="endDate" title="${festival.formattedEnd}">${festival.formattedEnd}</td>
+                                    <td class="season" title="${festival.season}">${festival.season}</td>
 
-    //                        if(! festival.imgUrl || festival.imgUrl == "null"){
-    //
-    //                            htmlContent2= `
-    //                            <td class="imgUrl"></td></tr>
-    //                            `
-    //
-    //
-    //                        }else{
-    //
-    //                             htmlContent2 = `
-    //                             <td class="imgUrl"><img src="${festival.imgUrl}" width="40px"></td></tr>
-    //                            `
-    //                        }
 
-                        var finalHtml = htmlCheck + htmlContent11 + htmlContent12;
+                                `;
 
-                        $('#list2').append(finalHtml);
+                            }else{
 
-                    })
+                                htmlContent12 = `
 
-                }
+                                    <td class="homepageUrl" title="${festival.homepageUrl}"><a href="${festival.homepageUrl}">클릭!</a></td>
+                                    <td class="detailAddress" title="${festival.detailAddress}">${festival.detailAddress}</td>
+                                    <td class="place" title="${festival.place}">${festival.place}</td>
+                                    <td class="startDate" title="${festival.formattedStart}">${festival.formattedStart}</td>
+                                    <td class="endDate" title="${festival.formattedEnd}">${festival.formattedEnd}</td>
+                                    <td class="season" title="${festival.season}">${festival.season}</td>
 
+
+                                `;
+
+                            }
+
+        //                        var htmlContent2 = ``;
+
+        //                        if(! festival.imgUrl || festival.imgUrl == "null"){
+        //
+        //                            htmlContent2= `
+        //                            <td class="imgUrl"></td></tr>
+        //                            `
+        //
+        //
+        //                        }else{
+        //
+        //                             htmlContent2 = `
+        //                             <td class="imgUrl"><img src="${festival.imgUrl}" width="40px"></td></tr>
+        //                            `
+        //                        }
+
+                            var finalHtml = htmlCheck + htmlContent11 + htmlContent12;
+
+                            $('#list2').append(finalHtml);
+
+                        })
+
+                        resolve();
+                    }
+                })
             })
-
          }
 
+
+        var currentAPIMulNum = 1;
+        var APIMulLastPage = 0;
 
 
          /**
@@ -1641,51 +1650,179 @@ $(document).ready(
         */
          function findAPIFestivalMultipleCount(data2){
 
-            $.ajax({
+            return new Promise((resolve, reject)=>{
 
-                url: '/admin/festival-regulate/findAPIFestivalMultipleCount',
-                method: 'POST',
-                data: JSON.stringify(data2),
-                contentType: 'application/json',
-                success: function(count){
+                $.ajax({
 
-                    $('#pageNum2').html("");
-                    // 상세검색 전으로 돌아가기 버튼
-                    $('#pageNum2').append(`<button class="pageBtn6">전체</button>`);
+                    url: '/admin/festival-regulate/findAPIFestivalMultipleCount',
+                    method: 'POST',
+                    data: JSON.stringify(data2),
+                    contentType: 'application/json',
+                    success: function(count){
 
-                    console.log("카운트는...")
-                    console.log(count)
+                        $('#pageNum2').html("");
+                        // 상세검색 전으로 돌아가기 버튼
+                        $('#pageNum2').append(`<button class="pageBtn6">전체</button>`);
+                        $('#pageNum2').append(`<button class="pageBtn16">처음</button>`);
 
-                    var page = 0;
+                        console.log("카운트는...")
+                        console.log(count)
 
-                    if(count % 5 ==0){
-                        page = count/5;
-                    }else{
-                        page = count/5 +1;
+                        var page = 0;
+
+                        if(count % 5 ==0){
+                            page = count/5;
+                        }else{
+                            page = count/5 +1;
+                        }
+
+                        APIMulLastPage = parseInt(page);
+
+                        for(var p=1; p<=page; p++){
+
+                            $('#pageNum2').append(`<button class="pageBtn5">${p}</button>`)
+
+                        }
+
+                        $('#pageNum2').append(`<button class="pageBtn17">다음</button>`);
+                        $('#pageNum2').append(`<button class="pageBtn18">마지막</button>`);
+
+                        resolve();
+
                     }
-
-                    for(var p=1; p<=page; p++){
-
-                        $('#pageNum2').append(`<button class="pageBtn5">${p}</button>`)
-
-                    }
+                })
+            })
+        }
 
 
+         /**
+       * api 상세검색 페이지 버튼에 해당 페이지의 순서에 해당하는 데이터 보이는 클릭 이벤트 추가
+       */
+        $(document).on('click','.pageBtn5', function(){
 
-                    $(document).on('click','.pageBtn5', function(){
+            let btns = document.querySelectorAll('.pageBtn5');
 
-                        const page = $(this).text();
-                        findAPIFestivalByMultiple(data2, page);
+            btns.forEach(function(btn){
 
-                    })
-
-
-                }
+                btn.classList.remove('active');
 
             })
 
+            $(this).addClass('active');
+            const page = $(this).text();
+            $('#list2').html("");
+            findAPIFestivalByMultiple(mulData, page);
 
-        }
+        })
+
+
+        /**
+       * 처음으로 돌아가기
+       */
+        $(document).on('click','.pageBtn16', function(){
+
+            $('#list2').html("");
+            currentAPIMulNum = 1;
+
+            findAPIFestivalByMultiple(mulData, 1)
+            .then(()=>{
+                // 1~10까지 보여줌
+                return addShowingBtns(findAPIFestivalMultipleCount, currentAPIMulNum, '.pageBtn5');
+            })
+            .then(()=>{
+
+                let btns = document.querySelectorAll('.pageBtn5');
+                btns.forEach(function(btn){
+                    if(btn.textContent == "1"){
+                        btn.classList.add('active');
+                    }else{
+                        btn.classList.remove('active');
+                    }
+                })
+            })
+            .catch((error)=>{
+                alert("api 오류")
+            })
+
+        })
+
+
+
+        /**
+       * 마지막으로 가기
+       */
+        $(document).on('click','.pageBtn18', function(){
+
+            $('#list2').html("");
+
+            var num = 0;
+
+            if(APIMulLastPage%10==0){
+                num = (APIMulLastPage / 10);
+            }else{
+                num = parseInt((APIMulLastPage / 10) + 1);
+            }
+
+            currentAPIMulNum = num;
+
+            findAPIFestivalByMultiple(mulData, APIMulLastPage)
+            .then(()=>{
+                return addShowingBtns(findAPIFestivalMultipleCount, currentAPIMulNum, '.pageBtn5');
+            })
+            .then(()=>{
+
+                let btns = document.querySelectorAll('.pageBtn5');
+                btns.forEach(function(btn){
+                    if(btn.textContent == APIMulLastPage){
+                        btn.classList.add('active');
+                    }else{
+                        btn.classList.remove('active');
+                    }
+                })
+            })
+            .catch((error)=>{
+                alert("api 오류")
+            })
+
+        })
+
+
+        /**
+         * api 상세검색 리스트의 다음 페이지 버튼 클릭 이벤트
+         *
+         */
+
+        $(document).on('click','.pageBtn17', function(){
+
+            currentAPIMulNum = currentAPIMulNum + 1;
+            var thisFirstPage = (currentAPIMulNum-1) * 10 + 1;
+
+            findAPIFestivalByMultiple(mulData, thisFirstPage)
+                .then(()=>{
+                return addShowingBtns(findAPIFestivalMultipleCount, currentAPIMulNum, '.pageBtn5');
+                })
+                .then(()=>{
+
+                    let btns = document.querySelectorAll('.pageBtn5');
+                    btns.forEach(function(btn){
+                        if(btn.textContent == thisFirstPage){
+                            btn.classList.add('active');
+                        }else{
+                            btn.classList.remove('active');
+                        }
+                    })
+                })
+                .catch((error)=>{
+                    alert("api 오류")
+                })
+
+        })
+
+
+
+
+
+
 
         /**
         * 전체 버튼으로 API 상세검색에서 API 전체리스트로 돌아가는 클릭 이벤트
@@ -1727,11 +1864,7 @@ $(document).ready(
 
             document.getElementById('searchForm2').reset();
 
-
         })
-
-
-
 
         //#endregion
 
