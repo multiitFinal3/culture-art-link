@@ -6,6 +6,13 @@
     margin-top: 20px;
 }
 
+.recommend {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+}
+
 .all-performances-title {
     width: 100%;
     text-align: center;
@@ -23,6 +30,14 @@
     width: calc(5 * 249px + 4 * 10px); /* 카드 5개와 간격을 고려한 너비 */
 }
 
+.recommend-items {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between; /* 양 끝 공간 확보 */
+    gap: 10px; /* 카드 간의 간격 */
+    width: calc(5 * 249px + 4 * 10px); /* 카드 5개와 간격을 고려한 너비 */
+}
+
 /* 각 공연 아이템 */
 .all-performance-item {
     display: flex;
@@ -33,6 +48,7 @@
 }
 
 .all-card {
+    position: relative; /* 내부 요소의 절대 위치 지정 가능하게 함 */
     width: 249px;
     height: 332px;
     background: white;
@@ -86,17 +102,24 @@
     position: relative; /* 자식 요소들의 절대 위치 지정 가능 */
 }
 
+
+
+
 .like-dislike-container {
-    display: flex;
-    justify-content: flex-end; /* 오른쪽 정렬 */
-    gap: 10px; /* 아이콘 사이 간격 */
-    position: absolute; /* 카드 내부에서 절대 위치 지정 */
-    bottom: 10px; /* 카드의 아래쪽에서 10px 위 */
-    right: 10px; /* 카드의 오른쪽에서 10px 왼쪽 */
-}
+            position: absolute; /* 카드 내부에서 절대 위치 지정 */
+                bottom: 10px; /* 카드의 아래쪽에서 10px 위 */
+                right: 10px; /* 카드의 오른쪽에서 10px 왼쪽 */
+                display: flex;
+                gap: 10px; /* 아이콘 사이 간격 */
+        }
 
 .like-dislike-icon {
-    width: 23px;  /* 이미지 너비 */
-    height: 23px; /* 이미지 높이 */
-    cursor: pointer; /* 클릭 가능한 커서 */
+            width: 30px !important;  /* 이미지 너비 */
+            height: 30px !important; /* 이미지 높이 */
+            cursor: pointer; /* 클릭할 수 있는 커서 */
+            pointer-events: auto; /* 클릭 이벤트를 허용 */
+            background-color: white;
+            background-size: 40px 40px;
+            border: 2px solid black;
+            border-radius: 20%;
 }

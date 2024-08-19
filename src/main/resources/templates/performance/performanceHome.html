@@ -1,3 +1,4 @@
+<!--performanceHome.html-->
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
@@ -9,6 +10,8 @@
     <meta charset="UTF-8">
     <title>공연</title>
     <link rel="stylesheet" th:href="@{/css/performance/performanceHome.css}">
+    <link rel="stylesheet" th:href="@{/css/performance/performanceAllList.css}">
+
     <script th:src="@{/js/performance/performance.js}"></script>
 
 </head>
@@ -43,6 +46,48 @@
 
 
     </div>
+
+
+
+
+    <!-- 추천 목록 -->
+    <div class="recommend">
+
+        <h2 th:text="${user.userName} + '님 이런 작품은 어때요?'"></h2>
+
+        <div class="recommend-items" th:if="${recommends != null}">
+            <div th:each="performance : ${recommends}">
+                <a th:href="@{'/performance/performanceDetail?performanceCode=' + ${performance.code} + '&source=db'}">
+                    <div class="all-card" th:data-performance-code="${performance.code}">
+                        <img th:src="${performance.imageMain}" alt="공연 이미지">
+
+                        <!-- 좋아요 및 싫어요 버튼 -->
+                        <div class="like-dislike-container">
+                            <img id="likeBtn" src="https://kr.object.ncloudstorage.com/team3/common/upNo.png" alt="Like" class="like-dislike-icon">
+                            <img id="dislikeBtn" src="https://kr.object.ncloudstorage.com/team3/common/downNo.png" alt="Dislike" class="like-dislike-icon">
+                        </div>
+
+
+                    </div>
+                    <div class="all-performance-info">
+                        <div class="all-title" th:text="${performance.title}">공연명</div>
+                        <div class="all-location" th:text="${performance.location}">공연장소</div>
+                        <div class="all-date" th:text="${performance.formattedDate}">공연날짜</div>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+        <div th:if="${recommends == null}">
+            <p>추천목록이 없습니다.</p>
+        </div>
+
+    </div>
+
+
+
+
+
 
 
 

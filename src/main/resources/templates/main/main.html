@@ -5,12 +5,724 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <link rel="stylesheet" th:href="@{/css/main/main.css}">
+    <script th:src="@{/js/main/main.js}"></script>
+    <script th:inline="javascript"
+            th:src="'https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=' + ${naverClientId}"></script>
+
+    <script th:inline="javascript">
+
+        $(document).ready(
+            function(){
+
+
+                //# region 추천 리스트 존
+
+                /**
+               *  축제 카드 클릭 시 상세 페이지로 이동
+               *
+               */
+                $(document).on('click','#fList .card', function(){
+
+                    var festivalId = $(this).attr('id');
+                    window.location.href='/festival/festival-detail?festivalId='+festivalId;
+
+                })
+
+
+
+               /**
+               * 축제 키워드 추천 함수
+               *
+               */
+                function findKeywordRecommendFestivalList(){
+
+                    $('#list2').html("");
+                    $.ajax({
+
+                        url: '/festival/findKeywordRecommendFestivalList',
+                        method: 'POST',
+                        contentType: 'application/json',
+                        success: function(list){
+
+                            $("#fList").html("");
+                            var list2 = list.slice(0,4);
+                            var imgHtml = ``;
+
+                            $.each(list2, function(index, festival){
+                                if(! festival.imgUrl || festival.imgUrl == "null"){
+                                    imgHtml = `
+                                            <img class="card-img-top" src="https://kr.object.ncloudstorage.com/team3/common/noPhoto.png" alt="Card image cap">
+                                    `;
+                                }else{
+                                    imgHtml = `
+                                            <img class="card-img-top" src="${festival.imgUrl}" alt="Card image cap">
+                                    `;
+                                }
+
+                                var cardHtml = `
+                                    <div class="card" id="${festival.festivalId}">
+                                        ${imgHtml}
+                                        <div class="card-body">
+                                            <p class="card-title" title="${festival.festivalName}">${festival.festivalName}</p>
+                                        </div>
+                                    </div>
+                                `;
+
+                                $('#fList').append(cardHtml);
+
+                            })
+                        }
+                    })
+                }
+
+
+                findKeywordRecommendFestivalList();
+
+                //#endregion
+
+
+                // #region 검색 존
+
+
+                var selectedCategory = "전체";
+                /**
+                * 카테고리 드롭다운 클릭 시 텍스트를 가져옴
+                *
+                */
+                $(document).on('click','.category', function(){
+
+                    var categoryText = $(this).text();
+                    selectedCategory = categoryText;
+                    $('#category').text(categoryText);
+
+                    if(categoryText=="전체"){
+
+                    }else if(categoryText=="공연"){
+
+                    }else if(categoryText=="전시"){
+
+                    }else if(categoryText=="축제"){
+
+                    }else if(categoryText=="문화재"){
+
+                    }
+
+
+                })
+
+
+                /**
+                * 검색에서 초기화 버튼으로 돌아가기 버튼
+                *
+                */
+                $(document).on('click','#resetBtn1', function(){
+
+                    document.getElementById('searchForm').reset();
+
+                })
+
+
+                /**
+               *  검색존의 축제 카드 클릭 시 상세 페이지로 이동
+               *
+               */
+                $(document).on('click','#fsList .card', function(){
+
+                    var festivalId = $(this).attr('id');
+                    window.location.href='/festival/festival-detail?festivalId='+festivalId;
+
+                })
+
+
+
+
+
+                /**
+                * 검색 버튼 클릭 시
+                *
+                */
+                $(document).on('click','#searchBtn1', function(){
+
+                    if(selectedCategory == "전체"){
+
+                    }else if(selectedCategory=="공연"){
+
+                    }else if(selectedCategory=="전시"){
+
+                    }else if(selectedCategory=="축제"){
+
+                        var festivalText = $('#keyword').val();
+
+                        $.ajax({
+
+                            url: '/festival/findDBFestivalByText?text='+festivalText,
+                            method: 'POST',
+                            contentType: 'application/json',
+                            success: function(list){
+
+                                $('#fsList').html("");
+
+                                $.each(list, function(index, festival){
+
+                                    var imgHtml = ``;
+
+                                    if(! festival.imgUrl || festival.imgUrl == "null"){
+                                        imgHtml = `
+                                                <img class="card-img-top" src="https://kr.object.ncloudstorage.com/team3/common/noPhoto.png" alt="Card image cap">
+                                        `;
+                                    }else{
+                                        imgHtml = `
+                                                <img class="card-img-top" src="${festival.imgUrl}" alt="Card image cap">
+                                        `;
+                                    }
+
+                                    var cardHtml = `
+                                        <div class="card" id="${festival.festivalId}">
+                                            ${imgHtml}
+                                            <div class="card-body">
+                                                <p class="card-title" title="${festival.festivalName}">${festival.festivalName}</p>
+                                            </div>
+                                        </div>
+                                    `;
+
+                                    $('#fsList').append(cardHtml);
+
+                                })
+                            }
+                        })
+
+
+
+
+
+                    }else if(selectedCategory=="문화재"){
+
+                    }
+
+
+
+
+
+                })
+
+
+
+                //#region 네이버 지도 존
+
+
+                /**
+               * 지도 드랍다운에 지역 넣기
+               */
+                 function findAllRegion(){
+
+                    $.ajax({
+
+                        url: '/admin/festival-regulate/findAllRegionAndTime',
+                        method: 'POST',
+                        contentType: 'application/json',
+                        success: function(map){
+
+                            var list1 = map.regionList;
+                            console.log(list1);
+
+                            $('#dropdownContent2').html("");
+                            $.each(list1, function(index, region){
+
+                                var htmlContent = `<a id="${region.regionName}" data-region-id="${region.regionId}" class="region">${region.regionName}</a>`;
+
+                                $('#dropdownContent2').append(htmlContent);
+
+                            })
+
+
+                        }
+
+                    })
+
+                }
+
+
+                findAllRegion();
+
+
+                var currentRegion="서울";
+                /**
+                * 카테고리 드롭다운 클릭 시 텍스트를 가져옴
+                *
+                */
+                $(document).on('click','.region', function(){
+
+                    var regionText = $(this).text();
+                    currentRegion = regionText;
+                    $('#region').text(currentRegion);
+
+                    var regionId = $(this).data('region-id');
+
+                    findAllCultureCategoryByRegion(regionId)
+
+                })
+
+
+
+                /**
+                * 지역에 따른 모든 카테고리의 위치를 다중 마커로 표시 후 지도에 표시, 클릭 시 상세페이지 이동
+                *
+                */
+                function findAllCultureCategoryByRegion(regionId){
+
+                    $.ajax({
+
+                        url: '/main/findAllCultureCategoryByRegion?regionId='+regionId,
+                        method: 'POST',
+                        contentType: 'application/json',
+                        success: function(categoryMap){
+
+                            $.ajax({
+
+                                url: '/main/findCenterPositionByRegion?regionName='+currentRegion,
+                                method: 'POST',
+                                contentType: 'application/json',
+                                success: function(pos){
+
+                                    // 중심좌표 잡기
+                                    console.log("position");
+                                    console.log(pos);
+
+                                    var position = new naver.maps.LatLng(parseFloat(pos.longtitude), parseFloat(pos.latitude));
+
+                                    var map = new naver.maps.Map('map', {
+                                        center: position,
+                                        zoom: 11
+                                    });
+
+                                    var fList = categoryMap.festivalList;
+                                    console.log(fList);
+
+                                    let fMarkers = new Array();
+                                    let fInfoWindows = new Array();
+
+
+                                    $.each(fList, function(index, festival){
+
+                                        var realLat = festival.latitude;
+                                        var realLong = festival.longtitude;
+
+                                        console.log("realLat")
+                                        console.log(realLat)
+
+
+                                        var marker = new naver.maps.Marker({
+                                            position: new naver.maps.LatLng(realLat, realLong),
+                                            title: festival.festivalName,
+                                            map: map,
+                                            icon: {
+                                                url: 'https://kr.object.ncloudstorage.com/team3/common/festi.png',
+                                                size: new naver.maps.Size(22, 35),
+                                                origin: new naver.maps.Point(0, 0),
+                                                anchor: new naver.maps.Point(11, 35)
+                                            }
+                                        });
+
+                                        var infoWindow = new naver.maps.InfoWindow({
+
+                                            content : `<div style="width:200px;text-align:center;padding:5px;">
+                                                <a href="/festival/festival-detail?festivalId=${festival.festivalId}">
+                                                    ${festival.festivalName}
+                                                </a>
+                                            </div>`
+
+                                        });
+
+                                        fMarkers.push(marker);
+                                        console.log(marker);
+                                        fInfoWindows.push(infoWindow);
+                                        console.log(infoWindow);
+                                    })
+
+
+                                    function fgetClickHandler(seq){
+
+                                        return function(e){
+
+                                            var marker = fMarkers[seq];
+                                            var infoWindow = fInfoWindows[seq];
+
+                                            if(infoWindow.getMap()){
+
+                                                infoWindow.close();
+
+                                            }else{
+
+                                                infoWindow.open(map, marker);
+
+                                            }
+
+                                        }
+
+                                    }
+
+                                     for (var i=0, ii=fMarkers.length; i<ii; i++) {
+                                        console.log(fMarkers[i] , fgetClickHandler(i));
+                                        naver.maps.Event.addListener(fMarkers[i], 'click', fgetClickHandler(i));
+                                    }
+
+
+                                    var mapWidth = $('#map').width();
+                                    console.log("mapWidth");
+                                    console.log(mapWidth);
+
+                                    function getMapSize() {
+                                        var size = new naver.maps.Size(mapWidth, 500);
+
+                                        return size;
+                                    };
+
+
+                                    map.setSize(getMapSize());
+
+
+
+
+
+                                }
+
+                            })
+
+                        }
+
+                    })
+
+                }
+
+                findAllCultureCategoryByRegion(11);
+
+
+
+
+
+
+
+            }
+        )
+    </script>
+
+
 </head>
 <body>
 
 <div layout:fragment="content">
 
-    메인페이지입니다~
+    <div id="contentZone">
+
+        <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
+            <div class="carousel-indicators">
+                <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
+            </div>
+            <div class="carousel-inner">
+                <div class="carousel-item">
+                    <img src="https://kr.object.ncloudstorage.com/team3/common/first.png" class="d-block w-100" alt="fisrt">
+                </div>
+                <div class="carousel-item active">
+                    <img src="https://kr.object.ncloudstorage.com/team3/common/second.png" class="d-block w-100" alt="second">
+                </div>
+                <div class="carousel-item">
+                    <img src="https://kr.object.ncloudstorage.com/team3/common/third.png" class="d-block w-100" alt="third">
+                </div>
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev" style="border: 0px; background-color: transparent; color: black;">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next" style="border: 0px; background-color: transparent; color: black;">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+            </button>
+        </div>
+
+        <th:block sec:authorize="hasAnyAuthority('ROLE_USERS','ROLE_ADMIN')">
+
+            <div id="recommendZone">
+
+                <div id="pZone">
+                    <div>
+
+                        <h3>공연</h3>
+
+                    </div>
+
+                    <div id="pList" class="listZone">
+
+                        <div class="card">
+                            <img src="https://kr.object.ncloudstorage.com/team3/common/noPhoto.png" class="card-img-top" alt="...">
+                            <div class="card-body">
+                                <p class="card-text">Some</p>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <img src="https://kr.object.ncloudstorage.com/team3/common/noPhoto.png" class="card-img-top" alt="...">
+                            <div class="card-body">
+                                <p class="card-text">some</p>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <img src="https://kr.object.ncloudstorage.com/team3/common/noPhoto.png" class="card-img-top" alt="...">
+                            <div class="card-body">
+                                <p class="card-text">Some</p>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <img src="https://kr.object.ncloudstorage.com/team3/common/noPhoto.png" class="card-img-top" alt="...">
+                            <div class="card-body">
+                                <p class="card-text">Some</p>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div id="eZone">
+                    <div>
+
+                        <h3>전시</h3>
+
+                    </div>
+
+                    <div id="eList" class="listZone">
+
+                        <div class="card">
+                            <img src="https://kr.object.ncloudstorage.com/team3/common/noPhoto.png" class="card-img-top" alt="...">
+                            <div class="card-body">
+                                <p class="card-text">Some</p>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <img src="https://kr.object.ncloudstorage.com/team3/common/noPhoto.png" class="card-img-top" alt="...">
+                            <div class="card-body">
+                                <p class="card-text">Some</p>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <img src="https://kr.object.ncloudstorage.com/team3/common/noPhoto.png" class="card-img-top" alt="...">
+                            <div class="card-body">
+                                <p class="card-text">Some</p>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <img src="https://kr.object.ncloudstorage.com/team3/common/noPhoto.png" class="card-img-top" alt="...">
+                            <div class="card-body">
+                                <p class="card-text">Some</p>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+
+                <div id="fZone">
+                    <div>
+
+                        <h3>축제</h3>
+
+                    </div>
+
+                    <div id="fList" class="listZone">
+
+                        <div class="card">
+                            <img src="https://kr.object.ncloudstorage.com/team3/common/noPhoto.png" class="card-img-top" alt="...">
+                            <div class="card-body">
+                                <p class="card-text">Some</p>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <img src="https://kr.object.ncloudstorage.com/team3/common/noPhoto.png" class="card-img-top" alt="...">
+                            <div class="card-body">
+                                <p class="card-text">Some</p>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <img src="https://kr.object.ncloudstorage.com/team3/common/noPhoto.png" class="card-img-top" alt="...">
+                            <div class="card-body">
+                                <p class="card-text">Some</p>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <img src="https://kr.object.ncloudstorage.com/team3/common/noPhoto.png" class="card-img-top" alt="...">
+                            <div class="card-body">
+                                <p class="card-text">Some</p>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+
+                <div id="cZone">
+                    <div>
+
+                        <h3>문화재</h3>
+
+                    </div>
+
+                    <div id="cList" class="listZone">
+
+                        <div class="card">
+                            <img src="https://kr.object.ncloudstorage.com/team3/common/noPhoto.png" class="card-img-top" alt="...">
+                            <div class="card-body">
+                                <p class="card-text">Some</p>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <img src="https://kr.object.ncloudstorage.com/team3/common/noPhoto.png" class="card-img-top" alt="...">
+                            <div class="card-body">
+                                <p class="card-text">Some</p>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <img src="https://kr.object.ncloudstorage.com/team3/common/noPhoto.png" class="card-img-top" alt="...">
+                            <div class="card-body">
+                                <p class="card-text">Some</p>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <img src="https://kr.object.ncloudstorage.com/team3/common/noPhoto.png" class="card-img-top" alt="...">
+                            <div class="card-body">
+                                <p class="card-text">Some</p>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+
+        </th:block>
+
+
+        <th:block sec:authorize="hasAnyAuthority('ROLE_USERS','ROLE_ADMIN')">
+
+            <div id="searchZone">
+
+                <div id="searchBar" class="extra-filter">
+
+                    <div class="dropdown btn btn-outline-success" id="searchDrop">
+
+                        <a href="javascript:void(0)" class="dropbtn" id="category" style="color: #28a745;">전체</a>
+                        <div class="dropdown-content">
+                            <a id="all" class="category">전체</a>
+                            <a id="performance" class="category">공연</a>
+                            <a id="exhibition" class="category">전시</a>
+                            <a id="festival" class="category">축제</a>
+                            <a id="culturalPro" class="category">문화재</a>
+                        </div>
+
+                    </div>
+
+                    <div id="searchFormDiv">
+                        <form id="searchForm" name="searchForm1" method="post" class="d-flex">
+                            <div id="inputGroup">
+
+                                <input  type="text" name="text" id="keyword" placeholder="키워드를 입력하세요" aria-label="festivalName" class="form-control me-2">
+                                <button id="searchBtn1"  type="button" class="btn btn-outline-success" style="margin-right: 0px;margin-left: 5px;
+                        border-radius: 0px;margin-top: 0px;margin-bottom: 0px;"><img src="https://kr.object.ncloudstorage.com/team3/common/search.png" style="width: 20px;height: 20px;"></button>
+                                <button id="resetBtn1"  type="button" class="btn btn-outline-secondary" style="margin-right: 0px;margin-left: -1px;margin-top: 0px;margin-bottom: 0px;"><img src="https://kr.object.ncloudstorage.com/team3/common/x.png" style="width: 20px;height: 20px;"></button>
+
+                            </div>
+                        </form>
+                    </div>
+
+                </div>
+
+
+                <div id="searchListZone">
+
+                    <div id="psList">
+
+                    </div>
+
+                    <div id="esList">
+
+
+                    </div>
+
+                    <div id="fsList">
+
+
+                    </div>
+
+                    <div id="csList">
+
+
+                    </div>
+
+                </div>
+
+            </div>
+        </th:block>
+
+        <div id="mapAndCalenderZone">
+
+            <div id="mapZone">
+
+                <div class="dropdown btn btn-outline-success" id="searchDrop2">
+
+                    <a href="javascript:void(0)" class="dropbtn" id="region" style="color: #28a745;">서울</a>
+                    <div class="dropdown-content" id="dropdownContent2">
+<!--                        <a id="all" class="category">전체</a>-->
+<!--                        <a id="performance" class="category">공연</a>-->
+<!--                        <a id="exhibition" class="category">전시</a>-->
+<!--                        <a id="festival" class="category">축제</a>-->
+<!--                        <a id="culturalPro" class="category">문화재</a>-->
+                    </div>
+
+                </div>
+
+                <div id="map" style="width: 100%;height: 500px;position: relative;overflow: hidden;background: rgb(248, 249, 250);">
+
+
+
+                </div>
+
+                <div>
+
+                    <a href="/main/mapDetail" style="text-align: right;width: 100%;display: block;">지도 더 보기</a>
+
+                </div>
+
+            </div>
+
+
+            <div id="calendarZone">
+
+                <div class="dropdown btn btn-outline-success" id="hiddenArea">
+
+                    <a href="javascript:void(0)" class="hidden" id="hidden" style="color: #28a745;">서울</a>
+                    <div class="dropdown-content" id="hiddenContent">
+                    </div>
+
+                </div>
+
+                <div id="calendar" style="width: 100%;height: 500px;position: relative;overflow: hidden;background: rgb(248, 249, 250);">
+
+
+                </div>
+
+                <div>
+
+                    <a href="/main/calendar" style="text-align: right;width: 100%;display: block;">일정 더 보기</a>
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+    </div>
 
 
 

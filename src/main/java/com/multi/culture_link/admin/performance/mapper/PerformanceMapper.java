@@ -34,12 +34,23 @@ public interface PerformanceMapper {
 
 
 
+
+
+
+
     //
     PerformanceAddDTO findByUserIdAndPerformanceId(@Param("userId") int userId, @Param("performanceId") int performanceId);
     void updatePerformanceAdd(PerformanceAddDTO performanceAddDTO);
     void insertPerformanceAdd(PerformanceAddDTO performanceAddDTO);
 
-    String getPerformanceLikeState(int userId, int performanceId);
+//    String getPerformanceLikeState(int userId, int performanceId);
+String getPerformanceLikeState(@Param("userId") int userId, @Param("performanceId") int performanceId);
+
+
+
+
+
+
 
 
 
@@ -49,6 +60,13 @@ public interface PerformanceMapper {
 
 
 
+
+
+
+
+
+
+    // 리뷰
     // 특정 공연의 모든 리뷰를 조회
     List<PerformanceReviewDTO> findReviewsByPerformanceId(@Param("performanceId") int performanceId);
 
@@ -63,15 +81,15 @@ public interface PerformanceMapper {
     void deleteReview(@Param("id") int id);
     // 리뷰 관련 메서드
 
-//    Integer findUserIdByUsername(String username);
-//
-//    List<PerformanceReviewDTO> getAllReviews();
-//
-//    List<PerformanceReviewDTO> getReviewsByPerformanceId(int performanceId);
-//
-//    void insertReview(PerformanceReviewDTO review);
-//
-//    void updateReview(PerformanceReviewDTO review);
-//
-//    void deleteReview(int id);
+
+
+
+
+
+
+    // 추천관련 메서드
+    List<PerformanceDTO> findRecommendedPerformances(@Param("userId") int userId , @Param("genre") String genre);
+
+
+
 }

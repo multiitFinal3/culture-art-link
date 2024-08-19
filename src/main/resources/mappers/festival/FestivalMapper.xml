@@ -335,7 +335,62 @@
 
     </delete>
 
+    <select id="findDBFestivalByText" resultType="festivalDTO">
 
+        SELECT f2.*
+
+        FROM (
+
+            SELECT f.*,
+                   t.time_name,
+                   t.time_description,
+                   r.region_name
+
+            FROM festival f
+
+            LEFT JOIN time t ON f.time_id = t.time_id
+            LEFT JOIN region r ON r.region_id = f.region_id
+
+         ) f2
+
+        <where>
+
+            <if test="text !=null and !text.equals('')">
+
+                OR f2.region_name = #{text}
+
+                OR f2.time_name = #{text}
+
+                OR f2.time_description = #{text}
+
+                OR f2.festival_name LIKE CONCAT ('%', #{text}, '%')
+
+                OR f2.festival_content LIKE CONCAT ('%', #{text}, '%')
+
+                OR f2.manage_institution LIKE CONCAT ('%', #{text}, '%')
+
+                OR f2.host_institution LIKE CONCAT ('%', #{text}, '%')
+
+                OR f2.sponser_institution LIKE CONCAT ('%', #{text}, '%')
+
+                OR f2.tel LIKE CONCAT ('%', #{text}, '%')
+
+                OR f2.homepage_url LIKE CONCAT ('%', #{text}, '%')
+
+                OR f2.detail_address LIKE CONCAT ('%', #{text}, '%')
+
+                OR f2.place LIKE CONCAT ('%', #{text}, '%')
+
+                OR f2.season LIKE CONCAT ('%', #{text}, '%')
+
+            </if>
+
+        </where>
+
+
+
+
+    </select>
 
 
 </mapper>
