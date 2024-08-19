@@ -79,37 +79,91 @@
 
 
 
-    <select id="getContentKeywords" resultType="KeywordDTO">
-        SELECT
+
+
+<!--    <select id="getKeywords" resultType="com.multi.culture_link.admin.culturalProperties.model.dto.KeywordDTO">-->
+<!--        SELECT DISTINCT-->
+<!--        category_name AS categoryName,-->
+<!--        keyword,-->
+<!--        keyword_type AS keywordType,-->
+<!--        select_count AS selectCount-->
+<!--        FROM vw_cultural_properties_combined_keyword_total-->
+<!--        ORDER BY category_name,-->
+<!--        CASE WHEN keyword_type = 'content' THEN 0 ELSE 1 END,-->
+<!--        select_count DESC-->
+<!--        LIMIT #{offset}, #{limit}-->
+<!--    </select>-->
+
+<!--    <select id="getKeywords" resultType="com.multi.culture_link.admin.culturalProperties.model.dto.KeywordDTO">-->
+<!--        SELECT DISTINCT-->
+<!--        category_name AS categoryName,-->
+<!--        keyword,-->
+<!--        keyword_type AS keywordType,-->
+<!--        select_count AS selectCount-->
+<!--        FROM vw_cultural_properties_combined_keyword_total-->
+<!--        ORDER BY category_name,-->
+<!--        CASE WHEN keyword_type = 'content' THEN 0 ELSE 1 END,-->
+<!--        select_count DESC-->
+<!--        LIMIT #{offset}, #{limit}-->
+<!--    </select>-->
+
+<!--    <select id="getKeywords" resultType="com.multi.culture_link.admin.culturalProperties.model.dto.KeywordDTO">-->
+<!--        SELECT DISTINCT-->
+<!--        category_name AS categoryName,-->
+<!--        keyword,-->
+<!--        keyword_type AS keywordType,-->
+<!--        select_count AS selectCount-->
+<!--        FROM vw_cultural_properties_combined_keyword_total-->
+<!--        WHERE keyword_type = #{keywordType}-->
+<!--        ORDER BY category_name,-->
+<!--        CASE WHEN keyword_type = 'content' THEN 0 ELSE 1 END,-->
+<!--        select_count DESC-->
+<!--        LIMIT #{offset}, #{limit}-->
+<!--    </select>-->
+
+    <update id="incrementKeywordSelectCount">
+        UPDATE
+        <choose>
+            <when test="keywordType == 'content'">
+                cultural_properties_content_keyword
+            </when>
+            <otherwise>
+                cultural_properties_review_keyword
+            </otherwise>
+        </choose>
+        SET select_count = select_count + 1
+        WHERE id = #{keywordId}
+    </update>
+
+<!--    <select id="getDistinctCategories" resultType="String">-->
+<!--        SELECT DISTINCT category_name-->
+<!--        FROM vw_cultural_properties_combined_keyword_total-->
+<!--        ORDER BY category_name-->
+<!--    </select>-->
+
+
+    <select id="getKeywords" resultType="com.multi.culture_link.admin.culturalProperties.model.dto.KeywordDTO">
+        SELECT DISTINCT
+        id,
+        category_name AS categoryName,
         keyword,
-        category_name as categoryName,
-        SUM(total_frequency) as totalFrequency,
-        'content' as sources
-        FROM vw_cultural_properties_combined_keyword_data3
-        WHERE sources LIKE '%content%'
-        GROUP BY keyword, category_name
-        ORDER BY totalFrequency DESC
-        LIMIT #{limit} OFFSET #{offset}
+        keyword_type AS keywordType,
+        select_count AS selectCount
+        FROM (
+        SELECT *,
+        ROW_NUMBER() OVER (PARTITION BY cultural_properties_id ORDER BY id) as rn
+        FROM vw_cultural_properties_combined_keyword_total
+        WHERE keyword_type = #{keywordType}
+        ) ranked
+        WHERE rn = #{keywordIndex}
+        ORDER BY category_name, select_count DESC
+        LIMIT #{offset}, #{limit}
     </select>
 
-    <select id="getReviewKeywords" resultType="KeywordDTO">
-        SELECT
-        keyword,
-        category_name as categoryName,
-        SUM(total_frequency) as totalFrequency,
-        'review' as sources
-        FROM vw_cultural_properties_combined_keyword_data3
-        WHERE sources LIKE '%review%'
-        AND keyword NOT IN (SELECT keyword FROM vw_cultural_properties_combined_keyword_data2 WHERE sources LIKE '%content%')
-        GROUP BY keyword, category_name
-        ORDER BY totalFrequency DESC
-        LIMIT #{limit} OFFSET #{offset}
-    </select>
-
-    <select id="getContentKeywordCount" resultType="int">
-        SELECT COUNT(DISTINCT keyword)
-        FROM vw_cultural_properties_combined_keyword_data3
-        WHERE sources LIKE '%content%'
+    <select id="getDistinctCategories" resultType="String">
+        SELECT DISTINCT category_name
+        FROM vw_cultural_properties_combined_keyword_total
+        ORDER BY category_name
     </select>
 
 

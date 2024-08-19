@@ -74,7 +74,8 @@
 
 
     #festivalKeywordBtns,
-    #exhibitionKeywordBtns
+    #exhibitionKeywordBtns,
+    #culturalPropertiesKeywordBtns
     {
         font-size: 20px;
         overflow-x: scroll;
@@ -111,7 +112,9 @@
     }
 
     .festivalKeywordBtn,
-    .exhibitionKeywordBtn{
+    .exhibitionKeywordBtn,
+    .culturalPropertiesKeywordBtn,
+    .culturalPropertiesCategoryBtns {
 
        min-width: 150px;
        max-height: 35px;
@@ -150,3 +153,6 @@
         font-size: inherit;
         line-height: inherit;
     }
+
+
+

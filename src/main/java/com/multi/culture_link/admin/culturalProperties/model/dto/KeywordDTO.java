@@ -6,9 +6,10 @@ import lombok.Data;
 public class KeywordDTO {
 
 
+    private int id;
     private String keyword;
     private String categoryName;
-    private int totalFrequency;
-    private String sources;
+    private String keywordType;  // 'content' or 'review'
+    private int selectCount;
 
 }

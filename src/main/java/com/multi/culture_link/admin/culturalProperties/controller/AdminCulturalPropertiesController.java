@@ -5,7 +5,13 @@ import com.multi.culture_link.admin.culturalProperties.model.dto.CulturalPropert
 import com.multi.culture_link.admin.culturalProperties.model.dto.KeywordDTO;
 import com.multi.culture_link.admin.culturalProperties.model.dto.PageDTO;
 import com.multi.culture_link.admin.culturalProperties.service.AdminCulturalPropertiesService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -240,26 +246,67 @@ public class AdminCulturalPropertiesController {
 	}
 
 
+
+
+//	@GetMapping("/keywords")
+//	public ResponseEntity<List<KeywordDTO>> getKeywords(
+//			@RequestParam(defaultValue = "0") int offset,
+//			@RequestParam(defaultValue = "5") int limit) {
+//		List<KeywordDTO> keywords = adminCulturalPropertiesService.getKeywords(offset, limit);
+//		System.out.println("키워드keywords"+keywords);
+//		return ResponseEntity.ok(keywords);
+//	}
+
+	//이거 순서대로 5개 가져옴
+//	@GetMapping("/keywords")
+//	public ResponseEntity<List<KeywordDTO>> getKeywords(
+//			@RequestParam(defaultValue = "0") int offset,
+//			@RequestParam(defaultValue = "5") int limit) {
+//		List<KeywordDTO> keywords = adminCulturalPropertiesService.getKeywords(offset, limit);
+//		return ResponseEntity.ok(keywords);
+//	}
+
+//	//카테고리 앞에 있고 순서대로 5개
+//	@GetMapping("/keywords")
+//	public ResponseEntity<List<KeywordDTO>> getKeywords(
+//			@RequestParam(defaultValue = "0") int offset,
+//			@RequestParam(defaultValue = "5") int limit,
+//			@RequestParam String keywordType) {
+//		List<KeywordDTO> keywords = adminCulturalPropertiesService.getKeywords(offset, limit, keywordType);
+//		return ResponseEntity.ok(keywords);
+//	}
+
+
+	@PostMapping("/keywords/select")
+	public ResponseEntity<Void> selectKeyword(@RequestParam Long keywordId, @RequestParam String keywordType) {
+		adminCulturalPropertiesService.incrementKeywordSelectCount(keywordId, keywordType);
+		return ResponseEntity.ok().build();
+	}
+//
+//	@GetMapping("/categories")
+//	public ResponseEntity<List<String>> getDistinctCategories() {
+//		List<String> categories = adminCulturalPropertiesService.getDistinctCategories();
+//		return ResponseEntity.ok(categories);
+//	}
+
 	@GetMapping("/keywords")
-	public String getKeywords(Model model) {
-		List<KeywordDTO> keywords = adminCulturalPropertiesService.getKeywords(0, 5);
-		model.addAttribute("keywords", keywords);
-		model.addAttribute("currentPage", 0);
-		return "admin/culturalProperties/keywords";
+	public ResponseEntity<List<KeywordDTO>> getKeywords(
+			@RequestParam(defaultValue = "0") int offset,
+			@RequestParam(defaultValue = "5") int limit,
+			@RequestParam String keywordType,
+			@RequestParam(defaultValue = "1") int keywordIndex) {
+		List<KeywordDTO> keywords = adminCulturalPropertiesService.getKeywords(offset, limit, keywordType, keywordIndex);
+		return ResponseEntity.ok(keywords);
 	}
 
-	@GetMapping("/keywords/load-more")
-	@ResponseBody
-	public Map<String, Object> loadMoreKeywords(@RequestParam int page) {
-		List<KeywordDTO> keywords = adminCulturalPropertiesService.getKeywords(page * 5, 5);
-		boolean hasMore = keywords.size() == 5;
-
-		Map<String, Object> response = new HashMap<>();
-		response.put("keywords", keywords);
-		response.put("hasMore", hasMore);
-
-		return response;
+	@GetMapping("/categories")
+	public ResponseEntity<List<String>> getDistinctCategories() {
+		List<String> categories = adminCulturalPropertiesService.getDistinctCategories();
+		return ResponseEntity.ok(categories);
 	}
+
+
+
 
 }
 

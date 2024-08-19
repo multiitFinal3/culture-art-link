@@ -554,28 +554,36 @@ public class AdminCulturalPropertiesService {
 	}
 
 
-	public List<KeywordDTO> getKeywords(int offset, int limit) {
-		List<KeywordDTO> contentKeywords = culturalPropertiesKeywordDAO.getContentKeywords(offset, limit);
 
-		if (contentKeywords.size() < limit) {
-			int remainingLimit = limit - contentKeywords.size();
-			int reviewOffset = Math.max(0, offset - culturalPropertiesKeywordDAO.getContentKeywordCount());
-			List<KeywordDTO> reviewKeywords = culturalPropertiesKeywordDAO.getReviewKeywords(reviewOffset, remainingLimit);
-			contentKeywords.addAll(reviewKeywords);
-		}
 
-		return removeDuplicateCategories(contentKeywords);
+
+//	public List<KeywordDTO> getKeywords(int offset, int limit) {
+//		return culturalPropertiesKeywordDAO.getKeywords(offset, limit);
+//	}
+//
+//
+//	public void incrementKeywordSelectCount(Long keywordId, String keywordType) {
+//		culturalPropertiesKeywordDAO.incrementKeywordSelectCount(keywordId, keywordType);
+//	}
+
+//	public List<KeywordDTO> getKeywords(int offset, int limit, String keywordType) {
+//		return culturalPropertiesKeywordDAO.getKeywords(offset, limit, keywordType);
+//	}
+
+	public void incrementKeywordSelectCount(Long keywordId, String keywordType) {
+		culturalPropertiesKeywordDAO.incrementKeywordSelectCount(keywordId, keywordType);
 	}
 
-	private List<KeywordDTO> removeDuplicateCategories(List<KeywordDTO> keywords) {
-		Map<String, KeywordDTO> uniqueKeywords = new LinkedHashMap<>();
-		for (KeywordDTO keyword : keywords) {
-			String key = keyword.getKeyword() + "|" + keyword.getCategoryName();
-			if (!uniqueKeywords.containsKey(key)) {
-				uniqueKeywords.put(key, keyword);
-			}
-		}
-		return new ArrayList<>(uniqueKeywords.values());
+//	public List<String> getDistinctCategories() {
+//		return culturalPropertiesKeywordDAO.getDistinctCategories();
+//	}
+
+	public List<KeywordDTO> getKeywords(int offset, int limit, String keywordType, int keywordIndex) {
+		return culturalPropertiesKeywordDAO.getKeywords(offset, limit, keywordType, keywordIndex);
+	}
+
+	public List<String> getDistinctCategories() {
+		return culturalPropertiesKeywordDAO.getDistinctCategories();
 	}
 
 
