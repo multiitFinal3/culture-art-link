@@ -3,6 +3,7 @@ package com.multi.culture_link.culturalProperties.service;
 import com.multi.culture_link.admin.culturalProperties.model.dao.AdminCulturalPropertiesDAO;
 import com.multi.culture_link.admin.culturalProperties.model.dto.CulturalPropertiesDTO;
 import com.multi.culture_link.admin.culturalProperties.model.dto.PageDTO;
+import com.multi.culture_link.admin.culturalProperties.service.AdminCulturalPropertiesService;
 import com.multi.culture_link.culturalProperties.model.dao.CulturalPropertiesDAO;
 import com.multi.culture_link.culturalProperties.model.dto.CulturalPropertiesInterestDTO;
 import com.multi.culture_link.culturalProperties.model.dto.CulturalPropertiesReviewDTO;
@@ -30,6 +31,13 @@ public class CulturalPropertiesService {
 
 	@Autowired
 	private CulturalPropertiesDAO culturalPropertiesDAO;
+//    private final AdminCulturalPropertiesDAO adminCulturalPropertiesDAO;
+    private final AdminCulturalPropertiesService adminCulturalPropertiesService;
+
+    public CulturalPropertiesService(AdminCulturalPropertiesDAO adminCulturalPropertiesDAO, AdminCulturalPropertiesService adminCulturalPropertiesService) {
+//        this.adminCulturalPropertiesDAO = adminCulturalPropertiesDAO;
+        this.adminCulturalPropertiesService = adminCulturalPropertiesService;
+    }
 
 
     public int getTotalCount() {
@@ -117,6 +125,9 @@ public class CulturalPropertiesService {
     public void addReview(CulturalPropertiesReviewDTO reviewDTO) {
         System.out.println("리뷰 DTO: " + reviewDTO);
         culturalPropertiesDAO.addReview(reviewDTO); // 리뷰 등록을 위한 매퍼 호출
+
+        // 키워드 추출 및 저장
+        adminCulturalPropertiesService.extractAndSaveReviewKeywords(reviewDTO.getCulturalPropertiesId());
     }
 
     public List<CulturalPropertiesReviewDTO> getReviewsByCulturalPropertyId(int id) {
@@ -170,6 +181,14 @@ public class CulturalPropertiesService {
 
     public int countReviews(int culturalPropertiesId) {
         return culturalPropertiesDAO.countReview(culturalPropertiesId); // 총 리뷰 수를 반환하는 DAO 메서드
+    }
+
+    public List<String> getKeywordsByCulturalPropertyId(int culturalPropertiesId) {
+        return culturalPropertiesDAO.getKeywordsByCulturalPropertyId(culturalPropertiesId);
+    }
+
+    public List<String> getReviewKeywordsByCulturalPropertyId(int culturalPropertiesId) {
+        return culturalPropertiesDAO.getReviewKeywordsByCulturalPropertyId(culturalPropertiesId);
     }
 
 

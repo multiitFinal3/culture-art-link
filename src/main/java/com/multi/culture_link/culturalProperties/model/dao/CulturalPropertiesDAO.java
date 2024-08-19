@@ -64,4 +64,7 @@ public interface CulturalPropertiesDAO {
 
     List<CulturalPropertiesReviewDTO> getRecentReview(int culturalPropertiesId);
 
+    List<String> getKeywordsByCulturalPropertyId(int culturalPropertiesId);
+
+    List<String> getReviewKeywordsByCulturalPropertyId(int culturalPropertiesId);
 }

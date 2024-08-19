@@ -208,6 +208,20 @@
     </select>
 
 
+    <select id="getKeywordsByCulturalPropertyId" parameterType="int" resultType="string">
+        SELECT keyword
+        FROM cultural_properties_content_keyword
+        WHERE cultural_properties_id = #{culturalPropertiesId}
+    </select>
+
+
+    <select id="getReviewKeywordsByCulturalPropertyId" resultType="string">
+        SELECT keyword
+        FROM cultural_properties_review_keyword
+        WHERE cultural_properties_id = #{culturalPropertiesId}
+    </select>
+
+
 
 
 </mapper>

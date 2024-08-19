@@ -343,7 +343,9 @@ $(document).ready(function() {
             const date = $('<small>').addClass('text-muted').text(article.date);
             //              const link = $('<a>').attr('href', article.link).addClass('btn btn-primary btn-sm mt-2').text('자세히 보기').css('margin-left', '2rem');
 
-            const link = $('<a>').attr('href', article.link).addClass('btn btn-outline-success').text('자세히 보기').css('margin-left', '2rem');
+//            const link = $('<a>').attr('href', article.link).addClass('btn btn-outline-success').text('자세히 보기').css('margin-left', '2rem');
+
+            const link = $('<a>').attr('href', article.link).addClass('btn btn-success').text('자세히 보기').css('margin-left', '2rem');
 
 
             listItem.append(title, content, date, link);

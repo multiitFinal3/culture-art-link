@@ -1,7 +1,13 @@
 package com.multi.culture_link.admin.culturalProperties.service;
 
 import com.multi.culture_link.admin.culturalProperties.model.dao.AdminCulturalPropertiesDAO;
+import com.multi.culture_link.admin.culturalProperties.model.dao.CulturalPropertiesKeywordDAO;
 import com.multi.culture_link.admin.culturalProperties.model.dto.CulturalPropertiesDTO;
+import com.multi.culture_link.admin.culturalProperties.model.dto.CulturalPropertiesKeywordDTO;
+import com.multi.culture_link.admin.culturalProperties.model.dto.CulturalPropertiesReviewKeywordDTO;
+import com.multi.culture_link.common.keyword.service.KeywordExtractService;
+import jakarta.annotation.PostConstruct;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import com.multi.culture_link.admin.culturalProperties.model.dto.PageDTO;
 import org.json.JSONArray;
@@ -13,27 +19,31 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
-
+@RequiredArgsConstructor
 @Slf4j
 @Service
 public class AdminCulturalPropertiesService {
 	
 	private final AdminCulturalPropertiesDAO adminCulturalPropertiesDAO;
 	private ArrayList<CulturalPropertiesDTO> list;
+
+	private final KeywordExtractService keywordExtractService;
+	private final CulturalPropertiesKeywordDAO culturalPropertiesKeywordDAO;
 	
 	@Autowired
-	public AdminCulturalPropertiesService(AdminCulturalPropertiesDAO adminCulturalPropertiesDAO, ArrayList<CulturalPropertiesDTO> list) {
+	public AdminCulturalPropertiesService(AdminCulturalPropertiesDAO adminCulturalPropertiesDAO, ArrayList<CulturalPropertiesDTO> list, KeywordExtractService keywordExtractService, CulturalPropertiesKeywordDAO culturalPropertiesKeywordDAO) {
 		this.adminCulturalPropertiesDAO = adminCulturalPropertiesDAO;
 		this.list = list;
-	}
+        this.keywordExtractService = keywordExtractService;
+        this.culturalPropertiesKeywordDAO = culturalPropertiesKeywordDAO;
+    }
 	
 	
 	private static final String listApiUrl = "http://www.khs.go.kr/cha/SearchKindOpenapiList.do";
@@ -315,7 +325,14 @@ public class AdminCulturalPropertiesService {
 			culturalPropertiesDTO = list.get(i);
 			System.out.println("설명 : " + culturalPropertiesDTO.toString());
 			adminCulturalPropertiesDAO.insertDB(culturalPropertiesDTO);
-			
+
+
+			// 키워드 추출 및 저장
+			int culturalPropertiesId = culturalPropertiesDTO.getId();
+			String content = culturalPropertiesDTO.getContent();
+			extractAndSaveKeywords(culturalPropertiesId, content);
+
+
 		}
 	
 	}
@@ -358,6 +375,8 @@ public class AdminCulturalPropertiesService {
 		// id를 사용하여 데이터베이스에서 삭제
 		if (id != null && !id.isEmpty()) {
 			adminCulturalPropertiesDAO.deleteDBData(id);
+
+			adminCulturalPropertiesDAO.deleteDBDataAndKeywords(id);
 		}
 	}
 
@@ -422,6 +441,120 @@ public class AdminCulturalPropertiesService {
 
 
 
+	@PostConstruct
+	public void initializeKeywords() {
+		List<CulturalPropertiesDTO> allCulturalProperties = adminCulturalPropertiesDAO.findAll();
+
+		for (CulturalPropertiesDTO culturalPropertiesDTO : allCulturalProperties) {
+			int culturalPropertiesId = culturalPropertiesDTO.getId();
+			String content = culturalPropertiesDTO.getContent();
+
+			// cultural_properties_content_keyword 테이블에 해당 cultural_properties_id가 존재하는지 확인
+			boolean isKeywordExists = culturalPropertiesKeywordDAO.existsByCulturalPropertiesId(culturalPropertiesId);
+
+			if (!isKeywordExists) {
+				// 키워드가 존재하지 않는 경우에만 추출 및 저장 수행
+				extractAndSaveKeywords(culturalPropertiesId, content);
+
+			}
+		}
+	}
+
+
+
+	public void extractAndSaveKeywords(int culturalPropertiesId, String content) {
+		try {
+			// culturalPropertiesId에 해당하는 문화재 데이터 존재 여부 확인
+			CulturalPropertiesDTO existingCulturalProperties = adminCulturalPropertiesDAO.selectById(culturalPropertiesId);
+
+			if (existingCulturalProperties != null) {
+				ArrayList<String> extractedKeywords = keywordExtractService.getKeywordByGPT(content);
+
+				System.out.println("Extracted Keywords for Cultural Properties ID " + culturalPropertiesId + ":");
+				for (String keyword : extractedKeywords) {
+					System.out.println(keyword);
+				}
+
+				List<CulturalPropertiesKeywordDTO> keywordDTOList = new ArrayList<>();
+				for (String keyword : extractedKeywords) {
+					CulturalPropertiesKeywordDTO keywordDTO = new CulturalPropertiesKeywordDTO();
+					keywordDTO.setCulturalPropertiesId(culturalPropertiesId);
+					keywordDTO.setKeyword(keyword);
+					keywordDTOList.add(keywordDTO);
+				}
+
+				System.out.println("Saving keywords for Cultural Properties ID: " + culturalPropertiesId);
+				culturalPropertiesKeywordDAO.saveAll(keywordDTOList);
+			} else {
+				System.out.println("Cultural Properties ID " + culturalPropertiesId + " does not exist. Skipping keyword extraction and saving.");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+
+
+
+	public List<String> getReviewContentsByCulturalPropertiesId(int culturalPropertiesId) {
+		return culturalPropertiesKeywordDAO.getReviewContentsByCulturalPropertiesId(culturalPropertiesId);
+	}
+
+	public boolean existsByReviewCulturalPropertiesId(int culturalPropertiesId) {
+		return culturalPropertiesKeywordDAO.existsByReviewCulturalPropertiesId(culturalPropertiesId);
+	}
+
+
+	@Transactional
+	public void extractAndSaveReviewKeywords(int culturalPropertiesId) {
+		List<String> reviewContents = getReviewContentsByCulturalPropertiesId(culturalPropertiesId);
+		if (reviewContents.isEmpty()) {
+			System.out.println("No reviews found for Cultural Properties ID: " + culturalPropertiesId);
+			return;
+		}
+
+		String combinedReviewContent = String.join(" ", reviewContents);
+
+		try {
+			ArrayList<String> extractedKeywords = keywordExtractService.getKeywordByGPT(combinedReviewContent);
+			System.out.println("Extracted Review Keywords for Cultural Properties ID " + culturalPropertiesId + ":");
+
+			List<String> limitedKeywords = extractedKeywords.subList(0, Math.min(5, extractedKeywords.size()));
+
+			for (String keyword : limitedKeywords) {
+				System.out.println(keyword);
+			}
+
+			List<Integer> existingIds = culturalPropertiesKeywordDAO.getExistingKeywordIds(culturalPropertiesId);
+
+			List<Map<String, Object>> keywordsToUpdate = new ArrayList<>();
+			List<String> keywordsToInsert = new ArrayList<>();
+
+			for (int i = 0; i < limitedKeywords.size(); i++) {
+				if (i < existingIds.size()) {
+					Map<String, Object> updateMap = new HashMap<>();
+					updateMap.put("id", existingIds.get(i));
+					updateMap.put("keyword", limitedKeywords.get(i));
+					keywordsToUpdate.add(updateMap);
+				} else {
+					keywordsToInsert.add(limitedKeywords.get(i));
+				}
+			}
+
+			if (!keywordsToUpdate.isEmpty()) {
+				culturalPropertiesKeywordDAO.updateExistingKeywords(keywordsToUpdate);
+			}
+
+			if (!keywordsToInsert.isEmpty()) {
+				culturalPropertiesKeywordDAO.insertNewKeywords(culturalPropertiesId, keywordsToInsert);
+			}
+
+			System.out.println("Updated review keywords for Cultural Properties ID: " + culturalPropertiesId);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new RuntimeException("Failed to update review keywords", e);
+		}
+	}
 
 
 

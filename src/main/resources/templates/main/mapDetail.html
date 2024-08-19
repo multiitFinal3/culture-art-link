@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.w3.org/1999/xhtml">
+<html layout:decorate="~{common/layout/layoutMenubar}">
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+            crossorigin="anonymous"></script>
+    <link rel="stylesheet" th:href="@{/css/main/mapDetail.css}">
+    <script th:src="@{/js/main/mapDetail.js}"></script>
+    <script th:inline="javascript"
+            th:src="'https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=' + ${naverClientId}"></script>
+
+    <script th:inline="javascript">
+
+        $(document).ready(
+            function(){
+
+
+
+                //#region 네이버 지도 존
+
+
+                /**
+               * 지도 드랍다운에 지역 넣기
+               */
+                 function findAllRegion(){
+
+                    $.ajax({
+
+                        url: '/admin/festival-regulate/findAllRegionAndTime',
+                        method: 'POST',
+                        contentType: 'application/json',
+                        success: function(map){
+
+                            var list1 = map.regionList;
+                            console.log(list1);
+
+                            $('#dropdownContent2').html("");
+                            $.each(list1, function(index, region){
+
+                                var htmlContent = `<a id="${region.regionName}" data-region-id="${region.regionId}" class="region">${region.regionName}</a>`;
+
+                                $('#dropdownContent2').append(htmlContent);
+
+                            })
+
+
+                        }
+
+                    })
+
+                }
+
+
+                findAllRegion();
+
+
+                var currentRegion="서울";
+                /**
+                * 카테고리 드롭다운 클릭 시 텍스트를 가져옴
+                *
+                */
+                $(document).on('click','.region', function(){
+
+                    var regionText = $(this).text();
+                    currentRegion = regionText;
+                    $('#region').text(currentRegion);
+
+                    var regionId = $(this).data('region-id');
+
+                    findAllCultureCategoryByRegion(regionId)
+
+                })
+
+
+
+                /**
+                * 지역에 따른 모든 카테고리의 위치를 다중 마커로 표시 후 지도에 표시, 클릭 시 상세페이지 이동
+                *
+                */
+                function findAllCultureCategoryByRegion(regionId){
+
+                    $.ajax({
+
+                        url: '/main/findAllCultureCategoryByRegion?regionId='+regionId,
+                        method: 'POST',
+                        contentType: 'application/json',
+                        success: function(categoryMap){
+
+                            $.ajax({
+
+                                url: '/main/findCenterPositionByRegion?regionName='+currentRegion,
+                                method: 'POST',
+                                contentType: 'application/json',
+                                success: function(pos){
+
+                                    // 중심좌표 잡기
+                                    console.log("position");
+                                    console.log(pos);
+
+                                    var position = new naver.maps.LatLng(parseFloat(pos.longtitude), parseFloat(pos.latitude));
+
+                                    var map = new naver.maps.Map('map', {
+                                        center: position,
+                                        zoom: 11
+                                    });
+
+                                    var fList = categoryMap.festivalList;
+                                    console.log(fList);
+
+                                    let fMarkers = new Array();
+                                    let fInfoWindows = new Array();
+
+
+                                    $.each(fList, function(index, festival){
+
+                                        var realLat = festival.latitude;
+                                        var realLong = festival.longtitude;
+
+                                        console.log("realLat")
+                                        console.log(realLat)
+
+
+                                        var marker = new naver.maps.Marker({
+                                            position: new naver.maps.LatLng(realLat, realLong),
+                                            title: festival.festivalName,
+                                            map: map,
+                                            icon: {
+                                                url: 'https://kr.object.ncloudstorage.com/team3/common/festi.png',
+                                                size: new naver.maps.Size(22, 35),
+                                                origin: new naver.maps.Point(0, 0),
+                                                anchor: new naver.maps.Point(11, 35)
+                                            }
+                                        });
+
+                                        var infoWindow = new naver.maps.InfoWindow({
+
+                                            content : `<div style="width:200px;text-align:center;padding:5px;">
+                                                <a href="/festival/festival-detail?festivalId=${festival.festivalId}">
+                                                    ${festival.festivalName}
+                                                </a>
+                                            </div>`
+
+                                        });
+
+                                        fMarkers.push(marker);
+                                        console.log(marker);
+                                        fInfoWindows.push(infoWindow);
+                                        console.log(infoWindow);
+                                    })
+
+
+                                    function fgetClickHandler(seq){
+
+                                        return function(e){
+
+                                            var marker = fMarkers[seq];
+                                            var infoWindow = fInfoWindows[seq];
+
+                                            if(infoWindow.getMap()){
+
+                                                infoWindow.close();
+
+                                            }else{
+
+                                                infoWindow.open(map, marker);
+
+                                            }
+
+                                        }
+
+                                    }
+
+                                     for (var i=0, ii=fMarkers.length; i<ii; i++) {
+                                        console.log(fMarkers[i] , fgetClickHandler(i));
+                                        naver.maps.Event.addListener(fMarkers[i], 'click', fgetClickHandler(i));
+                                    }
+
+
+                                    var mapWidth = $('#map').width();
+                                    console.log("mapWidth");
+                                    console.log(mapWidth);
+
+                                    function getMapSize() {
+                                        var size = new naver.maps.Size(mapWidth, 1000);
+
+                                        return size;
+                                    };
+
+
+                                    map.setSize(getMapSize());
+
+
+
+
+
+                                }
+
+                            })
+
+                        }
+
+                    })
+
+                }
+
+                findAllCultureCategoryByRegion(11);
+
+
+
+
+
+
+
+            }
+        )
+    </script>
+
+
+</head>
+<body>
+
+    <div layout:fragment="content">
+
+        <div id="contentZone">
+
+
+            <div id="mapZone">
+
+                <div>
+
+                    <div>
+
+                        <div class="dropdown btn btn-outline-success" id="searchDrop2">
+
+                            <a href="javascript:void(0)" class="dropbtn" id="region" style="color: #28a745;">서울</a>
+                            <div class="dropdown-content" id="dropdownContent2">
+                            </div>
+
+                        </div>
+
+                        <div id="searchZone">
+
+                            <div id="searchBar" class="extra-filter">
+
+                                <div class="dropdown btn btn-outline-success" id="searchDrop">
+
+                                    <a href="javascript:void(0)" class="dropbtn" id="category"
+                                       style="color: #28a745;">전체</a>
+                                    <div class="dropdown-content">
+                                        <a id="all" class="category">전체</a>
+                                        <a id="performance" class="category">공연</a>
+                                        <a id="exhibition" class="category">전시</a>
+                                        <a id="festival" class="category">축제</a>
+                                        <a id="culturalPro" class="category">문화재</a>
+                                    </div>
+
+                                </div>
+
+                                <div id="searchFormDiv">
+                                    <form id="searchForm" name="searchForm1" method="post" class="d-flex">
+                                        <div id="inputGroup">
+
+                                            <input type="text" name="text" id="keyword" placeholder="키워드를 입력하세요"
+                                                   aria-label="festivalName" class="form-control me-2">
+                                            <button id="searchBtn1" type="button" class="btn btn-outline-success" style="margin-right: 0px;margin-left: 5px;
+                            border-radius: 0px;margin-top: 0px;margin-bottom: 0px;"><img
+                                                    src="https://kr.object.ncloudstorage.com/team3/common/search.png"
+                                                    style="width: 20px;height: 20px;"></button>
+                                            <button id="resetBtn1" type="button" class="btn btn-outline-secondary"
+                                                    style="margin-right: 0px;margin-left: -1px;margin-top: 0px;margin-bottom: 0px;">
+                                                <img src="https://kr.object.ncloudstorage.com/team3/common/x.png"
+                                                     style="width: 20px;height: 20px;"></button>
+
+                                        </div>
+                                    </form>
+                                </div>
+
+                            </div>
+
+
+                        </div>
+
+
+                    </div>
+
+                    <div id="map"
+                         style="width: 100%;height: 1000px;position: relative;overflow: hidden;background: rgb(248, 249, 250);">
+
+
+                    </div>
+
+                    <br>
+                    <br>
+                    <br>
+
+
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</body>
+</html>
