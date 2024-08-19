@@ -103,6 +103,43 @@
             color: #ffc107; /* 선택된 별 색상 */
         }
 
+        .review-text-container textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            resize: vertical;
+            }
+
+
+
+
+
+.star-rating2 {
+    display: inline-block;
+    color: #e0e0e0; /* 기본 빈 별 색상 */
+    font-size: 24px; /* 별 크기 */
+}
+
+.star-rating2 .star {
+    color: #ffc107; /* 가득 찬 별 색상 */
+}
+
+.star-rating2 .empty {
+    color: #e0e0e0; /* 빈 별 색상 */
+}
+
+.star-rating2 .half-star::before {
+    content: "\2605"; /* 유니코드 별 */
+    position: absolute;
+    overflow: hidden;
+    width: 50%;
+    color: #ffc107; /* 반 별 색상 */
+}
+
+
+
+
     </style>
 </head>
 
@@ -207,11 +244,31 @@
 
             <div class="review-section" id="reviewInfo" style="display: none;">
                 <div class="write-review">
+
+                    <!-- 평균 별점 표시 -->
+                    <div style="display: inline-block; margin-left: 20px;">
+                        <span>평균 별점: </span>
+                        <span th:text="${averageRating}"></span> <!-- 평균 별점을 텍스트로 표시 -->
+                        <div class="star-rating2">
+                                <span th:each="i : ${#numbers.sequence(1, 5)}">
+                                    <span th:if="${i <= fullStars}" class="star">&#9733;</span> <!-- 가득 찬 별 -->
+                                    <span th:if="${i == fullStars + 1} and ${halfStar}" class="star">&#9734;</span> <!-- 반 별 -->
+                                    <span th:if="${i > fullStars + (halfStar ? 1 : 0)}" class="star empty">&#9734;</span> <!-- 빈 별 -->
+                                </span>
+                        </div>
+                    </div>
+
+
+
+
                     <br>
                     <form id="reviewForm" method="post">
                         <input type="hidden" id="performanceId" th:value="${performance.id}">
                         <div style="display: flex; align-items: center;">
-                            <h2 style="margin-right: 20px;">리뷰 작성</h2> <br>
+                            <h2 style="margin-right: 20px; margin-top: 0;">리뷰 작성</h2>
+
+
+
                             <div class="rating-container">
                                 <div class="star-rating">
                                     <span class="star" data-value="1">&#9733;</span>
@@ -228,9 +285,14 @@
                     </form>
                 </div>
 
+
+
+
+
                 <div class="reviews">
                     <h2 style="display: inline-block;">리뷰</h2>
                     <div id="totalReviewCount" class="mt-3" style="display: inline-block; margin-left: 10px;"><span>0</span></div>
+
 
                     <div class="review" th:each="review : ${reviews}">
                         <div class="user-info">
@@ -253,6 +315,8 @@
                                 </div>
                             </div>
                         </div>
+
+
 
 
                         <div class="review-content">

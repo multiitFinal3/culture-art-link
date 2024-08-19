@@ -3,6 +3,7 @@ package com.multi.culture_link.performance.controller;
 import com.multi.culture_link.admin.performance.model.dto.PerformanceDTO;
 import com.multi.culture_link.admin.performance.service.PerformanceDBService;
 import com.multi.culture_link.performance.model.dto.PerformanceAddDTO;
+import com.multi.culture_link.performance.model.dto.PerformanceReviewDTO;
 import com.multi.culture_link.performance.service.PerformanceLocationService;
 import com.multi.culture_link.performance.service.PerformanceRankingService;
 import com.multi.culture_link.performance.service.PerformanceReviewService;
@@ -235,6 +236,7 @@ public class PerformanceController {
             } catch (Exception e) {
                 model.addAttribute("error", "공연 정보를 가져오는 중 오류가 발생했습니다.");
                 e.printStackTrace();
+                return "redirect:/errorPage";
             }
         }
 
@@ -243,6 +245,25 @@ public class PerformanceController {
             performance.updateFormattedDate(); // 날짜 포맷 업데이트
             model.addAttribute("user", user.getUser());
             model.addAttribute("performance", performance);
+
+            // 리뷰 가져오기
+            List<PerformanceReviewDTO> reviews = performanceReviewService.getReviewsByPerformanceId(performance.getId());
+            model.addAttribute("reviews", reviews);
+
+            // 평균 별점 계산 및 포맷팅
+            double averageRating = reviews.stream()
+                    .mapToDouble(PerformanceReviewDTO::getStarRating)
+                    .average()
+                    .orElse(0.0);
+
+            // 소수점 첫째 자리까지만 표시하고 별점 계산
+            int fullStars = (int) averageRating; // 정수 부분
+            boolean halfStar = (averageRating - fullStars) >= 0.25 && (averageRating - fullStars) < 0.75; // 소수 부분이 0.25 이상 0.75 미만인 경우 반별
+
+            model.addAttribute("fullStars", fullStars);
+            model.addAttribute("halfStar", halfStar);
+            model.addAttribute("averageRating", String.format("%.1f", averageRating)); // 소수점 첫째 자리까지만 표시
+
         } else {
             // 공연 정보를 가져오지 못했을 때의 처리
             model.addAttribute("error", "공연 정보를 가져오지 못했습니다.");
@@ -253,6 +274,9 @@ public class PerformanceController {
 
         return "/performance/performanceDetail";
     }
+
+
+
 
 
 
