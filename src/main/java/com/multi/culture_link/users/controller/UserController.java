@@ -1,7 +1,6 @@
 package com.multi.culture_link.users.controller;
 
 
-import com.multi.culture_link.admin.culturalProperties.model.dto.KeywordDTO;
 import com.multi.culture_link.admin.culturalProperties.service.AdminCulturalPropertiesService;
 import com.multi.culture_link.common.region.model.dto.RegionDTO;
 import com.multi.culture_link.common.region.service.RegionService;
@@ -29,8 +28,8 @@ import java.util.*;
 @Controller
 @RequestMapping("/user")
 public class UserController {
-
-
+	
+	
 	private final UserService userService;
 	private final ExhibitionService exhibitionService;
 	private final UserMapper userMapper;
@@ -49,11 +48,11 @@ public class UserController {
 	private String bucket;
 	
 	public UserController(UserService userService,
-                          UserMapper userMapper,
-                          FestivalService festivalService, RegionService regionService,
-                          BCryptPasswordEncoder bCryptPasswordEncoder,
-                          FileController fileController,
-                          ExhibitionService exhibitionService, AdminCulturalPropertiesService adminCulturalPropertiesService) {
+						  UserMapper userMapper,
+						  FestivalService festivalService, RegionService regionService,
+						  BCryptPasswordEncoder bCryptPasswordEncoder,
+						  FileController fileController,
+						  ExhibitionService exhibitionService, AdminCulturalPropertiesService adminCulturalPropertiesService) {
 		this.userService = userService;
 		this.userMapper = userMapper;
 		this.festivalService = festivalService;
@@ -61,8 +60,8 @@ public class UserController {
 		this.bCryptPasswordEncoder = bCryptPasswordEncoder;
 		this.fileController = fileController;
 		this.exhibitionService = exhibitionService;
-        this.adminCulturalPropertiesService = adminCulturalPropertiesService;
-    }
+		this.adminCulturalPropertiesService = adminCulturalPropertiesService;
+	}
 	
 	/**
 	 * 회원가입 페이지로 이동
@@ -71,7 +70,6 @@ public class UserController {
 	 */
 	@GetMapping("/signUp")
 	public String signUp() {
-		
 		
 		
 		return "/user/signUp";
@@ -106,7 +104,7 @@ public class UserController {
 			@RequestParam(name = "festivalSelectKeyword", required = false) String festivalSelectKeyword,
 			@RequestParam(name = "exhibitionSelectKeyword", required = false) String exhibitionSelectKeyword,
 			@RequestParam(name = "culturalPropertiesSelectKeyword", required = false) String culturalPropertiesSelectKeyword
-			) {
+	) {
 		
 		// 회원 users/ admin 넣는 것도 추가할 것 = > 매핑 테이블에도 조인으로 추가하기
 		int result = 0;
@@ -207,15 +205,15 @@ public class UserController {
 			}
 			
 		}
-
+		
 		System.out.println("exhibitionSelectKeyword : " + exhibitionSelectKeyword);
-
-		if(exhibitionSelectKeyword != null) {
+		
+		if (exhibitionSelectKeyword != null) {
 			String[] array = exhibitionSelectKeyword.trim().split(" ");
 			List<String> list = Arrays.asList(array);
 			exhibitionService.saveKeyword(list, userId, 15);
 		}
-
+		
 		if (culturalPropertiesSelectKeyword != null && !culturalPropertiesSelectKeyword.trim().isEmpty()) {
 			adminCulturalPropertiesService.saveUserSelectedKeywords(culturalPropertiesSelectKeyword, userId, 15);
 		}
@@ -493,17 +491,30 @@ public class UserController {
 	
 	@PostMapping("/validateSameEmail")
 	@ResponseBody
-	public UserDTO validateSameEmail(@RequestParam(name = "email") String email) {
+	public UserDTO validateSameEmail(@RequestParam(name = "email") String email, @AuthenticationPrincipal VWUserRoleDTO userLogIn) {
 		
 		UserDTO user = null;
 		
-		try {
-			user = userService.findUserByEmail(email);
-		} catch (Exception e) {
-			throw new RuntimeException(e);
+		if (userLogIn != null) {
+			
+			int userId = userLogIn.getUserId();
+			try {
+				user = userService.findUserByEmailNotMe(email, userId);
+			} catch (Exception e) {
+				throw new RuntimeException(e);
+			}
+			
+		}else{
+			
+			try {
+				user = userService.findUserByEmail(email);
+			} catch (Exception e) {
+				throw new RuntimeException(e);
+			}
+			
+			System.out.println("user : " + user);
 		}
 		
-		System.out.println("user : " + user);
 		return user;
 		
 	}

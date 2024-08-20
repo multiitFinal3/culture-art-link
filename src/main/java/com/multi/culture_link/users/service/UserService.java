@@ -57,4 +57,10 @@ public class UserService {
 		userMapper.insertRoleId(userDTO);
 	
 	}
+	
+	public UserDTO findUserByEmailNotMe(String email, int userId) throws Exception{
+		
+		UserDTO user = userMapper.findUserByEmailNotMe(email, userId);
+		return user;
+	}
 }
