@@ -227,4 +227,33 @@ public class CulturalPropertiesService {
     }
 
 
+    public Page<CulturalPropertiesReviewDTO> getMyReviews(int userId, Pageable pageable) {
+        List<CulturalPropertiesReviewDTO> reviews = culturalPropertiesDAO.getMyReviews(userId, pageable);
+        int totalReviews = culturalPropertiesDAO.countMyReviews(userId);
+        return new PageImpl<>(reviews, pageable, totalReviews);
+    }
+
+
+    public List<CulturalPropertiesDTO> getUserInterest(int userId, String interestType) {
+        return culturalPropertiesDAO.getUserInterest(userId, interestType);
+    }
+
+    public void removeUserInterest(int userId, int culturalPropertiesId) {
+        culturalPropertiesDAO.removeUserInterest(userId, culturalPropertiesId);
+    }
+
+
+
+    public void addUserInterest(int userId, int culturalPropertiesId, String interestType) {
+
+        // 새로운 관심 추가 또는 업데이트
+        CulturalPropertiesInterestDTO interest = new CulturalPropertiesInterestDTO();
+        interest.setUserId(userId);
+        interest.setCulturalPropertiesId(culturalPropertiesId);
+        interest.setInterestType(interestType);
+        culturalPropertiesDAO.addUserInterest(interest);
+    }
+
+
+
 }

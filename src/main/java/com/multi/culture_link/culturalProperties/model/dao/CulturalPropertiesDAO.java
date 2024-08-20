@@ -67,4 +67,16 @@ public interface CulturalPropertiesDAO {
     List<String> getKeywordsByCulturalPropertyId(int culturalPropertiesId);
 
     List<String> getReviewKeywordsByCulturalPropertyId(int culturalPropertiesId);
+
+    List<CulturalPropertiesReviewDTO> getMyReviews(@Param("userId") int userId, @Param("pageable") Pageable pageable);
+    int countMyReviews(@Param("userId") int userId);
+
+
+    List<CulturalPropertiesDTO> getUserInterest(@Param("userId") int userId, @Param("interestType") String interestType);
+
+
+    void addUserInterest(CulturalPropertiesInterestDTO interest);
+    void removeUserInterest(@Param("userId") int userId, @Param("culturalPropertiesId") int culturalPropertiesId);
+
+
 }

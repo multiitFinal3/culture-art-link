@@ -558,6 +558,55 @@ public class CulturalPropertiesController {
 	}
 
 
+
+	@GetMapping("/myReviews")
+	public ResponseEntity<Map<String, Object>> getMyReviews(
+			@AuthenticationPrincipal VWUserRoleDTO user,
+			@RequestParam(value = "page", defaultValue = "0") int page,
+			@RequestParam(value = "size", defaultValue = "5") int size) {
+		Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "created_at"));
+		Page<CulturalPropertiesReviewDTO> reviews = culturalPropertiesService.getMyReviews(user.getUserId(), pageable);
+
+		Map<String, Object> response = new HashMap<>();
+		response.put("reviews", reviews.getContent());
+		response.put("currentPage", reviews.getNumber());
+		response.put("totalItems", reviews.getTotalElements());
+		response.put("totalPages", reviews.getTotalPages());
+
+		return ResponseEntity.ok(response);
+	}
+
+
+
+	@GetMapping("/getUserInterest")
+	public ResponseEntity<List<CulturalPropertiesDTO>> getUserInterest(
+			@RequestParam String interestType,
+			@AuthenticationPrincipal VWUserRoleDTO user) {
+		List<CulturalPropertiesDTO> interests = culturalPropertiesService.getUserInterest(user.getUserId(), interestType);
+		return ResponseEntity.ok(interests);
+	}
+
+	@PostMapping("/removeUserInterest")
+	public ResponseEntity<String> removeUserInterest(
+			@RequestParam int culturalPropertiesId,
+			@RequestParam String interestType,
+			@AuthenticationPrincipal VWUserRoleDTO user) {
+		culturalPropertiesService.removeUserInterest(user.getUserId(), culturalPropertiesId);
+		return ResponseEntity.ok("관심이 제거되었습니다.");
+	}
+
+
+
+	@PostMapping("/addUserInterest")
+	public ResponseEntity<String> addUserInterest(
+			@RequestParam int culturalPropertiesId,
+			@RequestParam String interestType,
+			@AuthenticationPrincipal VWUserRoleDTO user) {
+		culturalPropertiesService.addUserInterest(user.getUserId(), culturalPropertiesId, interestType);
+		return ResponseEntity.ok(interestType.equals("LIKE") ? "찜이 추가되었습니다." : "관심없음이 추가되었습니다.");
+	}
+
+
 }
 
 
