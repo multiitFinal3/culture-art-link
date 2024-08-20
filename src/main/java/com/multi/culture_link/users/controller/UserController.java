@@ -1,7 +1,6 @@
 package com.multi.culture_link.users.controller;
 
 
-import com.multi.culture_link.admin.culturalProperties.model.dto.KeywordDTO;
 import com.multi.culture_link.admin.culturalProperties.service.AdminCulturalPropertiesService;
 import com.multi.culture_link.common.region.model.dto.RegionDTO;
 import com.multi.culture_link.common.region.service.RegionService;
@@ -20,6 +19,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -29,8 +29,8 @@ import java.util.*;
 @Controller
 @RequestMapping("/user")
 public class UserController {
-
-
+	
+	
 	private final UserService userService;
 	private final ExhibitionService exhibitionService;
 	private final UserMapper userMapper;
@@ -49,11 +49,11 @@ public class UserController {
 	private String bucket;
 	
 	public UserController(UserService userService,
-                          UserMapper userMapper,
-                          FestivalService festivalService, RegionService regionService,
-                          BCryptPasswordEncoder bCryptPasswordEncoder,
-                          FileController fileController,
-                          ExhibitionService exhibitionService, AdminCulturalPropertiesService adminCulturalPropertiesService) {
+						  UserMapper userMapper,
+						  FestivalService festivalService, RegionService regionService,
+						  BCryptPasswordEncoder bCryptPasswordEncoder,
+						  FileController fileController,
+						  ExhibitionService exhibitionService, AdminCulturalPropertiesService adminCulturalPropertiesService) {
 		this.userService = userService;
 		this.userMapper = userMapper;
 		this.festivalService = festivalService;
@@ -61,8 +61,8 @@ public class UserController {
 		this.bCryptPasswordEncoder = bCryptPasswordEncoder;
 		this.fileController = fileController;
 		this.exhibitionService = exhibitionService;
-        this.adminCulturalPropertiesService = adminCulturalPropertiesService;
-    }
+		this.adminCulturalPropertiesService = adminCulturalPropertiesService;
+	}
 	
 	/**
 	 * 회원가입 페이지로 이동
@@ -71,8 +71,6 @@ public class UserController {
 	 */
 	@GetMapping("/signUp")
 	public String signUp() {
-		
-		
 		
 		return "/user/signUp";
 	}
@@ -94,6 +92,7 @@ public class UserController {
 	 */
 	@PostMapping("/signUp")
 	@ResponseBody
+	@Transactional
 	public void signUpPost(
 			@RequestParam(name = "uploadFile", required = false) MultipartFile uploadFile,
 			@RequestParam(name = "email") String email,
@@ -106,7 +105,7 @@ public class UserController {
 			@RequestParam(name = "festivalSelectKeyword", required = false) String festivalSelectKeyword,
 			@RequestParam(name = "exhibitionSelectKeyword", required = false) String exhibitionSelectKeyword,
 			@RequestParam(name = "culturalPropertiesSelectKeyword", required = false) String culturalPropertiesSelectKeyword
-			) {
+	) {
 		
 		// 회원 users/ admin 넣는 것도 추가할 것 = > 매핑 테이블에도 조인으로 추가하기
 		int result = 0;
@@ -161,7 +160,6 @@ public class UserController {
 		
 		
 		try {
-			
 			String encoded_pw = bCryptPasswordEncoder.encode(userDTO.getPassword());
 			userDTO.setPassword(encoded_pw);
 			userService.signUp(userDTO);
@@ -207,15 +205,15 @@ public class UserController {
 			}
 			
 		}
-
+		
 		System.out.println("exhibitionSelectKeyword : " + exhibitionSelectKeyword);
-
-		if(exhibitionSelectKeyword != null) {
+		
+		if (exhibitionSelectKeyword != null) {
 			String[] array = exhibitionSelectKeyword.trim().split(" ");
 			List<String> list = Arrays.asList(array);
 			exhibitionService.saveKeyword(list, userId, 15);
 		}
-
+		
 		if (culturalPropertiesSelectKeyword != null && !culturalPropertiesSelectKeyword.trim().isEmpty()) {
 			adminCulturalPropertiesService.saveUserSelectedKeywords(culturalPropertiesSelectKeyword, userId, 15);
 		}
@@ -264,7 +262,6 @@ public class UserController {
 			
 		}
 		
-		
 		model.addAttribute("user", userDTO);
 /*		model.addAttribute("gender", user.getGender());
 		model.addAttribute("regionId", user.getRegionId());
@@ -309,6 +306,7 @@ public class UserController {
 	 */
 	@PostMapping("/deleteUserAccount")
 	@ResponseBody
+	@Transactional
 	public void deleteUserAccount(@AuthenticationPrincipal VWUserRoleDTO user) {
 		
 		try {
@@ -328,6 +326,7 @@ public class UserController {
 	 */
 	@PostMapping("/updateUserAccount")
 	@ResponseBody
+	@Transactional
 	public void updateUserAccount(@AuthenticationPrincipal VWUserRoleDTO user, @RequestParam(name = "file", required = false) MultipartFile file, @RequestParam("email") String email, @RequestParam("password") String password, @RequestParam("userName") String userName, @RequestParam("tel") String tel, @RequestParam("userAge") int userAge, @RequestParam("gender") String gender, @RequestParam("regionId") int regionId) {
 		
 		String attachment = "";
@@ -367,19 +366,19 @@ public class UserController {
 		userDTO.setUserId(user.getUserId());
 		userDTO.setUserProfilePic(attachment);
 		userDTO.setEmail(email);
+
 		
-		System.out.println("입력된 비밀번호 : " + password);
-		System.out.println("원래 비밀번호 : " + user.getPassword());
-		
-		if (!password.equals(user.getPassword())) {
-			System.out.println("비밀번호 다름");
-			String encryptedPassword = bCryptPasswordEncoder.encode(password);
-			System.out.println("암호화 된 비밀번호 : " + encryptedPassword);
-			userDTO.setPassword(encryptedPassword);
-		} else {
-			userDTO.setPassword(password);
-		}
-		
+//		System.out.println("입력된 비밀번호 : " + password);
+//		System.out.println("원래 비밀번호 : " + user.getPassword());
+	//	 변경 비밀번호 필수 입력
+//		if (!password.equals(user.getPassword())) {
+		String encryptedPassword = bCryptPasswordEncoder.encode(password);
+		System.out.println("암호화 된 비밀번호 : " + encryptedPassword);
+		userDTO.setPassword(encryptedPassword);
+//		} else {
+//			userDTO.setPassword(password);
+//		}
+//
 		userDTO.setUserName(userName);
 		userDTO.setTel(tel);
 		userDTO.setUserAge(userAge);
@@ -424,6 +423,7 @@ public class UserController {
 	 * @return
 	 */
 	@PostMapping("/insertUserBigLoveHateKeyword")
+	@Transactional
 	public String insertUserBigLoveHateKeyword(@AuthenticationPrincipal VWUserRoleDTO user, @RequestParam(name = "performanceKeyword", required = false) String performanceKeyword, @RequestParam(name = "exhibitionKeyword", required = false) String exhibitionKeyword, @RequestParam(name = "festivalKeyword", required = false) String festivalKeyword, @RequestParam(name = "culturalPropertiesKeyword", required = false) String culturalPropertiesKeyword, @RequestParam(name = "loveOrHate", required = true) String loveOrHate) {
 		
 		System.out.println("lh : " + loveOrHate);
@@ -487,23 +487,48 @@ public class UserController {
 			
 		}
 		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 		return "redirect:/user/myPage";
 	}
 	
 	
 	@PostMapping("/validateSameEmail")
 	@ResponseBody
-	public UserDTO validateSameEmail(@RequestParam(name = "email") String email) {
+	@Transactional
+	public UserDTO validateSameEmail(@RequestParam(name = "email") String email, @AuthenticationPrincipal VWUserRoleDTO userLogIn) {
 		
 		UserDTO user = null;
 		
-		try {
-			user = userService.findUserByEmail(email);
-		} catch (Exception e) {
-			throw new RuntimeException(e);
+		if (userLogIn != null) {
+			
+			int userId = userLogIn.getUserId();
+			try {
+				user = userService.findUserByEmailNotMe(email, userId);
+			} catch (Exception e) {
+				throw new RuntimeException(e);
+			}
+			
+		}else{
+			
+			try {
+				user = userService.findUserByEmail(email);
+			} catch (Exception e) {
+				throw new RuntimeException(e);
+			}
+			
+			System.out.println("user : " + user);
 		}
 		
-		System.out.println("user : " + user);
 		return user;
 		
 	}
