@@ -479,4 +479,38 @@ public class PerformanceController {
 
 
 
+
+
+
+
+
+
+
+
+
+    /**
+     * 사용자가 찜한 공연 목록을 반환하는 메서드
+     *
+     * @param user 인증된 사용자 정보
+     * @return 사용자가 찜한 공연 목록
+     */
+
+
+    @GetMapping("/findLovePerformanceList")
+    @ResponseBody
+    public ResponseEntity<List<PerformanceDTO>> findLovePerformanceList(@AuthenticationPrincipal VWUserRoleDTO user, Model model) {
+        int userId = user.getUser().getUserId();
+
+
+        // 사용자의 찜한 공연 목록을 가져옴
+        List<PerformanceDTO> lovePerformanceList = performanceService.getLovePerformancesByUserId(user.getUserId());
+
+        model.addAttribute("user", user);
+
+        return ResponseEntity.ok(lovePerformanceList);
+    }
+
+
+
+
 }

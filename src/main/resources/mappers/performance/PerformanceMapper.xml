@@ -177,6 +177,29 @@
 
 
 
+    <!-- 특정 사용자가 좋아요(찜)한 공연 목록을 가져오는 쿼리 -->
+    <select id="findLovedPerformancesByUserId" resultType="com.multi.culture_link.admin.performance.model.dto.PerformanceDTO">
+        SELECT
+        p.id AS id,
+        p.title AS title,
+        p.genre AS genre,
+        p.start_date AS startDate,
+        p.end_date AS endDate,
+        p.location AS location,
+        p.image_main AS imageMain
+        FROM
+        performance_add pa
+        INNER JOIN performance_info p ON pa.performance_id = p.id
+        WHERE
+        pa.user_id = #{userId}
+        AND pa.state = 'like'
+    </select>
+
+
+
+
+
+
 
 
 

@@ -100,5 +100,14 @@ public class PerformanceService {
 
 
 
+
+
+
+
+
+    public List<PerformanceDTO> getLovePerformancesByUserId(int userId) {
+        // 데이터베이스에서 찜한 공연 목록을 가져오는 로직 구현
+        return performanceMapper.findLovedPerformancesByUserId(userId);
+    }
 }
 
