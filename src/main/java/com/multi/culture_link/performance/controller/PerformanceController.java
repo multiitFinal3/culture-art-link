@@ -384,31 +384,6 @@ public class PerformanceController {
         return response;
     }
 
-//    // 검색
-//    @GetMapping("/search")
-//    public String searchPerformances(
-//            @RequestParam("keyword") String keyword,
-//            @RequestParam(value = "genre", required = false) String genre,
-//            Model model) {
-//
-//        List<PerformanceDTO> performances = performanceService.searchPerformances(keyword, genre);
-//        model.addAttribute("allPerformances", performances);
-//        model.addAttribute("selectedGenre", genre);
-//        model.addAttribute("keyword", keyword);  // 검색어를 모델에 추가
-//
-//        // 각 공연에 대해 formattedDate 설정
-//        for (PerformanceDTO performance : performances) {
-//            performance.updateFormattedDate();
-//        }
-//
-//        // 검색 결과가 없을 경우 플래그 추가
-//        boolean noResults = performances.isEmpty();
-//        model.addAttribute("noResults", noResults);
-//
-//
-//
-//        return "performance/performanceGenre"; // 적절한 템플릿 경로로 변경
-//    }
 
     // 검색
     @GetMapping("/search")
@@ -442,20 +417,6 @@ public class PerformanceController {
 
 
 
-
-
-
-
-    // 추천 목록
-//    @GetMapping("/recommendations")
-//    public String showRecommendations(@AuthenticationPrincipal UserDTO user, Model model) {
-//        int userId = user.getUserId(); // UserDTO에서 사용자 ID를 가져옴
-//
-//        List<PerformanceDTO> recommendedPerformances = performanceService.getRecommendedPerformances(userId);
-//        model.addAttribute("recommends", recommendedPerformances);
-//        model.addAttribute("user", user);
-//        return "performance/performanceHome"; // 추천 목록을 보여줄 Thymeleaf 템플릿 이름
-//    }
 
 
 

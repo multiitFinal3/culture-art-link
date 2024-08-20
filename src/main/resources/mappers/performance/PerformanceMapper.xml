@@ -181,6 +181,7 @@
     <select id="findLovedPerformancesByUserId" resultType="com.multi.culture_link.admin.performance.model.dto.PerformanceDTO">
         SELECT
         p.id AS id,
+        p.code AS code,
         p.title AS title,
         p.genre AS genre,
         p.start_date AS startDate,
@@ -200,6 +201,7 @@
     <select id="findHatedPerformancesByUserId" resultType="com.multi.culture_link.admin.performance.model.dto.PerformanceDTO">
         SELECT
         p.id AS id,
+        p.code AS code,
         p.title AS title,
         p.genre AS genre,
         p.start_date AS startDate,
