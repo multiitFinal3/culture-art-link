@@ -33,4 +33,14 @@ public interface CulturalPropertiesKeywordDAO {
 
     void saveUserKeyword(@Param("userId") int userId, @Param("keyword") String keyword, @Param("count") int count);
 
+
+
+
+    List<KeywordDTO> getLikeKeyword(@Param("userId") int userId, @Param("limit") int limit);
+    List<KeywordDTO> getDislikeKeyword(@Param("userId") int userId, @Param("limit") int limit);
+
+    int getTotalKeywordCount();
+    List<KeywordDTO> getKeywords(@Param("userId") int userId, @Param("offset") int offset, @Param("limit") int limit);
+
+
 }

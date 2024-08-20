@@ -1,7 +1,9 @@
 package com.multi.culture_link.culturalProperties.service;
 
 import com.multi.culture_link.admin.culturalProperties.model.dao.AdminCulturalPropertiesDAO;
+import com.multi.culture_link.admin.culturalProperties.model.dao.CulturalPropertiesKeywordDAO;
 import com.multi.culture_link.admin.culturalProperties.model.dto.CulturalPropertiesDTO;
+import com.multi.culture_link.admin.culturalProperties.model.dto.KeywordDTO;
 import com.multi.culture_link.admin.culturalProperties.model.dto.PageDTO;
 import com.multi.culture_link.admin.culturalProperties.service.AdminCulturalPropertiesService;
 import com.multi.culture_link.culturalProperties.model.dao.CulturalPropertiesDAO;
@@ -33,10 +35,12 @@ public class CulturalPropertiesService {
 	private CulturalPropertiesDAO culturalPropertiesDAO;
 //    private final AdminCulturalPropertiesDAO adminCulturalPropertiesDAO;
     private final AdminCulturalPropertiesService adminCulturalPropertiesService;
+    private final CulturalPropertiesKeywordDAO culturalPropertiesKeywordDAO;
 
-    public CulturalPropertiesService(AdminCulturalPropertiesDAO adminCulturalPropertiesDAO, AdminCulturalPropertiesService adminCulturalPropertiesService) {
+    public CulturalPropertiesService(AdminCulturalPropertiesDAO adminCulturalPropertiesDAO, AdminCulturalPropertiesService adminCulturalPropertiesService, CulturalPropertiesKeywordDAO culturalPropertiesKeywordDAO) {
 //        this.adminCulturalPropertiesDAO = adminCulturalPropertiesDAO;
         this.adminCulturalPropertiesService = adminCulturalPropertiesService;
+        this.culturalPropertiesKeywordDAO = culturalPropertiesKeywordDAO;
     }
 
 
@@ -193,13 +197,30 @@ public class CulturalPropertiesService {
 
 
 
-//    public void saveKeyword(List<String> keywords,int userId, int countChange) {
-//        System.out.println("keywords : "+ keywords);
-//
-//        for (String keyword : keywords) {
-//            culturalPropertiesDAO.saveUserKeyword(userId, keyword, countChange);
-//        }
+
+//    public List<KeywordDTO> getLikedKeyword(int userId, int limit) {
+//        return culturalPropertiesKeywordDAO.getLikedKeyword(userId, limit);
 //    }
+
+    public int getTotalKeywordCount() {
+        return culturalPropertiesKeywordDAO.getTotalKeywordCount();
+    }
+
+    // getLikedKeywords 메소드를 수정합니다.
+    public List<KeywordDTO> getLikeKeyword(int userId) {
+        int totalCount = getTotalKeywordCount();
+        return culturalPropertiesKeywordDAO.getLikeKeyword(userId, totalCount);
+    }
+
+    public List<KeywordDTO> getDislikeKeyword(int userId, int limit) {
+        return culturalPropertiesKeywordDAO.getDislikeKeyword(userId, limit);
+    }
+
+
+    public List<KeywordDTO> getKeywords(int userId, int page, int limit) {
+        int offset = (page - 1) * limit;
+        return culturalPropertiesKeywordDAO.getKeywords(userId, offset, limit);
+    }
 
 
 }

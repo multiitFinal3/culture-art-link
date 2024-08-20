@@ -2,6 +2,7 @@ package com.multi.culture_link.culturalProperties.controller;
 
 
 import com.multi.culture_link.admin.culturalProperties.model.dto.CulturalPropertiesDTO;
+import com.multi.culture_link.admin.culturalProperties.model.dto.KeywordDTO;
 import com.multi.culture_link.culturalProperties.model.dto.*;
 import com.multi.culture_link.culturalProperties.service.CulturalPropertiesService;
 import com.multi.culture_link.users.model.dto.VWUserRoleDTO;
@@ -525,6 +526,30 @@ public class CulturalPropertiesController {
 		return ResponseEntity.ok(response);
 	}
 
+
+
+//	@GetMapping("/like/keywords")
+//	public ResponseEntity<List<KeywordDTO>> getLikeKeywords(@AuthenticationPrincipal VWUserRoleDTO user, @RequestParam(defaultValue = "10") int limit) {
+//		return ResponseEntity.ok(culturalPropertiesService.getLikedKeyword(user.getUserId(), limit));
+//	}
+
+	@GetMapping("/like/keywords")
+	public ResponseEntity<List<KeywordDTO>> getLikedKeywords(@AuthenticationPrincipal VWUserRoleDTO user) {
+		return ResponseEntity.ok(culturalPropertiesService.getLikeKeyword(user.getUserId()));
+	}
+
+	@GetMapping("/dislik/keywords")
+	public ResponseEntity<List<KeywordDTO>> getDislikKeywords(@AuthenticationPrincipal VWUserRoleDTO user, @RequestParam(defaultValue = "10") int limit) {
+		return ResponseEntity.ok(culturalPropertiesService.getDislikeKeyword(user.getUserId(), limit));
+	}
+
+	@GetMapping("/keywords")
+	public ResponseEntity<List<KeywordDTO>> getKeywords(
+			@AuthenticationPrincipal VWUserRoleDTO user,
+			@RequestParam(defaultValue = "1") int page,
+			@RequestParam(defaultValue = "5") int limit) {
+		return ResponseEntity.ok(culturalPropertiesService.getKeywords(user.getUserId(), page, limit));
+	}
 
 
 
