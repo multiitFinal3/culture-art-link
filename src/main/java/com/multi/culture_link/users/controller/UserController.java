@@ -5,6 +5,7 @@ import com.multi.culture_link.admin.culturalProperties.service.AdminCulturalProp
 import com.multi.culture_link.common.region.model.dto.RegionDTO;
 import com.multi.culture_link.common.region.service.RegionService;
 import com.multi.culture_link.culturalProperties.model.dto.CulturalPropertiesDTO;
+import com.multi.culture_link.culturalProperties.service.CulturalPropertiesService;
 import com.multi.culture_link.exhibition.service.ExhibitionService;
 import com.multi.culture_link.festival.model.dto.UserFestivalLoveHateMapDTO;
 import com.multi.culture_link.festival.service.FestivalService;
@@ -39,6 +40,7 @@ public class UserController {
 	private final BCryptPasswordEncoder bCryptPasswordEncoder;
 	private final FileController fileController;
 	private final AdminCulturalPropertiesService adminCulturalPropertiesService;
+	private final CulturalPropertiesService culturalPropertiesService;
 	
 	private ArrayList<CulturalPropertiesDTO> list;
 	
@@ -49,11 +51,11 @@ public class UserController {
 	private String bucket;
 	
 	public UserController(UserService userService,
-						  UserMapper userMapper,
-						  FestivalService festivalService, RegionService regionService,
-						  BCryptPasswordEncoder bCryptPasswordEncoder,
-						  FileController fileController,
-						  ExhibitionService exhibitionService, AdminCulturalPropertiesService adminCulturalPropertiesService) {
+                          UserMapper userMapper,
+                          FestivalService festivalService, RegionService regionService,
+                          BCryptPasswordEncoder bCryptPasswordEncoder,
+                          FileController fileController,
+                          ExhibitionService exhibitionService, AdminCulturalPropertiesService adminCulturalPropertiesService, CulturalPropertiesService culturalPropertiesService) {
 		this.userService = userService;
 		this.userMapper = userMapper;
 		this.festivalService = festivalService;
@@ -62,7 +64,8 @@ public class UserController {
 		this.fileController = fileController;
 		this.exhibitionService = exhibitionService;
 		this.adminCulturalPropertiesService = adminCulturalPropertiesService;
-	}
+        this.culturalPropertiesService = culturalPropertiesService;
+    }
 	
 	/**
 	 * 회원가입 페이지로 이동
@@ -486,10 +489,20 @@ public class UserController {
 			
 			
 		}
-		
-		
-		
-		
+
+		culturalPropertiesService.deleteUserSelectKeyword(user.getUserId());
+
+		if (culturalPropertiesKeyword != null && !culturalPropertiesKeyword.trim().isEmpty()) {
+			String[] culturalPropertiesList = culturalPropertiesKeyword.trim().split(" ");
+			String interestType = loveOrHate.equals("L") ? "LIKE" : "DISLIKE";
+			int count = loveOrHate.equals("L") ? 15 : -15;
+
+			for (String keyword : culturalPropertiesList) {
+				culturalPropertiesService.insertUserSelectKeyword(user.getUserId(), interestType, keyword, count);
+			}
+		}
+
+
 		
 		
 		

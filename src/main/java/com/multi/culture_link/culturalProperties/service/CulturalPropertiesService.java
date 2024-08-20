@@ -218,4 +218,13 @@ public class CulturalPropertiesService {
     }
 
 
+    public void deleteUserSelectKeyword(int userId) {
+        culturalPropertiesKeywordDAO.deleteUserSelectKeyword(userId);
+    }
+
+
+    public void insertUserSelectKeyword(int userId, String keyword, String interestType, int count) {
+        culturalPropertiesKeywordDAO.insertUserSelectKeyword(userId, keyword, interestType, count);
+    }
+
 }

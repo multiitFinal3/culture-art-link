@@ -44,5 +44,8 @@ public interface CulturalPropertiesKeywordDAO {
     List<KeywordDTO> getUnselectedKeywords(@Param("userId") int userId, @Param("offset") int offset, @Param("limit") int limit);
 
 
+    void deleteUserSelectKeyword(@Param("userId") int userId);
+    void insertUserSelectKeyword(@Param("userId") int userId, @Param("keyword") String keyword, @Param("interestType") String interestType, @Param("count") int count);
+
 
 }
