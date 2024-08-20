@@ -70,31 +70,29 @@
             resultType="com.multi.culture_link.admin.exhibition.model.dto.api.ExhibitionKeywordPageDto"
             parameterType="map">
         SELECT
+        id,
         keyword,
-        SUM(count) AS total_frequency,
+        count AS frequency,
         CONCAT(
-        LPAD(CAST(SUM(count) AS CHAR), 10, '0'),
-        LPAD(CAST(MIN(id) AS CHAR), 10, '0')
+        LPAD(CAST(count AS CHAR), 10, '0'),
+        LPAD(CAST(id AS CHAR), 10, '0')
         ) AS `nextCursor`
         FROM
         exhibition_interested_keyword
         WHERE
+        1 =1
         <choose>
             <when test="isUserSelected == true">
-                userId = #{user.getUserId()}
+                AND user_id = #{userId}
+                AND count >= 10
             </when>
-            <otherwise>
-                userId != #{user.getUserId()}
-            </otherwise>
         </choose>
-        GROUP BY
-        keyword
         <if test="nextCursor != null and nextCursor != ''">
             HAVING CAST(`nextCursor` AS UNSIGNED) &lt; CAST(#{nextCursor} AS UNSIGNED)
         </if>
         ORDER BY
-        total_frequency DESC,
-        MIN(id) DESC
+        frequency DESC,
+        id DESC
         LIMIT #{size}
     </select>
 
@@ -136,5 +134,13 @@
             #{item}
         </foreach>
     </select>
+
+
+    <update id="updateAnalyze" parameterType="com.multi.culture_link.exhibition.model.dto.ExhibitionInterestDto">
+        UPDATE exhibition_interested_keyword
+        SET count = #{count}
+        WHERE user_id = #{userId}
+          AND id = #{id}
+    </update>
 
 </mapper>

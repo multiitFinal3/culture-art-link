@@ -205,8 +205,8 @@ public class ExhibitionService {
     public PageResponseDto<ExhibitionKeywordPageDto> getAllKeywordByUser(String cursor, int size, VWUserRoleDTO currentUser, Boolean isUserSelected) {
 
         PageResponseDto<ExhibitionKeywordPageDto> result = new PageResponseDto<ExhibitionKeywordPageDto>();
-        List<ExhibitionKeywordPageDto> exhibitionAllKeyword = exhibitionKeywordDao.getExhibitionAllKeywordByUser(cursor, size, currentUser, isUserSelected);
-
+        List<ExhibitionKeywordPageDto> exhibitionAllKeyword = exhibitionKeywordDao.getExhibitionAllKeywordByUser(cursor, size, currentUser.getUserId(), isUserSelected);
+        System.out.println("exhibitionAllKeyword : " + exhibitionAllKeyword);
         String nextCursor = "";
         ExhibitionKeywordPageDto lastItem = exhibitionAllKeyword.get(exhibitionAllKeyword.size() - 1);
         nextCursor = lastItem.getNextCursor();
@@ -246,5 +246,21 @@ public class ExhibitionService {
 
         return exhibitions;
 
+    }
+
+    public void toggleKeyword(int userId, List<Integer> keywordId, boolean isInterested) {
+        for (Integer keyword : keywordId) {
+            System.out.println("keywordId: " + keyword);
+            int count = exhibitionKeywordDao.getKeywordCount(userId, keyword);
+
+            if (count >= 10 || count < 0) {
+                exhibitionKeywordDao.toggleKeyword(userId, keyword, 0);
+            } else if (isInterested) {  // 찜에서 눌렀을 때
+                exhibitionKeywordDao.toggleKeyword(userId, keyword, 10);
+            } else if (!isInterested) { // 관심없음에서 눌렀을 때
+                exhibitionKeywordDao.toggleKeyword(userId, keyword, -10);
+            }
+
+        }
     }
 }

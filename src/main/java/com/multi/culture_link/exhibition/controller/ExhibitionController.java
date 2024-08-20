@@ -267,4 +267,16 @@ public class ExhibitionController {
     ) {
         return exhibitionService.getUserRecommend(currentUser.getUserId());
     }
+
+    @PostMapping("/exhibition/keyword/toggle")
+    public void toggleKeyword(
+            @AuthenticationPrincipal VWUserRoleDTO currentUser,
+            @RequestBody List<Integer> keywordId,
+            @RequestBody boolean isInterested
+
+    ) {
+        exhibitionService.toggleKeyword(currentUser.getUserId(), keywordId, isInterested);
+    }
+
+
 }
