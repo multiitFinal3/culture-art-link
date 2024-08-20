@@ -18,22 +18,24 @@
         <div class="genre-filter">
             <ul>
 
+
+                <li>
+                    <div class="genre-item">
+                        <a id="keywordList">추천</a>
+                    </div>
+                </li>
+
+
                 <li>
                     <div class="genre-item">
                         <a id="allList" class="allList">전체</a>
                     </div>
                 <li>
 
-                <li>
-                    <div class="genre-item">
-                        <a id="keywordList">키워드 추천</a>
-                    </div>
-                </li>
-
             </ul>
         </div>
 
-        <div class="extra-filter">
+        <div class="extra-filter none">
 
             <form id="searchForm" name="searchForm1" method="post" class="d-flex">
                 <div id="inputGroup">
@@ -71,10 +73,10 @@
     <div id="festivalRegulate">
 
 
-        <div id="festivalRecommendation" style="width:100%" class="none">
+        <div id="festivalRecommendation" style="width:100%">
 
             <h2 th:text="${user.userName} + '님 이런 작품은 어때요?'"></h2>
-            <div id="list2" style="width:60%">
+            <div id="list2" style="width:75%">
 
             </div>
 
@@ -84,7 +86,7 @@
         </div>
 
 
-        <div id="festivalList">
+        <div id="festivalList" class="none">
 
 <!--             Modal : db 상세 검색 -->
 <!--            <div class="modal fade" id="searchModal1" tabindex="-1" role="dialog"-->

@@ -88,7 +88,6 @@ $(document).ready(
 
                                 firstHtml = `
                                     <div class="card" id="${festival.festivalId}">
-                                        <div class="card-number">${indexNew}</div>
                                         <img class="card-img-top" src="/img/festival/noPhoto.png" alt="Card image cap">
 
                                 `;
@@ -97,7 +96,6 @@ $(document).ready(
 
                                 firstHtml = `
                                     <div class="card" id="${festival.festivalId}">
-                                        <div class="card-number">${indexNew}</div>
                                         <img class="card-img-top" src="${festival.imgUrl}" alt="Card image cap">
 
                                 `;
@@ -247,10 +245,10 @@ $(document).ready(
         }
 
         findDBFestivalAllList();
-        $('#festivalList').removeClass('none');
-        $('#festivalRecommendation').addClass('none');
-        $('#allList').closest('.genre-item').addClass('active');
-        $('#love').closest('.genre-item').removeClass('active');
+        $('#festivalList').addClass('none');
+        $('#festivalRecommendation').removeClass('none');
+        $('#allList').closest('.genre-item').removeClass('active');
+        $('#keywordList').closest('.genre-item').addClass('active');
 
 
 
@@ -345,8 +343,7 @@ $(document).ready(
             })
         }
 
-        // 1페이지 호출 : 전체 리스트 불러오는 방식으로 변경하여 주석 처리함
-//        findDBFestivalList(1);
+
 
         /**
        * DB 전체 갯수를 알아와 페이지 버튼 추가 기능
@@ -385,7 +382,7 @@ $(document).ready(
         }
 
         // 버튼 붙히기 : 전체를 불러오는 방식으로 변경함
-//        findDBFestivalCount();
+        // findDBFestivalCount();
 
         /**
        * DB 페이지 버튼에 해당 페이지의 순서에 해당하는 데이터 보이는 클릭 이벤트 추가
