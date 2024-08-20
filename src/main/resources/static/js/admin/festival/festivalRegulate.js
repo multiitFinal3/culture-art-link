@@ -1202,20 +1202,10 @@ $(document).ready(
                             $('#list2').append(finalHtml);
 
                         })
-
                         resolve();
-
                     }
-
                 })
-
-
-
-
-
             })
-
-
         }
 
 
@@ -1227,8 +1217,6 @@ $(document).ready(
          * @param {int} page 페이지
          */
         function findAPIFestivalCount(){
-
-            console.log("들어와22..")
 
             return new Promise((resolve, reject)=>{
 
@@ -1250,9 +1238,9 @@ $(document).ready(
                         var page = 0;
 
                         if(count%5==0){
-                            page = count / 5;
+                            page = parseInt(count / 5);
                         }else{
-                            page = count / 5 + 1;
+                            page = parseInt(count / 5) + 1;
                         }
 
                         findAPIFestivalNumPage = page;
@@ -1695,7 +1683,7 @@ $(document).ready(
         }
 
 
-         /**
+      /**
        * api 상세검색 페이지 버튼에 해당 페이지의 순서에 해당하는 데이터 보이는 클릭 이벤트 추가
        */
         $(document).on('click','.pageBtn5', function(){
@@ -1722,6 +1710,7 @@ $(document).ready(
         $(document).on('click','.pageBtn16', function(){
 
             $('#list2').html("");
+            $('#pageNum2').html("");
             currentAPIMulNum = 1;
 
             findAPIFestivalByMultiple(mulData, 1)
@@ -1752,7 +1741,7 @@ $(document).ready(
        * 마지막으로 가기
        */
         $(document).on('click','.pageBtn18', function(){
-
+            $('#pageNum2').html("");
             $('#list2').html("");
 
             var num = 0;
@@ -1821,14 +1810,11 @@ $(document).ready(
 
 
 
-
-
-
         /**
         * 전체 버튼으로 API 상세검색에서 API 전체리스트로 돌아가는 클릭 이벤트
         */
         $(document).on('click','.pageBtn6', function(){
-
+            $('#pageNum2').html("");
             $('#list2').html("");
             console.log("pageBtn6");
             current = 1;
@@ -1837,20 +1823,20 @@ $(document).ready(
                 // 1~10까지 보여줌
                 return addShowingBtns(findAPIFestivalCount, 1, '.pageBtn2');
             })
-            .then(()=>{
-
-                let btns = document.querySelectorAll('.pageBtn2');
-                btns.forEach(function(btn){
-                    if(btn.textContent == "1"){
-                        btn.classList.add('active');
-                    }else{
-                        btn.classList.remove('active');
-                    }
-                })
-            })
-            .catch((error)=>{
-                alert("api 오류")
-            })
+//            .then(()=>{
+//
+//                let btns = document.querySelectorAll('.pageBtn2');
+//                btns.forEach(function(btn){
+//                    if(btn.textContent == "1"){
+//                        btn.classList.add('active');
+//                    }else{
+//                        btn.classList.remove('active');
+//                    }
+//                })
+//            })
+//            .catch((error)=>{
+//                alert("api 오류")
+//            })
 
         })
 

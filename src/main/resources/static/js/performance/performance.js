@@ -59,7 +59,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // 공연목록에서 상세페이지로 이동
     // 공연 카드 클릭 이벤트 추가
-    const allPerformanceCards = document.querySelectorAll('.all-card', 'listZone');
+    const allPerformanceCards = document.querySelectorAll('.all-card');
 
     allPerformanceCards.forEach(card => {
         card.addEventListener('click', function() {
@@ -202,12 +202,6 @@ document.addEventListener('DOMContentLoaded', function() {
                  });
              });
          }
-
-
-
-
-
-
 
 
 });
