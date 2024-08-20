@@ -25,7 +25,7 @@ public class SpringSecurityConfiguration {
 		httpSecurity.authorizeHttpRequests((auth) -> auth
 				
 				
-				.requestMatchers("/","/home","/user/login/**","/user/logout/**","/user/signUp/**","/user/login2/**","/festival/findPopularFestivalKeyword","/exhibition/exhibition/keyword","/admin/festival-regulate/findAllRegionAndTime","/main/**","/festival/findSameRegionFestivalByRegionId","/admin/cultural-properties-regulate/keywords","/admin/cultural-properties-regulate/keywords/initial").permitAll()
+				.requestMatchers("/","/home","/user/login/**","/user/logout/**","/user/signUp/**","/user/login2/**","/festival/findPopularFestivalKeyword","/exhibition/exhibition/keyword","/admin/festival-regulate/findAllRegionAndTime","/main/**","/festival/findSameRegionFestivalByRegionId","/admin/cultural-properties-regulate/keywords","/admin/cultural-properties-regulate/keywords/initial","/exhibition/exhibition/recommend").permitAll()
 				.requestMatchers("/admin/**").hasRole("ADMIN")
 				.requestMatchers("/user/myPage/**", "/festival/**","/museumEvent/**","/calendar/**","/mapDetail/**","/performance/**","/cultural-properties/**","/chat/**","/exhibition/**","/board/**").hasAnyRole("ADMIN", "USERS")
 				

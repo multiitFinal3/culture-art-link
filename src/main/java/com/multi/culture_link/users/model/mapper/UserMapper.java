@@ -18,4 +18,6 @@ public interface UserMapper {
 	void updateUserAccount(UserDTO userDTO) throws Exception;
 	
 	void insertRoleId(UserDTO userDTO) throws Exception;
+	
+	UserDTO findUserByEmailNotMe(String email, int userId) throws Exception;
 }
