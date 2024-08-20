@@ -251,14 +251,18 @@ public class ExhibitionController {
 
 
     @GetMapping("/exhibition/keyword/user")
-    public PageResponseDto<ExhibitionKeywordPageDto> getAllKeywordByUser(
-            // cursor : 다음 값을 가져올 수 있도록 알려주는 값, 넘버링
+    public List<ExhibitionKeywordDto> getAllKeywordByUser(
             @AuthenticationPrincipal VWUserRoleDTO currentUser,
-            @RequestParam(defaultValue = "") Boolean isUserSelected,
-            @RequestParam(defaultValue = "") String cursor,
-            @RequestParam(defaultValue = "5") int size
+            @RequestParam(defaultValue = "") Boolean isInterested
     ) {
-        return exhibitionService.getAllKeywordByUser(cursor, size, currentUser, isUserSelected);
+        return exhibitionService.getAllKeywordByUser(isInterested, currentUser);
+    }
+
+    @GetMapping("/exhibition/keyword/all")
+    public List<ExhibitionKeywordDto> getAllKeywordByUserAll(
+            @RequestParam(defaultValue = "ASC") String orderBy
+    ) {
+        return exhibitionService.getAllKeywordByUserAll(orderBy);
     }
 
     @GetMapping("/exhibition/recommend")

@@ -19,7 +19,15 @@ public interface ExhibitionKeywordDao {
 
     List<ExhibitionKeywordPageDto> getExhibitionAllKeyword(String nextCursor, int size);
 
-    List<ExhibitionKeywordPageDto> getExhibitionAllKeywordByUser(String nextCursor, int size, int userId, Boolean isUserSelected);
+    List<ExhibitionKeywordDto> getExhibitionAllKeywordByUser(Boolean isInterested, int userId);
+
+    List<ExhibitionKeywordDto> getExhibitionInterestedKeyword(String orderBy);
+
+    List<ExhibitionKeywordDto> getExhibitionKeywordAll(String orderBy);
+
+
+    ExhibitionKeywordDto getExhibitionInterestedKeywordByKeyword(String keyword, int userId);
+
 
     List<String> getExhibitionKeywordById(int exhibitionId);
 

@@ -17,6 +17,8 @@
 
         $(document).ready(
             function () {
+                let exhibitionKeywordList = []
+                let exhibitionKeywordLastIdx = 0;
 
                 var user = [[${user}]];
 
@@ -1849,6 +1851,7 @@
 
                 })
 
+
                 findFestivalBigLoveKeyword();
 
 
@@ -2042,54 +2045,51 @@
                  *
                  */
                 async function findExhibitionLoveKeyword() {
-
-                    var currentCursor = $("#addExhibitionLoveKeyword").val();
+                    const type = $('#loveOrHate').val();
+                    console.log('type : ', type)
                     // 현재 사용자의 관심도 10 이상인 키워드 가져오기
-                    // true 면 내꺼 중 관심도 10이상인거, false 면 모든 데이터
+                    // true 면 내꺼 중 관심도 10이상인거, false 면 -10인 데이터
                     let interestedList = (await axios({
                         url: '/exhibition/exhibition/keyword/user',
                         method: 'GET',
                         params: {
-                            isUserSelected: true,
-                            size: 9999
+                            isInterested: type === 'L',
                         },
                         headers: {
                             'Content-Type': 'application/json'
                         }
                     })).data;
                     // 모든 데이터 가져옴
-                    let notInterestedList = (await axios({
-                        url: '/exhibition/exhibition/keyword/user',
+                    let allInterestedList = (await axios({
+                        url: '/exhibition/exhibition/keyword/all',
                         method: 'GET',
                         params: {
-                            isUserSelected: false,
-                            size: 9999
+                            orderBy: type === 'L' ? "DESC" : "ASC",
                         },
                         headers: {
                             'Content-Type': 'application/json'
                         }
                     })).data;
-                    // $("#addExhibitionLoveKeyword").val(notInterestedList?.data?.at(-1)?.nextCursor);
 
 
                     console.log("findExhibitionBigLoveKeyword()");
                     console.log('InterestedList : ', interestedList);
-                    console.log('notInterestedList : ', notInterestedList);
+                    console.log('allInterestedList : ', allInterestedList);
 
                     // 관심 있는건지 그냥 나온건지 표시
-                    notInterestedList = notInterestedList.data.map(v => ({
+                    allInterestedList = allInterestedList.map(v => ({
                         ...v,
                         isInterested: false
                     }))
 
-                    interestedList = interestedList.data.map(v => ({
+                    interestedList = interestedList.map(v => ({
                         ...v,
                         isInterested: true
                     }))
 
                     // 중복 데이터 제거 (관심있음 되어있는거)
                     let mergedObject = {};
-                    notInterestedList.forEach(item => {
+                    allInterestedList.forEach(item => {
                         mergedObject[item.keyword] = item;
                     });
 
@@ -2107,19 +2107,26 @@
                     const initLen = interestedList.length + 5
 
                     // 데이터 순서 정렬, true 먼저 나오고 이후 frequency 순서
-                    dataList.sort((a, b) => b.isInterested - a.isInterested || b.frequency - a.frequency)
+                    dataList.sort((a, b) =>
+                        b.isInterested - a.isInterested || (type === 'L' ? b.frequency - a.frequency : a.frequency - b.frequency)
+                    )
 
                     console.log('Merged Array : ', dataList);
 
+                    exhibitionKeywordList = dataList
+                    exhibitionKeywordLastIdx = initLen
+
+                    // HTML에 보여주기
                     for (let i = 0; i < initLen; i++) {
                         const keyword = dataList[i]
                         var htmlContent = '';
                         if (keyword.isInterested) {
                             htmlContent = `<button value="${keyword.keyword}" class="exhibitionLoveKeywordBtn bigLove">${keyword.keyword}</button>`;
+                            concat += keyword.keyword + " ";
                         } else {
                             htmlContent = `<button value="${keyword.keyword}" class="exhibitionLoveKeywordBtn">${keyword.keyword}</button>`;
                         }
-
+                        console.log('htmlContent : ', htmlContent)
                         $('#exhibitionKeywordList').append(htmlContent);
                         concat += keyword.keyword + " ";
                     }
@@ -2128,6 +2135,63 @@
                     $('#exhibitionKeyword').val(concat.trim() + " ");
 
                 }
+
+
+                /**
+                 * 전시 찜 키워드를 추가로 가져옴
+                 *
+                 */
+                $(document).on('click', '#addExhibitionLoveKeyword', function () {
+                    exhibitionKeywordClicked();
+                })
+
+                $(document).on('click', '#addExhibitionHateKeyword', function () {
+                    exhibitionKeywordClicked();
+                })
+
+
+                function exhibitionKeywordClicked() {
+                    var concat = '';
+
+                    const initLen = exhibitionKeywordLastIdx;
+
+                    console.log('initLen : ', initLen)
+                    console.log('initLen+5 : ', initLen + 5)
+                    for (let i = initLen; i < Number(initLen) + 5; i++) {
+                        const keyword = exhibitionKeywordList[i]
+                        var htmlContent = '';
+                        if (keyword.isInterested) {
+                            htmlContent = `<button value="${keyword.keyword}" class="exhibitionLoveKeywordBtn bigLove">${keyword.keyword}</button>`;
+                            concat += keyword.keyword + " ";
+                        } else {
+                            htmlContent = `<button value="${keyword.keyword}" class="exhibitionLoveKeywordBtn">${keyword.keyword}</button>`;
+                        }
+                        $('#exhibitionKeywordList').append(htmlContent);
+                    }
+                    exhibitionKeywordLastIdx = Number(initLen) + 5;
+                    const text = $('#exhibitionKeyword').val();
+                    $('#exhibitionKeyword').val(text + concat.trim() + " ");
+                }
+
+
+                /**
+                 * 전시 찜 키워드 선택 시 색 변화 버튼
+                 *
+                 */
+                $(document).on('click', '.exhibitionLoveKeywordBtn', function () {
+                    $(this).toggleClass('bigLove');
+                    const $btns = document.querySelectorAll('button.bigLove.exhibitionLoveKeywordBtn');
+                    let concat = '';
+
+                    $btns.forEach(function (btn) {
+                        concat += (btn.value + " ");
+                    })
+
+                    $('#exhibitionKeyword').val(concat.trim());
+
+                    console.log('exhibitionKeyword : ', $('#exhibitionKeyword').val())
+                })
+
 
                 findExhibitionLoveKeyword();
 
@@ -2369,7 +2433,7 @@
 
                     findFestivalBigLoveKeyword();
 
-
+                    findExhibitionLoveKeyword();
                 });
 
 
@@ -2427,12 +2491,14 @@
                     $('#festivalZone').html(festivalHtml);
                     $('#culturalPropertiesZone').html(culturalPropertiesHtml);
 
-                    findFestivalBigHateKeyword();
+
                     $('#festivalKeyword').val("");
                     $('#loveOrHate').val("H");
                     $('#keywordCountUpdate').text("비선호 키워드 수정");
 
-
+                    // 위치 변경
+                    findFestivalBigHateKeyword();
+                    findExhibitionLoveKeyword();
                 });
 
 
@@ -2526,47 +2592,56 @@
 
                         <div style="color: #615757;">
                             <label for="uploadFile">사진</label>
-                            <input name="uploadFile" class="rounded" id="uploadFile" type="file" accept="image/*"><br>
+                            <input accept="image/*" class="rounded" id="uploadFile" name="uploadFile" type="file"><br>
 
                             <label for="email">이메일</label>
-                            <input name="email" class="rounded" id="email" th:value="${user.email}"
+                            <input class="rounded" id="email" name="email"
+                                   pattern="^[a-zA-Z0-9_]{5,}@[a-zA-Z]{3,}\.com$"
                                    placeholder="${user.email}" required style="background-color: lightblue"
-                                   pattern="^[a-zA-Z0-9_]{5,}@[a-zA-Z]{3,}\.com$">
-                            <button id="emailValidate" type="button" class="btn btn-outline-success">중복확인</button><br>
+                                   th:value="${user.email}">
+                            <button class="btn btn-outline-success" id="emailValidate" type="button">중복확인</button>
+                            <br>
 
                             <label for="password">비밀번호</label>
-                            <input name="password" class="rounded" id="password" type="password" required
-                                   style="background-color: lightblue" th:value="${user.password}" placeholder="******"
-                                   pattern="^[a-zA-Z0-9_]{5,}$"><br>
+                            <input class="rounded" id="password" name="password" pattern="^[a-zA-Z0-9_]{5,}$"
+                                   placeholder="******"
+                                   required style="background-color: lightblue" th:value="${user.password}"
+                                   type="password"><br>
 
                             <label for="userName">회원이름</label>
-                            <input name="userName" class="rounded" id="userName" th:value="${user.userName}"
-                                   placeholder="${user.userName}" pattern="^[a-zA-Z가-힣]{3,}$"
-                                   style="background-color: lightblue"><br>
+                            <input class="rounded" id="userName" name="userName" pattern="^[a-zA-Z가-힣]{3,}$"
+                                   placeholder="${user.userName}" style="background-color: lightblue"
+                                   th:value="${user.userName}"><br>
 
                             <label for="tel">전화번호</label>
-                            <input name="tel" class="rounded" id="tel" type="tel" th:value="${user.tel}"
-                                   placeholder="${user.tel}" pattern="[0-9]{3}-[0-9]{4}-[0-9]{4}"><br>
+                            <input class="rounded" id="tel" name="tel" pattern="[0-9]{3}-[0-9]{4}-[0-9]{4}"
+                                   placeholder="${user.tel}"
+                                   th:value="${user.tel}" type="tel"><br>
 
                             <label for="userAge">나이</label>
-                            <input name="userAge" class="rounded" id="userAge" type="number" th:value="${user.userAge}"
-                                   th:placeholder="${user.userAge}"><br>
+                            <input class="rounded" id="userAge" name="userAge" th:placeholder="${user.userAge}"
+                                   th:value="${user.userAge}"
+                                   type="number"><br>
 
                             <label for="gender">성별</label>
-                            <select name="gender" class="rounded" id="gender" th:value="${user.gender}">
+                            <select class="rounded" id="gender" name="gender" th:value="${user.gender}">
                             </select><br>
 
                             <label for="regionId">지역</label>
-                            <select name="regionId" id="regionId" class="rounded"></select><br>
+                            <select class="rounded" id="regionId" name="regionId"></select><br>
 
 
                             <div style="display: flex;align-items: center;justify-content: space-around; margin-top: 50px;">
 
-                                <button type="submit" id="updateAccount" class="btn btn-outline-success"
-                                        th:value="${user.userId}" style="width: 45%;color: white;background-color: green;">수정
+                                <button class="btn btn-outline-success" id="updateAccount"
+                                        style="width: 45%;color: white;background-color: green;"
+                                        th:value="${user.userId}"
+                                        type="submit">수정
                                 </button>
-                                <button type="button" id="deleteAccount" class="btn btn-outline-success"
-                                        th:value="${user.userId}" style="width: 45%;color: white;background-color: green;">탈퇴
+                                <button class="btn btn-outline-success" id="deleteAccount"
+                                        style="width: 45%;color: white;background-color: green;"
+                                        th:value="${user.userId}"
+                                        type="button">탈퇴
                                 </button>
 
                             </div>
@@ -2578,17 +2653,57 @@
 
             </div>
 
-        <div id="upperZone" class="none">
+            <div class="none" id="upperZone">
 
 
-            <div id="upper">
+                <div id="upper">
 
-                아아
+                    아아
+
+                </div>
+
+
+                <!--             <div class="none" id="downZone">
+
+                                <div id="down">
+                                    <div id="performanceZone">
+                                        <div id="performanceKeywordList">
+                                        </div>
+                                        <button class="btn btn-outline-success" id="addPerformanceLoveKeyword" value="1">공연 키워드 추가
+                                        </button>
+                                    </div>
+                                    <div id="exhibitionZone">
+                                        <div id="exhibitionKeywordList">
+                                        </div>
+                                        <button class="btn btn-outline-success" id="addExhibitionLoveKeyword" value="">전시 키워드 추가
+                                        </button>
+                                    </div>
+                                    <div id="festivalZone">
+                                        <div id="festivalKeywordList">
+                                        </div>
+                                        <button class="btn btn-outline-success" id="addFestivalLoveKeyword" value="1">축제 키워드 추가</button>
+                                    </div>
+                                    <div id="culturalPropertiesZone">
+                                        <div id="culturalPropertiesKeywordList">
+                                        </div>
+                                        <button class="btn btn-outline-success" id="addCulturalPropertiesLoveKeyword" value="1">문화재 키워드
+                                            추가
+                                        </button>
+                                    </div>
+                                    <div id="updateBtnZone">
+                                        <form id="insertUserBigLoveHateKeyword" style="font-size: 28px;">
+                                            <input id="performanceKeyword" name="performanceKeyword" type="hidden">
+                                            <input id="exhibitionKeyword" name="exhibitionKeyword" type="hidden">
+                                            <input id="festivalKeyword" name="festivalKeyword" type="hidden">
+                                            <input id="culturalPropertiesKeyword" name="culturalPropertiesKeyword" type="hidden">
+                                            <input id="loveOrHate" name="loveOrHate" type="hidden" value="L">
+                                            <button class="btn btn-outline-success" id="keywordCountUpdate" type="button">선호 키워드 수정
+                                            </button>
+                                        </form> -->
 
             </div>
 
-
-<!--             <div class="none" id="downZone">
+            <div class="none" id="downZone">
 
                 <div id="down">
                     <div id="performanceZone">
@@ -2624,53 +2739,17 @@
                             <input id="loveOrHate" name="loveOrHate" type="hidden" value="L">
                             <button class="btn btn-outline-success" id="keywordCountUpdate" type="button">선호 키워드 수정
                             </button>
-                        </form> -->
+                        </form>
+                    </div>
+                </div>
 
-        </div>
-
-        <div id="downZone" class="none">
-
-            <div id="down">
-                <div id="performanceZone">
-                    <div id="performanceKeywordList">
-                    </div>
-                    <button id="addPerformanceLoveKeyword" value="1" class="btn btn-outline-success">공연 키워드 추가</button>
-                </div>
-                <div id="exhibitionZone">
-                    <div id="exhibitionKeywordList">
-                    </div>
-                    <button id="addExhibitionLoveKeyword" value="" class="btn btn-outline-success">전시 키워드 추가</button>
-                </div>
-                <div id="festivalZone">
-                    <div id="festivalKeywordList">
-                    </div>
-                    <button id="addFestivalLoveKeyword" value="1" class="btn btn-outline-success">축제 키워드 추가</button>
-                </div>
-                <div id="culturalPropertiesZone">
-                    <div id="culturalPropertiesKeywordList">
-                    </div>
-                    <button id="addCulturalPropertiesLoveKeyword" value="1" class="btn btn-outline-success">문화재 키워드 추가
-                    </button>
-                </div>
-                <div id="updateBtnZone">
-                    <form style="font-size: 28px;" id="insertUserBigLoveHateKeyword">
-                        <input type="hidden" id="performanceKeyword" name="performanceKeyword">
-                        <input type="hidden" id="exhibitionKeyword" name="exhibitionKeyword">
-                        <input type="hidden" id="festivalKeyword" name="festivalKeyword">
-                        <input type="hidden" id="culturalPropertiesKeyword" name="culturalPropertiesKeyword">
-                        <input type="hidden" id="loveOrHate" name="loveOrHate" value="L">
-                        <button type="button" id="keywordCountUpdate" class="btn btn-outline-success">선호 키워드 수정</button>
-                    </form>
-                </div>
             </div>
+
 
         </div>
 
 
     </div>
-
-
-</div>
 
 
 </div>
