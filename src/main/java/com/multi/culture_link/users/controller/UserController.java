@@ -72,7 +72,6 @@ public class UserController {
 	@GetMapping("/signUp")
 	public String signUp() {
 		
-		
 		return "/user/signUp";
 	}
 	
@@ -487,6 +486,17 @@ public class UserController {
 			
 			
 		}
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 		
 		return "redirect:/user/myPage";
 	}
