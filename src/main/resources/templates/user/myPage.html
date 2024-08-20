@@ -1885,122 +1885,109 @@
                 //#endregion
 
 
-                // 전역 변수로 현재 페이지 번호를 추적
-let currentPage = 1;
 
-// 초기 키워드 로드 함수
-function loadInitialCulturalPropertiesKeywords() {
-    $.ajax({
-        url: '/cultural-properties/like/keywords',
-        method: 'GET',
-        success: function(response) {
-            displayCulturalPropertiesKeywords(response);
-        },
-        error: function(xhr, status, error) {
-            console.error("Error loading initial keywords:", error);
-        }
-    });
-}
+                //#region
+                // 문화재 찜키워드, 관심없음 키워드
 
-// 추가 키워드 로드 함수
-function loadMoreCulturalPropertiesKeywords() {
-    $.ajax({
-        url: '/cultural-properties/keywords',
-        method: 'GET',
-        data: { page: currentPage, limit: 5 },
-        success: function(response) {
-            displayCulturalPropertiesKeywords(response, true);
-            currentPage++;
-        },
-        error: function(xhr, status, error) {
-            console.error("Error loading more keywords:", error);
-        }
-    });
-}
+                let currentPage = 1;
 
-// 키워드 표시 함수
-function displayCulturalPropertiesKeywords(keywords, append = false) {
-    const keywordList = $('#culturalPropertiesKeywordList');
-    if (!append) {
-        keywordList.empty();
-    }
-    keywords.forEach(keyword => {
-        const keywordButton = $('<button>')
-            .addClass('culturalPropertiesKeywordBtn')
-            .text(keyword.keyword)
-            .attr('data-id', keyword.keywordId)
-            .attr('data-count', keyword.totalCount);
+                function loadInitialCulturalPropertiesKeywords() {
+                    const url = $('#loveOrHate').val() === "L" ? '/cultural-properties/like/keywords' : '/cultural-properties/dislike/keywords';
+                    $.ajax({
+                        url: url,
+                        method: 'GET',
+                        success: function(response) {
+                            // 초기 키워드를 모두 초록색으로 표시
+                            const initialKeywords = response.map(keyword => ({
+                                ...keyword,
+                                isInitial: true  // 초기 키워드임을 표시
+                            }));
+                            displayCulturalPropertiesKeywords(initialKeywords);
+                            loadUnselectedCulturalPropertiesKeywords();
+                        },
+                        error: function(xhr, status, error) {
+                            console.error("Error loading initial keywords:", error);
+                        }
+                    });
+                }
 
-        if (keyword.totalCount >= 10) {
-            keywordButton.addClass('bigLove');
-        }
+                function loadUnselectedCulturalPropertiesKeywords() {
+                    $.ajax({
+                        url: '/cultural-properties/keywords',
+                        method: 'GET',
+                        data: { page: currentPage, limit: 5 },
+                        success: function(response) {
+                            displayCulturalPropertiesKeywords(response, true);
+                        },
+                        error: function(xhr, status, error) {
+                            console.error("Error loading unselected keywords:", error);
+                        }
+                    });
+                }
 
-        keywordList.append(keywordButton);
-    });
-}
 
-// 키워드 버튼 클릭 이벤트
-$(document).on('click', '.culturalPropertiesKeywordBtn', function() {
-    $(this).toggleClass('bigLove');
-    updateSelectedCulturalPropertiesKeywords();
-});
+                function displayCulturalPropertiesKeywords(keywords, append = false) {
+                    const keywordList = $('#culturalPropertiesKeywordList');
+                    if (!append) {
+                        keywordList.empty();
+                    }
+                    keywords.forEach(keyword => {
+                        const keywordButton = $('<button>')
+                            .addClass('culturalPropertiesKeywordBtn')
+                            .text(keyword.keyword)
+                            .attr('data-id', keyword.keywordId)
+                            .attr('data-count', keyword.totalCount);
 
-// 선택된 키워드 업데이트 함수
-function updateSelectedCulturalPropertiesKeywords() {
-    const selectedKeywords = $('.culturalPropertiesKeywordBtn.bigLove').map(function() {
-        return $(this).text();
-    }).get().join(' ');
-    $('#culturalPropertiesKeyword').val(selectedKeywords);
-}
+                        if (keyword.isInitial) {
+                            // 초기 키워드는 loveOrHate 값에 따라 클래스 추가
+                            keywordButton.addClass($('#loveOrHate').val() === "L" ? 'bigLove' : 'bigHate');
+                        } else if ($('#loveOrHate').val() === "L" && keyword.totalCount >= 10) {
+                            keywordButton.addClass('bigLove');
+                        } else if ($('#loveOrHate').val() === "H" && keyword.totalCount <= -10) {
+                            keywordButton.addClass('bigHate');
+                        }
 
-// 문화재 키워드 추가 버튼 클릭 이벤트
-$('#addCulturalPropertiesLoveKeyword').on('click', function() {
-    loadMoreCulturalPropertiesKeywords();
-});
+                        keywordList.append(keywordButton);
+                    });
+                }
 
-// 페이지 로드 시 초기 키워드 로드
-$(document).ready(function() {
-    loadInitialCulturalPropertiesKeywords();
-});
 
-// 찜 키워드 목록 버튼 클릭 이벤트
-$('#loveKeywordList').on('click', function() {
-    $('#loveOrHate').val("L");
-    $('#keywordCountUpdate').text("선호 키워드 수정");
-    loadInitialCulturalPropertiesKeywords();
-    currentPage = 1; // 페이지 번호 초기화
-});
+                $(document).on('click', '.culturalPropertiesKeywordBtn', function() {
+                    const isLove = $('#loveOrHate').val() === "L";
+                    $(this).toggleClass(isLove ? 'bigLove' : 'bigHate');
+                    updateSelectedCulturalPropertiesKeywords();
+                });
 
-// 관심없음 키워드 목록 버튼 클릭 이벤트
-$('#hateKeywordList').on('click', function() {
-    $('#loveOrHate').val("H");
-    $('#keywordCountUpdate').text("비선호 키워드 수정");
-    loadInitialCulturalPropertiesKeywords();
-    currentPage = 1; // 페이지 번호 초기화
-});
+                function updateSelectedCulturalPropertiesKeywords() {
+                    const isLove = $('#loveOrHate').val() === "L";
+                    const selectedKeywords = $(`.culturalPropertiesKeywordBtn.${isLove ? 'bigLove' : 'bigHate'}`)
+                        .map(function() { return $(this).text(); }).get().join(' ');
+                    $('#culturalPropertiesKeyword').val(selectedKeywords);
+                }
 
-<!--// 키워드 수정 버튼 클릭 이벤트-->
-<!--$('#keywordCountUpdate').on('click', function() {-->
-<!--    const loveOrHate = $('#loveOrHate').val();-->
-<!--    const selectedKeywords = $('#culturalPropertiesKeyword').val();-->
 
-<!--    $.ajax({-->
-<!--        url: '/cultural-properties/update-keywords',-->
-<!--        method: 'POST',-->
-<!--        data: {-->
-<!--            loveOrHate: loveOrHate,-->
-<!--            keywords: selectedKeywords-->
-<!--        },-->
-<!--        success: function(response) {-->
-<!--            alert(loveOrHate === "L" ? "선호 키워드가 수정되었습니다." : "비선호 키워드가 수정되었습니다.");-->
-<!--            loadInitialCulturalPropertiesKeywords();-->
-<!--        },-->
-<!--        error: function(xhr, status, error) {-->
-<!--            console.error("Error updating keywords:", error);-->
-<!--            alert("키워드 수정 중 오류가 발생했습니다.");-->
-<!--        }-->
-<!--    });-->
-<!--});-->
+                $('#loveKeywordList, #hateKeywordList').on('click', function() {
+                    const isLove = $(this).attr('id') === 'loveKeywordList';
+                    $('#loveOrHate').val(isLove ? "L" : "H");
+                    $('#keywordCountUpdate').text(isLove ? "선호 키워드 수정" : "비선호 키워드 수정");
+                    $('#addCulturalPropertiesLoveKeyword').toggle(isLove);
+                    $('#addCulturalPropertiesHateKeyword').toggle(!isLove);
+                    currentPage = 1;
+                    loadInitialCulturalPropertiesKeywords();
+                });
+
+                $(document).ready(function() {
+                    $('#loveKeywordList').click(); // 초기 로드 시 찜 키워드 목록 표시
+                });
+
+                $(document).on('click', '#addCulturalPropertiesLoveKeyword, #addCulturalPropertiesHateKeyword', function() {
+                    console.log("버튼 클릭됨");
+                    currentPage++;
+                    loadUnselectedCulturalPropertiesKeywords();
+                });
+
+
+
 
 
 

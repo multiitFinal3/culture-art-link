@@ -130,31 +130,34 @@
 
 
 
-    <select id="getLikeKeyword" resultType="KeywordDTO">
-        SELECT user_id, keyword, total_count
-        FROM vw_cultural_properties_total_sum_keyword
-        WHERE user_id = #{userId} AND total_count >= 10
-        ORDER BY total_count DESC
-        LIMIT #{limit}
-    </select>
 
-    <select id="getDislikeKeyword" resultType="KeywordDTO">
-        SELECT user_id, keyword, total_count
-        FROM vw_cultural_properties_total_sum_keyword
-        WHERE user_id = #{userId} AND total_count <![CDATA[ <= -10 ]]>
-        ORDER BY total_count ASC
-        LIMIT #{limit}
-    </select>
 
     <select id="getTotalKeywordCount" resultType="int">
         SELECT COUNT(DISTINCT keyword) FROM vw_cultural_properties_combined_keyword_unique4
     </select>
 
-    <select id="getKeywords" resultType="com.multi.culture_link.admin.culturalProperties.model.dto.KeywordDTO">
-        SELECT user_id, keyword, total_count
+
+    <select id="getLikeKeyword" resultType="KeywordDTO">
+        SELECT keyword, total_count
         FROM vw_cultural_properties_total_sum_keyword
-        WHERE user_id = #{userId} AND total_count <![CDATA[ < 10 ]]>
-        ORDER BY total_count DESC
+        WHERE user_id = #{userId} AND total_count >= 10
+    </select>
+
+    <select id="getDislikeKeyword" resultType="KeywordDTO">
+        SELECT keyword, total_count
+        FROM vw_cultural_properties_total_sum_keyword
+        WHERE user_id = #{userId} AND total_count <![CDATA[ <= -10 ]]>
+    </select>
+
+    <select id="getUnselectedKeywords" resultType="KeywordDTO">
+        SELECT k.keyword_id, k.keyword
+        FROM vw_cultural_properties_combined_keyword_unique4 k
+        WHERE k.keyword NOT IN (
+        SELECT keyword
+        FROM vw_cultural_properties_total_sum_keyword
+        WHERE user_id = #{userId}
+        )
+        ORDER BY RAND()
         LIMIT #{limit} OFFSET #{offset}
     </select>
 

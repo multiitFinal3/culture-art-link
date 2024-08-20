@@ -198,28 +198,23 @@ public class CulturalPropertiesService {
 
 
 
-//    public List<KeywordDTO> getLikedKeyword(int userId, int limit) {
-//        return culturalPropertiesKeywordDAO.getLikedKeyword(userId, limit);
-//    }
-
     public int getTotalKeywordCount() {
         return culturalPropertiesKeywordDAO.getTotalKeywordCount();
     }
 
-    // getLikedKeywords 메소드를 수정합니다.
+
+
     public List<KeywordDTO> getLikeKeyword(int userId) {
-        int totalCount = getTotalKeywordCount();
-        return culturalPropertiesKeywordDAO.getLikeKeyword(userId, totalCount);
+        return culturalPropertiesKeywordDAO.getLikeKeyword(userId);
     }
 
-    public List<KeywordDTO> getDislikeKeyword(int userId, int limit) {
-        return culturalPropertiesKeywordDAO.getDislikeKeyword(userId, limit);
+    public List<KeywordDTO> getDislikeKeyword(int userId) {
+        return culturalPropertiesKeywordDAO.getDislikeKeyword(userId);
     }
 
-
-    public List<KeywordDTO> getKeywords(int userId, int page, int limit) {
+    public List<KeywordDTO> getUnselectedKeywords(int userId, int page, int limit) {
         int offset = (page - 1) * limit;
-        return culturalPropertiesKeywordDAO.getKeywords(userId, offset, limit);
+        return culturalPropertiesKeywordDAO.getUnselectedKeywords(userId, offset, limit);
     }
 
 

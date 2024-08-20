@@ -528,27 +528,23 @@ public class CulturalPropertiesController {
 
 
 
-//	@GetMapping("/like/keywords")
-//	public ResponseEntity<List<KeywordDTO>> getLikeKeywords(@AuthenticationPrincipal VWUserRoleDTO user, @RequestParam(defaultValue = "10") int limit) {
-//		return ResponseEntity.ok(culturalPropertiesService.getLikedKeyword(user.getUserId(), limit));
-//	}
 
 	@GetMapping("/like/keywords")
 	public ResponseEntity<List<KeywordDTO>> getLikedKeywords(@AuthenticationPrincipal VWUserRoleDTO user) {
 		return ResponseEntity.ok(culturalPropertiesService.getLikeKeyword(user.getUserId()));
 	}
 
-	@GetMapping("/dislik/keywords")
-	public ResponseEntity<List<KeywordDTO>> getDislikKeywords(@AuthenticationPrincipal VWUserRoleDTO user, @RequestParam(defaultValue = "10") int limit) {
-		return ResponseEntity.ok(culturalPropertiesService.getDislikeKeyword(user.getUserId(), limit));
+	@GetMapping("/dislike/keywords")
+	public ResponseEntity<List<KeywordDTO>> getDislikedKeywords(@AuthenticationPrincipal VWUserRoleDTO user) {
+		return ResponseEntity.ok(culturalPropertiesService.getDislikeKeyword(user.getUserId()));
 	}
 
 	@GetMapping("/keywords")
-	public ResponseEntity<List<KeywordDTO>> getKeywords(
+	public ResponseEntity<List<KeywordDTO>> getUnselectedKeywords(
 			@AuthenticationPrincipal VWUserRoleDTO user,
 			@RequestParam(defaultValue = "1") int page,
 			@RequestParam(defaultValue = "5") int limit) {
-		return ResponseEntity.ok(culturalPropertiesService.getKeywords(user.getUserId(), page, limit));
+		return ResponseEntity.ok(culturalPropertiesService.getUnselectedKeywords(user.getUserId(), page, limit));
 	}
 
 
