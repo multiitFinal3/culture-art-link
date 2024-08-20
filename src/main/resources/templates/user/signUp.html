@@ -279,7 +279,85 @@
                 })
 
 
-                //#endregion
+
+
+
+
+                /**
+                * 문화재 키워드 조회
+                *
+                */
+                let excludedKeywordIds = []; // 제외할 키워드 ID를 저장할 배열
+                const limit = 5; // 한 번에 가져올 키워드 수
+
+                function fetchKeywords() {
+                    $.ajax({
+                        url: '/admin/cultural-properties-regulate/keywords',
+                        method: 'GET',
+                        data: {
+                            limit: limit,
+                            excludedKeywordIds: excludedKeywordIds
+                        },
+                        dataType: 'json',
+                        success: function(response) {
+                            console.log("Fetched keywords:", response);
+                            if (Array.isArray(response)) {
+                                displayCulturalPropertiesKeywords(response);
+                                // 현재 가져온 키워드를 제외 목록에 추가
+                                excludedKeywordIds = excludedKeywordIds.concat(response.map(keyword => keyword.keyword_id));
+                            } else {
+                                console.error('Received data is not an array:', response);
+                                alert('키워드를 불러오는 데 문제가 발생했습니다.');
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            console.error('Error status:', status);
+                            console.error('Error thrown:', error);
+                            console.error('Response text:', xhr.responseText);
+                            alert('키워드를 불러오는 데 실패했습니다.');
+                        }
+                    });
+                }
+
+
+                function displayCulturalPropertiesKeywords(keywords) {
+                    const keywordZone = $('#culturalPropertiesKeywordBtns');
+                    keywords.forEach(keyword => {
+                        const btn = $('<button>')
+                            .addClass('culturalPropertiesKeywordBtn')
+                            .text(keyword.keyword)
+                            .attr('data-id', keyword.keyword_id)
+                            .on('click', function(e) {
+                                e.preventDefault();
+                                selectCulturalPropertiesKeyword($(this));
+                            });
+                        keywordZone.append(btn);
+                    });
+                }
+
+                function selectCulturalPropertiesKeyword(btn) {
+                    btn.toggleClass('hasLove');
+                    updateSelectedCulturalPropertiesKeywords();
+                }
+
+                function updateSelectedCulturalPropertiesKeywords() {
+                    const selectedKeywords = $('.culturalPropertiesKeywordBtn.hasLove').map(function() {
+                        return $(this).text();
+                    }).get().join(',');
+                    $('#culturalPropertiesSelectKeyword').val(selectedKeywords);
+                }
+
+
+                // 추가 키워드 버튼 클릭 이벤트
+                $('#addCulturalPropertiesKeyword').on('click', function(event) {
+                    event.preventDefault();
+                    fetchKeywords();
+                });
+
+                // 초기 로드 시 키워드 가져오기
+                fetchKeywords();
+
+
 
 
 
@@ -365,6 +443,10 @@
 
                     var exhibitionSelectKeyword = $('#exhibitionSelectKeyword').val();
                     formData.append('exhibitionSelectKeyword',exhibitionSelectKeyword);
+
+                    var culturalPropertiesSelectKeyword = $('#culturalPropertiesSelectKeyword').val();
+                    formData.append('culturalPropertiesSelectKeyword', culturalPropertiesSelectKeyword);
+
 
                     console.log(regionId);
                     console.log(email);
@@ -505,7 +587,6 @@
         )
 
 
-
     </script>
 </head>
 <body>
@@ -522,70 +603,93 @@
 
                 <img class="profileImg round" src="/img/festival/noPhoto.png" alt="이미지가 없습니다">
 
-            </div><br>
+            </div>
 
-            <form id="basicForm" method="post" style="font-size: 28px;" encType="multipart/form-data">
-                <label for="uploadFile"><img src="https://img.icons8.com/?size=100&id=67360&format=png&color=000000" alt="User Icon"></label>
-                <input name="uploadFile" class="rounded" id="uploadFile" type="file" accept="image/*"><br>
+            <form id="basicForm" method="post" style="font-size: 20px;color: #615757;" encType="multipart/form-data">
 
-                <label for="email"><img src="https://img.icons8.com/?size=100&id=8uaNSRthy4ju&format=png&color=000000" alt="Email Icon"></label>
-                <input name="email" id="email" class="rounded" placeholder="dkswldus@gmail.com" required style="background-color: lightblue" pattern="^[a-zA-Z0-9_]{5,}@[a-zA-Z]{3,}\.com$"><button id="emailValidate" type="button" class="btn btn-outline-success">중복확인</button>
-                <span id="emailError" class="error"></span><br>
+                <div>
+                    <label for="uploadFile">사진</label>
+                    <input name="uploadFile" class="rounded" id="uploadFile" type="file" accept="image/*"><br>
 
-                <label for="password"><img src="https://img.icons8.com/?size=100&id=B9ytemSyoM31&format=png&color=000000" alt="Password Icon"></label>
-                <input name="password" id="password" class="rounded" type="password" placeholder="*****" required style="background-color: lightblue" pattern="^[a-zA-Z0-9_]{5,}$">
-                <span id="passwordError" class="error"></span><br>
+                    <label for="email">이메일</label>
+                    <input name="email" id="email" class="rounded" placeholder="dkswldus@gmail.com" required
+                           style="background-color: lightblue" pattern="^[a-zA-Z0-9_]{5,}@[a-zA-Z]{3,}\.com$">
+                    <button id="emailValidate" type="button" class="btn btn-outline-success">중복확인</button>
+                    <span id="emailError" class="error"></span><br>
 
-                <label for="userName"><img src="https://img.icons8.com/?size=100&id=ZuNYjWxqVWsa&format=png&color=000000" alt="userName Icon"></label>
-                <input name="userName" id="userName" class="rounded" placeholder="안지연" style="background-color: lightblue" required pattern="^[a-zA-Z가-힣]{3,}$">
-                <span id="nameError" class="error"></span><br>
+                    <label for="password">비밀번호</label>
+                    <input name="password" id="password" class="rounded" type="password" placeholder="*****" required
+                           style="background-color: lightblue" pattern="^[a-zA-Z0-9_]{5,}$">
+                    <span id="passwordError" class="error"></span><br>
 
-                <label for="tel"><img src="https://img.icons8.com/?size=100&id=wqTsYydyXBbo&format=png&color=000000" alt="tel Icon"></label>
-                <input name="tel" id="tel" class="rounded" placeholder="010-0000-1234" type="tel" pattern="[0-9]{3}-[0-9]{4}-[0-9]{4}"><br>
+                    <label for="userName">이름</label>
+                    <input name="userName" id="userName" class="rounded" placeholder="안지연"
+                           style="background-color: lightblue" required pattern="^[a-zA-Z가-힣]{3,}$">
+                    <span id="nameError" class="error"></span><br>
 
-                <label for="userAge"><img src="https://img.icons8.com/?size=100&id=7zkG0i0pLOGd&format=png&color=000000" alt="userAge Icon"></label>
-                <input name="userAge" id="userAge" class="rounded" placeholder="12" type="number" min="0" max="100" value="12"><br>
+                    <label for="tel">전화번호</label>
+                    <input name="tel" id="tel" class="rounded" placeholder="010-0000-1234" type="tel"
+                           pattern="[0-9]{3}-[0-9]{4}-[0-9]{4}"><br>
 
-                <label for="gender"><img src="https://img.icons8.com/?size=100&id=33337Z2WxW0x&format=png&color=000000" alt="gender Icon"></label>
-                <select name="gender" id="gender" class="rounded">
-                    <option value="남">남</option>
-                    <option value="여">여</option>
-                </select><br>
+                    <label for="userAge">나이</label>
+                    <input name="userAge" id="userAge" class="rounded" placeholder="12" type="number" min="0" max="100"
+                           value="12"><br>
+
+                    <label for="gender">성별</label>
+                    <select name="gender" id="gender" class="rounded">
+                        <option value="남">남</option>
+                        <option value="여">여</option>
+                    </select><br>
+
+                    <label for="regionId">지역</label>
+                    <select name="regionId" id="regionId" class="rounded"></select><br><br>
 
 
-                <label for="regionId"><img src="https://img.icons8.com/?size=100&id=43632&format=png&color=000000" alt="region Icon"></label>
-                <select name="regionId" id="regionId" class="rounded"></select><br><br>
+                    카테고리별 키워드
+                    <div id="festivalKeywordZone">
 
+                        <input type="hidden" id="festivalSelectKeyword" name="festivalSelectKeyword" value="">
 
-                카테고리별 키워드
-                <div id="festivalKeywordZone">
+                        <div id="festivalKeywordBtns">
 
-                    <input type="hidden" id="festivalSelectKeyword" name="festivalSelectKeyword" value="">
+                        </div>
 
-                    <div id="festivalKeywordBtns">
+                        <button id="addFestivalKeyword" class="btn btn-outline-success" value="1">축제 키워드 추가</button>
+
 
                     </div>
 
-                    <button id="addFestivalKeyword" class="btn btn-outline-success" value="1">축제 키워드 추가</button>
+                    <div id="exhibitionKeywordZone">
 
+                        <input type="hidden" id="exhibitionSelectKeyword" name="exhibitionSelectKeyword" value="">
 
-                </div>
+                        <div id="exhibitionKeywordBtns">
 
-                <div id="exhibitionKeywordZone">
+                        </div>
 
-                    <input type="hidden" id="exhibitionSelectKeyword" name="exhibitionSelectKeyword" value="">
+                        <button id="addExhibitionKeyword" class="btn btn-outline-success" value="0">전시 키워드 추가</button>
 
-                    <div id="exhibitionKeywordBtns">
 
                     </div>
 
-                    <button id="addExhibitionKeyword" class="btn btn-outline-success" value="0">전시 키워드 추가</button>
 
 
+                <div id="culturalPropertiesKeywordZone">
+                    <input type="hidden" id="culturalPropertiesSelectKeyword" name="culturalPropertiesSelectKeyword" value="">
+                    <div id="culturalPropertiesCategoryBtns"></div>
+                    <div id="culturalPropertiesKeywordBtns">
+                    </div>
+
+                    <button id="addCulturalPropertiesKeyword" class="btn btn-outline-success" value="1">문화재 키워드 추가</button>
                 </div>
 
 
-                <button type="submit" class="btn btn-outline-success">제출</button>
+                <div>
+
+                    <button type="submit" class="btn btn-outline-success" style="color: white;background-color: green;width: 100%;margin-top: 50px;">제출</button>
+
+                </div>
+
 
             </form>
 

@@ -1,8 +1,11 @@
 package com.multi.culture_link.users.controller;
 
 
+import com.multi.culture_link.admin.culturalProperties.model.dto.KeywordDTO;
+import com.multi.culture_link.admin.culturalProperties.service.AdminCulturalPropertiesService;
 import com.multi.culture_link.common.region.model.dto.RegionDTO;
 import com.multi.culture_link.common.region.service.RegionService;
+import com.multi.culture_link.culturalProperties.model.dto.CulturalPropertiesDTO;
 import com.multi.culture_link.exhibition.service.ExhibitionService;
 import com.multi.culture_link.festival.model.dto.UserFestivalLoveHateMapDTO;
 import com.multi.culture_link.festival.service.FestivalService;
@@ -35,6 +38,9 @@ public class UserController {
 	private final RegionService regionService;
 	private final BCryptPasswordEncoder bCryptPasswordEncoder;
 	private final FileController fileController;
+	private final AdminCulturalPropertiesService adminCulturalPropertiesService;
+	
+	private ArrayList<CulturalPropertiesDTO> list;
 	
 	@Value("${cloud.aws.s3.endpoint}")
 	private String endPoint;
@@ -43,11 +49,11 @@ public class UserController {
 	private String bucket;
 	
 	public UserController(UserService userService,
-						  UserMapper userMapper,
-						  FestivalService festivalService, RegionService regionService,
-						  BCryptPasswordEncoder bCryptPasswordEncoder,
-						  FileController fileController,
-						  ExhibitionService exhibitionService) {
+                          UserMapper userMapper,
+                          FestivalService festivalService, RegionService regionService,
+                          BCryptPasswordEncoder bCryptPasswordEncoder,
+                          FileController fileController,
+                          ExhibitionService exhibitionService, AdminCulturalPropertiesService adminCulturalPropertiesService) {
 		this.userService = userService;
 		this.userMapper = userMapper;
 		this.festivalService = festivalService;
@@ -55,7 +61,8 @@ public class UserController {
 		this.bCryptPasswordEncoder = bCryptPasswordEncoder;
 		this.fileController = fileController;
 		this.exhibitionService = exhibitionService;
-	}
+        this.adminCulturalPropertiesService = adminCulturalPropertiesService;
+    }
 	
 	/**
 	 * 회원가입 페이지로 이동
@@ -64,6 +71,8 @@ public class UserController {
 	 */
 	@GetMapping("/signUp")
 	public String signUp() {
+		
+		
 		
 		return "/user/signUp";
 	}
@@ -95,7 +104,8 @@ public class UserController {
 			@RequestParam(name = "gender") String gender,
 			@RequestParam(name = "regionId") int regionId,
 			@RequestParam(name = "festivalSelectKeyword", required = false) String festivalSelectKeyword,
-			@RequestParam(name = "exhibitionSelectKeyword", required = false) String exhibitionSelectKeyword
+			@RequestParam(name = "exhibitionSelectKeyword", required = false) String exhibitionSelectKeyword,
+			@RequestParam(name = "culturalPropertiesSelectKeyword", required = false) String culturalPropertiesSelectKeyword
 			) {
 		
 		// 회원 users/ admin 넣는 것도 추가할 것 = > 매핑 테이블에도 조인으로 추가하기
@@ -176,7 +186,7 @@ public class UserController {
 		}
 		
 		
-		if (festivalSelectKeyword != null) {
+		if (festivalSelectKeyword != null && !festivalSelectKeyword.trim().equals("")) {
 			
 			System.out.println("festivalSelectKeyword : " + festivalSelectKeyword);
 			String[] list = festivalSelectKeyword.trim().split(" ");
@@ -194,9 +204,7 @@ public class UserController {
 					throw new RuntimeException(e);
 				}
 				
-				
 			}
-			
 			
 		}
 
@@ -207,7 +215,10 @@ public class UserController {
 			List<String> list = Arrays.asList(array);
 			exhibitionService.saveKeyword(list, userId, 15);
 		}
-		
+
+		if (culturalPropertiesSelectKeyword != null && !culturalPropertiesSelectKeyword.trim().isEmpty()) {
+			adminCulturalPropertiesService.saveUserSelectedKeywords(culturalPropertiesSelectKeyword, userId, 15);
+		}
 		
 		System.out.println("회원가입 성공");
 		

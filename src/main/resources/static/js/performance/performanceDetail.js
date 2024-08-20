@@ -1,3 +1,4 @@
+//performanceDetail.js
 document.addEventListener("DOMContentLoaded", function() {
     loadReviews(); // 페이지 로드 시 리뷰 로드
     setupEventListeners(); // 이벤트 리스너 설정

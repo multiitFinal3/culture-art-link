@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const genreItems = document.querySelectorAll('.genre-item');
     const genreItems2 = document.querySelectorAll('.genre-item2');
     const locationItems = document.querySelectorAll('.location-item');
-    const currentGenre = new URLSearchParams(window.location.search).get('genre') || '홈';
+    const currentGenre = new URLSearchParams(window.location.search).get('genre') || '추천';
 
 
     const selectedGenreInput = document.getElementById('selectedGenre');
@@ -69,6 +69,9 @@ document.addEventListener('DOMContentLoaded', function() {
             window.location.href = `/performance/performanceDetail?performanceCode=${encodeURIComponent(performanceCode)}&source=${encodeURIComponent(source)}`;
         });
     });
+
+
+
 
     // 장르별 랭킹에서 공연명 클릭 시 상세페이지로 이동
     const ranking5 = document.querySelectorAll('.card');
@@ -199,12 +202,6 @@ document.addEventListener('DOMContentLoaded', function() {
                  });
              });
          }
-
-
-
-
-
-
 
 
 });

@@ -66,7 +66,7 @@
 .all-card img {
     width: 249px;
     height: 332px;
-    object-fit: cover;
+    /*object-fit: cover;*/
     object-position: center;
 }
 
@@ -105,21 +105,47 @@
 
 
 
+
+
+
+/* 완전 바꿈*/
 .like-dislike-container {
-            position: absolute; /* 카드 내부에서 절대 위치 지정 */
-                bottom: 10px; /* 카드의 아래쪽에서 10px 위 */
-                right: 10px; /* 카드의 오른쪽에서 10px 왼쪽 */
+
+
+
+
+
+            justify-content: center;
+            margin-top: 155px;
                 display: flex;
-                gap: 10px; /* 아이콘 사이 간격 */
-        }
+                align-items: start;
+                font-weight: 700;
+                color: white;
+                text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+                position: relative;
+                top: -200px;
+                right: -60px;
+}
 
 .like-dislike-icon {
-            width: 30px !important;  /* 이미지 너비 */
-            height: 30px !important; /* 이미지 높이 */
+
             cursor: pointer; /* 클릭할 수 있는 커서 */
             pointer-events: auto; /* 클릭 이벤트를 허용 */
             background-color: white;
             background-size: 40px 40px;
-            border: 2px solid black;
-            border-radius: 20%;
+            border: none;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            padding: 5px 10px; /* 내부 여백 추가 */
+
+            margin: 0 5px;
+
+            width: 45px !important;
+            height: 35px !important;
+                opacity: 0.8;
+
+
 }
+
+

@@ -1,11 +1,13 @@
 package com.multi.culture_link.exhibition.controller;
 
+import com.multi.culture_link.users.model.dto.VWUserRoleDTO;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.ui.Model;
 
 @Controller
 @RequiredArgsConstructor
@@ -16,10 +18,13 @@ public class ExhibitionViewController {
     private String naverClientId;
 
     @GetMapping
-    public String searchExhibition() {
-
+    public String searchExhibition(
+            @AuthenticationPrincipal VWUserRoleDTO currentUser,
+            Model model
+    ) {
+        System.out.println("currentUser.getUsername() : " + currentUser.getUsername());
+        model.addAttribute("userName", currentUser.getUsername());
         return "/exhibition/exhibition";
-
     }
 
     @GetMapping("/detail/{exhibitionId}")

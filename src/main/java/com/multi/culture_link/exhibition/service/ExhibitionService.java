@@ -10,16 +10,16 @@ import com.multi.culture_link.culturalProperties.model.dto.Video;
 import com.multi.culture_link.culturalProperties.model.dto.YoutubeConfig;
 import com.multi.culture_link.exhibition.model.dao.ExhibitionDao;
 import com.multi.culture_link.exhibition.model.dto.ExhibitionDto;
+import com.multi.culture_link.users.model.dto.VWUserRoleDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import okhttp3.OkHttpClient;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import okhttp3.OkHttpClient;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
-
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -43,11 +43,11 @@ public class ExhibitionService {
         return exhibitionDao.searchExhibition(searchParams);
     }
 
-    public ExhibitionDto getExhibitionById(int userId, int exhibitionId){
+    public ExhibitionDto getExhibitionById(int userId, int exhibitionId) {
         return exhibitionDao.getExhibitionById(userId, exhibitionId);
     }
 
-//    @Transactional
+    //    @Transactional
 //    public void setInterested(int userId, int exhibitionId, String state){
 //        // 현재 상태 확인
 //        String currentState = exhibitionDao.getInterestState(userId, exhibitionId);
@@ -82,7 +82,7 @@ public class ExhibitionService {
 //    }
 //
     @Transactional
-    public void setInterested(int userId, int exhibitionId, String newState){
+    public void setInterested(int userId, int exhibitionId, String newState) {
         // 현재 상태 확인
         String currentState = exhibitionDao.getInterestState(userId, exhibitionId);
 
@@ -110,8 +110,8 @@ public class ExhibitionService {
         saveKeyword(keywords, userId, countChange);
     }
 
-    public void saveKeyword(List<String> keywords,int userId, int countChange) {
-        System.out.println("keywords : "+ keywords);
+    public void saveKeyword(List<String> keywords, int userId, int countChange) {
+        System.out.println("keywords : " + keywords);
 
         for (String keyword : keywords) {
             exhibitionKeywordDao.updateUserKeyword(userId, keyword, countChange);
@@ -135,7 +135,7 @@ public class ExhibitionService {
 //    }
 
 
-    public List<ExhibitionDto> getExhibition(int userId){
+    public List<ExhibitionDto> getExhibition(int userId) {
         return exhibitionDao.getExhibition(userId);
     }
 
@@ -200,6 +200,25 @@ public class ExhibitionService {
         return result;
     }
 
+
+    @Transactional
+    public PageResponseDto<ExhibitionKeywordPageDto> getAllKeywordByUser(String cursor, int size, VWUserRoleDTO currentUser, Boolean isUserSelected) {
+
+        PageResponseDto<ExhibitionKeywordPageDto> result = new PageResponseDto<ExhibitionKeywordPageDto>();
+        List<ExhibitionKeywordPageDto> exhibitionAllKeyword = exhibitionKeywordDao.getExhibitionAllKeywordByUser(cursor, size, currentUser.getUserId(), isUserSelected);
+        System.out.println("exhibitionAllKeyword : " + exhibitionAllKeyword);
+        String nextCursor = "";
+        ExhibitionKeywordPageDto lastItem = exhibitionAllKeyword.get(exhibitionAllKeyword.size() - 1);
+        nextCursor = lastItem.getNextCursor();
+
+        result.setData(exhibitionAllKeyword);
+        result.setNextCursor(nextCursor);
+
+
+        return result;
+    }
+
+
     public List<ExhibitionApiDto> getLikeExhibition(int userId) {
         return exhibitionDao.getLikeExhibition(userId);
     }
@@ -209,5 +228,39 @@ public class ExhibitionService {
     }
 
 
+    public List<ExhibitionDto> getUserRecommend(int userId) {
+        // 1. 사용자의 관심 키워드 가져오기 (count >= 10)
+        List<String> userKeyword = exhibitionKeywordDao.findKeywordsByCount(userId);
+        if (userKeyword.isEmpty()) {
+            return new ArrayList<>();
+        }
+        System.out.println("userKeyword: " + userKeyword);
 
+        // 2. 해당 키워드를 가진 전시회 ID 가져오기
+        List<Integer> exhibitionId = exhibitionKeywordDao.findExhibitionIdByKeywords(userKeyword);
+        System.out.println("exhibitionId: " + exhibitionId);
+
+        // 3. 전시회 정보 가져오기
+        List<ExhibitionDto> exhibitions = exhibitionKeywordDao.findAllById(exhibitionId);
+        System.out.println("exhibitions: " + exhibitions);
+
+        return exhibitions;
+
+    }
+
+    public void toggleKeyword(int userId, List<Integer> keywordId, boolean isInterested) {
+        for (Integer keyword : keywordId) {
+            System.out.println("keywordId: " + keyword);
+            int count = exhibitionKeywordDao.getKeywordCount(userId, keyword);
+
+            if (count >= 10 || count < 0) {
+                exhibitionKeywordDao.toggleKeyword(userId, keyword, 0);
+            } else if (isInterested) {  // 찜에서 눌렀을 때
+                exhibitionKeywordDao.toggleKeyword(userId, keyword, 10);
+            } else if (!isInterested) { // 관심없음에서 눌렀을 때
+                exhibitionKeywordDao.toggleKeyword(userId, keyword, -10);
+            }
+
+        }
+    }
 }

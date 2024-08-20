@@ -7,9 +7,10 @@
 
     <insert id="saveExhibitionKeyword">
         INSERT INTO exhibition_keyword (exhibition_id, keyword, frequency)
-        VALUES (#{exhibitionId}, #{keyword}, #{frequency})
-            ON DUPLICATE KEY UPDATE
-                                 frequency = VALUES(frequency)
+        VALUES (#{exhibitionId}, #{keyword}, #{frequency}) ON DUPLICATE KEY
+        UPDATE
+            frequency =
+        VALUES (frequency)
     </insert>
 
     <select id="getExhibitionKeywordById" resultType="string">
@@ -20,54 +21,126 @@
 
     <insert id="updateUserKeyword">
         INSERT INTO exhibition_interested_keyword (user_id, keyword, count)
-        VALUES (#{userId}, #{keyword}, #{countChange})
-            ON DUPLICATE KEY UPDATE
-                                 count = count + VALUES(count)
+        VALUES (#{userId}, #{keyword}, #{countChange}) ON DUPLICATE KEY
+        UPDATE
+            count = count +
+        VALUES (count)
     </insert>
 
     <insert id="saveExhibitionCommentKeyword">
         INSERT INTO exhibition_comment_keyword (exhibition_id, keyword, frequency)
-        VALUES (#{exhibitionId}, #{keyword}, #{frequency})
-            ON DUPLICATE KEY UPDATE
-                                 frequency = VALUES(frequency)
+        VALUES (#{exhibitionId}, #{keyword}, #{frequency}) ON DUPLICATE KEY
+        UPDATE
+            frequency =
+        VALUES (frequency)
     </insert>
 
-    <select id="getExhibitionKeyword" resultType="com.multi.culture_link.admin.exhibition.model.dto.api.ExhibitionKeywordDto">
-        SELECT * FROM exhibition_keyword
+    <select id="getExhibitionKeyword"
+            resultType="com.multi.culture_link.admin.exhibition.model.dto.api.ExhibitionKeywordDto">
+        SELECT *
+        FROM exhibition_keyword
         WHERE exhibition_id = #{exhibitionId}
         ORDER BY frequency DESC
     </select>
 
-    <select id="getExhibitionAllKeyword" resultType="com.multi.culture_link.admin.exhibition.model.dto.api.ExhibitionKeywordPageDto">
+    <select id="getExhibitionAllKeyword"
+            resultType="com.multi.culture_link.admin.exhibition.model.dto.api.ExhibitionKeywordPageDto">
         SELECT
-            keyword,
-            SUM(frequency) AS total_frequency,
-            CONCAT(
-                LPAD(CAST(SUM(frequency) AS CHAR), 10, '0'),
-                LPAD(CAST(MIN(id) AS CHAR), 10, '0')
-            ) AS `nextCursor`
+        keyword,
+        SUM(frequency) AS total_frequency,
+        CONCAT(
+        LPAD(CAST(SUM(frequency) AS CHAR), 10, '0'),
+        LPAD(CAST(MIN(id) AS CHAR), 10, '0')
+        ) AS `nextCursor`
         FROM
-            exhibition_keyword
+        exhibition_keyword
         GROUP BY
-            keyword
+        keyword
         <if test="nextCursor != 0">
             HAVING `nextCursor` &lt; #{nextCursor}
         </if>
         ORDER BY
-            total_frequency DESC,
-            MIN(id) DESC
+        total_frequency DESC,
+        MIN(id) DESC
         LIMIT #{size};
     </select>
 
-    <select id="getTotalCountOfExhibitionKeyword" resultType="int">
-        SELECT COUNT(*) FROM exhibition_keyword
+
+    <select id="getExhibitionAllKeywordByUser"
+            resultType="com.multi.culture_link.admin.exhibition.model.dto.api.ExhibitionKeywordPageDto"
+            parameterType="map">
+        SELECT
+        id,
+        keyword,
+        count AS frequency,
+        CONCAT(
+        LPAD(CAST(count AS CHAR), 10, '0'),
+        LPAD(CAST(id AS CHAR), 10, '0')
+        ) AS `nextCursor`
+        FROM
+        exhibition_interested_keyword
+        WHERE
+        1 =1
+        <choose>
+            <when test="isUserSelected == true">
+                AND user_id = #{userId}
+                AND count >= 10
+            </when>
+        </choose>
+        <if test="nextCursor != null and nextCursor != ''">
+            HAVING CAST(`nextCursor` AS UNSIGNED) &lt; CAST(#{nextCursor} AS UNSIGNED)
+        </if>
+        ORDER BY
+        frequency DESC,
+        id DESC
+        LIMIT #{size}
     </select>
 
-    <select id="getExhibitionCommentKeyword" resultType="com.multi.culture_link.admin.exhibition.model.dto.api.ExhibitionKeywordDto">
-        SELECT * FROM exhibition_comment_keyword
+    <select id="getTotalCountOfExhibitionKeyword" resultType="int">
+        SELECT COUNT(*)
+        FROM exhibition_keyword
+    </select>
+
+    <select id="getExhibitionCommentKeyword"
+            resultType="com.multi.culture_link.admin.exhibition.model.dto.api.ExhibitionKeywordDto">
+        SELECT *
+        FROM exhibition_comment_keyword
         WHERE exhibition_id = #{exhibitionId}
         ORDER BY frequency DESC
     </select>
 
+
+    <select id="findKeywordsByCount" resultType="string">
+        SELECT keyword
+        FROM exhibition_interested_keyword
+        WHERE user_id = #{userId}
+          AND count >= 10
+    </select>
+
+    <select id="findExhibitionIdByKeywords" resultType="int">
+        SELECT DISTINCT exhibition_id
+        FROM exhibition_keyword
+        WHERE keyword IN
+        <foreach item="item" index="index" collection="keyword" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
+    <select id="findAllById" resultType="com.multi.culture_link.exhibition.model.dto.ExhibitionDto">
+        SELECT *
+        FROM exhibition
+        WHERE id IN
+        <foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
+
+    <update id="updateAnalyze" parameterType="com.multi.culture_link.exhibition.model.dto.ExhibitionInterestDto">
+        UPDATE exhibition_interested_keyword
+        SET count = #{count}
+        WHERE user_id = #{userId}
+          AND id = #{id}
+    </update>
 
 </mapper>
