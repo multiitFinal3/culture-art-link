@@ -187,8 +187,10 @@ public class UserController {
 		if (festivalSelectKeyword != null && !festivalSelectKeyword.trim().equals("")) {
 			
 			System.out.println("festivalSelectKeyword : " + festivalSelectKeyword);
-			String[] list = festivalSelectKeyword.trim().split(" ");
+			String[] list = festivalSelectKeyword.trim().split(",");
 			for (String s : list) {
+				
+				s = s.replace(",","");
 				
 				try {
 					
