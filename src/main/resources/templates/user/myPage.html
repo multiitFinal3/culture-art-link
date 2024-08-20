@@ -17,6 +17,7 @@
         $(document).ready(
             function () {
                 let exhibitionKeywordList = []
+                let exhibitionKeywordLastIdx = 0;
 
                 var user = [[${user}]];
 
@@ -1794,16 +1795,15 @@
                  *
                  */
                 async function findExhibitionLoveKeyword() {
-
-                    var currentCursor = $("#addExhibitionLoveKeyword").val();
+                    const type = $('#loveOrHate').val();
+                    console.log('type : ', type)
                     // 현재 사용자의 관심도 10 이상인 키워드 가져오기
-                    // true 면 내꺼 중 관심도 10이상인거, false 면 모든 데이터
+                    // true 면 내꺼 중 관심도 10이상인거, false 면 -10인 데이터
                     let interestedList = (await axios({
                         url: '/exhibition/exhibition/keyword/user',
                         method: 'GET',
                         params: {
-                            isUserSelected: true,
-                            size: 9999
+                            isInterested: type === 'L',
                         },
                         headers: {
                             'Content-Type': 'application/json'
@@ -1813,6 +1813,9 @@
                     let allInterestedList = (await axios({
                         url: '/exhibition/exhibition/keyword/all',
                         method: 'GET',
+                        params: {
+                            orderBy: type === 'L' ? "DESC" : "ASC",
+                        },
                         headers: {
                             'Content-Type': 'application/json'
                         }
@@ -1829,7 +1832,7 @@
                         isInterested: false
                     }))
 
-                    interestedList = interestedList.data.map(v => ({
+                    interestedList = interestedList.map(v => ({
                         ...v,
                         isInterested: true
                     }))
@@ -1854,13 +1857,14 @@
                     const initLen = interestedList.length + 5
 
                     // 데이터 순서 정렬, true 먼저 나오고 이후 frequency 순서
-                    dataList.sort((a, b) => b.isInterested - a.isInterested || b.frequency - a.frequency)
+                    dataList.sort((a, b) =>
+                        b.isInterested - a.isInterested || (type === 'L' ? b.frequency - a.frequency : a.frequency - b.frequency)
+                    )
 
                     console.log('Merged Array : ', dataList);
 
                     exhibitionKeywordList = dataList
-
-                    $("#addExhibitionLoveKeyword").val(initLen);
+                    exhibitionKeywordLastIdx = initLen
 
                     // HTML에 보여주기
                     for (let i = 0; i < initLen; i++) {
@@ -1888,9 +1892,18 @@
                  *
                  */
                 $(document).on('click', '#addExhibitionLoveKeyword', function () {
+                    exhibitionKeywordClicked();
+                })
+
+                $(document).on('click', '#addExhibitionHateKeyword', function () {
+                    exhibitionKeywordClicked();
+                })
+
+
+                function exhibitionKeywordClicked() {
                     var concat = '';
 
-                    const initLen = $("#addExhibitionLoveKeyword").val();
+                    const initLen = exhibitionKeywordLastIdx;
 
                     console.log('initLen : ', initLen)
                     console.log('initLen+5 : ', initLen + 5)
@@ -1905,9 +1918,10 @@
                         }
                         $('#exhibitionKeywordList').append(htmlContent);
                     }
-                    $("#addExhibitionLoveKeyword").val(Number(initLen) + 5);
-                    $('#exhibitionKeyword').val($('#exhibitionKeyword').val() + concat.trim() + " ");
-                })
+                    exhibitionKeywordLastIdx = Number(initLen) + 5;
+                    const text = $('#exhibitionKeyword').val();
+                    $('#exhibitionKeyword').val(text + concat.trim() + " ");
+                }
 
 
                 /**
@@ -1925,7 +1939,7 @@
 
                     $('#exhibitionKeyword').val(concat.trim());
 
-                    console.log('exhibitionKeyword : ', exhibitionKeyword.val())
+                    console.log('exhibitionKeyword : ', $('#exhibitionKeyword').val())
                 })
 
 
@@ -2211,12 +2225,14 @@
                     $('#festivalZone').html(festivalHtml);
                     $('#culturalPropertiesZone').html(culturalPropertiesHtml);
 
-                    findFestivalBigHateKeyword();
+
                     $('#festivalKeyword').val("");
                     $('#loveOrHate').val("H");
                     $('#keywordCountUpdate').text("비선호 키워드 수정");
 
-
+                    // 위치 변경
+                    findFestivalBigHateKeyword();
+                    findExhibitionLoveKeyword();
                 });
 
 

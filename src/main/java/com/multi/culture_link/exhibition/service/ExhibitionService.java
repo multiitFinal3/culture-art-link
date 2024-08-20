@@ -21,10 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -202,31 +199,31 @@ public class ExhibitionService {
 
 
     @Transactional
-    public PageResponseDto<ExhibitionKeywordPageDto> getAllKeywordByUser(String cursor, int size, VWUserRoleDTO currentUser, Boolean isUserSelected) {
-
-        PageResponseDto<ExhibitionKeywordPageDto> result = new PageResponseDto<ExhibitionKeywordPageDto>();
-        List<ExhibitionKeywordPageDto> exhibitionAllKeyword = exhibitionKeywordDao.getExhibitionAllKeywordByUser(cursor, size, currentUser.getUserId(), isUserSelected);
-        System.out.println("exhibitionAllKeyword : " + exhibitionAllKeyword);
-        String nextCursor = "";
-        ExhibitionKeywordPageDto lastItem = exhibitionAllKeyword.get(exhibitionAllKeyword.size() - 1);
-        nextCursor = lastItem.getNextCursor();
-
-        result.setData(exhibitionAllKeyword);
-        result.setNextCursor(nextCursor);
-
-
-        return result;
+    public List<ExhibitionKeywordDto> getAllKeywordByUser(Boolean isInterested, VWUserRoleDTO currentUser) {
+        List<ExhibitionKeywordDto> exhibitionAllKeyword = exhibitionKeywordDao.getExhibitionAllKeywordByUser(isInterested, currentUser.getUserId());
+        System.out.println("isInterested : " + isInterested);
+        return exhibitionAllKeyword;
     }
 
 
     @Transactional
-    public List<ExhibitionKeywordDto> getAllKeywordByUserAll() {
+    public List<ExhibitionKeywordDto> getAllKeywordByUserAll(String orderBy) {
+        List<ExhibitionKeywordDto> exhibitionInterestedKeyword = exhibitionKeywordDao.getExhibitionInterestedKeyword(orderBy);
+        List<ExhibitionKeywordDto> exhibitionKeyword = exhibitionKeywordDao.getExhibitionKeywordAll(orderBy);
 
-        List<ExhibitionKeywordDto> exhibitionInterestedKeyword = exhibitionKeywordDao.getExhibitionInterestedKeyword("ASC");
-        List<ExhibitionKeywordDto> exhibitionKeyword = exhibitionKeywordDao.getExhibitionKeywordAll("ASC");
+        Set<String> uniqueKeywords = new HashSet<>();
+
+        for (ExhibitionKeywordDto dto : exhibitionInterestedKeyword) {
+            uniqueKeywords.add(dto.getKeyword()); // 키워드가 무엇인지에 따라 변경
+        }
+
         List<ExhibitionKeywordDto> combinedList = new ArrayList<>(exhibitionInterestedKeyword);
-        combinedList.addAll(exhibitionKeyword);
-        System.out.println("exhibitionAllKeyword : " + combinedList);
+
+        for (ExhibitionKeywordDto dto : exhibitionKeyword) {
+            if (!uniqueKeywords.contains(dto.getKeyword())) {
+                combinedList.add(dto);
+            }
+        }
 
         return combinedList;
     }
@@ -271,6 +268,32 @@ public class ExhibitionService {
                 exhibitionKeywordDao.toggleKeyword(userId, keyword, 10);
             } else if (!isInterested) { // 관심없음에서 눌렀을 때
                 exhibitionKeywordDao.toggleKeyword(userId, keyword, -10);
+            }
+
+        }
+    }
+
+
+    public void saveKeywordByUser(int userId, String exhibitionKeyword, String type) {
+        String[] keywords = exhibitionKeyword.trim().split(" ");
+        System.out.println("type: " + type);
+
+        for (String s : keywords) {
+            System.out.println("keyword: " + s);
+            ExhibitionKeywordDto dto = exhibitionKeywordDao.getExhibitionInterestedKeywordByKeyword(s, userId);
+
+            if (dto == null) {
+                exhibitionKeywordDao.updateUserKeyword(userId, s, (type.equals("L") ? 10 : -10));
+            }
+
+            if (type.equals("L")) {
+                if (dto.getFrequency() < 10) {
+                    exhibitionKeywordDao.updateUserKeyword(userId, s, 10 - dto.getFrequency());
+                }
+            } else {
+                if (dto.getFrequency() > -10) {
+                    exhibitionKeywordDao.updateUserKeyword(userId, s, -10 - dto.getFrequency());
+                }
             }
 
         }

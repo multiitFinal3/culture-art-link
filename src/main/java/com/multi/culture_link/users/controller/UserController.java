@@ -422,11 +422,22 @@ public class UserController {
      * @return
      */
     @PostMapping("/insertUserBigLoveHateKeyword")
-    public String insertUserBigLoveHateKeyword(@AuthenticationPrincipal VWUserRoleDTO user, @RequestParam(name = "performanceKeyword", required = false) String performanceKeyword, @RequestParam(name = "exhibitionKeyword", required = false) String exhibitionKeyword, @RequestParam(name = "festivalKeyword", required = false) String festivalKeyword, @RequestParam(name = "culturalPropertiesKeyword", required = false) String culturalPropertiesKeyword, @RequestParam(name = "loveOrHate", required = true) String loveOrHate) {
+    public String insertUserBigLoveHateKeyword(
+            @AuthenticationPrincipal VWUserRoleDTO user,
+            @RequestParam(name = "performanceKeyword", required = false) String performanceKeyword,
+            @RequestParam(name = "exhibitionKeyword", required = false) String exhibitionKeyword,
+            @RequestParam(name = "festivalKeyword", required = false) String festivalKeyword,
+            @RequestParam(name = "culturalPropertiesKeyword", required = false) String culturalPropertiesKeyword,
+            @RequestParam(name = "loveOrHate", required = true) String loveOrHate
+    ) {
 
         System.out.println("lh : " + loveOrHate);
         System.out.println("fk : " + festivalKeyword);
 
+        // 전시
+        System.out.println("exhibitionKeyword : " + exhibitionKeyword);
+        exhibitionService.saveKeywordByUser(user.getUserId(), exhibitionKeyword, loveOrHate);
+        
         if (loveOrHate.equals("L")) {
 
             UserFestivalLoveHateMapDTO mapDTO = new UserFestivalLoveHateMapDTO();

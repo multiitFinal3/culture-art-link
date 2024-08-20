@@ -73,28 +73,39 @@
         SELECT
         id,
         keyword,
-        count AS frequency,
-        CONCAT(
-        LPAD(CAST(count AS CHAR), 10, '0'),
-        LPAD(CAST(id AS CHAR), 10, '0')
-        ) AS `nextCursor`
+        count AS frequency
         FROM
         exhibition_interested_keyword
         WHERE
-        1 =1
+        1 = 1
+        AND user_id = #{userId}
         <choose>
-            <when test="isUserSelected == true">
-                AND user_id = #{userId}
+            <when test="isInterested == true">
                 AND count >= 10
             </when>
+            <otherwise>
+                AND count &lt;= -10
+            </otherwise>
         </choose>
-        <if test="nextCursor != null and nextCursor != ''">
-            HAVING CAST(`nextCursor` AS UNSIGNED) &lt; CAST(#{nextCursor} AS UNSIGNED)
-        </if>
         ORDER BY
-        frequency DESC,
-        id DESC
-        LIMIT #{size}
+        frequency
+        <choose>
+            <when test="isInterested == true">
+                DESC
+            </when>
+            <otherwise>
+                ASC
+            </otherwise>
+        </choose>
+    </select>
+
+
+    <select id="getExhibitionInterestedKeywordByKeyword"
+            resultType="com.multi.culture_link.admin.exhibition.model.dto.api.ExhibitionKeywordDto">
+        SELECT id, keyword, count as frequency
+        FROM exhibition_interested_keyword
+        WHERE keyword = #{keyword}
+          AND user_id = #{userId}
     </select>
 
     <select id="getTotalCountOfExhibitionKeyword" resultType="int">
