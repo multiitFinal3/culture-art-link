@@ -19,6 +19,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -92,6 +93,7 @@ public class UserController {
 	 */
 	@PostMapping("/signUp")
 	@ResponseBody
+	@Transactional
 	public void signUpPost(
 			@RequestParam(name = "uploadFile", required = false) MultipartFile uploadFile,
 			@RequestParam(name = "email") String email,
@@ -305,6 +307,7 @@ public class UserController {
 	 */
 	@PostMapping("/deleteUserAccount")
 	@ResponseBody
+	@Transactional
 	public void deleteUserAccount(@AuthenticationPrincipal VWUserRoleDTO user) {
 		
 		try {
@@ -324,6 +327,7 @@ public class UserController {
 	 */
 	@PostMapping("/updateUserAccount")
 	@ResponseBody
+	@Transactional
 	public void updateUserAccount(@AuthenticationPrincipal VWUserRoleDTO user, @RequestParam(name = "file", required = false) MultipartFile file, @RequestParam("email") String email, @RequestParam("password") String password, @RequestParam("userName") String userName, @RequestParam("tel") String tel, @RequestParam("userAge") int userAge, @RequestParam("gender") String gender, @RequestParam("regionId") int regionId) {
 		
 		String attachment = "";
@@ -420,6 +424,7 @@ public class UserController {
 	 * @return
 	 */
 	@PostMapping("/insertUserBigLoveHateKeyword")
+	@Transactional
 	public String insertUserBigLoveHateKeyword(@AuthenticationPrincipal VWUserRoleDTO user, @RequestParam(name = "performanceKeyword", required = false) String performanceKeyword, @RequestParam(name = "exhibitionKeyword", required = false) String exhibitionKeyword, @RequestParam(name = "festivalKeyword", required = false) String festivalKeyword, @RequestParam(name = "culturalPropertiesKeyword", required = false) String culturalPropertiesKeyword, @RequestParam(name = "loveOrHate", required = true) String loveOrHate) {
 		
 		System.out.println("lh : " + loveOrHate);
@@ -489,6 +494,7 @@ public class UserController {
 	
 	@PostMapping("/validateSameEmail")
 	@ResponseBody
+	@Transactional
 	public UserDTO validateSameEmail(@RequestParam(name = "email") String email, @AuthenticationPrincipal VWUserRoleDTO userLogIn) {
 		
 		UserDTO user = null;

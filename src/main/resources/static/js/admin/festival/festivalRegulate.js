@@ -166,9 +166,9 @@ $(document).ready(
                         var page = 0;
 
                         if(count % 5 ==0){
-                            page = count/5;
+                            page = parseInt(count/5);
                         }else{
-                            page = count/5 +1;
+                            page = parseInt(count/5) +1;
                         }
 
                         DBLastPage = page;
@@ -323,7 +323,7 @@ $(document).ready(
             var num = 0;
 
             if(DBLastPage%10==0){
-                num = (DBLastPage / 10);
+                num = parseInt(DBLastPage / 10);
             }else{
                 num = parseInt((DBLastPage / 10) + 1);
             }
@@ -887,9 +887,9 @@ $(document).ready(
                         var page = 0;
 
                         if(count % 5 ==0){
-                            page = count/5;
+                            page = parseInt(count/5);
                         }else{
-                            page = count/5 +1;
+                            page = parseInt(count/5 +1);
                         }
 
                         lastDBMultiPage = parseInt(page);
@@ -1659,9 +1659,9 @@ $(document).ready(
                         var page = 0;
 
                         if(count % 5 ==0){
-                            page = count/5;
+                            page = parseInt(count/5);
                         }else{
-                            page = count/5 +1;
+                            page = parseInt(count/5 +1);
                         }
 
                         APIMulLastPage = parseInt(page);
