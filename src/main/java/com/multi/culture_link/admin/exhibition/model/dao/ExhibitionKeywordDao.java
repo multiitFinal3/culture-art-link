@@ -3,7 +3,6 @@ package com.multi.culture_link.admin.exhibition.model.dao;
 import com.multi.culture_link.admin.exhibition.model.dto.api.ExhibitionKeywordDto;
 import com.multi.culture_link.admin.exhibition.model.dto.api.ExhibitionKeywordPageDto;
 import com.multi.culture_link.exhibition.model.dto.ExhibitionDto;
-import com.multi.culture_link.users.model.dto.VWUserRoleDTO;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -20,7 +19,7 @@ public interface ExhibitionKeywordDao {
 
     List<ExhibitionKeywordPageDto> getExhibitionAllKeyword(String nextCursor, int size);
 
-    List<ExhibitionKeywordPageDto> getExhibitionAllKeywordByUser(String nextCursor, int size, VWUserRoleDTO user, Boolean isUserSelected);
+    List<ExhibitionKeywordPageDto> getExhibitionAllKeywordByUser(String nextCursor, int size, int userId, Boolean isUserSelected);
 
     List<String> getExhibitionKeywordById(int exhibitionId);
 
@@ -31,5 +30,9 @@ public interface ExhibitionKeywordDao {
     List<Integer> findExhibitionIdByKeywords(List<String> keyword);
 
     List<ExhibitionDto> findAllById(List<Integer> exhibitionId);
+
+    void toggleKeyword(int userId, int toggleKeyword, int count);
+
+    int getKeywordCount(int userId, Integer keyword);
 }
 
