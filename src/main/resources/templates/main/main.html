@@ -153,16 +153,47 @@
 
 
 
+            /**
+            * 문화재 키워드 추천 함수
+            *
+            */
 
+            function findKeywordRecommendCulturalPropertiesList() {
+                $('#cList').html("");
+                $.ajax({
+                url: '/cultural-properties/recommend',
+                method: 'GET',
+                contentType: 'application/json',
+                success: function(list) {
+                    var list2 = list.slice(0, 4);
+                    $.each(list2, function(index, culturalProperty) {
+                        var imgHtml = culturalProperty.mainImgUrl ?
+                            `<img class="card-img-top" src="${culturalProperty.mainImgUrl}" alt="문화재 이미지">` :
+                            `<img class="card-img-top" src="https://kr.object.ncloudstorage.com/team3/common/noPhoto.png" alt="이미지 없음">`;
 
+                        var cardHtml = `
+                            <div class="card" id="${culturalProperty.id}">
+                                ${imgHtml}
+                                <div class="card-body">
+                                    <p class="card-title" title="${culturalProperty.culturalPropertiesName}">${culturalProperty.culturalPropertiesName}</p>
+                                </div>
+                            </div>
+                        `;
 
+                        $('#cList').append(cardHtml);
+                    });
+                }
+                });
+            }
 
+            $(document).ready(function() {
+                findKeywordRecommendCulturalPropertiesList();
 
-
-
-
-
-
+                $(document).on('click', '#cList .card', function() {
+                    var culturalPropertyId = $(this).attr('id');
+                    window.location.href = '/cultural-properties/detail/' + culturalPropertyId;
+                });
+            });
 
 
 

@@ -221,5 +221,10 @@ public class CulturalPropertiesService {
         culturalPropertiesKeywordDAO.deleteUserSelectKeywordByType(userId, interestType);
     }
 
+    public List<CulturalPropertiesDTO> getRecommendedCulturalProperties(int userId) {
+        List<String> recommendedKeywords = culturalPropertiesKeywordDAO.getRecommendedKeywords(userId);
+        return culturalPropertiesKeywordDAO.getRandomCulturalPropertiesByKeywords(recommendedKeywords, 4);
+    }
+
 
 }

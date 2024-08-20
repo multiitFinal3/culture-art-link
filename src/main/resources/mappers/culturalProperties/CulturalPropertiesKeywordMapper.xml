@@ -197,4 +197,25 @@
 
 
 
+    <select id="getRecommendedKeywords" resultType="string">
+        SELECT keyword
+        FROM vw_cultural_properties_total_sum_keyword
+        WHERE user_id = #{userId} AND total_count > 0
+    </select>
+
+    <select id="getRandomCulturalPropertiesByKeywords" resultType="CulturalPropertiesDTO">
+        SELECT DISTINCT cp.*
+        FROM cultural_properties cp
+        JOIN cultural_properties_content_keyword cck ON cp.id = cck.cultural_properties_id
+        WHERE cck.keyword IN
+        <foreach item="item" index="index" collection="keywords" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        ORDER BY RAND()
+        LIMIT #{limit}
+    </select>
+
+
+
+
 </mapper>
