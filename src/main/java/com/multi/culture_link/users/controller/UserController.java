@@ -159,7 +159,6 @@ public class UserController {
 		
 		
 		try {
-			
 			String encoded_pw = bCryptPasswordEncoder.encode(userDTO.getPassword());
 			userDTO.setPassword(encoded_pw);
 			userService.signUp(userDTO);
@@ -261,7 +260,6 @@ public class UserController {
 			userDTO.setUserProfilePic(storageLink + userDTO.getUserProfilePic().trim());
 			
 		}
-		
 		
 		model.addAttribute("user", userDTO);
 /*		model.addAttribute("gender", user.getGender());
@@ -365,19 +363,19 @@ public class UserController {
 		userDTO.setUserId(user.getUserId());
 		userDTO.setUserProfilePic(attachment);
 		userDTO.setEmail(email);
+
 		
-		System.out.println("입력된 비밀번호 : " + password);
-		System.out.println("원래 비밀번호 : " + user.getPassword());
-		
-		if (!password.equals(user.getPassword())) {
-			System.out.println("비밀번호 다름");
-			String encryptedPassword = bCryptPasswordEncoder.encode(password);
-			System.out.println("암호화 된 비밀번호 : " + encryptedPassword);
-			userDTO.setPassword(encryptedPassword);
-		} else {
-			userDTO.setPassword(password);
-		}
-		
+//		System.out.println("입력된 비밀번호 : " + password);
+//		System.out.println("원래 비밀번호 : " + user.getPassword());
+	//	 변경 비밀번호 필수 입력
+//		if (!password.equals(user.getPassword())) {
+		String encryptedPassword = bCryptPasswordEncoder.encode(password);
+		System.out.println("암호화 된 비밀번호 : " + encryptedPassword);
+		userDTO.setPassword(encryptedPassword);
+//		} else {
+//			userDTO.setPassword(password);
+//		}
+//
 		userDTO.setUserName(userName);
 		userDTO.setTel(tel);
 		userDTO.setUserAge(userAge);
