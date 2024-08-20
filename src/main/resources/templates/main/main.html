@@ -83,6 +83,91 @@
 
                 findKeywordRecommendFestivalList();
 
+
+
+
+
+             /**
+               * 전시 키워드 추천 함수
+               *
+               */
+               function findKeywordRecommendExhibitionList(){
+
+
+                $.ajax({
+
+                    url: '/exhibition/exhibition/recommend',
+                    method: 'GET',
+                    contentType: 'application/json',
+                    success: function(list){
+                        console.log("전시 리스트");
+                        console.log(list);
+                        $("#eList").html("");
+                        var list2 = list.slice(0,4);
+                        var imgHtml = ``;
+
+                        $.each(list2, function(index, exhibition){
+                            if(! exhibition.image || exhibition.image == "null"){
+                                imgHtml = `
+                                        <img class="card-img-top" src="https://kr.object.ncloudstorage.com/team3/common/noPhoto.png" alt="Card image cap">
+                                `;
+                            }else{
+                                imgHtml = `
+                                        <img class="card-img-top" src="${exhibition.image}" alt="Card image cap">
+                                `;
+                            }
+
+                            var cardHtml = `
+                                <div class="card" id="${exhibition.id}">
+                                    ${imgHtml}
+                                    <div class="card-body">
+                                        <p class="card-title" title="${exhibition.title}">${exhibition.title}</p>
+                                    </div>
+                                </div>
+                            `;
+
+                            $('#eList').append(cardHtml);
+
+                        })
+                    }
+                })
+            }
+
+
+            findKeywordRecommendExhibitionList();
+
+
+            /**
+               *  전시 카드 클릭 시 상세 페이지로 이동
+               *
+               */
+            $(document).on('click','#eList .card', function(){
+
+                var exhibitionId = $(this).attr('id');
+                window.location.href='/exhibition/detail/'+exhibitionId;
+
+            })
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                 //#endregion
 
 

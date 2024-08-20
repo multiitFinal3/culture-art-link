@@ -265,6 +265,7 @@ public class ExhibitionController {
     public List<ExhibitionDto> recommend(
             @AuthenticationPrincipal VWUserRoleDTO currentUser
     ) {
+        System.out.println("추천 전시 : " + exhibitionService.getUserRecommend(currentUser.getUserId()));
         return exhibitionService.getUserRecommend(currentUser.getUserId());
     }
 
