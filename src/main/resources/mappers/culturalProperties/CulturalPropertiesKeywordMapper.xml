@@ -80,6 +80,56 @@
 
 
 
+    <update id="incrementKeywordSelectCount">
+        UPDATE
+        <choose>
+            <when test="keywordType == 'content'">
+                cultural_properties_content_keyword
+            </when>
+            <otherwise>
+                cultural_properties_review_keyword
+            </otherwise>
+        </choose>
+        SET select_count = select_count + 1
+        WHERE id = #{keywordId}
+    </update>
+
+
+    <!-- 랜덤으로 5개 키워드를 선택하는 쿼리 -->
+    <select id="getInitialKeywords" resultType="com.multi.culture_link.admin.culturalProperties.model.dto.KeywordDTO">
+        SELECT keyword_id, keyword
+        FROM vw_cultural_properties_combined_keyword_unique4
+        ORDER BY RAND()
+        LIMIT 5
+    </select>
+
+    <!-- 제외할 키워드 ID를 기반으로 랜덤으로 5개 키워드를 선택하는 쿼리 -->
+    <select id="getKeywords" resultType="com.multi.culture_link.admin.culturalProperties.model.dto.KeywordDTO">
+        SELECT keyword_id, keyword
+        FROM vw_cultural_properties_combined_keyword_unique4
+        <where>
+            <if test="excludedKeywordIds != null and excludedKeywordIds.size() > 0">
+                AND keyword_id NOT IN
+                <foreach item="id" collection="excludedKeywordIds" open="(" separator="," close=")">
+                    #{id}
+                </foreach>
+            </if>
+        </where>
+        ORDER BY RAND()
+        LIMIT #{limit}
+    </select>
+
+
+
+    <insert id="saveUserKeyword">
+        INSERT INTO cultural_properties_user_select_keyword (user_id, keyword, count)
+        VALUES (#{userId}, #{keyword}, #{count})
+        ON DUPLICATE KEY UPDATE count = #{count}
+    </insert>
+
+
+
+
 
 
 </mapper>

@@ -2,6 +2,7 @@ package com.multi.culture_link.config;
 
 import com.multi.culture_link.admin.culturalProperties.model.dto.CulturalPropertiesDTO;
 import com.multi.culture_link.admin.culturalProperties.model.dto.CulturalPropertiesKeywordDTO;
+import com.multi.culture_link.admin.culturalProperties.model.dto.KeywordDTO;
 import com.multi.culture_link.admin.culturalProperties.model.dto.StringListTypeHandler;
 import com.multi.culture_link.common.region.model.dto.RegionDTO;
 import com.multi.culture_link.common.time.model.dto.TimeDTO;
@@ -77,6 +78,7 @@ public class MyBatisConfiguration {
         configuration.getTypeAliasRegistry().registerAlias("CulturalPropertiesInterestDTO", CulturalPropertiesInterestDTO.class);
         configuration.getTypeAliasRegistry().registerAlias("CulturalPropertiesReviewDTO", CulturalPropertiesReviewDTO.class);
         configuration.getTypeAliasRegistry().registerAlias("CulturalPropertiesKeywordDTO", CulturalPropertiesKeywordDTO.class);
+        configuration.getTypeAliasRegistry().registerAlias("KeywordDTO", KeywordDTO.class);
 
 
         // TypeHandler 등록
@@ -89,4 +91,5 @@ public class MyBatisConfiguration {
 
 
     }
+
 }

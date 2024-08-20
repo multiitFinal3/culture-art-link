@@ -2,6 +2,7 @@ package com.multi.culture_link.admin.culturalProperties.model.dao;
 
 import com.multi.culture_link.admin.culturalProperties.model.dto.CulturalPropertiesKeywordDTO;
 import com.multi.culture_link.admin.culturalProperties.model.dto.CulturalPropertiesReviewKeywordDTO;
+import com.multi.culture_link.admin.culturalProperties.model.dto.KeywordDTO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -23,4 +24,13 @@ public interface CulturalPropertiesKeywordDAO {
     List<Integer> getExistingKeywordIds(int culturalPropertiesId);
     void updateExistingKeywords(@Param("keywordList") List<Map<String, Object>> keywordList);
     void insertNewKeywords(@Param("culturalPropertiesId") int culturalPropertiesId, @Param("keywords") List<String> keywords);
+
+
+
+//    List<KeywordDTO> getInitialKeywords();
+
+    List<KeywordDTO> getKeywords(@Param("excludedKeywordIds") List<Integer> excludedKeywordIds, @Param("limit") int limit);
+
+    void saveUserKeyword(@Param("userId") int userId, @Param("keyword") String keyword, @Param("count") int count);
+
 }

@@ -192,4 +192,14 @@ public class CulturalPropertiesService {
     }
 
 
+
+//    public void saveKeyword(List<String> keywords,int userId, int countChange) {
+//        System.out.println("keywords : "+ keywords);
+//
+//        for (String keyword : keywords) {
+//            culturalPropertiesDAO.saveUserKeyword(userId, keyword, countChange);
+//        }
+//    }
+
+
 }
