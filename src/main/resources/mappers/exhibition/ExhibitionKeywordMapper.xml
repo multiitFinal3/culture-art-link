@@ -19,6 +19,7 @@
         WHERE exhibition_id = #{exhibitionId}
     </select>
 
+
     <insert id="updateUserKeyword">
         INSERT INTO exhibition_interested_keyword (user_id, keyword, count)
         VALUES (#{userId}, #{keyword}, #{countChange}) ON DUPLICATE KEY
@@ -133,6 +134,49 @@
         <foreach item="item" index="index" collection="list" open="(" separator="," close=")">
             #{item}
         </foreach>
+    </select>
+
+
+    <select id="getExhibitionInterestedKeyword"
+            resultType="com.multi.culture_link.admin.exhibition.model.dto.api.ExhibitionKeywordDto">
+        SELECT id, keyword, count as frequency
+        FROM exhibition_interested_keyword
+        where
+        keyword != ''
+        <if test="orderBy != null">
+            <choose>
+                <when test="orderBy.equalsIgnoreCase('ASC')">
+                    ORDER BY frequency ASC
+                </when>
+                <when test="orderBy.equalsIgnoreCase('DESC')">
+                    ORDER BY frequency DESC
+                </when>
+                <otherwise>
+                    ORDER BY frequency ASC
+                </otherwise>
+            </choose>
+        </if>
+    </select>
+
+    <select id="getExhibitionKeywordAll"
+            resultType="com.multi.culture_link.admin.exhibition.model.dto.api.ExhibitionKeywordDto">
+        SELECT *
+        FROM exhibition_keyword
+        where
+        keyword != ''
+        <if test="orderBy != null">
+            <choose>
+                <when test="orderBy.equalsIgnoreCase('ASC')">
+                    ORDER BY frequency ASC
+                </when>
+                <when test="orderBy.equalsIgnoreCase('DESC')">
+                    ORDER BY frequency DESC
+                </when>
+                <otherwise>
+                    ORDER BY frequency ASC
+                </otherwise>
+            </choose>
+        </if>
     </select>
 
 

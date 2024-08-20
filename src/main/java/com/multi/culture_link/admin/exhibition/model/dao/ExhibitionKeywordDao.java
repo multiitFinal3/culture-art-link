@@ -21,6 +21,11 @@ public interface ExhibitionKeywordDao {
 
     List<ExhibitionKeywordPageDto> getExhibitionAllKeywordByUser(String nextCursor, int size, int userId, Boolean isUserSelected);
 
+    List<ExhibitionKeywordDto> getExhibitionInterestedKeyword(String orderBy);
+
+    List<ExhibitionKeywordDto> getExhibitionKeywordAll(String orderBy);
+
+
     List<String> getExhibitionKeywordById(int exhibitionId);
 
     void updateUserKeyword(int userId, String keyword, int countChange);

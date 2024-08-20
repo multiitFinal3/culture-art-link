@@ -261,6 +261,12 @@ public class ExhibitionController {
         return exhibitionService.getAllKeywordByUser(cursor, size, currentUser, isUserSelected);
     }
 
+    @GetMapping("/exhibition/keyword/all")
+    public List<ExhibitionKeywordDto> getAllKeywordByUserAll(
+    ) {
+        return exhibitionService.getAllKeywordByUserAll();
+    }
+
     @GetMapping("/exhibition/recommend")
     public List<ExhibitionDto> recommend(
             @AuthenticationPrincipal VWUserRoleDTO currentUser

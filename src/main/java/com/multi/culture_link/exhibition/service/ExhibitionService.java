@@ -219,6 +219,18 @@ public class ExhibitionService {
     }
 
 
+    @Transactional
+    public List<ExhibitionKeywordDto> getAllKeywordByUserAll() {
+
+        List<ExhibitionKeywordDto> exhibitionInterestedKeyword = exhibitionKeywordDao.getExhibitionInterestedKeyword("ASC");
+        List<ExhibitionKeywordDto> exhibitionKeyword = exhibitionKeywordDao.getExhibitionKeywordAll("ASC");
+        List<ExhibitionKeywordDto> combinedList = new ArrayList<>(exhibitionInterestedKeyword);
+        combinedList.addAll(exhibitionKeyword);
+        System.out.println("exhibitionAllKeyword : " + combinedList);
+
+        return combinedList;
+    }
+
     public List<ExhibitionApiDto> getLikeExhibition(int userId) {
         return exhibitionDao.getLikeExhibition(userId);
     }
