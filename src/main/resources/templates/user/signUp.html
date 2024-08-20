@@ -279,7 +279,85 @@
                 })
 
 
-                //#endregion
+
+
+
+
+                /**
+                * 문화재 키워드 조회
+                *
+                */
+                let excludedKeywordIds = []; // 제외할 키워드 ID를 저장할 배열
+                const limit = 5; // 한 번에 가져올 키워드 수
+
+                function fetchKeywords() {
+                    $.ajax({
+                        url: '/admin/cultural-properties-regulate/keywords',
+                        method: 'GET',
+                        data: {
+                            limit: limit,
+                            excludedKeywordIds: excludedKeywordIds
+                        },
+                        dataType: 'json',
+                        success: function(response) {
+                            console.log("Fetched keywords:", response);
+                            if (Array.isArray(response)) {
+                                displayCulturalPropertiesKeywords(response);
+                                // 현재 가져온 키워드를 제외 목록에 추가
+                                excludedKeywordIds = excludedKeywordIds.concat(response.map(keyword => keyword.keyword_id));
+                            } else {
+                                console.error('Received data is not an array:', response);
+                                alert('키워드를 불러오는 데 문제가 발생했습니다.');
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            console.error('Error status:', status);
+                            console.error('Error thrown:', error);
+                            console.error('Response text:', xhr.responseText);
+                            alert('키워드를 불러오는 데 실패했습니다.');
+                        }
+                    });
+                }
+
+
+                function displayCulturalPropertiesKeywords(keywords) {
+                    const keywordZone = $('#culturalPropertiesKeywordBtns');
+                    keywords.forEach(keyword => {
+                        const btn = $('<button>')
+                            .addClass('culturalPropertiesKeywordBtn')
+                            .text(keyword.keyword)
+                            .attr('data-id', keyword.keyword_id)
+                            .on('click', function(e) {
+                                e.preventDefault();
+                                selectCulturalPropertiesKeyword($(this));
+                            });
+                        keywordZone.append(btn);
+                    });
+                }
+
+                function selectCulturalPropertiesKeyword(btn) {
+                    btn.toggleClass('hasLove');
+                    updateSelectedCulturalPropertiesKeywords();
+                }
+
+                function updateSelectedCulturalPropertiesKeywords() {
+                    const selectedKeywords = $('.culturalPropertiesKeywordBtn.hasLove').map(function() {
+                        return $(this).text();
+                    }).get().join(',');
+                    $('#culturalPropertiesSelectKeyword').val(selectedKeywords);
+                }
+
+
+                // 추가 키워드 버튼 클릭 이벤트
+                $('#addCulturalPropertiesKeyword').on('click', function(event) {
+                    event.preventDefault();
+                    fetchKeywords();
+                });
+
+                // 초기 로드 시 키워드 가져오기
+                fetchKeywords();
+
+
 
 
 
@@ -365,6 +443,10 @@
 
                     var exhibitionSelectKeyword = $('#exhibitionSelectKeyword').val();
                     formData.append('exhibitionSelectKeyword',exhibitionSelectKeyword);
+
+                    var culturalPropertiesSelectKeyword = $('#culturalPropertiesSelectKeyword').val();
+                    formData.append('culturalPropertiesSelectKeyword', culturalPropertiesSelectKeyword);
+
 
                     console.log(regionId);
                     console.log(email);
@@ -591,21 +673,16 @@
                     </div>
 
 
-                    <div id="culturalKeywordZone">
 
-                        <input type="hidden" id="culturalSelectKeyword" name="culturalSelectKeyword" value="">
-
-                        <div id="culturalKeywordBtns">
-
-                        </div>
-
-                        <button id="addCulturalKeyword" class="btn btn-outline-success" value="1">문화재 키워드 추가</button>
-
-
+                <div id="culturalPropertiesKeywordZone">
+                    <input type="hidden" id="culturalPropertiesSelectKeyword" name="culturalPropertiesSelectKeyword" value="">
+                    <div id="culturalPropertiesCategoryBtns"></div>
+                    <div id="culturalPropertiesKeywordBtns">
                     </div>
 
-
+                    <button id="addCulturalPropertiesKeyword" class="btn btn-outline-success" value="1">문화재 키워드 추가</button>
                 </div>
+
 
                 <div>
 

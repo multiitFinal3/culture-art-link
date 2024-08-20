@@ -2,15 +2,25 @@ package com.multi.culture_link.admin.culturalProperties.controller;
 
 
 import com.multi.culture_link.admin.culturalProperties.model.dto.CulturalPropertiesDTO;
+import com.multi.culture_link.admin.culturalProperties.model.dto.KeywordDTO;
 import com.multi.culture_link.admin.culturalProperties.model.dto.PageDTO;
 import com.multi.culture_link.admin.culturalProperties.service.AdminCulturalPropertiesService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 
 @Controller
@@ -235,6 +245,23 @@ public class AdminCulturalPropertiesController {
 		return list;
 		
 	}
+
+
+
+
+
+	@GetMapping("/keywords")
+	public ResponseEntity<List<KeywordDTO>> getKeywords(
+			@RequestParam(defaultValue = "5") int limit,
+			@RequestParam(required = false) List<Integer> excludedKeywordIds) {
+		List<KeywordDTO> keywords = adminCulturalPropertiesService.getKeywords(excludedKeywordIds, limit);
+		return ResponseEntity.ok(keywords);
+	}
+
+
+
+
+
 
 }
 

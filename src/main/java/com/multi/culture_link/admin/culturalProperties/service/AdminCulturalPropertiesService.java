@@ -2,14 +2,11 @@ package com.multi.culture_link.admin.culturalProperties.service;
 
 import com.multi.culture_link.admin.culturalProperties.model.dao.AdminCulturalPropertiesDAO;
 import com.multi.culture_link.admin.culturalProperties.model.dao.CulturalPropertiesKeywordDAO;
-import com.multi.culture_link.admin.culturalProperties.model.dto.CulturalPropertiesDTO;
-import com.multi.culture_link.admin.culturalProperties.model.dto.CulturalPropertiesKeywordDTO;
-import com.multi.culture_link.admin.culturalProperties.model.dto.CulturalPropertiesReviewKeywordDTO;
+import com.multi.culture_link.admin.culturalProperties.model.dto.*;
 import com.multi.culture_link.common.keyword.service.KeywordExtractService;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import com.multi.culture_link.admin.culturalProperties.model.dto.PageDTO;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.XML;
@@ -18,8 +15,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.client.RestTemplate;
 
 
@@ -555,6 +556,41 @@ public class AdminCulturalPropertiesService {
 			throw new RuntimeException("Failed to update review keywords", e);
 		}
 	}
+
+
+
+	public List<KeywordDTO> getKeywords(List<Integer> excludedKeywordIds, int limit) {
+		if (excludedKeywordIds == null) {
+			excludedKeywordIds = new ArrayList<>();
+		}
+		return culturalPropertiesKeywordDAO.getKeywords(excludedKeywordIds, limit);
+	}
+
+
+//	@Transactional
+//	public void saveUserSelectedKeywords(String keywordsString, int userId, int count) {
+//		if (keywordsString == null || keywordsString.isEmpty()) {
+//			return;
+//		}
+//
+//		String[] keywords = keywordsString.split(",");
+//		for (String keyword : keywords) {
+//			culturalPropertiesKeywordDAO.saveUserKeyword(userId, keyword, count);
+//		}
+//	}
+
+	@Transactional
+	public void saveUserSelectedKeywords(String keywordsString, int userId, int count) {
+		if (keywordsString == null || keywordsString.trim().isEmpty()) {
+			return;
+		}
+
+		String[] keywords = keywordsString.trim().split(",");
+		for (String keyword : keywords) {
+			culturalPropertiesKeywordDAO.saveUserKeyword(userId, keyword.trim(), count);
+		}
+	}
+
 
 
 
