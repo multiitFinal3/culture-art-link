@@ -1,3 +1,4 @@
+<!--performanceGenre.html-->
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
@@ -10,14 +11,85 @@
     <link rel="stylesheet" th:href="@{/css/performance/performanceHome.css}">
     <link rel="stylesheet" th:href="@{/css/performance/performanceAllList.css}">
     <script th:src="@{/js/performance/performance.js}"></script>
-<!--    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">-->
-
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
+    <script>
+        var userId = [[${user.userId}]];
+    </script>
 
-    <script th:src="@{/js/performance/performanceDetail.js}"></script>
+    <script th:inline="javascript">
+        // 좋아요 또는 싫어요 상태 업데이트 함수
+        async function updatePerformanceState(state, performanceId) {
+            try {
+                await axios.post('/performance/updatePerformanceLikeState', {
+                    userId: userId,
+                    performanceId: performanceId,
+                    state: state
+                }, {
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
 
+                const likeBtn = document.getElementById(`likeBtn-${performanceId}`);
+                const dislikeBtn = document.getElementById(`dislikeBtn-${performanceId}`);
 
+                if (state === 'like') {
+                    likeBtn.src = 'https://kr.object.ncloudstorage.com/team3/common/upBlue.png';
+                    dislikeBtn.src = 'https://kr.object.ncloudstorage.com/team3/common/downNo.png';
+                    alert('찜이 추가되었습니다.');
+                } else {
+                    likeBtn.src = 'https://kr.object.ncloudstorage.com/team3/common/upNo.png';
+                    dislikeBtn.src = 'https://kr.object.ncloudstorage.com/team3/common/downRed.png';
+                    alert('관심없음이 추가되었습니다.');
+                }
+            } catch (error) {
+                console.error('좋아요/싫어요 상태를 업데이트하는 중 오류가 발생했습니다:', error);
+            }
+        }
+
+        // 좋아요/싫어요 상태 확인 함수
+        async function checkLikeState(performanceId) {
+            if (!performanceId) {
+                console.error('performanceId is null or undefined');
+                return;
+            }
+
+            const likeBtn = document.getElementById(`likeBtn-${performanceId}`);
+            const dislikeBtn = document.getElementById(`dislikeBtn-${performanceId}`);
+
+            if (!likeBtn || !dislikeBtn) {
+                console.error('Like/Dislike buttons not found for performanceId:', performanceId);
+                return;
+            }
+
+            try {
+                const response = await axios.get(`/performance/getPerformanceLikeState?userId=${userId}&performanceId=${performanceId}`);
+                const state = response.data.state;
+
+                if (state === 'like') {
+                    likeBtn.src = 'https://kr.object.ncloudstorage.com/team3/common/upBlue.png';
+                    dislikeBtn.src = 'https://kr.object.ncloudstorage.com/team3/common/downNo.png';
+                } else if (state === 'not like') {
+                    likeBtn.src = 'https://kr.object.ncloudstorage.com/team3/common/upNo.png';
+                    dislikeBtn.src = 'https://kr.object.ncloudstorage.com/team3/common/downRed.png';
+                } else {
+                    likeBtn.src = 'https://kr.object.ncloudstorage.com/team3/common/upNo.png';
+                    dislikeBtn.src = 'https://kr.object.ncloudstorage.com/team3/common/downNo.png';
+                }
+            } catch (error) {
+                console.error('좋아요/싫어요 상태 확인 중 오류가 발생했습니다:', error);
+            }
+        }
+
+        // 페이지 로드 시 각 공연의 "좋아요/싫어요" 상태를 확인
+        document.addEventListener("DOMContentLoaded", function() {
+            document.querySelectorAll('.all-card, .card').forEach(card => {
+                const performanceId = card.getAttribute('data-performance-id');
+                checkLikeState(performanceId);
+            });
+        });
+    </script>
 
 
 
@@ -40,20 +112,19 @@
             <div class="genre-item">뮤지컬</div>
         </div>
         <!-- 추가 필터 -->
+
+        <!--검색바-->
+        <form id="searchForm" class="d-flex" th:action="@{/performance/search}" method="get">
+            <div class="input-group">
+                <input class="form-control me-2" type="text" name="keyword" placeholder="검색어를 입력해주세요." aria-label="performanceName" style="width: 300px;" th:value="${keyword}">
+                <input type="hidden" name="genre" id="selectedGenre" th:value="${param.genre != null ? param.genre : '추천'}">
+                <button id="searchButton" class="btn btn-outline-success" type="submit">
+                    <img th:src="@{/img/performance/search.png}" alt="검색 아이콘" style="width: 20px; height: 20px;">
+                </button>
+            </div>
+        </form>
+
         <div class="extra-filter">
-
-            <!--검색바-->
-            <form id="searchForm" class="d-flex" th:action="@{/performance/search}" method="get">
-                <div class="input-group">
-                    <input class="form-control me-2" type="text" name="keyword" placeholder="검색어를 입력해주세요." aria-label="performanceName" style="width: 300px;" th:value="${keyword}">
-                    <input type="hidden" name="genre" id="selectedGenre" th:value="${param.genre != null ? param.genre : '추천'}">
-                    <button id="searchButton" class="btn btn-outline-success" type="submit">
-                        <img th:src="@{/img/performance/search.png}" alt="검색 아이콘" style="width: 20px; height: 20px;">
-                    </button>
-                </div>
-            </form>
-
-
             <div class="extra-item" id="ranking-item">
                 <img th:src="@{/img/performance/ranking.png}" alt="랭킹 아이콘" class="filter-icon">
                 랭킹
@@ -70,7 +141,7 @@
         <div class="ranking-items" th:if="${rankingData != null}">
             <div th:each="ranking, iterStat : ${rankingData}">
                 <a th:href="@{'/performance/performanceDetail?performanceCode=' + ${ranking.code} + '&source=db'}">
-                    <div class="card" th:data-performance-title="${ranking.title}" th:data-source="db">
+                    <div class="card" th:data-performance-title="${ranking.title}" th:data-performance-id="${ranking.id}" th:data-performance-code="${ranking.code}" th:data-source="db">
                         <!-- 카드 번호 -->
                         <div class="card-number" th:text="${iterStat.index + 1}">1</div>
                         <!-- 공연 이미지 -->
@@ -78,11 +149,9 @@
 
                         <!-- 좋아요 및 싫어요 버튼 -->
                         <div class="like-dislike-container">
-                            <img id="likeBtn" src="https://kr.object.ncloudstorage.com/team3/common/upNo.png" alt="Like" class="like-dislike-icon">
-                            <img id="dislikeBtn" src="https://kr.object.ncloudstorage.com/team3/common/downNo.png" alt="Dislike" class="like-dislike-icon">
+                            <img id="likeBtn-${ranking.id}" src="https://kr.object.ncloudstorage.com/team3/common/upNo.png" alt="Like" class="like-dislike-icon" onclick="updatePerformanceState('like', '${ranking.id}')">
+                            <img id="dislikeBtn-${ranking.id}" src="https://kr.object.ncloudstorage.com/team3/common/downNo.png" alt="Dislike" class="like-dislike-icon" onclick="updatePerformanceState('not like', '${ranking.id}')">
                         </div>
-
-
                     </div>
                     <!-- 공연 정보 -->
                     <div class="performance-info">
@@ -99,26 +168,20 @@
         </div>
     </div>
 
-
-
-
-
     <!-- 전체 공연 목록 -->
     <div class="all-performances">
         <div class="all-performances-title">전체 공연 목록</div>
         <div class="all-performances-items" th:if="${allPerformances != null}">
             <div th:each="performance : ${allPerformances}">
                 <a th:href="@{'/performance/performanceDetail?performanceCode=' + ${performance.code} + '&source=db'}">
-                    <div class="all-card" th:data-performance-code="${performance.code}">
+                    <div class="all-card" th:data-performance-code="${performance.code}" th:data-performance-id="${performance.id}">
                         <img th:src="${performance.imageMain}" alt="공연 이미지">
 
                         <!-- 좋아요 및 싫어요 버튼 -->
                         <div class="like-dislike-container">
-                            <img id="likeBtn" src="https://kr.object.ncloudstorage.com/team3/common/upNo.png" alt="Like" class="like-dislike-icon">
-                            <img id="dislikeBtn" src="https://kr.object.ncloudstorage.com/team3/common/downNo.png" alt="Dislike" class="like-dislike-icon">
+                            <img id="likeBtn-${performance.id}" src="https://kr.object.ncloudstorage.com/team3/common/upNo.png" alt="Like" class="like-dislike-icon" onclick="updatePerformanceState('like', '${performance.id}')">
+                            <img id="dislikeBtn-${performance.id}" src="https://kr.object.ncloudstorage.com/team3/common/downNo.png" alt="Dislike" class="like-dislike-icon" onclick="updatePerformanceState('not like', '${performance.id}')">
                         </div>
-
-
                     </div>
                     <div class="all-performance-info">
                         <div class="all-title" th:text="${performance.title}">공연명</div>
@@ -139,6 +202,3 @@
         </div>
     </div>
 </div>
-
-</body>
-</html>

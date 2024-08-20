@@ -62,11 +62,7 @@ public class PerformanceController {
      * @param model the model
      * @return 공연 홈페이지
      */
-//    @GetMapping("/performance-home")
-//    public String performanceHomePage(@AuthenticationPrincipal VWUserRoleDTO user, Model model) {
-//        model.addAttribute("user", user.getUser());
-//        return "/performance/performanceHome";
-//    }
+
 
     @GetMapping("/performance-home")
     public String performanceHomePage(@AuthenticationPrincipal VWUserRoleDTO user, Model model) {
@@ -84,6 +80,9 @@ public class PerformanceController {
     }
 
 
+
+
+
     /**
      * 공연 장르 페이지 매핑 -> 5위까지 performanceGenre.html
      *
@@ -92,19 +91,49 @@ public class PerformanceController {
      * @param model the model
      * @return 공연 각 장르별 페이지
      */
+//    @GetMapping("/performance-genre")
+//    public String performanceGenrePage(@AuthenticationPrincipal VWUserRoleDTO user,
+//                                       @RequestParam("genre") String genre,
+//                                       Model model) {
+//
+//        if ("추천".equals(genre)) {
+//            return "redirect:/performance/performance-home";
+//        }
+//
+//        String date = "20240817"; // 일간 데이터 날짜
+//        List<PerformanceDTO> rankingData = performanceRankingService.fetchGenreRanking(genre, date, 5);
+//        System.out.println("Fetched Data: " + rankingData); // 로그 추가
+//
+//
+//        // 장르에 따른 전체 공연 목록 추가
+//        List<PerformanceDTO> allPerformances = performanceDBService.getPerformancesByGenre(genre);
+//        System.out.println("All Performances: " + allPerformances); // 디버깅 로그 추가
+//
+//        // 날짜 포맷 업데이트
+//        allPerformances.forEach(PerformanceDTO::updateFormattedDate);
+//
+//        model.addAttribute("user", user.getUser());
+//        model.addAttribute("genre", genre);
+//        model.addAttribute("rankingData", rankingData);
+//        model.addAttribute("allPerformances", allPerformances); // 전체 공연 목록 모델에 추가
+//
+//        return "/performance/performanceGenre";
+//    }
+
     @GetMapping("/performance-genre")
     public String performanceGenrePage(@AuthenticationPrincipal VWUserRoleDTO user,
                                        @RequestParam("genre") String genre,
                                        Model model) {
 
+        PerformanceDTO performance = null;
+
         if ("추천".equals(genre)) {
             return "redirect:/performance/performance-home";
         }
 
-        String date = "20240817"; // 일간 데이터 날짜
+        String date = "20240818"; // 일간 데이터 날짜
         List<PerformanceDTO> rankingData = performanceRankingService.fetchGenreRanking(genre, date, 5);
         System.out.println("Fetched Data: " + rankingData); // 로그 추가
-
 
         // 장르에 따른 전체 공연 목록 추가
         List<PerformanceDTO> allPerformances = performanceDBService.getPerformancesByGenre(genre);
@@ -113,13 +142,26 @@ public class PerformanceController {
         // 날짜 포맷 업데이트
         allPerformances.forEach(PerformanceDTO::updateFormattedDate);
 
-        model.addAttribute("user", user.getUser());
+        // user 객체가 null인지 확인하여 안전하게 처리
+        if (user != null && user.getUser() != null) {
+            model.addAttribute("user", user.getUser());
+        } else {
+            model.addAttribute("message", "로그인 후 이용해 주세요."); // 로그인하지 않은 경우 메시지 추가
+        }
+
         model.addAttribute("genre", genre);
         model.addAttribute("rankingData", rankingData);
-        model.addAttribute("allPerformances", allPerformances); // 전체 공연 목록 모델에 추가
+        model.addAttribute("allPerformances", allPerformances);
+
+        model.addAttribute("performance", performance);
+
+
+
 
         return "/performance/performanceGenre";
     }
+
+
 
 
     /**
@@ -157,7 +199,7 @@ public class PerformanceController {
      */
     @GetMapping("/genre-rankings")
     public ResponseEntity<List<PerformanceDTO>> getPerformanceGenreRankings(@RequestParam String genre) {
-        String date = "20240817"; // 일간 데이터 날짜
+        String date = "20240818"; // 일간 데이터 날짜
         List<PerformanceDTO> rankingData;
 
         if (genre.equals("전체")) {
@@ -184,7 +226,7 @@ public class PerformanceController {
     public String performanceRankingPage(@AuthenticationPrincipal VWUserRoleDTO user, Model model,
                                          @RequestParam(required = false) String genre) {
         model.addAttribute("user", user.getUser());
-        String date = "20240817"; // 일간 데이터 날짜
+        String date = "20240818"; // 일간 데이터 날짜
         List<PerformanceDTO> rankingData;
 
         if (genre == null || genre.isEmpty() || genre.equals("전체")) {
@@ -203,8 +245,8 @@ public class PerformanceController {
     public String performanceLocationPage(@AuthenticationPrincipal VWUserRoleDTO user,
                                           @RequestParam(required = false) String locationCode,
                                           Model model) {
-        String stdate = "20240817"; // 시작 날짜
-        String eddate = "20240917"; // 종료 날짜
+        String stdate = "20240818"; // 시작 날짜
+        String eddate = "20240918"; // 종료 날짜
 
         System.out.println("Received locationCode: " + locationCode); // Debug line
 
@@ -280,31 +322,31 @@ public class PerformanceController {
 
 
 
-//    @GetMapping("/performanceDetailByTitle")
-//    public String performanceDetailByTitle(@RequestParam("performanceTitle") String performanceTitle, Model model) {
-//        // DB에서 공연명을 통해 공연 정보를 검색
-//        PerformanceDTO performance = performanceDBService.getPerformanceByTitle(performanceTitle);
-//
-//        if (performance == null) {
-//            model.addAttribute("error", "해당 공연명을 가진 공연을 찾을 수 없습니다.");
-//            return "/performance/performanceDetail";
-//        }
-//
-//        // 공연 디테일 페이지에 정보를 전달
-//        model.addAttribute("performance", performance);
-//        model.addAttribute("naverClientId", naverClientId);
-//        return "/performance/performanceDetail";
-//    }
+    @GetMapping("/performanceDetailByTitle")
+    public String performanceDetailByTitle(@RequestParam("performanceTitle") String performanceTitle, Model model) {
+        // DB에서 공연명을 통해 공연 정보를 검색
+        PerformanceDTO performance = performanceDBService.getPerformanceByTitle(performanceTitle);
+
+        if (performance == null) {
+            model.addAttribute("error", "해당 공연명을 가진 공연을 찾을 수 없습니다.");
+            return "/performance/performanceDetail";
+        }
+
+        // 공연 디테일 페이지에 정보를 전달
+        model.addAttribute("performance", performance);
+        model.addAttribute("naverClientId", naverClientId);
+        return "/performance/performanceDetail";
+    }
 
 
 
-//    @GetMapping("/getPerformanceCode")
-//    public ResponseEntity<Map<String, String>> getPerformanceCode(@RequestParam("performanceTitle") String performanceTitle) {
-//        String performanceCode = performanceDBService.getPerformanceCodeByTitle(performanceTitle);
-//        Map<String, String> response = new HashMap<>();
-//        response.put("performanceCode", performanceCode);
-//        return ResponseEntity.ok(response);
-//    }
+    @GetMapping("/getPerformanceCode")
+    public ResponseEntity<Map<String, String>> getPerformanceCode(@RequestParam("performanceTitle") String performanceTitle) {
+        String performanceCode = performanceDBService.getPerformanceCodeByTitle(performanceTitle);
+        Map<String, String> response = new HashMap<>();
+        response.put("performanceCode", performanceCode);
+        return ResponseEntity.ok(response);
+    }
 
 
     // 좋아요/싫어요 상태 업데이트 메서드
@@ -342,17 +384,49 @@ public class PerformanceController {
         return response;
     }
 
+//    // 검색
+//    @GetMapping("/search")
+//    public String searchPerformances(
+//            @RequestParam("keyword") String keyword,
+//            @RequestParam(value = "genre", required = false) String genre,
+//            Model model) {
+//
+//        List<PerformanceDTO> performances = performanceService.searchPerformances(keyword, genre);
+//        model.addAttribute("allPerformances", performances);
+//        model.addAttribute("selectedGenre", genre);
+//        model.addAttribute("keyword", keyword);  // 검색어를 모델에 추가
+//
+//        // 각 공연에 대해 formattedDate 설정
+//        for (PerformanceDTO performance : performances) {
+//            performance.updateFormattedDate();
+//        }
+//
+//        // 검색 결과가 없을 경우 플래그 추가
+//        boolean noResults = performances.isEmpty();
+//        model.addAttribute("noResults", noResults);
+//
+//
+//
+//        return "performance/performanceGenre"; // 적절한 템플릿 경로로 변경
+//    }
+
     // 검색
     @GetMapping("/search")
     public String searchPerformances(
+            @AuthenticationPrincipal VWUserRoleDTO user,  // 인증된 사용자를 받아옵니다.
             @RequestParam("keyword") String keyword,
             @RequestParam(value = "genre", required = false) String genre,
             Model model) {
+
+        if (user == null) {
+            return "redirect:/login";  // user가 null이라면 로그인 페이지로 리다이렉트
+        }
 
         List<PerformanceDTO> performances = performanceService.searchPerformances(keyword, genre);
         model.addAttribute("allPerformances", performances);
         model.addAttribute("selectedGenre", genre);
         model.addAttribute("keyword", keyword);  // 검색어를 모델에 추가
+        model.addAttribute("user", user.getUser());  // user 정보를 모델에 추가
 
         // 각 공연에 대해 formattedDate 설정
         for (PerformanceDTO performance : performances) {
@@ -363,10 +437,9 @@ public class PerformanceController {
         boolean noResults = performances.isEmpty();
         model.addAttribute("noResults", noResults);
 
-
-
         return "performance/performanceGenre"; // 적절한 템플릿 경로로 변경
     }
+
 
 
 

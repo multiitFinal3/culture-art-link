@@ -600,6 +600,13 @@ transform: translateY(-2px);}
 
 
 
+#addReview {
+    height: 50px; /* 버튼 높이를 텍스트 영역과 유사하게 설정 */
+    padding: 10px 20px; /* 내부 패딩을 설정하여 버튼 크기를 조정 */
+    border-radius: 4px;
+    white-space: nowrap; /* 버튼 텍스트가 줄 바꿈되지 않도록 설정 */
+}
+
 
 
 
