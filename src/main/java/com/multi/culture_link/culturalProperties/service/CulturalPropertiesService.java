@@ -17,6 +17,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 
@@ -211,13 +212,14 @@ public class CulturalPropertiesService {
     }
 
 
-    public void deleteUserSelectKeyword(int userId) {
-        culturalPropertiesKeywordDAO.deleteUserSelectKeyword(userId);
-    }
-
 
     public void insertUserSelectKeyword(int userId,  String interestType, String keyword, int count) {
         culturalPropertiesKeywordDAO.insertUserSelectKeyword(userId, interestType, keyword, count);
     }
+
+    public void deleteUserSelectKeywordByType(int userId, String interestType) {
+        culturalPropertiesKeywordDAO.deleteUserSelectKeywordByType(userId, interestType);
+    }
+
 
 }

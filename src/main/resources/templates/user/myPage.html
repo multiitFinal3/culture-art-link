@@ -1986,7 +1986,7 @@
                 function updateSelectedCulturalPropertiesKeywords() {
                     const isLove = $('#loveOrHate').val() === "L";
                     const selectedKeywords = $(`.culturalPropertiesKeywordBtn.${isLove ? 'bigLove' : 'bigHate'}`)
-                        .map(function() { return $(this).text(); }).get().join(' ');
+                        .map(function() { return $(this).text(); }).get().join(',');
                     $('#culturalPropertiesKeyword').val(selectedKeywords);
                 }
 

@@ -163,16 +163,36 @@
 
 
 
-    <delete id="deleteUserSelectKeyword">
-        DELETE FROM cultural_properties_user_select_keyword
-        WHERE user_id = #{userId}
-    </delete>
-
     <insert id="insertUserSelectKeyword">
         INSERT INTO cultural_properties_user_select_keyword (user_id, interest_type, keyword, count)
         VALUES (#{userId}, #{interestType}, #{keyword}, #{count})
     </insert>
 
+
+
+    <select id="getUserKeyword" resultType="KeywordDTO">
+        SELECT user_id as id, keyword, count
+        FROM cultural_properties_user_select_keyword
+        WHERE user_id = #{userId} AND keyword = #{keyword}
+    </select>
+
+    <update id="updateUserKeyword" parameterType="KeywordDTO">
+        UPDATE cultural_properties_user_select_keyword
+        SET count = #{count},
+        interest_type = CASE
+        WHEN #{count} > 0 THEN 'LIKE'
+        WHEN #{count} <![CDATA[  < 0 THEN 'DISLIKE'  ]]>
+        ELSE interest_type
+        END,
+        updated_at = CURRENT_TIMESTAMP
+        WHERE user_id = #{id} AND keyword = #{keyword}
+    </update>
+
+
+    <delete id="deleteUserSelectKeywordByType">
+        DELETE FROM cultural_properties_user_select_keyword
+        WHERE user_id = #{userId} AND interest_type = #{interestType}
+    </delete>
 
 
 

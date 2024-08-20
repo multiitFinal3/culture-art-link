@@ -1,6 +1,7 @@
 package com.multi.culture_link.users.controller;
 
 
+import com.multi.culture_link.admin.culturalProperties.model.dto.KeywordDTO;
 import com.multi.culture_link.admin.culturalProperties.service.AdminCulturalPropertiesService;
 import com.multi.culture_link.common.region.model.dto.RegionDTO;
 import com.multi.culture_link.common.region.service.RegionService;
@@ -490,32 +491,28 @@ public class UserController {
 			
 		}
 
-		culturalPropertiesService.deleteUserSelectKeyword(user.getUserId());
 
-		if (culturalPropertiesKeyword != null && !culturalPropertiesKeyword.trim().isEmpty()) {
-			String[] culturalPropertiesList = culturalPropertiesKeyword.trim().split(" ");
-			String interestType = loveOrHate.equals("L") ? "LIKE" : "DISLIKE";
-			int count = loveOrHate.equals("L") ? 15 : -15;
+		int userId = user.getUserId();
+		String interestType = loveOrHate.equals("L") ? "LIKE" : "DISLIKE";
+		int count = loveOrHate.equals("L") ? 15 : -15;
+
+		// 먼저 해당 타입의 기존 키워드를 모두 삭제
+		culturalPropertiesService.deleteUserSelectKeywordByType(userId, interestType);
+
+		if (culturalPropertiesKeyword != null && !culturalPropertiesKeyword.isEmpty()) {
+			String[] culturalPropertiesList = culturalPropertiesKeyword.trim().split(",");
 
 			for (String keyword : culturalPropertiesList) {
-				System.out.println("문화 키워드: " + user.getUserId() + interestType +  keyword + count);
-				culturalPropertiesService.insertUserSelectKeyword(user.getUserId(), interestType.trim(), keyword, count);
+				culturalPropertiesService.insertUserSelectKeyword(userId, interestType, keyword, count);
 			}
 		}
 
 
 		
-		
-		
-		
-		
-		
-		
-		
 		return "redirect:/user/myPage";
 	}
-	
-	
+
+
 	@PostMapping("/validateSameEmail")
 	@ResponseBody
 	@Transactional
