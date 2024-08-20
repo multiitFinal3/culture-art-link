@@ -1039,6 +1039,7 @@
                 //#region 상단바 : 공연
 
 
+
                 /**
                  * 공연 찜한 내역을 가져옴
                  *
@@ -1050,6 +1051,96 @@
                     $.ajax({
 
                         url: '/performance/findLovePerformanceList', // 서버에서 공연 찜한 내역을 가져오는 API 엔드포인트
+                        method: 'GET',
+                        contentType: 'application/json',
+                        success: function (list) {
+                            $('#upper').html("");
+                            $('#upper').removeClass("page")
+                            $('#upper').addClass("scroll")
+
+                            $.each(list, function (index, performance) {
+
+                                var start = performance.startDate.length > 0 ?
+                                    performance.startDate.substring(0, 10) :
+                                    "없음";
+
+                                var end = performance.endDate.length > 0 ?
+                                    performance.endDate.substring(0, 10) :
+                                    "없음";
+
+                                var firstHtml = ``;
+
+                                if (!performance.imageMain || performance.imageMain == "null") {
+
+                                    firstHtml = `
+                                        <div class="card fcard" id="${performance.id}" data-value="${performance.id}">
+                                            <img class="card-img-top" src="/img/performance/noPhoto.png" alt="Card image cap">
+
+                                    `;
+
+                                } else {
+
+                                    firstHtml = `
+                                        <div class="card fcard" id="${performance.id}" data-value="${performance.id}">
+                                            <img class="card-img-top" src="${performance.imageMain}" alt="Card image cap">
+
+                                    `;
+
+                                }
+
+
+                                var secondHtml = `
+                                    <div class="card-body">
+                                          <h5 class="card-title" title="${performance.title}">${performance.title}</h5>
+                                          <p class="card-text">${start} - ${end}</p>
+                                          <div class="buttonZone">
+                                            <button class="whiteHeartBtn">
+                                                <img src="https://kr.object.ncloudstorage.com/team3/common/upNo.png"
+                                                   style="width : 25px; height: 25px;" class="heart" value="${performance.id}">
+                                            </button>
+
+                                            <button class="whiteHateBtn">
+                                                <img src="https://kr.object.ncloudstorage.com/team3/common/downNo.png"
+                                                   style="width : 25px; height: 25px;" class="hate" value="${performance.id}">
+                                            </button>
+                                          </div>
+                                    </div>
+
+                                </div>
+                                `;
+
+
+                                var finalHtml = firstHtml + secondHtml;
+
+                                $('#upper').append(finalHtml);
+
+                                findLoveList();
+                                findHateList();
+
+
+                            })
+                        }
+
+                    })
+
+                }
+
+
+
+
+
+
+                /**
+                 * 공연 관심없음 내역을 가져옴
+                 *
+                 */
+
+
+                 function findHatePerformanceList() {
+
+                    $.ajax({
+
+                        url: '/performance/findHatePerformanceList', // 서버에서 공연 관심없음 내역을 가져오는 API 엔드포인트
                         method: 'GET',
                         contentType: 'application/json',
                         success: function (list) {
@@ -2124,7 +2215,7 @@
 
                         findLoveExhibitionList();
 
-                    } else if (categoryText == "공연") {
+                    } else if (category == "공연") {
 
                         findLovePerformanceList();
 
@@ -2159,7 +2250,7 @@
 
                         findHateExhibitionList();
 
-                    } else if (categoryText == "공연") {
+                    } else if (category == "공연") {
 
                         findHatePerformanceList();
 

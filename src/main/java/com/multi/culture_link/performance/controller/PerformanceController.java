@@ -511,6 +511,30 @@ public class PerformanceController {
     }
 
 
+    /**
+     * 사용자가 관심없음 공연 목록을 반환하는 메서드
+     *
+     * @param user 인증된 사용자 정보
+     * @return 사용자가 관심없음 공연 목록
+     */
+
+
+    @GetMapping("/findHatePerformanceList")
+    @ResponseBody
+    public ResponseEntity<List<PerformanceDTO>> findHatePerformanceList(@AuthenticationPrincipal VWUserRoleDTO user, Model model) {
+        int userId = user.getUser().getUserId();
+
+
+        // 사용자의 찜한 공연 목록을 가져옴
+        List<PerformanceDTO> hatePerformanceList = performanceService.getHatePerformancesByUserId(user.getUserId());
+
+        model.addAttribute("user", user);
+
+        return ResponseEntity.ok(hatePerformanceList);
+    }
+
+
+
 
 
 }

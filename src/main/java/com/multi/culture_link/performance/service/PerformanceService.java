@@ -109,5 +109,9 @@ public class PerformanceService {
         // 데이터베이스에서 찜한 공연 목록을 가져오는 로직 구현
         return performanceMapper.findLovedPerformancesByUserId(userId);
     }
+
+    public List<PerformanceDTO> getHatePerformancesByUserId(int userId) {
+        return performanceMapper.findHatedPerformancesByUserId(userId);
+    }
 }
 
