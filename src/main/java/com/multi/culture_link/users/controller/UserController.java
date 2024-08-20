@@ -498,7 +498,8 @@ public class UserController {
 			int count = loveOrHate.equals("L") ? 15 : -15;
 
 			for (String keyword : culturalPropertiesList) {
-				culturalPropertiesService.insertUserSelectKeyword(user.getUserId(), interestType, keyword, count);
+				System.out.println("문화 키워드: " + user.getUserId() + interestType +  keyword + count);
+				culturalPropertiesService.insertUserSelectKeyword(user.getUserId(), interestType.trim(), keyword, count);
 			}
 		}
 

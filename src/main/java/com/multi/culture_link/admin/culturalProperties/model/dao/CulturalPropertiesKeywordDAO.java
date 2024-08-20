@@ -1,7 +1,6 @@
 package com.multi.culture_link.admin.culturalProperties.model.dao;
 
 import com.multi.culture_link.admin.culturalProperties.model.dto.CulturalPropertiesKeywordDTO;
-import com.multi.culture_link.admin.culturalProperties.model.dto.CulturalPropertiesReviewKeywordDTO;
 import com.multi.culture_link.admin.culturalProperties.model.dto.KeywordDTO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -45,7 +44,7 @@ public interface CulturalPropertiesKeywordDAO {
 
 
     void deleteUserSelectKeyword(@Param("userId") int userId);
-    void insertUserSelectKeyword(@Param("userId") int userId, @Param("keyword") String keyword, @Param("interestType") String interestType, @Param("count") int count);
+    void insertUserSelectKeyword(@Param("userId") int userId, @Param("interestType") String interestType,  @Param("keyword") String keyword, @Param("count") int count);
 
 
 }

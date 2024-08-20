@@ -4,24 +4,17 @@ import com.multi.culture_link.admin.culturalProperties.model.dao.AdminCulturalPr
 import com.multi.culture_link.admin.culturalProperties.model.dao.CulturalPropertiesKeywordDAO;
 import com.multi.culture_link.admin.culturalProperties.model.dto.CulturalPropertiesDTO;
 import com.multi.culture_link.admin.culturalProperties.model.dto.KeywordDTO;
-import com.multi.culture_link.admin.culturalProperties.model.dto.PageDTO;
 import com.multi.culture_link.admin.culturalProperties.service.AdminCulturalPropertiesService;
 import com.multi.culture_link.culturalProperties.model.dao.CulturalPropertiesDAO;
 import com.multi.culture_link.culturalProperties.model.dto.CulturalPropertiesInterestDTO;
 import com.multi.culture_link.culturalProperties.model.dto.CulturalPropertiesReviewDTO;
 import com.multi.culture_link.culturalProperties.model.dto.NewsArticle;
-import com.multi.culture_link.exhibition.model.dto.ExhibitionDto;
-import com.multi.culture_link.users.model.dto.VWUserRoleDTO;
 import lombok.extern.slf4j.Slf4j;
-import org.json.JSONArray;
-import org.json.JSONObject;
-import org.json.XML;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.*;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -223,8 +216,8 @@ public class CulturalPropertiesService {
     }
 
 
-    public void insertUserSelectKeyword(int userId, String keyword, String interestType, int count) {
-        culturalPropertiesKeywordDAO.insertUserSelectKeyword(userId, keyword, interestType, count);
+    public void insertUserSelectKeyword(int userId,  String interestType, String keyword, int count) {
+        culturalPropertiesKeywordDAO.insertUserSelectKeyword(userId, interestType, keyword, count);
     }
 
 }
