@@ -1568,11 +1568,11 @@
 
                                 $('#festivalKeywordList').append(htmlContent);
 
-                                concat += keyword.festivalKeywordId + " ";
+                                concat += keyword.festivalKeywordId + ",";
 
                             })
 
-                            $('#festivalKeyword').val(concat.trim() + " ");
+                            $('#festivalKeyword').val(concat.trim() + ",");
 
                             findFestivalSmallLoveKeyword(1);
 
@@ -1649,7 +1649,7 @@
 
                     btns.forEach(function (btn) {
 
-                        concat += (btn.value + " ");
+                        concat += (btn.value + ",");
 
                     })
 

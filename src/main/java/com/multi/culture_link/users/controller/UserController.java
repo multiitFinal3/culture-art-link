@@ -440,10 +440,10 @@ public class UserController {
 				if ((!festivalKeyword.trim().equals("")) && (!festivalKeyword.isEmpty()) && (festivalKeyword != null)) {
 					
 					String[] festivalList = null;
-					festivalList = festivalKeyword.trim().split(" ");
+					festivalList = festivalKeyword.trim().split(",");
 					
 					for (String s : festivalList) {
-						
+						s= s.replace(",","");
 						mapDTO.setFestivalKeywordId(s);
 						mapDTO.setFestivalCount(15);
 						festivalService.insertUserSelectKeyword(mapDTO);
