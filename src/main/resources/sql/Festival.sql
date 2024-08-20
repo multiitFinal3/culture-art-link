@@ -495,8 +495,56 @@ CREATE VIEW vw_user_role_data AS
 
 
 
+CREATE OR REPLACE VIEW `vw_festival_user_review_data` AS
+select
+    `fr`.`festival_review_id` AS `festival_review_id`,
+    `fr`.`user_id` AS `user_id`,
+    `fr`.`festival_id` AS `festival_id`,
+    `fr`.`festival_review_star` AS `festival_review_star`,
+    `fr`.`festival_review_content` AS `festival_review_content`,
+    `fr`.`attachment` AS `attachment`,
+    `fr`.`created_at` AS `created_at`,
+    `fr`.`updated_at` AS `updated_at`,
+    `u`.`user_name` AS `user_name`,
+    `u`.`user_profile_pic` AS `user_profile_pic`
+from
+    (`user` `u`
+join `festival_review` `fr` on
+    ((`u`.`user_id` = `fr`.`user_id`)));
 
 
+
+
+CREATE OR REPLACE VIEW `vw_festival_review_manage_data` AS
+select
+    `f`.`festival_id` AS `festival_id`,
+    `f`.`region_id` AS `region_id`,
+    `f`.`time_id` AS `time_id`,
+    `f`.`festival_name` AS `festival_name`,
+    `f`.`festival_content` AS `festival_content`,
+    `f`.`manage_institution` AS `manage_institution`,
+    `f`.`host_institution` AS `host_institution`,
+    `f`.`sponser_institution` AS `sponser_institution`,
+    `f`.`tel` AS `tel`,
+    `f`.`homepage_url` AS `homepage_url`,
+    `f`.`detail_address` AS `detail_address`,
+    `f`.`latitude` AS `latitude`,
+    `f`.`longtitude` AS `longtitude`,
+    `f`.`place` AS `place`,
+    `f`.`start_date` AS `start_date`,
+    `f`.`end_date` AS `end_date`,
+    `f`.`season` AS `season`,
+    `f`.`img_url` AS `img_url`,
+    `f`.`created_at` AS `created_at`,
+    `f`.`updated_at` AS `updated_at`,
+    count(`fr`.`festival_review_id`) AS `review_count`,
+    round(avg(`fr`.`festival_review_star`), 1) AS `avg_rate`
+from
+    (`festival` `f`
+left join `festival_review` `fr` on
+    ((`f`.`festival_id` = `fr`.`festival_id`)))
+group by
+    `f`.`festival_id`;
 
 
 
