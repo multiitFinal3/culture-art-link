@@ -329,8 +329,10 @@
 
             RIGHT JOIN (
 
-                SELECT * FROM vw_festival_user_love_hate_keyword_mapping_total_data
+                SELECT vw.festival_keyword_id, MAX(vw.festival_keyword_total_count) AS festival_keyword_total_count
+                FROM vw_festival_user_love_hate_keyword_mapping_total_data vw
                 WHERE sort_code = #{sortCode}
+                GROUP BY vw.festival_keyword_id
 
             ) f2
 

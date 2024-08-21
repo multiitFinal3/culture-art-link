@@ -67,4 +67,21 @@ public class PerformanceReviewController {
         performanceReviewService.deleteReview(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
+
+
+
+
+
+
+
+
+
+
+
+    // 사용자가 작성한 공연 리뷰 조회
+    @GetMapping("/user")
+    public ResponseEntity<List<PerformanceReviewDTO>> getUserReviews(@AuthenticationPrincipal VWUserRoleDTO user) {
+        List<PerformanceReviewDTO> userReviews = performanceReviewService.getReviewsByUserId(user.getUser().getUserId());
+        return ResponseEntity.ok(userReviews);
+    }
 }
