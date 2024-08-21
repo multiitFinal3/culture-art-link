@@ -122,8 +122,8 @@
 
 
     <insert id="saveUserKeyword">
-        INSERT INTO cultural_properties_user_select_keyword (user_id, keyword, count)
-        VALUES (#{userId}, #{keyword}, #{count})
+        INSERT INTO cultural_properties_user_select_keyword (user_id, interest_type, keyword, count)
+        VALUES (#{userId}, "LIKE"  , #{keyword}, #{count})
         ON DUPLICATE KEY UPDATE count = #{count}
     </insert>
 
