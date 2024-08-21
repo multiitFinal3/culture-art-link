@@ -2545,7 +2545,7 @@
                             }
                             $.each(response, function(index, property) {
                                 var html = `
-                                    <div class="card" id="${property.id}">
+                                    <div class="card ccard" id="${property.id}">
                                         <img class="card-img-top" src="${property.imgUrl && property.imgUrl.length > 0 ? property.imgUrl[0] : '/img/festival/noPhoto.png'}" alt="Cultural Property Image">
                                         <div class="card-body">
                                             <h5 class="card-title">${property.culturalPropertiesName}</h5>
@@ -2610,7 +2610,7 @@
                 });
 
                 // 문화재 카드 클릭 시 상세 페이지로 이동
-                $(document).on('click', '.card', function() {
+                $(document).on('click', '.ccard', function() {
                     var culturalPropertyId = $(this).attr('id');
                     window.location.href = '/cultural-properties/detail/' + culturalPropertyId;
                 });
