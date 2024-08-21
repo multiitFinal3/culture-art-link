@@ -1705,7 +1705,7 @@ $(document).ready(
 
 
         /**
-       * 처음으로 돌아가기
+       * 상세검색 1페이지로 돌아가기
        */
         $(document).on('click','.pageBtn16', function(){
 
@@ -1747,7 +1747,7 @@ $(document).ready(
             var num = 0;
 
             if(APIMulLastPage%10==0){
-                num = (APIMulLastPage / 10);
+                num = parseInt(APIMulLastPage / 10);
             }else{
                 num = parseInt((APIMulLastPage / 10) + 1);
             }
@@ -1780,7 +1780,6 @@ $(document).ready(
          * api 상세검색 리스트의 다음 페이지 버튼 클릭 이벤트
          *
          */
-
         $(document).on('click','.pageBtn17', function(){
 
             currentAPIMulNum = currentAPIMulNum + 1;
@@ -1818,10 +1817,11 @@ $(document).ready(
             $('#list2').html("");
             console.log("pageBtn6");
             current = 1;
+
             findAPIFestivalList(1)
             .then(()=>{
                 // 1~10까지 보여줌
-                return addShowingBtns(findAPIFestivalCount, 1, '.pageBtn2');
+                addShowingBtns(findAPIFestivalCount, 1, '.pageBtn2');
             })
 //            .then(()=>{
 //

@@ -10,6 +10,7 @@ import com.multi.culture_link.festival.service.FestivalService;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import org.jsoup.HttpStatusException;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.springframework.beans.factory.annotation.Value;
@@ -79,10 +80,10 @@ public class AdminFestivalServiceImpl implements AdminFestivalService {
 		int start = pageDTO.getStart();
 		int end = pageDTO.getEnd();
 		
-		if(this.list.isEmpty()){
+		if (this.list.isEmpty()) {
 			
 			Request request = new Request.Builder()
-					.url("http://api.data.go.kr/openapi/tn_pubr_public_cltur_fstvl_api?serviceKey=chNg8jx96krRfOCTvGcO2PvBKnrCrH0Qm6/JmV1TOw/Yu1T0x3jy0fHM8SOcZFnJIxdc7oqyM03PVmMA9UFOsA==&pageNo=1&numOfRows=1400&type=json")
+					.url("http://api.data.go.kr/openapi/tn_pubr_public_cltur_fstvl_api?serviceKey=chNg8jx96krRfOCTvGcO2PvBKnrCrH0Qm6/JmV1TOw/Yu1T0x3jy0fHM8SOcZFnJIxdc7oqyM03PVmMA9UFOsA==&pageNo=1&numOfRows=100&type=json")
 					.addHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36")
 					.addHeader("Connection", "keep-alive")
 					.get()
@@ -90,8 +91,8 @@ public class AdminFestivalServiceImpl implements AdminFestivalService {
 			
 			OkHttpClient client1 = new OkHttpClient.Builder()
 					.connectTimeout(40, TimeUnit.SECONDS)
-					.writeTimeout(40,TimeUnit.SECONDS)
-					.readTimeout(40,TimeUnit.SECONDS)
+					.writeTimeout(40, TimeUnit.SECONDS)
+					.readTimeout(40, TimeUnit.SECONDS)
 					.build();
 			
 			
@@ -340,7 +341,7 @@ public class AdminFestivalServiceImpl implements AdminFestivalService {
 		
 		ArrayList<FestivalDTO> nowList = (ArrayList<FestivalDTO>) this.list.clone();
 		
-		for(FestivalDTO festivalDTO : nowList){
+		for (FestivalDTO festivalDTO : nowList) {
 			
 			FestivalDTO festivalExist = adminFestivalMapper.findDBFestivalByFestival(festivalDTO);
 			
@@ -349,7 +350,7 @@ public class AdminFestivalServiceImpl implements AdminFestivalService {
 				this.list.remove(festivalDTO);
 			}
 		}
-
+		
 		ArrayList<FestivalDTO> list2 = new ArrayList<FestivalDTO>();
 		
 		int realEnd = this.list.size() > end ? end : this.list.size();
@@ -804,20 +805,28 @@ public class AdminFestivalServiceImpl implements AdminFestivalService {
 			
 			String content1 = item.get("fstvlCo").getAsString().replace("+", ", ") + ". ";
 			
+			String content2 = "";
 			
-			Document document = Jsoup.connect("https://search.naver.com/search.naver?sm=tab_hty.top&where=nexearch&ssc=tab.nx.all&query=" + festivalName + "+기본정보").get();
-			
-			String title = document.title();
-			
-			String imgUrl = document.select("div.detail_info > a > img").attr("src");
-			
-			if (!imgUrl.equals("")) {
+			try {
 				
-				festivalDTO2.setImgUrl(imgUrl);
+				Document document = Jsoup.connect("https://search.naver.com/search.naver?sm=tab_hty.top&where=nexearch&ssc=tab.nx.all&query=" + festivalName + "+기본정보").get();
 				
+				String title = document.title();
+				
+				String imgUrl = document.select("div.detail_info > a > img").attr("src");
+				
+				if (!imgUrl.equals("")) {
+					
+					festivalDTO2.setImgUrl(imgUrl);
+					
+				}
+				
+				content2 = document.select("div.intro_box > p.text").text();
+				
+			} catch (HttpStatusException e) {
+			
+			
 			}
-			
-			String content2 = document.select("div.intro_box > p.text").text();
 			
 			
 			String festivalContent = content1 + content2;
@@ -866,8 +875,6 @@ public class AdminFestivalServiceImpl implements AdminFestivalService {
 		
 		
 		System.out.println("impl list: " + list);
-		
-		this.list = list;
 		
 		ArrayList<FestivalDTO> list2 = new ArrayList<FestivalDTO>();
 		
@@ -1061,7 +1068,7 @@ public class AdminFestivalServiceImpl implements AdminFestivalService {
 		
 		if (naverArticleDTO != null) {
 			
-			int iter =  naverArticleDTO.getDisplay();
+			int iter = naverArticleDTO.getDisplay();
 			
 			for (int i = 1; i <= iter; i++) {
 				
