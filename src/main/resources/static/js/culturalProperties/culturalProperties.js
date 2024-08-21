@@ -282,7 +282,10 @@ $(document).ready(function() {
         loadAllCulturalProperties();
     });
 
-
+//// 추천 탭이 기본으로 선택되어 있다면 추천 문화재 로드
+//        if ($('.genre-item[data-target="recommend"]').hasClass('active')) {
+//            loadRecommendedCulturalProperties();
+//        }<div class="genre-item" data-target="all">전체 문화재 목록</div>
 
     const genreItems = document.querySelectorAll('.genre-item');
     const tabPanes = document.querySelectorAll('.tab-pane');
@@ -297,10 +300,12 @@ $(document).ready(function() {
             tabPanes.forEach(pane => pane.classList.remove('show', 'active'));
             document.getElementById(target).classList.add('show', 'active');
 
-            if (target === 'news') {
-              loadNewsArticles();
+            if (target === 'all') {
+               loadAllCulturalProperties();
+            } else if (target === 'news') {
+               loadNewsArticles();
             } else if (target === 'video') {
-              loadVideos();
+               loadVideos();
             }
         });
     });
