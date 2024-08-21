@@ -27,4 +27,6 @@ public class PerformanceReviewDTO {
     private String userProfileImage;
 
     private double averageRating;
+
+    private String code;
 }

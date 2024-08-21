@@ -1283,8 +1283,10 @@
                                 var actionBtns = ``;
                                 var reviewStarHtml = ``;
                                 var reviewUserId = review.userId;
-                                var reviewStarNum = review.performanceReviewStar;
+                                var reviewStarNum = review.starRating;
                                 var time = review.updatedAt.replace("T", " ").slice(0, 19);
+                                var performanceCode = review.code || ''; // review 객체에서 performanceCode 가져오기
+
 
                                 if ((review.userProfileImage == null) || (review.userProfileImage == "")) {
                                     profilePic = `<img src="https://kr.object.ncloudstorage.com/team3/common/noPhoto.png" alt="이미지 없음">`;
@@ -1301,11 +1303,10 @@
 
                                 actionBtns = `
                                     <div class="review-actions">
-                                        <button class="update btn btn-outline-success" onclick="location.href='/performance/performance-detail?performanceId=${review.festivalId}'">상세</button>
-                                        <button class="update btn btn-outline-success" value="${review.performanceReviewId}" type="button">수정</button>
-                                        <button class="deleteBtn btn btn-outline-success" value="${review.performanceReviewId}">삭제</button>
-                                        <button class="editBtn hide btn btn-outline-success" value="${review.performanceReviewId}">저장</button>
-                                        <button class="cancelBtn hide btn btn-outline-success" value="${review.performanceReviewId}">취소</button>
+                                        <button class="detail3 btn btn-outline-success" onclick="location.href='/performance/performanceDetail?performanceCode=' + performanceCode + '&source=db'">상세</button>                                        <button class="update3 btn btn-outline-success" value="${review.performanceReviewId}" type="button">수정</button>
+                                        <button class="deleteBtn3 btn btn-outline-success" value="${review.performanceReviewId}">삭제</button>
+                                        <button class="editBtn3 hide btn btn-outline-success" value="${review.performanceReviewId}">저장</button>
+                                        <button class="cancelBtn3 hide btn btn-outline-success" value="${review.performanceReviewId}">취소</button>
                                     </div>
                                 `;
 
