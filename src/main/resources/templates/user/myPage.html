@@ -1568,11 +1568,11 @@
 
                                 $('#festivalKeywordList').append(htmlContent);
 
-                                concat += keyword.festivalKeywordId + " ";
+                                concat += keyword.festivalKeywordId + ",";
 
                             })
 
-                            $('#festivalKeyword').val(concat.trim() + " ");
+                            $('#festivalKeyword').val(concat.trim() + ",");
 
                             findFestivalSmallLoveKeyword(1);
 
@@ -1649,7 +1649,7 @@
 
                     btns.forEach(function (btn) {
 
-                        concat += (btn.value + " ");
+                        concat += (btn.value + ",");
 
                     })
 
@@ -2228,7 +2228,7 @@
                                 <a class="category" id="performance">공연</a>
                                 <a class="category" id="exhibition">전시</a>
                                 <a class="category" id="festival">축제</a>
-                                <a class="category" id="culturalPro">문화제</a>
+                                <a class="category" id="culturalPro">문화재</a>
                             </div>
                         </div>
 

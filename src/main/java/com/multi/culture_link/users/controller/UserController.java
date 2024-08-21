@@ -187,8 +187,10 @@ public class UserController {
 		if (festivalSelectKeyword != null && !festivalSelectKeyword.trim().equals("")) {
 			
 			System.out.println("festivalSelectKeyword : " + festivalSelectKeyword);
-			String[] list = festivalSelectKeyword.trim().split(" ");
+			String[] list = festivalSelectKeyword.trim().split(",");
 			for (String s : list) {
+				
+				s = s.replace(",","");
 				
 				try {
 					
@@ -440,10 +442,10 @@ public class UserController {
 				if ((!festivalKeyword.trim().equals("")) && (!festivalKeyword.isEmpty()) && (festivalKeyword != null)) {
 					
 					String[] festivalList = null;
-					festivalList = festivalKeyword.trim().split(" ");
+					festivalList = festivalKeyword.trim().split(",");
 					
 					for (String s : festivalList) {
-						
+						s= s.replace(",","");
 						mapDTO.setFestivalKeywordId(s);
 						mapDTO.setFestivalCount(15);
 						festivalService.insertUserSelectKeyword(mapDTO);
