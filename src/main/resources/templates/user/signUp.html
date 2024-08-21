@@ -89,6 +89,44 @@
                 findAllRegion();
 
 
+
+
+                $(document).on('click', '.performanceKeywordBtn', function () {
+
+                    event.preventDefault();
+
+                    if ($(this).hasClass('hasLove')) {
+                        $(this).removeClass('hasLove');
+                    } else {
+                        $(this).addClass('hasLove');
+                    }
+
+                    var btns = document.querySelectorAll('button.performanceKeywordBtn.hasLove');
+                    var concat = '';
+
+                    btns.forEach(function (btn) {
+                        concat += (btn.value + " ");
+                    })
+
+                    $('#performanceSelectKeyword').val(concat.trim());
+                });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                 //#endregion
 
 
@@ -675,6 +713,28 @@
 
 
                     카테고리별 키워드
+
+                    <div id="performanceKeywordZone">
+
+                        <input type="hidden" id="performanceSelectKeyword" name="performanceSelectKeyword" value="">
+
+                        <div id="performanceKeywordBtns">
+                            <button value="연극" class="performanceKeywordBtn">연극</button>
+                            <button value="무용" class="performanceKeywordBtn">무용</button>
+                            <button value="대중무용" class="performanceKeywordBtn">대중무용</button>
+                            <button value="서양음악(클래식)" class="performanceKeywordBtn">서양음악</button>
+                            <button value="한국음악(국악)" class="performanceKeywordBtn">한국음악</button>
+                            <button value="대중음악" class="performanceKeywordBtn">대중음악</button>
+                            <button value="복합" class="performanceKeywordBtn">복합</button>
+                            <button value="서커스/마술" class="performanceKeywordBtn">서커스/마술</button>
+                            <button value="뮤지컬" class="performanceKeywordBtn">뮤지컬</button>
+                        </div>
+
+                        <button id="addperformanceKeyword" class="btn btn-outline-success" value="1">공연 키워드 추가</button>
+                    </div>
+
+
+
                     <div id="festivalKeywordZone">
 
                         <input type="hidden" id="festivalSelectKeyword" name="festivalSelectKeyword" value="">
@@ -712,6 +772,9 @@
                         <button id="addCulturalPropertiesKeyword" class="btn btn-outline-success" value="1">문화재 키워드 추가
                         </button>
                     </div>
+
+
+
 
 
                     <div>

@@ -83,6 +83,7 @@
 
 
 
+    #performanceKeywordBtns,
     #festivalKeywordBtns,
     #exhibitionKeywordBtns,
     #culturalPropertiesKeywordBtns
@@ -120,6 +121,7 @@
 
     }
 
+    .performanceKeywordBtn,
     .festivalKeywordBtn,
     .exhibitionKeywordBtn,
     .culturalPropertiesKeywordBtn,
