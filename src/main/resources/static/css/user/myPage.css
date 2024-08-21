@@ -617,7 +617,11 @@
 
    .pageBtn1,
    .pageBtn2,
-   .page-btn {
+
+   .page-btn,
+
+   .pageBtn3{
+
 
         width: 45px;
         text-align: center;

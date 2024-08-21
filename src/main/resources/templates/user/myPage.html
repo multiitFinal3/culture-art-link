@@ -1306,21 +1306,33 @@
                                 var reviewIdPlusPerformanceId = review.id + "," + review.performanceId;
                                 var reviewHtml = ``;
                                 var profilePic = ``;
+                                var attachment = ``;
                                 var actionBtns = ``;
                                 var reviewStarHtml = ``;
-                                var reviewStarNum = parseInt(review.stars);
+                                var reviewUserId = review.userId;
+                                var reviewStarNum = review.performanceReviewStar;
                                 var time = review.updatedAt.replace("T", " ").slice(0, 19);
 
-                                if (!review.profileImage) {
+                                if ((review.userProfileImage == null) || (review.userProfileImage == "")) {
                                     profilePic = `<img src="https://kr.object.ncloudstorage.com/team3/common/noPhoto.png" alt="이미지 없음">`;
                                 } else {
-                                    profilePic = `<img src="${review.profileImage}">`;
+                                    profilePic = `<img src="https://kr.object.ncloudstorage.com/team3${review.userProfileImage}" alt="사용자 이미지">`;
                                 }
+
+                                if ((review.attachment == null) || (review.attachment == "")) {
+                                    attachment = `<img src="https://kr.object.ncloudstorage.com/team3/common/noPhoto.png">`
+                                } else {
+                                    attachment = `<img src="${review.attachment}">`
+                                }
+
 
                                 actionBtns = `
                                     <div class="review-actions">
-                                        <button class="update btn btn-outline-success" onclick="location.href='/performance/detail/${review.performanceId}'">상세</button>
-                                        <button class="deleteBtn2 btn btn-outline-success" value="${reviewIdPlusPerformanceId}">삭제</button>
+                                        <button class="update btn btn-outline-success" onclick="location.href='/performance/performance-detail?performanceId=${review.festivalId}'">상세</button>
+                                        <button class="update btn btn-outline-success" value="${review.performanceReviewId}" type="button">수정</button>
+                                        <button class="deleteBtn btn btn-outline-success" value="${review.performanceReviewId}">삭제</button>
+                                        <button class="editBtn hide btn btn-outline-success" value="${review.performanceReviewId}">저장</button>
+                                        <button class="cancelBtn hide btn btn-outline-success" value="${review.performanceReviewId}">취소</button>
                                     </div>
                                 `;
 
@@ -1372,7 +1384,7 @@
                                 $('#reviewList').append(reviewHtml);
                             });
 
-                            findUserEReviewCount(size);
+                            findUserReviewCount(size);
                         },
                         error: function (error) {
                             console.error('리뷰 로드 실패:', error);
@@ -1401,7 +1413,7 @@
                     }
 
                     for (var p = 1; p <= pages; p++) {
-                        $('#reviewPages').append(`<button class="pageBtn2" style="font-size: 20px; margin: 0.5%">${p}</button>`)
+                        $('#reviewPages').append(`<button class="pageBtn3" style="font-size: 20px; margin: 0.5%">${p}</button>`)
                     }
 
                 }
@@ -1411,13 +1423,13 @@
                  * 리뷰 페이지 이벤트 버튼
                  *
                  */
-                $(document).on('click', '.pageBtn2', function () {
+                $(document).on('click', '.pageBtn3', function () {
                     var page = $(this).text();
                     findPerformanceReviewListByPage(page);
 
                     setTimeout(function () {
                         console.log("0.1s");
-                        var btns = $('.pageBtn2');
+                        var btns = $('.pageBtn3');
 
                         console.log(btns)
 
@@ -1446,7 +1458,7 @@
                  * 공연 리뷰 삭제
                  *
                  */
-                $(document).on('click', '.deleteBtn2', function () {
+                $(document).on('click', '.deleteBtn3', function () {
 
                     var reviewIdPlusPerformanceId = $(this).val().trim();
                     var ids = reviewIdPlusPerformanceId.split(",");

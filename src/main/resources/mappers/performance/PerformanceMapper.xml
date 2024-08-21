@@ -221,9 +221,30 @@
 
 
     <!-- 사용자 ID로 리뷰 조회 -->
+<!--    <select id="findReviewsByUserId" parameterType="int" resultType="com.multi.culture_link.performance.model.dto.PerformanceReviewDTO">-->
+<!--        SELECT * FROM performance_review-->
+<!--        WHERE user_id = #{userId}-->
+<!--    </select>-->
+
+
     <select id="findReviewsByUserId" parameterType="int" resultType="com.multi.culture_link.performance.model.dto.PerformanceReviewDTO">
-        SELECT * FROM performance_review
-        WHERE user_id = #{userId}
+        SELECT
+        pr.id,
+        pr.performance_id AS performanceId,
+        pr.user_id AS userId,
+        pr.star_rating AS starRating,
+        pr.content,
+        pr.review_date AS reviewDate,
+        pr.created_at AS createdAt,
+        pr.updated_at AS updatedAt,
+        u.user_name AS userName,
+        u.user_profile_pic AS userProfileImage
+        FROM
+        performance_review pr
+        JOIN
+        user u ON pr.user_id = u.user_id
+        WHERE
+        pr.user_id = #{userId}
     </select>
 
 
