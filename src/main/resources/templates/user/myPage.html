@@ -2885,12 +2885,16 @@
                         method: 'GET',
                         success: function(response) {
                             // 초기 키워드를 모두 초록색으로 표시
+                            var concat="";
+
                             const initialKeywords = response.map(keyword => ({
                                 ...keyword,
                                 isInitial: true  // 초기 키워드임을 표시
                             }));
+                            initialKeywords.forEach(function(keyword) { concat += keyword.keyword + ","; });
                             displayCulturalPropertiesKeywords(initialKeywords);
                             loadUnselectedCulturalPropertiesKeywords();
+                            $('#culturalPropertiesKeyword').val(concat);
                         },
                         error: function(xhr, status, error) {
                             console.error("Error loading initial keywords:", error);

@@ -382,12 +382,14 @@
            border-radius: 5px;
            cursor: pointer;
            opacity: 0.8;
+
        }
 
     #upperZone .whiteHeartBtn{
 
-      top: 290px;
-      right: 60px;
+
+      top: 285px;
+      right: 59px;
     }
 
 
@@ -420,8 +422,8 @@
 
    #upperZone .whiteHateBtn{
 
-       top: 290px;
-       right: 10px;
+       top: 285px;
+       right: 7px;
 
    }
 

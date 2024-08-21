@@ -401,4 +401,103 @@ $(document).ready(function() {
         });
     }
 
+
+
+    function loadRecommendedCulturalProperties() {
+        $.ajax({
+            url: '/cultural-properties/main/recommend',
+            type: 'GET',
+            success: function(data) {
+                renderRecommendedCulturalProperties(data);
+
+                // 찜 정보를 사용자 ID로 불러오기
+                getUserId().then(userId => {
+                    loadUserInterest(userId); // 찜 상태 로드
+                }).catch(error => {
+                    console.error('사용자 ID 요청 중 오류 발생:', error);
+                });
+
+            },
+            error: function(xhr, status, error) {
+                console.error('AJAX 요청 실패:', status, error);
+            }
+        });
+    }
+
+    function renderRecommendedCulturalProperties(properties) {
+        const gallerySection = $('#recommended-gallery-section');
+        gallerySection.empty();
+
+        if (!properties || properties.length === 0) {
+            gallerySection.append('<p class="empty-message">추천할 문화재가 없습니다.</p>');
+            return;
+        }
+
+        properties.forEach(function(property) {
+            const item = $('<div>').addClass('all-cultural-property-item');
+            const link = $('<a>').attr('href', `/cultural-properties/detail/${property.id}`);
+            const card = $('<div>').addClass('all-card').attr('data-cultural-property-id', property.id);
+            const img = $('<img>').attr('src', property.mainImgUrl || '/img/festival/noPhoto.png').attr('alt', property.culturalPropertiesName);
+            const info = $('<div>').addClass('all-cultural-property-info');
+            const title = $('<div>').addClass('all-title').text(property.culturalPropertiesName);
+            const location = $('<div>').addClass('all-location').text((property.region && property.district) ? `${property.region} ${property.district}` : '위치정보가 없습니다');
+            const category = $('<div>').addClass('all-category').text(property.categoryName);
+            const dynasty = $('<div>').addClass('all-dynasty').text(property.dynasty);
+
+            // 별점 추가
+            const ratingWrapper = $('<div>').addClass('rating-wrapper');
+            const star = $('<span>').addClass('star').text('★ ');
+            const averageRating = $('<span>').addClass('average-rating').text(Number(property.averageRating).toFixed(1));
+            ratingWrapper.append(star, averageRating);
+
+            // 찜과 관심없음 버튼 추가
+            const badgeDiv = $('<div>').addClass('badge-container');
+            const likeButton = $('<button>').addClass('interest-button like-button');
+            const dislikeButton = $('<button>').addClass('interest-button dislike-button');
+            const likeImg = $('<img>').attr('src', 'https://kr.object.ncloudstorage.com/team3/common/upNo.png').attr('alt', '찜');
+            const dislikeImg = $('<img>').attr('src', 'https://kr.object.ncloudstorage.com/team3/common/downNo.png').attr('alt', '관심없음');
+
+            likeButton.append(likeImg);
+            dislikeButton.append(dislikeImg);
+            badgeDiv.append(likeButton, dislikeButton);
+
+
+            // 버튼 이벤트 핸들러
+            likeButton.click(function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                handleInterestClick(property.id, 'LIKE', $(this), dislikeButton);
+            });
+
+            dislikeButton.click(function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                handleInterestClick(property.id, 'DISLIKE', $(this), likeButton);
+            });
+
+            card.append(img, badgeDiv);
+            info.append(title, category, location, dynasty, ratingWrapper);
+            link.append(card, info);
+            item.append(link);
+            gallerySection.append(item);
+        });
+    }
+
+
+
+    // 기존의 genre-item 클릭 이벤트 리스너에 추가
+    $('.genre-item[data-target="recommend"]').on('click', function() {
+        loadRecommendedCulturalProperties();
+    });
+
+    // 페이지 로드 시 추천 문화재 로드
+    $(document).ready(function() {
+
+        // 추천 탭이 기본으로 선택되어 있다면 추천 문화재 로드
+        if ($('.genre-item[data-target="recommend"]').hasClass('active')) {
+            loadRecommendedCulturalProperties();
+        }
+    });
+
+
 });

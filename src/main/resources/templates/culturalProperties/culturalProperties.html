@@ -120,22 +120,45 @@
     margin-bottom: 20px;
 }
 
+<!--/* 전체 문화재 목록 아이템 컨테이너 */-->
+<!--.all-cultural-properties-items {-->
+<!--    display: flex;-->
+<!--    flex-wrap: wrap;-->
+<!--    justify-content: space-between; /* 양 끝 공간 확보 */-->
+<!--    gap: 10px; /* 카드 간의 간격 */-->
+<!--    width: calc(5 * 249px + 4 * 10px); /* 카드 5개와 간격을 고려한 너비 */-->
+<!--}-->
+
+<!--/* 각 문화재 아이템 */-->
+<!--.all-cultural-property-item {-->
+<!--    display: flex;-->
+<!--    flex-direction: column;-->
+<!--    align-items: center;-->
+<!--    width: 249px; /* 고정 너비 */-->
+<!--    margin-bottom: 20px;-->
+<!--}-->
+
 /* 전체 문화재 목록 아이템 컨테이너 */
 .all-cultural-properties-items {
     display: flex;
     flex-wrap: wrap;
-    justify-content: space-between; /* 양 끝 공간 확보 */
     gap: 10px; /* 카드 간의 간격 */
-    width: calc(5 * 249px + 4 * 10px); /* 카드 5개와 간격을 고려한 너비 */
+    width: 100%; /* 전체 너비 사용 */
+    max-width: calc(5 * 249px + 4 * 10px); /* 최대 너비 제한 */
+    margin: 0 auto; /* 중앙 정렬 */
 }
 
 /* 각 문화재 아이템 */
 .all-cultural-property-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    flex: 0 0 auto; /* flex-grow: 0, flex-shrink: 0, flex-basis: auto */
     width: 249px; /* 고정 너비 */
     margin-bottom: 20px;
+}
+
+/* 왼쪽 정렬을 위한 추가 스타일 */
+.all-cultural-properties-items::after {
+    content: "";
+    flex: auto;
 }
 
 .all-card {
@@ -226,18 +249,19 @@ a {
 <!--}-->
 
 .badge-container {
-    position: absolute;
-    bottom: 10px;
-    right: 10px;
-    display: none;
-    gap: 5px;
-}
 
-
-
-.all-card:hover .badge-container {
+    position: relative;
+    bottom: 48px;
+    right: -139px;
+    gap: 7px;
     display: flex;
 }
+
+
+
+<!--.all-card:hover .badge-container {-->
+<!--    display: flex;-->
+<!--}-->
 
 <!--.all-card:hover .badge-container {-->
 <!--    display: flex;-->
@@ -332,6 +356,7 @@ a {
     <div class="filter-container">
 
         <div class="genre-filter">
+            <div class="genre-item" data-target="recommend">추천</div>
             <div class="genre-item active" data-target="all">전체 문화재 목록</div>
             <div class="genre-item" data-target="news">뉴스 & 소식</div>
             <div class="genre-item" data-target="video">관련 영상</div>
@@ -395,17 +420,18 @@ a {
 
         <div class="tab-content mt-5" id="myTabContent">
         <div class="tab-pane fade show active" id="all" role="tabpanel">
-        <div class="ranking mt-5">
-            <h2 class="mb-4">카테고리별 랭킹</h2>
-            <div class="row" id="ranking-list">
-                <!-- 랭킹 카드가 여기에 동적으로 추가됩니다 -->
-            </div>
-        </div>
+<!--        <div class="ranking mt-5">-->
+<!--            <h2 class="mb-4">카테고리별 랭킹</h2>-->
+<!--            <div class="row" id="ranking-list">-->
+<!--                &lt;!&ndash; 랭킹 카드가 여기에 동적으로 추가됩니다 &ndash;&gt;-->
+<!--            </div>-->
+<!--        </div>-->
 
 
 
         <div class="all-cultural-properties">
             <h2 class="all-cultural-properties-title">전체 문화재 목록</h2>
+            <br><br>
             <div class="all-cultural-properties-items" id="gallery-section">
                 <div class="all-cultural-property-item" th:each="property : ${allCulturalProperties}">
                     <a th:href="@{'/cultural-properties/detail/' + ${property.id}}">
@@ -441,6 +467,21 @@ a {
             </div>
         </div>
         </div>
+
+
+            <div class="tab-pane fade" id="recommend" role="tabpanel">
+                <div class="all-cultural-properties">
+
+                    <br>
+
+                    <h2 th:text="${user.userName} + '님 이런 문화유산은 어때요?'"></h2>
+
+                    <br><br>
+                    <div class="all-cultural-properties-items" id="recommended-gallery-section">
+                        <!-- 추천 문화재 카드가 동적으로 추가됨 -->
+                    </div>
+                </div>
+            </div>
 
 
             <div class="tab-pane fade" id="news" role="tabpanel" aria-labelledby="news-tab">

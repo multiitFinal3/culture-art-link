@@ -80,4 +80,6 @@ public interface CulturalPropertiesDAO {
     void removeUserInterest(@Param("userId") int userId, @Param("culturalPropertiesId") int culturalPropertiesId);
 
 
+
+
 }

@@ -60,7 +60,10 @@ public class CulturalPropertiesController {
 
 
 	@GetMapping
-	public String culturalProperties() {
+	public String culturalProperties(@AuthenticationPrincipal VWUserRoleDTO user, Model model) {
+
+		model.addAttribute("user", user.getUser());
+
 		return "/culturalProperties/culturalProperties";
 	}
 
@@ -77,6 +80,7 @@ public class CulturalPropertiesController {
 			double averageRating = culturalPropertiesService.averageRating(property.getId());
 			property.setAverageRating(averageRating);
 		}
+
 
 		return ResponseEntity.ok(properties);
 	}
@@ -618,6 +622,23 @@ public class CulturalPropertiesController {
 		return ResponseEntity.ok(interestType.equals("LIKE") ? "찜이 추가되었습니다." : "관심없음이 추가되었습니다.");
 	}
 
+
+
+
+	@GetMapping("/main/recommend")
+	public ResponseEntity<List<CulturalPropertiesDTO>> getMainRecommend(@AuthenticationPrincipal VWUserRoleDTO user) {
+		int userId = user.getUserId();
+		List<CulturalPropertiesDTO> recommendedProperties = culturalPropertiesService.getMainRecommend(userId);
+
+		// 각 문화재의 평균 평점을 설정
+		for (CulturalPropertiesDTO property : recommendedProperties) {
+			double averageRating = culturalPropertiesService.averageRating(property.getId());
+			property.setAverageRating(averageRating);
+		}
+
+
+		return ResponseEntity.ok(recommendedProperties);
+	}
 
 
 

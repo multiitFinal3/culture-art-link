@@ -269,4 +269,23 @@ public class CulturalPropertiesService {
 
 
 
+
+
+    public List<CulturalPropertiesDTO> getMainRecommend(int userId) {
+        List<String> recommendedKeywords = culturalPropertiesKeywordDAO.getMainRecommendedKeywords(userId);
+        List<CulturalPropertiesDTO> properties = culturalPropertiesKeywordDAO.getRecommendedCulturalProperties(recommendedKeywords);
+
+        // 각 문화재의 평균 평점을 설정
+        for (CulturalPropertiesDTO property : properties) {
+            double averageRating = averageRating(property.getId());
+            property.setAverageRating(averageRating);
+        }
+
+        return properties;
+    }
+
+
+
+
+
 }
