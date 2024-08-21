@@ -592,6 +592,12 @@
         color: gold;
 
     }
+    
+    .review-star.empty {
+        font-size: 20px; /*  */
+        color: #e0e0e0;
+
+    }
 
     .card-img-top:hover {
        transform: scale(1.05);
@@ -610,7 +616,8 @@
 
 
    .pageBtn1,
-   .pageBtn2{
+   .pageBtn2,
+   .page-btn {
 
         width: 45px;
         text-align: center;
