@@ -767,7 +767,7 @@
                                     <div id="leftHead">
                                         <h2 style="display: inline-block;">리뷰</h2>
 
-                                        <div id="totalReviewCount" class="mt-3" style="display: inline-block; margin-left: 10px;">
+                                        <div id="totalfReviewCount" class="mt-3" style="display: inline-block; margin-left: 10px;">
                                             숫자
                                         </div>
                                     </div>
@@ -896,7 +896,7 @@
 
                             })
 
-                            findUserReviewCount();
+                            findUserfReviewCount();
 
                         }
                     })
@@ -911,7 +911,7 @@
                  *
                  *
                  */
-                function findUserReviewCount() {
+                function findUserfReviewCount() {
 
                     $.ajax({
 
@@ -920,7 +920,7 @@
                         contentType: 'application/json',
                         success: function (count) {
 
-                            $('#totalReviewCount').html(count);
+                            $('#totalfReviewCount').html(count);
 
                             var pages = 0;
 
