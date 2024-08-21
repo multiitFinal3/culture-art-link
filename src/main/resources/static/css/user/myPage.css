@@ -593,6 +593,12 @@
         color: gold;
 
     }
+    
+    .review-star.empty {
+        font-size: 20px; /*  */
+        color: #e0e0e0;
+
+    }
 
     .card-img-top:hover {
        transform: scale(1.05);
@@ -612,7 +618,11 @@
 
    .pageBtn1,
    .pageBtn2,
+
+   .page-btn,
+
    .pageBtn3{
+
 
         width: 45px;
         text-align: center;
@@ -802,6 +812,13 @@
 
    }
 
+    .cpagination{
+
+        display: flex;
+        padding-left: 0;
+        list-style: none;
+
+    }
     .ccard{
 
         margin-bottom: 50px;
