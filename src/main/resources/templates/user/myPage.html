@@ -2079,24 +2079,282 @@
 
                 //문화재 리뷰
 
-                function loadMyReviews(page = 0) {
+<!--                function loadMyReviews(page = 0) {-->
+<!--    $.ajax({-->
+<!--        url: '/cultural-properties/myReviews',-->
+<!--        method: 'GET',-->
+<!--        data: { page: page },-->
+<!--        success: function(response) {-->
+<!--            $('#upper').html("");-->
+<!--            var reviewsHtml = '<h2>내가 쓴 리뷰</h2>';-->
+<!--            response.reviews.forEach(function(review) {-->
+<!--                reviewsHtml += `-->
+<!--                    <div class="review-item">-->
+<!--                        <h3>${review.culturalPropertiesName}</h3>-->
+<!--                        <p>평점: ${review.star}</p>-->
+<!--                        <p>${review.content}</p>-->
+<!--                        <p>작성일: ${new Date(review.createdAt).toLocaleDateString()}</p>-->
+<!--                    </div>-->
+<!--                `;-->
+<!--            });-->
+
+<!--            // 페이징 버튼 추가-->
+<!--            reviewsHtml += '<div class="pagination">';-->
+<!--            for (let i = 0; i < response.totalPages; i++) {-->
+<!--                reviewsHtml += `<button class="page-btn" data-page="${i}">${i + 1}</button>`;-->
+<!--            }-->
+<!--            reviewsHtml += '</div>';-->
+
+<!--            $('#upper').html(reviewsHtml);-->
+
+<!--            // 페이지 버튼 클릭 이벤트-->
+<!--            $('.page-btn').click(function() {-->
+<!--                loadMyReviews($(this).data('page'));-->
+<!--            });-->
+<!--        },-->
+<!--        error: function(xhr, status, error) {-->
+<!--            console.error("Error loading reviews:", error);-->
+<!--            $('#upper').html("<p>리뷰를 불러오는데 실패했습니다.</p>");-->
+<!--        }-->
+<!--    });-->
+<!--}-->
+
+
+<!--////////////////////////////////////////////////////////-->
+
+<!--function loadMyReviews(page = 0) {-->
+<!--    $.ajax({-->
+<!--        url: '/cultural-properties/myReviews',-->
+<!--        method: 'GET',-->
+<!--        data: { page: page },-->
+<!--        success: function(response) {-->
+<!--            $('#upper').html("");-->
+<!--            const reviewCount = response.totalElements;-->
+
+<!--            var reviewsHtml = `-->
+<!--                <div class="reviews">-->
+<!--                    <h2 style="display: inline-block;">리뷰</h2>-->
+<!--                    <div id="totalReviewCount" class="mt-3" style="display: inline-block; margin-left: 10px;">-->
+<!--                        <span>${reviewCount}</span>-->
+<!--                    </div>-->
+<!--            `;-->
+
+<!--            if (reviewCount === 0) {-->
+<!--                reviewsHtml += '<br><br><br><br><br><div class="no-reviews" style="font-size: 20px;">리뷰가 없습니다. 리뷰를 작성해보세요.</div><br><br><br><br><br>';-->
+<!--            } else {-->
+<!--                response.reviews.forEach(function(review) {-->
+<!--                    const createdAt = new Date(review.createdAt);-->
+<!--                    const formattedDate = createdAt.toISOString().slice(0, 19).replace('T', ' ') + '             ';-->
+
+<!--                    const updatedAtHtml = review.updatedAt && review.updatedAt !== review.createdAt-->
+<!--                        ? ` 수정 : ${new Date(review.updatedAt).toISOString().slice(0, 19).replace('T', ' ')}`-->
+<!--                        : '';-->
+
+<!--                    reviewsHtml += `-->
+<!--                        <div class="review">-->
+<!--                            <div class="user-info">-->
+<!--                                <img src="${review.userProfileImage ? 'https://kr.object.ncloudstorage.com/team3' + review.userProfileImage : 'https://kr.object.ncloudstorage.com/team3/img/festival/noPhoto.png'}" alt="${review.userName}">-->
+<!--                                <div class="user-details">-->
+<!--                                    <span>${review.userName}</span>-->
+<!--                                    <span style="font-size: 13px; color: #999;">-->
+<!--                                        ${formattedDate}   ${updatedAtHtml}-->
+<!--                                    </span>-->
+<!--                                    <div class="review-rating" data-rating="${review.star}">-->
+<!--                                        ${Array.from({ length: 5 }, (_, index) => {-->
+<!--                                            if (index < review.star) {-->
+<!--                                                return '<span class="review-star">&#9733;</span>';-->
+<!--                                            } else {-->
+<!--                                                return '<span class="review-star empty">&#9734;</span>';-->
+<!--                                            }-->
+<!--                                        }).join('')}-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                            <div class="review-content">-->
+<!--                                <p class="review-content-p-${review.id}">${review.content}</p>-->
+<!--                                <div class="review-text-container">-->
+<!--                                    <textarea id="editContent-${review.id}" rows="5" style="display:none;" value="${review.content}">${review.content}</textarea>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                            <div class="review-actions">-->
+<!--                                <button type="button" class="btn btn-outline-success detail-btn" onclick="location.href='/cultural-properties/detail/${review.culturalPropertiesId}'">상세</button>-->
+<!--                                <button type="button" class="btn btn-outline-success edit-btn" id="edit-btn-${review.id}" data-id="${review.id}">수정</button>-->
+<!--                                <button type="button" class="btn btn-outline-success delete-btn" id="delete-btn-${review.id}" data-id="${review.id}" data-cultural-id="${review.culturalPropertiesId}">삭제</button>-->
+<!--                                <button type="button" class="btn btn-outline-success save-btn" id="save-btn-${review.id}" style="display:none;" data-id="${review.id}" data-cultural-id="${review.culturalPropertiesId}">저장</button>-->
+<!--                                <button type="button" class="btn btn-outline-success cancel-btn" id="cancel-btn-${review.id}" style="display:none;">취소</button>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    `;-->
+<!--                });-->
+<!--            }-->
+
+<!--            reviewsHtml += '</div>';-->
+
+<!--            // 페이징 버튼 추가-->
+<!--            reviewsHtml += '<div class="pagination">';-->
+<!--            for (let i = 0; i < response.totalPages; i++) {-->
+<!--                reviewsHtml += `<button class="page-btn" data-page="${i}">${i + 1}</button>`;-->
+<!--            }-->
+<!--            reviewsHtml += '</div>';-->
+
+<!--            $('#upper').html(reviewsHtml);-->
+
+<!--            // 페이지 버튼 클릭 이벤트-->
+<!--            $('.page-btn').click(function() {-->
+<!--                loadMyReviews($(this).data('page'));-->
+<!--            });-->
+
+<!--            // 수정 버튼 클릭 이벤트-->
+<!--            $('.edit-btn').click(function() {-->
+<!--                var reviewId = $(this).data('id');-->
+<!--                $(this).hide();-->
+<!--                $('#delete-btn-' + reviewId).hide();-->
+<!--                $('#save-btn-' + reviewId).show();-->
+<!--                $('#cancel-btn-' + reviewId).show();-->
+<!--                $('.review-content-p-' + reviewId).hide();-->
+<!--                $('#editContent-' + reviewId).show();-->
+<!--            });-->
+
+<!--            // 취소 버튼 클릭 이벤트-->
+<!--            $('.cancel-btn').click(function() {-->
+<!--                var reviewId = $(this).attr('id').split('-')[2];-->
+<!--                $('#edit-btn-' + reviewId).show();-->
+<!--                $('#delete-btn-' + reviewId).show();-->
+<!--                $(this).hide();-->
+<!--                $('#save-btn-' + reviewId).hide();-->
+<!--                $('.review-content-p-' + reviewId).show();-->
+<!--                $('#editContent-' + reviewId).hide();-->
+<!--            });-->
+
+<!--            // 저장 버튼 클릭 이벤트-->
+<!--            $('.save-btn').click(function() {-->
+<!--                var reviewId = $(this).data('id');-->
+<!--                var culturalPropertiesId = $(this).data('cultural-id');-->
+<!--                var content = $('#editContent-' + reviewId).val();-->
+
+<!--                $.ajax({-->
+<!--                    url: '/cultural-properties/detail/' + culturalPropertiesId + '/review/update',-->
+<!--                    method: 'PUT',-->
+<!--                    contentType: 'application/json',-->
+<!--                    data: JSON.stringify({-->
+<!--                        id: reviewId,-->
+<!--                        content: content-->
+<!--                    }),-->
+<!--                    success: function(response) {-->
+<!--                        alert("리뷰가 성공적으로 수정되었습니다.");-->
+<!--                        loadMyReviews(page);-->
+<!--                    },-->
+<!--                    error: function(xhr, status, error) {-->
+<!--                        alert("리뷰 수정에 실패했습니다.");-->
+<!--                    }-->
+<!--                });-->
+<!--            });-->
+
+<!--            // 삭제 버튼 클릭 이벤트-->
+<!--            $('.delete-btn').click(function() {-->
+<!--                var reviewId = $(this).data('id');-->
+<!--                var culturalPropertiesId = $(this).data('cultural-id');-->
+
+<!--                if (confirm("정말로 이 리뷰를 삭제하시겠습니까?")) {-->
+<!--                    $.ajax({-->
+<!--                        url: '/cultural-properties/detail/' + culturalPropertiesId + '/review/remove',-->
+<!--                        method: 'DELETE',-->
+<!--                        data: { id: reviewId },-->
+<!--                        success: function(response) {-->
+<!--                            alert("리뷰가 성공적으로 삭제되었습니다.");-->
+<!--                            loadMyReviews(page);-->
+<!--                        },-->
+<!--                        error: function(xhr, status, error) {-->
+<!--                            alert("리뷰 삭제에 실패했습니다.");-->
+<!--                        }-->
+<!--                    });-->
+<!--                }-->
+<!--            });-->
+<!--        },-->
+<!--        error: function(xhr, status, error) {-->
+<!--            console.error("Error loading reviews:", error);-->
+<!--            $('#upper').html("<p>리뷰를 불러오는데 실패했습니다.</p>");-->
+<!--        }-->
+<!--    });-->
+<!--}-->
+<!--///////////////////////////////////////////////-->
+
+
+function loadMyReviews(page = 0) {
     $.ajax({
         url: '/cultural-properties/myReviews',
         method: 'GET',
         data: { page: page },
         success: function(response) {
             $('#upper').html("");
-            var reviewsHtml = '<h2>내가 쓴 리뷰</h2>';
-            response.reviews.forEach(function(review) {
-                reviewsHtml += `
-                    <div class="review-item">
-                        <h3>${review.culturalPropertiesName}</h3>
-                        <p>평점: ${review.star}</p>
-                        <p>${review.content}</p>
-                        <p>작성일: ${new Date(review.createdAt).toLocaleDateString()}</p>
+            var reviewCount = response.totalItems; // 총 리뷰 수
+
+            // 리뷰 카운트 업데이트
+            var reviewCountHtml = `<span>${reviewCount}</span>`;
+            $('#totalReviewCount').html(reviewCountHtml);
+
+            var reviewsHtml = `
+                <div class="reviews">
+                    <h2 style="display: inline-block;">리뷰</h2>
+                    <div id="totalReviewCount" class="mt-3" style="display: inline-block; margin-left: 10px;">
+                        <span>${reviewCount}</span>
                     </div>
-                `;
-            });
+            `;
+
+            // 리뷰가 없는 경우 메시지 추가
+            if (reviewCount === 0) {
+                reviewsHtml += '<br><br><br><br><br><div class="no-reviews" style="font-size: 20px;">리뷰가 없습니다. 리뷰를 작성해보세요.</div><br><br><br><br><br>';
+            } else {
+                response.reviews.forEach(function(review) {
+                    // createdAt 값을 Date 객체로 변환
+                    const createdAt = new Date(review.createdAt);
+                    // (YYYY-MM-DD HH:mm:ss) 형식으로 날짜 포맷팅
+                    const formattedDate = createdAt.toISOString().slice(0, 19).replace('T', ' ') + '             ';
+
+                    // updatedAt 포맷팅 (updatedAt이 존재하는 경우)
+                    const updatedAtHtml = review.updatedAt && review.updatedAt !== review.createdAt
+                        ? ` 수정 : ${new Date(review.updatedAt).toISOString().slice(0, 19).replace('T', ' ')}`
+                        : '';
+
+                    reviewsHtml += `
+                        <div class="review">
+                            <div class="user-info">
+                                <img src="${review.userProfileImage ? 'https://kr.object.ncloudstorage.com/team3' + review.userProfileImage : 'https://kr.object.ncloudstorage.com/team3/img/festival/noPhoto.png'}" alt="${review.userName}">
+                                <div class="user-details">
+                                    <span>${review.userName}</span>
+                                    <span style="font-size: 13px; color: #999;">
+                                        ${formattedDate}   ${updatedAtHtml}
+                                    </span>
+                                    <div class="review-rating" data-rating="${review.star}">
+                                        ${Array.from({ length: 5 }, (_, index) => {
+                                            if (index < review.star) {
+                                                return '<span class="review-star">&#9733;</span>';
+                                            } else {
+                                                return '<span class="review-star empty">&#9734;</span>';
+                                            }
+                                        }).join('')}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="review-content">
+                                <p class="review-content-p-${review.id}">${review.content}</p>
+                                <div class="review-text-container">
+                                    <textarea id="editContent-${review.id}" rows="5" style="display:none;" value="${review.content}">${review.content}</textarea>
+                                </div>
+                            </div>
+                            <div class="review-actions">
+                                <button type="button" class="btn btn-outline-success detail-btn" onclick="location.href='/cultural-properties/detail/${review.culturalPropertiesId}'">상세</button>
+                                <button type="button" class="btn btn-outline-success edit-btn" id="edit-btn-${review.id}" data-id="${review.id}">수정</button>
+                                <button type="button" class="btn btn-outline-success delete-btn" id="delete-btn-${review.id}" data-id="${review.id}" data-cultural-id="${review.culturalPropertiesId}">삭제</button>
+                                <button type="button" class="btn btn-outline-success save-btn" id="save-btn-${review.id}" style="display:none;" data-id="${review.id}" data-cultural-id="${review.culturalPropertiesId}">저장</button>
+                                <button type="button" class="btn btn-outline-success cancel-btn" id="cancel-btn-${review.id}" style="display:none;">취소</button>
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+
+            reviewsHtml += '</div>';
 
             // 페이징 버튼 추가
             reviewsHtml += '<div class="pagination">';
@@ -2111,6 +2369,54 @@
             $('.page-btn').click(function() {
                 loadMyReviews($(this).data('page'));
             });
+
+            // 수정 버튼 클릭 이벤트
+            $('.edit-btn').click(function() {
+                var reviewId = $(this).data('id');
+                $(this).hide();
+                $('#delete-btn-' + reviewId).hide();
+                $('#save-btn-' + reviewId).show();
+                $('#cancel-btn-' + reviewId).show();
+                $('.review-content-p-' + reviewId).hide();
+                $('#editContent-' + reviewId).show();
+            });
+
+            // 취소 버튼 클릭 이벤트
+            $('.cancel-btn').click(function() {
+                var reviewId = $(this).attr('id').split('-')[2];
+                $('#edit-btn-' + reviewId).show();
+                $('#delete-btn-' + reviewId).show();
+                $(this).hide();
+                $('#save-btn-' + reviewId).hide();
+                $('.review-content-p-' + reviewId).show();
+                $('#editContent-' + reviewId).hide();
+            });
+
+            // 저장 버튼 클릭 이벤트 (여기에 저장 로직 추가 필요)
+            $('.save-btn').click(function() {
+                // 저장 로직 구현
+            });
+
+            // 삭제 버튼 클릭 이벤트
+            $('.delete-btn').click(function() {
+                var reviewId = $(this).data('id');
+                var culturalPropertiesId = $(this).data('cultural-id');
+
+                if (confirm("정말로 이 리뷰를 삭제하시겠습니까?")) {
+                    $.ajax({
+                        url: '/cultural-properties/detail/' + culturalPropertiesId + '/review/remove',
+                        method: 'DELETE',
+                        data: { id: reviewId },
+                        success: function(response) {
+                            alert("리뷰가 성공적으로 삭제되었습니다.");
+                            loadMyReviews(page);
+                        },
+                        error: function(xhr, status, error) {
+                            alert("리뷰 삭제에 실패했습니다.");
+                        }
+                    });
+                }
+            });
         },
         error: function(xhr, status, error) {
             console.error("Error loading reviews:", error);
@@ -2119,10 +2425,6 @@
     });
 }
 
-// 내가 쓴 리뷰 메뉴 클릭 이벤트
-$(document).on('click', '#myReviews', function() {
-    loadMyReviews();
-});
 
 
 
@@ -2392,6 +2694,8 @@ $(document).on('click', '#myReviews', function() {
 
                         findExhibitionReviewListByPage(1);
 
+                    } else if (category == "문화재") {
+                        loadMyReviews();
                     }
 
                 });

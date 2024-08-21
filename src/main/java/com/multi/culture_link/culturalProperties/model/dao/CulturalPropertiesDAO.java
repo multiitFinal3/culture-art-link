@@ -70,6 +70,7 @@ public interface CulturalPropertiesDAO {
 
     List<CulturalPropertiesReviewDTO> getMyReviews(@Param("userId") int userId, @Param("pageable") Pageable pageable);
     int countMyReviews(@Param("userId") int userId);
+    void editReview(CulturalPropertiesReviewDTO review);
 
 
     List<CulturalPropertiesDTO> getUserInterest(@Param("userId") int userId, @Param("interestType") String interestType);

@@ -234,6 +234,17 @@ public class CulturalPropertiesService {
     }
 
 
+    public boolean editReview(int id, int culturalPropertiesId, CulturalPropertiesReviewDTO reviewDTO) {
+        CulturalPropertiesReviewDTO existingReview = culturalPropertiesDAO.findByReviewId(id);
+        if (existingReview != null && existingReview.getCulturalPropertiesId() == culturalPropertiesId) {
+            existingReview.setContent(reviewDTO.getContent());
+            culturalPropertiesDAO.editReview(existingReview);
+            return true;
+        }
+        return false;
+    }
+
+
     public List<CulturalPropertiesDTO> getUserInterest(int userId, String interestType) {
         return culturalPropertiesDAO.getUserInterest(userId, interestType);
     }

@@ -577,6 +577,19 @@ public class CulturalPropertiesController {
 	}
 
 
+	@PutMapping("/detail/{culturalPropertiesId}/review/edit")
+	public ResponseEntity<String> updateReview(
+			@PathVariable int culturalPropertiesId,
+			@RequestBody CulturalPropertiesReviewDTO reviewDTO) {
+		boolean updated = culturalPropertiesService.editReview(reviewDTO.getId(), culturalPropertiesId, reviewDTO);
+		if (updated) {
+			return ResponseEntity.ok("리뷰가 성공적으로 수정되었습니다.");
+		} else {
+			return ResponseEntity.status(HttpStatus.FORBIDDEN).body("리뷰 수정 권한이 없습니다.");
+		}
+	}
+
+
 
 	@GetMapping("/getUserInterest")
 	public ResponseEntity<List<CulturalPropertiesDTO>> getUserInterest(
@@ -605,6 +618,14 @@ public class CulturalPropertiesController {
 		culturalPropertiesService.addUserInterest(user.getUserId(), culturalPropertiesId, interestType);
 		return ResponseEntity.ok(interestType.equals("LIKE") ? "찜이 추가되었습니다." : "관심없음이 추가되었습니다.");
 	}
+
+
+
+
+
+
+
+
 
 
 }

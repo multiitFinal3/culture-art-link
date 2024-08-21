@@ -241,6 +241,17 @@
     </select>
 
 
+    <update id="editReview" parameterType="com.multi.culture_link.culturalProperties.model.dto.CulturalPropertiesReviewDTO">
+        UPDATE cultural_properties_review
+        SET content = #{content},
+        star = #{star},
+        updated_at = CURRENT_TIMESTAMP
+        WHERE id = #{id}
+        AND cultural_properties_id = #{culturalPropertiesId}
+        AND user_id = #{userId}
+    </update>
+
+
 
     <select id="getUserInterest" resultMap="culturalPropertiesResultMap">
         SELECT cp.*
