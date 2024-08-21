@@ -1303,7 +1303,7 @@
 
                                 actionBtns = `
                                     <div class="review-actions">
-                                        <button class="detail3 btn btn-outline-success" onclick="location.href='/performance/performanceDetail?performanceCode=' + performanceCode + '&source=db'">상세</button>                                        <button class="update3 btn btn-outline-success" value="${review.performanceReviewId}" type="button">수정</button>
+                                        <button class="detail3 btn btn-outline-success" onclick="location.href='/performance/performanceDetail?performanceCode=${performanceCode}&source=db'">상세</button>
                                         <button class="deleteBtn3 btn btn-outline-success" value="${review.performanceReviewId}">삭제</button>
                                         <button class="editBtn3 hide btn btn-outline-success" value="${review.performanceReviewId}">저장</button>
                                         <button class="cancelBtn3 hide btn btn-outline-success" value="${review.performanceReviewId}">취소</button>
