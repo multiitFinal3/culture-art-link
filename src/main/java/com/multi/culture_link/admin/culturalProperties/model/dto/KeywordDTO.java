@@ -18,5 +18,7 @@ public class KeywordDTO {
 
     private int rn;
 
+    private int count;
+
 
 }

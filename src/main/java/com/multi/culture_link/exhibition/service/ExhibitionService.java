@@ -21,10 +21,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -39,6 +37,7 @@ public class ExhibitionService {
     @Value("${API-KEY.youtubeKey}")
     private String youtubeKey;
 
+
     public List<ExhibitionApiDto> searchExhibition(Map<String, String> searchParams) {
         return exhibitionDao.searchExhibition(searchParams);
     }
@@ -46,6 +45,22 @@ public class ExhibitionService {
     public ExhibitionDto getExhibitionById(int userId, int exhibitionId) {
         return exhibitionDao.getExhibitionById(userId, exhibitionId);
     }
+
+//    public void setInterested(int userId, int exhibitionId, String newState) {
+//        String currentState = exhibitionDao.getInterestState(userId, exhibitionId);
+//
+//        if (currentState == null) {
+//            // 현재 상태가 없으면 새로운 상태를 설정
+//            exhibitionDao.setInterested(userId, exhibitionId, newState);
+//        } else if (currentState.equals(newState)) {
+//            // 현재 상태와 새로운 상태가 같으면 관심 상태를 제거
+//            exhibitionDao.removeInterest(userId, exhibitionId);
+//        } else {
+//            // 현재 상태와 새로운 상태가 다르면 상태를 업데이트
+//            exhibitionDao.setInterested(userId, exhibitionId, newState);
+//        }
+//
+//    }
 
     //    @Transactional
 //    public void setInterested(int userId, int exhibitionId, String state){
@@ -118,23 +133,6 @@ public class ExhibitionService {
         }
     }
 
-//    public void setInterested(int userId, int exhibitionId, String newState) {
-//        String currentState = exhibitionDao.getInterestState(userId, exhibitionId);
-//
-//        if (currentState == null) {
-//            // 현재 상태가 없으면 새로운 상태를 설정
-//            exhibitionDao.setInterested(userId, exhibitionId, newState);
-//        } else if (currentState.equals(newState)) {
-//            // 현재 상태와 새로운 상태가 같으면 관심 상태를 제거
-//            exhibitionDao.removeInterest(userId, exhibitionId);
-//        } else {
-//            // 현재 상태와 새로운 상태가 다르면 상태를 업데이트
-//            exhibitionDao.setInterested(userId, exhibitionId, newState);
-//        }
-//
-//    }
-
-
     public List<ExhibitionDto> getExhibition(int userId) {
         return exhibitionDao.getExhibition(userId);
     }
@@ -169,7 +167,6 @@ public class ExhibitionService {
         return videos;
     }
 
-
     @Transactional
     public HashMap<String, List<ExhibitionKeywordDto>> getKeyword(int exhibitionId) {
 
@@ -183,7 +180,6 @@ public class ExhibitionService {
 
         return result;
     }
-
 
     @Transactional
     public PageResponseDto<ExhibitionKeywordPageDto> getAllKeyword(String cursor, int size) {
@@ -200,24 +196,34 @@ public class ExhibitionService {
         return result;
     }
 
-
     @Transactional
-    public PageResponseDto<ExhibitionKeywordPageDto> getAllKeywordByUser(String cursor, int size, VWUserRoleDTO currentUser, Boolean isUserSelected) {
-
-        PageResponseDto<ExhibitionKeywordPageDto> result = new PageResponseDto<ExhibitionKeywordPageDto>();
-        List<ExhibitionKeywordPageDto> exhibitionAllKeyword = exhibitionKeywordDao.getExhibitionAllKeywordByUser(cursor, size, currentUser.getUserId(), isUserSelected);
-        System.out.println("exhibitionAllKeyword : " + exhibitionAllKeyword);
-        String nextCursor = "";
-        ExhibitionKeywordPageDto lastItem = exhibitionAllKeyword.get(exhibitionAllKeyword.size() - 1);
-        nextCursor = lastItem.getNextCursor();
-
-        result.setData(exhibitionAllKeyword);
-        result.setNextCursor(nextCursor);
-
-
-        return result;
+    public List<ExhibitionKeywordDto> getAllKeywordByUser(Boolean isInterested, VWUserRoleDTO currentUser) {
+        List<ExhibitionKeywordDto> exhibitionAllKeyword = exhibitionKeywordDao.getExhibitionAllKeywordByUser(isInterested, currentUser.getUserId());
+        System.out.println("isInterested : " + isInterested);
+        return exhibitionAllKeyword;
     }
 
+    @Transactional
+    public List<ExhibitionKeywordDto> getAllKeywordByUserAll(String orderBy) {
+        List<ExhibitionKeywordDto> exhibitionInterestedKeyword = exhibitionKeywordDao.getExhibitionInterestedKeyword(orderBy);
+        List<ExhibitionKeywordDto> exhibitionKeyword = exhibitionKeywordDao.getExhibitionKeywordAll(orderBy);
+
+        Set<String> uniqueKeywords = new HashSet<>();
+
+        for (ExhibitionKeywordDto dto : exhibitionInterestedKeyword) {
+            uniqueKeywords.add(dto.getKeyword()); // 키워드가 무엇인지에 따라 변경
+        }
+
+        List<ExhibitionKeywordDto> combinedList = new ArrayList<>(exhibitionInterestedKeyword);
+
+        for (ExhibitionKeywordDto dto : exhibitionKeyword) {
+            if (!uniqueKeywords.contains(dto.getKeyword())) {
+                combinedList.add(dto);
+            }
+        }
+
+        return combinedList;
+    }
 
     public List<ExhibitionApiDto> getLikeExhibition(int userId) {
         return exhibitionDao.getLikeExhibition(userId);
@@ -226,7 +232,6 @@ public class ExhibitionService {
     public List<ExhibitionApiDto> getUnlikeExhibition(int userId) {
         return exhibitionDao.getUnlikeExhibition(userId);
     }
-
 
     public List<ExhibitionDto> getUserRecommend(int userId) {
         // 1. 사용자의 관심 키워드 가져오기 (count >= 10)
@@ -259,6 +264,55 @@ public class ExhibitionService {
                 exhibitionKeywordDao.toggleKeyword(userId, keyword, 10);
             } else if (!isInterested) { // 관심없음에서 눌렀을 때
                 exhibitionKeywordDao.toggleKeyword(userId, keyword, -10);
+            }
+
+        }
+    }
+
+    public String[] findMissingWords(String[] keywords, List<String> userKeyword) {
+        Set<String> keywordSet = new HashSet<>(Arrays.asList(keywords));
+
+        List<String> missingWords = new ArrayList<>();
+        for (String word : userKeyword) {
+            if (!keywordSet.contains(word)) {
+                missingWords.add(word);
+            }
+        }
+
+        return missingWords.toArray(new String[0]);
+    }
+
+    public void saveKeywordByUser(int userId, String exhibitionKeyword, String type) {
+        String[] keywords = exhibitionKeyword.trim().split(",");
+        System.out.println("type: " + type);
+        List<ExhibitionKeywordDto> exhibitionAllKeyword = exhibitionKeywordDao.getExhibitionAllKeywordByUser(type.equals("L"), userId);
+        List<String> userKeyword = exhibitionAllKeyword.stream()
+                .map(ExhibitionKeywordDto::getKeyword)
+                .collect(Collectors.toList());
+        String[] missingWords = findMissingWords(keywords, userKeyword);
+
+
+        for (String s : missingWords) {
+            ExhibitionKeywordDto dto = exhibitionKeywordDao.getExhibitionInterestedKeywordByKeyword(s, userId);
+            exhibitionKeywordDao.updateUserKeyword(userId, s, -dto.getFrequency());
+        }
+
+        for (String s : keywords) {
+            ExhibitionKeywordDto dto = exhibitionKeywordDao.getExhibitionInterestedKeywordByKeyword(s, userId);
+
+            if (dto == null) {
+                exhibitionKeywordDao.updateUserKeyword(userId, s, (type.equals("L") ? 10 : -10));
+
+            } else {
+                if (type.equals("L")) {
+                    if (dto.getFrequency() < 10) {
+                        exhibitionKeywordDao.updateUserKeyword(userId, s, 10 - dto.getFrequency());
+                    }
+                } else {
+                    if (dto.getFrequency() > -10) {
+                        exhibitionKeywordDao.updateUserKeyword(userId, s, -10 - dto.getFrequency());
+                    }
+                }
             }
 
         }

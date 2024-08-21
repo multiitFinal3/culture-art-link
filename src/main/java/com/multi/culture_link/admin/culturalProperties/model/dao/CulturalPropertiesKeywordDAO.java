@@ -1,10 +1,11 @@
 package com.multi.culture_link.admin.culturalProperties.model.dao;
 
+import com.multi.culture_link.admin.culturalProperties.model.dto.CulturalPropertiesDTO;
 import com.multi.culture_link.admin.culturalProperties.model.dto.CulturalPropertiesKeywordDTO;
-import com.multi.culture_link.admin.culturalProperties.model.dto.CulturalPropertiesReviewKeywordDTO;
 import com.multi.culture_link.admin.culturalProperties.model.dto.KeywordDTO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
 import java.util.Map;
@@ -32,5 +33,26 @@ public interface CulturalPropertiesKeywordDAO {
     List<KeywordDTO> getKeywords(@Param("excludedKeywordIds") List<Integer> excludedKeywordIds, @Param("limit") int limit);
 
     void saveUserKeyword(@Param("userId") int userId, @Param("keyword") String keyword, @Param("count") int count);
+
+
+
+
+    int getTotalKeywordCount();
+
+
+    List<KeywordDTO> getLikeKeyword(@Param("userId") int userId);
+    List<KeywordDTO> getDislikeKeyword(@Param("userId") int userId);
+    List<KeywordDTO> getUnselectedKeywords(@Param("userId") int userId, @Param("offset") int offset, @Param("limit") int limit);
+
+
+
+    void insertUserSelectKeyword(@Param("userId") int userId, @Param("interestType") String interestType,  @Param("keyword") String keyword, @Param("count") int count);
+
+    void deleteUserSelectKeywordByType(@Param("userId") int userId, @Param("interestType") String interestType);
+
+
+    List<String> getRecommendedKeywords(int userId);
+
+    List<CulturalPropertiesDTO> getRandomCulturalPropertiesByKeywords(@Param("keywords") List<String> keywords, @Param("limit") int limit);
 
 }

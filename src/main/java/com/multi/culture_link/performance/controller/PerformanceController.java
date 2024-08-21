@@ -131,7 +131,7 @@ public class PerformanceController {
             return "redirect:/performance/performance-home";
         }
 
-        String date = "20240818"; // 일간 데이터 날짜
+        String date = "20240819"; // 일간 데이터 날짜
         List<PerformanceDTO> rankingData = performanceRankingService.fetchGenreRanking(genre, date, 5);
         System.out.println("Fetched Data: " + rankingData); // 로그 추가
 
@@ -199,7 +199,7 @@ public class PerformanceController {
      */
     @GetMapping("/genre-rankings")
     public ResponseEntity<List<PerformanceDTO>> getPerformanceGenreRankings(@RequestParam String genre) {
-        String date = "20240818"; // 일간 데이터 날짜
+        String date = "20240819"; // 일간 데이터 날짜
         List<PerformanceDTO> rankingData;
 
         if (genre.equals("전체")) {
@@ -226,7 +226,7 @@ public class PerformanceController {
     public String performanceRankingPage(@AuthenticationPrincipal VWUserRoleDTO user, Model model,
                                          @RequestParam(required = false) String genre) {
         model.addAttribute("user", user.getUser());
-        String date = "20240818"; // 일간 데이터 날짜
+        String date = "20240819"; // 일간 데이터 날짜
         List<PerformanceDTO> rankingData;
 
         if (genre == null || genre.isEmpty() || genre.equals("전체")) {
@@ -384,31 +384,6 @@ public class PerformanceController {
         return response;
     }
 
-//    // 검색
-//    @GetMapping("/search")
-//    public String searchPerformances(
-//            @RequestParam("keyword") String keyword,
-//            @RequestParam(value = "genre", required = false) String genre,
-//            Model model) {
-//
-//        List<PerformanceDTO> performances = performanceService.searchPerformances(keyword, genre);
-//        model.addAttribute("allPerformances", performances);
-//        model.addAttribute("selectedGenre", genre);
-//        model.addAttribute("keyword", keyword);  // 검색어를 모델에 추가
-//
-//        // 각 공연에 대해 formattedDate 설정
-//        for (PerformanceDTO performance : performances) {
-//            performance.updateFormattedDate();
-//        }
-//
-//        // 검색 결과가 없을 경우 플래그 추가
-//        boolean noResults = performances.isEmpty();
-//        model.addAttribute("noResults", noResults);
-//
-//
-//
-//        return "performance/performanceGenre"; // 적절한 템플릿 경로로 변경
-//    }
 
     // 검색
     @GetMapping("/search")
@@ -445,20 +420,6 @@ public class PerformanceController {
 
 
 
-
-    // 추천 목록
-//    @GetMapping("/recommendations")
-//    public String showRecommendations(@AuthenticationPrincipal UserDTO user, Model model) {
-//        int userId = user.getUserId(); // UserDTO에서 사용자 ID를 가져옴
-//
-//        List<PerformanceDTO> recommendedPerformances = performanceService.getRecommendedPerformances(userId);
-//        model.addAttribute("recommends", recommendedPerformances);
-//        model.addAttribute("user", user);
-//        return "performance/performanceHome"; // 추천 목록을 보여줄 Thymeleaf 템플릿 이름
-//    }
-
-
-
     @GetMapping("/recommendations")
     public String showRecommendations(@AuthenticationPrincipal UserDTO user, Model model) {
         System.out.println("showRecommendations 메서드 호출됨");  // 확인용 로그
@@ -476,6 +437,65 @@ public class PerformanceController {
         model.addAttribute("user", user);
         return "performance/performanceHome"; // 추천 목록을 보여줄 Thymeleaf 템플릿 이름
     }
+
+
+
+
+
+
+
+
+
+
+
+
+    /**
+     * 사용자가 찜한 공연 목록을 반환하는 메서드
+     *
+     * @param user 인증된 사용자 정보
+     * @return 사용자가 찜한 공연 목록
+     */
+
+
+    @GetMapping("/findLovePerformanceList")
+    @ResponseBody
+    public ResponseEntity<List<PerformanceDTO>> findLovePerformanceList(@AuthenticationPrincipal VWUserRoleDTO user, Model model) {
+        int userId = user.getUser().getUserId();
+
+
+        // 사용자의 찜한 공연 목록을 가져옴
+        List<PerformanceDTO> lovePerformanceList = performanceService.getLovePerformancesByUserId(user.getUserId());
+
+        model.addAttribute("user", user);
+
+        return ResponseEntity.ok(lovePerformanceList);
+    }
+
+
+    /**
+     * 사용자가 관심없음 공연 목록을 반환하는 메서드
+     *
+     * @param user 인증된 사용자 정보
+     * @return 사용자가 관심없음 공연 목록
+     */
+
+
+    @GetMapping("/findHatePerformanceList")
+    @ResponseBody
+    public ResponseEntity<List<PerformanceDTO>> findHatePerformanceList(@AuthenticationPrincipal VWUserRoleDTO user, Model model) {
+        int userId = user.getUser().getUserId();
+
+
+        // 사용자의 찜한 공연 목록을 가져옴
+        List<PerformanceDTO> hatePerformanceList = performanceService.getHatePerformancesByUserId(user.getUserId());
+
+        model.addAttribute("user", user);
+
+        return ResponseEntity.ok(hatePerformanceList);
+    }
+
+
+
 
 
 

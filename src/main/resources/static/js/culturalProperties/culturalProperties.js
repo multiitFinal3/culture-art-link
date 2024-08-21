@@ -382,7 +382,8 @@ $(document).ready(function() {
 
         videos.forEach(function(video) {
             const colDiv = $('<div>').addClass('col-md-4 mb-4');
-            const cardDiv = $('<div>').addClass('card');
+//            const cardDiv = $('<div>').addClass('card');
+            const cardDiv = $('<div>').addClass('card video-card');
             const cardBody = $('<div>').addClass('card-body');
             const title = $('<h5>').addClass('card-title').html(video.title);
             const videoId = video.link.split('v=')[1];
