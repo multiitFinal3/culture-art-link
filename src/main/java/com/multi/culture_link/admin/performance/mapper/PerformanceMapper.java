@@ -92,4 +92,20 @@ String getPerformanceLikeState(@Param("userId") int userId, @Param("performanceI
 
 
 
+
+
+
+
+
+    // 찜 좋아요 가져오기 - 메인 페이지
+    List<PerformanceDTO> findLovedPerformancesByUserId(@Param("userId") int userId);
+
+    List<PerformanceDTO> findHatedPerformancesByUserId(@Param("userId") int userId);
+
+
+
+
+
+    // 내가 쓴 리뷰 가져오기 ㅡㅜ휴ㅡㅠㅡㅜㅠㅡㅠㅡㅠㅡㅠ
+    List<PerformanceReviewDTO> findReviewsByUserId(@Param("userId") int userId);
 }

@@ -1,27 +1,23 @@
 package com.multi.culture_link.culturalProperties.service;
 
 import com.multi.culture_link.admin.culturalProperties.model.dao.AdminCulturalPropertiesDAO;
+import com.multi.culture_link.admin.culturalProperties.model.dao.CulturalPropertiesKeywordDAO;
 import com.multi.culture_link.admin.culturalProperties.model.dto.CulturalPropertiesDTO;
-import com.multi.culture_link.admin.culturalProperties.model.dto.PageDTO;
+import com.multi.culture_link.admin.culturalProperties.model.dto.KeywordDTO;
 import com.multi.culture_link.admin.culturalProperties.service.AdminCulturalPropertiesService;
 import com.multi.culture_link.culturalProperties.model.dao.CulturalPropertiesDAO;
 import com.multi.culture_link.culturalProperties.model.dto.CulturalPropertiesInterestDTO;
 import com.multi.culture_link.culturalProperties.model.dto.CulturalPropertiesReviewDTO;
 import com.multi.culture_link.culturalProperties.model.dto.NewsArticle;
-import com.multi.culture_link.exhibition.model.dto.ExhibitionDto;
-import com.multi.culture_link.users.model.dto.VWUserRoleDTO;
 import lombok.extern.slf4j.Slf4j;
-import org.json.JSONArray;
-import org.json.JSONObject;
-import org.json.XML;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.*;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 
@@ -33,10 +29,12 @@ public class CulturalPropertiesService {
 	private CulturalPropertiesDAO culturalPropertiesDAO;
 //    private final AdminCulturalPropertiesDAO adminCulturalPropertiesDAO;
     private final AdminCulturalPropertiesService adminCulturalPropertiesService;
+    private final CulturalPropertiesKeywordDAO culturalPropertiesKeywordDAO;
 
-    public CulturalPropertiesService(AdminCulturalPropertiesDAO adminCulturalPropertiesDAO, AdminCulturalPropertiesService adminCulturalPropertiesService) {
+    public CulturalPropertiesService(AdminCulturalPropertiesDAO adminCulturalPropertiesDAO, AdminCulturalPropertiesService adminCulturalPropertiesService, CulturalPropertiesKeywordDAO culturalPropertiesKeywordDAO) {
 //        this.adminCulturalPropertiesDAO = adminCulturalPropertiesDAO;
         this.adminCulturalPropertiesService = adminCulturalPropertiesService;
+        this.culturalPropertiesKeywordDAO = culturalPropertiesKeywordDAO;
     }
 
 
@@ -193,13 +191,80 @@ public class CulturalPropertiesService {
 
 
 
-//    public void saveKeyword(List<String> keywords,int userId, int countChange) {
-//        System.out.println("keywords : "+ keywords);
-//
-//        for (String keyword : keywords) {
-//            culturalPropertiesDAO.saveUserKeyword(userId, keyword, countChange);
-//        }
-//    }
+
+    public int getTotalKeywordCount() {
+        return culturalPropertiesKeywordDAO.getTotalKeywordCount();
+    }
+
+
+
+    public List<KeywordDTO> getLikeKeyword(int userId) {
+        return culturalPropertiesKeywordDAO.getLikeKeyword(userId);
+    }
+
+    public List<KeywordDTO> getDislikeKeyword(int userId) {
+        return culturalPropertiesKeywordDAO.getDislikeKeyword(userId);
+    }
+
+    public List<KeywordDTO> getUnselectedKeywords(int userId, int page, int limit) {
+        int offset = (page - 1) * limit;
+        return culturalPropertiesKeywordDAO.getUnselectedKeywords(userId, offset, limit);
+    }
+
+
+
+    public void insertUserSelectKeyword(int userId,  String interestType, String keyword, int count) {
+        culturalPropertiesKeywordDAO.insertUserSelectKeyword(userId, interestType, keyword, count);
+    }
+
+    public void deleteUserSelectKeywordByType(int userId, String interestType) {
+        culturalPropertiesKeywordDAO.deleteUserSelectKeywordByType(userId, interestType);
+    }
+
+    public List<CulturalPropertiesDTO> getRecommendedCulturalProperties(int userId) {
+        List<String> recommendedKeywords = culturalPropertiesKeywordDAO.getRecommendedKeywords(userId);
+        return culturalPropertiesKeywordDAO.getRandomCulturalPropertiesByKeywords(recommendedKeywords, 4);
+    }
+
+
+    public Page<CulturalPropertiesReviewDTO> getMyReviews(int userId, Pageable pageable) {
+        List<CulturalPropertiesReviewDTO> reviews = culturalPropertiesDAO.getMyReviews(userId, pageable);
+        int totalReviews = culturalPropertiesDAO.countMyReviews(userId);
+        return new PageImpl<>(reviews, pageable, totalReviews);
+    }
+
+
+    public boolean editReview(int id, int culturalPropertiesId, CulturalPropertiesReviewDTO reviewDTO) {
+        CulturalPropertiesReviewDTO existingReview = culturalPropertiesDAO.findByReviewId(id);
+        if (existingReview != null && existingReview.getCulturalPropertiesId() == culturalPropertiesId) {
+            existingReview.setContent(reviewDTO.getContent());
+            culturalPropertiesDAO.editReview(existingReview);
+            return true;
+        }
+        return false;
+    }
+
+
+    public List<CulturalPropertiesDTO> getUserInterest(int userId, String interestType) {
+        return culturalPropertiesDAO.getUserInterest(userId, interestType);
+    }
+
+    public void removeUserInterest(int userId, int culturalPropertiesId) {
+        culturalPropertiesDAO.removeUserInterest(userId, culturalPropertiesId);
+    }
+
+
+
+    public void addUserInterest(int userId, int culturalPropertiesId, String interestType) {
+
+        // 새로운 관심 추가 또는 업데이트
+        CulturalPropertiesInterestDTO interest = new CulturalPropertiesInterestDTO();
+        interest.setUserId(userId);
+        interest.setCulturalPropertiesId(culturalPropertiesId);
+        interest.setInterestType(interestType);
+        culturalPropertiesDAO.addUserInterest(interest);
+    }
+
 
 
 }

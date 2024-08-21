@@ -2,6 +2,7 @@ package com.multi.culture_link.culturalProperties.controller;
 
 
 import com.multi.culture_link.admin.culturalProperties.model.dto.CulturalPropertiesDTO;
+import com.multi.culture_link.admin.culturalProperties.model.dto.KeywordDTO;
 import com.multi.culture_link.culturalProperties.model.dto.*;
 import com.multi.culture_link.culturalProperties.service.CulturalPropertiesService;
 import com.multi.culture_link.users.model.dto.VWUserRoleDTO;
@@ -23,6 +24,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -524,6 +526,103 @@ public class CulturalPropertiesController {
 
 		return ResponseEntity.ok(response);
 	}
+
+
+
+
+	@GetMapping("/like/keywords")
+	public ResponseEntity<List<KeywordDTO>> getLikedKeywords(@AuthenticationPrincipal VWUserRoleDTO user) {
+		return ResponseEntity.ok(culturalPropertiesService.getLikeKeyword(user.getUserId()));
+	}
+
+	@GetMapping("/dislike/keywords")
+	public ResponseEntity<List<KeywordDTO>> getDislikedKeywords(@AuthenticationPrincipal VWUserRoleDTO user) {
+		return ResponseEntity.ok(culturalPropertiesService.getDislikeKeyword(user.getUserId()));
+	}
+
+	@GetMapping("/keywords")
+	public ResponseEntity<List<KeywordDTO>> getUnselectedKeywords(
+			@AuthenticationPrincipal VWUserRoleDTO user,
+			@RequestParam(defaultValue = "1") int page,
+			@RequestParam(defaultValue = "5") int limit) {
+		return ResponseEntity.ok(culturalPropertiesService.getUnselectedKeywords(user.getUserId(), page, limit));
+	}
+
+
+
+	@GetMapping("/recommend")
+	@ResponseBody
+	public List<CulturalPropertiesDTO> getRecommendedCulturalProperties(@AuthenticationPrincipal VWUserRoleDTO user) {
+		int userId = user.getUserId();
+		return culturalPropertiesService.getRecommendedCulturalProperties(userId);
+	}
+
+
+
+	@GetMapping("/myReviews")
+	public ResponseEntity<Map<String, Object>> getMyReviews(
+			@AuthenticationPrincipal VWUserRoleDTO user,
+			@RequestParam(value = "page", defaultValue = "0") int page,
+			@RequestParam(value = "size", defaultValue = "5") int size) {
+		Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "created_at"));
+		Page<CulturalPropertiesReviewDTO> reviews = culturalPropertiesService.getMyReviews(user.getUserId(), pageable);
+
+		Map<String, Object> response = new HashMap<>();
+		response.put("reviews", reviews.getContent());
+		response.put("currentPage", reviews.getNumber());
+		response.put("totalItems", reviews.getTotalElements());
+		response.put("totalPages", reviews.getTotalPages());
+
+		return ResponseEntity.ok(response);
+	}
+
+
+	@PutMapping("/detail/{culturalPropertiesId}/review/edit")
+	public ResponseEntity<String> updateReview(
+			@PathVariable int culturalPropertiesId,
+			@RequestBody CulturalPropertiesReviewDTO reviewDTO) {
+		boolean updated = culturalPropertiesService.editReview(reviewDTO.getId(), culturalPropertiesId, reviewDTO);
+		if (updated) {
+			return ResponseEntity.ok("리뷰가 성공적으로 수정되었습니다.");
+		} else {
+			return ResponseEntity.status(HttpStatus.FORBIDDEN).body("리뷰 수정 권한이 없습니다.");
+		}
+	}
+
+
+
+	@GetMapping("/getUserInterest")
+	public ResponseEntity<List<CulturalPropertiesDTO>> getUserInterest(
+			@RequestParam String interestType,
+			@AuthenticationPrincipal VWUserRoleDTO user) {
+		List<CulturalPropertiesDTO> interests = culturalPropertiesService.getUserInterest(user.getUserId(), interestType);
+		return ResponseEntity.ok(interests);
+	}
+
+	@PostMapping("/removeUserInterest")
+	public ResponseEntity<String> removeUserInterest(
+			@RequestParam int culturalPropertiesId,
+			@RequestParam String interestType,
+			@AuthenticationPrincipal VWUserRoleDTO user) {
+		culturalPropertiesService.removeUserInterest(user.getUserId(), culturalPropertiesId);
+		return ResponseEntity.ok("관심이 제거되었습니다.");
+	}
+
+
+
+	@PostMapping("/addUserInterest")
+	public ResponseEntity<String> addUserInterest(
+			@RequestParam int culturalPropertiesId,
+			@RequestParam String interestType,
+			@AuthenticationPrincipal VWUserRoleDTO user) {
+		culturalPropertiesService.addUserInterest(user.getUserId(), culturalPropertiesId, interestType);
+		return ResponseEntity.ok(interestType.equals("LIKE") ? "찜이 추가되었습니다." : "관심없음이 추가되었습니다.");
+	}
+
+
+
+
+
 
 
 

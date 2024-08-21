@@ -89,6 +89,44 @@
                 findAllRegion();
 
 
+
+
+                $(document).on('click', '.performanceKeywordBtn', function () {
+
+                    event.preventDefault();
+
+                    if ($(this).hasClass('hasLove')) {
+                        $(this).removeClass('hasLove');
+                    } else {
+                        $(this).addClass('hasLove');
+                    }
+
+                    var btns = document.querySelectorAll('button.performanceKeywordBtn.hasLove');
+                    var concat = '';
+
+                    btns.forEach(function (btn) {
+                        concat += (btn.value + " ");
+                    })
+
+                    $('#performanceSelectKeyword').val(concat.trim());
+                });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                 //#endregion
 
 
@@ -167,7 +205,7 @@
 
                     btns.forEach(function(btn){
 
-                        concat += (btn.value+" ");
+                        concat += (btn.value+",");
 
                     })
 
@@ -572,6 +610,35 @@
 
                 })
 
+
+
+
+                /**
+                * 번호 양식 자동으로 변경
+                *
+                */
+                document.getElementById('tel').addEventListener('blur',function(){
+
+                    let input = this.value.replace(/\D/g,'');
+
+                    if (input.length >11){
+
+                        this.value = input.substring(0,11).replace(/(\d{3})(\d{4})(\d{4})/,'$1-$2-$3');
+
+                    }else if(input.length < 11){
+
+                        this.value = input.padEnd(11,'0').replace(/(\d{3})(\d{4})(\d{4})/,'$1-$2-$3');
+
+                    }else{
+
+                        this.value = input.replace(/(\d{3})(\d{4})(\d{4})/,'$1-$2-$3');
+
+                    }
+
+                })
+
+
+
                 //#endregion
 
 
@@ -628,8 +695,8 @@
                     <span id="nameError" class="error"></span><br>
 
                     <label for="tel">전화번호</label>
-                    <input name="tel" id="tel" class="rounded" placeholder="010-0000-1234" type="tel"
-                           pattern="[0-9]{3}-[0-9]{4}-[0-9]{4}"><br>
+                    <input name="tel" id="tel" class="rounded" placeholder="010-0000-1234"
+                           pattern="[0-9]{3}-[0-9]{4}-[0-9]{4}" value="010-0000-0000"><br>
 
                     <label for="userAge">나이</label>
                     <input name="userAge" id="userAge" class="rounded" placeholder="12" type="number" min="0" max="100"
@@ -646,6 +713,28 @@
 
 
                     카테고리별 키워드
+
+                    <div id="performanceKeywordZone">
+
+                        <input type="hidden" id="performanceSelectKeyword" name="performanceSelectKeyword" value="">
+
+                        <div id="performanceKeywordBtns">
+                            <button value="연극" class="performanceKeywordBtn">연극</button>
+                            <button value="무용" class="performanceKeywordBtn">무용</button>
+                            <button value="대중무용" class="performanceKeywordBtn">대중무용</button>
+                            <button value="서양음악(클래식)" class="performanceKeywordBtn">서양음악</button>
+                            <button value="한국음악(국악)" class="performanceKeywordBtn">한국음악</button>
+                            <button value="대중음악" class="performanceKeywordBtn">대중음악</button>
+                            <button value="복합" class="performanceKeywordBtn">복합</button>
+                            <button value="서커스/마술" class="performanceKeywordBtn">서커스/마술</button>
+                            <button value="뮤지컬" class="performanceKeywordBtn">뮤지컬</button>
+                        </div>
+
+                        <button id="addperformanceKeyword" class="btn btn-outline-success" value="1">공연 키워드 추가</button>
+                    </div>
+
+
+
                     <div id="festivalKeywordZone">
 
                         <input type="hidden" id="festivalSelectKeyword" name="festivalSelectKeyword" value="">
@@ -673,23 +762,29 @@
                     </div>
 
 
+                    <div id="culturalPropertiesKeywordZone">
+                        <input type="hidden" id="culturalPropertiesSelectKeyword" name="culturalPropertiesSelectKeyword"
+                               value="">
+                        <div id="culturalPropertiesCategoryBtns"></div>
+                        <div id="culturalPropertiesKeywordBtns">
+                        </div>
 
-                <div id="culturalPropertiesKeywordZone">
-                    <input type="hidden" id="culturalPropertiesSelectKeyword" name="culturalPropertiesSelectKeyword" value="">
-                    <div id="culturalPropertiesCategoryBtns"></div>
-                    <div id="culturalPropertiesKeywordBtns">
+                        <button id="addCulturalPropertiesKeyword" class="btn btn-outline-success" value="1">문화재 키워드 추가
+                        </button>
                     </div>
 
-                    <button id="addCulturalPropertiesKeyword" class="btn btn-outline-success" value="1">문화재 키워드 추가</button>
+
+
+
+
+                    <div>
+
+                        <button type="submit" class="btn btn-outline-success"
+                                style="color: white;background-color: green;width: 100%;margin-top: 50px;">제출
+                        </button>
+
+                    </div>
                 </div>
-
-
-                <div>
-
-                    <button type="submit" class="btn btn-outline-success" style="color: white;background-color: green;width: 100%;margin-top: 50px;">제출</button>
-
-                </div>
-
 
             </form>
 

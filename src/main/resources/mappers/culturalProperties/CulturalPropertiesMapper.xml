@@ -222,6 +222,59 @@
     </select>
 
 
+    <select id="getMyReviews" resultType="CulturalPropertiesReviewDTO">
+        SELECT r.id, r.cultural_properties_id, r.user_id, r.star, r.content, r.created_at, r.updated_at,
+        u.user_name, u.user_profile_pic AS userProfileImage,
+        cp.cultural_properties_name
+        FROM cultural_properties_review r
+        JOIN user u ON r.user_id = u.user_id
+        JOIN cultural_properties cp ON r.cultural_properties_id = cp.id
+        WHERE r.user_id = #{userId}
+        ORDER BY r.created_at DESC
+        LIMIT #{pageable.pageSize} OFFSET #{pageable.offset}
+    </select>
+
+    <select id="countMyReviews" resultType="int">
+        SELECT COUNT(*)
+        FROM cultural_properties_review
+        WHERE user_id = #{userId}
+    </select>
+
+
+    <update id="editReview" parameterType="com.multi.culture_link.culturalProperties.model.dto.CulturalPropertiesReviewDTO">
+        UPDATE cultural_properties_review
+        SET content = #{content},
+        star = #{star},
+        updated_at = CURRENT_TIMESTAMP
+        WHERE id = #{id}
+        AND cultural_properties_id = #{culturalPropertiesId}
+        AND user_id = #{userId}
+    </update>
+
+
+
+    <select id="getUserInterest" resultMap="culturalPropertiesResultMap">
+        SELECT cp.*
+        FROM cultural_properties cp
+        JOIN cultural_properties_interest cpi ON cp.id = cpi.cultural_properties_id
+        WHERE cpi.user_id = #{userId} AND cpi.interest_type = #{interestType}
+    </select>
+
+
+
+    <delete id="removeUserInterest">
+        DELETE FROM cultural_properties_interest
+        WHERE user_id = #{userId} AND cultural_properties_id = #{culturalPropertiesId}
+    </delete>
+
+
+    <insert id="addUserInterest" parameterType="CulturalPropertiesInterestDTO">
+        INSERT INTO cultural_properties_interest (cultural_properties_id, user_id, interest_type)
+        VALUES (#{culturalPropertiesId}, #{userId}, #{interestType})
+        ON DUPLICATE KEY UPDATE interest_type = #{interestType}
+    </insert>
+
+
 
 
 </mapper>

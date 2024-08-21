@@ -295,6 +295,7 @@
        align-items: center;
        transition: transform 0.2s;
        border: 0px !important;
+       cursor: pointer;
 
     }
 
@@ -515,9 +516,9 @@
 
     .festivalLoveKeywordBtn,
     .festivalHateKeywordBtn,
+    .culturalPropertiesKeywordBtn,{
     .exhibitionLoveKeywordBtn,
     .exhibitionHateKeywordBtn {
-
        min-width: 150px;
        max-height: 35px;
        color: #02542d;
@@ -610,7 +611,8 @@
 
 
    .pageBtn1,
-   .pageBtn2{
+   .pageBtn2,
+   .pageBtn3{
 
         width: 45px;
         text-align: center;
@@ -800,3 +802,8 @@
 
    }
 
+    .ccard{
+
+        margin-bottom: 50px;
+
+    }

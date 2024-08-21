@@ -1,10 +1,13 @@
 package com.multi.culture_link.admin.culturalProperties.controller;
 
 
+import com.multi.culture_link.admin.culturalProperties.model.dao.AdminCulturalPropertiesDAO;
+import com.multi.culture_link.admin.culturalProperties.model.dao.CulturalPropertiesKeywordDAO;
 import com.multi.culture_link.admin.culturalProperties.model.dto.CulturalPropertiesDTO;
 import com.multi.culture_link.admin.culturalProperties.model.dto.KeywordDTO;
 import com.multi.culture_link.admin.culturalProperties.model.dto.PageDTO;
 import com.multi.culture_link.admin.culturalProperties.service.AdminCulturalPropertiesService;
+import com.multi.culture_link.common.keyword.service.KeywordExtractService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +33,11 @@ public class AdminCulturalPropertiesController {
 
 	@Autowired
 	private AdminCulturalPropertiesService adminCulturalPropertiesService;
+
+	@Autowired
+	public AdminCulturalPropertiesController(AdminCulturalPropertiesService adminCulturalPropertiesService) {
+		this.adminCulturalPropertiesService = adminCulturalPropertiesService;
+	}
 
 
 	@GetMapping

@@ -96,7 +96,7 @@
 
 
     <!-- 랜덤으로 5개 키워드를 선택하는 쿼리 -->
-    <select id="getInitialKeywords" resultType="com.multi.culture_link.admin.culturalProperties.model.dto.KeywordDTO">
+    <select id="getInitialKeywords" resultType="KeywordDTO">
         SELECT keyword_id, keyword
         FROM vw_cultural_properties_combined_keyword_unique4
         ORDER BY RAND()
@@ -104,7 +104,7 @@
     </select>
 
     <!-- 제외할 키워드 ID를 기반으로 랜덤으로 5개 키워드를 선택하는 쿼리 -->
-    <select id="getKeywords" resultType="com.multi.culture_link.admin.culturalProperties.model.dto.KeywordDTO">
+    <select id="getKeywords" resultType="KeywordDTO">
         SELECT keyword_id, keyword
         FROM vw_cultural_properties_combined_keyword_unique4
         <where>
@@ -122,12 +122,98 @@
 
 
     <insert id="saveUserKeyword">
-        INSERT INTO cultural_properties_user_select_keyword (user_id, keyword, count)
-        VALUES (#{userId}, #{keyword}, #{count})
+        INSERT INTO cultural_properties_user_select_keyword (user_id, interest_type, keyword, count)
+        VALUES (#{userId}, "LIKE"  , #{keyword}, #{count})
         ON DUPLICATE KEY UPDATE count = #{count}
     </insert>
 
 
+
+
+
+
+    <select id="getTotalKeywordCount" resultType="int">
+        SELECT COUNT(DISTINCT keyword) FROM vw_cultural_properties_combined_keyword_unique4
+    </select>
+
+
+    <select id="getLikeKeyword" resultType="KeywordDTO">
+        SELECT keyword, total_count
+        FROM vw_cultural_properties_total_sum_keyword
+        WHERE user_id = #{userId} AND total_count >= 10
+    </select>
+
+    <select id="getDislikeKeyword" resultType="KeywordDTO">
+        SELECT keyword, total_count
+        FROM vw_cultural_properties_total_sum_keyword
+        WHERE user_id = #{userId} AND total_count <![CDATA[ <= -10 ]]>
+    </select>
+
+    <select id="getUnselectedKeywords" resultType="KeywordDTO">
+        SELECT k.keyword_id, k.keyword
+        FROM vw_cultural_properties_combined_keyword_unique4 k
+        WHERE k.keyword NOT IN (
+        SELECT keyword
+        FROM vw_cultural_properties_total_sum_keyword
+        WHERE user_id = #{userId}
+        )
+        ORDER BY RAND()
+        LIMIT #{limit} OFFSET #{offset}
+    </select>
+
+
+
+    <insert id="insertUserSelectKeyword">
+        INSERT INTO cultural_properties_user_select_keyword (user_id, interest_type, keyword, count)
+        VALUES (#{userId}, #{interestType}, #{keyword}, #{count})
+    </insert>
+
+
+
+    <select id="getUserKeyword" resultType="KeywordDTO">
+        SELECT user_id as id, keyword, count
+        FROM cultural_properties_user_select_keyword
+        WHERE user_id = #{userId} AND keyword = #{keyword}
+    </select>
+
+    <update id="updateUserKeyword" parameterType="KeywordDTO">
+        UPDATE cultural_properties_user_select_keyword
+        SET count = #{count},
+        interest_type = CASE
+        WHEN #{count} > 0 THEN 'LIKE'
+        WHEN #{count} <![CDATA[  < 0 THEN 'DISLIKE'  ]]>
+        ELSE interest_type
+        END,
+        updated_at = CURRENT_TIMESTAMP
+        WHERE user_id = #{id} AND keyword = #{keyword}
+    </update>
+
+
+    <delete id="deleteUserSelectKeywordByType">
+        DELETE FROM cultural_properties_user_select_keyword
+        WHERE user_id = #{userId} AND interest_type = #{interestType}
+    </delete>
+
+
+
+
+    <select id="getRecommendedKeywords" resultType="string">
+        SELECT keyword
+        FROM vw_cultural_properties_total_sum_keyword
+        WHERE user_id = #{userId} AND total_count > 0
+    </select>
+
+    <select id="getRandomCulturalPropertiesByKeywords" resultType="CulturalPropertiesDTO">
+        SELECT DISTINCT cp.*
+        FROM cultural_properties cp
+        JOIN cultural_properties_content_keyword cck ON cp.id = cck.cultural_properties_id
+        WHERE cck.keyword IN
+        <foreach item="item" index="index" collection="keywords" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        ORDER BY RAND()
+        LIMIT #{limit}
+    </select>
 
 
 

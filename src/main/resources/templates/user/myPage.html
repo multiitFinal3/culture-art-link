@@ -12,6 +12,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
     <script th:inline="javascript">
 
         $(document).ready(
@@ -64,6 +65,31 @@
                 }
 
                 findAllRegion();
+
+
+                /**
+                * 번호 양식 자동으로 변경
+                *
+                */
+                document.getElementById('tel').addEventListener('blur',function(){
+
+                    let input = this.value.replace(/\D/g,'');
+
+                    if (input.length >11){
+
+                        this.value = input.substring(0,11).replace(/(\d{3})(\d{4})(\d{4})/,'$1-$2-$3');
+
+                    }else if(input.length < 11){
+
+                        this.value = input.padEnd(11,'0').replace(/(\d{3})(\d{4})(\d{4})/,'$1-$2-$3');
+
+                    }else{
+
+                        this.value = input.replace(/(\d{3})(\d{4})(\d{4})/,'$1-$2-$3');
+
+                    }
+
+                })
 
 
                 /**
@@ -258,7 +284,7 @@
 
                                 } else {
 
-                                    alert("중복되지 않는 이메일입니다.")
+                                    alert("현재 이메일을 제외하고 중복되지 않는 이메일입니다.")
                                     resolve(true);
                                 }
 
@@ -390,7 +416,6 @@
 
                 }
 
-                findLoveFestivalList();
 
 
                 /**
@@ -711,7 +736,7 @@
                                     <div id="leftHead">
                                         <h2 style="display: inline-block;">리뷰</h2>
 
-                                        <div id="totalReviewCount" class="mt-3" style="display: inline-block; margin-left: 10px;">
+                                        <div id="totalfReviewCount" class="mt-3" style="display: inline-block; margin-left: 10px;">
                                             숫자
                                         </div>
                                     </div>
@@ -840,11 +865,15 @@
 
                             })
 
-                            findUserReviewCount();
+                            findUserfReviewCount();
 
                         }
+
                     })
                 }
+
+
+
 
 
                 /**
@@ -852,7 +881,7 @@
                  *
                  *
                  */
-                function findUserReviewCount() {
+                function findUserfReviewCount() {
 
                     $.ajax({
 
@@ -861,7 +890,10 @@
                         contentType: 'application/json',
                         success: function (count) {
 
-                            $('#totalReviewCount').html(count);
+                            console.log("fes count")
+                            console.log(count)
+
+                            $('#totalfReviewCount').html(count);
 
                             var pages = 0;
 
@@ -1005,6 +1037,439 @@
 
 
                 //#region 상단바 : 공연
+
+
+                /**
+                 * 공연 카드 클릭 시 상세 페이지로 이동
+                 *
+                 */
+
+
+
+                $(document).on('click', '.pcard', function () {
+
+                    var performanceCode = $(this).attr('code');
+                    window.location.href = '/performance/performanceDetail?performanceCode=' + performanceCode + '&source=db';
+                });
+
+
+                /**
+                 * 공연 찜한 내역을 가져옴
+                 *
+                 */
+
+
+                 function findLovePerformanceList() {
+
+                    $.ajax({
+
+                        url: '/performance/findLovePerformanceList', // 서버에서 공연 찜한 내역을 가져오는 API 엔드포인트
+                        method: 'GET',
+                        contentType: 'application/json',
+                        success: function (list) {
+                            $('#upper').html("");
+                            $('#upper').removeClass("page")
+                            $('#upper').addClass("scroll")
+
+                            $.each(list, function (index, performance) {
+
+                                var start = performance.startDate.length > 0 ?
+                                    performance.startDate.substring(0, 10) :
+                                    "없음";
+
+                                var end = performance.endDate.length > 0 ?
+                                    performance.endDate.substring(0, 10) :
+                                    "없음";
+
+                                var firstHtml = ``;
+
+                                if (!performance.imageMain || performance.imageMain == "null") {
+
+                                    firstHtml = `
+                                        <div class="card pcard" id="${performance.id}" code="${performance.code}" data-value="${performance.id}">
+                                            <img class="card-img-top" src="/img/performance/noPhoto.png" alt="Card image cap">
+
+                                    `;
+
+                                } else {
+
+                                    firstHtml = `
+                                        <div class="card pcard" id="${performance.id}" code="${performance.code}" data-value="${performance.id}">
+                                            <img class="card-img-top" src="${performance.imageMain}" alt="Card image cap">
+
+                                    `;
+
+                                }
+
+
+                                var secondHtml = `
+                                    <div class="card-body">
+                                          <h5 class="card-title" title="${performance.title}">${performance.title}</h5>
+                                          <p class="card-text">${start} - ${end}</p>
+                                          <div class="buttonZone">
+                                            <button class="whiteHeartBtn">
+                                                <img src="https://kr.object.ncloudstorage.com/team3/common/upNo.png"
+                                                   style="width : 25px; height: 25px;" class="heart" value="${performance.id}">
+                                            </button>
+
+                                            <button class="whiteHateBtn">
+                                                <img src="https://kr.object.ncloudstorage.com/team3/common/downNo.png"
+                                                   style="width : 25px; height: 25px;" class="hate" value="${performance.id}">
+                                            </button>
+                                          </div>
+                                    </div>
+
+                                </div>
+                                `;
+
+
+                                var finalHtml = firstHtml + secondHtml;
+
+                                $('#upper').append(finalHtml);
+
+                                findLoveList();
+                                findHateList();
+
+
+                            })
+                        }
+
+                    })
+
+                }
+
+
+
+
+
+
+                /**
+                 * 공연 관심없음 내역을 가져옴
+                 *
+                 */
+
+
+                 function findHatePerformanceList() {
+
+                    $.ajax({
+
+                        url: '/performance/findHatePerformanceList', // 서버에서 공연 관심없음 내역을 가져오는 API 엔드포인트
+                        method: 'GET',
+                        contentType: 'application/json',
+                        success: function (list) {
+                            $('#upper').html("");
+                            $('#upper').removeClass("page")
+                            $('#upper').addClass("scroll")
+
+                            $.each(list, function (index, performance) {
+
+                                var start = performance.startDate.length > 0 ?
+                                    performance.startDate.substring(0, 10) :
+                                    "없음";
+
+                                var end = performance.endDate.length > 0 ?
+                                    performance.endDate.substring(0, 10) :
+                                    "없음";
+
+                                var firstHtml = ``;
+
+                                if (!performance.imageMain || performance.imageMain == "null") {
+
+                                    firstHtml = `
+                                        <div class="card pcard" id="${performance.id}" code="${performance.code}" data-value="${performance.id}">
+                                            <img class="card-img-top" src="/img/performance/noPhoto.png" alt="Card image cap">
+
+                                    `;
+
+                                } else {
+
+                                    firstHtml = `
+                                        <div class="card pcard" id="${performance.id}" code="${performance.code}" data-value="${performance.id}">
+                                            <img class="card-img-top" src="${performance.imageMain}" alt="Card image cap">
+
+                                    `;
+
+                                }
+
+
+                                var secondHtml = `
+                                    <div class="card-body">
+                                          <h5 class="card-title" title="${performance.title}">${performance.title}</h5>
+                                          <p class="card-text">${start} - ${end}</p>
+                                          <div class="buttonZone">
+                                            <button class="whiteHeartBtn">
+                                                <img src="https://kr.object.ncloudstorage.com/team3/common/upNo.png"
+                                                   style="width : 25px; height: 25px;" class="heart" value="${performance.id}">
+                                            </button>
+
+                                            <button class="whiteHateBtn">
+                                                <img src="https://kr.object.ncloudstorage.com/team3/common/downNo.png"
+                                                   style="width : 25px; height: 25px;" class="hate" value="${performance.id}">
+                                            </button>
+                                          </div>
+                                    </div>
+
+                                </div>
+                                `;
+
+
+                                var finalHtml = firstHtml + secondHtml;
+
+                                $('#upper').append(finalHtml);
+
+                                findLoveList();
+                                findHateList();
+
+
+                            })
+                        }
+
+                    })
+
+                }
+
+
+
+                /**
+                 * 전체 공연 리뷰 내역을 가져옴(페이지 별로)
+                 *
+                 */
+
+                function findPerformanceReviewListByPage(page) {
+
+                    console.log("findPerformanceReviewListByPage");
+
+                    $.ajax({
+                        url: '/reviews/user',
+                        method: 'GET',
+                        contentType: 'application/json',
+                        success: function (list) {
+                            $('#upper').html("");
+                            $('#upper').removeClass("scroll")
+                            $('#upper').addClass("page")
+                            var size = list.length;
+
+                            console.log("리뷰", list);
+
+                            var reviewHeader = `
+                                <div id="reviewListHead">
+                                    <div id="leftHead">
+                                        <h2 style="display: inline-block;">리뷰</h2>
+                                        <div id="totalReviewCount" class="mt-3" style="display: inline-block; margin-left: 10px;">
+                                            ${size}
+                                        </div>
+                                    </div>
+                                    <div id="reviewList">
+                                    </div>
+                                    <div id="reviewPages">
+                                    </div>
+                                </div>
+                            `;
+
+                            $('#upper').html(reviewHeader);
+
+                            // 페이지네이션 처리
+                            var startIndex = (page - 1) * 5;
+                            var endIndex = page * 5;
+                            var sliceList = list.slice(startIndex, endIndex);
+
+                            console.log("sliceList", sliceList);
+
+                            $.each(sliceList, function (index, review) {
+                                var reviewIdPlusPerformanceId = review.id + "," + review.performanceId;
+                                var reviewHtml = ``;
+                                var profilePic = ``;
+                                var attachment = ``;
+                                var actionBtns = ``;
+                                var reviewStarHtml = ``;
+                                var reviewUserId = review.userId;
+                                var reviewStarNum = review.performanceReviewStar;
+                                var time = review.updatedAt.replace("T", " ").slice(0, 19);
+
+                                if ((review.userProfileImage == null) || (review.userProfileImage == "")) {
+                                    profilePic = `<img src="https://kr.object.ncloudstorage.com/team3/common/noPhoto.png" alt="이미지 없음">`;
+                                } else {
+                                    profilePic = `<img src="https://kr.object.ncloudstorage.com/team3${review.userProfileImage}" alt="사용자 이미지">`;
+                                }
+
+                                if ((review.attachment == null) || (review.attachment == "")) {
+                                    attachment = `<img src="https://kr.object.ncloudstorage.com/team3/common/noPhoto.png">`
+                                } else {
+                                    attachment = `<img src="${review.attachment}">`
+                                }
+
+
+                                actionBtns = `
+                                    <div class="review-actions">
+                                        <button class="update btn btn-outline-success" onclick="location.href='/performance/performance-detail?performanceId=${review.festivalId}'">상세</button>
+                                        <button class="update btn btn-outline-success" value="${review.performanceReviewId}" type="button">수정</button>
+                                        <button class="deleteBtn btn btn-outline-success" value="${review.performanceReviewId}">삭제</button>
+                                        <button class="editBtn hide btn btn-outline-success" value="${review.performanceReviewId}">저장</button>
+                                        <button class="cancelBtn hide btn btn-outline-success" value="${review.performanceReviewId}">취소</button>
+                                    </div>
+                                `;
+
+                                for (let i = 1; i <= reviewStarNum; i++) {
+                                    reviewStarHtml += `<label class="goldStar">★</label>`;
+                                }
+
+                                if (reviewStarNum < 5) {
+                                    for (let i = reviewStarNum + 1; i <= 5; i++) {
+                                        reviewStarHtml += `<label class="emptyStar">★</label>`;
+                                    }
+                                }
+
+                                reviewHtml = `
+                                    <div class="review">
+                                        <div class="user-info">
+                                            ${profilePic}
+                                            <div class="user-details">
+                                                <span>${review.userName}</span>
+                                                <span>${time}</span>
+                                                <div class="review-rating" data-rating="${reviewStarNum}">
+                                                    ${reviewStarHtml}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="review-content">
+                                            <p class="review-content-p-${review.id} review-content-p">${review.content}</p>
+                                            <div class="review-text-container hide">
+                                                <form id="reviewForm_${review.id}" style="width:100%;">
+                                                    <div class="star-rating2" style="width:100%;">
+                                                        <input type="radio" id="star5_${review.id}" name="reviewStar" value="5" ${review.stars == 5 ? 'checked' : ''}/>
+                                                        <label for="star5_${review.id}">★</label>
+                                                        <input type="radio" id="star4_${review.id}" name="reviewStar" value="4" ${review.stars == 4 ? 'checked' : ''}/>
+                                                        <label for="star4_${review.id}">★</label>
+                                                        <input type="radio" id="star3_${review.id}" name="reviewStar" value="3" ${review.stars == 3 ? 'checked' : ''}/>
+                                                        <label for="star3_${review.id}">★</label>
+                                                        <input type="radio" id="star2_${review.id}" name="reviewStar" value="2" ${review.stars == 2 ? 'checked' : ''}/>
+                                                        <label for="star2_${review.id}">★</label>
+                                                        <input type="radio" id="star1_${review.id}" name="reviewStar" value="1" ${review.stars == 1 ? 'checked' : ''}/>
+                                                        <label for="star1_${review.id}">★</label>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                        ${actionBtns}
+                                    </div>
+                                `;
+
+                                $('#reviewList').append(reviewHtml);
+                            });
+
+                            findUserReviewCount(size);
+                        },
+                        error: function (error) {
+                            console.error('리뷰 로드 실패:', error);
+                        }
+                    });
+                }
+
+
+
+
+
+
+                /**
+                 * 유저별 전체 리뷰 페이지 버튼 만들기
+                 *
+                 *
+                 */
+                function findUserReviewCount(count) {
+
+                    var pages = 0;
+
+                    if (count % 5 == 0) {
+                        pages = count / 5;
+                    } else {
+                        pages = count / 5 + 1;
+                    }
+
+                    for (var p = 1; p <= pages; p++) {
+                        $('#reviewPages').append(`<button class="pageBtn3" style="font-size: 20px; margin: 0.5%">${p}</button>`)
+                    }
+
+                }
+
+
+                /**
+                 * 리뷰 페이지 이벤트 버튼
+                 *
+                 */
+                $(document).on('click', '.pageBtn3', function () {
+                    var page = $(this).text();
+                    findPerformanceReviewListByPage(page);
+
+                    setTimeout(function () {
+                        console.log("0.1s");
+                        var btns = $('.pageBtn3');
+
+                        console.log(btns)
+
+                        btns.each(function () {
+
+                            var button = $(this);
+                            console.log(button);
+                            if (button.text() == page) {
+                                console.log(button.text());
+                                console.log("same")
+                                button.addClass('activePage');
+
+                            } else {
+                                console.log(button.text());
+                                button.removeClass('activePage');
+
+                            }
+                        })
+                    }, 100);
+
+
+                })
+
+
+                /**
+                 * 공연 리뷰 삭제
+                 *
+                 */
+                $(document).on('click', '.deleteBtn3', function () {
+
+                    var reviewIdPlusPerformanceId = $(this).val().trim();
+                    var ids = reviewIdPlusPerformanceId.split(",");
+                    var reviewId = ids[0];
+                    var exhibitionId = ids[1];
+
+                    console.log(reviewId);
+                    console.log(performanceId)
+
+                    var data = {
+
+                        id: reviewId
+
+                    };
+
+                    $.ajax({
+
+                        url: `/performance/performance/${performanceId}/comment`,
+                        method: 'DELETE',
+                        contentType: 'application/json',
+                        data: JSON.stringify(data),
+                        success: function () {
+
+                            alert("공연 댓글 삭제 성공");
+                            $("#review").click()
+
+                        },
+                        error: function (error) {
+
+                            alert("공연 댓글 삭제 실패");
+
+                        }
+                    })
+                })
+
+
+
+
 
                 //#endregion
 
@@ -1515,7 +1980,7 @@
                 //#endregion
 
 
-                //#region 상단바 : 문화제
+                //#region 상단바 : 문화재
 
                 //#endregion
 
@@ -1545,11 +2010,11 @@
 
                                 $('#festivalKeywordList').append(htmlContent);
 
-                                concat += keyword.festivalKeywordId + " ";
+                                concat += keyword.festivalKeywordId + ",";
 
                             })
 
-                            $('#festivalKeyword').val(concat.trim() + " ");
+                            $('#festivalKeyword').val(concat.trim() + ",");
 
                             findFestivalSmallLoveKeyword(1);
 
@@ -1602,8 +2067,6 @@
                 })
 
 
-                findFestivalBigLoveKeyword();
-
 
                 /**
                  * 축제 찜 키워드 선택 시 색 변화 버튼
@@ -1621,13 +2084,13 @@
 
                     }
 
-                    var btns = document.querySelectorAll('button.bigLove');
+                    var btns = document.querySelectorAll('.festivalLoveKeywordBtn.bigLove');
 
                     var concat = '';
 
                     btns.forEach(function (btn) {
 
-                        concat += (btn.value + " ");
+                        concat += (btn.value + ",");
 
                     })
 
@@ -1732,7 +2195,7 @@
 
                     }
 
-                    var btns = document.querySelectorAll('button.bigHate');
+                    var btns = document.querySelectorAll('.festivalHateKeywordBtn.bigHate');
 
                     var concat = '';
 
@@ -1943,10 +2406,635 @@
                 })
 
 
-                findExhibitionLoveKeyword();
-
 
                 //#endregion
+
+
+
+
+                // 문화재 찜, 관심없음 내역
+
+                // 문화재 찜/관심없음 버튼 클릭 이벤트
+                $(document).on('click', '.cheart, .chate', function(e) {
+                    e.stopPropagation();
+                    var img = $(this);
+                    var culturalPropertyId = img.attr('value');
+                    var currentInterestType = img.data('type');
+                    var newInterestType = img.hasClass('cheart') ? 'LIKE' : 'DISLIKE';
+
+                    // 현재 상태 확인
+                    var isCurrentlyInterested = img.attr('src').includes('Blue.png') || img.attr('src').includes('Red.png');
+
+                    if (isCurrentlyInterested && currentInterestType === newInterestType) {
+                        // 이미 관심 상태인 경우 제거
+                        $.ajax({
+                            url: '/cultural-properties/removeUserInterest',
+                            method: 'POST',
+                            data: {
+                                culturalPropertiesId: culturalPropertyId,
+                                interestType: currentInterestType
+                            },
+                            success: function(response) {
+                                alert(response);
+                                updateInterestUI(img, null);
+                                loadCulturalPropertiesInterests(currentInterestType);
+                            },
+                            error: function(xhr, status, error) {
+                                console.error("Error removing interest:", error);
+                                alert("관심 제거 실패: " + error);
+                            }
+                        });
+                    } else {
+                        // 새로운 관심 추가 또는 변경
+                        $.ajax({
+                            url: '/cultural-properties/addUserInterest',
+                            method: 'POST',
+                            data: {
+                                culturalPropertiesId: culturalPropertyId,
+                                interestType: newInterestType
+                            },
+                            success: function(response) {
+                                alert(response);
+                                updateInterestUI(img, newInterestType);
+                                loadCulturalPropertiesInterests(newInterestType);
+                            },
+                            error: function(xhr, status, error) {
+                                console.error("Error updating interest:", error);
+                                alert("관심 상태 업데이트 실패: " + error);
+                            }
+                        });
+                    }
+                });
+
+                // UI 업데이트 함수
+                function updateInterestUI(img, newInterestType) {
+                    var heartImg = img.closest('.card').find('.cheart');
+                    var hateImg = img.closest('.card').find('.chate');
+
+                    if (newInterestType === 'LIKE') {
+                        heartImg.attr('src', 'https://kr.object.ncloudstorage.com/team3/common/upBlue.png');
+                        hateImg.attr('src', 'https://kr.object.ncloudstorage.com/team3/common/downNo.png');
+                    } else if (newInterestType === 'DISLIKE') {
+                        heartImg.attr('src', 'https://kr.object.ncloudstorage.com/team3/common/upNo.png');
+                        hateImg.attr('src', 'https://kr.object.ncloudstorage.com/team3/common/downRed.png');
+                    } else {
+                        heartImg.attr('src', 'https://kr.object.ncloudstorage.com/team3/common/upNo.png');
+                        hateImg.attr('src', 'https://kr.object.ncloudstorage.com/team3/common/downNo.png');
+                    }
+
+                    img.data('type', newInterestType);
+                }
+
+                // 문화재 관심 목록 로드 함수
+                function loadCulturalPropertiesInterests(interestType) {
+                    $.ajax({
+                        url: '/cultural-properties/getUserInterest',
+                        method: 'GET',
+                        data: { interestType: interestType },
+                        success: function(response) {
+                            console.log("Received data:", response);
+                            $('#upper').html("");
+                            $('#upper').addClass("scroll");
+                            $('#upper').removeClass("page");
+                            if (response.length === 0) {
+                                $('#upper').html("<p>" + (interestType === 'LIKE' ? '찜한' : '관심없음') + " 문화재가 없습니다.</p>");
+                                return;
+                            }
+                            $.each(response, function(index, property) {
+                                var html = `
+                                    <div class="card ccard" id="${property.id}">
+                                        <img class="card-img-top" src="${property.imgUrl && property.imgUrl.length > 0 ? property.imgUrl[0] : '/img/festival/noPhoto.png'}" alt="Cultural Property Image">
+                                        <div class="card-body">
+                                            <h5 class="card-title">${property.culturalPropertiesName}</h5>
+                                            <p class="card-text">${property.categoryName}</p>
+                                            <p class="card-text">${property.region + ' ' + property.district}</p>
+                                            <p class="card-text">${property.dynasty}</p>
+                                            <div class="buttonZone">
+                                                <button class="whiteHeartBtn">
+                                                    <img src="${interestType === 'LIKE' ? 'https://kr.object.ncloudstorage.com/team3/common/upBlue.png' : 'https://kr.object.ncloudstorage.com/team3/common/upNo.png'}"
+                                                       style="width : 25px; height: 25px;" class="cheart" value="${property.id}" data-type="${interestType}">
+                                                </button>
+                                                <button class="whiteHateBtn">
+                                                    <img src="${interestType === 'LIKE' ? 'https://kr.object.ncloudstorage.com/team3/common/downNo.png' : 'https://kr.object.ncloudstorage.com/team3/common/downRed.png'}"
+                                                       style="width : 25px; height: 25px;" class="chate" value="${property.id}" data-type="${interestType}">
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                `;
+                                $('#upper').append(html);
+                            });
+                        },
+                        error: function(xhr, status, error) {
+                            console.error("Error loading interests:", error);
+                            console.log("Status:", status);
+                            console.log("Response:", xhr.responseText);
+                            $('#upper').html("<p>데이터를 불러오는데 실패했습니다.</p>");
+                        }
+                    });
+                }
+
+                // 문화재 찜 목록 버튼 클릭 이벤트
+                $(document).on('click', '#culturalPropertiesLove', function() {
+                    $('#leftZone').addClass('none');
+                    $('#upperZone').removeClass('none');
+                    $('#downZone').addClass('none');
+
+                    $('#userInfo').closest('.genre-item').removeClass('active');
+                    $('#culturalPropertiesLove').closest('.genre-item').addClass('active');
+                    $('#culturalPropertiesHate').closest('.genre-item').removeClass('active');
+                    $('#review').closest('.genre-item').removeClass('active');
+                    $('#loveKeywordList').closest('.genre-item').removeClass('active');
+                    $('#hateKeywordList').closest('.genre-item').removeClass('active');
+
+                    loadCulturalPropertiesInterests('LIKE');
+                });
+
+                // 문화재 관심없음 목록 버튼 클릭 이벤트
+                $(document).on('click', '#culturalPropertiesHate', function() {
+                    $('#leftZone').addClass('none');
+                    $('#upperZone').removeClass('none');
+                    $('#downZone').addClass('none');
+
+                    $('#userInfo').closest('.genre-item').removeClass('active');
+                    $('#culturalPropertiesLove').closest('.genre-item').removeClass('active');
+                    $('#culturalPropertiesHate').closest('.genre-item').addClass('active');
+                    $('#review').closest('.genre-item').removeClass('active');
+                    $('#loveKeywordList').closest('.genre-item').removeClass('active');
+                    $('#hateKeywordList').closest('.genre-item').removeClass('active');
+
+                    loadCulturalPropertiesInterests('DISLIKE');
+                });
+
+                // 문화재 카드 클릭 시 상세 페이지로 이동
+                $(document).on('click', '.ccard', function() {
+                    var culturalPropertyId = $(this).attr('id');
+                    window.location.href = '/cultural-properties/detail/' + culturalPropertyId;
+                });
+
+
+
+
+
+
+
+
+                //문화재 리뷰
+
+<!--                function loadMyReviews(page = 0) {-->
+<!--    $.ajax({-->
+<!--        url: '/cultural-properties/myReviews',-->
+<!--        method: 'GET',-->
+<!--        data: { page: page },-->
+<!--        success: function(response) {-->
+<!--            $('#upper').html("");-->
+<!--            var reviewsHtml = '<h2>내가 쓴 리뷰</h2>';-->
+<!--            response.reviews.forEach(function(review) {-->
+<!--                reviewsHtml += `-->
+<!--                    <div class="review-item">-->
+<!--                        <h3>${review.culturalPropertiesName}</h3>-->
+<!--                        <p>평점: ${review.star}</p>-->
+<!--                        <p>${review.content}</p>-->
+<!--                        <p>작성일: ${new Date(review.createdAt).toLocaleDateString()}</p>-->
+<!--                    </div>-->
+<!--                `;-->
+<!--            });-->
+
+<!--            // 페이징 버튼 추가-->
+<!--            reviewsHtml += '<div class="pagination">';-->
+<!--            for (let i = 0; i < response.totalPages; i++) {-->
+<!--                reviewsHtml += `<button class="page-btn" data-page="${i}">${i + 1}</button>`;-->
+<!--            }-->
+<!--            reviewsHtml += '</div>';-->
+
+<!--            $('#upper').html(reviewsHtml);-->
+
+<!--            // 페이지 버튼 클릭 이벤트-->
+<!--            $('.page-btn').click(function() {-->
+<!--                loadMyReviews($(this).data('page'));-->
+<!--            });-->
+<!--        },-->
+<!--        error: function(xhr, status, error) {-->
+<!--            console.error("Error loading reviews:", error);-->
+<!--            $('#upper').html("<p>리뷰를 불러오는데 실패했습니다.</p>");-->
+<!--        }-->
+<!--    });-->
+<!--}-->
+
+
+<!--////////////////////////////////////////////////////////-->
+
+<!--function loadMyReviews(page = 0) {-->
+<!--    $.ajax({-->
+<!--        url: '/cultural-properties/myReviews',-->
+<!--        method: 'GET',-->
+<!--        data: { page: page },-->
+<!--        success: function(response) {-->
+<!--            $('#upper').html("");-->
+<!--            const reviewCount = response.totalElements;-->
+
+<!--            var reviewsHtml = `-->
+<!--                <div class="reviews">-->
+<!--                    <h2 style="display: inline-block;">리뷰</h2>-->
+<!--                    <div id="totalReviewCount" class="mt-3" style="display: inline-block; margin-left: 10px;">-->
+<!--                        <span>${reviewCount}</span>-->
+<!--                    </div>-->
+<!--            `;-->
+
+<!--            if (reviewCount === 0) {-->
+<!--                reviewsHtml += '<br><br><br><br><br><div class="no-reviews" style="font-size: 20px;">리뷰가 없습니다. 리뷰를 작성해보세요.</div><br><br><br><br><br>';-->
+<!--            } else {-->
+<!--                response.reviews.forEach(function(review) {-->
+<!--                    const createdAt = new Date(review.createdAt);-->
+<!--                    const formattedDate = createdAt.toISOString().slice(0, 19).replace('T', ' ') + '             ';-->
+
+<!--                    const updatedAtHtml = review.updatedAt && review.updatedAt !== review.createdAt-->
+<!--                        ? ` 수정 : ${new Date(review.updatedAt).toISOString().slice(0, 19).replace('T', ' ')}`-->
+<!--                        : '';-->
+
+<!--                    reviewsHtml += `-->
+<!--                        <div class="review">-->
+<!--                            <div class="user-info">-->
+<!--                                <img src="${review.userProfileImage ? 'https://kr.object.ncloudstorage.com/team3' + review.userProfileImage : 'https://kr.object.ncloudstorage.com/team3/img/festival/noPhoto.png'}" alt="${review.userName}">-->
+<!--                                <div class="user-details">-->
+<!--                                    <span>${review.userName}</span>-->
+<!--                                    <span style="font-size: 13px; color: #999;">-->
+<!--                                        ${formattedDate}   ${updatedAtHtml}-->
+<!--                                    </span>-->
+<!--                                    <div class="review-rating" data-rating="${review.star}">-->
+<!--                                        ${Array.from({ length: 5 }, (_, index) => {-->
+<!--                                            if (index < review.star) {-->
+<!--                                                return '<span class="review-star">&#9733;</span>';-->
+<!--                                            } else {-->
+<!--                                                return '<span class="review-star empty">&#9734;</span>';-->
+<!--                                            }-->
+<!--                                        }).join('')}-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                            <div class="review-content">-->
+<!--                                <p class="review-content-p-${review.id}">${review.content}</p>-->
+<!--                                <div class="review-text-container">-->
+<!--                                    <textarea id="editContent-${review.id}" rows="5" style="display:none;" value="${review.content}">${review.content}</textarea>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                            <div class="review-actions">-->
+<!--                                <button type="button" class="btn btn-outline-success detail-btn" onclick="location.href='/cultural-properties/detail/${review.culturalPropertiesId}'">상세</button>-->
+<!--                                <button type="button" class="btn btn-outline-success edit-btn" id="edit-btn-${review.id}" data-id="${review.id}">수정</button>-->
+<!--                                <button type="button" class="btn btn-outline-success delete-btn" id="delete-btn-${review.id}" data-id="${review.id}" data-cultural-id="${review.culturalPropertiesId}">삭제</button>-->
+<!--                                <button type="button" class="btn btn-outline-success save-btn" id="save-btn-${review.id}" style="display:none;" data-id="${review.id}" data-cultural-id="${review.culturalPropertiesId}">저장</button>-->
+<!--                                <button type="button" class="btn btn-outline-success cancel-btn" id="cancel-btn-${review.id}" style="display:none;">취소</button>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    `;-->
+<!--                });-->
+<!--            }-->
+
+<!--            reviewsHtml += '</div>';-->
+
+<!--            // 페이징 버튼 추가-->
+<!--            reviewsHtml += '<div class="pagination">';-->
+<!--            for (let i = 0; i < response.totalPages; i++) {-->
+<!--                reviewsHtml += `<button class="page-btn" data-page="${i}">${i + 1}</button>`;-->
+<!--            }-->
+<!--            reviewsHtml += '</div>';-->
+
+<!--            $('#upper').html(reviewsHtml);-->
+
+<!--            // 페이지 버튼 클릭 이벤트-->
+<!--            $('.page-btn').click(function() {-->
+<!--                loadMyReviews($(this).data('page'));-->
+<!--            });-->
+
+<!--            // 수정 버튼 클릭 이벤트-->
+<!--            $('.edit-btn').click(function() {-->
+<!--                var reviewId = $(this).data('id');-->
+<!--                $(this).hide();-->
+<!--                $('#delete-btn-' + reviewId).hide();-->
+<!--                $('#save-btn-' + reviewId).show();-->
+<!--                $('#cancel-btn-' + reviewId).show();-->
+<!--                $('.review-content-p-' + reviewId).hide();-->
+<!--                $('#editContent-' + reviewId).show();-->
+<!--            });-->
+
+<!--            // 취소 버튼 클릭 이벤트-->
+<!--            $('.cancel-btn').click(function() {-->
+<!--                var reviewId = $(this).attr('id').split('-')[2];-->
+<!--                $('#edit-btn-' + reviewId).show();-->
+<!--                $('#delete-btn-' + reviewId).show();-->
+<!--                $(this).hide();-->
+<!--                $('#save-btn-' + reviewId).hide();-->
+<!--                $('.review-content-p-' + reviewId).show();-->
+<!--                $('#editContent-' + reviewId).hide();-->
+<!--            });-->
+
+<!--            // 저장 버튼 클릭 이벤트-->
+<!--            $('.save-btn').click(function() {-->
+<!--                var reviewId = $(this).data('id');-->
+<!--                var culturalPropertiesId = $(this).data('cultural-id');-->
+<!--                var content = $('#editContent-' + reviewId).val();-->
+
+<!--                $.ajax({-->
+<!--                    url: '/cultural-properties/detail/' + culturalPropertiesId + '/review/update',-->
+<!--                    method: 'PUT',-->
+<!--                    contentType: 'application/json',-->
+<!--                    data: JSON.stringify({-->
+<!--                        id: reviewId,-->
+<!--                        content: content-->
+<!--                    }),-->
+<!--                    success: function(response) {-->
+<!--                        alert("리뷰가 성공적으로 수정되었습니다.");-->
+<!--                        loadMyReviews(page);-->
+<!--                    },-->
+<!--                    error: function(xhr, status, error) {-->
+<!--                        alert("리뷰 수정에 실패했습니다.");-->
+<!--                    }-->
+<!--                });-->
+<!--            });-->
+
+<!--            // 삭제 버튼 클릭 이벤트-->
+<!--            $('.delete-btn').click(function() {-->
+<!--                var reviewId = $(this).data('id');-->
+<!--                var culturalPropertiesId = $(this).data('cultural-id');-->
+
+<!--                if (confirm("정말로 이 리뷰를 삭제하시겠습니까?")) {-->
+<!--                    $.ajax({-->
+<!--                        url: '/cultural-properties/detail/' + culturalPropertiesId + '/review/remove',-->
+<!--                        method: 'DELETE',-->
+<!--                        data: { id: reviewId },-->
+<!--                        success: function(response) {-->
+<!--                            alert("리뷰가 성공적으로 삭제되었습니다.");-->
+<!--                            loadMyReviews(page);-->
+<!--                        },-->
+<!--                        error: function(xhr, status, error) {-->
+<!--                            alert("리뷰 삭제에 실패했습니다.");-->
+<!--                        }-->
+<!--                    });-->
+<!--                }-->
+<!--            });-->
+<!--        },-->
+<!--        error: function(xhr, status, error) {-->
+<!--            console.error("Error loading reviews:", error);-->
+<!--            $('#upper').html("<p>리뷰를 불러오는데 실패했습니다.</p>");-->
+<!--        }-->
+<!--    });-->
+<!--}-->
+<!--///////////////////////////////////////////////-->
+
+
+                function loadMyReviews(page = 0) {
+                    $.ajax({
+                        url: '/cultural-properties/myReviews',
+                        method: 'GET',
+                        data: { page: page },
+                        success: function(response) {
+                            $('#upper').html("");
+                            $('#upper').removeClass("scroll");
+                            $('#upper').addClass("page");
+                            var reviewCount = response.totalItems; // 총 리뷰 수
+
+                            // 리뷰 카운트 업데이트
+                            var reviewCountHtml = `<span>${reviewCount}</span>`;
+                            $('#totalReviewCount').html(reviewCountHtml);
+
+                            var reviewsHtml = `
+                                <div class="reviews">
+                                    <h2 style="display: inline-block;">리뷰</h2>
+                                    <div id="totalReviewCount" class="mt-3" style="display: inline-block; margin-left: 10px;">
+                                        <span>${reviewCount}</span>
+                                    </div>
+                            `;
+
+                            // 리뷰가 없는 경우 메시지 추가
+                            if (reviewCount === 0) {
+                                reviewsHtml += '<br><br><br><br><br><div class="no-reviews" style="font-size: 20px;">리뷰가 없습니다. 리뷰를 작성해보세요.</div><br><br><br><br><br>';
+                            } else {
+                                response.reviews.forEach(function(review) {
+                                    // createdAt 값을 Date 객체로 변환
+                                    const createdAt = new Date(review.createdAt);
+                                    // (YYYY-MM-DD HH:mm:ss) 형식으로 날짜 포맷팅
+                                    const formattedDate = createdAt.toISOString().slice(0, 19).replace('T', ' ') + '             ';
+
+                                    // updatedAt 포맷팅 (updatedAt이 존재하는 경우)
+                                    const updatedAtHtml = review.updatedAt && review.updatedAt !== review.createdAt
+                                        ? ` 수정 : ${new Date(review.updatedAt).toISOString().slice(0, 19).replace('T', ' ')}`
+                                        : '';
+
+                                    reviewsHtml += `
+                                        <div class="review">
+                                            <div class="user-info">
+                                                <img src="${review.userProfileImage ? 'https://kr.object.ncloudstorage.com/team3' + review.userProfileImage : 'https://kr.object.ncloudstorage.com/team3/img/festival/noPhoto.png'}" alt="${review.userName}">
+                                                <div class="user-details">
+                                                    <span>${review.userName}</span>
+                                                    <span style="font-size: 13px; color: #999;">
+                                                        ${formattedDate}   ${updatedAtHtml}
+                                                    </span>
+                                                    <div class="review-rating" data-rating="${review.star}">
+                                                        ${Array.from({ length: 5 }, (_, index) => {
+                                                            if (index < review.star) {
+                                                                return '<span class="review-star">&#9733;</span>';
+                                                            } else {
+                                                                return '<span class="review-star empty">&#9734;</span>';
+                                                            }
+                                                        }).join('')}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="review-content">
+                                                <p class="review-content-p-${review.id}">${review.content}</p>
+                                                <div class="review-text-container">
+                                                    <textarea id="editContent-${review.id}" rows="5" style="display:none;" value="${review.content}">${review.content}</textarea>
+                                                </div>
+                                            </div>
+                                            <div class="review-actions">
+                                                <button type="button" class="btn btn-outline-success detail-btn" onclick="location.href='/cultural-properties/detail/${review.culturalPropertiesId}'">상세</button>
+                                                <button type="button" class="btn btn-outline-success edit-btn" id="edit-btn-${review.id}" data-id="${review.id}">수정</button>
+                                                <button type="button" class="btn btn-outline-success delete-btn" id="delete-btn-${review.id}" data-id="${review.id}" data-cultural-id="${review.culturalPropertiesId}">삭제</button>
+                                                <button type="button" class="btn btn-outline-success save-btn" id="save-btn-${review.id}" style="display:none;" data-id="${review.id}" data-cultural-id="${review.culturalPropertiesId}">저장</button>
+                                                <button type="button" class="btn btn-outline-success cancel-btn" id="cancel-btn-${review.id}" style="display:none;">취소</button>
+                                            </div>
+                                        </div>
+                                    `;
+                                });
+                            }
+
+                            reviewsHtml += '</div>';
+
+                            // 페이징 버튼 추가
+                            reviewsHtml += '<div class="pagination">';
+                            for (let i = 0; i < response.totalPages; i++) {
+                                reviewsHtml += `<button class="page-btn" data-page="${i}">${i + 1}</button>`;
+                            }
+                            reviewsHtml += '</div>';
+
+                            $('#upper').html(reviewsHtml);
+
+                            // 페이지 버튼 클릭 이벤트
+                            $('.page-btn').click(function() {
+                                loadMyReviews($(this).data('page'));
+                            });
+
+                            // 수정 버튼 클릭 이벤트
+                            $('.edit-btn').click(function() {
+                                var reviewId = $(this).data('id');
+                                $(this).hide();
+                                $('#delete-btn-' + reviewId).hide();
+                                $('#save-btn-' + reviewId).show();
+                                $('#cancel-btn-' + reviewId).show();
+                                $('.review-content-p-' + reviewId).hide();
+                                $('#editContent-' + reviewId).show();
+                            });
+
+                            // 취소 버튼 클릭 이벤트
+                            $('.cancel-btn').click(function() {
+                                var reviewId = $(this).attr('id').split('-')[2];
+                                $('#edit-btn-' + reviewId).show();
+                                $('#delete-btn-' + reviewId).show();
+                                $(this).hide();
+                                $('#save-btn-' + reviewId).hide();
+                                $('.review-content-p-' + reviewId).show();
+                                $('#editContent-' + reviewId).hide();
+                            });
+
+                            // 저장 버튼 클릭 이벤트 (여기에 저장 로직 추가 필요)
+                            $('.save-btn').click(function() {
+                                // 저장 로직 구현
+                            });
+
+                            // 삭제 버튼 클릭 이벤트
+                            $('.delete-btn').click(function() {
+                                var reviewId = $(this).data('id');
+                                var culturalPropertiesId = $(this).data('cultural-id');
+
+                                if (confirm("정말로 이 리뷰를 삭제하시겠습니까?")) {
+                                    $.ajax({
+                                        url: '/cultural-properties/detail/' + culturalPropertiesId + '/review/remove',
+                                        method: 'DELETE',
+                                        data: { id: reviewId },
+                                        success: function(response) {
+                                            alert("리뷰가 성공적으로 삭제되었습니다.");
+                                            loadMyReviews(page);
+                                        },
+                                        error: function(xhr, status, error) {
+                                            alert("리뷰 삭제에 실패했습니다.");
+                                        }
+                                    });
+                                }
+                            });
+                        },
+                        error: function(xhr, status, error) {
+                            console.error("Error loading reviews:", error);
+                            $('#upper').html("<p>리뷰를 불러오는데 실패했습니다.</p>");
+                        }
+                    });
+                }
+
+
+
+
+                //#region
+                // 문화재 찜키워드, 관심없음 키워드
+
+                let currentPage = 1;
+
+                function loadInitialCulturalPropertiesKeywords() {
+                    const url = $('#loveOrHate').val() === "L" ? '/cultural-properties/like/keywords' : '/cultural-properties/dislike/keywords';
+                    $.ajax({
+                        url: url,
+                        method: 'GET',
+                        success: function(response) {
+                            // 초기 키워드를 모두 초록색으로 표시
+                            const initialKeywords = response.map(keyword => ({
+                                ...keyword,
+                                isInitial: true  // 초기 키워드임을 표시
+                            }));
+                            displayCulturalPropertiesKeywords(initialKeywords);
+                            loadUnselectedCulturalPropertiesKeywords();
+                        },
+                        error: function(xhr, status, error) {
+                            console.error("Error loading initial keywords:", error);
+                        }
+                    });
+                }
+
+                function loadUnselectedCulturalPropertiesKeywords() {
+                    $.ajax({
+                        url: '/cultural-properties/keywords',
+                        method: 'GET',
+                        data: { page: currentPage, limit: 5 },
+                        success: function(response) {
+                            displayCulturalPropertiesKeywords(response, true);
+                        },
+                        error: function(xhr, status, error) {
+                            console.error("Error loading unselected keywords:", error);
+                        }
+                    });
+                }
+
+
+                function displayCulturalPropertiesKeywords(keywords, append = false) {
+                    const keywordList = $('#culturalPropertiesKeywordList');
+                    if (!append) {
+                        keywordList.empty();
+                    }
+                    keywords.forEach(keyword => {
+                        const keywordButton = $('<button>')
+                            .addClass('culturalPropertiesKeywordBtn')
+                            .text(keyword.keyword)
+                            .attr('data-id', keyword.keywordId)
+                            .attr('data-count', keyword.totalCount);
+
+                        if (keyword.isInitial) {
+                            // 초기 키워드는 loveOrHate 값에 따라 클래스 추가
+                            keywordButton.addClass($('#loveOrHate').val() === "L" ? 'bigLove' : 'bigHate');
+                        } else if ($('#loveOrHate').val() === "L" && keyword.totalCount >= 10) {
+                            keywordButton.addClass('bigLove');
+                        } else if ($('#loveOrHate').val() === "H" && keyword.totalCount <= -10) {
+                            keywordButton.addClass('bigHate');
+                        }
+
+                        keywordList.append(keywordButton);
+                    });
+                }
+
+
+                $(document).on('click', '.culturalPropertiesKeywordBtn', function() {
+                    const isLove = $('#loveOrHate').val() === "L";
+                    $(this).toggleClass(isLove ? 'bigLove' : 'bigHate');
+                    updateSelectedCulturalPropertiesKeywords();
+                });
+
+                function updateSelectedCulturalPropertiesKeywords() {
+                    const isLove = $('#loveOrHate').val() === "L";
+                    const selectedKeywords = $(`.culturalPropertiesKeywordBtn.${isLove ? 'bigLove' : 'bigHate'}`)
+                        .map(function() { return $(this).text(); }).get().join(',');
+                    $('#culturalPropertiesKeyword').val(selectedKeywords);
+                }
+
+
+                $('#loveKeywordList, #hateKeywordList').on('click', function() {
+                    const isLove = $(this).attr('id') === 'loveKeywordList';
+                    $('#loveOrHate').val(isLove ? "L" : "H");
+                    $('#keywordCountUpdate').text(isLove ? "선호 키워드 수정" : "비선호 키워드 수정");
+                    $('#addCulturalPropertiesLoveKeyword').toggle(isLove);
+                    $('#addCulturalPropertiesHateKeyword').toggle(!isLove);
+                    currentPage = 1;
+                    loadInitialCulturalPropertiesKeywords();
+                });
+
+<!--                $(document).ready(function() {-->
+<!--                    $('#loveKeywordList').click(); // 초기 로드 시 찜 키워드 목록 표시-->
+<!--                });-->
+
+                $(document).on('click', '#addCulturalPropertiesLoveKeyword, #addCulturalPropertiesHateKeyword', function() {
+                    console.log("버튼 클릭됨");
+                    currentPage++;
+                    loadUnselectedCulturalPropertiesKeywords();
+                });
+
+
+
+
 
 
                 //#endregion
@@ -1983,6 +3071,16 @@
 
                         findLoveExhibitionList();
 
+
+                    }else if (categoryText == "문화재") {
+
+                        loadCulturalPropertiesInterests('LIKE');
+
+                    } else if (categoryText == "공연") {
+
+                        findLovePerformanceList();
+
+
                     }
 
 
@@ -2009,7 +3107,7 @@
 
                 })
 
-                $('#userInfo').closest('.genre-item').addClass('active');
+
 
 
                 /**
@@ -2037,6 +3135,16 @@
                     } else if (category == "전시") {
 
                         findLoveExhibitionList();
+
+
+                    }else if (category == "문화재") {
+
+                        loadCulturalPropertiesInterests('LIKE');
+
+                    } else if (category == "공연") {
+
+                        findLovePerformanceList();
+
 
                     }
 
@@ -2069,6 +3177,15 @@
 
                         findHateExhibitionList();
 
+
+                    } else if (category == "문화재") {
+                        loadCulturalPropertiesInterests('DISLIKE');
+
+                    } else if (category == "공연") {
+
+                        findHatePerformanceList();
+
+
                     }
 
                 })
@@ -2099,6 +3216,15 @@
                     } else if (category == "전시") {
 
                         findExhibitionReviewListByPage(1);
+
+
+                    } else if (category == "문화재") {
+                        loadMyReviews();
+
+                    } else if (category == "공연") {
+
+                        findPerformanceReviewListByPage(1);
+
 
                     }
 
@@ -2238,12 +3364,15 @@
 
                 //# endregion
 
+                $("#userInfo").trigger("click");
 
             }
         )
 
 
     </script>
+
+
 </head>
 <body>
 
@@ -2257,7 +3386,7 @@
 
                     <li>
                         <div class="genre-item">
-                            <a class="userInfo" id="userInfo">회원정보</a>
+                            <a class="userInfo" id="userInfo">회원정보임</a>
                         </div>
                     <li>
 
@@ -2269,7 +3398,7 @@
                                 <a class="category" id="performance">공연</a>
                                 <a class="category" id="exhibition">전시</a>
                                 <a class="category" id="festival">축제</a>
-                                <a class="category" id="culturalPro">문화제</a>
+                                <a class="category" id="culturalPro">문화재</a>
                             </div>
                         </div>
 
@@ -2335,10 +3464,10 @@
                             <br>
 
                             <label for="password">비밀번호</label>
-                            <input class="rounded" id="password" name="password" pattern="^[a-zA-Z0-9_]{5,}$"
-                                   placeholder="******"
-                                   required style="background-color: lightblue" th:value="${user.password}"
-                                   type="password"><br>
+
+                            <input name="password" class="rounded" id="password" type="password" required
+                                   style="background-color: lightblue" pattern="^[a-zA-Z0-9_]{5,}$"><br>
+
 
                             <label for="userName">회원이름</label>
                             <input class="rounded" id="userName" name="userName" pattern="^[a-zA-Z가-힣]{3,}$"
@@ -2485,7 +3614,6 @@
 
 
 </div>
-
 
 </body>
 </html>

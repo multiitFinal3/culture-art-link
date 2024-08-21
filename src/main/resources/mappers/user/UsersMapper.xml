@@ -54,5 +54,16 @@
 
     </insert>
 
+    <select id="findUserByEmailNotMe">
+
+        SELECT *
+
+        FROM vw_user_role_data
+
+        WHERE email=#{email}
+
+        AND user_id !=#{userId};
+
+    </select>
 
 </mapper>

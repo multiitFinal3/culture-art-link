@@ -236,7 +236,7 @@ public class ExhibitionService {
         return exhibitionDao.getUnlikeExhibition(userId);
     }
 
-
+  
     public List<ExhibitionDto> getUserRecommend(int userId) {
         // 1. 사용자의 관심 키워드 가져오기 (count >= 10)
         List<String> userKeyword = exhibitionKeywordDao.findKeywordsByCount(userId);

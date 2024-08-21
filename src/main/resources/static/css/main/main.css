@@ -62,6 +62,7 @@ h3{
     min-width: 48%;
     max-width: 48%;
     border: 0px;
+    cursor: pointer;
 }
 
 .card-img-top {
