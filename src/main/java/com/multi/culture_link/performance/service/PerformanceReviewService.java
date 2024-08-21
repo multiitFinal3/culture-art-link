@@ -55,4 +55,9 @@ public class PerformanceReviewService {
     public void deleteReview(int reviewId) {
         performancMapper.deleteReview(reviewId);
     }
+
+
+    public List<PerformanceReviewDTO> getReviewsByUserId(int userId) {
+        return performancMapper.findReviewsByUserId(userId);
+    }
 }

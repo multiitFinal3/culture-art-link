@@ -220,6 +220,15 @@
 
 
 
+    <!-- 사용자 ID로 리뷰 조회 -->
+    <select id="findReviewsByUserId" parameterType="int" resultType="com.multi.culture_link.performance.model.dto.PerformanceReviewDTO">
+        SELECT * FROM performance_review
+        WHERE user_id = #{userId}
+    </select>
+
+
+
+
 
 
 

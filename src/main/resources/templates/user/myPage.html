@@ -1232,6 +1232,235 @@
 
 
 
+                /**
+                 * 전체 공연 리뷰 내역을 가져옴(페이지 별로)
+                 *
+                 */
+
+                function findPerformanceReviewListByPage(page) {
+
+                    console.log("findPerformanceReviewListByPage");
+
+                    $.ajax({
+                        url: '/reviews/user',
+                        method: 'GET',
+                        contentType: 'application/json',
+                        success: function (list) {
+                            $('#upper').html("");
+                            $('#upper').removeClass("scroll")
+                            $('#upper').addClass("page")
+                            var size = list.length;
+
+                            console.log("리뷰", list);
+
+                            var reviewHeader = `
+                                <div id="reviewListHead">
+                                    <div id="leftHead">
+                                        <h2 style="display: inline-block;">리뷰</h2>
+                                        <div id="totalReviewCount" class="mt-3" style="display: inline-block; margin-left: 10px;">
+                                            ${size}
+                                        </div>
+                                    </div>
+                                    <div id="reviewList">
+                                    </div>
+                                    <div id="reviewPages">
+                                    </div>
+                                </div>
+                            `;
+
+                            $('#upper').html(reviewHeader);
+
+                            // 페이지네이션 처리
+                            var startIndex = (page - 1) * 5;
+                            var endIndex = page * 5;
+                            var sliceList = list.slice(startIndex, endIndex);
+
+                            console.log("sliceList", sliceList);
+
+                            $.each(sliceList, function (index, review) {
+                                var reviewIdPlusPerformanceId = review.id + "," + review.performanceId;
+                                var reviewHtml = ``;
+                                var profilePic = ``;
+                                var actionBtns = ``;
+                                var reviewStarHtml = ``;
+                                var reviewStarNum = parseInt(review.stars);
+                                var time = review.updatedAt.replace("T", " ").slice(0, 19);
+
+                                if (!review.profileImage) {
+                                    profilePic = `<img src="https://kr.object.ncloudstorage.com/team3/common/noPhoto.png" alt="이미지 없음">`;
+                                } else {
+                                    profilePic = `<img src="${review.profileImage}">`;
+                                }
+
+                                actionBtns = `
+                                    <div class="review-actions">
+                                        <button class="update btn btn-outline-success" onclick="location.href='/performance/detail/${review.performanceId}'">상세</button>
+                                        <button class="deleteBtn2 btn btn-outline-success" value="${reviewIdPlusPerformanceId}">삭제</button>
+                                    </div>
+                                `;
+
+                                for (let i = 1; i <= reviewStarNum; i++) {
+                                    reviewStarHtml += `<label class="goldStar">★</label>`;
+                                }
+
+                                if (reviewStarNum < 5) {
+                                    for (let i = reviewStarNum + 1; i <= 5; i++) {
+                                        reviewStarHtml += `<label class="emptyStar">★</label>`;
+                                    }
+                                }
+
+                                reviewHtml = `
+                                    <div class="review">
+                                        <div class="user-info">
+                                            ${profilePic}
+                                            <div class="user-details">
+                                                <span>${review.userName}</span>
+                                                <span>${time}</span>
+                                                <div class="review-rating" data-rating="${reviewStarNum}">
+                                                    ${reviewStarHtml}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="review-content">
+                                            <p class="review-content-p-${review.id} review-content-p">${review.content}</p>
+                                            <div class="review-text-container hide">
+                                                <form id="reviewForm_${review.id}" style="width:100%;">
+                                                    <div class="star-rating2" style="width:100%;">
+                                                        <input type="radio" id="star5_${review.id}" name="reviewStar" value="5" ${review.stars == 5 ? 'checked' : ''}/>
+                                                        <label for="star5_${review.id}">★</label>
+                                                        <input type="radio" id="star4_${review.id}" name="reviewStar" value="4" ${review.stars == 4 ? 'checked' : ''}/>
+                                                        <label for="star4_${review.id}">★</label>
+                                                        <input type="radio" id="star3_${review.id}" name="reviewStar" value="3" ${review.stars == 3 ? 'checked' : ''}/>
+                                                        <label for="star3_${review.id}">★</label>
+                                                        <input type="radio" id="star2_${review.id}" name="reviewStar" value="2" ${review.stars == 2 ? 'checked' : ''}/>
+                                                        <label for="star2_${review.id}">★</label>
+                                                        <input type="radio" id="star1_${review.id}" name="reviewStar" value="1" ${review.stars == 1 ? 'checked' : ''}/>
+                                                        <label for="star1_${review.id}">★</label>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                        ${actionBtns}
+                                    </div>
+                                `;
+
+                                $('#reviewList').append(reviewHtml);
+                            });
+
+                            findUserEReviewCount(size);
+                        },
+                        error: function (error) {
+                            console.error('리뷰 로드 실패:', error);
+                        }
+                    });
+                }
+
+
+
+
+
+
+                /**
+                 * 유저별 전체 리뷰 페이지 버튼 만들기
+                 *
+                 *
+                 */
+                function findUserReviewCount(count) {
+
+                    var pages = 0;
+
+                    if (count % 5 == 0) {
+                        pages = count / 5;
+                    } else {
+                        pages = count / 5 + 1;
+                    }
+
+                    for (var p = 1; p <= pages; p++) {
+                        $('#reviewPages').append(`<button class="pageBtn2" style="font-size: 20px; margin: 0.5%">${p}</button>`)
+                    }
+
+                }
+
+
+                /**
+                 * 리뷰 페이지 이벤트 버튼
+                 *
+                 */
+                $(document).on('click', '.pageBtn2', function () {
+                    var page = $(this).text();
+                    findPerformanceReviewListByPage(page);
+
+                    setTimeout(function () {
+                        console.log("0.1s");
+                        var btns = $('.pageBtn2');
+
+                        console.log(btns)
+
+                        btns.each(function () {
+
+                            var button = $(this);
+                            console.log(button);
+                            if (button.text() == page) {
+                                console.log(button.text());
+                                console.log("same")
+                                button.addClass('activePage');
+
+                            } else {
+                                console.log(button.text());
+                                button.removeClass('activePage');
+
+                            }
+                        })
+                    }, 100);
+
+
+                })
+
+
+                /**
+                 * 공연 리뷰 삭제
+                 *
+                 */
+                $(document).on('click', '.deleteBtn2', function () {
+
+                    var reviewIdPlusPerformanceId = $(this).val().trim();
+                    var ids = reviewIdPlusPerformanceId.split(",");
+                    var reviewId = ids[0];
+                    var exhibitionId = ids[1];
+
+                    console.log(reviewId);
+                    console.log(performanceId)
+
+                    var data = {
+
+                        id: reviewId
+
+                    };
+
+                    $.ajax({
+
+                        url: `/performance/performance/${performanceId}/comment`,
+                        method: 'DELETE',
+                        contentType: 'application/json',
+                        data: JSON.stringify(data),
+                        success: function () {
+
+                            alert("공연 댓글 삭제 성공");
+                            $("#review").click()
+
+                        },
+                        error: function (error) {
+
+                            alert("공연 댓글 삭제 실패");
+
+                        }
+                    })
+                })
+
+
+
+
+
 
 
 

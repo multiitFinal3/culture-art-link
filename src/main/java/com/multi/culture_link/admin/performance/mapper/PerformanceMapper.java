@@ -101,4 +101,11 @@ String getPerformanceLikeState(@Param("userId") int userId, @Param("performanceI
     List<PerformanceDTO> findLovedPerformancesByUserId(@Param("userId") int userId);
 
     List<PerformanceDTO> findHatedPerformancesByUserId(@Param("userId") int userId);
+
+
+
+
+
+    // 내가 쓴 리뷰 가져오기 ㅡㅜ휴ㅡㅠㅡㅜㅠㅡㅠㅡㅠㅡㅠ
+    List<PerformanceReviewDTO> findReviewsByUserId(@Param("userId") int userId);
 }
