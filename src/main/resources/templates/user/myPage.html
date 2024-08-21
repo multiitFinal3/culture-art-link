@@ -2890,7 +2890,7 @@ function loadMyReviews(page = 0) {
                     reviewsHtml += `
                         <div class="review">
                             <div class="user-info">
-                                <img src="${review.userProfileImage ? 'https://kr.object.ncloudstorage.com/team3' + review.userProfileImage : 'https://kr.object.ncloudstorage.com/team3/img/festival/noPhoto.png'}" alt="${review.userName}">
+                                <img src="${review.userProfileImage ? 'https://kr.object.ncloudstorage.com/team3' + review.userProfileImage : 'https://kr.object.ncloudstorage.com/team3/img/festival/noPhoto.png'}" alt="${review.userName}" style="margin-right: 20px;">
                                 <div class="user-details">
                                     <span>${review.userName}</span>
                                     <span style="font-size: 13px; color: #999;">
@@ -3089,9 +3089,9 @@ function loadMyReviews(page = 0) {
                     loadInitialCulturalPropertiesKeywords();
                 });
 
-                $(document).ready(function() {
-                    $('#loveKeywordList').click(); // 초기 로드 시 찜 키워드 목록 표시
-                });
+<!--                $(document).ready(function() {-->
+<!--                    $('#loveKeywordList').click(); // 초기 로드 시 찜 키워드 목록 표시-->
+<!--                });-->
 
                 $(document).on('click', '#addCulturalPropertiesLoveKeyword, #addCulturalPropertiesHateKeyword', function() {
                     console.log("버튼 클릭됨");
