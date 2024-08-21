@@ -1243,4 +1243,26 @@ $(document).ready(function() {
         });
     }
 
+
+
+   /**
+   *
+   */
+    $(document).on('click','#allList', function(){
+
+        var value = "fromDetail";
+
+        window.location.href = "/cultural-properties?param=" + encodeURIComponent(value);
+
+
+    })
+
+
+
+
+
+
+
+
+
 });

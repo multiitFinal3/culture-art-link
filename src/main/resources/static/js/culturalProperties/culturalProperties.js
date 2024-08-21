@@ -505,4 +505,17 @@ $(document).ready(function() {
     });
 
 
+    var urlParam = new URLSearchParams(window.location.search);
+    var paramValue = urlParam.get('param');
+
+    if(paramValue=="fromDetail"){
+
+        $('#allList').click();
+        paramValue = "";
+
+    }
+
+
+
+
 });
