@@ -91,49 +91,34 @@
 
 
 
-<!--                $(document).on('click', '.performanceKeywordBtn', function () {-->
 
-<!--                    event.preventDefault();-->
 
-<!--                    if ($(this).hasClass('hasLove')) {-->
-<!--                        $(this).removeClass('hasLove');-->
-<!--                    } else {-->
-<!--                        $(this).addClass('hasLove');-->
-<!--                    }-->
 
-<!--                    var btns = document.querySelectorAll('button.performanceKeywordBtn.hasLove');-->
-<!--                    var concat = '';-->
+                        $(document).on('click', '.performanceKeywordBtn', function (event) {
+                            event.preventDefault();
 
-<!--                    btns.forEach(function (btn) {-->
-<!--                        concat += (btn.value + " ");-->
-<!--                    })-->
+                            // 현재 버튼이 이미 선택된 상태 확인
+                            if ($(this).hasClass('hasLove')) {
+                                $(this).removeClass('hasLove');  // 선택 취소 시 클래스를 제거
+                            } else {
+                                $(this).addClass('hasLove');  // 선택 시 클래스를 추가
+                            }
 
-<!--                    $('#performanceSelectKeyword').val(concat.trim());-->
-<!--                });-->
-<!--                -->
+                            // 선택된 모든 버튼을 가져와서 값을 연결
+                            var btns = document.querySelectorAll('button.performanceKeywordBtn.hasLove');
+                            var concat = '';
 
-                $(document).on('click', '.performanceKeywordBtn', function (event) {
-                    event.preventDefault();
+                            btns.forEach(function (btn) {
+                                concat += (btn.value + " ");
+                            });
 
-                    if ($(this).hasClass('hasLove')) {
-                        // 이미 선택된 키워드는 클릭해도 상태를 변경하지 않음
-                        return;
-                    } else {
-                        $(this).addClass('hasLove');
-                    }
+                            // 연결된 값을 숨겨진 input 필드에 저장
+                            $('#performanceSelectKeyword').val(concat.trim());
 
-                    var btns = document.querySelectorAll('button.performanceKeywordBtn.hasLove');
-                    var concat = '';
 
-                    btns.forEach(function (btn) {
-                        concat += (btn.value + " ");
-                    })
+                            console.log('Submitting performanceSelectKeyword:', $('#performanceSelectKeyword').val());
+                        });
 
-                    $('#performanceSelectKeyword').val(concat.trim());
-                    formData.append('performanceSelectKeyword', $('#performanceSelectKeyword').val());
-                    console.log('Submitting performanceSelectKeyword:', $('#performanceSelectKeyword').val());
-
-                });
 
 
 
