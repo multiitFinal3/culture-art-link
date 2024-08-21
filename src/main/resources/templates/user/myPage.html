@@ -2908,7 +2908,7 @@ function loadMyReviews(page = 0) {
 
 
             // 페이징 버튼 추가
-            reviewsHtml += '<div class="epagination">';
+            reviewsHtml += '<div class="cpagination">';
             for (let i = 0; i < response.totalPages; i++) {
                 reviewsHtml += `<button class="page-btn" data-page="${i}" style="font-size: 20px; margin: 0.5%">${i + 1}</button>`;
             }
@@ -2943,10 +2943,32 @@ function loadMyReviews(page = 0) {
                 $('#editContent-' + reviewId).hide();
             });
 
-            // 저장 버튼 클릭 이벤트 (여기에 저장 로직 추가 필요)
+
+
+            // 저장 버튼 클릭 이벤트
             $('.save-btn').click(function() {
-                // 저장 로직 구현
+                var reviewId = $(this).data('id');
+                var culturalPropertiesId = $(this).data('cultural-id');
+                var content = $('#editContent-' + reviewId).val();
+
+                $.ajax({
+                    url: '/cultural-properties/detail/' + culturalPropertiesId + '/review/update',
+                    method: 'PUT',
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        id: reviewId,
+                        content: content
+                    }),
+                    success: function(response) {
+                        alert("리뷰가 성공적으로 수정되었습니다.");
+                        loadMyReviews(page);
+                    },
+                    error: function(xhr, status, error) {
+                        alert("리뷰 수정에 실패했습니다.");
+                    }
+                });
             });
+
 
             // 삭제 버튼 클릭 이벤트
             $('.delete-btn').click(function() {
