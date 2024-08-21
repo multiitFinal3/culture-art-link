@@ -384,11 +384,113 @@ public class UserController {
 //			userDTO.setPassword(password);
 //		}
 //
-        userDTO.setUserName(userName);
-        userDTO.setTel(tel);
-        userDTO.setUserAge(userAge);
-        userDTO.setGender(gender);
-        userDTO.setRegionId(regionId);
+		userDTO.setUserName(userName);
+		userDTO.setTel(tel);
+		userDTO.setUserAge(userAge);
+		userDTO.setGender(gender);
+		userDTO.setRegionId(regionId);
+		
+		
+		System.out.println("받아온 정보 : " + userDTO);
+		
+		try {
+			userService.updateUserAccount(userDTO);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+		
+		
+		try {
+			UserDTO newUser = userService.findUserByEmail(email);
+			VWUserRoleDTO newVWUser = new VWUserRoleDTO(newUser);
+			
+			UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(newVWUser, null, user.getAuthorities());
+			SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+			
+			
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+		
+		
+	}
+	
+	
+	/**
+	 * 찜 관심없음 선택 키워드를 삽입
+	 *
+	 * @param user
+	 * @param performanceKeyword
+	 * @param exhibitionKeyword
+	 * @param festivalKeyword
+	 * @param culturalPropertiesKeyword
+	 * @param loveOrHate
+	 * @return
+	 */
+	@PostMapping("/insertUserBigLoveHateKeyword")
+	@Transactional
+	public String insertUserBigLoveHateKeyword(@AuthenticationPrincipal VWUserRoleDTO user, @RequestParam(name = "performanceKeyword", required = false) String performanceKeyword, @RequestParam(name = "exhibitionKeyword", required = false) String exhibitionKeyword, @RequestParam(name = "festivalKeyword", required = false) String festivalKeyword, @RequestParam(name = "culturalPropertiesKeyword", required = false) String culturalPropertiesKeyword, @RequestParam(name = "loveOrHate", required = true) String loveOrHate) {
+		
+		System.out.println("lh : " + loveOrHate);
+		System.out.println("fk : " + festivalKeyword);
+		
+		if (loveOrHate.equals("L")) {
+			
+			UserFestivalLoveHateMapDTO mapDTO = new UserFestivalLoveHateMapDTO();
+			mapDTO.setUserId(user.getUserId());
+			mapDTO.setSortCode("L");
+			
+			try {
+				festivalService.deleteAllUserSelectFestivalKeyword(mapDTO);
+				if ((!festivalKeyword.trim().equals("")) && (!festivalKeyword.isEmpty()) && (festivalKeyword != null)) {
+					
+					String[] festivalList = null;
+					festivalList = festivalKeyword.trim().split(",");
+					
+					for (String s : festivalList) {
+						s= s.replace(",","");
+						mapDTO.setFestivalKeywordId(s);
+						mapDTO.setFestivalCount(15);
+						festivalService.insertUserSelectKeyword(mapDTO);
+						
+					}
+					
+					
+				}
+			} catch (Exception e) {
+				throw new RuntimeException(e);
+			}
+			
+			
+		} else if (loveOrHate.equals("H")) {
+			
+			UserFestivalLoveHateMapDTO mapDTO = new UserFestivalLoveHateMapDTO();
+			mapDTO.setUserId(user.getUserId());
+			mapDTO.setSortCode("H");
+			
+			try {
+				festivalService.deleteAllUserSelectFestivalKeyword(mapDTO);
+				if ((!festivalKeyword.trim().equals("")) && (!festivalKeyword.isEmpty()) && (festivalKeyword != null)) {
+					
+					String[] festivalList = null;
+					festivalList = festivalKeyword.trim().split(",");
+					
+					for (String s : festivalList) {
+						s = s.replace(",","");
+						mapDTO.setFestivalKeywordId(s);
+						mapDTO.setFestivalCount(15);
+						festivalService.insertUserSelectKeyword(mapDTO);
+						
+					}
+					
+					
+				}
+			} catch (Exception e) {
+				throw new RuntimeException(e);
+			}
+			
+			
+		}
 
 
         System.out.println("받아온 정보 : " + userDTO);
