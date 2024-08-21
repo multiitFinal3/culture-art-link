@@ -2345,7 +2345,7 @@
                     }
 
                     //?
-                    $('#exhibitionKeyword').val(concat.trim() + " ");
+                    $('#exhibitionKeyword').val(concat.trim() + ",");
 
                 }
 
@@ -2383,7 +2383,7 @@
                     }
                     exhibitionKeywordLastIdx = Number(initLen) + 5;
                     const text = $('#exhibitionKeyword').val();
-                    $('#exhibitionKeyword').val(text + concat.trim() + " ");
+                    $('#exhibitionKeyword').val(text + concat.trim() + ",");
                 }
 
 
@@ -2397,7 +2397,7 @@
                     let concat = '';
 
                     $btns.forEach(function (btn) {
-                        concat += (btn.value + " ");
+                        concat += (btn.value + ",");
                     })
 
                     $('#exhibitionKeyword').val(concat.trim());
