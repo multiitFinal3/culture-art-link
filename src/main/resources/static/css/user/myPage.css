@@ -812,6 +812,9 @@
         display: flex;
         padding-left: 0;
         list-style: none;
-        justify-content: center;
+
+    .ccard{
+
+        margin-bottom: 50px;
 
     }
