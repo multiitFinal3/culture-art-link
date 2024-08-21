@@ -516,8 +516,9 @@
 
     .festivalLoveKeywordBtn,
     .festivalHateKeywordBtn,
-    .culturalPropertiesKeywordBtn{
-
+    .culturalPropertiesKeywordBtn,{
+    .exhibitionLoveKeywordBtn,
+    .exhibitionHateKeywordBtn {
        min-width: 150px;
        max-height: 35px;
        color: #02542d;
