@@ -1,10 +1,12 @@
 package com.multi.culture_link.users.controller;
 
 
+import com.multi.culture_link.admin.culturalProperties.model.dto.KeywordDTO;
 import com.multi.culture_link.admin.culturalProperties.service.AdminCulturalPropertiesService;
 import com.multi.culture_link.common.region.model.dto.RegionDTO;
 import com.multi.culture_link.common.region.service.RegionService;
 import com.multi.culture_link.culturalProperties.model.dto.CulturalPropertiesDTO;
+import com.multi.culture_link.culturalProperties.service.CulturalPropertiesService;
 import com.multi.culture_link.exhibition.service.ExhibitionService;
 import com.multi.culture_link.festival.model.dto.UserFestivalLoveHateMapDTO;
 import com.multi.culture_link.festival.service.FestivalService;
@@ -39,6 +41,7 @@ public class UserController {
 	private final BCryptPasswordEncoder bCryptPasswordEncoder;
 	private final FileController fileController;
 	private final AdminCulturalPropertiesService adminCulturalPropertiesService;
+	private final CulturalPropertiesService culturalPropertiesService;
 	
 	private ArrayList<CulturalPropertiesDTO> list;
 	
@@ -49,11 +52,11 @@ public class UserController {
 	private String bucket;
 	
 	public UserController(UserService userService,
-						  UserMapper userMapper,
-						  FestivalService festivalService, RegionService regionService,
-						  BCryptPasswordEncoder bCryptPasswordEncoder,
-						  FileController fileController,
-						  ExhibitionService exhibitionService, AdminCulturalPropertiesService adminCulturalPropertiesService) {
+                          UserMapper userMapper,
+                          FestivalService festivalService, RegionService regionService,
+                          BCryptPasswordEncoder bCryptPasswordEncoder,
+                          FileController fileController,
+                          ExhibitionService exhibitionService, AdminCulturalPropertiesService adminCulturalPropertiesService, CulturalPropertiesService culturalPropertiesService) {
 		this.userService = userService;
 		this.userMapper = userMapper;
 		this.festivalService = festivalService;
@@ -62,7 +65,8 @@ public class UserController {
 		this.fileController = fileController;
 		this.exhibitionService = exhibitionService;
 		this.adminCulturalPropertiesService = adminCulturalPropertiesService;
-	}
+        this.culturalPropertiesService = culturalPropertiesService;
+    }
 	
 	/**
 	 * 회원가입 페이지로 이동
@@ -488,22 +492,29 @@ public class UserController {
 			
 			
 		}
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
+
+
+		int userId = user.getUserId();
+		String interestType = loveOrHate.equals("L") ? "LIKE" : "DISLIKE";
+		int count = loveOrHate.equals("L") ? 15 : -15;
+
+		// 먼저 해당 타입의 기존 키워드를 모두 삭제
+		culturalPropertiesService.deleteUserSelectKeywordByType(userId, interestType);
+
+		if (culturalPropertiesKeyword != null && !culturalPropertiesKeyword.isEmpty()) {
+			String[] culturalPropertiesList = culturalPropertiesKeyword.trim().split(",");
+
+			for (String keyword : culturalPropertiesList) {
+				culturalPropertiesService.insertUserSelectKeyword(userId, interestType, keyword, count);
+			}
+		}
+
+
 		
 		return "redirect:/user/myPage";
 	}
-	
-	
+
+
 	@PostMapping("/validateSameEmail")
 	@ResponseBody
 	@Transactional
