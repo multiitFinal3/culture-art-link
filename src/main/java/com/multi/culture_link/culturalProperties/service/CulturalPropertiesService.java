@@ -234,10 +234,12 @@ public class CulturalPropertiesService {
     }
 
 
+
     public boolean editReview(int id, int culturalPropertiesId, CulturalPropertiesReviewDTO reviewDTO) {
         CulturalPropertiesReviewDTO existingReview = culturalPropertiesDAO.findByReviewId(id);
         if (existingReview != null && existingReview.getCulturalPropertiesId() == culturalPropertiesId) {
             existingReview.setContent(reviewDTO.getContent());
+            existingReview.setStar(reviewDTO.getStar());
             culturalPropertiesDAO.editReview(existingReview);
             return true;
         }

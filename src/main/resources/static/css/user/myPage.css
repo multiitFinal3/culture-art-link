@@ -811,15 +811,43 @@
 
    }
 
+
+    /* 문화재 리뷰 */
     .cpagination{
 
         display: flex;
         padding-left: 0;
         list-style: none;
+        justify-content: center; /* 수평 방향으로 중앙 정렬 */
+        align-items: center;     /* 수직 방향으로 중앙 정렬 */
 
+    }
+
+    .page-btn.active {
+        background-color: #D9D9D9;
+    }
+
+    .page-btn:hover {
+        background-color: #bfbfbf;
     }
     .ccard{
 
         margin-bottom: 50px;
 
+    }
+
+
+    .review-rating .review-star {
+        cursor: default;
+        font-size: 20px;
+    }
+    .review-rating.editable .review-star {
+        cursor: pointer;
+    }
+    .review-rating .review-star:not(.empty) {
+        color: #ffc107;
+    }
+    .review-rating .review-star.empty {
+
+        color: #e0e0e0;
     }

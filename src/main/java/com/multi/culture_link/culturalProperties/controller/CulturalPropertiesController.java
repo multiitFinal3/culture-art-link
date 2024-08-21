@@ -590,7 +590,6 @@ public class CulturalPropertiesController {
 	}
 
 
-
 	@GetMapping("/getUserInterest")
 	public ResponseEntity<List<CulturalPropertiesDTO>> getUserInterest(
 			@RequestParam String interestType,
