@@ -2537,6 +2537,8 @@
                         success: function(response) {
                             console.log("Received data:", response);
                             $('#upper').html("");
+                            $('#upper').addClass("scroll");
+                            $('#upper').removeClass("page");
                             if (response.length === 0) {
                                 $('#upper').html("<p>" + (interestType === 'LIKE' ? '찜한' : '관심없음') + " 문화재가 없습니다.</p>");
                                 return;
@@ -2830,6 +2832,8 @@ function loadMyReviews(page = 0) {
         data: { page: page },
         success: function(response) {
             $('#upper').html("");
+            $('#upper').removeClass("scroll");
+            $('#upper').addClass("page");
             var reviewCount = response.totalItems; // 총 리뷰 수
 
             // 리뷰 카운트 업데이트
