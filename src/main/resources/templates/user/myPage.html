@@ -313,36 +313,6 @@
                 })
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                 //#endregion
 
 
@@ -896,9 +866,12 @@
 
                             })
 
-                            findUserReviewCount();
 
+                            console.log("?????")
+                            findUserfReviewCount();
+                            console.log("!!!!!");
                         }
+
                     })
                 }
 
@@ -911,7 +884,7 @@
                  *
                  *
                  */
-                function findUserReviewCount() {
+                function findUserfReviewCount() {
 
                     $.ajax({
 
@@ -919,6 +892,9 @@
                         method: 'POST',
                         contentType: 'application/json',
                         success: function (count) {
+
+                            console.log("fes count")
+                            console.log(count)
 
                             $('#totalReviewCount').html(count);
 
