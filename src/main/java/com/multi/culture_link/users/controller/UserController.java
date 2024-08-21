@@ -1,7 +1,6 @@
 package com.multi.culture_link.users.controller;
 
 
-import com.multi.culture_link.admin.culturalProperties.model.dto.KeywordDTO;
 import com.multi.culture_link.admin.culturalProperties.service.AdminCulturalPropertiesService;
 import com.multi.culture_link.common.region.model.dto.RegionDTO;
 import com.multi.culture_link.common.region.service.RegionService;
@@ -434,6 +433,10 @@ public class UserController {
 		
 		System.out.println("lh : " + loveOrHate);
 		System.out.println("fk : " + festivalKeyword);
+		
+		// 전시
+		System.out.println("exhibitionKeyword : " + exhibitionKeyword);
+		exhibitionService.saveKeywordByUser(user.getUserId(), exhibitionKeyword, loveOrHate);
 		
 		if (loveOrHate.equals("L")) {
 			
