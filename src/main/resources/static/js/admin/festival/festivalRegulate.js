@@ -1636,7 +1636,9 @@ $(document).ready(
         * API 상세검색 갯수 알아와서 페이지 버튼 갯수만큼 붙히기
         * @param {Array<{name: string, value: string}>} data2 직렬화 된 폼 데이터
         */
-         function findAPIFestivalMultipleCount(data2){
+         function findAPIFestivalMultipleCount(){
+
+            var data2 = mulData;
 
             return new Promise((resolve, reject)=>{
 
@@ -1716,7 +1718,7 @@ $(document).ready(
             findAPIFestivalByMultiple(mulData, 1)
             .then(()=>{
                 // 1~10까지 보여줌
-                return addShowingBtns(findAPIFestivalMultipleCount, currentAPIMulNum, '.pageBtn5');
+                return addShowingBtns(findAPIFestivalMultipleCount, 1, '.pageBtn5');
             })
             .then(()=>{
 
