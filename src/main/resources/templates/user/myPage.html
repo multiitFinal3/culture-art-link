@@ -2964,7 +2964,7 @@ function loadMyReviews(page = 0) {
                 var content = $('#editContent-' + reviewId).val();
 
                 $.ajax({
-                    url: '/cultural-properties/detail/' + culturalPropertiesId + '/review/update',
+                    url: '/cultural-properties/detail/' + culturalPropertiesId + '/review/edit',
                     method: 'PUT',
                     contentType: 'application/json',
                     data: JSON.stringify({
