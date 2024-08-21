@@ -241,7 +241,7 @@
         FROM vw_cultural_properties_total_sum_keyword
         WHERE keyword = ck.keyword
         LIMIT 1) DESC
-        LIMIT 15
+        LIMIT 25
     </select>
 
 
