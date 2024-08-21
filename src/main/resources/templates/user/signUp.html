@@ -91,12 +91,33 @@
 
 
 
-                $(document).on('click', '.performanceKeywordBtn', function () {
+<!--                $(document).on('click', '.performanceKeywordBtn', function () {-->
 
+<!--                    event.preventDefault();-->
+
+<!--                    if ($(this).hasClass('hasLove')) {-->
+<!--                        $(this).removeClass('hasLove');-->
+<!--                    } else {-->
+<!--                        $(this).addClass('hasLove');-->
+<!--                    }-->
+
+<!--                    var btns = document.querySelectorAll('button.performanceKeywordBtn.hasLove');-->
+<!--                    var concat = '';-->
+
+<!--                    btns.forEach(function (btn) {-->
+<!--                        concat += (btn.value + " ");-->
+<!--                    })-->
+
+<!--                    $('#performanceSelectKeyword').val(concat.trim());-->
+<!--                });-->
+<!--                -->
+
+                $(document).on('click', '.performanceKeywordBtn', function (event) {
                     event.preventDefault();
 
                     if ($(this).hasClass('hasLove')) {
-                        $(this).removeClass('hasLove');
+                        // 이미 선택된 키워드는 클릭해도 상태를 변경하지 않음
+                        return;
                     } else {
                         $(this).addClass('hasLove');
                     }
@@ -109,7 +130,11 @@
                     })
 
                     $('#performanceSelectKeyword').val(concat.trim());
+                    formData.append('performanceSelectKeyword', $('#performanceSelectKeyword').val());
+                    console.log('Submitting performanceSelectKeyword:', $('#performanceSelectKeyword').val());
+
                 });
+
 
 
 
@@ -443,6 +468,9 @@
 
                      }
 
+                     // performanceSelectKeyword의 값을 가져옴
+                     var performanceSelectKeyword = $('#performanceSelectKeyword').val();
+
 
                      var isEmailValid = validateSameEmail(email);
 
@@ -484,6 +512,9 @@
 
                     var culturalPropertiesSelectKeyword = $('#culturalPropertiesSelectKeyword').val();
                     formData.append('culturalPropertiesSelectKeyword', culturalPropertiesSelectKeyword);
+
+                    formData.append('performanceSelectKeyword', performanceSelectKeyword);
+
 
 
                     console.log(regionId);
@@ -734,6 +765,8 @@
                         <button id="addPerformanceKeyword" class="btn btn-outline-success" value="1" disabled>공연 키워드</button>
 
                     </div>
+
+
 
 
 

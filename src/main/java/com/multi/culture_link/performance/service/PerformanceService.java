@@ -3,6 +3,7 @@ package com.multi.culture_link.performance.service;
 import com.multi.culture_link.admin.performance.mapper.PerformanceMapper;
 import com.multi.culture_link.admin.performance.model.dto.PerformanceDTO;
 import com.multi.culture_link.performance.model.dto.PerformanceAddDTO;
+import com.multi.culture_link.performance.model.dto.PerformanceKeywordDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -113,5 +114,25 @@ public class PerformanceService {
     public List<PerformanceDTO> getHatePerformancesByUserId(int userId) {
         return performanceMapper.findHatedPerformancesByUserId(userId);
     }
+
+
+
+    // 회원가입할때 공연 장르 넣는 거
+//    public void savePerformanceKeyword(PerformanceKeywordDTO performanceKeyword) {
+//        performanceMapper.insertPerformanceKeyword(performanceKeyword);
+//    }
+
+    public void savePerformanceKeyword(PerformanceKeywordDTO performanceKeyword) {
+        try {
+            performanceMapper.insertPerformanceKeyword(performanceKeyword);
+            System.out.println("Inserted performance keyword: " + performanceKeyword.getGenre());
+        } catch (Exception e) {
+            System.out.println("Error inserting performance keyword: " + e.getMessage());
+            throw new RuntimeException("Failed to insert performance keyword", e);
+        }
+    }
+
+
+
 }
 

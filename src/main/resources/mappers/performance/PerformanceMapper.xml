@@ -272,6 +272,15 @@
     </select>
 
 
+    <!-- 공연 키워드 삽입 -->
+    <insert id="insertPerformanceKeyword" parameterType="com.multi.culture_link.performance.model.dto.PerformanceKeywordDTO">
+        INSERT INTO performance_keyword (user_id, genre, created_at, updated_at)
+        VALUES (#{userId}, #{genre}, NOW(), NOW());
+    </insert>
+
+
+
+
 
 
 
