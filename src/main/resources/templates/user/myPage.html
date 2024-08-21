@@ -68,6 +68,31 @@
 
 
                 /**
+                * 번호 양식 자동으로 변경
+                *
+                */
+                document.getElementById('tel').addEventListener('blur',function(){
+
+                    let input = this.value.replace(/\D/g,'');
+
+                    if (input.length >11){
+
+                        this.value = input.substring(0,11).replace(/(\d{3})(\d{4})(\d{4})/,'$1-$2-$3');
+
+                    }else if(input.length < 11){
+
+                        this.value = input.padEnd(11,'0').replace(/(\d{3})(\d{4})(\d{4})/,'$1-$2-$3');
+
+                    }else{
+
+                        this.value = input.replace(/(\d{3})(\d{4})(\d{4})/,'$1-$2-$3');
+
+                    }
+
+                })
+
+
+                /**
                  * 성별 표시
                  *
                  */
@@ -259,7 +284,7 @@
 
                                 } else {
 
-                                    alert("중복되지 않는 이메일입니다.")
+                                    alert("현재 이메일을 제외하고 중복되지 않는 이메일입니다.")
                                     resolve(true);
                                 }
 
@@ -2024,11 +2049,11 @@
 
                                 $('#festivalKeywordList').append(htmlContent);
 
-                                concat += keyword.festivalKeywordId + " ";
+                                concat += keyword.festivalKeywordId + ",";
 
                             })
 
-                            $('#festivalKeyword').val(concat.trim() + " ");
+                            $('#festivalKeyword').val(concat.trim() + ",");
 
                             findFestivalSmallLoveKeyword(1);
 
@@ -2100,13 +2125,13 @@
 
                     }
 
-                    var btns = document.querySelectorAll('button.bigLove');
+                    var btns = document.querySelectorAll('.festivalLoveKeywordBtn.bigLove');
 
                     var concat = '';
 
                     btns.forEach(function (btn) {
 
-                        concat += (btn.value + " ");
+                        concat += (btn.value + ",");
 
                     })
 
@@ -2211,7 +2236,7 @@
 
                     }
 
-                    var btns = document.querySelectorAll('button.bigHate');
+                    var btns = document.querySelectorAll('.festivalHateKeywordBtn.bigHate');
 
                     var concat = '';
 
@@ -2766,7 +2791,7 @@
                                 <a class="category" id="performance">공연</a>
                                 <a class="category" id="exhibition">전시</a>
                                 <a class="category" id="festival">축제</a>
-                                <a class="category" id="culturalPro">문화제</a>
+                                <a class="category" id="culturalPro">문화재</a>
                             </div>
                         </div>
 
@@ -2832,10 +2857,10 @@
                             <br>
 
                             <label for="password">비밀번호</label>
-                            <input class="rounded" id="password" name="password" pattern="^[a-zA-Z0-9_]{5,}$"
-                                   placeholder="******"
-                                   required style="background-color: lightblue" th:value="${user.password}"
-                                   type="password"><br>
+
+                            <input name="password" class="rounded" id="password" type="password" required
+                                   style="background-color: lightblue" pattern="^[a-zA-Z0-9_]{5,}$"><br>
+
 
                             <label for="userName">회원이름</label>
                             <input class="rounded" id="userName" name="userName" pattern="^[a-zA-Z가-힣]{3,}$"

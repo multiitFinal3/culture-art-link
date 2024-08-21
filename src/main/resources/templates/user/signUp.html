@@ -205,7 +205,7 @@
 
                     btns.forEach(function(btn){
 
-                        concat += (btn.value+" ");
+                        concat += (btn.value+",");
 
                     })
 
@@ -610,6 +610,35 @@
 
                 })
 
+
+
+
+                /**
+                * 번호 양식 자동으로 변경
+                *
+                */
+                document.getElementById('tel').addEventListener('blur',function(){
+
+                    let input = this.value.replace(/\D/g,'');
+
+                    if (input.length >11){
+
+                        this.value = input.substring(0,11).replace(/(\d{3})(\d{4})(\d{4})/,'$1-$2-$3');
+
+                    }else if(input.length < 11){
+
+                        this.value = input.padEnd(11,'0').replace(/(\d{3})(\d{4})(\d{4})/,'$1-$2-$3');
+
+                    }else{
+
+                        this.value = input.replace(/(\d{3})(\d{4})(\d{4})/,'$1-$2-$3');
+
+                    }
+
+                })
+
+
+
                 //#endregion
 
 
@@ -666,8 +695,8 @@
                     <span id="nameError" class="error"></span><br>
 
                     <label for="tel">전화번호</label>
-                    <input name="tel" id="tel" class="rounded" placeholder="010-0000-1234" type="tel"
-                           pattern="[0-9]{3}-[0-9]{4}-[0-9]{4}"><br>
+                    <input name="tel" id="tel" class="rounded" placeholder="010-0000-1234"
+                           pattern="[0-9]{3}-[0-9]{4}-[0-9]{4}" value="010-0000-0000"><br>
 
                     <label for="userAge">나이</label>
                     <input name="userAge" id="userAge" class="rounded" placeholder="12" type="number" min="0" max="100"
