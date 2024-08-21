@@ -1,7 +1,6 @@
 package com.multi.culture_link.users.controller;
 
 
-import com.multi.culture_link.admin.culturalProperties.model.dto.KeywordDTO;
 import com.multi.culture_link.admin.culturalProperties.service.AdminCulturalPropertiesService;
 import com.multi.culture_link.common.region.model.dto.RegionDTO;
 import com.multi.culture_link.common.region.service.RegionService;
@@ -474,10 +473,10 @@ public class UserController {
 				if ((!festivalKeyword.trim().equals("")) && (!festivalKeyword.isEmpty()) && (festivalKeyword != null)) {
 					
 					String[] festivalList = null;
-					festivalList = festivalKeyword.trim().split(" ");
+					festivalList = festivalKeyword.trim().split(",");
 					
 					for (String s : festivalList) {
-						
+						s = s.replace(",","");
 						mapDTO.setFestivalKeywordId(s);
 						mapDTO.setFestivalCount(15);
 						festivalService.insertUserSelectKeyword(mapDTO);
