@@ -223,7 +223,9 @@ $(document).ready(function() {
                 disableCheckboxes();
 
                 $.each(list, function(index, culturalProperties) {
+
                     var htmlCheck = '<tr><td><input class="check1" type="checkbox" name="index" value="' + index + '"/></td>';
+
                     var htmlContent =
                         '<td class="id">' + culturalProperties.id + '</td>' +
                         '<td class="culturalPropertiesName">' + culturalProperties.culturalPropertiesName + '</td>' +
@@ -236,7 +238,7 @@ $(document).ready(function() {
                         '<td class="classifyB">' + culturalProperties.classifyB + '</td>' +
                         '<td class="classifyC">' + culturalProperties.classifyC + '</td>' +
                         '<td class="classifyD">' + culturalProperties.classifyD + '</td>' +
-                        '<td class="mainImgUrl"><img src="' + culturalProperties.mainImgUrl + '" style="max-width: 100px; max-height: 100px;"></td>';
+                        '<td class="mainImgUrl"><img src="' + (culturalProperties.mainImgUrl && culturalProperties.mainImgUrl.trim() !== '' ? culturalProperties.mainImgUrl : 'http://www.cha.go.kr/unisearch/images/no_image.gif') + '" style="max-width: 100px; max-height: 100px;"></td>';
 
 
                     // 날짜 포맷팅 함수 정의
