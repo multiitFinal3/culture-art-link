@@ -1,213 +1,175 @@
-
-    body{
-
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-
-    }
-
-
-    #realContent{
-
-        width: 100%;
-        height: 100%;
-        display: flex;
-        flex-flow: column;
-        justify-content: center;
-        align-items: center;
-
-
-    }
-
-    #leftZone, #upperZone, #downZone{
-
-        margin-top: 1%;
-
-    }
-
-
-
-    #rightZone{
-
-        padding: 1%;
-        width: 100%;
-        display: flex;
-        flex-flow: column;
-        align-items: center;
-        justify-content: flex-start;
-
-    }
-
-
-    #basicForm{
-
-        font-size: 28px;
-        display: flex;
-        flex-flow: column;
-        align-items: center;
-        justify-content: center;
-        background: #f7f7f6;
-        border-radius: 60px;
-        padding: 5%;
-
-    }
-
-
-    h1{
-        font-size: 5rem;
-        margin-top: 5%;
-
-    }
-
-
-    #basicForm > div:first-child{
-
-        display: flex;
-        min-height: 800px;
-        flex-flow: column;
-
-    }
-
-    #profileImg{
-
-        display: flex;
-        justify-content: center;
-        margin-bottom: 100px;
-
-    }
-
-
-    .profileImg{
-
-        border-radius: 50%;
-        width: 300px;
-        height: 300px;
-    }
-
-    #basicForm button, #basicForm input, #basicForm optgroup, #basicForm select, #basicForm textarea {
-
-    }
-
-    #basicForm label{
-
-        width: 150px;
-
-    }
-
-    #basicForm input{
-
-        width: 450px;
-
-    }
-
-    #basicForm select{
-
-        width: 450px;
-
-    }
-
-
-    .round{
-        width: 100%;
-        height: 100%;
-        border-radius: 50%;
-        object-fit: cover;
-        display: block;
-        margin-bottom: 100px;
-    }
-
-
-
-    #festivalKeywordBtns{
-        font-size: 20px;
-        overflow-x: scroll;
-        margin: 3%;
-        text-align: center;
-        display: flex;
-
-    }
-
-    .hasLove{
-
-        background-color: #ffe5ea;
-
-    }
-
-    .profileImg{
-
-        border-radius: 50%;
-
-    }
-
-    #upperZone{
-
-        width: 100%;
-        display: flex;
-        flex-flow: column;
-
-    }
-
-    #downZone{
-
-        width: 100%;
-        display: flex;
-        flex-flow: column;
-    }
-
-
-    /* 필터 컨테이너 */
-    .filter-container {
-        display: flex;
-        justify-content: space-between;
-        margin: 20px 0;
-        align-self: flex-start;
-    }
-
-    /* 장르 필터 */
-    .genre-filter {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-    }
-
-    /* 장르 아이템 스타일 */
-    .genre-item {
-        border-radius: 8px;
-        font-size: 16px;
-        font-weight: 400;
-        color: #1E1E1E;
-        cursor: pointer;
-        padding: 8px 12px;
-    }
-
-    /* 활성화된 장르 아이템 스타일 */
-    .genre-item.active {
-        background: #F5F5F5;
-        color: #444444;
-    }
-
-
-    .genre-filter ul{
-
-          list-style-type: none;
-          margin: 0;
-          padding: 0;
-          display: flex;
-          flex-flow: row;
-          justify-content: space-around;
-          align-items: center;
-    }
-
-    .genre-filter li {
-      float: left;
-    }
-
-    .genre-filter li a, .genre-filter .dropbtn
-     {
-      display: inline-block;
-      color: black;
-      text-align: center;
-      text-decoration: none;
-    }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
+    "Segoe UI Symbol";
+}
+
+#realContent {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-flow: column;
+  justify-content: center;
+  align-items: center;
+}
+
+#leftZone,
+#upperZone,
+#downZone {
+  margin-top: 1%;
+}
+
+#rightZone {
+  padding: 1%;
+  width: 100%;
+  display: flex;
+  flex-flow: column;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+#basicForm {
+  font-size: 28px;
+  display: flex;
+  flex-flow: column;
+  align-items: center;
+  justify-content: center;
+  background: #f7f7f6;
+  border-radius: 60px;
+  padding: 5%;
+}
+
+h1 {
+  font-size: 5rem;
+  margin-top: 5%;
+}
+
+#basicForm > div:first-child {
+  display: flex;
+  min-height: 800px;
+  flex-flow: column;
+}
+
+#profileImg {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 100px;
+}
+
+.profileImg {
+  border-radius: 50%;
+  width: 300px;
+  height: 300px;
+}
+
+#basicForm button,
+#basicForm input,
+#basicForm optgroup,
+#basicForm select,
+#basicForm textarea {
+}
+
+#basicForm label {
+  width: 150px;
+}
+
+#basicForm input {
+  width: 450px;
+}
+
+#basicForm select {
+  width: 450px;
+}
+
+.round {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  display: block;
+  margin-bottom: 100px;
+}
+
+#festivalKeywordBtns {
+  font-size: 20px;
+  overflow-x: scroll;
+  margin: 3%;
+  text-align: center;
+  display: flex;
+}
+
+.hasLove {
+  background-color: #ffe5ea;
+}
+
+.profileImg {
+  border-radius: 50%;
+}
+
+#upperZone {
+  width: 100%;
+  display: flex;
+  flex-flow: column;
+}
+
+#downZone {
+  width: 100%;
+  display: flex;
+  flex-flow: column;
+}
+
+/* 필터 컨테이너 */
+.filter-container {
+  display: flex;
+  justify-content: space-between;
+  margin: 20px 0;
+  align-self: flex-start;
+}
+
+/* 장르 필터 */
+.genre-filter {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* 장르 아이템 스타일 */
+.genre-item {
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 400;
+  color: #1e1e1e;
+  cursor: pointer;
+  padding: 8px 12px;
+}
+
+/* 활성화된 장르 아이템 스타일 */
+.genre-item.active {
+  background: #f5f5f5;
+  color: #444444;
+}
+
+.genre-filter ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-flow: row;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.genre-filter li {
+  float: left;
+}
+
+.genre-filter li a,
+.genre-filter .dropbtn {
+  display: inline-block;
+  color: black;
+  text-align: center;
+  text-decoration: none;
+}
 
 /*
     .genre-filter li a:hover, .genre-filter .dropdown:hover .dropbtn
@@ -216,6 +178,492 @@
     }
 */
 
+.genre-filter li.dropdown {
+  display: inline-block;
+  position: relative;
+}
+
+.genre-filter .dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f9f9f9;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  z-index: 5;
+}
+
+.genre-filter .dropbtn:after {
+  content: "▼";
+  margin-left: 10px;
+  font-size: 10px;
+}
+
+.genre-filter .dropdown-content a {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+  text-align: left;
+}
+
+.genre-filter .dropdown-content a:hover {
+  display: block;
+}
+
+.genre-filter .dropdown:hover .dropdown-content {
+  display: block;
+}
+
+.scroll {
+  display: flex;
+  flex-flow: row;
+  flex-wrap: no-wrap;
+  align-items: center;
+  justify-content: center;
+  margin-left: 5%;
+  margin-right: 5%;
+  flex-wrap: wrap;
+  gap: 15px;
+  padding-top: 5%;
+}
+
+.page {
+  margin: 3%;
+  text-align: center;
+  display: flex;
+  flex-flow: column;
+}
+
+.card {
+  min-height: 440px;
+  max-height: 440px;
+  min-width: 249px;
+  max-width: 249px;
+  margin-bottom: 10px;
+  background: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: transform 0.2s;
+  border: 0px !important;
+  cursor: pointer;
+}
+
+.card-img-top {
+  max-height: 332px;
+  min-width: 249px;
+  min-height: 332px;
+  max-width: 249px;
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+.card-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 5px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 230px;
+  text-align: center;
+}
+
+.card-body p {
+  margin-top: 0px;
+  margin-bottom: 0px;
+  font-size: 16px;
+  font-weight: 400;
+  color: #757575;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 200px;
+  text-align: center;
+}
+
+.card-body .t2 {
+  margin-top: 0px;
+  margin-bottom: 20px;
+  text-align: center;
+  color: black;
+}
+
+input,
+optgroup,
+select,
+textarea {
+  margin: 0;
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  border: 1px solid #ced4da;
+  border-radius: 0px;
+  color: #495057;
+}
+
+button {
+  margin: 1%;
+}
+
+.whiteHeartBtn {
+  position: absolute;
+  background: white;
+  padding: 5px 10px;
+  margin: 0 5px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  opacity: 0.8;
+}
+
+#upperZone .whiteHeartBtn {
+  top: 290px;
+  right: 60px;
+}
+
+.heart {
+  font-weight: 700;
+  color: white;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.whiteHateBtn {
+  position: absolute;
+  background: white;
+  padding: 5px 10px;
+  margin: 0 5px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  opacity: 0.8;
+}
+
+#upperZone .whiteHateBtn {
+  top: 290px;
+  right: 10px;
+}
+
+.hate {
+  font-weight: 700;
+  color: white;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.hasLove {
+}
+
+.hasHate {
+}
+
+#performanceZone,
+#exhibitionZone,
+#festivalZone,
+#culturalPropertiesZone {
+  margin: 0.1%;
+  text-align: center;
+  display: flex;
+  flex-flow: row;
+  align-items: center;
+  justify-content: center;
+}
+
+#performanceKeywordList,
+#exhibitionKeywordList,
+#festivalKeywordList,
+#culturalPropertiesKeywordList {
+  font-size: 20px;
+  overflow-x: scroll;
+  margin: 3%;
+  text-align: center;
+  display: flex;
+  width: 80%;
+}
+
+#addPerformanceLoveKeyword,
+#addExhibitionLoveKeyword,
+#addFestivalLoveKeyword,
+#addCulturalPropertiesLoveKeyword,
+#addPerformanceHateKeyword,
+#addExhibitionHateKeyword,
+#addFestivalHateKeyword,
+#addCulturalPropertiesHateKeyword {
+  width: 160px;
+  height: 45px;
+}
+
+.bigLove {
+  background-color: #cff7d3;
+}
+
+.bigHate {
+  background-color: #cff7d3;
+}
+
+.festivalLoveKeywordBtn,
+.festivalHateKeywordBtn,
+.culturalPropertiesKeywordBtn,
+.exhibitionLoveKeywordBtn,
+.exhibitionHateKeywordBtn {
+  min-width: 150px;
+  max-height: 35px;
+  color: #02542d;
+  padding: 8px 15px;
+  border-radius: 15px;
+  font-size: 14px;
+  font-weight: bold;
+  text-decoration: none;
+  border: 0px;
+  margin: 15px;
+}
+
+#updateBtnZone {
+  display: flex;
+  flex-flow: row;
+  align-items: center;
+  justify-content: center;
+}
+
+#keywordCountUpdate {
+  width: 500px;
+  height: 100px;
+  font-size: 40px;
+}
+
+[class^="star-rating"] {
+  position: relative;
+  display: inline-flex;
+  flex-direction: row-reverse;
+  justify-content: flex-end;
+  margin: 0 -0.25rem;
+}
+
+[class^="star-rating"] input {
+  position: absolute;
+  opacity: 0;
+}
+
+[class^="star-rating"] label {
+  cursor: pointer;
+  color: grey;
+  padding: 0 0.25rem;
+  transition: color 0.15s;
+}
+
+[class^="star-rating"] input:checked ~ label {
+  color: gold;
+}
+
+[class^="star-rating"] input:hover ~ label {
+  color: goldenrod;
+  transition: none;
+}
+
+[class^="star-rating"] label:active {
+  color: darkgoldenrod !important;
+}
+
+[class^="star-rating"] input:focus-visible + label {
+  outline-offset: 1px;
+  outline: #4f46e5 solid 2px;
+}
+
+.gold {
+  color: gold;
+}
+
+.review-star.empty {
+  font-size: 20px; /*  */
+  color: #e0e0e0;
+}
+
+.card-img-top:hover {
+  transform: scale(1.05);
+}
+
+.none {
+  display: none !important;
+}
+
+.card:hover .card-body {
+  text-decoration: underline #0b5eb6;
+}
+
+.pageBtn1,
+.pageBtn2,
+.page-btn,
+.pageBtn3 {
+  width: 45px;
+  text-align: center;
+  font-size: 20px;
+  margin: 1%;
+  padding: 5px 10px;
+  border: 1px solid #ddd;
+  background-color: white;
+  cursor: pointer;
+}
+
+#reviewListHead {
+  padding: 20px;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+#leftHead {
+  display: flex;
+  justify-content: start;
+  align-items: center;
+}
+
+#reviewListHead h2 {
+  color: rgb(117, 117, 117);
+  display: inline-block;
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 15px;
+}
+
+#reviewListHead #totalReviewCount {
+  display: inline-block;
+  margin-left: 10px;
+  font-size: 13px;
+  margin-top: 0px;
+}
+
+#reviewForm > div {
+  display: flex;
+  flex-flow: row;
+}
+
+.review {
+  position: relative;
+  padding: 15px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  margin-bottom: 15px;
+  display: flex;
+  flex-direction: column;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+}
+
+.user-info img {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+.user-details {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: left;
+}
+
+.user-details:nth-child(1) {
+  font-weight: bold;
+  font-size: 20px;
+}
+
+.user-details:nth-child(2) {
+  font-size: 13px;
+  color: #999;
+  font-weight: bold;
+}
+
+.review-content {
+  flex: 1;
+  display: flex;
+  width: 100%;
+}
+
+.review-content p {
+  font-size: 20px;
+  color: #333;
+  margin-top: 0;
+  margin-bottom: 1rem;
+  text-align: left;
+}
+
+.review-text-container {
+  display: flex;
+  flex-direction: column;
+  border-bottom: 1px solid #e0e0e0;
+  width: 100%;
+  margin: 0 15px 15px 15px;
+}
+
+.review-text-container textarea {
+  resize: vertical;
+  margin: 0;
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  overflow: auto;
+  width: 100%;
+}
+
+.review-actions {
+  display: block;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+
+#reviewForm > div > div {
+  display: flex;
+  flex-flow: column;
+  align-items: center;
+}
+
+.hide {
+  display: none !important;
+}
+
+.goldStar {
+  font-weight: bold;
+  font-size: 20px;
+  color: #ffc107;
+}
+
+.emptyStar {
+  font-weight: bold;
+  font-size: 20px;
+  color: #e0e0e0;
+}
+
+.activePage {
+  padding: 5px 10px;
+  margin: 0 5px;
+  border: 1px solid #ddd;
+  background-color: #d9d9d9;
+  cursor: pointer;
+}
+
+#leftZone {
+  width: 75%;
+}
+
+#leftZone h1 {
+  margin-top: 5%;
+  font-size: 50px;
+  font-weight: bold;
+}
+
+.cpagination {
+  display: flex;
+  padding-left: 0;
+  list-style: none;
+}
+.ccard {
+  margin-bottom: 50px;
+}
     .genre-filter li.dropdown {
       display: inline-block;
       position: relative;
@@ -518,8 +966,9 @@
 
     .festivalLoveKeywordBtn,
     .festivalHateKeywordBtn,
-    .culturalPropertiesKeywordBtn{
-
+    .culturalPropertiesKeywordBtn,
+    .exhibitionLoveKeywordBtn,
+    .exhibitionHateKeywordBtn {
        min-width: 150px;
        max-height: 35px;
        color: #02542d;
@@ -698,7 +1147,7 @@
     .user-info img {
         width: 50px;
         height: 50px;
-        border-radius: 50%;s
+        border-radius: 50%;
         margin-right: 10px;
     }
 
@@ -839,6 +1288,7 @@
     }
 
 
+
     .review-rating .review-star {
         cursor: default;
         font-size: 20px;
@@ -853,3 +1303,5 @@
 
         color: #e0e0e0;
     }
+
+

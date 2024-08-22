@@ -2,8 +2,10 @@ package com.multi.culture_link.admin.performance.mapper;
 
 import com.multi.culture_link.admin.performance.model.dto.PerformanceDTO;
 import com.multi.culture_link.performance.model.dto.PerformanceAddDTO;
+import com.multi.culture_link.performance.model.dto.PerformanceKeywordDTO;
 import com.multi.culture_link.performance.model.dto.PerformanceReviewDTO;
-import org.apache.ibatis.annotations.*;
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -108,4 +110,21 @@ String getPerformanceLikeState(@Param("userId") int userId, @Param("performanceI
 
     // 내가 쓴 리뷰 가져오기 ㅡㅜ휴ㅡㅠㅡㅜㅠㅡㅠㅡㅠㅡㅠ
     List<PerformanceReviewDTO> findReviewsByUserId(@Param("userId") int userId);
+
+
+
+
+
+    // 회원가입할때 공연 장르 넣는 거
+    void insertPerformanceKeyword(PerformanceKeywordDTO performanceKeyword);
+
+
+
+
+    // 사용자 찜한 공연 키워드를 가져오는 메서드
+    List<PerformanceKeywordDTO> findLoveKeywordsByUserId(@Param("userId") int userId);
+
+    // 사용자 관심없음 공연 키워드를 가져오는 메서드
+    List<PerformanceKeywordDTO> findHateKeywordsByUserId(@Param("userId") int userId);
+
 }

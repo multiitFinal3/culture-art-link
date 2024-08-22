@@ -3,6 +3,7 @@ package com.multi.culture_link.performance.service;
 import com.multi.culture_link.admin.performance.mapper.PerformanceMapper;
 import com.multi.culture_link.admin.performance.model.dto.PerformanceDTO;
 import com.multi.culture_link.performance.model.dto.PerformanceAddDTO;
+import com.multi.culture_link.performance.model.dto.PerformanceKeywordDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -113,5 +114,61 @@ public class PerformanceService {
     public List<PerformanceDTO> getHatePerformancesByUserId(int userId) {
         return performanceMapper.findHatedPerformancesByUserId(userId);
     }
+
+
+
+    // 회원가입할때 공연 장르 넣는 거
+    public void savePerformanceKeyword(PerformanceKeywordDTO performanceKeyword) {
+        try {
+            performanceMapper.insertPerformanceKeyword(performanceKeyword);
+            System.out.println("Inserted performance keyword: " + performanceKeyword.getGenre());
+        } catch (Exception e) {
+            System.out.println("Error inserting performance keyword: " + e.getMessage());
+            throw new RuntimeException("Failed to insert performance keyword", e);
+        }
+    }
+
+
+
+
+
+
+
+    // 사용자가 찜한 공연 키워드를 가져오는 메서드
+    public List<PerformanceKeywordDTO> getLoveKeywordsByUserId(int userId) {
+        return performanceMapper.findLoveKeywordsByUserId(userId);
+    }
+
+//    // 사용자가 관심없음으로 지정한 공연 키워드를 가져오는 메서드
+//    public List<PerformanceKeywordDTO> getHateKeywordsByUserId(int userId) {
+//        return performanceMapper.findHateKeywordsByUserId(userId);
+//    }
+
+    public List<PerformanceKeywordDTO> getHateKeywordsByUserId(int userId) {
+        // 모든 장르를 가져온 후 사용자가 찜한 키워드를 제외한 나머지 키워드를 관심없음으로 처리
+        List<String> allGenres = Arrays.asList("연극", "무용", "대중무용", "서양음악(클래식)", "한국음악(국악)", "대중음악", "복합", "서커스/마술", "콘서트");
+        List<PerformanceKeywordDTO> loveKeywords = performanceMapper.findLoveKeywordsByUserId(userId);
+
+        List<String> loveGenres = loveKeywords.stream()
+                .map(PerformanceKeywordDTO::getGenre)
+                .collect(Collectors.toList());
+
+        List<PerformanceKeywordDTO> hateKeywords = allGenres.stream()
+                .filter(genre -> !loveGenres.contains(genre))
+                .map(genre -> {
+                    PerformanceKeywordDTO dto = new PerformanceKeywordDTO();
+                    dto.setGenre(genre);
+                    return dto;
+                })
+                .collect(Collectors.toList());
+
+        return hateKeywords;
+    }
+
+
+
+
+
+
 }
 
