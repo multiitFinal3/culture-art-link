@@ -241,6 +241,17 @@
 
                     }
 
+                    var smsBool = $('#smsBool').val();
+
+                    if(smsBool == "false"){
+
+                        alert("문자 인증이 필요합니다.");
+                        return;
+
+                     }
+
+
+
                     $.ajax({
 
                         url: '/user/updateUserAccount',
@@ -311,6 +322,106 @@
                     validateSameEmail(email);
 
                 })
+
+
+
+                /**
+                * 전화 검증 버튼
+                *
+                */
+                $(document).on('click','#telValidate', function(){
+
+                    event.preventDefault();
+                    var tel = $('#tel').val();
+                    validateTel(tel);
+
+                })
+
+
+                /**
+                * 전화번호 인증 문자 받기
+                * @param {string} tel 검증할 전화번호
+                * @returns {boolean} 인증 성공 시 true, 인증 실패 시 false
+                *
+                */
+                function validateTel(tel){
+                    return new Promise((resolve, reject) => {
+                        $.ajax({
+                            url: '/sms/send-one',
+                            method: 'POST',
+                            data: {
+                                toNumber : tel
+                            },
+                            success: function(response){
+
+                                alert(response);
+                                resolve();
+
+                            },
+                            error: function(xhr, status, error){
+
+                                alert('문자 인증 오류 발생!');
+                                return(false);
+
+                            }
+                        })
+                    })
+                }
+
+
+
+                /**
+                * 문자 인증 버튼
+                *
+                */
+                $(document).on('click','#telValidate2', function(){
+
+                    event.preventDefault();
+                    var tel = $('#tel').val();
+                    var authNum = $('#authNum').val();
+                    validateSMS(tel, authNum);
+
+                })
+
+
+                /**
+                * 전화번호 인증 번호 확인
+                * @param {string} authNum 검증할 번호
+                * @returns {boolean} 인증 성공 시 true, 인증 실패 시 false
+                *
+                */
+                function validateSMS(tel, authNum){
+                    return new Promise((resolve, reject) => {
+                        $.ajax({
+                            url: '/sms/validateNum',
+                            method: 'POST',
+                            data: {
+                                tel : tel,
+                                authNum : authNum
+                            },
+                            success: function(bool){
+
+                                if(bool === true){
+                                    $('#smsBool').val("true");
+                                    alert("전화번호 인증 성공!!")
+                                    resolve(true);
+
+                                }else{
+                                    alert("전화번호 인증 실패")
+                                    resolve(false);
+
+                                }
+                            },
+                            error: function(xhr, status, error){
+
+                                alert('문자 인증 오류 발생!');
+                                reject();
+
+                            }
+                        })
+                    })
+                }
+
 
 
                 //#endregion
@@ -3550,7 +3661,12 @@
                             <label for="tel">전화번호</label>
                             <input class="rounded" id="tel" name="tel" pattern="[0-9]{3}-[0-9]{4}-[0-9]{4}"
                                    placeholder="${user.tel}"
-                                   th:value="${user.tel}" type="tel"><br>
+                                   th:value="${user.tel}" type="tel" required style="background-color: lightblue">
+                            <input name="authNum" id="authNum" class="rounded" placeholder="0000" type="number" pattern="\d{4}" value="0000" required style="width: 80px;">
+                            <button id="telValidate" type="button" class="btn btn-outline-success">문자인증</button>
+                            <button id="telValidate2" type="button" class="btn btn-outline-success">인증하기</button>
+                            <input type="hidden" value="false" id="smsBool">
+                            <br>
 
                             <label for="userAge">나이</label>
                             <input class="rounded" id="userAge" name="userAge" th:placeholder="${user.userAge}"
