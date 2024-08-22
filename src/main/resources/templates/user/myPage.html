@@ -2943,6 +2943,7 @@
                 ];
 
                 // 공연 찜 키워드를 서버에서 가져와 UI에 표시하는 함수
+                // 공연 찜 키워드를 서버에서 가져와 UI에 표시하는 함수
                 async function findPerformanceLoveKeyword() {
                     try {
                         // 사용자가 선호하는 키워드만 서버에서 가져옴
@@ -2954,13 +2955,14 @@
                             }
                         });
 
-                        let loveKeywords = response.data.keywords || [];
+                        let loveKeywords = response.data.loveKeywords || []; // 서버에서 받은 찜 키워드 리스트
+                        console.log("loveKeywords: ", loveKeywords);
 
-                        console.log("findPerformanceLoveKeyword()");
-                        console.log('LoveKeywords : ', loveKeywords);
-
-                        // 키워드를 UI에 표시
-                        displayPerformanceKeywords(loveKeywords);
+                        if (loveKeywords.length === 0) {
+                            console.log("No love keywords found.");
+                        } else {
+                            displayPerformanceKeywords(loveKeywords);
+                        }
                     } catch (error) {
                         console.error('Error fetching performance keywords:', error);
                     }
@@ -2968,30 +2970,20 @@
 
                 // 키워드를 UI에 표시하는 함수
                 function displayPerformanceKeywords(loveKeywords) {
-                    $('#performanceKeywordList').empty(); // 기존 키워드를 모두 비움
+                    const keywordList = $('#performanceKeywordList');
+                    keywordList.empty(); // 기존 키워드를 모두 비움
+
                     let concatLove = '';
 
-                    // 모든 키워드를 순회하며 UI에 표시
-                    allKeywords.forEach(keyword => {
-                        // 사용자가 선호하는 키워드인지 확인
-                        const isLove = loveKeywords.some(loveKeyword => loveKeyword.genre === keyword);
-
-                        let htmlContent = '';
-                        if (isLove) {
-                            // 선호하는 키워드인 경우 강조 표시
-                            htmlContent = `<button value="${keyword}" class="performanceLoveKeywordBtn bigLove">${keyword}</button>`;
-                            concatLove += keyword + ",";
-                        } else {
-                            // 그렇지 않은 키워드는 기본 스타일로 표시
-                            htmlContent = `<button value="${keyword}" class="performanceLoveKeywordBtn">${keyword}</button>`;
-                        }
-
-                        // 키워드를 HTML에 추가
-                        $('#performanceKeywordList').append(htmlContent);
+                    loveKeywords.forEach(keyword => {
+                        let htmlContent = `<button value="${keyword.genre}" class="performanceLoveKeywordBtn">${keyword.genre}</button>`;
+                        concatLove += keyword.genre + ",";
+                        keywordList.append(htmlContent);
                     });
 
                     // 선택된 키워드를 히든 필드에 저장
                     $('#performanceKeyword').val(concatLove.trim() + ",");
+                    console.log('Keywords rendered in UI.');
                 }
 
                 // 공연 찜 키워드 선택 시 색 변화 버튼
@@ -3011,6 +3003,9 @@
 
                 // 페이지 로드 시 공연 찜 키워드를 불러옴
                 findPerformanceLoveKeyword();
+
+
+
 
 
 
@@ -3308,6 +3303,8 @@
                     findFestivalBigLoveKeyword();
 
                     findExhibitionLoveKeyword();
+
+                    findPerformanceLoveKeyword();
                 });
 
 
@@ -3373,6 +3370,7 @@
                     // 위치 변경
                     findFestivalBigHateKeyword();
                     findExhibitionLoveKeyword();
+                    findPerformanceLoveKeyword();
                 });
 
 
