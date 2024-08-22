@@ -167,6 +167,14 @@ async function saveComment(exhibitionId) {
             content: comment.value
         }
 
+        if (!comment.value) {
+            alert('내용을 작성해 주세요.')
+            return;
+        } else if (!Number(stars)) {
+            alert('별점을 추가해 주세요.')
+            return;
+        }
+
         console.log('save comment : ', data)
         const response = await axios.post(`/exhibition/exhibition/${exhibitionId}/comment`, data)
 
@@ -209,6 +217,14 @@ async function saveAnalyze(exhibitionId) {
             artwork: artwork.value,
             content: analyze.value,
             image: imagePath
+        }
+
+        if (!analyze.value) {
+            alert('내용을 작성해 주세요.')
+            return;
+        } else if (!artwork.value) {
+            alert('작품명을 작성해 주세요.')
+            return;
         }
 
         console.log('save analyze : ', data)
@@ -379,7 +395,7 @@ async function loadExhibitionReviews() {
         const data = await response.json();
         const count = data.length;
         const $commentBtn = $("#commentBtn");
-        $commentBtn.text($commentBtn.text() + ' ' + count);
+        $commentBtn.text('후기' + ' ' + count);
         console.log("loadExhibitionReviews : ", data);
         renderReviews(data)
     } catch (error) {
@@ -404,6 +420,14 @@ function renderExhibitionDetails(exhibition) {
 
     const $info = $(".exhibition-info")
     $info.html(`
+        ${(exhibition.title) ? `
+        <div class="info-item">
+            <h1 class="info-data" style=" color: #1E1E1E; font-size: 24px;
+    font-weight: bold;">
+                ${exhibition.title}
+            </h1>
+        </div>
+        ` : ''}
         ${(exhibition.artist) ? `
         <div class="info-item">
             <span class="info-label">
@@ -684,7 +708,7 @@ async function loadExhibitionAnalyze() {
         const data = await response.json();
         const count = data.length;
         const $AnalyzeBtn = $("#AnalyzeBtn");
-        $AnalyzeBtn.text($AnalyzeBtn.text() + ' ' + count);
+        $AnalyzeBtn.text('분석' + ' ' + count);
         console.log("loadExhibitionAnalyze : ", data);
         renderAnalyze(data)
     } catch (error) {
@@ -718,10 +742,19 @@ function renderAnalyze(analyze) {
                 ${(analyze.auth) ? '<button class="delete-analyze btn btn-outline-secondary">삭제</button>' : ''}
             </div>
             <div class="analyze-edit" style="display:none;">
-                <h3>${analyze.artwork}</h3>
-                <textarea class="edit-content">${analyze.content}</textarea>
-                <button class="save-edit">수정 완료</button>
-                <button class="cancel-edit">취소</button>
+                <div class="analyze-text-content">
+                    <h3 class="analyze-username-edit">${analyze.name}</h3>
+                    <h4 class="analyze-artwork-edit">${analyze.artwork}</h4>
+                    <br>
+                    <textarea class="edit-content">${analyze.content}</textarea>
+                </div>
+                ${analyze.image ? `
+                    <div class="analyze-image">
+                        <img src="https://kr.object.ncloudstorage.com/team3${analyze.image}" alt="분석 이미지">
+                    </div>
+                ` : ''}
+                <button class="save-edit btn btn-outline-secondary">수정 완료</button>
+                <button class="cancel-edit btn btn-outline-secondary">취소</button>
             </div>
         </div>
 `).join('');
