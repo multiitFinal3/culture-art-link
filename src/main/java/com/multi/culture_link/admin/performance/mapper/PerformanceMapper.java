@@ -119,4 +119,12 @@ String getPerformanceLikeState(@Param("userId") int userId, @Param("performanceI
     void insertPerformanceKeyword(PerformanceKeywordDTO performanceKeyword);
 
 
+
+
+    // 사용자 찜한 공연 키워드를 가져오는 메서드
+    List<PerformanceKeywordDTO> findLoveKeywordsByUserId(@Param("userId") int userId);
+
+    // 사용자 관심없음 공연 키워드를 가져오는 메서드
+    List<PerformanceKeywordDTO> findHateKeywordsByUserId(@Param("userId") int userId);
+
 }

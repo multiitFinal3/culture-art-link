@@ -3,6 +3,7 @@ package com.multi.culture_link.performance.controller;
 import com.multi.culture_link.admin.performance.model.dto.PerformanceDTO;
 import com.multi.culture_link.admin.performance.service.PerformanceDBService;
 import com.multi.culture_link.performance.model.dto.PerformanceAddDTO;
+import com.multi.culture_link.performance.model.dto.PerformanceKeywordDTO;
 import com.multi.culture_link.performance.model.dto.PerformanceReviewDTO;
 import com.multi.culture_link.performance.service.PerformanceLocationService;
 import com.multi.culture_link.performance.service.PerformanceRankingService;
@@ -492,6 +493,70 @@ public class PerformanceController {
         model.addAttribute("user", user);
 
         return ResponseEntity.ok(hatePerformanceList);
+    }
+
+
+
+
+
+
+
+
+
+
+
+    /**
+     * 사용자가 찜한 공연 키워드를 반환하는 메서드
+     *
+     * @param user  인증된 사용자 정보
+     * @param type  키워드 타입 (찜: 'L', 관심없음: 'H')
+     * @return 사용자가 선택한 공연 키워드 목록
+     */
+//    @GetMapping("/getUserKeywords")
+//    public ResponseEntity<Map<String, Object>> getUserKeywords(
+//            @AuthenticationPrincipal VWUserRoleDTO user,
+//            @RequestParam("type") String type) {
+//
+//        Map<String, Object> response = new HashMap<>();
+//        try {
+//            List<PerformanceKeywordDTO> keywords;
+//            if ("L".equals(type)) {
+//                keywords = performanceService.getLoveKeywordsByUserId(user.getUser().getUserId());
+//            } else if ("H".equals(type)) {
+//                keywords = performanceService.getHateKeywordsByUserId(user.getUser().getUserId());
+//            } else {
+//                throw new IllegalArgumentException("Invalid keyword type: " + type);
+//            }
+//
+//            response.put("keywords", keywords);
+//            return ResponseEntity.ok(response);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            response.put("error", "Error fetching keywords: " + e.getMessage());
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+//        }
+//    }
+
+    @GetMapping("/getUserKeywords")
+    public ResponseEntity<Map<String, Object>> getUserKeywords(
+            @AuthenticationPrincipal VWUserRoleDTO user) {
+
+        Map<String, Object> response = new HashMap<>();
+        try {
+            // 사용자가 찜한 키워드를 가져옴
+            List<PerformanceKeywordDTO> loveKeywords = performanceService.getLoveKeywordsByUserId(user.getUser().getUserId());
+
+            // 사용자가 찜하지 않은 나머지 키워드를 관심없음 키워드로 처리
+            List<PerformanceKeywordDTO> hateKeywords = performanceService.getHateKeywordsByUserId(user.getUser().getUserId());
+
+            response.put("loveKeywords", loveKeywords);
+            response.put("hateKeywords", hateKeywords);
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            e.printStackTrace();
+            response.put("error", "Error fetching keywords: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
     }
 
 

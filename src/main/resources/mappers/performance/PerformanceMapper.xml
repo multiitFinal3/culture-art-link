@@ -283,6 +283,50 @@
 
 
 
+    <!-- 사용자 찜한 공연 키워드를 가져오는 쿼리 -->
+    <select id="findLoveKeywordsByUserId" resultType="com.multi.culture_link.performance.model.dto.PerformanceKeywordDTO">
+        SELECT genre
+        FROM performance_keyword
+        WHERE user_id = #{userId}
+    </select>
+
+    <!-- 사용자 관심없음 공연 키워드를 가져오는 쿼리 -->
+    <select id="findHateKeywordsByUserId" resultType="com.multi.culture_link.performance.model.dto.PerformanceKeywordDTO">
+        SELECT genre
+        FROM performance_genre
+        WHERE genre NOT IN (
+        SELECT genre
+        FROM performance_keyword
+        WHERE user_id = #{userId}
+        )
+    </select>
+
+
+
+
+    <!-- 찜 키워드 삽입 -->
+    <insert id="insertLoveKeyword">
+        INSERT INTO performance_keyword (user_id, genre, created_at, updated_at)
+        VALUES (#{userId}, #{genre}, NOW(), NOW());
+    </insert>
+
+    <!-- 관심없음 키워드 삽입 -->
+    <insert id="insertHateKeyword">
+        INSERT INTO performance_keyword (user_id, genre, created_at, updated_at)
+        SELECT #{userId}, genre, NOW(), NOW()
+        FROM performance_genre
+        WHERE genre NOT IN (
+        SELECT genre
+        FROM performance_keyword
+        WHERE user_id = #{userId}
+        );
+    </insert>
+
+
+
+
+
+
 
 
 
