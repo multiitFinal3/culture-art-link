@@ -55,4 +55,12 @@ public interface CulturalPropertiesKeywordDAO {
 
     List<CulturalPropertiesDTO> getRandomCulturalPropertiesByKeywords(@Param("keywords") List<String> keywords, @Param("limit") int limit);
 
+
+    List<String> getMainRecommendedKeywords(int userId);
+    List<CulturalPropertiesDTO> getRecommendedCulturalProperties(List<String> keywords);
+
+
+
+
+
 }

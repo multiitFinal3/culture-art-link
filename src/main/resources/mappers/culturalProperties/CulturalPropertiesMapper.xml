@@ -241,6 +241,7 @@
     </select>
 
 
+
     <update id="editReview" parameterType="com.multi.culture_link.culturalProperties.model.dto.CulturalPropertiesReviewDTO">
         UPDATE cultural_properties_review
         SET content = #{content},

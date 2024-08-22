@@ -442,6 +442,7 @@ public class AdminCulturalPropertiesService {
 
 
 
+
 	@PostConstruct
 	public void initializeKeywords() {
 		List<CulturalPropertiesDTO> allCulturalProperties = adminCulturalPropertiesDAO.findAll();
@@ -450,21 +451,30 @@ public class AdminCulturalPropertiesService {
 			int culturalPropertiesId = culturalPropertiesDTO.getId();
 			String content = culturalPropertiesDTO.getContent();
 
+			// content가 비어있는지 확인
+			if (content == null || content.trim().isEmpty()) {
+				System.out.println("Cultural Properties ID " + culturalPropertiesId + " has no content. Skipping keyword extraction.");
+				continue;
+			}
+
 			// cultural_properties_content_keyword 테이블에 해당 cultural_properties_id가 존재하는지 확인
 			boolean isKeywordExists = culturalPropertiesKeywordDAO.existsByCulturalPropertiesId(culturalPropertiesId);
 
 			if (!isKeywordExists) {
 				// 키워드가 존재하지 않는 경우에만 추출 및 저장 수행
 				extractAndSaveKeywords(culturalPropertiesId, content);
-
 			}
 		}
 	}
 
-
-
 	public void extractAndSaveKeywords(int culturalPropertiesId, String content) {
 		try {
+			// content가 비어있는지 다시 한 번 확인
+			if (content == null || content.trim().isEmpty()) {
+				System.out.println("Cultural Properties ID " + culturalPropertiesId + " has no content. Skipping keyword extraction.");
+				return;
+			}
+
 			// culturalPropertiesId에 해당하는 문화재 데이터 존재 여부 확인
 			CulturalPropertiesDTO existingCulturalProperties = adminCulturalPropertiesDAO.selectById(culturalPropertiesId);
 
@@ -566,18 +576,6 @@ public class AdminCulturalPropertiesService {
 		return culturalPropertiesKeywordDAO.getKeywords(excludedKeywordIds, limit);
 	}
 
-
-//	@Transactional
-//	public void saveUserSelectedKeywords(String keywordsString, int userId, int count) {
-//		if (keywordsString == null || keywordsString.isEmpty()) {
-//			return;
-//		}
-//
-//		String[] keywords = keywordsString.split(",");
-//		for (String keyword : keywords) {
-//			culturalPropertiesKeywordDAO.saveUserKeyword(userId, keyword, count);
-//		}
-//	}
 
 	@Transactional
 	public void saveUserSelectedKeywords(String keywordsString, int userId, int count) {

@@ -217,5 +217,35 @@
 
 
 
+    <select id="getMainRecommendedKeywords" resultType="string">
+        SELECT keyword
+        FROM vw_cultural_properties_total_sum_keyword
+        WHERE user_id = #{userId} AND total_count > 0
+        ORDER BY total_count DESC
+    </select>
+
+
+
+
+    <select id="getRecommendedCulturalProperties" resultType="CulturalPropertiesDTO">
+        SELECT DISTINCT cp.*,
+        (SELECT AVG(star) FROM cultural_properties_review WHERE cultural_properties_id = cp.id) as averageRating
+        FROM cultural_properties cp
+        JOIN vw_cultural_properties_combined_keyword_unique4 ck ON cp.id = ck.cultural_properties_id
+        WHERE ck.keyword IN
+        <foreach item="keyword" collection="list" open="(" separator="," close=")">
+            #{keyword}
+        </foreach>
+        ORDER BY
+        (SELECT total_count
+        FROM vw_cultural_properties_total_sum_keyword
+        WHERE keyword = ck.keyword
+        LIMIT 1) DESC
+        LIMIT 25
+    </select>
+
+
+
+
 
 </mapper>

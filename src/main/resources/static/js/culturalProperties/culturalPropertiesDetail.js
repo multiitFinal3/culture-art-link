@@ -809,15 +809,29 @@ $(document).ready(function() {
 
                         var userId = getUserId();
 
-                        // createdAt 값을 Date 객체로 변환
-                        const createdAt = new Date(review.createdAt);
-                        //(YYYY-MM-DD HH:mm:ss) 형식으로 날짜 포맷팅
-                        const formattedDate = createdAt.toISOString().slice(0, 19).replace('T', ' ') + '             ';
+//                        // createdAt 값을 Date 객체로 변환
+//                        const createdAt = new Date(review.createdAt);
+//                        //(YYYY-MM-DD HH:mm:ss) 형식으로 날짜 포맷팅
+//                        const formattedDate = createdAt.toISOString().slice(0, 19).replace('T', ' ') + '             ';
+//
+//                        // updatedAt 포맷팅 (updatedAt이 존재하는 경우)
+//                        const updatedAtHtml = review.updatedAt && review.updatedAt !== review.createdAt
+//                            ? ` 수정 : ${new Date(review.updatedAt).toISOString().slice(0, 19).replace('T', ' ')}`
+//                            : '';
 
-                        // updatedAt 포맷팅 (updatedAt이 존재하는 경우)
-                        const updatedAtHtml = review.updatedAt && review.updatedAt !== review.createdAt
-                            ? ` 수정 : ${new Date(review.updatedAt).toISOString().slice(0, 19).replace('T', ' ')}`
-                            : '';
+// 서버 시간을 한국 시간으로 변환
+                const createdAt = new Date(review.createdAt);
+                createdAt.setHours(createdAt.getHours() + 9); // UTC+9 (한국 시간)
+                const formattedDate = createdAt.toISOString().slice(0, 19).replace('T', ' ');
+
+                const updatedAtHtml = review.updatedAt && review.updatedAt !== review.createdAt
+                    ? (() => {
+                        const updatedAt = new Date(review.updatedAt);
+                        updatedAt.setHours(updatedAt.getHours() + 9);
+                        return ` 수정 : ${updatedAt.toISOString().slice(0, 19).replace('T', ' ')}`;
+                      })()
+                    : '';
+
 
                         const reviewHtml = `
                             <div class="review">
@@ -832,7 +846,9 @@ $(document).ready(function() {
                                     <span>${review.userName}</span>
 
                                     <span style="font-size: 13px; color: #999;">
+
                                         ${formattedDate}   ${updatedAtHtml}
+
                                     </span>
 
 
@@ -1167,9 +1183,7 @@ $(document).ready(function() {
             const title = $('<h5>').addClass('mb-1').text(article.title);
             const content = $('<p>').addClass('mb-1').text(article.content);
             const date = $('<small>').addClass('text-muted').text(article.date);
-            //              const link = $('<a>').attr('href', article.link).addClass('btn btn-primary btn-sm mt-2').text('자세히 보기').css('margin-left', '2rem');
 
-//            const link = $('<a>').attr('href', article.link).addClass('btn btn-outline-success').text('자세히 보기').css('margin-left', '2rem');
 
             const link = $('<a>').attr('href', article.link).addClass('btn btn-success').text('자세히 보기').css('margin-left', '2rem');
 
@@ -1226,5 +1240,27 @@ $(document).ready(function() {
             videoList.append(colDiv);
         });
     }
+
+
+
+   /**
+   *   전채 목록 연결
+   */
+    $(document).on('click','#allList', function(){
+
+        var value = "fromDetail";
+
+        window.location.href = "/cultural-properties?param=" + encodeURIComponent(value);
+
+
+    })
+
+
+
+
+
+
+
+
 
 });
