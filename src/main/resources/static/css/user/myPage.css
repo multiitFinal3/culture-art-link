@@ -968,7 +968,9 @@ button {
     .festivalHateKeywordBtn,
     .culturalPropertiesKeywordBtn,
     .exhibitionLoveKeywordBtn,
-    .exhibitionHateKeywordBtn {
+    .exhibitionHateKeywordBtn,
+    .performanceLoveKeywordBtn,
+    .performanceHateKeywordBtn{
        min-width: 150px;
        max-height: 35px;
        color: #02542d;
