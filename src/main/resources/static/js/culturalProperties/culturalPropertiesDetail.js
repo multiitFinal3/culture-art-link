@@ -1183,9 +1183,7 @@ $(document).ready(function() {
             const title = $('<h5>').addClass('mb-1').text(article.title);
             const content = $('<p>').addClass('mb-1').text(article.content);
             const date = $('<small>').addClass('text-muted').text(article.date);
-            //              const link = $('<a>').attr('href', article.link).addClass('btn btn-primary btn-sm mt-2').text('자세히 보기').css('margin-left', '2rem');
 
-//            const link = $('<a>').attr('href', article.link).addClass('btn btn-outline-success').text('자세히 보기').css('margin-left', '2rem');
 
             const link = $('<a>').attr('href', article.link).addClass('btn btn-success').text('자세히 보기').css('margin-left', '2rem');
 
@@ -1246,7 +1244,7 @@ $(document).ready(function() {
 
 
    /**
-   *
+   *   전채 목록 연결
    */
     $(document).on('click','#allList', function(){
 

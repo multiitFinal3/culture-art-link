@@ -644,9 +644,7 @@
     vertical-align: middle;
 }
 
-<!--.interest-button.active {-->
-<!--    background-color: #d4edda;-->
-<!--}-->
+
 
 .like-button.active img {
     content: url('https://kr.object.ncloudstorage.com/team3/common/upBlue.png');
@@ -665,25 +663,6 @@
     margin-bottom: 10px;
 }
 
-<!--.keyword {-->
-<!--    background-color: #cff7d3;-->
-<!--    color: #02542d;-->
-<!--    padding: 8px 15px;-->
-<!--    border-radius: 15px;-->
-<!--    font-size: 14px;-->
-<!--    font-weight: bold;-->
-<!--    text-decoration: none;-->
-<!--}-->
-
-<!--.keyword {-->
-<!--    padding: 4px 8px;-->
-<!--&lt;!&ndash;    background-color: #f1f1f1;&ndash;&gt;-->
-<!--    border-radius: 4px;-->
-<!--    font-size: 14px;-->
-<!--&lt;!&ndash;    color: #333;&ndash;&gt;-->
-<!--background-color: #cff7d3;-->
-<!--    color: #02542d;-->
-<!--}-->
 
 .keyword {
     padding: 5px 9px;
@@ -717,10 +696,6 @@
     margin-bottom: 20px;
 }
 
-<!--#reviewKeywords h3 {-->
-<!--    font-size: 18px;-->
-<!--    margin-bottom: 10px;-->
-<!--}-->
 
 .review-keywords {
     display: flex;
@@ -728,13 +703,7 @@
     gap: 10px;
 }
 
-<!--.review-keyword {-->
-<!--    background-color: #f0f0f0;-->
-<!--    padding: 5px 10px;-->
-<!--    border-radius: 20px;-->
-<!--    font-size: 14px;-->
-<!--    color: #333;-->
-<!--}-->
+
 
 .review-keyword {
     padding: 5px 9px;
@@ -765,10 +734,7 @@
 
 }
 
-<!--.video-container{-->
-<!--    margin-left: 79.800;-->
-<!--    margin-right: 79.800;-->
-<!--}-->
+
 
         .video-card {
     display: flex;
@@ -819,7 +785,6 @@
 
         <div class="genre-filter">
             <div class="genre-item" data-target="recommend" th:onclick="|location.href='@{/cultural-properties}'|">추천</div>
-<!--            <div class="genre-item" data-target="all" th:onclick="|location.href='@{/cultural-properties}'|">전체 문화재 목록</div>-->
             <div class="genre-item" data-target="all" id="allList">전체 문화재 목록</div>
 
             <div class="genre-item" data-target="news">뉴스 & 소식</div>
@@ -871,47 +836,6 @@
         </div>
     </div>
 
-<!--    <div class="info-section">-->
-<!--        <div class="title" th:text="${performance.title}">공연명</div>-->
-<!--        <div class="info-section-content">-->
-<!--            <div class="info-item">-->
-<!--                <span class="info-label">장소</span>-->
-<!--                <span class="info-location" th:text="${performance.location}">공연장소</span>-->
-<!--            </div>-->
-<!--            <div class="info-item">-->
-<!--                <span class="info-label">공연기간</span>-->
-<!--                <span class="info-content" th:text="${performance.formattedDate}">공연기간</span>-->
-<!--            </div>-->
-<!--            <div class="info-item">-->
-<!--                <span class="info-label">관람시간</span>-->
-<!--                <span class="info-content" th:text="${performance.runtime}">관람시간</span>-->
-<!--            </div>-->
-<!--            <div class="info-item">-->
-<!--                <span class="info-label">관람연령</span>-->
-<!--                <span class="info-content" th:text="${performance.age}">관람등급</span>-->
-<!--            </div>-->
-<!--            <div class="info-item">-->
-<!--                <span class="info-label">장르</span>-->
-<!--                <span class="info-content" th:text="${performance.genre}">장르</span>-->
-<!--            </div>-->
-<!--            <div class="info-item">-->
-<!--                <span class="info-label">기관</span>-->
-<!--                <span class="info-content" th:text="${performance.organizer}">기관</span>-->
-<!--            </div>-->
-<!--            <div class="info-item">-->
-<!--                <span class="info-label">주체</span>-->
-<!--                <span class="info-content" th:text="${performance.producer}">주체</span>-->
-<!--            </div>-->
-<!--            <div class="info-item">-->
-<!--                <span class="info-label">가격</span>-->
-<!--                <span class="info-content" th:text="${performance.price}">가격</span>-->
-<!--            </div>-->
-
-<!--            <div class="info-ticketbutton">-->
-<!--                <a th:href="${performance.ticketingUrl}" target="_blank">예매하기</a>-->
-<!--            </div>-->
-<!--        </div>-->
-<!--    </div>-->
 
     <div class="container">
         <div class="top-section">
@@ -932,35 +856,19 @@
                 <div class="title" th:text="${property.culturalPropertiesName}" style="margin-top: -7px;">문화재명</div>
                 <br>
                 <div class="info-section-content">
-<!--                    <div class="info-location" th:text="${property.region + ' ' + property.district}">위치</div>-->
-<!--                    <div class="info-dynasty" th:text="${property.dynasty}">시대</div>-->
 
 
                     <div class="info-item" style="margin-top: -17px;">
                         <span class="info-label">지역</span>
                         <span class="info-location" th:text="${property.region + ' ' + property.district}">지역</span>
-<!--                        <div class="info-location" th:text="${property.region + ' ' + property.district}">지역</div>-->
                     </div>
 
                     <div class="info-item">
                         <span class="info-label">시대</span>
                         <span class="info-dynasty" th:text="${property.dynasty}">시대</span>
-<!--                        <div class="info-dynasty" th:text="${property.dynasty}">시대</div>-->
                     </div>
 
 
-<!--                    <br>-->
-
-<!--                    <div class="info-item">-->
-<!--                        <span class="info-label">미디어</span>-->
-<!--                        <span th:if="${property.imgUrl != null && !property.imgUrl.isEmpty()}">-->
-<!--                            <button id="imageButton" class="btn btn-info me-2"-->
-<!--                                    th:data-images="${#strings.listJoin(property.imgUrl, ',')}"-->
-<!--                                    th:data-descriptions="${#strings.listJoin(property.imgDesc, ',')}">-->
-<!--                                이미지 보기-->
-<!--                            </button>-->
-<!--                        </span>-->
-<!--                    </div>-->
                     <div class="d-flex justify-content-start mt-2">
 
                         <div class="info-item">
@@ -985,16 +893,6 @@
 
                     </div>
 
-<!--                    <br>-->
-<!--                    <br>-->
-
-<!--                    <div class="info-item">-->
-<!--                        <span class="info-label">평균 별점</span>-->
-<!--                        <div class="averageRating" th:data-average-rating="${averageRating}" th:data-review-count="${reviews.size()}">-->
-<!--                            <span th:text="${#numbers.formatDecimal(averageRating != null ? averageRating : 0.0, 1, 1)}"></span>-->
-<!--                            <span class="review-avgstar"></span>-->
-<!--                        </div>-->
-<!--                    </div>-->
 
                     <div class="averageRating" th:data-average-rating="${averageRating}" th:data-review-count="${reviews.size()}" style="margin-top:12px">
                         <span th:text="${#numbers.formatDecimal(averageRating != null ? averageRating : 0.0, 1, 1)}" style="font-size:18px; margin-right:4px;"></span>
@@ -1133,9 +1031,6 @@
                                      th:src="@{/img/festival/noPhoto.png}"
                                      th:alt="기본 사용자 이미지">
 
-                                <!--                <img th:if="${review.userProfileImage != null}"-->
-                                <!--                     th:src="@{/img/user/userProfile/{filename}(filename=${review.userProfileImage})}"-->
-                                <!--                     th:alt="${review.userName}">-->
                                 <div class="user-details">
                                     <span th:text="${review.userName}"></span>
                                     <div class="review-rating" th:attr="data-rating=${review.star}">

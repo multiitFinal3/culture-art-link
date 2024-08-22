@@ -240,13 +240,6 @@ a {
 }
 
 
-<!--.badge-container {-->
-<!--    position: absolute;-->
-<!--    bottom: 10px;-->
-<!--    right: 10px;-->
-<!--    display: none;-->
-<!--    gap: 5px;-->
-<!--}-->
 
 .badge-container {
 
@@ -263,19 +256,6 @@ a {
 <!--    display: flex;-->
 <!--}-->
 
-<!--.all-card:hover .badge-container {-->
-<!--    display: flex;-->
-<!--}-->
-
-<!--.interest-button {-->
-<!--    border: none;-->
-<!--    background-color: #fff;-->
-<!--    cursor: pointer;-->
-<!--    padding: 5px;-->
-<!--    border-radius: 4px;-->
-<!--    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);-->
-<!--    opacity: 0.8;-->
-<!--}-->
 
 
 .interest-button {
@@ -287,42 +267,19 @@ a {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     opacity: 0.8;
 }
-<!--.interest-button {-->
-<!--    top: 290px;-->
-<!--    right: 65px;-->
-<!--    background: white;-->
-<!--    padding: 5px 10px;-->
-<!--    margin: 0 5px;-->
-<!--    border: none;-->
-<!--    border-radius: 5px;-->
-<!--    cursor: pointer;-->
-<!--    opacity: 0.8;-->
-<!--    }-->
+
 
 .interest-button img {
     width: 25px;
     height: 25px;
 }
 
-<!--.interest-button img {-->
-<!--    width: 20px;-->
-<!--    height: 20px;-->
-<!--}-->
-
-
-<!--        .video-card {-->
-<!--    height: 100%;-->
-<!--    display: flex;-->
-<!--    flex-direction: column;-->
-<!--  }-->
 
 .video-container{
     max-width: 1320px;
     margin-left:300px;
 }
-<!--style="max-width: 1320px; margin-left:300px"-->
-<!--align-items: center; /* 수직 중앙 정렬 */-->
-<!--            justify-content: center; /* 수평 중앙 정렬 */-->
+
 .video-card {
     display: flex;
     flex-direction: column;
@@ -370,7 +327,6 @@ a {
         <div class="genre-filter">
             <div class="genre-item active" data-target="recommend">추천</div>
             <div class="genre-item" data-target="all" id="allList">전체 문화재 목록</div>
-<!--            <div class="genre-item active" data-target="all">전체 문화재 목록</div>-->
             <div class="genre-item" data-target="news">뉴스 & 소식</div>
             <div class="genre-item" data-target="video">관련 영상</div>
         </div>
@@ -415,14 +371,7 @@ a {
                 </form>
 
 
-<!--            <div class="extra-item">-->
-<!--                <img th:src="@{/img/performance/ranking.png}" alt="랭킹 아이콘" class="filter-icon">-->
-<!--                랭킹-->
-<!--            </div>-->
-<!--            <div class="extra-item">-->
-<!--                <img th:src="@{/img/performance/map.png}" alt="지역별 아이콘" class="filter-icon">-->
-<!--                지역별-->
-<!--            </div>-->
+
         </div>
 
 
@@ -433,13 +382,7 @@ a {
 
         <div class="tab-content mt-5" id="myTabContent">
         <div class="tab-pane fade" id="all" role="tabpanel">
-<!--        <div class="tab-pane fade show active" id="all" role="tabpanel">-->
-<!--        <div class="ranking mt-5">-->
-<!--            <h2 class="mb-4">카테고리별 랭킹</h2>-->
-<!--            <div class="row" id="ranking-list">-->
-<!--                &lt;!&ndash; 랭킹 카드가 여기에 동적으로 추가됩니다 &ndash;&gt;-->
-<!--            </div>-->
-<!--        </div>-->
+
 
 
 
@@ -449,9 +392,7 @@ a {
             <div class="all-cultural-properties-items" id="gallery-section">
                 <div class="all-cultural-property-item" th:each="property : ${allCulturalProperties}">
                     <a th:href="@{'/cultural-properties/detail/' + ${property.id}}">
-<!--                        <div class="all-card">-->
-<!--                            <img th:src="${property.mainImgUrl}" th:alt="${property.culturalPropertiesName}">-->
-<!--                        </div>-->
+
 
 
                         <div class="all-card" th:data-cultural-property-id="${property.id}">
@@ -484,7 +425,6 @@ a {
 
 
             <div class="tab-pane fade show active" id="recommend" role="tabpanel">
-<!--            <div class="tab-pane fade" id="recommend" role="tabpanel">-->
                 <div class="all-cultural-properties">
 
                     <br>

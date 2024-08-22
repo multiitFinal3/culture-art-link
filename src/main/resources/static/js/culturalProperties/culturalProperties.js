@@ -505,6 +505,7 @@ $(document).ready(function() {
     });
 
 
+    //전체 목록 페이지 연결
     var urlParam = new URLSearchParams(window.location.search);
     var paramValue = urlParam.get('param');
 
