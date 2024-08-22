@@ -10,6 +10,8 @@ import com.multi.culture_link.exhibition.service.ExhibitionService;
 import com.multi.culture_link.festival.model.dto.UserFestivalLoveHateMapDTO;
 import com.multi.culture_link.festival.service.FestivalService;
 import com.multi.culture_link.file.controller.FileController;
+import com.multi.culture_link.performance.model.dto.PerformanceKeywordDTO;
+import com.multi.culture_link.performance.service.PerformanceService;
 import com.multi.culture_link.users.model.dto.UserDTO;
 import com.multi.culture_link.users.model.dto.VWUserRoleDTO;
 import com.multi.culture_link.users.model.mapper.UserMapper;
@@ -42,6 +44,8 @@ public class UserController {
     private final AdminCulturalPropertiesService adminCulturalPropertiesService;
     private final CulturalPropertiesService culturalPropertiesService;
 
+    private final PerformanceService performanceService;
+
     private ArrayList<CulturalPropertiesDTO> list;
 
     @Value("${cloud.aws.s3.endpoint}")
@@ -52,10 +56,14 @@ public class UserController {
 
     public UserController(UserService userService,
                           UserMapper userMapper,
-                          FestivalService festivalService, RegionService regionService,
+                          FestivalService festivalService,
+                          RegionService regionService,
                           BCryptPasswordEncoder bCryptPasswordEncoder,
                           FileController fileController,
-                          ExhibitionService exhibitionService, AdminCulturalPropertiesService adminCulturalPropertiesService, CulturalPropertiesService culturalPropertiesService) {
+                          ExhibitionService exhibitionService,
+                          AdminCulturalPropertiesService adminCulturalPropertiesService,
+                          CulturalPropertiesService culturalPropertiesService,
+                          PerformanceService performanceService) {
         this.userService = userService;
         this.userMapper = userMapper;
         this.festivalService = festivalService;
@@ -65,6 +73,7 @@ public class UserController {
         this.exhibitionService = exhibitionService;
         this.adminCulturalPropertiesService = adminCulturalPropertiesService;
         this.culturalPropertiesService = culturalPropertiesService;
+        this.performanceService = performanceService;
     }
 
     /**
@@ -107,8 +116,13 @@ public class UserController {
             @RequestParam(name = "regionId") int regionId,
             @RequestParam(name = "festivalSelectKeyword", required = false) String festivalSelectKeyword,
             @RequestParam(name = "exhibitionSelectKeyword", required = false) String exhibitionSelectKeyword,
-            @RequestParam(name = "culturalPropertiesSelectKeyword", required = false) String culturalPropertiesSelectKeyword
+            @RequestParam(name = "culturalPropertiesSelectKeyword", required = false) String culturalPropertiesSelectKeyword,
+            @RequestParam(name = "performanceSelectKeyword", required = false) String performanceSelectKeyword
+
     ) {
+
+        System.out.println("Performance Keyword: " + performanceSelectKeyword);
+
 
         // 회원 users/ admin 넣는 것도 추가할 것 = > 매핑 테이블에도 조인으로 추가하기
         int result = 0;
@@ -223,9 +237,36 @@ public class UserController {
             adminCulturalPropertiesService.saveUserSelectedKeywords(culturalPropertiesSelectKeyword, userId, 15);
         }
 
+        // 공연 키워드 저장 로직 추가
+        // 공연 키워드 저장 로직 추가
+        if (performanceSelectKeyword != null && !performanceSelectKeyword.trim().isEmpty()) {
+            String[] keywords = performanceSelectKeyword.trim().split(" ");
+            for (String keyword : keywords) {
+                if (isValidGenre(keyword)) {
+                    PerformanceKeywordDTO performanceKeyword = new PerformanceKeywordDTO();
+                    performanceKeyword.setUserId(userId);
+                    performanceKeyword.setGenre(keyword);
+                    performanceService.savePerformanceKeyword(performanceKeyword);
+                } else {
+                    System.out.println("Invalid genre: " + keyword);
+                    // 유효하지 않은 장르에 대한 에러 처리 로직
+                }
+            }
+        }
+
+
         System.out.println("회원가입 성공");
 
     }
+
+    private boolean isValidGenre(String genre) {
+        List<String> validGenres = Arrays.asList(
+                "연극", "무용", "대중무용", "서양음악(클래식)", "한국음악(국악)",
+                "대중음악", "복합", "서커스/마술", "콘서트"
+        );
+        return validGenres.contains(genre);
+    }
+
 
 
     /**

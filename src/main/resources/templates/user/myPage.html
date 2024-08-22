@@ -1269,8 +1269,10 @@
                                 var actionBtns = ``;
                                 var reviewStarHtml = ``;
                                 var reviewUserId = review.userId;
-                                var reviewStarNum = review.performanceReviewStar;
+                                var reviewStarNum = review.starRating;
                                 var time = review.updatedAt.replace("T", " ").slice(0, 19);
+                                var performanceCode = review.code || ''; // review 객체에서 performanceCode 가져오기
+
 
                                 if ((review.userProfileImage == null) || (review.userProfileImage == "")) {
                                     profilePic = `<img src="https://kr.object.ncloudstorage.com/team3/common/noPhoto.png" alt="이미지 없음">`;
@@ -1287,11 +1289,10 @@
 
                                 actionBtns = `
                                     <div class="review-actions">
-                                        <button class="update btn btn-outline-success" onclick="location.href='/performance/performance-detail?performanceId=${review.festivalId}'">상세</button>
-                                        <button class="update btn btn-outline-success" value="${review.performanceReviewId}" type="button">수정</button>
-                                        <button class="deleteBtn btn btn-outline-success" value="${review.performanceReviewId}">삭제</button>
-                                        <button class="editBtn hide btn btn-outline-success" value="${review.performanceReviewId}">저장</button>
-                                        <button class="cancelBtn hide btn btn-outline-success" value="${review.performanceReviewId}">취소</button>
+                                        <button class="detail3 btn btn-outline-success" onclick="location.href='/performance/performanceDetail?performanceCode=${performanceCode}&source=db'">상세</button>
+                                        <button class="deleteBtn3 btn btn-outline-success" value="${review.performanceReviewId}">삭제</button>
+                                        <button class="editBtn3 hide btn btn-outline-success" value="${review.performanceReviewId}">저장</button>
+                                        <button class="cancelBtn3 hide btn btn-outline-success" value="${review.performanceReviewId}">취소</button>
                                     </div>
                                 `;
 
@@ -2823,6 +2824,148 @@
                 });
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                //#endregion
+
+                //#region 하단바 : 공연의 찜 키워드 , 관심없음 키워드
+                /**
+                 * 공연 찜 키워드를 가져옴
+                 *
+                 */
+               // 전체 공연 키워드 목록을 클라이언트에서 미리 정의
+                const allKeywords = [
+                    "연극", "무용", "대중무용", "서양음악(클래식)", "한국음악(국악)", "대중음악", "복합", "서커스/마술", "콘서트"
+                ];
+
+                // 공연 찜 키워드를 서버에서 가져와 UI에 표시하는 함수
+                async function findPerformanceLoveKeyword() {
+                    try {
+                        // 사용자가 선호하는 키워드만 서버에서 가져옴
+                        let response = await axios({
+                            url: '/performance/getUserKeywords',
+                            method: 'GET',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            }
+                        });
+
+                        let loveKeywords = response.data.keywords || [];
+
+                        console.log("findPerformanceLoveKeyword()");
+                        console.log('LoveKeywords : ', loveKeywords);
+
+                        // 키워드를 UI에 표시
+                        displayPerformanceKeywords(loveKeywords);
+                    } catch (error) {
+                        console.error('Error fetching performance keywords:', error);
+                    }
+                }
+
+                // 키워드를 UI에 표시하는 함수
+                function displayPerformanceKeywords(loveKeywords) {
+                    $('#performanceKeywordList').empty(); // 기존 키워드를 모두 비움
+                    let concatLove = '';
+
+                    // 모든 키워드를 순회하며 UI에 표시
+                    allKeywords.forEach(keyword => {
+                        // 사용자가 선호하는 키워드인지 확인
+                        const isLove = loveKeywords.some(loveKeyword => loveKeyword.genre === keyword);
+
+                        let htmlContent = '';
+                        if (isLove) {
+                            // 선호하는 키워드인 경우 강조 표시
+                            htmlContent = `<button value="${keyword}" class="performanceLoveKeywordBtn bigLove">${keyword}</button>`;
+                            concatLove += keyword + ",";
+                        } else {
+                            // 그렇지 않은 키워드는 기본 스타일로 표시
+                            htmlContent = `<button value="${keyword}" class="performanceLoveKeywordBtn">${keyword}</button>`;
+                        }
+
+                        // 키워드를 HTML에 추가
+                        $('#performanceKeywordList').append(htmlContent);
+                    });
+
+                    // 선택된 키워드를 히든 필드에 저장
+                    $('#performanceKeyword').val(concatLove.trim() + ",");
+                }
+
+                // 공연 찜 키워드 선택 시 색 변화 버튼
+                $(document).on('click', '.performanceLoveKeywordBtn', function () {
+                    $(this).toggleClass('bigLove');
+                    const $btns = document.querySelectorAll('button.bigLove.performanceLoveKeywordBtn');
+                    let concat = '';
+
+                    $btns.forEach(function (btn) {
+                        concat += (btn.value + ",");
+                    });
+
+                    $('#performanceKeyword').val(concat.trim());
+
+                    console.log('performanceKeyword : ', $('#performanceKeyword').val());
+                });
+
+                // 페이지 로드 시 공연 찜 키워드를 불러옴
+                findPerformanceLoveKeyword();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                 //#endregion
 
 
@@ -3158,6 +3301,8 @@
     </script>
 
 
+
+
 </head>
 <body>
 
@@ -3304,48 +3449,10 @@
 
                 <div id="upper">
 
-                    아아
+
 
                 </div>
 
-
-                <!--             <div class="none" id="downZone">
-
-                                <div id="down">
-                                    <div id="performanceZone">
-                                        <div id="performanceKeywordList">
-                                        </div>
-                                        <button class="btn btn-outline-success" id="addPerformanceLoveKeyword" value="1">공연 키워드 추가
-                                        </button>
-                                    </div>
-                                    <div id="exhibitionZone">
-                                        <div id="exhibitionKeywordList">
-                                        </div>
-                                        <button class="btn btn-outline-success" id="addExhibitionLoveKeyword" value="">전시 키워드 추가
-                                        </button>
-                                    </div>
-                                    <div id="festivalZone">
-                                        <div id="festivalKeywordList">
-                                        </div>
-                                        <button class="btn btn-outline-success" id="addFestivalLoveKeyword" value="1">축제 키워드 추가</button>
-                                    </div>
-                                    <div id="culturalPropertiesZone">
-                                        <div id="culturalPropertiesKeywordList">
-                                        </div>
-                                        <button class="btn btn-outline-success" id="addCulturalPropertiesLoveKeyword" value="1">문화재 키워드
-                                            추가
-                                        </button>
-                                    </div>
-                                    <div id="updateBtnZone">
-                                        <form id="insertUserBigLoveHateKeyword" style="font-size: 28px;">
-                                            <input id="performanceKeyword" name="performanceKeyword" type="hidden">
-                                            <input id="exhibitionKeyword" name="exhibitionKeyword" type="hidden">
-                                            <input id="festivalKeyword" name="festivalKeyword" type="hidden">
-                                            <input id="culturalPropertiesKeyword" name="culturalPropertiesKeyword" type="hidden">
-                                            <input id="loveOrHate" name="loveOrHate" type="hidden" value="L">
-                                            <button class="btn btn-outline-success" id="keywordCountUpdate" type="button">선호 키워드 수정
-                                            </button>
-                                        </form> -->
 
             </div>
 
