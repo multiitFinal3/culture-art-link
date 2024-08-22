@@ -1,14 +1,14 @@
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     const imageUpload = document.getElementById('imageUpload');
     const editor = document.getElementById('editor');
 
     const cancelBtn = document.querySelector('.cancel-btn');
 
-    cancelBtn.addEventListener('click', function() {
+    cancelBtn.addEventListener('click', function () {
         history.back();
     });
 
-    imageUpload.addEventListener('change', async function(e) {
+    imageUpload.addEventListener('change', async function (e) {
         const file = e.target.files[0];
         if (file) {
             try {
@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
                 // 서버로 이미지 전송
-                const response =  await axios.post('/file/upload', formData, {
+                const response = await axios.post('/file/upload', formData, {
                     headers: {
                         'Content-Type': 'multipart/form-data'
                     }
@@ -38,7 +38,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    document.getElementById('writeForm').addEventListener('submit',  async function(e) {
+    document.getElementById('writeForm').addEventListener('submit', async function (e) {
         e.preventDefault();
         const title = document.getElementById('title').value;
         const content = editor.innerHTML;
@@ -48,7 +48,12 @@ document.addEventListener('DOMContentLoaded', function() {
         console.log('내용:', content);
         console.log('category:', category);
 
-        await axios.post('/board',{
+        if (!content) {
+            alert('내용을 작성해 주세요.')
+            return;
+        }
+
+        await axios.post('/board', {
             title,
             content,
             genre: category
