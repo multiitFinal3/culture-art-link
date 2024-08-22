@@ -840,7 +840,9 @@
     <div class="container">
         <div class="top-section">
             <div class="detail-card">
-                <img class="thumbnail" th:src="${property.mainImgUrl}" alt="문화재 이미지" />
+                <img class="thumbnail"
+                     th:src="${property.mainImgUrl != null and !property.mainImgUrl.isEmpty()} ? ${property.mainImgUrl} : 'http://www.cha.go.kr/unisearch/images/no_image.gif'"
+                     th:alt="${property.culturalPropertiesName}" />
 
             </div>
             <div class="info-section">
@@ -928,10 +930,16 @@
             <div class="related-info" id="detailInfo">
                 <div class="title">관련정보</div>
                 <div class="content">
-                    <!-- 여기에 문화재 관련 정보가 동적으로 추가됩니다 -->
+                    <!-- 여기에 문화재 관련 정보가 동적으로 추가됨-->
                     <br><br>
                     <div class="title">상세설명</div>
-                    <div class="info-content" th:text="${property.content}">상세 설명</div>
+
+                    <div class="info-content"
+                         th:text="${property.content != null and !property.content.isEmpty()} ? ${property.content} : '설명이 아직 없습니다.'"
+                         th:style="${property.content == null or property.content.isEmpty()} ? 'color: #999;' : ''">
+                        상세 설명
+                    </div>
+
                     <br><br>
 
 
@@ -961,7 +969,6 @@
                 </div>
             </div>
 
-
             <div class="related-info" id="mapInfo" style="display: none;">
                 <div class="title">관련정보</div>
                 <br>
@@ -988,9 +995,8 @@
 
                     <!-- 리뷰 키워드 섹션 추가 -->
                     <section id="reviewKeywords">
-<!--                        <h3>리뷰 키워드</h3>-->
                         <div class="review-keywords">
-                            <!-- 여기에 리뷰 키워드가 동적으로 추가됩니다 -->
+                            <!-- 여기에 리뷰 키워드가 동적으로 추가됨 -->
                             <span th:each="keyword : ${reviewKeywords}" class="review-keyword" th:text="${keyword}"></span>
                         </div>
                     </section>
@@ -1083,15 +1089,14 @@
 
                     </section>
 
-                    <br><br><br><br>
+                    <br><br>
 
                 </div>
             </div>
 
 
-
         </div>
-
+        <br><br><br>
 
         <!-- 모달 구조 -->
         <div class="modal fade" id="mediaModal" tabindex="-1" aria-labelledby="mediaModalLabel" aria-hidden="true">
@@ -1109,15 +1114,6 @@
             </div>
         </div>
 
-
-
-<!--        <section class="reviews2">-->
-<!--&lt;!&ndash;            <h2>리뷰 <span id="totalReviewCount">0</span></h2>&ndash;&gt;-->
-<!--            <a th:href="@{/cultural-properties/detail/{id}/review/detail(id=${property.id})}" class="more-reviews-link">리뷰 더보기</a>-->
-<!--            <ul id="reviewsList">-->
-<!--                &lt;!&ndash; 리뷰가 동적으로 추가됩니다 &ndash;&gt;-->
-<!--            </ul>-->
-<!--        </section>-->
     </div>
 </div>
 </body>
