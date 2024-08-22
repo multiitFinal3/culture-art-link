@@ -75,6 +75,7 @@ dependencies {
 	implementation group: 'org.nd4j', name: 'nd4j-native-platform', version: '1.0.0-M2.1'
 
 	implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
+	implementation("com.google.guava:guava:33.3.0-jre")
 
 //	implementation 'org.springframework.boot:spring-boot-starter-web'
 
