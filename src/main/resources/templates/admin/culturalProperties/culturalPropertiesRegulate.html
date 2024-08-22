@@ -63,7 +63,7 @@
     }
 
     #culturalPropertiesAPI th:nth-child(3) {
-        width: 40%; /* 세 번째 열 너비 */
+        width: 33%; /* 세 번째 열 너비 */
     }
 
     #culturalPropertiesAPI th:nth-child(4) {
@@ -71,10 +71,13 @@
     }
 
     #culturalPropertiesAPI th:nth-child(5) {
-        width: 15%; /* 다섯 번째 열 너비 */
+        width: 12%; /* 다섯 번째 열 너비 */
     }
 
     #culturalPropertiesAPI th:nth-child(6) {
+        width: 10%; /* 여섯 번째 열 너비 */
+    }
+    #culturalPropertiesAPI th:nth-child(7) {
         width: 25%; /* 여섯 번째 열 너비 */
     }
 
@@ -325,45 +328,6 @@
                         <br>
                         </div>
 
-<!--                        <label>종목:</label>-->
-<!--                        <select id="categoryFilter2">-->
-<!--                            <option value="전체">전체</option>-->
-<!--                            <option value="category1">국보</option>-->
-<!--                            <option value="category2">보물</option>-->
-<!--                            <option value="category3">사적</option>-->
-<!--                            <option value="category4">사적및명승</option>-->
-<!--                            <option value="category5">명승</option>-->
-<!--                            <option value="category6">천연기념물</option>-->
-<!--                            <option value="category7">국가무형유산</option>-->
-<!--                            <option value="category8">국가민속문화유산</option>-->
-<!--                            <option value="category9">시도유형문화유산</option>-->
-<!--                            <option value="category10">시도무형유산</option>-->
-<!--                            <option value="category11">시도기념물</option>-->
-<!--                            <option value="category12">시도민속문화유산</option>-->
-<!--                            <option value="category13">시도등록유산</option>-->
-<!--                            <option value="category14">문화유산자료</option>-->
-<!--                            <option value="category15">국가등록유산</option>-->
-<!--                            <option value="category16">이북5도 무형유산</option>-->
-<!--                        </select>-->
-
-<!--                        <input type="text" id="searchName2" maxlength="20" placeholder="문화재 이름" />-->
-<!--                        <input type="text" id="searchRegion2" maxlength="10" placeholder="지역"/>-->
-<!--                        <input type="text" id="searchDynasty2" maxlength="10" placeholder="시대"/>-->
-
-<!--&lt;!&ndash;                        <button id="searchDB2" class="btn btn-outline-primary ml-3" >검색</button>&ndash;&gt;-->
-<!--&lt;!&ndash;                        <button id="reset2" class="btn btn-outline-primary ml-3" >초기화</button>&ndash;&gt;-->
-
-<!--&lt;!&ndash;                        <button id="searchDB2" class="btn btn-primary ml-3" >검색</button>&ndash;&gt;-->
-<!--&lt;!&ndash;                        <button id="reset2" class="btn btn-primary ml-3" >초기화</button>&ndash;&gt;-->
-
-<!--&lt;!&ndash;                        <button id="searchDB2" class="btn-outline-primary" type="button">&ndash;&gt;-->
-<!--                        <button id="searchDB2" class="btn-primary" type="button">-->
-<!--                            <img src="https://kr.object.ncloudstorage.com/team3/common/search.png" alt="검색" style="width: 20px; height: 20px;">-->
-<!--                        </button>-->
-<!--&lt;!&ndash;                        <button id="reset2" class="btn btn-outline-secondary" type="button" style=" margin-right: 10px;">&ndash;&gt;-->
-<!--                        <button id="reset2" class="btn btn-secondary" type="button" style=" margin-right: 10px;">-->
-<!--                            <img src="https://kr.object.ncloudstorage.com/team3/common/x.png" alt="초기화" style="width: 20px; height: 20px;">-->
-<!--                        </button>-->
 
                     </div>
 
@@ -372,8 +336,7 @@
                 <div class="col d-flex justify-content-end align-items-center">
                     <button type="button" id="addDB" class="btn btn-primary ml-3" style="margin-top: 10px;">DB 추가</button>
                 </div>
-<!--            </div>-->
-<!--        </div>-->
+
         </div>
 
         <table class="table table-striped" id="culturalPropertiesAPI">
@@ -387,6 +350,7 @@
                 <th scope="col">문화재 이름</th>
                 <th scope="col">종목</th>
                 <th scope="col">지역</th>
+                <th scope="col">시ㆍ군ㆍ구</th>
                 <th scope="col">시대</th>
             </tr>
             </thead>

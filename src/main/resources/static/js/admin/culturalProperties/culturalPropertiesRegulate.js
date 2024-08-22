@@ -178,6 +178,7 @@ $(document).ready(function() {
                         '<td class="culturalPropertiesName">' + culturalProperties.culturalPropertiesName + '</td>' +
                         '<td class="categoryName">' + culturalProperties.categoryName + '</td>' +
                         '<td class="region">' + culturalProperties.region + '</td>' +
+                        '<td class="district">' + culturalProperties.district + '</td>' +
                         '<td class="dynasty">' + culturalProperties.dynasty + '</td></tr>';
 
                     var finalHtml = htmlCheck + htmlContent;
