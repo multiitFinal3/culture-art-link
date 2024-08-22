@@ -27,61 +27,7 @@ $(document).ready(function() {
 
     showPage(0);
 
-    function loadRecentReviews() {
-        const urlParts = window.location.pathname.split('/');
-        const culturalPropertiesId = urlParts[urlParts.length - 1];
 
-
-        fetch(`/cultural-properties/detail/${culturalPropertiesId}/review`)
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('네트워크 오류 발생');
-                }
-                return response.json();
-            })
-            .then(data => {
-                const reviews = data.reviews;
-                const totalReviews = data.totalReviews || 0;
-                const reviewsContainer = document.getElementById('reviewsList');
-
-                reviewsContainer.innerHTML = '';
-                document.querySelector('#totalReviewCount').textContent = totalReviews;
-
-                if (totalReviews === 0) {
-                    reviewsContainer.innerHTML = '<li class="no-reviews">리뷰가 아직 없습니다.</li>';
-                } else {
-                    reviews.forEach(review => {
-                        const reviewHtml = `
-                            <li class="review">
-                                <div class="user-info">
-                                    <img src="${review.userProfileImage || '/img/festival/noPhoto.png'}" alt="${review.userName}">
-                                    <div class="user-details">
-                                        <span>${review.userName}</span>
-                                        <span style="font-size: 13px; color: #999;">${new Date(review.createdAt).toLocaleString()}</span>
-                                        <div class="review-rating" data-rating="${review.star}">
-                                            ${Array.from({ length: 5 }, (_, index) => {
-                                                return index < review.star ?
-                                                    `<span class="review-star">&#9733;</span>` :
-                                                    `<span class="review-star empty">&#9734;</span>`;
-                                            }).join('')}
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="review-content">
-                                    <p>${review.content}</p>
-                                </div>
-                            </li>
-                        `;
-                        reviewsContainer.innerHTML += reviewHtml;
-                    });
-                }
-            })
-            .catch(error => {
-                console.error('리뷰 로드 실패:', error);
-            });
-    }
-
-    loadRecentReviews();
 
 
     function initializeInterestButtons() {

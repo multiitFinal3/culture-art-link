@@ -34,7 +34,15 @@ $(document).ready(function() {
             const item = $('<div>').addClass('all-cultural-property-item');
             const link = $('<a>').attr('href', `/cultural-properties/detail/${property.id}`);
             const card = $('<div>').addClass('all-card').attr('data-cultural-property-id', property.id);
-            const img = $('<img>').attr('src', property.mainImgUrl).attr('alt', property.culturalPropertiesName);
+            const img = $('<img>')
+                .attr('src', property.mainImgUrl && property.mainImgUrl.trim() !== ''
+                    ? property.mainImgUrl
+                    : 'http://www.cha.go.kr/unisearch/images/no_image.gif'
+                )
+                .attr('alt', property.culturalPropertiesName)
+                .on('error', function() {
+                    $(this).attr('src', 'http://www.cha.go.kr/unisearch/images/no_image.gif');
+                });
             const info = $('<div>').addClass('all-cultural-property-info');
             const title = $('<div>').addClass('all-title').text(property.culturalPropertiesName);
             const location = $('<div>').addClass('all-location').text((property.region && property.district) ? `${property.region} ${property.district}` : '위치정보가 없습니다').css('margin-bottom', '0');
@@ -442,7 +450,16 @@ $(document).ready(function() {
             const item = $('<div>').addClass('all-cultural-property-item');
             const link = $('<a>').attr('href', `/cultural-properties/detail/${property.id}`);
             const card = $('<div>').addClass('all-card').attr('data-cultural-property-id', property.id);
-            const img = $('<img>').attr('src', property.mainImgUrl || '/img/festival/noPhoto.png').attr('alt', property.culturalPropertiesName);
+//            const img = $('<img>').attr('src', property.mainImgUrl || '/img/festival/noPhoto.png').attr('alt', property.culturalPropertiesName);
+            const img = $('<img>')
+                .attr('src', property.mainImgUrl && property.mainImgUrl.trim() !== ''
+                    ? property.mainImgUrl
+                    : 'http://www.cha.go.kr/unisearch/images/no_image.gif'
+                )
+                .attr('alt', property.culturalPropertiesName)
+                .on('error', function() {
+                    $(this).attr('src', 'http://www.cha.go.kr/unisearch/images/no_image.gif');
+                });
             const info = $('<div>').addClass('all-cultural-property-info');
             const title = $('<div>').addClass('all-title').text(property.culturalPropertiesName);
             const location = $('<div>').addClass('all-location').text((property.region && property.district) ? `${property.region} ${property.district}` : '위치정보가 없습니다');

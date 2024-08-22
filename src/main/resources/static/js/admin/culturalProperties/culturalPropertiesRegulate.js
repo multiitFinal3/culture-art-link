@@ -178,6 +178,7 @@ $(document).ready(function() {
                         '<td class="culturalPropertiesName">' + culturalProperties.culturalPropertiesName + '</td>' +
                         '<td class="categoryName">' + culturalProperties.categoryName + '</td>' +
                         '<td class="region">' + culturalProperties.region + '</td>' +
+                        '<td class="district">' + culturalProperties.district + '</td>' +
                         '<td class="dynasty">' + culturalProperties.dynasty + '</td></tr>';
 
                     var finalHtml = htmlCheck + htmlContent;
@@ -192,6 +193,8 @@ $(document).ready(function() {
                 setTimeout(function() {
                     $('#loadingIndicator').hide();
                 });
+
+                disableCheckboxes();
 
 
             },
@@ -221,7 +224,9 @@ $(document).ready(function() {
                 disableCheckboxes();
 
                 $.each(list, function(index, culturalProperties) {
+
                     var htmlCheck = '<tr><td><input class="check1" type="checkbox" name="index" value="' + index + '"/></td>';
+
                     var htmlContent =
                         '<td class="id">' + culturalProperties.id + '</td>' +
                         '<td class="culturalPropertiesName">' + culturalProperties.culturalPropertiesName + '</td>' +
@@ -234,7 +239,7 @@ $(document).ready(function() {
                         '<td class="classifyB">' + culturalProperties.classifyB + '</td>' +
                         '<td class="classifyC">' + culturalProperties.classifyC + '</td>' +
                         '<td class="classifyD">' + culturalProperties.classifyD + '</td>' +
-                        '<td class="mainImgUrl"><img src="' + culturalProperties.mainImgUrl + '" style="max-width: 100px; max-height: 100px;"></td>';
+                        '<td class="mainImgUrl"><img src="' + (culturalProperties.mainImgUrl && culturalProperties.mainImgUrl.trim() !== '' ? culturalProperties.mainImgUrl : 'http://www.cha.go.kr/unisearch/images/no_image.gif') + '" style="max-width: 100px; max-height: 100px;"></td>';
 
 
                     // 날짜 포맷팅 함수 정의
@@ -353,7 +358,8 @@ $(document).ready(function() {
     $(document).on('click', '.page-num2, .prev-link, .next-link, .first-link, .last-link', function(e) {
         e.preventDefault();
         var pageIndex = parseInt($(this).attr('data-page'));
-        if (!isNaN(pageIndex) && pageIndex !== currentPage2) {
+//        if (!isNaN(pageIndex) && pageIndex !== currentPage2) {
+        if (!isNaN(pageIndex)) {
             currentPage2 = pageIndex; // 클릭된 페이지를 현재 페이지로 설정
             fetchApiData(pageIndex); // 데이터 불러오기
         }
@@ -401,11 +407,15 @@ $(document).ready(function() {
                 // 추가된 데이터를 문화재 DB 현황 테이블에 업데이트
                 getDBData(1); // 데이터베이스 데이터 다시 불러오기
 
+                findtotalDBData();
 
                 // 체크박스 비활성화 처리
                 $('.check2:checked').prop('disabled', true);
 
                 $('#loadingIndicator').hide();
+//console.log("currentPage2 ::::::"+currentPage2);
+                fetchApiData(currentPage2);
+
             }
         });
     });
