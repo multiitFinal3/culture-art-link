@@ -132,7 +132,7 @@ public class PerformanceController {
             return "redirect:/performance/performance-home";
         }
 
-        String date = "20240819"; // 일간 데이터 날짜
+        String date = "20240820"; // 일간 데이터 날짜
         List<PerformanceDTO> rankingData = performanceRankingService.fetchGenreRanking(genre, date, 5);
         System.out.println("Fetched Data: " + rankingData); // 로그 추가
 
@@ -200,7 +200,7 @@ public class PerformanceController {
      */
     @GetMapping("/genre-rankings")
     public ResponseEntity<List<PerformanceDTO>> getPerformanceGenreRankings(@RequestParam String genre) {
-        String date = "20240819"; // 일간 데이터 날짜
+        String date = "20240820"; // 일간 데이터 날짜
         List<PerformanceDTO> rankingData;
 
         if (genre.equals("전체")) {
@@ -227,7 +227,7 @@ public class PerformanceController {
     public String performanceRankingPage(@AuthenticationPrincipal VWUserRoleDTO user, Model model,
                                          @RequestParam(required = false) String genre) {
         model.addAttribute("user", user.getUser());
-        String date = "20240819"; // 일간 데이터 날짜
+        String date = "20240820"; // 일간 데이터 날짜
         List<PerformanceDTO> rankingData;
 
         if (genre == null || genre.isEmpty() || genre.equals("전체")) {
@@ -246,8 +246,8 @@ public class PerformanceController {
     public String performanceLocationPage(@AuthenticationPrincipal VWUserRoleDTO user,
                                           @RequestParam(required = false) String locationCode,
                                           Model model) {
-        String stdate = "20240818"; // 시작 날짜
-        String eddate = "20240918"; // 종료 날짜
+        String stdate = "20240820"; // 시작 날짜
+        String eddate = "20240920"; // 종료 날짜
 
         System.out.println("Received locationCode: " + locationCode); // Debug line
 
