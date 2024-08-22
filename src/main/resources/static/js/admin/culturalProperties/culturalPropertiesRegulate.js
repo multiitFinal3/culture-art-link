@@ -328,7 +328,6 @@ $(document).ready(function() {
                         htmlContent += '-';
                     }
 
-//                    htmlContent +=  '<td><button class="btn btn-outline-primary" id="updateDB" data-index="' + index + '">수정</button></td>';
 
                     htmlContent +=  '<td><button class="btn btn-primary" id="updateDB" data-index="' + index + '">수정</button></td>';
 
@@ -1187,8 +1186,6 @@ $(document).ready(function() {
             } else {
                 htmlContent += '-';
             }
-
-//            htmlContent +=  '<td><button class="btn btn-outline-primary" data-index="' + index + '">수정</button></td>';
 
             htmlContent +=  '<td><button class="btn btn-primary" data-index="' + index + '">수정</button></td>';
 

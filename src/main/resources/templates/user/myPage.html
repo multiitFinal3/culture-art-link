@@ -1269,8 +1269,10 @@
                                 var actionBtns = ``;
                                 var reviewStarHtml = ``;
                                 var reviewUserId = review.userId;
-                                var reviewStarNum = review.performanceReviewStar;
+                                var reviewStarNum = review.starRating;
                                 var time = review.updatedAt.replace("T", " ").slice(0, 19);
+                                var performanceCode = review.code || ''; // review 객체에서 performanceCode 가져오기
+
 
                                 if ((review.userProfileImage == null) || (review.userProfileImage == "")) {
                                     profilePic = `<img src="https://kr.object.ncloudstorage.com/team3/common/noPhoto.png" alt="이미지 없음">`;
@@ -1287,11 +1289,10 @@
 
                                 actionBtns = `
                                     <div class="review-actions">
-                                        <button class="update btn btn-outline-success" onclick="location.href='/performance/performance-detail?performanceId=${review.festivalId}'">상세</button>
-                                        <button class="update btn btn-outline-success" value="${review.performanceReviewId}" type="button">수정</button>
-                                        <button class="deleteBtn btn btn-outline-success" value="${review.performanceReviewId}">삭제</button>
-                                        <button class="editBtn hide btn btn-outline-success" value="${review.performanceReviewId}">저장</button>
-                                        <button class="cancelBtn hide btn btn-outline-success" value="${review.performanceReviewId}">취소</button>
+                                        <button class="detail3 btn btn-outline-success" onclick="location.href='/performance/performanceDetail?performanceCode=${performanceCode}&source=db'">상세</button>
+                                        <button class="deleteBtn3 btn btn-outline-success" value="${review.performanceReviewId}">삭제</button>
+                                        <button class="editBtn3 hide btn btn-outline-success" value="${review.performanceReviewId}">저장</button>
+                                        <button class="cancelBtn3 hide btn btn-outline-success" value="${review.performanceReviewId}">취소</button>
                                     </div>
                                 `;
 
@@ -2554,19 +2555,18 @@
                 });
 
 
-                //문화재 리뷰
+
 
                 function loadMyReviews(page = 0) {
                     $.ajax({
                         url: '/cultural-properties/myReviews',
                         method: 'GET',
-                        data: {page: page},
-                        success: function (response) {
+                        data: { page: page },
+                        success: function(response) {
                             $('#upper').html("");
                             $('#upper').removeClass("scroll");
                             $('#upper').addClass("page");
-                            var reviewCount = response.totalItems; // 총 리뷰 수
-
+                            var reviewCount = response.totalItems;
 
                             var reviewsHtml = `
                                 <div id="reviewListHead">
@@ -2579,124 +2579,189 @@
                                 `;
 
 
-                            // 리뷰가 없는 경우 메시지 추가
                             if (reviewCount === 0) {
                                 reviewsHtml += '<br><br><br><br><br><div class="no-reviews" style="font-size: 20px;">리뷰가 없습니다. 리뷰를 작성해보세요.</div><br><br><br><br><br>';
                             } else {
-                                response.reviews.forEach(function (review) {
-                                    // createdAt 값을 Date 객체로 변환
-                                    const createdAt = new Date(review.createdAt);
-                                    // (YYYY-MM-DD HH:mm:ss) 형식으로 날짜 포맷팅
-                                    const formattedDate = createdAt.toISOString().slice(0, 19).replace('T', ' ') + '             ';
+                                response.reviews.forEach(function(review) {
 
-                                    // updatedAt 포맷팅 (updatedAt이 존재하는 경우)
-                                    const updatedAtHtml = review.updatedAt && review.updatedAt !== review.createdAt
-                                        ? ` 수정 : ${new Date(review.updatedAt).toISOString().slice(0, 19).replace('T', ' ')}`
-                                        : '';
+                                // 서버 시간을 한국 시간으로 변환
+                                const createdAt = new Date(review.createdAt);
+                                createdAt.setHours(createdAt.getHours() + 9); // UTC+9 (한국 시간)
+                                const formattedDate = createdAt.toISOString().slice(0, 19).replace('T', ' ');
 
-                                    reviewsHtml += `
-                                        <div class="review">
-                                            <div class="user-info">
-                                                <img src="${review.userProfileImage ? 'https://kr.object.ncloudstorage.com/team3' + review.userProfileImage : 'https://kr.object.ncloudstorage.com/team3/img/festival/noPhoto.png'}" alt="${review.userName}" style="margin-right: 20px;">
-                                                <div class="user-details">
-                                                    <span>${review.userName}</span>
-                                                    <span style="font-size: 13px; color: #999;">
-                                                        ${formattedDate}   ${updatedAtHtml}
-                                                    </span>
-                                                    <div class="review-rating" data-rating="${review.star}">
-                                                        ${Array.from({length: 5}, (_, index) => {
-                                        if (index < review.star) {
-                                            return '<span class="goldStar">&#9733;</span>';
-                                        } else {
-                                            return '<span class="review-star empty">&#9734;</span>';
-                                        }
-                                    }).join('')}
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="review-content">
-                                                <p class="review-content-p-${review.id}">${review.content}</p>
-                                                <div class="review-text-container">
-                                                    <textarea id="editContent-${review.id}" rows="5" style="display:none;" value="${review.content}">${review.content}</textarea>
-                                                </div>
-                                            </div>
-                                            <div class="review-actions">
-                                                <button type="button" class="btn btn-outline-success detail-btn" onclick="location.href='/cultural-properties/detail/${review.culturalPropertiesId}'">상세</button>
-                                                <button type="button" class="btn btn-outline-success edit-btn" id="edit-btn-${review.id}" data-id="${review.id}">수정</button>
-                                                <button type="button" class="btn btn-outline-success delete-btn" id="delete-btn-${review.id}" data-id="${review.id}" data-cultural-id="${review.culturalPropertiesId}">삭제</button>
-                                                <button type="button" class="btn btn-outline-success save-btn" id="save-btn-${review.id}" style="display:none;" data-id="${review.id}" data-cultural-id="${review.culturalPropertiesId}">저장</button>
-                                                <button type="button" class="btn btn-outline-success cancel-btn" id="cancel-btn-${review.id}" style="display:none;">취소</button>
+                                const updatedAtHtml = review.updatedAt && review.updatedAt !== review.createdAt
+                                    ? (() => {
+                                        const updatedAt = new Date(review.updatedAt);
+                                        updatedAt.setHours(updatedAt.getHours() + 9);
+                                        return ` 수정 : ${updatedAt.toISOString().slice(0, 19).replace('T', ' ')}`;
+                                      })()
+                                    : '';
+
+
+
+                                        var starRatingHtml = `
+                                    <div class="review-rating" data-rating="${review.star}">
+                                        ${Array.from({ length: 5 }, (_, index) =>
+                                            `<span class="review-star ${index < review.star ? '' : 'empty'}" data-value="${index + 1}">${index < review.star ? '&#9733;' : '&#9734;'}</span>`
+                                        ).join('')}
+                                    </div>
+                                `;
+
+                                reviewsHtml += `
+                                    <div class="review">
+                                        <div class="user-info">
+                                            <img src="${review.userProfileImage ? 'https://kr.object.ncloudstorage.com/team3' + review.userProfileImage : 'https://kr.object.ncloudstorage.com/team3/img/festival/noPhoto.png'}" alt="${review.userName}" style="margin-right: 20px;">
+                                            <div class="user-details">
+                                                <span>${review.userName}</span>
+                                                <span style="font-size: 13px; color: #999;">
+                                                    ${formattedDate}   ${updatedAtHtml}
+                                                </span>
+                                                ${starRatingHtml}
                                             </div>
                                         </div>
-                                    `;
+                                        <div class="review-content">
+                                            <p class="review-content-p-${review.id}" style="margin-top: 20px;">${review.content}</p>
+                                            <div class="review-text-container" style="display:none;">
+                                                <textarea id="editContent-${review.id}" rows="5">${review.content}</textarea>
+                                            </div>
+                                        </div>
+                                        <div class="review-actions">
+                                            <button type="button" class="btn btn-outline-success detail-btn" onclick="location.href='/cultural-properties/detail/${review.culturalPropertiesId}'">상세</button>
+                                            <button type="button" class="btn btn-outline-success edit-btn" id="edit-btn-${review.id}" data-id="${review.id}">수정</button>
+                                            <button type="button" class="btn btn-outline-success delete-btn" id="delete-btn-${review.id}" data-id="${review.id}" data-cultural-id="${review.culturalPropertiesId}">삭제</button>
+                                            <button type="button" class="btn btn-outline-success save-btn" id="save-btn-${review.id}" style="display:none;" data-id="${review.id}" data-cultural-id="${review.culturalPropertiesId}">저장</button>
+                                            <button type="button" class="btn btn-outline-success cancel-btn" id="cancel-btn-${review.id}" style="display:none;">취소</button>
+                                        </div>
+                                    </div>
+                                `;
+
                                 });
                             }
+
+                            
+
+
 
 
                             // 페이징 버튼 추가
                             reviewsHtml += '<div class="cpagination">';
                             for (let i = 0; i < response.totalPages; i++) {
-                                reviewsHtml += `<button class="page-btn" data-page="${i}" style="font-size: 20px; margin: 0.5%">${i + 1}</button>`;
+                                reviewsHtml += `<button class="page-btn${i === page ? ' active' : ''}" data-page="${i}" style="font-size: 20px; margin: 0.5%">${i + 1}</button>`;
                             }
                             reviewsHtml += '</div></div>';
 
                             $('#upper').html(reviewsHtml);
 
                             // 페이지 버튼 클릭 이벤트
-                            $('.page-btn').click(function () {
-                                loadMyReviews($(this).data('page'));
+                            $('.page-btn').click(function() {
+                                var clickedPage = $(this).data('page');
+                                $('.page-btn').removeClass('active');
+                                $(this).addClass('active');
+                                loadMyReviews(clickedPage);
+                            });
+
+                            // 별점 클릭 이벤트 (수정 모드에서만 작동)
+                            $(document).on('click', '.review-rating.editable .review-star', function() {
+                                var value = $(this).data('value');
+                                var container = $(this).closest('.review-rating');
+                                container.find('.review-star').each(function(index) {
+                                    if (index < value) {
+                                        $(this).removeClass('empty').html('&#9733;');
+                                    } else {
+                                        $(this).addClass('empty').html('&#9734;');
+                                    }
+                                });
+                                container.attr('data-rating', value);
                             });
 
                             // 수정 버튼 클릭 이벤트
-                            $('.edit-btn').click(function () {
+                            $(document).on('click', '.edit-btn', function() {
                                 var reviewId = $(this).data('id');
-                                $(this).hide();
-                                $('#delete-btn-' + reviewId).hide();
-                                $('#save-btn-' + reviewId).show();
-                                $('#cancel-btn-' + reviewId).show();
-                                $('.review-content-p-' + reviewId).hide();
-                                $('#editContent-' + reviewId).show();
-                            });
+                                var reviewContainer = $(this).closest('.review');
 
-                            // 취소 버튼 클릭 이벤트
-                            $('.cancel-btn').click(function () {
-                                var reviewId = $(this).attr('id').split('-')[2];
-                                $('#edit-btn-' + reviewId).show();
-                                $('#delete-btn-' + reviewId).show();
-                                $(this).hide();
-                                $('#save-btn-' + reviewId).hide();
-                                $('.review-content-p-' + reviewId).show();
-                                $('#editContent-' + reviewId).hide();
-                            });
+                                reviewContainer.find('.review-content-p-' + reviewId).hide();
+                                reviewContainer.find('.review-text-container').show();
 
+                                // 별점을 클릭 가능하게 변경
+                                reviewContainer.find('.review-rating').addClass('editable');
+
+                                $(this).hide();
+                                reviewContainer.find('.delete-btn').hide();
+                                reviewContainer.find('.save-btn, .cancel-btn').show();
+                            });
 
                             // 저장 버튼 클릭 이벤트
-                            $('.save-btn').click(function () {
+
+                            $(document).on('click', '.save-btn', function() {
                                 var reviewId = $(this).data('id');
                                 var culturalPropertiesId = $(this).data('cultural-id');
-                                var content = $('#editContent-' + reviewId).val();
+                                var reviewContainer = $(this).closest('.review');
+                                var content = reviewContainer.find('#editContent-' + reviewId).val().trim();
+                                var newRating = parseInt(reviewContainer.find('.review-rating').attr('data-rating'));
+
+                                if (content === '') {
+                                    alert("리뷰 내용을 입력해주세요.");
+                                    return;
+                                }
 
                                 $.ajax({
-                                    url: '/cultural-properties/detail/' + culturalPropertiesId + '/review/update',
+                                    url: '/cultural-properties/detail/' + culturalPropertiesId + '/review/edit',
+
+
+                           
                                     method: 'PUT',
                                     contentType: 'application/json',
                                     data: JSON.stringify({
                                         id: reviewId,
-                                        content: content
+                                        content: content,
+                                        star: newRating
                                     }),
-                                    success: function (response) {
+                                    success: function(response) {
                                         alert("리뷰가 성공적으로 수정되었습니다.");
-                                        loadMyReviews(page);
+                                        // 화면 업데이트
+                                        reviewContainer.find('.review-content-p-' + reviewId).text(content).show();
+                                        reviewContainer.find('.review-text-container').hide();
+                                        updateStarRating(reviewContainer.find('.review-rating'), newRating);
+                                        reviewContainer.find('.review-rating').removeClass('editable');
+                                        reviewContainer.find('.edit-btn, .delete-btn').show();
+                                        reviewContainer.find('.save-btn, .cancel-btn').hide();
                                     },
-                                    error: function (xhr, status, error) {
+                                    error: function(xhr, status, error) {
+
                                         alert("리뷰 수정에 실패했습니다.");
                                     }
                                 });
                             });
 
 
+                            // 취소 버튼 클릭 이벤트
+                            $('.cancel-btn').click(function() {
+                                var reviewId = $(this).attr('id').split('-')[2];
+                                var reviewContainer = $(this).closest('.review');
+
+                                reviewContainer.find('.review-content-p-' + reviewId).show();
+                                reviewContainer.find('.review-text-container').hide();
+
+                                // 별점을 원래대로 복구
+                                var originalRating = reviewContainer.find('.review-rating').attr('data-rating');
+                                reviewContainer.find('.review-rating .star').removeClass('editable goldStar emptyStar');
+                                reviewContainer.find('.review-rating .star').each(function(index) {
+                                    if (index < originalRating) {
+                                        $(this).addClass('goldStar');
+                                    } else {
+                                        $(this).addClass('emptyStar');
+                                    }
+                                });
+
+                                reviewContainer.find('.edit-btn, .delete-btn').show();
+                                reviewContainer.find('.save-btn, .cancel-btn').hide();
+                            });
+
+
+
                             // 삭제 버튼 클릭 이벤트
-                            $('.delete-btn').click(function () {
+                            $('.delete-btn').click(function() {
+
                                 var reviewId = $(this).data('id');
                                 var culturalPropertiesId = $(this).data('cultural-id');
 
@@ -2704,19 +2769,23 @@
                                     $.ajax({
                                         url: '/cultural-properties/detail/' + culturalPropertiesId + '/review/remove',
                                         method: 'DELETE',
-                                        data: {id: reviewId},
-                                        success: function (response) {
+
+                                        data: { id: reviewId },
+                                        success: function(response) {
                                             alert("리뷰가 성공적으로 삭제되었습니다.");
                                             loadMyReviews(page);
                                         },
-                                        error: function (xhr, status, error) {
+                                        error: function(xhr, status, error) {
+
                                             alert("리뷰 삭제에 실패했습니다.");
                                         }
                                     });
                                 }
                             });
                         },
-                        error: function (xhr, status, error) {
+
+                        error: function(xhr, status, error) {
+
                             console.error("Error loading reviews:", error);
                             $('#upper').html("<p>리뷰를 불러오는데 실패했습니다.</p>");
                         }
@@ -2724,7 +2793,20 @@
                 }
 
 
+
+                function updateStarRating(container, rating) {
+                    container.attr('data-rating', rating);
+                    container.find('.review-star').each(function(index) {
+                        if (index < rating) {
+                            $(this).removeClass('empty').html('&#9733;');
+                        } else {
+                            $(this).addClass('empty').html('&#9734;');
+                        }
+                    });
+                }
+
                 //#region
+
                 // 문화재 찜키워드, 관심없음 키워드
 
                 let currentPage = 1;
@@ -2736,12 +2818,16 @@
                         method: 'GET',
                         success: function (response) {
                             // 초기 키워드를 모두 초록색으로 표시
+                            var concat="";
+
                             const initialKeywords = response.map(keyword => ({
                                 ...keyword,
                                 isInitial: true  // 초기 키워드임을 표시
                             }));
+                            initialKeywords.forEach(function(keyword) { concat += keyword.keyword + ","; });
                             displayCulturalPropertiesKeywords(initialKeywords);
                             loadUnselectedCulturalPropertiesKeywords();
+                            $('#culturalPropertiesKeyword').val(concat);
                         },
                         error: function (xhr, status, error) {
                             console.error("Error loading initial keywords:", error);
@@ -2821,6 +2907,148 @@
                     currentPage++;
                     loadUnselectedCulturalPropertiesKeywords();
                 });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                //#endregion
+
+                //#region 하단바 : 공연의 찜 키워드 , 관심없음 키워드
+                /**
+                 * 공연 찜 키워드를 가져옴
+                 *
+                 */
+               // 전체 공연 키워드 목록을 클라이언트에서 미리 정의
+                const allKeywords = [
+                    "연극", "무용", "대중무용", "서양음악(클래식)", "한국음악(국악)", "대중음악", "복합", "서커스/마술", "콘서트"
+                ];
+
+                // 공연 찜 키워드를 서버에서 가져와 UI에 표시하는 함수
+                async function findPerformanceLoveKeyword() {
+                    try {
+                        // 사용자가 선호하는 키워드만 서버에서 가져옴
+                        let response = await axios({
+                            url: '/performance/getUserKeywords',
+                            method: 'GET',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            }
+                        });
+
+                        let loveKeywords = response.data.keywords || [];
+
+                        console.log("findPerformanceLoveKeyword()");
+                        console.log('LoveKeywords : ', loveKeywords);
+
+                        // 키워드를 UI에 표시
+                        displayPerformanceKeywords(loveKeywords);
+                    } catch (error) {
+                        console.error('Error fetching performance keywords:', error);
+                    }
+                }
+
+                // 키워드를 UI에 표시하는 함수
+                function displayPerformanceKeywords(loveKeywords) {
+                    $('#performanceKeywordList').empty(); // 기존 키워드를 모두 비움
+                    let concatLove = '';
+
+                    // 모든 키워드를 순회하며 UI에 표시
+                    allKeywords.forEach(keyword => {
+                        // 사용자가 선호하는 키워드인지 확인
+                        const isLove = loveKeywords.some(loveKeyword => loveKeyword.genre === keyword);
+
+                        let htmlContent = '';
+                        if (isLove) {
+                            // 선호하는 키워드인 경우 강조 표시
+                            htmlContent = `<button value="${keyword}" class="performanceLoveKeywordBtn bigLove">${keyword}</button>`;
+                            concatLove += keyword + ",";
+                        } else {
+                            // 그렇지 않은 키워드는 기본 스타일로 표시
+                            htmlContent = `<button value="${keyword}" class="performanceLoveKeywordBtn">${keyword}</button>`;
+                        }
+
+                        // 키워드를 HTML에 추가
+                        $('#performanceKeywordList').append(htmlContent);
+                    });
+
+                    // 선택된 키워드를 히든 필드에 저장
+                    $('#performanceKeyword').val(concatLove.trim() + ",");
+                }
+
+                // 공연 찜 키워드 선택 시 색 변화 버튼
+                $(document).on('click', '.performanceLoveKeywordBtn', function () {
+                    $(this).toggleClass('bigLove');
+                    const $btns = document.querySelectorAll('button.bigLove.performanceLoveKeywordBtn');
+                    let concat = '';
+
+                    $btns.forEach(function (btn) {
+                        concat += (btn.value + ",");
+                    });
+
+                    $('#performanceKeyword').val(concat.trim());
+
+                    console.log('performanceKeyword : ', $('#performanceKeyword').val());
+                });
+
+                // 페이지 로드 시 공연 찜 키워드를 불러옴
+                findPerformanceLoveKeyword();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
                 //#endregion
@@ -3158,6 +3386,8 @@
     </script>
 
 
+
+
 </head>
 <body>
 
@@ -3171,7 +3401,7 @@
 
                     <li>
                         <div class="genre-item">
-                            <a class="userInfo" id="userInfo">회원정보임</a>
+                            <a class="userInfo" id="userInfo">회원정보</a>
                         </div>
                     <li>
 
@@ -3304,48 +3534,10 @@
 
                 <div id="upper">
 
-                    아아
+
 
                 </div>
 
-
-                <!--             <div class="none" id="downZone">
-
-                                <div id="down">
-                                    <div id="performanceZone">
-                                        <div id="performanceKeywordList">
-                                        </div>
-                                        <button class="btn btn-outline-success" id="addPerformanceLoveKeyword" value="1">공연 키워드 추가
-                                        </button>
-                                    </div>
-                                    <div id="exhibitionZone">
-                                        <div id="exhibitionKeywordList">
-                                        </div>
-                                        <button class="btn btn-outline-success" id="addExhibitionLoveKeyword" value="">전시 키워드 추가
-                                        </button>
-                                    </div>
-                                    <div id="festivalZone">
-                                        <div id="festivalKeywordList">
-                                        </div>
-                                        <button class="btn btn-outline-success" id="addFestivalLoveKeyword" value="1">축제 키워드 추가</button>
-                                    </div>
-                                    <div id="culturalPropertiesZone">
-                                        <div id="culturalPropertiesKeywordList">
-                                        </div>
-                                        <button class="btn btn-outline-success" id="addCulturalPropertiesLoveKeyword" value="1">문화재 키워드
-                                            추가
-                                        </button>
-                                    </div>
-                                    <div id="updateBtnZone">
-                                        <form id="insertUserBigLoveHateKeyword" style="font-size: 28px;">
-                                            <input id="performanceKeyword" name="performanceKeyword" type="hidden">
-                                            <input id="exhibitionKeyword" name="exhibitionKeyword" type="hidden">
-                                            <input id="festivalKeyword" name="festivalKeyword" type="hidden">
-                                            <input id="culturalPropertiesKeyword" name="culturalPropertiesKeyword" type="hidden">
-                                            <input id="loveOrHate" name="loveOrHate" type="hidden" value="L">
-                                            <button class="btn btn-outline-success" id="keywordCountUpdate" type="button">선호 키워드 수정
-                                            </button>
-                                        </form> -->
 
             </div>
 
