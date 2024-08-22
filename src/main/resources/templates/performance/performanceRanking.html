@@ -60,7 +60,7 @@
 
     <!-- Ranking Cards -->
     <div class="ranking-container">
-        <div th:each="card : ${rankingData}" class="ranking-card" data-performance-code="${card.code}" data-source="db">
+        <div th:each="card : ${rankingData}" class="ranking-card" th:data-performance-code="${card.code}" th:data-source="db">
             <div class="ranking-position" th:text="${card.rank} + ' 위'">1 위</div>
             <img class="ranking-img" th:src="${card.imageMain}" alt="공연 이미지"/>
             <div class="performance-info">
