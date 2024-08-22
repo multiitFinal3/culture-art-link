@@ -65,7 +65,7 @@ public class CoolSMSController {
 		
 		message.setText("다음 네자리 숫자를 입력해주세요. [" + authNum + "].");
 		
-		redisService.setValues(toNumber, authNum, Duration.ofMillis(5000));
+		redisService.setValues(toNumber, authNum, Duration.ofMillis(1000*60*5));
 		
 		SingleMessageSentResponse response = messageService.sendOne(new SingleMessageSendingRequest(message));
 		
@@ -81,6 +81,8 @@ public class CoolSMSController {
 		tel = tel.replace("-","").trim();
 		
 		String redisNum = redisService.getValues(tel);
+		
+		System.out.println("tel : " + tel + ", authnum : " + authNum + ", redisNum : " + redisNum);
 		
 		if (redisNum.equals(authNum)) {
 			

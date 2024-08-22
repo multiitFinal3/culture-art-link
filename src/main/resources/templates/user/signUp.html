@@ -743,10 +743,11 @@
 
                                 if(bool === true){
                                     $('#smsBool').val("true");
+                                    alert("전화번호 인증 성공!!")
                                     resolve(true);
 
                                 }else{
-
+                                    alert("전화번호 인증 실패")
                                     resolve(false);
 
                                 }
