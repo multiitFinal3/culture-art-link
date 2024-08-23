@@ -110,7 +110,7 @@ public class UserController {
             @RequestParam(name = "email") String email,
             @RequestParam(name = "password") String password,
             @RequestParam(name = "userName") String userName,
-            @RequestParam(name = "tel", required = false) String tel,
+            @RequestParam(name = "tel", required = true) String tel,
             @RequestParam(name = "userAge", required = false) int userAge,
             @RequestParam(name = "gender") String gender,
             @RequestParam(name = "regionId") int regionId,
