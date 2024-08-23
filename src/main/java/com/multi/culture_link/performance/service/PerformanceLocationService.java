@@ -67,6 +67,10 @@ public class PerformanceLocationService {
                 PerformanceDTO dto = new PerformanceDTO();
                 dto.setTitle(getTagValue("prfnm", performance));
                 dto.setLocation(getTagValue("fcltynm", performance));
+                dto.setCode(getTagValue("mt20id", performance));
+
+
+
 
                 String startDateStr = getTagValue("prfpdfrom", performance).trim();
                 String endDateStr = getTagValue("prfpdto", performance).trim();

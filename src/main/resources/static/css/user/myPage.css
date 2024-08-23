@@ -116,6 +116,18 @@ h1 {
   width: 100%;
   display: flex;
   flex-flow: column;
+  align-items: center;
+}
+
+#down{
+
+    display: flex;
+    flex-flow: row;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    width: 1300px;
+
 }
 
 /* 필터 컨테이너 */
@@ -367,6 +379,7 @@ button {
   flex-flow: row;
   align-items: center;
   justify-content: center;
+  background-color: #f7f7f7;
 }
 
 #performanceKeywordList,
@@ -911,12 +924,16 @@ button {
    #festivalZone,
    #culturalPropertiesZone{
 
-       margin: 0.1%;
+       margin: 1%;
        text-align: center;
        display: flex;
        flex-flow: row;
        align-items: center;
        justify-content: center;
+       width: 500px;
+       height: 500px;
+       flex-wrap: wrap;
+       border-radius: 5%;
 
    }
 
@@ -929,12 +946,19 @@ button {
     #culturalPropertiesKeywordList{
 
         font-size: 20px;
-        overflow-x: scroll;
+        overflow-x: clip;
         margin: 3%;
         text-align: center;
         display: flex;
         width: 80%;
+        height: 70%;
+        flex-flow: row;
+        flex-wrap: wrap;
+        overflow-y: scroll;
+        scrollbar-width: thin;
+        scrollbar-color: #e7e1e1 #f1f1f1;
     }
+
 
 
     #addPerformanceLoveKeyword,
@@ -994,12 +1018,14 @@ button {
 
     }
 
-    #keywordCountUpdate{
-
-        width: 500px;
-        height: 100px;
-        font-size: 40px;
-
+    #keywordCountUpdate {
+        width: 1000px;
+        height: 40px;
+        font-size: 15px;
+        margin: 30px;
+        background-color: green;
+        color: white;
+        margin-bottom: 100px;
     }
 
     [class^="star-rating"] {
