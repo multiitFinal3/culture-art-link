@@ -217,7 +217,7 @@
     .active{
 
         padding: 5px 10px;
-        margin: 0 5px;
+/*        margin: 0 5px;*/
         border: 1px solid #ddd;
         background-color: #D9D9D9;
         cursor: pointer;
@@ -248,7 +248,7 @@
 
     #deleteZone{
 
-        width: calc(1519px - 1069px);
+        width: 870px;
         display: flex;
         justify-content: end;
 
@@ -263,7 +263,7 @@
 
     #insertZone{
 
-        width: calc(1504.880px - 632px);
+        width: 1310px;
         display: flex;
         justify-content: end;
 
