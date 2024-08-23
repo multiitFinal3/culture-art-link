@@ -1190,7 +1190,7 @@ $(document).ready(function() {
 
 
    /**
-   *   전채 목록 연결
+   *   전체 목록 연결
    */
     $(document).on('click','#allList', function(){
 

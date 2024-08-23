@@ -390,8 +390,8 @@ a {
 
 
 
-        <div class="all-cultural-properties">
-            <h2 class="all-cultural-properties-title">전체 문화재 목록</h2>
+        <div class="all-cultural-properties"><br>
+            <h2 class="all-cultural-properties-title" style="font-size: 26px;">전체 문화재 목록</h2>
             <br><br>
             <div class="all-cultural-properties-items" id="gallery-section">
                 <div class="all-cultural-property-item" th:each="property : ${allCulturalProperties}">
@@ -433,7 +433,7 @@ a {
 
                     <br>
 
-                    <h2 th:text="${user.userName} + '님 이런 문화유산은 어때요?'"></h2>
+                    <h2 th:text="${user.userName} + '님 이런 문화유산은 어때요?'" style="font-size: 26px;"></h2>
 
                     <br><br>
                     <div class="all-cultural-properties-items" id="recommended-gallery-section">
@@ -444,8 +444,8 @@ a {
 
 
             <div class="tab-pane fade" id="news" role="tabpanel" aria-labelledby="news-tab">
-                <div class="news-articles">
-                    <h2>문화재 관련 뉴스</h2>
+                <div class="news-articles"><br>
+                    <h2 style="display: flex;justify-content: center;font-size: 26px;font-weight: 600;">문화재 관련 뉴스</h2>
                     <br>
                     <ul id="news-list" class="list-group mt-3">
                         <!-- 뉴스 기사가 여기에 추가됨 -->
@@ -456,8 +456,8 @@ a {
 
 
             <div class="tab-pane fade" id="video" role="tabpanel" aria-labelledby="video-tab">
-                <div class="container">
-                    <h2>관련 영상</h2>
+                <div class="container"><br>
+                    <h2 style="display: flex;justify-content: center;font-size: 26px;font-weight: 600;">관련 영상</h2>
                     <br>
                     <div id="video-list" class="row mt-3">
                         <!-- 비디오 리스트가 여기에 렌더링됨 -->
