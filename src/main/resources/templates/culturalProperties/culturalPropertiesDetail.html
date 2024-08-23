@@ -953,7 +953,9 @@
                             <div class="nearby-property" th:each="property : ${getNearbyPlace}">
                                 <a th:href="@{'/cultural-properties/detail/' + ${property.id}}" class="property-link">
                                     <div class="image-container">
-                                        <img th:src="${property.mainImgUrl}" alt="${property.culturalPropertiesName}">
+                                        <img  th:src="${property.mainImgUrl != null and !property.mainImgUrl.isEmpty()} ? ${property.mainImgUrl} : 'http://www.cha.go.kr/unisearch/images/no_image.gif'"
+                                         th:alt="${property.culturalPropertiesName}" />
+
                                         <div class="property-name" th:text="${property.culturalPropertiesName}"></div>
                                         <div class="property-location" th:text="${property.region} + ' ' + ${property.district}"></div>
                                     </div>
