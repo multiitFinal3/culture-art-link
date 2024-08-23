@@ -177,10 +177,17 @@
 
 
    /* 필터 컨테이너 */
-   .filter-container {
+  /* .filter-container {
        display: flex;
        justify-content: space-between;
        margin: 20px 0;
+   }*/
+
+   .filter-container {
+       display: flex;
+       align-items: center;
+       gap: 5px;
+       flex-grow: 1;
    }
 
 
@@ -230,21 +237,21 @@
 
     }
 
-    #searchForm1{
+   /* #searchForm1{
 
         display: flex;
         flex-flow: row;
         align-items: center;
         width: 95vw;
 
-    }
+    }*/
 
 
-    #inputGroup1{
+   /* #inputGroup1{
 
         margin-left: 5%;
 
-    }
+    }*/
 
     #deleteZone{
 
@@ -252,13 +259,15 @@
         display: flex;
         justify-content: end;
 
+        margin-left: auto;
+
     }
 
-    #searchForm2{
+   /* #searchForm2{
 
         margin-left: 5%;
 
-    }
+    }*/
 
 
     #insertZone{
@@ -267,6 +276,32 @@
         display: flex;
         justify-content: end;
 
+        margin-left: auto;
+
     }
 
 
+#searchForm1, #searchForm2 {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    margin-left: 5%;
+    margin-right: 5%;
+}
+
+Copy#inputGroup1, #inputGroup2 {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    flex-grow: 1;
+}
+
+.form-container {
+    width: 77vw; /* 표와 동일한 너비 */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-left: 5%; /* 표와 동일한 마진 */
+    margin-bottom: 20px;
+}
