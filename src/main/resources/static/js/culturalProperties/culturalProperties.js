@@ -315,22 +315,22 @@ $(document).ready(function() {
     });
 
     $('#recommendList').click(function(e) {
-        e.preventDefault();
+//        e.preventDefault();
         $(".extra-filter").addClass('none');
     });
 
     $('#allList').click(function(e) {
-        e.preventDefault();
+//        e.preventDefault();
         $(".extra-filter").removeClass('none');
     });
 
     $('#newsList').click(function(e) {
-        e.preventDefault();
+//        e.preventDefault();
         $(".extra-filter").addClass('none');
     });
 
     $('#videoList').click(function(e) {
-        e.preventDefault();
+//        e.preventDefault();
         $(".extra-filter").addClass('none');
     });
 
@@ -538,7 +538,9 @@ $(document).ready(function() {
 
     if(paramValue=="fromDetail"){
 
+        console.log("from detail")
         $('#allList').click();
+        console.log("????")
         paramValue = "";
 
     }
