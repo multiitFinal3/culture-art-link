@@ -319,6 +319,13 @@ $(document).ready(function() {
     });
 
 
+        $('#recommendList').removeClass('extra-filter');
+        $('#allList').addClass('extra-filter');
+        $('#newsList').removeClass('extra-filter');
+        $('#videoList').removeClass('extra-filter');
+
+//$('#festivalList').addClass('none');
+//        $('#festivalRecommendation').removeClass('none');
 
     // 뉴스 로드 함수
     function loadNewsArticles() {
