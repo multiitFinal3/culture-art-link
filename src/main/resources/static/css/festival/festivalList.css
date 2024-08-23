@@ -107,7 +107,7 @@
 
 
     #list2{
-
+        width: 60%;
         display: flex;
         flex-flow: row;
         flex-wrap: no-wrap;
