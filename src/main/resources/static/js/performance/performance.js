@@ -95,9 +95,6 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
 
-
-
-
     // 랭킹 카드 클릭 이벤트 추가 -> 랭킹별 페이지에서 디테일페이지
         const rankingCards = document.querySelectorAll('.ranking-card');
 
@@ -113,12 +110,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     }
                 });
             });
-
-
-
-
-
-
 
 
 

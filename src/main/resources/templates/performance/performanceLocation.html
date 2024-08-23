@@ -12,13 +12,17 @@
   <script th:src="@{/js/performance/performance.js}"></script>
 
 
-  <script>
+
+  <script th:inline="javascript">
     document.addEventListener('DOMContentLoaded', function() {
-        const cards = document.querySelectorAll('.card, .all-card');
+
+
+        const cards = document.querySelectorAll('.location-card');
         cards.forEach(card => {
             card.addEventListener('click', function() {
-                const performanceId = this.getAttribute('data-performance-id');
-                window.location.href = `/performance/performanceDetail?performanceId=${performanceId}`;
+                const performanceCode = this.getAttribute('data-performance-code');
+                const source = this.getAttribute('data-source');
+                window.location.href = `/performance/performanceDetail?performanceCode=${encodeURIComponent(performanceCode)}&source=${encodeURIComponent(source)}`;
             });
         });
     });
@@ -34,7 +38,7 @@
   <div class="filter-container">
     <!-- 장르 필터 -->
     <div class="genre-filter">
-      <div class="genre-item">홈</div>
+      <div class="genre-item">추천</div>
       <div class="genre-item">연극</div>
       <div class="genre-item">무용</div>
       <div class="genre-item">대중무용</div>
@@ -81,7 +85,7 @@
   </div>
 
   <div class="performance-container">
-    <div class="location-card" th:each="performance : ${performances}">
+    <div class="location-card" th:each="performance : ${performances}" th:data-performance-code="${performance.code}" th:data-source="db">
       <img class="location-image" th:src="${performance.imageMain}" alt="공연 이미지"/>
       <div class="location-info">
         <div class="location-title" th:text="${performance.title}">공연 타이틀</div>
