@@ -25,7 +25,7 @@
 .all-performances-items {
     display: flex;
     flex-wrap: wrap;
-    justify-content: space-between; /* 양 끝 공간 확보 */
+   /* justify-content: space-between; /* 양 끝 공간 확보 */
     gap: 10px; /* 카드 간의 간격 */
     width: calc(5 * 249px + 4 * 10px); /* 카드 5개와 간격을 고려한 너비 */
 }
