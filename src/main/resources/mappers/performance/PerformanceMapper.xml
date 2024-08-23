@@ -8,6 +8,7 @@
     <select id="getAllPerformances" resultType="com.multi.culture_link.admin.performance.model.dto.PerformanceDTO">
         SELECT *
         FROM performance_info
+        ORDER BY id DESC;
     </select>
 
     <insert id="insertPerformance">
@@ -28,6 +29,7 @@
         FROM performance_info
         WHERE title LIKE CONCAT('%', #{keyword}, '%')
         OR location LIKE CONCAT('%', #{keyword}, '%')
+        ORDER BY id DESC;
     </select>
 
 
