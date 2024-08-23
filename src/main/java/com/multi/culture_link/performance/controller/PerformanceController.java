@@ -187,7 +187,6 @@ public class PerformanceController {
      * @param genre the genre
      * @return performanceRanking
      */
-    // PerformanceController.java
 
     @GetMapping("/performanceRanking")
     public String performanceRankingPage(@AuthenticationPrincipal VWUserRoleDTO user, Model model,
@@ -471,37 +470,6 @@ public class PerformanceController {
 
 
 
-    /**
-     * 사용자가 찜한 공연 키워드를 반환하는 메서드
-     *
-     * @param user  인증된 사용자 정보
-     * @param type  키워드 타입 (찜: 'L', 관심없음: 'H')
-     * @return 사용자가 선택한 공연 키워드 목록
-     */
-//    @GetMapping("/getUserKeywords")
-//    public ResponseEntity<Map<String, Object>> getUserKeywords(
-//            @AuthenticationPrincipal VWUserRoleDTO user,
-//            @RequestParam("type") String type) {
-//
-//        Map<String, Object> response = new HashMap<>();
-//        try {
-//            List<PerformanceKeywordDTO> keywords;
-//            if ("L".equals(type)) {
-//                keywords = performanceService.getLoveKeywordsByUserId(user.getUser().getUserId());
-//            } else if ("H".equals(type)) {
-//                keywords = performanceService.getHateKeywordsByUserId(user.getUser().getUserId());
-//            } else {
-//                throw new IllegalArgumentException("Invalid keyword type: " + type);
-//            }
-//
-//            response.put("keywords", keywords);
-//            return ResponseEntity.ok(response);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            response.put("error", "Error fetching keywords: " + e.getMessage());
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
-//        }
-//    }
 
     @GetMapping("/getUserKeywords")
     public ResponseEntity<Map<String, Object>> getUserKeywords(
