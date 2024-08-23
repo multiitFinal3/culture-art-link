@@ -290,10 +290,6 @@ $(document).ready(function() {
         loadAllCulturalProperties();
     });
 
-//// 추천 탭이 기본으로 선택되어 있다면 추천 문화재 로드
-//        if ($('.genre-item[data-target="recommend"]').hasClass('active')) {
-//            loadRecommendedCulturalProperties();
-//        }<div class="genre-item" data-target="all">전체 문화재 목록</div>
 
     const genreItems = document.querySelectorAll('.genre-item');
     const tabPanes = document.querySelectorAll('.tab-pane');
@@ -318,6 +314,25 @@ $(document).ready(function() {
         });
     });
 
+    $('#recommendList').click(function(e) {
+        e.preventDefault();
+        $(".extra-filter").addClass('none');
+    });
+
+    $('#allList').click(function(e) {
+        e.preventDefault();
+        $(".extra-filter").removeClass('none');
+    });
+
+    $('#newsList').click(function(e) {
+        e.preventDefault();
+        $(".extra-filter").addClass('none');
+    });
+
+    $('#videoList').click(function(e) {
+        e.preventDefault();
+        $(".extra-filter").addClass('none');
+    });
 
 
     // 뉴스 로드 함수
@@ -354,9 +369,6 @@ $(document).ready(function() {
             const title = $('<h5>').addClass('mb-1').text(article.title);
             const content = $('<p>').addClass('mb-1').text(article.content);
             const date = $('<small>').addClass('text-muted').text(article.date);
-            //              const link = $('<a>').attr('href', article.link).addClass('btn btn-primary btn-sm mt-2').text('자세히 보기').css('margin-left', '2rem');
-
-//            const link = $('<a>').attr('href', article.link).addClass('btn btn-outline-success').text('자세히 보기').css('margin-left', '2rem');
 
             const link = $('<a>').attr('href', article.link).addClass('btn btn-success').text('자세히 보기').css('margin-left', '2rem');
 
@@ -395,7 +407,6 @@ $(document).ready(function() {
 
         videos.forEach(function(video) {
             const colDiv = $('<div>').addClass('col-md-4 mb-4');
-//            const cardDiv = $('<div>').addClass('card');
             const cardDiv = $('<div>').addClass('card video-card');
             const cardBody = $('<div>').addClass('card-body');
             const title = $('<h5>').addClass('card-title').html(video.title);
@@ -450,7 +461,6 @@ $(document).ready(function() {
             const item = $('<div>').addClass('all-cultural-property-item');
             const link = $('<a>').attr('href', `/cultural-properties/detail/${property.id}`);
             const card = $('<div>').addClass('all-card').attr('data-cultural-property-id', property.id);
-//            const img = $('<img>').attr('src', property.mainImgUrl || '/img/festival/noPhoto.png').attr('alt', property.culturalPropertiesName);
             const img = $('<img>')
                 .attr('src', property.mainImgUrl && property.mainImgUrl.trim() !== ''
                     ? property.mainImgUrl
