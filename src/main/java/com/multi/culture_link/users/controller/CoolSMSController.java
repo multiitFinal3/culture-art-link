@@ -71,7 +71,7 @@ public class CoolSMSController {
 		
 		System.out.println("response : " + response);
 
-		return "레디스 처리 완료";
+		return "문자 전송 완료";
 	}
 	
 	
