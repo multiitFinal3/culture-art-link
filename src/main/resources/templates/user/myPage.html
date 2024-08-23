@@ -3087,7 +3087,7 @@
                     let concatLove = '';
 
                     loveKeywords.forEach(keyword => {
-                        let htmlContent = `<button value="${keyword.genre}" class="performanceLoveKeywordBtn">${keyword.genre}</button>`;
+                        let htmlContent = `<button value="${keyword.genre}" class="performanceLoveKeywordBtn bigLove">${keyword.genre}</button>`;
                         concatLove += keyword.genre + ",";
                         keywordList.append(htmlContent);
                     });
@@ -3146,7 +3146,7 @@
                     let concatHate = '';
 
                     hateKeywords.forEach(keyword => {
-                        let htmlContent = `<button value="${keyword.genre}" class="performanceHateKeywordBtn hateLove">${keyword.genre}</button>`;
+                        let htmlContent = `<button value="${keyword.genre}" class="performanceHateKeywordBtn">${keyword.genre}</button>`;
                         concatHate += keyword.genre + ",";
                         keywordList.append(htmlContent);
                     });
@@ -3158,8 +3158,8 @@
 
                 // 공연 관심없음 키워드 선택 시 색 변화 버튼
                 $(document).on('click', '.performanceHateKeywordBtn', function () {
-                    $(this).toggleClass('hateLove');
-                    const $btns = document.querySelectorAll('button.hateLove.performanceHateKeywordBtn');
+                    $(this).toggleClass('bigLove');
+                    const $btns = document.querySelectorAll('button.bigLove.performanceHateKeywordBtn');
                     let concat = '';
 
                     $btns.forEach(function (btn) {

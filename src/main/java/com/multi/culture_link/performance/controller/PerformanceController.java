@@ -101,7 +101,7 @@ public class PerformanceController {
             return "redirect:/performance/performance-home";
         }
 
-        String date = "20240821"; // 일간 데이터 날짜
+        String date = "20240822"; // 일간 데이터 날짜
         List<PerformanceDTO> rankingData = performanceRankingService.fetchGenreRanking(genre, date, 5);
         System.out.println("Fetched Data: " + rankingData); // 로그 추가
 
@@ -187,13 +187,12 @@ public class PerformanceController {
      * @param genre the genre
      * @return performanceRanking
      */
-    // PerformanceController.java
 
     @GetMapping("/performanceRanking")
     public String performanceRankingPage(@AuthenticationPrincipal VWUserRoleDTO user, Model model,
                                          @RequestParam(required = false) String genre) {
         model.addAttribute("user", user.getUser());
-        String date = "20240821"; // 일간 데이터 날짜
+        String date = "20240822"; // 일간 데이터 날짜
         List<PerformanceDTO> rankingData;
 
         if (genre == null || genre.isEmpty() || genre.equals("전체")) {
@@ -212,8 +211,8 @@ public class PerformanceController {
     public String performanceLocationPage(@AuthenticationPrincipal VWUserRoleDTO user,
                                           @RequestParam(required = false) String locationCode,
                                           Model model) {
-        String stdate = "20240821"; // 시작 날짜
-        String eddate = "20240921"; // 종료 날짜
+        String stdate = "20240822"; // 시작 날짜
+        String eddate = "20240922"; // 종료 날짜
 
         System.out.println("Received locationCode: " + locationCode); // Debug line
 
@@ -471,37 +470,6 @@ public class PerformanceController {
 
 
 
-    /**
-     * 사용자가 찜한 공연 키워드를 반환하는 메서드
-     *
-     * @param user  인증된 사용자 정보
-     * @param type  키워드 타입 (찜: 'L', 관심없음: 'H')
-     * @return 사용자가 선택한 공연 키워드 목록
-     */
-//    @GetMapping("/getUserKeywords")
-//    public ResponseEntity<Map<String, Object>> getUserKeywords(
-//            @AuthenticationPrincipal VWUserRoleDTO user,
-//            @RequestParam("type") String type) {
-//
-//        Map<String, Object> response = new HashMap<>();
-//        try {
-//            List<PerformanceKeywordDTO> keywords;
-//            if ("L".equals(type)) {
-//                keywords = performanceService.getLoveKeywordsByUserId(user.getUser().getUserId());
-//            } else if ("H".equals(type)) {
-//                keywords = performanceService.getHateKeywordsByUserId(user.getUser().getUserId());
-//            } else {
-//                throw new IllegalArgumentException("Invalid keyword type: " + type);
-//            }
-//
-//            response.put("keywords", keywords);
-//            return ResponseEntity.ok(response);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            response.put("error", "Error fetching keywords: " + e.getMessage());
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
-//        }
-//    }
 
     @GetMapping("/getUserKeywords")
     public ResponseEntity<Map<String, Object>> getUserKeywords(
