@@ -10,6 +10,7 @@
     <title>Document</title>
     <link rel="stylesheet" th:href="@{/css/user/signUp.css}">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
     <script>
 
         $(document).ready(
@@ -422,9 +423,9 @@
                 * @param {Event} event 제출버튼 클릭 이벤트
                 */
 
-                $(document).on('submit','#basicForm', function(event){
-                    console.log("#createAccount");
+                $(document).on('click','#submitBtn', function(event){
                     event.preventDefault();
+                    console.log("#createAccount");
 
                     $('#emailError').text("");
                     $('#passwordError').text("");
@@ -785,146 +786,199 @@
 
             <h1>Registration Form</h1><br><br>
 
-            <div id="profileImg">
+            <!-- 빨간색 주석: 추가된 컨테이너 div -->
+            <div id="formContainer">
+                <div id="leftSection">
 
-                <img class="profileImg round" src="/img/festival/noPhoto.png" alt="이미지가 없습니다">
+                    <div id="profileImg">
 
+                        <img class="profileImg round" src="/img/festival/noPhoto.png" alt="이미지가 없습니다">
+
+                    </div>
+
+                    <label for="uploadFile">
+                        <!--                        사진-->
+                    </label>
+                    <input name="uploadFile" class="rounded" id="uploadFile" type="file" accept="image/*" ><br>
+
+                </div>
+
+
+                <form id="basicForm" method="post" style="font-size: 20px;color: #615757;" encType="multipart/form-data">
+
+                    <div style="display: flex;flex-flow: column;justify-content: center;align-items: center;">
+
+
+                        <div id="rightSection">
+
+                            <div id="basicZone">
+
+                                <!--                        <label for="uploadFile">사진</label>-->
+                                <!--                        <input name="uploadFile" class="rounded" id="uploadFile" type="file" accept="image/*"><br>-->
+
+
+
+                                <label for="email"  class="erequired">이메일</label>
+
+                                <div class="email-group">
+
+                                    <input name="email" id="email" class="rounded" placeholder="dkswldus@gmail.com" required
+                                           pattern="^[a-zA-Z0-9_]{5,}@[a-zA-Z]{3,}\.com$">
+                                    <button id="emailValidate" type="button" class="btn btn-outline-success" style="height: 45px;">중복확인</button>
+                                    <span id="emailError" class="error"></span><br>
+
+                                </div>
+
+                                <label for="password"  class="prequired">비밀번호</label>
+                                <input name="password" id="password" class="rounded" type="password" placeholder="*****" required
+                                       pattern="^[a-zA-Z0-9_]{5,}$">
+                                <span id="passwordError" class="error"></span><br>
+
+                                <label for="userName"  class="urequired">이름</label>
+                                <input name="userName" id="userName" class="rounded" placeholder="안지연"
+                                       required pattern="^[a-zA-Z가-힣]{3,}$">
+                                <span id="nameError" class="error"></span><br>
+
+
+
+                                <label for="tel"  class="trequired">전화번호</label>
+
+                                <div class="tel-group">
+
+                                    <input name="tel" id="tel" class="rounded" placeholder="010-0000-1234"
+                                           pattern="[0-9]{3}-[0-9]{4}-[0-9]{4}" value="010-0000-0000"  required>
+
+                                    <button id="telValidate" type="button" class="btn btn-outline-success" style="height: 45px;">문자인증</button>
+
+                                    <input name="authNum" id="authNum" class="rounded" placeholder="0000" type="number" pattern="\d{4}" value="0000" required style="width: 80px;">
+                                    <!--                        <button id="telValidate" type="button" class="btn btn-outline-success" style="height: 44px;">문자인증</button>-->
+                                    <button id="telValidate2" type="button" class="btn btn-outline-success" style="height: 45px;">인증하기</button>
+                                    <input type="hidden" value="false" id="smsBool">
+
+                                </div>
+
+                                <br>
+
+                                <label for="userAge">나이</label>
+                                <input name="userAge" id="userAge" class="rounded" placeholder="12" type="number" min="0" max="100"
+                                       value="12"><br>
+
+                                <label for="gender">성별</label>
+                                <select name="gender" id="gender" class="rounded">
+                                    <option value="남">남</option>
+                                    <option value="여">여</option>
+                                </select><br>
+
+                                <label for="regionId">지역</label>
+                                <select name="regionId" id="regionId" class="rounded"></select><br><br>
+
+
+                            </div>
+
+                        </div>
+                    </div>
             </div>
 
-            <form id="basicForm" method="post" style="font-size: 20px;color: #615757;" encType="multipart/form-data">
+            <div id="keywordSection">
 
-                <div style="display: flex;flex-flow: column;justify-content: center;align-items: center;">
+                <div id="cateHeadZone">
 
-                    <div id="basicZone">
+                    카테고리별 키워드
 
-                        <label for="uploadFile">사진</label>
-                        <input name="uploadFile" class="rounded" id="uploadFile" type="file" accept="image/*"><br>
-
-                        <label for="email">이메일</label>
-                        <input name="email" id="email" class="rounded" placeholder="dkswldus@gmail.com" required
-                               style="background-color: lightblue" pattern="^[a-zA-Z0-9_]{5,}@[a-zA-Z]{3,}\.com$">
-                        <button id="emailValidate" type="button" class="btn btn-outline-success">중복확인</button>
-                        <span id="emailError" class="error"></span><br>
-
-                        <label for="password">비밀번호</label>
-                        <input name="password" id="password" class="rounded" type="password" placeholder="*****" required
-                               style="background-color: lightblue" pattern="^[a-zA-Z0-9_]{5,}$">
-                        <span id="passwordError" class="error"></span><br>
-
-                        <label for="userName">이름</label>
-                        <input name="userName" id="userName" class="rounded" placeholder="안지연"
-                               style="background-color: lightblue" required pattern="^[a-zA-Z가-힣]{3,}$">
-                        <span id="nameError" class="error"></span><br>
-
-                        <label for="tel">전화번호</label>
-                        <input name="tel" id="tel" class="rounded" placeholder="010-0000-1234"
-                               pattern="[0-9]{3}-[0-9]{4}-[0-9]{4}" value="010-0000-0000" style="background-color: lightblue" required>
-                        <input name="authNum" id="authNum" class="rounded" placeholder="0000" type="number" pattern="\d{4}" value="0000" required style="width: 80px;">
-                        <button id="telValidate" type="button" class="btn btn-outline-success">문자인증</button>
-                        <button id="telValidate2" type="button" class="btn btn-outline-success">인증하기</button>
-                        <input type="hidden" value="false" id="smsBool">
-                        <br>
-
-                        <label for="userAge">나이</label>
-                        <input name="userAge" id="userAge" class="rounded" placeholder="12" type="number" min="0" max="100"
-                               value="12"><br>
-
-                        <label for="gender">성별</label>
-                        <select name="gender" id="gender" class="rounded">
-                            <option value="남">남</option>
-                            <option value="여">여</option>
-                        </select><br>
-
-                        <label for="regionId">지역</label>
-                        <select name="regionId" id="regionId" class="rounded"></select><br><br>
-
-
-                    </div>
-
-
-                    <div id="cateHeadZone">
-
-                        카테고리별 키워드
-
-                    </div>
-
-
-                    <div id="keyZone">
-
-                        <div id="performanceKeywordZone">
-
-                            <input type="hidden" id="performanceSelectKeyword" name="performanceSelectKeyword" value="">
-
-                            <div id="performanceKeywordBtns">
-                                <button value="연극" class="performanceKeywordBtn">연극</button>
-                                <button value="무용" class="performanceKeywordBtn">무용</button>
-                                <button value="대중무용" class="performanceKeywordBtn">대중무용</button>
-                                <button value="서양음악(클래식)" class="performanceKeywordBtn">서양음악</button>
-                                <button value="한국음악(국악)" class="performanceKeywordBtn">한국음악</button>
-                                <button value="대중음악" class="performanceKeywordBtn">대중음악</button>
-                                <button value="복합" class="performanceKeywordBtn">복합</button>
-                                <button value="서커스/마술" class="performanceKeywordBtn">서커스/마술</button>
-                                <button value="뮤지컬" class="performanceKeywordBtn">뮤지컬</button>
-                            </div>
-
-
-                            <button id="addPerformanceKeyword" class="btn btn-outline-success" value="1" disabled>공연 키워드</button>
-
-                        </div>
-
-                        <div id="festivalKeywordZone">
-
-                            <input type="hidden" id="festivalSelectKeyword" name="festivalSelectKeyword" value="">
-
-                            <div id="festivalKeywordBtns">
-
-                            </div>
-
-                            <button id="addFestivalKeyword" class="btn btn-outline-success" value="1">축제 키워드 추가</button>
-
-
-                        </div>
-
-                        <div id="exhibitionKeywordZone">
-
-                            <input type="hidden" id="exhibitionSelectKeyword" name="exhibitionSelectKeyword" value="">
-
-                            <div id="exhibitionKeywordBtns">
-
-                            </div>
-
-                            <button id="addExhibitionKeyword" class="btn btn-outline-success" value="0">전시 키워드 추가</button>
-
-
-                        </div>
-
-                        <div id="culturalPropertiesKeywordZone">
-                            <input type="hidden" id="culturalPropertiesSelectKeyword" name="culturalPropertiesSelectKeyword"
-                                   value="">
-                            <div id="culturalPropertiesCategoryBtns"></div>
-                            <div id="culturalPropertiesKeywordBtns">
-                            </div>
-
-                            <button id="addCulturalPropertiesKeyword" class="btn btn-outline-success" value="1">문화재 키워드 추가
-                            </button>
-                        </div>
-
-                    </div>
-
-
-
-                    <div style="width: 80%;">
-
-                        <button type="submit" class="btn btn-outline-success"
-                                style="color: white;background-color: green;width: 100%;margin-top: 50px;">제출
-                        </button>
-
-                    </div>
                 </div>
+
+
+                <div id="keyZone">
+
+                    <div id="performanceKeywordZone">
+
+                        <input type="hidden" id="performanceSelectKeyword" name="performanceSelectKeyword" value="">
+
+                        <div id="performanceKeywordBtns">
+                            <button value="연극" class="performanceKeywordBtn">연극</button>
+                            <button value="무용" class="performanceKeywordBtn">무용</button>
+                            <button value="대중무용" class="performanceKeywordBtn">대중무용</button>
+                            <button value="서양음악(클래식)" class="performanceKeywordBtn">서양음악</button>
+                            <button value="한국음악(국악)" class="performanceKeywordBtn">한국음악</button>
+                            <button value="대중음악" class="performanceKeywordBtn">대중음악</button>
+                            <button value="복합" class="performanceKeywordBtn">복합</button>
+                            <button value="서커스/마술" class="performanceKeywordBtn">서커스/마술</button>
+                            <button value="뮤지컬" class="performanceKeywordBtn">뮤지컬</button>
+                        </div>
+
+
+                        <button id="addPerformanceKeyword" class="btn btn-outline-success" value="1" disabled>공연 키워드</button>
+
+                    </div>
+
+                    <div id="festivalKeywordZone">
+
+                        <input type="hidden" id="festivalSelectKeyword" name="festivalSelectKeyword" value="">
+
+                        <div id="festivalKeywordBtns">
+
+                        </div>
+
+                        <button id="addFestivalKeyword" class="btn btn-outline-success" value="1">축제 키워드 추가</button>
+
+
+                    </div>
+
+                    <div id="exhibitionKeywordZone">
+
+                        <input type="hidden" id="exhibitionSelectKeyword" name="exhibitionSelectKeyword" value="">
+
+                        <div id="exhibitionKeywordBtns">
+
+                        </div>
+
+                        <button id="addExhibitionKeyword" class="btn btn-outline-success" value="0">전시 키워드 추가</button>
+
+
+                    </div>
+
+                    <div id="culturalPropertiesKeywordZone">
+                        <input type="hidden" id="culturalPropertiesSelectKeyword" name="culturalPropertiesSelectKeyword"
+                               value="">
+                        <div id="culturalPropertiesCategoryBtns"></div>
+                        <div id="culturalPropertiesKeywordBtns">
+                        </div>
+
+                        <button id="addCulturalPropertiesKeyword" class="btn btn-outline-success" value="1">문화재 키워드 추가
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+
+
+            <!--                    <div style="width: 80%;">-->
+
+            <!--                        <button type="submit" class="btn btn-outline-success"-->
+            <!--                                style="color: white;background-color: green;width: 100%;margin-top: 50px;">제출-->
+            <!--                        </button>-->
+
+            <!--                    </div>-->
+
+            <!--            <div style="width: 100%; position: relative;">-->
+            <!--                <button type="submit" class="btn btn-outline-success">제출</button>-->
+            <!--            </div>-->
+            <!--            <br><br><br>-->
+            <!--            <button type="submit" class="btn btn-outline-success">제출</button>-->
+
+            <!--                </div>-->
+
 
             </form>
 
+            <br><br><br>
+            <div style="display: flex;flex-flow: column;justify-content: center;align-items: end;">
+                <button type="button" class="btn btn-success" style="width: 12%;height: 45px; margin-right: 35px; width: 12%; height: 45px; margin-right: 35px;" id="submitBtn">제출</button>
+            </div>
+
         </div>
+
+        <br><br>
 
 
     </div>

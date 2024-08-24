@@ -327,8 +327,11 @@
 
 
 
+    <delete id="deleteAllUserSelectPerformanceKeywordByUserId">
 
+        DELETE FROM performance_keyword WHERE user_id = #{userId};
 
+    </delete>
 
 
 
