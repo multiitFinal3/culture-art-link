@@ -27,7 +27,12 @@ public class PerformanceService {
 
     @Autowired
     private PerformanceMapper performanceMapper;
-
+    
+    public void deleteAllUserSelectPerformanceKeywordByUserId(int userId) {
+        
+        performanceMapper.deleteAllUserSelectPerformanceKeywordByUserId(userId);
+    }
+    
     // 좋아요 싫어요
     public void updatePerformanceLikeState(PerformanceAddDTO performanceAddDTO) {
         PerformanceAddDTO existingRecord = performanceMapper.findByUserIdAndPerformanceId(performanceAddDTO.getUserId(), performanceAddDTO.getPerformanceId());
@@ -164,11 +169,7 @@ public class PerformanceService {
 
         return hateKeywords;
     }
-
-
-
-
-
-
+    
+    
 }
 

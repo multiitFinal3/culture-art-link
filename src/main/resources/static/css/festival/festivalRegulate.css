@@ -250,7 +250,7 @@
 
         width: 870px;
         display: flex;
-        justify-content: end;
+        margin-left: 364px;
 
     }
 
@@ -265,7 +265,6 @@
 
         width: 1310px;
         display: flex;
-        justify-content: end;
 
     }
 

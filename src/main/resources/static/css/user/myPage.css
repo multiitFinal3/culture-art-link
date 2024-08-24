@@ -20,12 +20,18 @@ body {
 }
 
 #rightZone {
-  padding: 1%;
-  width: 100%;
+  width: 90%;
+  max-width: 1300px;
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 40px;
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+  position: relative;
+  padding-bottom: 80px;
+  margin-top: 50px;
+  padding-bottom: 40px;
+  margin-bottom: 100px;
   display: flex;
-  flex-flow: column;
-  align-items: center;
-  justify-content: flex-start;
 }
 
 #basicForm {
@@ -34,7 +40,6 @@ body {
   flex-flow: column;
   align-items: center;
   justify-content: center;
-  background: #f7f7f6;
   border-radius: 60px;
   padding: 5%;
 }
@@ -1333,3 +1338,193 @@ button {
     }
 
 
+    #basicForm {
+        position: relative;
+    }
+
+    #basicForm button[type="submit"] {
+        position: absolute;
+        bottom: 20px;  /* 수정: 아래에서 20px 떨어진 위치 */
+        right: 40px;
+        /*bottom: 0;
+        right: 0;
+        width: auto;
+        padding: 10px 20px;*/
+        width: 200px;
+        padding: 10px 20px;
+    }
+
+    @media (max-width: 768px) {
+        #formContainer {
+            grid-template-columns: 1fr;
+        }
+
+        #basicZone > div,
+        .email-group,
+        .tel-group {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        #basicZone input,
+        #basicZone select,
+        .email-group input {
+            width: 100%;
+            max-width: none;
+            margin-bottom: 10px;
+        }
+
+        .tel-group input[name="tel"],
+        #authNum {
+            width: 100%;
+            margin-left: 0;
+            margin-bottom: 10px;
+        }
+
+        .tel-group button {
+            margin-left: 0;
+            margin-top: 10px;
+        }
+
+        .btn-outline-success {
+            margin-left: 0;
+            margin-top: 10px;
+        }
+
+        .error {
+            margin-left: 0;
+        }
+
+        #leftSection {
+            align-items: center;
+        }
+
+        #uploadFile {
+            width: 100%;
+            max-width: 200px;
+        }
+
+        #signUp {
+            padding-bottom: 100px;  /* 모바일에서 버튼 공간 더 확보 */
+        }
+
+        #basicForm {
+            padding-bottom: 100px; /* 모바일에서 버튼 공간 더 확보 */
+        }
+
+        #basicForm button[type="submit"] {
+            width: calc(100% - 80px);  /* 양쪽 여백 40px씩 제외한 너비 */
+            right: 40px;
+            bottom: 40px;
+        }
+    }
+
+
+
+#formContainer {
+    display: grid;
+    grid-template-columns: 30% 70%;
+    gap: 60px;
+    margin-bottom: 30px;
+}
+
+#leftZone h1{
+
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 30px;
+    text-align: center;
+    margin-top: 0;
+
+}
+
+#leftSection {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+#profileImg {
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.profileImg, .round {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #007bff;
+}
+
+#uploadFile {
+    display: block;
+    margin-top: 20px;
+    max-width: 273px;
+    margin-right: -28px;
+    font-size: 20px;
+}
+
+#basicForm {
+    position: relative;
+    font-size: 20px;
+    color: #615757;
+    padding-top: 0px;
+}
+
+#rightSection {
+    display: flex;
+    flex-direction: column;
+}
+
+#basicZone {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    margin-left: 25px;
+}
+
+#basicZone label {
+    width: 100px;
+    font-weight: bold;
+    color: #495057;
+    margin-right: 10px;
+    position: relative;
+}
+
+
+#basicZone > div {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    margin-bottom: 15px;
+    width: 100%;
+    gap:7px;
+}
+
+#email, #password, #userName, #userAge, #basicZone select {
+    flex: 1;
+    min-width: 400px;
+    max-width: 400px;
+    padding: 10px;
+    border: 1px solid #ced4da;
+    border-radius: 0.25rem;
+    font-size: 1rem;
+}
+
+#tel {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ced4da;
+    border-radius: 0.25rem;
+    font-size: 1rem;
+}
+
+#authNum {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ced4da;
+    border-radius: 0.25rem;
+    font-size: 1rem;
+}
