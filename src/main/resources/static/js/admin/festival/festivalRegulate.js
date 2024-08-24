@@ -1282,11 +1282,14 @@ $(document).ready(
 
         })
 
+        var status = "allApiListMode";
+
         /**
          * API리스트의 처음페이지 버튼 클릭 이벤트
          *
          */
         $(document).on('click','.pageBtn7', function(){
+            status = "allApiListMode";
 
             current = 1;
 
@@ -1425,25 +1428,46 @@ $(document).ready(
 
             })
 
-            $.ajax({
 
-                url: '/admin/festival-regulate/insertAPIFestivalList',
-                method: 'POST',
-                contentType: 'application/json',
-                data: JSON.stringify(checks),
-                success: function(response){
+            if(status == "allApiListMode"){
 
-                    alert(response);
-                    setTimeout(function(){
-                        window.location.href='/admin/festival-regulate';
-                    },1000)
+                $.ajax({
 
+                    url: '/admin/festival-regulate/insertAPIFestivalList',
+                    method: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify(checks),
+                    success: function(response){
 
-                }
+                        alert(response);
+                        setTimeout(function(){
+                            window.location.href='/admin/festival-regulate';
+                        },1000)
 
+                    }
 
-            })
+                })
 
+            }else if(status == "SearchApiListMode"){
+
+                $.ajax({
+
+                    url: '/admin/festival-regulate/insertMultipleAPIFestivalList',
+                    method: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify(checks),
+                    success: function(response){
+
+                        alert(response);
+                        setTimeout(function(){
+                            window.location.href='/admin/festival-regulate';
+                        },1000)
+
+                    }
+
+                })
+
+            }
 
         })
 
@@ -1484,6 +1508,8 @@ $(document).ready(
           * api 다중조건 검색 버튼 클릭
           */
          $(document).on('click','#searchBtn2', function(){
+
+            status = "SearchApiListMode";
 
            var festivalName = $('#festivalName').val();
            var manageInstitution = $('#manageInstitution').val();
