@@ -423,9 +423,9 @@
                 * @param {Event} event 제출버튼 클릭 이벤트
                 */
 
-                $(document).on('submit','#basicForm', function(event){
-                    console.log("#createAccount");
+                $(document).on('click','#submitBtn', function(event){
                     event.preventDefault();
+                    console.log("#createAccount");
 
                     $('#emailError').text("");
                     $('#passwordError').text("");
@@ -973,7 +973,7 @@
 
             <br><br><br>
             <div style="display: flex;flex-flow: column;justify-content: center;align-items: end;">
-            <button type="submit" class="btn btn-success" style="width: 12%;height: 45px; margin-right: 35px; width: 12%; height: 45px; margin-right: 35px;">제출</button>
+            <button type="button" class="btn btn-success" style="width: 12%;height: 45px; margin-right: 35px; width: 12%; height: 45px; margin-right: 35px;" id="submitBtn">제출</button>
             </div>
 
         </div>
