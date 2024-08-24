@@ -92,6 +92,11 @@ async function deletePost() {
 async function submitComment(event) {
     event.preventDefault();
     const commentContent = document.getElementById('newComment').value;
+
+    if (!commentContent) {
+        alert('댓글을 작성해 주세요.')
+        return;
+    }
     try {
         await axios.post(`/board/${boardId}/comment`, {content: commentContent});
         document.getElementById('newComment').value = '';

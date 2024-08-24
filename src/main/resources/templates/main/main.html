@@ -167,9 +167,11 @@
                 success: function(list) {
                     var list2 = list.slice(0, 4);
                     $.each(list2, function(index, culturalProperty) {
-                        var imgHtml = culturalProperty.mainImgUrl ?
-                            `<img class="card-img-top" src="${culturalProperty.mainImgUrl}" alt="문화재 이미지">` :
-                            `<img class="card-img-top" src="https://kr.object.ncloudstorage.com/team3/common/noPhoto.png" alt="이미지 없음">`;
+
+                    var imgHtml = culturalProperty.mainImgUrl ?
+                        `<img class="card-img-top" src="${culturalProperty.mainImgUrl}" alt="${culturalProperty.culturalPropertiesName}">` :
+                        `<img class="card-img-top" src="http://www.cha.go.kr/unisearch/images/no_image.gif" alt="${culturalProperty.culturalPropertiesName} - 이미지 없음">`;
+
 
                         var cardHtml = `
                             <div class="card" id="${culturalProperty.id}">
@@ -781,7 +783,7 @@
                                 <input  type="text" name="text" id="keyword" placeholder="키워드를 입력하세요" aria-label="festivalName" class="form-control me-2">
                                 <button id="searchBtn1"  type="button" class="btn btn-outline-success" style="margin-right: 0px;margin-left: 5px;
                         border-radius: 0px;margin-top: 0px;margin-bottom: 0px;"><img src="https://kr.object.ncloudstorage.com/team3/common/search.png" style="width: 20px;height: 20px;"></button>
-                                <button id="resetBtn1"  type="button" class="btn btn-outline-secondary" style="margin-right: 0px;margin-left: -1px;margin-top: 0px;margin-bottom: 0px;"><img src="https://kr.object.ncloudstorage.com/team3/common/x.png" style="width: 20px;height: 20px;"></button>
+                                <button id="resetBtn1"  type="button" class="btn btn-outline-secondary" style="margin-right: 0px;margin-left: -1px;margin-top: 0px;margin-bottom: 0px;"><!--<img src="https://kr.object.ncloudstorage.com/team3/common/x.png" style="width: 20px;height: 20px;">-->초기화</button>
 
                             </div>
                         </form>

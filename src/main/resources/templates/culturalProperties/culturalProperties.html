@@ -286,35 +286,39 @@ a {
     height: 100%; /* 카드 전체 높이를 100%로 설정 */
   }
 
-  .card-body {
+.card-body {
     display: flex;
     flex-direction: column;
     justify-content: space-between; /* 제목과 비디오 사이의 공간을 균등하게 배치 */
-  }
+}
 
-  .video-card .card-body {
+.video-card .card-body {
     flex: 1;
-  }
+}
 
-  .video-card iframe {
+.video-card iframe {
     width: 100%;
     height: 200px; /* 높이를 일정하게 유지 */
-  }
+}
 
-    @media (min-width: 768px) {
+@media (min-width: 768px) {
     .col-md-4 {
         flex: 0 0 auto;
         width: 33.33333333%;
         height: 400px;
     }
-    }
+}
 
 
-    @media (min-width: 768px) {
+@media (min-width: 768px) {
     .video-card {
         height: 100%;
     }
-    }
+}
+
+.none{
+    display: none;
+}
 
     </style>
 </head>
@@ -325,13 +329,13 @@ a {
     <div class="filter-container">
 
         <div class="genre-filter">
-            <div class="genre-item active" data-target="recommend">추천</div>
+            <div class="genre-item active" data-target="recommend" id="recommendList">추천</div>
             <div class="genre-item" data-target="all" id="allList">전체 문화재 목록</div>
-            <div class="genre-item" data-target="news">뉴스 & 소식</div>
-            <div class="genre-item" data-target="video">관련 영상</div>
+            <div class="genre-item" data-target="news" id="newsList">뉴스 & 소식</div>
+            <div class="genre-item" data-target="video" id="videoList">관련 영상</div>
         </div>
 
-        <div class="extra-filter">
+        <div class="extra-filter none">
 
                 <form id="searchForm" class="d-flex">
                     <div class="input-group">
@@ -363,7 +367,7 @@ a {
                             <img src="https://kr.object.ncloudstorage.com/team3/common/search.png" alt="검색" style="width: 20px; height: 20px;">
                         </button>
                         <button id="resetButton" class="btn btn-outline-secondary" type="button" style=" margin-right: 10px;">
-                            <img src="https://kr.object.ncloudstorage.com/team3/common/x.png" alt="초기화" style="width: 20px; height: 20px;">
+<!--                            <img src="https://kr.object.ncloudstorage.com/team3/common/x.png" alt="초기화" style="width: 20px; height: 20px;">-->초기화
                         </button>
 
 
@@ -386,8 +390,8 @@ a {
 
 
 
-        <div class="all-cultural-properties">
-            <h2 class="all-cultural-properties-title">전체 문화재 목록</h2>
+        <div class="all-cultural-properties"><br>
+            <h2 class="all-cultural-properties-title" style="font-size: 26px;">전체 문화재 목록</h2>
             <br><br>
             <div class="all-cultural-properties-items" id="gallery-section">
                 <div class="all-cultural-property-item" th:each="property : ${allCulturalProperties}">
@@ -429,7 +433,7 @@ a {
 
                     <br>
 
-                    <h2 th:text="${user.userName} + '님 이런 문화유산은 어때요?'"></h2>
+                    <h2 th:text="${user.userName} + '님 이런 문화유산은 어때요?'" style="font-size: 26px;"></h2>
 
                     <br><br>
                     <div class="all-cultural-properties-items" id="recommended-gallery-section">
@@ -440,8 +444,8 @@ a {
 
 
             <div class="tab-pane fade" id="news" role="tabpanel" aria-labelledby="news-tab">
-                <div class="news-articles">
-                    <h2>문화재 관련 뉴스</h2>
+                <div class="news-articles"><br>
+                    <h2 style="display: flex;justify-content: center;font-size: 26px;font-weight: 600;">문화재 관련 뉴스</h2>
                     <br>
                     <ul id="news-list" class="list-group mt-3">
                         <!-- 뉴스 기사가 여기에 추가됨 -->
@@ -452,8 +456,8 @@ a {
 
 
             <div class="tab-pane fade" id="video" role="tabpanel" aria-labelledby="video-tab">
-                <div class="container">
-                    <h2>관련 영상</h2>
+                <div class="container"><br>
+                    <h2 style="display: flex;justify-content: center;font-size: 26px;font-weight: 600;">관련 영상</h2>
                     <br>
                     <div id="video-list" class="row mt-3">
                         <!-- 비디오 리스트가 여기에 렌더링됨 -->

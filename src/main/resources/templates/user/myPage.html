@@ -241,6 +241,17 @@
 
                     }
 
+                    var smsBool = $('#smsBool').val();
+
+                    if(smsBool == "false"){
+
+                        alert("문자 인증이 필요합니다.");
+                        return;
+
+                     }
+
+
+
                     $.ajax({
 
                         url: '/user/updateUserAccount',
@@ -311,6 +322,106 @@
                     validateSameEmail(email);
 
                 })
+
+
+
+                /**
+                * 전화 검증 버튼
+                *
+                */
+                $(document).on('click','#telValidate', function(){
+
+                    event.preventDefault();
+                    var tel = $('#tel').val();
+                    validateTel(tel);
+
+                })
+
+
+                /**
+                * 전화번호 인증 문자 받기
+                * @param {string} tel 검증할 전화번호
+                * @returns {boolean} 인증 성공 시 true, 인증 실패 시 false
+                *
+                */
+                function validateTel(tel){
+                    return new Promise((resolve, reject) => {
+                        $.ajax({
+                            url: '/sms/send-one',
+                            method: 'POST',
+                            data: {
+                                toNumber : tel
+                            },
+                            success: function(response){
+
+                                alert(response);
+                                resolve();
+
+                            },
+                            error: function(xhr, status, error){
+
+                                alert('문자 인증 오류 발생!');
+                                return(false);
+
+                            }
+                        })
+                    })
+                }
+
+
+
+                /**
+                * 문자 인증 버튼
+                *
+                */
+                $(document).on('click','#telValidate2', function(){
+
+                    event.preventDefault();
+                    var tel = $('#tel').val();
+                    var authNum = $('#authNum').val();
+                    validateSMS(tel, authNum);
+
+                })
+
+
+                /**
+                * 전화번호 인증 번호 확인
+                * @param {string} authNum 검증할 번호
+                * @returns {boolean} 인증 성공 시 true, 인증 실패 시 false
+                *
+                */
+                function validateSMS(tel, authNum){
+                    return new Promise((resolve, reject) => {
+                        $.ajax({
+                            url: '/sms/validateNum',
+                            method: 'POST',
+                            data: {
+                                tel : tel,
+                                authNum : authNum
+                            },
+                            success: function(bool){
+
+                                if(bool === true){
+                                    $('#smsBool').val("true");
+                                    alert("전화번호 인증 성공!!")
+                                    resolve(true);
+
+                                }else{
+                                    alert("전화번호 인증 실패")
+                                    resolve(false);
+
+                                }
+                            },
+                            error: function(xhr, status, error){
+
+                                alert('문자 인증 오류 발생!');
+                                reject();
+
+                            }
+                        })
+                    })
+                }
+
 
 
                 //#endregion
@@ -2943,6 +3054,7 @@
                 ];
 
                 // 공연 찜 키워드를 서버에서 가져와 UI에 표시하는 함수
+                // 공연 찜 키워드를 서버에서 가져와 UI에 표시하는 함수
                 async function findPerformanceLoveKeyword() {
                     try {
                         // 사용자가 선호하는 키워드만 서버에서 가져옴
@@ -2954,13 +3066,14 @@
                             }
                         });
 
-                        let loveKeywords = response.data.keywords || [];
+                        let loveKeywords = response.data.loveKeywords || []; // 서버에서 받은 찜 키워드 리스트
+                        console.log("loveKeywords: ", loveKeywords);
 
-                        console.log("findPerformanceLoveKeyword()");
-                        console.log('LoveKeywords : ', loveKeywords);
-
-                        // 키워드를 UI에 표시
-                        displayPerformanceKeywords(loveKeywords);
+                        if (loveKeywords.length === 0) {
+                            console.log("No love keywords found.");
+                        } else {
+                            displayPerformanceKeywords(loveKeywords);
+                        }
                     } catch (error) {
                         console.error('Error fetching performance keywords:', error);
                     }
@@ -2968,30 +3081,20 @@
 
                 // 키워드를 UI에 표시하는 함수
                 function displayPerformanceKeywords(loveKeywords) {
-                    $('#performanceKeywordList').empty(); // 기존 키워드를 모두 비움
+                    const keywordList = $('#performanceKeywordList');
+                    keywordList.empty(); // 기존 키워드를 모두 비움
+
                     let concatLove = '';
 
-                    // 모든 키워드를 순회하며 UI에 표시
-                    allKeywords.forEach(keyword => {
-                        // 사용자가 선호하는 키워드인지 확인
-                        const isLove = loveKeywords.some(loveKeyword => loveKeyword.genre === keyword);
-
-                        let htmlContent = '';
-                        if (isLove) {
-                            // 선호하는 키워드인 경우 강조 표시
-                            htmlContent = `<button value="${keyword}" class="performanceLoveKeywordBtn bigLove">${keyword}</button>`;
-                            concatLove += keyword + ",";
-                        } else {
-                            // 그렇지 않은 키워드는 기본 스타일로 표시
-                            htmlContent = `<button value="${keyword}" class="performanceLoveKeywordBtn">${keyword}</button>`;
-                        }
-
-                        // 키워드를 HTML에 추가
-                        $('#performanceKeywordList').append(htmlContent);
+                    loveKeywords.forEach(keyword => {
+                        let htmlContent = `<button value="${keyword.genre}" class="performanceLoveKeywordBtn">${keyword.genre}</button>`;
+                        concatLove += keyword.genre + ",";
+                        keywordList.append(htmlContent);
                     });
 
                     // 선택된 키워드를 히든 필드에 저장
                     $('#performanceKeyword').val(concatLove.trim() + ",");
+                    console.log('Keywords rendered in UI.');
                 }
 
                 // 공연 찜 키워드 선택 시 색 변화 버튼
@@ -3009,8 +3112,71 @@
                     console.log('performanceKeyword : ', $('#performanceKeyword').val());
                 });
 
-                // 페이지 로드 시 공연 찜 키워드를 불러옴
+
+                // 공연 관심없음 키워드를 서버에서 가져와 UI에 표시하는 함수
+                async function findPerformanceHateKeyword() {
+                    try {
+                        // 사용자가 관심없어하는 키워드만 서버에서 가져옴
+                        let response = await axios({
+                            url: '/performance/getUserKeywords',
+                            method: 'GET',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            }
+                        });
+
+                        let hateKeywords = response.data.hateKeywords || []; // 서버에서 받은 관심없음 키워드 리스트
+                        console.log("hateKeywords: ", hateKeywords);
+
+                        if (hateKeywords.length === 0) {
+                            console.log("No hate keywords found.");
+                        } else {
+                            displayHatePerformanceKeywords(hateKeywords);
+                        }
+                    } catch (error) {
+                        console.error('Error fetching hate keywords:', error);
+                    }
+                }
+
+                // 키워드를 UI에 표시하는 함수 (관심없음 키워드)
+                function displayHatePerformanceKeywords(hateKeywords) {
+                    const keywordList = $('#performanceKeywordList');
+                    keywordList.empty(); // 기존 키워드를 모두 비움
+
+                    let concatHate = '';
+
+                    hateKeywords.forEach(keyword => {
+                        let htmlContent = `<button value="${keyword.genre}" class="performanceHateKeywordBtn hateLove">${keyword.genre}</button>`;
+                        concatHate += keyword.genre + ",";
+                        keywordList.append(htmlContent);
+                    });
+
+                    // 선택된 키워드를 히든 필드에 저장
+                    $('#hateKeyword').val(concatHate.trim() + ",");
+                    console.log('Hate Keywords rendered in UI.');
+                }
+
+                // 공연 관심없음 키워드 선택 시 색 변화 버튼
+                $(document).on('click', '.performanceHateKeywordBtn', function () {
+                    $(this).toggleClass('hateLove');
+                    const $btns = document.querySelectorAll('button.hateLove.performanceHateKeywordBtn');
+                    let concat = '';
+
+                    $btns.forEach(function (btn) {
+                        concat += (btn.value + ",");
+                    });
+
+                    $('#hateKeyword').val(concat.trim());
+
+                    console.log('hateKeyword : ', $('#hateKeyword').val());
+                });
+
+                // 페이지 로드 시 공연 찜 키워드와 관심없음 키워드를 불러옴
                 findPerformanceLoveKeyword();
+                findPerformanceHateKeyword();
+
+
+
 
 
 
@@ -3308,6 +3474,8 @@
                     findFestivalBigLoveKeyword();
 
                     findExhibitionLoveKeyword();
+
+                    findPerformanceLoveKeyword();
                 });
 
 
@@ -3373,6 +3541,7 @@
                     // 위치 변경
                     findFestivalBigHateKeyword();
                     findExhibitionLoveKeyword();
+                    findPerformanceHateKeyword();
                 });
 
 
@@ -3492,7 +3661,12 @@
                             <label for="tel">전화번호</label>
                             <input class="rounded" id="tel" name="tel" pattern="[0-9]{3}-[0-9]{4}-[0-9]{4}"
                                    placeholder="${user.tel}"
-                                   th:value="${user.tel}" type="tel"><br>
+                                   th:value="${user.tel}" type="tel" required style="background-color: lightblue">
+                            <input name="authNum" id="authNum" class="rounded" placeholder="0000" type="number" pattern="\d{4}" value="0000" required style="width: 80px;">
+                            <button id="telValidate" type="button" class="btn btn-outline-success">문자인증</button>
+                            <button id="telValidate2" type="button" class="btn btn-outline-success">인증하기</button>
+                            <input type="hidden" value="false" id="smsBool">
+                            <br>
 
                             <label for="userAge">나이</label>
                             <input class="rounded" id="userAge" name="userAge" th:placeholder="${user.userAge}"

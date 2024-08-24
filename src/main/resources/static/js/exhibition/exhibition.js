@@ -325,5 +325,8 @@ async function updateInterest(exhibitionId, state) {
 
 //페이지에 들어갔을 때 실행 되는 init 함수
 function init() {
-    getExhibitions();
+    getRecommendExhibitions();
+
+    $("#exhibitionTitle").text($("#userName").text() + "님 이런 작품은 어때요?")
+
 }

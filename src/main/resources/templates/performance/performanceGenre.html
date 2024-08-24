@@ -129,15 +129,15 @@
                 <img th:src="@{/img/performance/ranking.png}" alt="랭킹 아이콘" class="filter-icon">
                 랭킹
             </div>
-            <div class="extra-item">
+            <div class="extra-item" id="region-item">
                 <img th:src="@{/img/performance/map.png}" alt="지역별 아이콘" class="filter-icon">
                 지역별
             </div>
         </div>
     </div>
 
-    <div class="ranking">
-        <div class="ranking-title">장르별 랭킹</div>
+    <div class="ranking"><br>
+        <div class="ranking-title" style="font-size: 26px;font-weight: 600;">장르별 랭킹</div><br>
         <div class="ranking-items" th:if="${rankingData != null}">
             <div th:each="ranking, iterStat : ${rankingData}">
                 <a th:href="@{'/performance/performanceDetail?performanceCode=' + ${ranking.code} + '&source=db'}">
@@ -169,8 +169,8 @@
     </div>
 
     <!-- 전체 공연 목록 -->
-    <div class="all-performances">
-        <div class="all-performances-title">전체 공연 목록</div>
+    <div class="all-performances"><br>
+        <div class="all-performances-title" style="font-size: 26px;font-weight: 600;">전체 공연 목록</div><br>
         <div class="all-performances-items" th:if="${allPerformances != null}">
             <div th:each="performance : ${allPerformances}">
                 <a th:href="@{'/performance/performanceDetail?performanceCode=' + ${performance.code} + '&source=db'}">

@@ -164,7 +164,6 @@ p {
 .all-exhibitions-items {
     display: flex;
     flex-wrap: wrap;
-    justify-content: space-between;
     gap: 10px;
     width: calc(5 * 249px + 4 * 10px);
 }
@@ -292,4 +291,24 @@ p {
 #initSearchButton {
     margin-right: 100px;
     margin-left: -1px;
+}
+
+
+/* 반응형 디자인을 위한 미디어 쿼리 */
+@media (max-width: 1300px) {
+    .all-exhibitions-items {
+
+    }
+}
+
+@media (max-width: 768px) {
+    .exhibition-item {
+        width: calc(50% - 10px);
+    }
+}
+
+@media (max-width: 480px) {
+    .exhibition-item {
+        width: 100%;
+    }
 }
