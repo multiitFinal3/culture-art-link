@@ -85,7 +85,27 @@
 <div id="menubar">
 
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 100" style="width: 300px; cursor:pointer;" id="home"
+<!--        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 100" style="width: 300px; cursor:pointer;" id="home"-->
+<!--             onclick="window.location.href='/'">-->
+<!--            <style>-->
+<!--                .icon { fill: #333333; }-->
+<!--                .korean { font-family: 'Noto Sans KR', sans-serif; font-weight: 500; }-->
+<!--                .english { font-family: 'Arial', sans-serif; font-weight: normal; letter-spacing: 2px; }-->
+<!--            </style>-->
+
+<!--            &lt;!&ndash; Updated triangle icon &ndash;&gt;-->
+<!--            <g class="icon" transform="translate(0, 20) scale(0.6)">-->
+<!--                <path d="M0,60 L50,0 L100,60 L75,60 L50,20 L25,60 Z"/>-->
+<!--            </g>-->
+
+<!--            &lt;!&ndash; Korean text &ndash;&gt;-->
+<!--            <text x="80" y="50" class="korean" font-size="32" fill="#333333">문 화 이 음</text>-->
+
+<!--            &lt;!&ndash; English text &ndash;&gt;-->
+<!--            <text x="80" y="80" class="english" font-size="20" fill="#555555">C U L T U R E L I N K</text>-->
+<!--        </svg>-->
+
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 100"  style="width: 300px; cursor:pointer;" id="home"
              onclick="window.location.href='/'">
             <style>
                 .icon { fill: #333333; }
@@ -93,17 +113,24 @@
                 .english { font-family: 'Arial', sans-serif; font-weight: normal; letter-spacing: 2px; }
             </style>
 
-            <!-- Updated triangle icon -->
+            <!-- Triangle icon -->
             <g class="icon" transform="translate(0, 20) scale(0.6)">
                 <path d="M0,60 L50,0 L100,60 L75,60 L50,20 L25,60 Z"/>
             </g>
 
-            <!-- Korean text -->
-            <text x="80" y="50" class="korean" font-size="32" fill="#333333">문 화 이 음</text>
+            <!-- Korean text with slightly increased spacing -->
+            <text x="70" y="50" class="korean" font-size="32" fill="#333333">
+                <tspan x="70">문</tspan>
+                <tspan x="130">화</tspan>
+                <tspan x="190">이</tspan>
+                <tspan x="250">음</tspan>
+            </text>
 
             <!-- English text -->
-            <text x="80" y="80" class="english" font-size="20" fill="#555555">C U L T U R E L I N K</text>
+            <text x="82" y="80" class="english" font-size="16" fill="#555555">C U L T U R E L I N K</text>
         </svg>
+
+
 
         <!--메뉴바 링크-->
         <div class="collapse navbar-collapse" id="navbarNavDropdown">
