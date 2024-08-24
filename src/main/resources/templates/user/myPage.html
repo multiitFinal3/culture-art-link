@@ -197,9 +197,10 @@
                  * 회원정보 수정
                  *
                  */
-                $(document).on('submit', '#basicForm', function (event) {
-                    console.log("#updateAccount")
+                $(document).on('click', '#updateAccount', function (event) {
                     event.preventDefault();
+
+                    console.log("#updateAccount")
 
                     var formData = new FormData();
 
@@ -3626,9 +3627,136 @@
 
         <div id="rightZone">
 
-            <div id="leftZone">
+            <div id="leftZone" style="margin-left: 7%;">
 
-                <form encType="multipart/form-data" id="basicForm" style="font-size: 20px;">
+                <h1>회원정보</h1><br><br>
+
+                <div id="formContainer">
+                    <div id="leftSection">
+
+                        <div id="profileImg">
+
+                        </div>
+
+                        <label for="uploadFile">
+                            <!--                        사진-->
+                        </label>
+                        <input name="uploadFile" class="rounded" id="uploadFile" type="file" accept="image/*"><br>
+
+                    </div>
+
+
+                    <form id="basicForm" method="post" style="font-size: 20px;color: #615757;"
+                          encType="multipart/form-data">
+
+                        <div style="display: flex;flex-flow: column;justify-content: center;align-items: center;">
+
+
+                            <div id="rightSection">
+
+                                <div id="basicZone">
+
+                                    <!--                        <label for="uploadFile">사진</label>-->
+                                    <!--                        <input name="uploadFile" class="rounded" id="uploadFile" type="file" accept="image/*"><br>-->
+
+
+                                    <label for="email" class="erequired">이메일</label>
+
+                                    <div class="email-group">
+
+                                        <input name="email" id="email" class="rounded" placeholder="dkswldus@gmail.com"
+                                               required th:value="${user.email}"
+                                               pattern="^[a-zA-Z0-9_]{5,}@[a-zA-Z]{3,}\.com$">
+                                        <button id="emailValidate" type="button" class="btn btn-outline-success"
+                                                style="height: 45px;">중복확인
+                                        </button>
+                                        <span id="emailError" class="error"></span><br>
+
+                                    </div>
+
+                                    <label for="password" class="prequired">비밀번호</label>
+                                    <input name="password" id="password" class="rounded" type="password" placeholder="*****"
+                                           required
+                                           pattern="^[a-zA-Z0-9_]{5,}$">
+                                    <span id="passwordError" class="error"></span><br>
+
+                                    <label for="userName" class="urequired">이름</label>
+                                    <input name="userName" id="userName" class="rounded" placeholder="${user.userName}"
+                                           th:value="${user.userName}"
+                                           required pattern="^[a-zA-Z가-힣]{3,}$">
+                                    <span id="nameError" class="error"></span><br>
+
+
+                                    <label for="tel" class="trequired" placeholder="${user.tel}"
+                                           th:value="${user.tel}">전화번호</label>
+
+                                    <div class="tel-group">
+
+                                        <input name="tel" id="tel" class="rounded" placeholder="010-0000-1234"
+                                               pattern="[0-9]{3}-[0-9]{4}-[0-9]{4}" value="010-0000-0000" required>
+
+                                        <button id="telValidate" type="button" class="btn btn-outline-success"
+                                                style="height: 45px;">문자인증
+                                        </button>
+
+                                        <input name="authNum" id="authNum" class="rounded" placeholder="0000" type="number"
+                                               pattern="\d{4}" value="0000" required style="width: 80px;">
+                                        <!--                        <button id="telValidate" type="button" class="btn btn-outline-success" style="height: 44px;">문자인증</button>-->
+                                        <button id="telValidate2" type="button" class="btn btn-outline-success"
+                                                style="height: 45px;">인증하기
+                                        </button>
+                                        <input type="hidden" value="false" id="smsBool">
+
+                                    </div>
+
+                                    <br>
+
+                                    <label for="userAge">나이</label>
+                                    <input name="userAge" id="userAge" class="rounded" type="number"
+                                           min="0" max="100"
+                                           th:placeholder="${user.userAge}"
+                                           th:value="${user.userAge}"><br>
+
+                                    <label for="gender">성별</label>
+                                    <select name="gender" id="gender" class="rounded" th:value="${user.gender}">
+                                        <option value="남">남</option>
+                                        <option value="여">여</option>
+                                    </select><br>
+
+                                    <label for="regionId">지역</label>
+                                    <select name="regionId" id="regionId" class="rounded"></select><br><br>
+
+
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </form>
+
+                    <br><br><br>
+                    <div style="display: flex;flex-flow: row;justify-content: center;align-items: end;">
+
+                        <button class="btn btn-outline-success" id="updateAccount"
+                                style="width: 12%;height: 45px; margin-right: 35px; width: 40%; height: 45px; margin-right: 10px;color: white;background: green;"
+                                th:value="${user.userId}"
+                                type="submit">수정
+                        </button>
+                        <button class="btn btn-outline-success" id="deleteAccount"
+                                style="width: 12%;height: 45px; margin-right: 35px; width: 40%; height: 45px; margin-right: 10px;color: white;background: green;"
+                                th:value="${user.userId}"
+                                type="button">탈퇴
+                        </button>
+
+                    </div>
+
+                </div>
+
+                <br><br>
+
+
+
+<!--                <form encType="multipart/form-data" id="basicForm" style="font-size: 20px;">
                     <h1 style="color: #7a7272;">회원정보</h1><br><br>
 
                     <div>
@@ -3698,7 +3826,7 @@
 
                         </div>
                     </div>
-                </form>
+                </form>-->
 
 
             </div>
