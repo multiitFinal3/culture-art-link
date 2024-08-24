@@ -63,6 +63,7 @@ public class ExhibitionApiService {
                 }
             }
         } else {
+            System.out.println("res code : " + responseCode);
             throw new Exception("HTTP GET 요청 실패: " + responseCode);
         }
 

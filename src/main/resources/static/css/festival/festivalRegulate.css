@@ -248,7 +248,7 @@
 
     #deleteZone{
 
-        width: calc(1519px - 1069px);
+        width: 870px;
         display: flex;
         justify-content: end;
 
@@ -263,7 +263,7 @@
 
     #insertZone{
 
-        width: calc(1504.880px - 632px);
+        width: 1310px;
         display: flex;
         justify-content: end;
 
