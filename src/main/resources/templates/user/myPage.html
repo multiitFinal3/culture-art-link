@@ -3027,21 +3027,6 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                 //#endregion
 
                 //#region 하단바 : 공연의 찜 키워드 , 관심없음 키워드
@@ -3070,11 +3055,28 @@
                         let loveKeywords = response.data.loveKeywords || []; // 서버에서 받은 찜 키워드 리스트
                         console.log("loveKeywords: ", loveKeywords);
 
-                        if (loveKeywords.length === 0) {
-                            console.log("No love keywords found.");
-                        } else {
-                            displayPerformanceKeywords(loveKeywords);
+                        displayPerformanceKeywords(loveKeywords);
+
+                        let allLoveList = [];
+
+                        for(let allK of loveKeywords){
+
+                            allLoveList.push(allK.genre);
+
                         }
+
+
+                        for(let keyword of allKeywords){
+
+                            if(! allLoveList.includes(keyword)){
+
+                                let htmlContent = `<button value="${keyword}" class="performanceLoveKeywordBtn">${keyword}</button>`;
+                                $("#performanceKeywordList").append(htmlContent);
+
+                            }
+                        }
+
+
                     } catch (error) {
                         console.error('Error fetching performance keywords:', error);
                     }
@@ -3088,7 +3090,7 @@
                     let concatLove = '';
 
                     loveKeywords.forEach(keyword => {
-                        let htmlContent = `<button value="${keyword.genre}" class="performanceLoveKeywordBtn">${keyword.genre}</button>`;
+                        let htmlContent = `<button value="${keyword.genre}" class="performanceLoveKeywordBtn bigLove">${keyword.genre}</button>`;
                         concatLove += keyword.genre + ",";
                         keywordList.append(htmlContent);
                     });
@@ -3129,11 +3131,26 @@
                         let hateKeywords = response.data.hateKeywords || []; // 서버에서 받은 관심없음 키워드 리스트
                         console.log("hateKeywords: ", hateKeywords);
 
-                        if (hateKeywords.length === 0) {
-                            console.log("No hate keywords found.");
-                        } else {
-                            displayHatePerformanceKeywords(hateKeywords);
+                        displayHatePerformanceKeywords(hateKeywords);
+
+                        let allHateList = [];
+
+                        for(let allK of hateKeywords){
+
+                            allHateList.push(allK.genre);
+
                         }
+
+                        for(let keyword of allKeywords){
+
+                            if(! allHateList.includes(keyword)){
+
+                                let htmlContent = `<button value="${keyword}" class="performanceHateKeywordBtn">${keyword}</button>`;
+                                $("#performanceKeywordList").append(htmlContent);
+
+                            }
+                        }
+
                     } catch (error) {
                         console.error('Error fetching hate keywords:', error);
                     }
@@ -3147,7 +3164,7 @@
                     let concatHate = '';
 
                     hateKeywords.forEach(keyword => {
-                        let htmlContent = `<button value="${keyword.genre}" class="performanceHateKeywordBtn hateLove">${keyword.genre}</button>`;
+                        let htmlContent = `<button value="${keyword.genre}" class="performanceHateKeywordBtn bigHate">${keyword.genre}</button>`;
                         concatHate += keyword.genre + ",";
                         keywordList.append(htmlContent);
                     });
@@ -3159,17 +3176,17 @@
 
                 // 공연 관심없음 키워드 선택 시 색 변화 버튼
                 $(document).on('click', '.performanceHateKeywordBtn', function () {
-                    $(this).toggleClass('hateLove');
-                    const $btns = document.querySelectorAll('button.hateLove.performanceHateKeywordBtn');
+                    $(this).toggleClass('bigHate');
+                    const $btns = document.querySelectorAll('button.bigHate.performanceHateKeywordBtn');
                     let concat = '';
 
                     $btns.forEach(function (btn) {
                         concat += (btn.value + ",");
                     });
 
-                    $('#hateKeyword').val(concat.trim());
+                    $('#performanceKeyword').val(concat.trim());
 
-                    console.log('hateKeyword : ', $('#hateKeyword').val());
+                    console.log('hateKeyword : ', $('#performanceKeyword').val());
                 });
 
                 // 페이지 로드 시 공연 찜 키워드와 관심없음 키워드를 불러옴
