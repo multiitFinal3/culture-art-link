@@ -49,6 +49,7 @@ public class AdminFestivalServiceImpl implements AdminFestivalService {
 	
 	
 	ArrayList<FestivalDTO> list = new ArrayList<>();
+	ArrayList<FestivalDTO> apiMultipleList = new ArrayList<>();
 	
 	private LoadingCache<String, List<FestivalDTO>> cache;
 	
@@ -898,6 +899,8 @@ public class AdminFestivalServiceImpl implements AdminFestivalService {
 		}
 		
 		
+		this.apiMultipleList = list;
+		
 		System.out.println("impl list: " + list);
 		
 		ArrayList<FestivalDTO> list2 = new ArrayList<FestivalDTO>();
@@ -1171,7 +1174,6 @@ public class AdminFestivalServiceImpl implements AdminFestivalService {
 			
 		}
 		
-		
 		return;
 		
 	}
@@ -1372,6 +1374,66 @@ public class AdminFestivalServiceImpl implements AdminFestivalService {
 	@Override
 	public int findAPIFestivalCount() throws Exception {
 		return apiAllListSize;
+	}
+	
+	@Override
+	public void insertAPIMultipleFestivalList(ArrayList<Integer> numList) throws Exception {
+		
+		
+		for (int i : numList) {
+			
+			FestivalDTO festivalDTO = apiMultipleList.get(i);
+			
+			String festivalName = festivalDTO.getFestivalName();
+			String content1 = festivalDTO.getFestivalContent();
+			
+			
+			//festival naver content + img
+			
+			Document document = Jsoup.connect("https://search.naver.com/search.naver?sm=tab_hty.top&where=nexearch&ssc=tab.nx.all&query=" + festivalName + "+기본정보").get();
+			
+			String title = document.title();
+			
+			String imgUrl = document.select("div.detail_info > a > img").attr("src");
+			
+			if (!imgUrl.equals("")) {
+				System.out.println("img : " + imgUrl);
+				festivalDTO.setImgUrl(imgUrl);
+				
+			} else {
+				
+				String urlFinal = "https://openapi.naver.com/v1/search/image?query=" + festivalName + "&display=10&sort=sim&filter=all";
+				
+				Request request = new Request.Builder()
+						.url(urlFinal)
+						.addHeader("X-Naver-Client-Id", clientId)
+						.addHeader("X-Naver-Client-Secret", clientSecret)
+						.get()
+						.build();
+				
+				
+				Response response = client.newCall(request).execute();
+				String responseBody = response.body().string();
+				JsonObject json = gson.fromJson(responseBody, JsonObject.class);
+				JsonArray items = json.getAsJsonArray("items");
+				String url = items.get(1).getAsJsonObject().get("thumbnail").getAsString();
+				
+				imgUrl = url;
+				festivalDTO.setImgUrl(imgUrl);
+				
+			}
+			
+			String content2 = document.select("div.intro_box > p.text").text();
+			
+			String festivalContent = content1 + content2;
+			
+			festivalDTO.setFestivalContent(festivalContent);
+			
+			adminFestivalMapper.insertAPIFestival(festivalDTO);
+			
+		}
+		
+		
 	}
 	
 	
