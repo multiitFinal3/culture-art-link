@@ -62,4 +62,6 @@ public interface AdminFestivalService {
 	ArrayList<FestivalDTO> findDBFestivalAllList() throws Exception;
 	
 	int findAPIFestivalCount() throws Exception;
+	
+	void insertAPIMultipleFestivalList(ArrayList<Integer> list) throws Exception;
 }

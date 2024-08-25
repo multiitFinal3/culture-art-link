@@ -1095,4 +1095,25 @@ public class AdminFestivalController {
 	}
 	
 	
-}
+	@PostMapping("/insertMultipleAPIFestivalList")
+	@ResponseBody
+	public String insertMultipleAPIFestivalList(@RequestBody ArrayList < Integer > checks) {
+			
+			ArrayList<Integer> list = new ArrayList();
+			
+			for (int i : checks) {
+				
+				list.add(i);
+			}
+			
+			
+			try {
+				adminFestivalService.insertAPIMultipleFestivalList(list);
+			} catch (Exception e) {
+				throw new RuntimeException(e);
+			}
+			
+			return "다중조건 데이터 삽입 성공";
+		}
+		
+	}
