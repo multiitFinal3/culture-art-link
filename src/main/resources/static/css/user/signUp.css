@@ -261,7 +261,9 @@ body {
     border-radius: 0.25rem;
     margin-bottom: 10px;
     gap: 5px;
+    scrollbar-width: thin;
 }
+
 
 .performanceKeywordBtn,
 .festivalKeywordBtn,
