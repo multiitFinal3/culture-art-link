@@ -830,12 +830,12 @@
                             </div>
 
                             <label for="password"  class="prequired">비밀번호</label>
-                            <input name="password" id="password" class="rounded" type="password" placeholder="*****" required
+                            <input name="password" id="password" class="rounded" type="password" placeholder="5자리 이상" required
                                    pattern="^[a-zA-Z0-9_]{5,}$">
                             <span id="passwordError" class="error"></span><br>
 
                             <label for="userName"  class="urequired">이름</label>
-                            <input name="userName" id="userName" class="rounded" placeholder="안지연"
+                            <input name="userName" id="userName" class="rounded" placeholder=""
                                     required pattern="^[a-zA-Z가-힣]{3,}$">
                             <span id="nameError" class="error"></span><br>
 
@@ -845,12 +845,14 @@
 
                             <div class="tel-group">
 
-                                <input name="tel" id="tel" class="rounded" placeholder="010-0000-1234"
-                                   pattern="[0-9]{3}-[0-9]{4}-[0-9]{4}" value="010-0000-0000"  required>
+<!--                                <input name="tel" id="tel" class="rounded" placeholder="010-0000-1234"-->
+<!--                                   pattern="[0-9]{3}-[0-9]{4}-[0-9]{4}" value="010-0000-0000"  required>-->
+                                <input name="tel" id="tel" class="rounded" placeholder="010-0000-0000"
+                                       pattern="[0-9]{3}-[0-9]{4}-[0-9]{4}" value=""  required>
 
                                 <button id="telValidate" type="button" class="btn btn-outline-success" style="height: 45px;">문자인증</button>
 
-                                <input name="authNum" id="authNum" class="rounded" placeholder="0000" type="number" pattern="\d{4}" value="0000" required style="width: 80px;">
+                                <input name="authNum" id="authNum" class="rounded" placeholder="4자리 인증번호" type="number" pattern="\d{4}" value="" required style="width: 80px;">
     <!--                        <button id="telValidate" type="button" class="btn btn-outline-success" style="height: 44px;">문자인증</button>-->
                                 <button id="telValidate2" type="button" class="btn btn-outline-success" style="height: 45px;">인증하기</button>
                                 <input type="hidden" value="false" id="smsBool">
@@ -860,11 +862,12 @@
                             <br>
 
                             <label for="userAge">나이</label>
-                            <input name="userAge" id="userAge" class="rounded" placeholder="12" type="number" min="0" max="100"
-                                   value="12"><br>
+                            <input name="userAge" id="userAge" class="rounded" placeholder="" type="number" min="0" max="100"
+                                   value=""><br>
 
                             <label for="gender">성별</label>
                             <select name="gender" id="gender" class="rounded">
+                                <option value="선택">선택</option>
                                 <option value="남">남</option>
                                 <option value="여">여</option>
                             </select><br>
