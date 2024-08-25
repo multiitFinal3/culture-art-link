@@ -70,7 +70,8 @@ public class AdminFestivalServiceImpl implements AdminFestivalService {
 		this.keywordExtractService = keywordExtractService;
 		this.cache = CacheBuilder.newBuilder()
 				.maximumSize(100)
-				.expireAfterWrite(10, TimeUnit.DAYS)
+//				.expireAfterWrite(10, TimeUnit.DAYS)
+				.expireAfterWrite(1,TimeUnit.SECONDS)
 				.build(new CacheLoader<String, List<FestivalDTO>>() {
 					@Override
 					public List<FestivalDTO> load(String key) throws Exception {
@@ -413,7 +414,7 @@ public class AdminFestivalServiceImpl implements AdminFestivalService {
 			
 			String festivalName = festivalDTO.getFestivalName();
 			String content1 = festivalDTO.getFestivalContent();
-			
+			festivalName = festivalName.replace("<"," ").replace(">","").replace("+"," ");
 			
 			//festival naver content + img
 			
@@ -443,7 +444,18 @@ public class AdminFestivalServiceImpl implements AdminFestivalService {
 				String responseBody = response.body().string();
 				JsonObject json = gson.fromJson(responseBody, JsonObject.class);
 				JsonArray items = json.getAsJsonArray("items");
-				String url = items.get(1).getAsJsonObject().get("thumbnail").getAsString();
+				
+				String url = "";
+				
+				if (items.size()>=2){
+					
+					url  = items.get(1).getAsJsonObject().get("thumbnail").getAsString();
+					
+				}else{
+					
+					url = "https://kr.object.ncloudstorage.com/team3/common/noPhoto.png";
+					
+				}
 				
 				imgUrl = url;
 				festivalDTO.setImgUrl(imgUrl);
