@@ -1256,6 +1256,12 @@ public class AdminFestivalServiceImpl implements AdminFestivalService {
 			String path = "classpath:static/txt/festival/stop.txt";
 			map = keywordExtractService.getKeywordByKomoran(allContent, path);
 			
+			if (map==null){
+				
+				continue;
+				
+			}
+			
 			System.out.println("TF-ID 결과 : " + map);
 			
 			list.add(map);

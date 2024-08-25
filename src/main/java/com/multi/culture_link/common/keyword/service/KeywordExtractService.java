@@ -180,7 +180,7 @@ public class KeywordExtractService {
 		
 		System.out.println("allContent : " + allContent);
 		
-		if (allContent==null){
+		if (allContent==null || allContent.equals("")){
 			
 			return null;
 			
@@ -192,15 +192,38 @@ public class KeywordExtractService {
 		
 		Komoran komoran = new Komoran(DEFAULT_MODEL.FULL);
 		
-		KomoranResult analyzeResultList = komoran.analyze(allContent);
+		KomoranResult analyzeResultList = null;
+		
+		try {
+			
+			analyzeResultList = komoran.analyze(allContent);
+			
+		}catch (Exception e){
+			System.out.println(e);
+			return null;
+			
+		}
+		
 		
 		System.out.println("analyzeResultList.getPlainText() : " + analyzeResultList.getPlainText());
 		
 		List<Token> tokenList = analyzeResultList.getTokenList();
-		for (Token token : tokenList) {
-			System.out.println("token");
-			System.out.format("(%2d, %2d) %s/%s\n", token.getBeginIndex(), token.getEndIndex(), token.getMorph(), token.getPos());
+		
+		try {
+			
+			for (Token token : tokenList) {
+				System.out.println("token");
+				System.out.format("(%2d, %2d) %s/%s\n", token.getBeginIndex(), token.getEndIndex(), token.getMorph(), token.getPos());
+			}
+			
+			
+		}catch (Exception e){
+			System.out.println("여기 : " + e);
+			return null;
+			
 		}
+		
+		
 		
 		ArrayList<String> list = (ArrayList<String>) analyzeResultList.getNouns();
 		
