@@ -3707,8 +3707,9 @@
 
                                     <div class="tel-group">
 
-                                        <input name="tel" id="tel" class="rounded" placeholder="010-0000-1234"
-                                               pattern="[0-9]{3}-[0-9]{4}-[0-9]{4}" value="010-0000-0000" required>
+                                        <input name="tel" id="tel" class="rounded"
+                                               pattern="[0-9]{3}-[0-9]{4}-[0-9]{4}" placeholder="${user.tel}"
+                                               th:value="${user.tel}" required>
 
                                         <button id="telValidate" type="button" class="btn btn-outline-success"
                                                 style="height: 45px;">문자인증
