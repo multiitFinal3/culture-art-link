@@ -871,6 +871,43 @@
                     </div>
 
 
+                    <div class="info-item">
+                        <span class="info-label">분류</span>
+                        <span class="info-dynasty" th:with="hasClassify=${!#strings.isEmpty(property.classifyA) || !#strings.isEmpty(property.classifyB) || !#strings.isEmpty(property.classifyC) || !#strings.isEmpty(property.classifyD)}">
+                        <th:block th:if="${hasClassify}">
+                            <th:block th:text="${property.classifyA}"></th:block>
+                            <th:block th:if="${!#strings.isEmpty(property.classifyB)}">
+                                <th:block th:text="' / ' + ${property.classifyB}"></th:block>
+                            </th:block>
+                            <th:block th:if="${!#strings.isEmpty(property.classifyC)}">
+                                <th:block th:text="' / ' + ${property.classifyC}"></th:block>
+                            </th:block>
+                            <th:block th:if="${!#strings.isEmpty(property.classifyD)}">
+                                <th:block th:text="' / ' + ${property.classifyD}"></th:block>
+                            </th:block>
+                        </th:block>
+                        <th:block th:unless="${hasClassify}">분류 정보가 없습니다.</th:block>
+                    </span>
+                    </div>
+
+
+
+                    <div class="info-item">
+                        <span class="info-label">지정일</span>
+                        <span class="info-dynasty" th:with="formattedDate=${
+                            #strings.isEmpty(property.registrationDate) ? '' :
+                            (#strings.length(property.registrationDate) == 8 ?
+                                #strings.substring(property.registrationDate, 0, 4) + '-' +
+                                #strings.substring(property.registrationDate, 4, 6) + '-' +
+                                #strings.substring(property.registrationDate, 6, 8) :
+                                property.registrationDate)
+                        }">
+                            <th:block th:text="${#strings.isEmpty(formattedDate) ? '지정일 정보가 없습니다.' : formattedDate}">지정일</th:block>
+                        </span>
+                    </div>
+
+
+
                     <div class="d-flex justify-content-start mt-2">
 
                         <div class="info-item">
